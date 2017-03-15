@@ -25,7 +25,11 @@ tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
 tools-y += m4 libtool autoconf automake flex bison pkg-config mklibs
 tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
 tools-y += firmware-utils patch-image quilt padjffs2
+tools-y += sstrip
+tools-y += quilt
 tools-y += mm-macros missing-macros cmake scons bc findutils gengetopt patchelf
+tools-y += mtools
+tools-y += lzma
 tools-y += mtools dosfstools libressl
 tools-$(CONFIG_TARGET_orion_generic) += wrt350nv2-builder upslug2
 tools-$(CONFIG_powerpc) += upx
@@ -38,6 +42,8 @@ tools-$(BUILD_B43_TOOLS) += b43-tools
 tools-$(BUILD_ISL) += isl
 tools-$(CONFIG_USE_SPARSE) += sparse
 tools-$(CONFIG_TARGET_apm821xx) += genext2fs
+tools-$(CONFIG_INSTALL_GCCGO) += go-src
+tools-$(CONFIG_INSTALL_GCCGO) += go-bootstrap
 
 # builddir dependencies
 $(curdir)/bison/compile := $(curdir)/flex/compile
@@ -72,6 +78,7 @@ $(curdir)/libressl/compile := $(curdir)/pkg-config/compile
 $(curdir)/mkimage/compile += $(curdir)/libressl/compile
 $(curdir)/firmware-utils/compile += $(curdir)/libressl/compile
 $(curdir)/cmake/compile += $(curdir)/libressl/compile
+$(curdir)/go-src/compile := $(curdir)/go-bootstrap/compile
 
 ifneq ($(HOST_OS),Linux)
   tools-y += coreutils
