@@ -37,6 +37,7 @@ endif
 
 include $(INCLUDE_DIR)/hardening.mk
 include $(INCLUDE_DIR)/prereq.mk
+include $(INCLUDE_DIR)/host.mk
 include $(INCLUDE_DIR)/unpack.mk
 include $(INCLUDE_DIR)/depends.mk
 
@@ -293,13 +294,13 @@ Build/DistCheck=$(call Build/DistCheck/Default,)
 .PHONY: prepare-package-install
 prepare-package-install:
 	@mkdir -p $(PKG_INFO_DIR)
-	@rm -f $(PKG_INSTALL_STAMP)
+	@touch $(PKG_INSTALL_STAMP).clean
 	@echo "$(filter-out essential nonshared,$(PKG_FLAGS))" > $(PKG_INSTALL_STAMP).flags
 
 $(PACKAGE_DIR):
 	mkdir -p $@
 
-compile:
+compile: prepare-package-install
 .install: .compile
 install: compile
 

@@ -3,6 +3,7 @@ TMP_DIR:=$(TOPDIR)/tmp
 
 all: $(TMP_DIR)/.$(SCAN_TARGET)
 
+include $(TOPDIR)/include/host.mk
 SCAN_TARGET ?= packageinfo
 SCAN_NAME ?= package
 SCAN_DIR ?= package
