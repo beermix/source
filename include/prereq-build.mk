@@ -123,9 +123,9 @@ $(eval $(call SetupHostCommand,getopt, \
 	getopt -o t --long test -- --test | grep '^ *--test *--'))
 
 $(eval $(call SetupHostCommand,stat,Cannot find a file stat utility, \
-	gnustat -c%s $(TOPDIR)/Makefile, \
-	gstat -c%s $(TOPDIR)/Makefile, \
-	stat -c%s $(TOPDIR)/Makefile))
+	gnustat -c%s $(TMP_DIR)/.host.mk, \
+	gstat -c%s $(TMP_DIR)/.host.mk, \
+	stat -c%s $(TMP_DIR)/.host.mk))
 
 $(eval $(call SetupHostCommand,unzip,Please install 'unzip', \
 	unzip 2>&1 | grep zipfile, \
