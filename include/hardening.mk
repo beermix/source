@@ -38,7 +38,7 @@ endif
 ifdef CONFIG_PKG_RELRO_PARTIAL
   ifeq ($(strip $(PKG_RELRO)),1)
     TARGET_CFLAGS += -fstack-protector-strong -Wl,-z,relro
-    TARGET_LDFLAGS += -fuse-ld=gold -zrelro -s
+    TARGET_LDFLAGS += -zrelro -s
   endif
 endif
 ifdef CONFIG_PKG_RELRO_FULL
