@@ -9,6 +9,9 @@ GCC_CONFIGURE += \
 	--enable-languages=c \
 	--disable-shared \
 	--disable-threads \
+	--enable-plugin \
+	--enable-gold \
+	--enable-ld=default \
 
 define Host/Compile
 	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) \

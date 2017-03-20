@@ -12,7 +12,6 @@ GCC_CONFIGURE += \
 	--disable-shared \
 	--disable-threads \
 	--enable-plugin \
-	--enable-lto \
 	--enable-gold \
 	--enable-ld=default \
 

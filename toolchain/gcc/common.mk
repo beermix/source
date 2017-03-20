@@ -112,7 +112,6 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--enable-plugin \
-		--enable-lto \
 		--enable-gold \
 		--enable-ld=default \
 		$(GRAPHITE_CONFIGURE) \
