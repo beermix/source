@@ -155,10 +155,6 @@ define Build/append-rootfs
 	dd if=$(IMAGE_ROOTFS) >> $@
 endef
 
-define Build/append-file
-	cat "$(1)" >> "$@"
-endef
-
 define Build/append-ubi
 	sh $(TOPDIR)/scripts/ubinize-image.sh \
 		$(if $(UBOOTENV_IN_UBI),--uboot-env) \

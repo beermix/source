@@ -306,6 +306,7 @@ config LIBC
 	string
 	default "glibc"   if USE_GLIBC
 	default "uClibc"  if USE_UCLIBC
+	default "musl"	  if USE_MUSL
 
 config TARGET_SUFFIX
 	string
@@ -313,6 +314,8 @@ config TARGET_SUFFIX
 	default "gnu"             if USE_GLIBC && !(arm || armeb)
 	default "uclibcgnueabi"   if USE_UCLIBC && (arm || armeb)
 	default "uclibc"          if USE_UCLIBC && !(arm || armeb)
+	default "muslgnueabi"     if USE_MUSL && (arm || armeb)
+	default "musl"            if USE_MUSL && !(arm || armeb)
 
 config MIPS64_ABI
 	depends on mips64 || mips64el

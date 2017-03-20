@@ -56,13 +56,8 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-stack-protector=strong \
-		--enable-kernel=2.6.32 \
-		--enable-obsolete-rpc \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
@@ -77,7 +72,7 @@ endef
 
 define Host/Configure
 	[ -f $(HOST_BUILD_DIR)/.autoconf ] || { \
-		cd $(HOST_BUILD_DIR)/$(GLIBC_PATH); \
+		cd $(HOST_BUILD_DIR)/; \
 		autoconf --force && \
 		touch $(HOST_BUILD_DIR)/.autoconf; \
 	}
