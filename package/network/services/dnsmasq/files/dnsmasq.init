@@ -661,7 +661,7 @@ dhcp_relay_add() {
 
 dnsmasq_start()
 {
-	local cfg="$1" disabled
+	local cfg="$1" disabled resolvfile
 
 	config_get_bool disabled "$cfg" disabled 0
 	[ "$disabled" -gt 0 ] && return 0
@@ -787,7 +787,6 @@ dnsmasq_start()
 	config_get_bool readethers "$cfg" readethers
 	[ "$readethers" = "1" -a \! -e "/etc/ethers" ] && touch /etc/ethers
 
-	config_get resolvfile $cfg resolvfile
 	config_get dhcpscript $cfg dhcpscript
 
 	config_get leasefile $cfg leasefile "/tmp/dhcp.leases"
