@@ -43,7 +43,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="$(TARGET_CFLAGS)" \
+	CFLAGS="-O2 -g -fno-stack-protector" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -56,10 +56,18 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-stack-protector=strong \
-		--enable-kernel=2.6.32 \
+		--disable-sanity-checks \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
+		--enable-kernel=3.0.0 \
 		--enable-obsolete-rpc \
-		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-lock-elision \
+		--disable-timezone-tools \
+		--with-fp \
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no

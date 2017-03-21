@@ -10,10 +10,7 @@ GCC_CONFIGURE += \
 	--disable-libsanitizer \
 	--disable-libssp \
 	--disable-shared \
-	--disable-threads \
-	--enable-plugin \
-	--enable-gold \
-	--enable-ld=default \
+	--disable-threads
 
 define Host/Compile
 	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) all-gcc all-target-libgcc

@@ -9,9 +9,7 @@ GCC_CONFIGURE += \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
-	--enable-plugin \
-	--enable-gold \
-	--enable-ld=default \
+	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL
