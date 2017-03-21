@@ -10,6 +10,23 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
+	--enable-__cxa_atexit \
+	--enable-decimal-float \
+	--enable-tls \
+	--disable-static \
+	--enable-c99 \
+	--enable-long-long \
+	--enable-threads=posix \
+	--disable-libstdcxx-pch \
+	--enable-libstdcxx-time \
+	--enable-clocale=gnu \
+	--enable-checking=release \
+	--enable-default-pie \
+	--disable-browser-plugin \
+	--disable-vtable-verify \
+	--disable-multilib \
+	--without-included-gettext \
+	--enable-linker-build-id \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 #ifdef CONFIG_USE_MUSL
@@ -67,7 +84,7 @@ endef
 
 define Host/Install
 	$(CleanupToolchain)
-	$(_SINGLE)$(GCC_MAKE) -C $(GCC_BUILD_DIR) install
+	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) install
 	# Set up the symlinks to enable lying about target name.
 	set -e; \
 	(cd $(TOOLCHAIN_DIR); \
