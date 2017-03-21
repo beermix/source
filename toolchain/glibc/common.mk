@@ -37,10 +37,13 @@ ifeq ($(ARCH),mips64)
 endif
 
 
+# -Os miscompiles w. 2.24 gcc5/gcc6
+# only -O2 tested by upstream changeset
+# "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="$(TARGET_CFLAGS)" \
+	CFLAGS="-O2 -g" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -81,7 +84,7 @@ endef
 
 define Host/Configure
 	[ -f $(HOST_BUILD_DIR)/.autoconf ] || { \
-		cd $(HOST_BUILD_DIR)/$(GLIBC_PATH); \
+		cd $(HOST_BUILD_DIR)/; \
 		autoconf --force && \
 		touch $(HOST_BUILD_DIR)/.autoconf; \
 	}
@@ -93,9 +96,6 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
-	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
-		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
-	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 

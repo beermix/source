@@ -8,13 +8,13 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=musl
-PKG_VERSION:=1.1.16
+PKG_VERSION:=git
 PKG_RELEASE=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=769f53598e781ffc89191520f3f8a93cb58db91f
-PKG_MIRROR_HASH:=c148c570cc46471ab30a1b36e96531519837e41c4347f3164bf610ab98741d80
+PKG_SOURCE_VERSION:=0c53178ec09478ca5f6ca6b5ad09d50a10c8f19d
+#PKG_MIRROR_HASH:=c148c570cc46471ab30a1b36e96531519837e41c4347f3164bf610ab98741d80
 PKG_SOURCE_URL:=git://git.musl-libc.org/musl
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -35,7 +35,7 @@ MUSL_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
-		--enable-debug
+		--disable-debug
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
