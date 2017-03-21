@@ -195,7 +195,7 @@ ifneq ($(GCC_PREPARE),)
 	$(SED) 's,^MULTILIB_OSDIRNAMES,# MULTILIB_OSDIRNAMES,' $(HOST_SOURCE_DIR)/gcc/config/*/t-*
 	$(SED) 'd' $(HOST_SOURCE_DIR)/gcc/DEV-PHASE
 	$(SED) 's, DATESTAMP,,' $(HOST_SOURCE_DIR)/gcc/version.c
-	#(cd $(HOST_SOURCE_DIR)/libstdc++-v3; autoconf;);
+	(cd $(HOST_SOURCE_DIR)/libstdc++-v3; autoconf;);
 	$(SED) 's,gcc_no_link=yes,gcc_no_link=no,' $(HOST_SOURCE_DIR)/libstdc++-v3/configure
 	mkdir -p $(GCC_BUILD_DIR)
   endef
