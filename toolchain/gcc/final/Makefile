@@ -10,23 +10,6 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--enable-__cxa_atexit \
-	--enable-decimal-float \
-	--enable-tls \
-	--disable-static \
-	--enable-c99 \
-	--enable-long-long \
-	--enable-threads=posix \
-	--disable-libstdcxx-pch \
-	--enable-libstdcxx-time \
-	--enable-clocale=gnu \
-	--enable-checking=release \
-	--enable-default-pie \
-	--disable-browser-plugin \
-	--disable-vtable-verify \
-	--disable-multilib \
-	--without-included-gettext \
-	--enable-linker-build-id \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL
