@@ -1,0 +1,1711 @@
+Package: iptables-mod-chaos
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-chaos
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-sis900
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-mii
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libuci-lua
+Version: 2016-07-04-e1bf4356-1
+Depends: libc, libssp, librt, libpthread, libuci, liblua
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-natsemi
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-nfqueue
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-nfnetlink-queue
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: openssh-sftp-server
+Version: 7.5p1-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-cluster
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-cluster
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ip6tables-extra
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ip6tables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-lib-textsearch
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-dnetmap
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-dnetmap
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-app-adblock
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, adblock
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+
+Package: libc
+Version: 2.25-1
+Depends: libgcc
+Status: install hold installed
+Essential: yes
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ebtables
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-br-netfilter
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: mkf2fs
+Version: 1.8.0-1
+Depends: libc, libssp, librt, libpthread, libf2fs
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: opkg
+Version: 2017-03-15-cfe46c7d-1
+Depends: libc, libssp, librt, libpthread, uclient-fetch, libpthread, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/opkg.conf b73c0a02cb7bc300b2e6c7c29e8e6d38bdb6ded314319e89be3b352f59fff5ab
+ /etc/opkg/customfeeds.conf 61d1f3aa62fe977614ed0c2f0ad3b2ee2f7b451bfb34812071d86d31a4d43d4a
+Installed-Time: 1490155186
+
+Package: iptables-mod-extra
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-extra
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-logmark
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-logmark
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libpthread
+Version: 2.25-1
+Depends: libgcc
+Status: install hold installed
+Essential: yes
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: ubus
+Version: 2017-02-18-34c6e818-1
+Depends: libc, libssp, librt, libpthread, libubus, libblobmsg-json, ubusd
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-dhcpmac
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: rpcd
+Version: 2016-12-03-0577cfc1-1
+Depends: libc, libssp, librt, libpthread, libubus, libubox, libuci, libblobmsg-json
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/config/rpcd 9f58e09bb250fe6cee61c873ff2c1a19cb800d12cef0773bd5dfc47e0d01c90b
+Installed-Time: 1490155186
+
+Package: busybox
+Version: 1.26.2-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Essential: yes
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-kvm-intel
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-kvm-x86
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: odhcpd
+Version: 2017-02-28-9eac2a89-1
+Depends: libc, libssp, librt, libpthread, libubox, libuci, libubus, libnl-tiny
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-lib-ip
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, liblua, libnl-tiny
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-nfnetlink
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libubus-lua
+Version: 2017-02-18-34c6e818-1
+Depends: libc, libssp, librt, libpthread, libubus, liblua
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-tproxy
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-conntrack, kmod-ip6tables, kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-ulog
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-crypto-hash
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libiwinfo-lua
+Version: 2016-09-21-fd9e17be-1
+Depends: libc, libssp, librt, libpthread, libiwinfo, liblua
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-via-velocity
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-lib-crc-ccitt
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libiwinfo
+Version: 2016-09-21-fd9e17be-1
+Depends: libc, libssp, librt, libpthread, libuci
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-br-netfilter
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libcurl
+Version: 7.53.1-1
+Depends: libc, libssp, librt, libpthread, libmbedtls
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-lib-crc-ccitt
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-filter
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-lib-textsearch, kmod-ipt-conntrack
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-nat-extra
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-nat
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-iface
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-iface
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: r8169-firmware
+Version: 2016-09-21-42ad5367-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libnetfilter-queue
+Version: 2016-07-03-981025e1-1
+Depends: libc, libssp, librt, libpthread, libmnl, libnfnetlink
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-theme-bootstrap
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-nf-nathelper
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nf-nat
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-pppoe
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ppp, kmod-pppox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-pppox
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ppp
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-conntrack
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-nf-conntrack
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: base-files
+Version: 172-r3800+1-7b568743e2
+Depends: libc, libssp, librt, libpthread, netifd, procd, jsonfilter, usign, lede-keyring, fstools, fwtool
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/hosts c1a978d90673437b35fa9494e0a54294062c152bb653d490b718052ab88447fd
+ /etc/inittab f74069b98072f928523990b9868eb6b268b574cbc3e4e8411c6397ea5ff30e4a
+ /etc/group 35b63adf31591ac37358e918a5e8d4f9c1d541c681a07861cdf1119106c0dd2e
+ /etc/passwd 6a451aa33393f47ade89b8bce4d9711818c2630394c3967265ffed276bb25a55
+ /etc/shadow ccbbfeee2dd560403fea13f7f431ebd21d9bb4b3d41e48e892013fa451f91cc4
+ /etc/profile d33dd2449b260f767f7239a130402fca895ed51eafc2a2c94e6b0f09a679516a
+ /etc/protocols 7d551355d5540b07b9d86e623cbbc4abecbb94d2a662b3afcc917940eb0e3d52
+ /etc/services 649cc7e6dd56e85cd1e388c4f222245aa7b25328274cc218236bf330eb342964
+ /etc/shells 8b35ce73c18161a7d7ed16fa244410993bd031515260e3e0c11749047df48d0a
+ /etc/sysctl.conf 427dedc19aa6bfb2e9d5c59d9aa0af8445eeaf484cc3df29063d0ba68726e967
+ /etc/rc.local 515018aa94eb4937dade12dc0d69890b352af35a5ab5fb8203f9ed10990ac06f
+ /etc/sysupgrade.conf 9e87b05fe2f12c84d1c465b396322748479f64bc40e5bab061887f0bd95020a6
+ /etc/sysctl.d/local.conf 43cedc0217825c00cb1a3d49e7be43c06f70257593fb4d6d393f645e04d512de
+ /etc/sysctl.d/local.conf 43cedc0217825c00cb1a3d49e7be43c06f70257593fb4d6d393f645e04d512de
+ /etc/iproute2/rt_tables f771e2b81741f70e3faf658dc504f0dc048672fc8caaadea15e46c35da3de8f8
+ /etc/iproute2/rt_protos a0712b1771c8d5f3e0dcf9a6314880e71aa3498ea1ae873535bdfcf70d814061
+Installed-Time: 1490155186
+
+Package: kmod-nf-nat
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nf-conntrack, kmod-nf-ipt
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-input-core
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-lscan
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: partx-utils
+Version: 2.29.2-1
+Depends: libc, libssp, librt, libpthread, libblkid, libsmartcols
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-sysrq
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables, kmod-crypto-hash
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-irqbypass
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: netifd
+Version: 2017-03-21-a0321666-1
+Depends: libc, libssp, librt, libpthread, libuci, libnl-tiny, libubus, ubus, ubusd, jshn, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-raw
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libmnl
+Version: 1.0.4-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-r8169
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-mii, r8169-firmware
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-length2
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-nflog
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-nfnetlink-log
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: adblock
+Version: 2.4.0-2
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: all
+Conffiles:
+ /etc/config/adblock a1c315b9519f016d3c18940369ad0c3fdb449f74145734ca40cf2316b723a60e
+ /etc/adblock/adblock.whitelist e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+ /etc/adblock/adblock.blacklist e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-mii
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: dnsmasq
+Version: 2.77test4-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/config/dhcp f81fe9bd228dede2165be71e5c9dcf76cc298bc8b6c877974a172a66fac7cf45
+ /etc/dnsmasq.conf 1e6ab19c1ae5e70d609ac7b6246541d52042e4dee1892f825266507ef52d7dfd
+Installed-Time: 1490155186
+
+Package: procd
+Version: 2017-03-05-8f218f56-1
+Depends: libc, libssp, librt, libpthread, ubusd, ubus, libjson-script, ubox, libubox, libubus
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libblkid
+Version: 2.29.2-1
+Depends: libc, libssp, librt, libpthread, libuuid
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libmbedtls
+Version: 2.4.2-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-nat-extra
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-nat-extra
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-tarpit
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-tarpit
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: ubusd
+Version: 2017-02-18-34c6e818-1
+Depends: libc, libssp, librt, libpthread, libubox, libblobmsg-json
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-geoip
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nf-nat6
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nf-conntrack6, kmod-nf-ipt6, kmod-nf-nat
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-ipmark
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-ipmark
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-ipsec
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-ipsec
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-raw6
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ip6tables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-i18n-base-ru
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, luci-base
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+
+Package: kmod-ipt-condition
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-delude
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-nathelper-rtsp
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-conntrack-extra, kmod-ipt-nat
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-tee
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-tee
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nls-cp1251
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nls-base
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nft-nat
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nft-core, kmod-nf-nat, kmod-nf-nat6
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-lua
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-lua
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-iprange
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-iprange
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: miniupnpd
+Version: 2.0.20161216-1
+Depends: libc, libssp, librt, libpthread, iptables, libip4tc, libip6tc, ip6tables, libuuid
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/config/upnpd 7ad28a8eac39b1f33a3072d5402f4f5b2fa16729e3e30101560748f2e0930448
+Installed-Time: 1490155186
+
+Package: kmod-ipt-compat-xtables
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ip6tables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: firewall
+Version: 2017-02-07-1949e0cc-1
+Depends: libc, libssp, librt, libpthread, libubox, libubus, libuci, libip4tc, libip6tc, libxtables, kmod-ipt-core, kmod-ipt-conntrack, kmod-ipt-nat
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/config/firewall 390db1708e76edac2345cb598fd222a855b14557c4c31fe79df387c0ca6b4690
+ /etc/firewall.user bd68324966481011f5e36570258ad97dd422655c16f3119d48325ed8459de510
+Installed-Time: 1490155186
+
+Package: luci-app-firewall
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, firewall
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-chaos
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables, kmod-ipt-delude, kmod-ipt-tarpit
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-app-unbound
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, unbound
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+
+Package: kmod-nf-ipt
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-conntrack-extra
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-conntrack
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-nfqueue
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-nfnetlink-queue, kmod-ipt-nfqueue
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libuci
+Version: 2016-07-04-e1bf4356-1
+Depends: libc, libssp, librt, libpthread, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: liblua
+Version: 5.1.5-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libip4tc
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, libxtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ip6tables
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nf-ipt6, kmod-ipt-core, kmod-ipt-conntrack
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: odhcp6c
+Version: 2017-03-16-7e0d8b8e-1
+Depends: libc, libssp, librt, libpthread, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: fstools
+Version: 2017-03-06-98bbb5a0-1
+Depends: libc, libssp, librt, libpthread, ubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: uclient-fetch
+Version: 2016-12-09-52d955fd-1
+Depends: libc, libssp, librt, libpthread, libuclient
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libuclient
+Version: 2016-12-09-52d955fd-1
+Depends: libc, libssp, librt, libpthread, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-extra
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-br-netfilter
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-ipopt
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-ipopt
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-dhcpmac
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-dhcpmac
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: uci
+Version: 2016-07-04-e1bf4356-1
+Depends: libc, libssp, librt, libpthread, libuci
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: lua
+Version: 5.1.5-1
+Depends: libc, libssp, librt, libpthread, liblua
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ebtables-ipv4
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ebtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: dropbear
+Version: 2016.74-2
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/dropbear/dropbear_rsa_host_key e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+ /etc/config/dropbear 0198dbc97b5a9aac76a5c6233684571ccdcc91fcb735e91c36d2b06a98158589
+Installed-Time: 1490155186
+
+Package: libunbound
+Version: 1.6.1rc2-4
+Depends: libc, libssp, librt, libpthread, libopenssl, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-condition
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-condition
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: curl
+Version: 7.53.1-1
+Depends: libc, libssp, librt, libpthread, libcurl
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-hwmon-core
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-debug
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nls-utf8
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nls-base
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: mtd
+Version: 21
+Depends: libc, libssp, librt, libpthread, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-quota2
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-tee
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-conntrack, kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-lua
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-conntrack-extra
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-hashlimit
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-ipp2p
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-ipp2p
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libjson-c
+Version: 0.12.1-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libgcc
+Version: 6.3.0-1
+Status: install hold installed
+Essential: yes
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libip6tc
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, libxtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-iface
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-proto-ppp
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libuuid
+Version: 2.29.2-1
+Depends: libc, libssp, librt, libpthread, librt
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: ppp
+Version: 2.4.7-11
+Depends: libc, libssp, librt, libpthread, kmod-ppp
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/ppp/chap-secrets 6981fa176a79f8c12be5826c421b16253a616747018ba7e76752a9d36d1d51d4
+ /etc/ppp/filter 579583b318e0cff706ffc134620b42d3fbce8fc31aeb0ad7eea1cc859868e902
+ /etc/ppp/options a0509db666fc831a3f9332ca6e911ba9a32e7f1ce13733e539a719f0413794b9
+Installed-Time: 1490155186
+
+Package: luci-mod-admin-full
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, luci-base
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libubox
+Version: 2017-02-24-96305a3c-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: luci-base
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, lua, libuci-lua, luci-lib-nixio, luci-lib-ip, rpcd, libubus-lua, luci-lib-jsonc
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/luci-uploads/.placeholder e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+ /etc/config/luci 7e04b593f6a54853b284c1dadfa0df9a90d16661977382978a56443152348329
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-psd
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-psd
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-fuzzy
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-fuzzy
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-account
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: logd
+Version: 2017-03-03-21a4bd04-1
+Depends: libc, libssp, librt, libpthread, libubox, libubus, libblobmsg-json
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libsmartcols
+Version: 2.29.2-1
+Depends: libc, libssp, librt, libpthread, librt
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: librt
+Version: 2.25-1
+Depends: libpthread
+Status: install hold installed
+Essential: yes
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-tproxy
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-tproxy
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-tg3
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-libphy, kmod-hwmon-core, kmod-ptp
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-vmxnet3
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ne2k-pci
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-hashlimit
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-hashlimit
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libjson-script
+Version: 2017-02-24-96305a3c-1
+Depends: libc, libssp, librt, libpthread, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: unbound
+Version: 1.6.1rc2-4
+Depends: libc, libssp, librt, libpthread, libopenssl, libunbound
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/config/unbound d516f968124f3774ed2b1883cf2e95e567a743518dc1bec95dcfd6b2dae19ae7
+ /etc/unbound/unbound.conf 77ca051203e5ba5be38b32bcb23553b0072381e3e86b90ad87ccdf653c9d3ed5
+ /etc/unbound/unbound_ext.conf c977d255449549bd460b2f76a91f023ed4fef9fdfc3474e40f7d64bb4ab95e4f
+ /etc/unbound/unbound_srv.conf 71029b030cff2142fca295779af031e1500569945d8d2bffcd68ec10e1fd13ef
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-8139too
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-mii
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-proto-ipv6
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-length2
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-length2
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libblobmsg-json
+Version: 2017-02-24-96305a3c-1
+Depends: libc, libssp, librt, libpthread, libjson-c, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-nfnetlink-log
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nfnetlink
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, kmod-ipt-core, libip4tc, libip6tc, libxtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-cluster
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-filter
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-filter
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-pcnet32
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-mii
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-dnetmap
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables, kmod-ipt-nat
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nf-conntrack-netlink
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nfnetlink, kmod-ipt-conntrack
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-libphy
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nf-nathelper-extra
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nf-nat, kmod-lib-textsearch
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: nfqws
+Version: 1
+Depends: libc, libssp, librt, libpthread, libnetfilter-queue
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libidn
+Version: 1.33-2
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: jshn
+Version: 2017-02-24-96305a3c-1
+Depends: libc, libssp, librt, libpthread, libjson-c, libubox, libblobmsg-json
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-kvm-x86
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-irqbypass
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-psd
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-core
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nf-ipt
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: e2fsprogs
+Version: 1.43.4-1
+Depends: libc, libssp, librt, libpthread, libuuid, libext2fs
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/e2fsck.conf dece11e2b15f487d7d2bf9f96abe2eaaf9cd33f02d7b9725b9116023d7786cac
+Installed-Time: 1490155186
+
+Package: kmod-ipt-logmark
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-ipsec
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ppp
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-lib-crc-ccitt, kmod-slhc
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-pps
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-clusterip
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-nf-conntrack
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-ipset
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-nfnetlink
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: idn
+Version: 1.33-2
+Depends: libc, libssp, librt, libpthread, libidn
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libnfnetlink
+Version: 1.0.1-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libubus
+Version: 2017-02-18-34c6e818-1
+Depends: libc, libssp, librt, libpthread, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: uhttpd
+Version: 2016-10-25-1628fa4b-1
+Depends: libc, libssp, librt, libpthread, libubox, libblobmsg-json, libjson-script
+Status: install user installed
+Architecture: i386_pentium4
+Conffiles:
+ /etc/config/uhttpd d2938f7486383b6dc50a7f752e1c08317825f13ea6fb8a3d0e805b74cf093592
+Installed-Time: 1490155186
+
+Package: kmod-nf-conntrack
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-ipv4options
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-ipv4options
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-conntrack-extra
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-conntrack-extra
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: usign
+Version: 2015-07-04-ef641914-1
+Depends: libc, libssp, librt, libpthread, libubox
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-u32
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-u32
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: ip6tables
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, kmod-ip6tables, iptables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libxtables
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-arptables
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nf-ipt6
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nf-ipt, kmod-nf-conntrack6
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-lib-nixio
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, liblua
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-tarpit
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: libf2fs
+Version: 1.8.0-1
+Depends: libc, libssp, librt, libpthread, libuuid
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libssp
+Version: 6.3.0-1
+Status: install hold installed
+Essential: yes
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-ipmark
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-lib-jsonc
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, liblua, libjson-c
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-ipt-ipopt
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nls-cp866
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nls-base
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-clusterip
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-clusterip
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ptp
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-pps
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: luci
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, uhttpd, uhttpd-mod-ubus, luci-mod-admin-full, luci-theme-bootstrap, luci-app-firewall, luci-proto-ppp, libiwinfo-lua, luci-proto-ipv6
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+
+Package: kmod-nf-conntrack6
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nf-conntrack
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-lscan
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-lscan
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-delude
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-delude
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-led
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-led
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-ulog
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-ulog
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-nat6
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-nf-nat6, kmod-ipt-core, kmod-ipt-conntrack, kmod-ipt-core, kmod-ipt-nat, kmod-ipt-core, kmod-ip6tables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-sysrq
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-sysrq
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libext2fs
+Version: 1.43.4-1
+Depends: libc, libssp, librt, libpthread, libuuid
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-via-rhine
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-mii
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-ipp2p
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-ipt-compat-xtables
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: ubox
+Version: 2017-03-03-21a4bd04-1
+Depends: libc, libssp, librt, libpthread, libubox, ubusd, ubus, libubus, libuci
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: lede-keyring
+Version: 2017-01-20-a50b7529-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kernel
+Version: 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-ipv4options
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libnl-tiny
+Version: 0.1-5
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-nflog
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-nfnetlink-log, kmod-ipt-nflog
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-u32
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nfnetlink-queue
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nfnetlink
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: kmod-nft-core
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nfnetlink, kmod-nf-conntrack6, kmod-nf-ipt, kmod-nf-ipt6
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-geoip
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-geoip
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nls-base
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c)
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: tpws
+Version: 1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: uhttpd-mod-ubus
+Version: 2016-10-25-1628fa4b-1
+Depends: libc, libssp, librt, libpthread, uhttpd, libubus, libblobmsg-json
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-fuzzy
+Version: 4.9.16+2.12-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: fwtool
+Version: 1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptables-mod-account
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-account
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: jsonfilter
+Version: 2016-07-02-dea067ad-1
+Depends: libc, libssp, librt, libpthread, libubox, libjson-c
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+Auto-Installed: yes
+
+Package: iptaccount
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, iptables-mod-account
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: libopenssl
+Version: 1.0.2k-1
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-nls-koi8r
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nls-base
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-slhc
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-lib-crc-ccitt
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-led
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: iptables-mod-quota2
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-quota2
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: ppp-mod-pppoe
+Version: 2.4.7-11
+Depends: libc, libssp, librt, libpthread, kmod-pppoe
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: luci-i18n-firewall-ru
+Version: git-17.080.69173-773734e-1
+Depends: libc, libssp, librt, libpthread, luci-app-firewall
+Status: install user installed
+Architecture: all
+Installed-Time: 1490155186
+
+Package: kmod-ipt-nat
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-nf-nat
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+
+Package: kmod-ipt-iprange
+Version: 4.9.16-1
+Depends: kernel (= 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Status: install user installed
+Architecture: i386_pentium4
+Installed-Time: 1490155186
+

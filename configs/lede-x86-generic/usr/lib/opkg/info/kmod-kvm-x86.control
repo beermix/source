@@ -1,0 +1,15 @@
+Package: kmod-kvm-x86
+Version: 4.9.16-1
+Depends: kernel (=4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-irqbypass
+Source: package/kernel/linux
+License: GPLv2
+Section: kernel
+Architecture: i386_pentium4
+Installed-Size: 188
+Description:  Support hosting fully virtualized guest machines using hardware
+ virtualization extensions.  You will need a fairly recent
+ processor equipped with virtualization extensions. You will also
+ need to select one or more of the processor modules.
+ 
+ This module provides access to the hardware capabilities through
+ a character device node named /dev/kvm.

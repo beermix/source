@@ -1,0 +1,10 @@
+Package: usign
+Version: 2015-07-04-ef641914-1
+Depends: libc, libssp, librt, libpthread, libubox
+Source: package/system/usign
+License: ISC
+Section: base
+Maintainer: Felix Fietkau <nbd@nbd.name>
+Architecture: i386_pentium4
+Installed-Size: 13204
+Description:  OpenWrt signature verification utility

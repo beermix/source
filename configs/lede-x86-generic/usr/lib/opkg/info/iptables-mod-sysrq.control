@@ -1,0 +1,10 @@
+Package: iptables-mod-sysrq
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-sysrq
+Source: package/network/utils/xtables-addons
+License: GPL-2.0
+Section: net
+Maintainer: Jo-Philipp Wich <jo@mein.io>
+Architecture: i386_pentium4
+Installed-Size: 1646
+Description:  SYSRQ iptables extension

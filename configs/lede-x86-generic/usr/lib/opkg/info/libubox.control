@@ -1,0 +1,10 @@
+Package: libubox
+Version: 2017-02-24-96305a3c-1
+Depends: libc, libssp, librt, libpthread
+Source: package/libs/libubox
+License: ISC
+Section: libs
+Maintainer: Felix Fietkau <nbd@nbd.name>
+Architecture: i386_pentium4
+Installed-Size: 21305
+Description:  Basic utility library

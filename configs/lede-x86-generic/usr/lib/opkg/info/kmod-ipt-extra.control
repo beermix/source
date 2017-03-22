@@ -1,0 +1,15 @@
+Package: kmod-ipt-extra
+Version: 4.9.16-1
+Depends: kernel (=4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core, kmod-br-netfilter
+Source: package/kernel/linux
+License: GPLv2
+Section: kernel
+Architecture: i386_pentium4
+Installed-Size: 4108
+Description:  Other Netfilter (IPv4) kernel modules
+ Includes:
+ - addrtype
+ - owner
+ - physdev (if bridge support was enabled in kernel)
+ - pkttype
+ - quota

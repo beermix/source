@@ -20,8 +20,8 @@ include $(INCLUDE_DIR)/host-build.mk
 HOST_CONFIGURE_VARS += CC="$(HOSTCC_NOCACHE)"
 
 define Host/Install/ccache
-	$(INSTALL_DIR) /root/.ccache-ledex/
-	$(CP) ./files/* /root/.ccache-ledex/
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin/
+	$(CP) ./files/* $(STAGING_DIR_HOST)/bin/
 endef
 
 define Host/Clean

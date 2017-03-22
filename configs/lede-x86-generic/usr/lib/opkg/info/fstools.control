@@ -1,0 +1,10 @@
+Package: fstools
+Version: 2017-03-06-98bbb5a0-1
+Depends: libc, libssp, librt, libpthread, ubox
+Source: package/system/fstools
+License: GPL-2.0
+Section: base
+Maintainer: John Crispin <john@phrozen.org>
+Architecture: i386_pentium4
+Installed-Size: 18793
+Description:  OpenWrt filesystem tools

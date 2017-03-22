@@ -1,0 +1,9 @@
+Package: e2fsprogs
+Version: 1.43.4-1
+Depends: libc, libssp, librt, libpthread, libuuid, libext2fs
+Source: package/utils/e2fsprogs
+Section: utils
+Architecture: i386_pentium4
+Installed-Size: 237680
+Description:  This package contains essential ext2 filesystem utilities which consists of
+ e2fsck, mke2fs and most of the other core ext2 filesystem utilities.

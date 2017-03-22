@@ -1,0 +1,10 @@
+Package: kmod-ebtables-ipv4
+Version: 4.9.16-1
+Depends: kernel (=4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ebtables
+Source: package/kernel/linux
+License: GPLv2
+Section: kernel
+Architecture: i386_pentium4
+Installed-Size: 3557
+Description:  This option adds the IPv4 support to ebtables, which allows basic
+ IPv4 header field filtering, ARP filtering as well as SNAT, DNAT targets.

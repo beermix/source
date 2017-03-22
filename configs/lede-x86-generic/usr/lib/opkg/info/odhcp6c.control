@@ -1,0 +1,10 @@
+Package: odhcp6c
+Version: 2017-03-16-7e0d8b8e-1
+Depends: libc, libssp, librt, libpthread, libubox
+Source: package/network/ipv6/odhcp6c
+License: GPL-2.0
+Section: net
+Maintainer: Hans Dedecker <dedeckeh@gmail.com>
+Architecture: i386_pentium4
+Installed-Size: 26977
+Description:  Embedded DHCPv6-client for OpenWrt

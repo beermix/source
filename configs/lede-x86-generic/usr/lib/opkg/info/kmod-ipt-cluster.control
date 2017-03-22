@@ -1,0 +1,22 @@
+Package: kmod-ipt-cluster
+Version: 4.9.16-1
+Depends: kernel (=4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
+Source: package/kernel/linux
+License: GPLv2
+Section: kernel
+Architecture: i386_pentium4
+Installed-Size: 1403
+Description:  Netfilter (IPv4/IPv6) module for matching cluster
+ This option allows you to build work-load-sharing clusters of
+ network servers/stateful firewalls without having a dedicated
+ load-balancing router/server/switch. Basically, this match returns
+ true when the packet must be handled by this cluster node. Thus,
+ all nodes see all packets and this match decides which node handles
+ what packets. The work-load sharing algorithm is based on source
+ address hashing.
+ 
+ This module is usable for ipv4 and ipv6.
+ 
+ To use it also enable iptables-mod-cluster
+ 
+ see `iptables -m cluster --help` for more information.

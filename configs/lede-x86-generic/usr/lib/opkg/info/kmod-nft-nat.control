@@ -1,0 +1,9 @@
+Package: kmod-nft-nat
+Version: 4.9.16-1
+Depends: kernel (=4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-nft-core, kmod-nf-nat, kmod-nf-nat6
+Source: package/kernel/linux
+License: GPLv2
+Section: kernel
+Architecture: i386_pentium4
+Installed-Size: 3955
+Description:  Netfilter nf_tables NAT support

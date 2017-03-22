@@ -1,0 +1,10 @@
+Package: iptables-mod-dhcpmac
+Version: 2.12-1
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-dhcpmac
+Source: package/network/utils/xtables-addons
+License: GPL-2.0
+Section: net
+Maintainer: Jo-Philipp Wich <jo@mein.io>
+Architecture: i386_pentium4
+Installed-Size: 2446
+Description:  DHCPMAC iptables extension

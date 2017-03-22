@@ -1,0 +1,16 @@
+Package: iptables-mod-tproxy
+Version: 1.4.21-2
+Depends: libc, libssp, librt, libpthread, iptables, kmod-ipt-tproxy
+Source: package/network/utils/iptables
+License: GPL-2.0
+Section: net
+Architecture: i386_pentium4
+Installed-Size: 3837
+Description:  Transparent proxy iptables extensions.
+ 
+ Matches:
+ - socket
+ 
+ Targets:
+ - TPROXY
+ 
