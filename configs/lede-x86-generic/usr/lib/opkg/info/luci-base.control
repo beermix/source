@@ -1,8 +1,0 @@
-Package: luci-base
-Version: git-17.080.69173-773734e-1
-Depends: libc, libssp, librt, libpthread, lua, libuci-lua, luci-lib-nixio, luci-lib-ip, rpcd, libubus-lua, luci-lib-jsonc
-Source: feeds/luci/modules/luci-base
-Section: luci
-Architecture: i386_pentium4
-Installed-Size: 128016
-Description:  LuCI core libraries

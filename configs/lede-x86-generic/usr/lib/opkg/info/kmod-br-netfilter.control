@@ -1,9 +1,0 @@
-Package: kmod-br-netfilter
-Version: 4.9.16-1
-Depends: kernel (=4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ipt-core
-Source: package/kernel/linux
-License: GPLv2
-Section: kernel
-Architecture: i386_pentium4
-Installed-Size: 7756
-Description:  Bridge netfilter support modules

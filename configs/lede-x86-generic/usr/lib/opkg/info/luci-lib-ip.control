@@ -1,8 +1,0 @@
-Package: luci-lib-ip
-Version: git-17.080.69173-773734e-1
-Depends: libc, libssp, librt, libpthread, liblua, libnl-tiny
-Source: feeds/luci/libs/luci-lib-ip
-Section: luci
-Architecture: i386_pentium4
-Installed-Size: 12392
-Description:  Lua library for IP calculation and routing information

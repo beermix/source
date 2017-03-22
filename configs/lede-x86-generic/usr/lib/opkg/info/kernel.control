@@ -1,9 +1,0 @@
-Package: kernel
-Version: 4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c
-Depends: libc, libssp, librt, libpthread
-Source: package/kernel/linux
-License: GPLv2
-Section: sys
-Architecture: i386_pentium4
-Installed-Size: 106
-Description:  Virtual kernel package

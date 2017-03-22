@@ -1,8 +1,0 @@
-Package: luci-i18n-base-ru
-Version: git-17.080.69173-773734e-1
-Depends: libc, libssp, librt, libpthread, luci-base
-Source: feeds/luci/modules/luci-base
-Section: luci
-Architecture: all
-Installed-Size: 23344
-Description:  Translation for luci-base - Русский (Russian)

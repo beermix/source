@@ -1,9 +1,0 @@
-Package: base-files
-Version: 172-r3800+1-7b568743e2
-Depends: libc, libssp, librt, libpthread, netifd, procd, jsonfilter, usign, lede-keyring, fstools, fwtool
-Source: package/base-files
-License: GPL-2.0
-Section: base
-Architecture: i386_pentium4
-Installed-Size: 36802
-Description:  This package contains a base filesystem and system scripts for OpenWrt.

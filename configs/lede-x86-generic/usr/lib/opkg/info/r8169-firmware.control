@@ -1,9 +1,0 @@
-Package: r8169-firmware
-Version: 2016-09-21-42ad5367-1
-Depends: libc, libssp, librt, libpthread
-Source: package/firmware/linux-firmware
-Section: firmware
-Maintainer: Felix Fietkau <nbd@nbd.name>
-Architecture: i386_pentium4
-Installed-Size: 16634
-Description:  RealTek RTL8169 firmware

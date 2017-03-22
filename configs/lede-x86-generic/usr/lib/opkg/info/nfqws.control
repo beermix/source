@@ -1,8 +1,0 @@
-Package: nfqws
-Version: 1
-Depends: libc, libssp, librt, libpthread, libnetfilter-queue
-Source: /root/-f2fs/pkg-ledex/zapret/nfqws
-Section: net
-Architecture: i386_pentium4
-Installed-Size: 5467
-Description:  nfqws

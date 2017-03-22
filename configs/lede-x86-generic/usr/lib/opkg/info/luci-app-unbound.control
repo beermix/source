@@ -1,8 +1,0 @@
-Package: luci-app-unbound
-Version: git-17.080.69173-773734e-1
-Depends: libc, libssp, librt, libpthread, unbound
-Source: feeds/luci/applications/luci-app-unbound
-Section: luci
-Architecture: all
-Installed-Size: 3045
-Description:  Unbound Recursive DNS Resolver Configuration

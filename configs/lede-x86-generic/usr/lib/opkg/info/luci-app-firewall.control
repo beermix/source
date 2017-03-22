@@ -1,8 +1,0 @@
-Package: luci-app-firewall
-Version: git-17.080.69173-773734e-1
-Depends: libc, libssp, librt, libpthread, firewall
-Source: feeds/luci/applications/luci-app-firewall
-Section: luci
-Architecture: all
-Installed-Size: 10768
-Description:  Firewall and Portforwarding application

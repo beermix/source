@@ -1,3 +1,0 @@
-/etc/modules.d/ipt-nathelper-rtsp
-/lib/modules/4.9.16/nf_conntrack_rtsp.ko
-/lib/modules/4.9.16/nf_nat_rtsp.ko

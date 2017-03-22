@@ -1,9 +1,0 @@
-Package: kmod-pppox
-Version: 4.9.16-1
-Depends: kernel (=4.9.16-1-d562fa0e0be9bce88cb14befa88ac98c), kmod-ppp
-Source: package/kernel/linux
-License: GPLv2
-Section: kernel
-Architecture: i386_pentium4
-Installed-Size: 1371
-Description:  Kernel helper module for PPPoE and PPTP support

@@ -1,5 +1,0 @@
-/etc/config/adblock
-/etc/adblock/adblock.whitelist
-/etc/adblock/adblock.blacklist
-/etc/init.d/adblock
-/usr/bin/adblock.sh
