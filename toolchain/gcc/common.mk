@@ -22,18 +22,18 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gcc
 GCC_VERSION:=$(call qstrip,$(CONFIG_GCC_VERSION))
-PKG_VERSION:=$(firstword $(subst +, ,$(GCC_VERSION)))
+PKG_VERSION:=6-20170323
 GCC_DIR:=$(PKG_NAME)-$(PKG_VERSION)
 
-PKG_SOURCE_URL:=@GNU/gcc/gcc-$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE_URL:=https://fossies.org/linux/misc
+PKG_SOURCE:=gcc-6-20170323.tar.xz
 
 ifeq ($(PKG_VERSION),5.4.0)
   PKG_HASH:=608df76dec2d34de6558249d8af4cbee21eceddbcb580d666f7a5a583ca3303a
 endif
 
-ifeq ($(PKG_VERSION),6.3.0)
-  PKG_HASH:=f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f
+ifeq ($(PKG_VERSION),6.3.1)
+  #PKG_HASH:=f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_4_8_ARC),)
