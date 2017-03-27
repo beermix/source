@@ -26,7 +26,7 @@ PKG_VERSION:=6-20170323
 GCC_DIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_SOURCE_URL:=https://fossies.org/linux/misc
-PKG_SOURCE:=gcc-6-20170323.tar.xz
+PKG_SOURCE:=gcc-$(PKG_VERSION).tar.xz
 
 ifeq ($(PKG_VERSION),5.4.0)
   PKG_HASH:=608df76dec2d34de6558249d8af4cbee21eceddbcb580d666f7a5a583ca3303a
