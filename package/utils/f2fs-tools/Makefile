@@ -13,9 +13,9 @@ PKG_RELEASE:=1
 
 PKG_LICENSE:=GPLv2
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://git.kernel.org/cgit/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot/
-#PKG_HASH:=33d454c2e95aabef5659949c4fff15f6c9877b48349e64411de502bc62b0cbd4
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot/
+PKG_HASH:=34790bccd74086e6b4f04fcac3a167ce1ca3319ce660454bceefc45c52906f94
 
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
@@ -33,8 +33,6 @@ define Package/f2fs-tools/Default
   URL:=http://git.kernel.org/cgit/linux/kernel/git/jaegeuk/f2fs-tools.git
 endef
 
-CONFIGURE_ARGS += --without-selinux
-	
 define Package/mkf2fs
   $(Package/f2fs-tools/Default)
   TITLE:=Utility for creating a Flash-Friendly File System (F2FS)
@@ -57,6 +55,9 @@ define Package/libf2fs
   TITLE:=Library for Flash-Friendly File System (F2FS) tools
   DEPENDS:=+libuuid
 endef
+
+CONFIGURE_ARGS += \
+	--without-selinux
 
 define Package/libf2fs/install
 	$(INSTALL_DIR) $(1)/usr/lib

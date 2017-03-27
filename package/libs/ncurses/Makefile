@@ -52,11 +52,11 @@ CONFIGURE_ARGS += \
 	--enable-overwrite \
 	--enable-pc-files \
 	--disable-rpath \
+	--with-progs \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
-	--without-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
@@ -67,6 +67,7 @@ CONFIGURE_ARGS += \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
 	--enable-widec \
 	--with-build-cppflags=-D_GNU_SOURCE
+
 
 HOST_CONFIGURE_ARGS += \
 	--without-cxx \
