@@ -52,11 +52,11 @@ CONFIGURE_ARGS += \
 	--enable-overwrite \
 	--enable-pc-files \
 	--disable-rpath \
-	--with-progs \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
+	--with-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
