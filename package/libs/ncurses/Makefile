@@ -66,6 +66,8 @@ CONFIGURE_ARGS += \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
 	--enable-widec \
+	--with-ncursesw \
+	--with-curses-h \
 	--with-build-cppflags=-D_GNU_SOURCE
 
 
