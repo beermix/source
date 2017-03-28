@@ -55,7 +55,6 @@ BINUTILS_CONFIGURE:= \
 		--enable-ld=default \
 		--enable-gold \
 		--enable-plugins \
-		--with-pic \
 		--disable-werror \
 		--disable-gdb \
 		$(GRAPHITE_CONFIGURE) \
