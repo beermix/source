@@ -7,12 +7,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.25
+PKG_VERSION:=2.26
 
-PKG_SOURCE_URL:=https://dl.dropboxusercontent.com/s/t70of91s971v28x/
-PKG_REV:=29d92a8
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
-
+PKG_SOURCE_URL:=https://dl.dropboxusercontent.com/s/0005r5o7ujlqewc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
