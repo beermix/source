@@ -23,7 +23,6 @@ GCC_CONFIGURE += \
 	--enable-gnu-unique-object \
 	--disable-vtable-verify \
 	--enable-default-pie \
-	--with-system-zlib \
 	--disable-browser-plugin \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
