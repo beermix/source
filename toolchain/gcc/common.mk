@@ -173,9 +173,9 @@ ifneq ($(CONFIG_SOFT_FLOAT),y)
   endif
 endif
 
-ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
-  TARGET_CFLAGS+=-fno-split-stack
-endif
+#ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
+#  TARGET_CFLAGS+=-fno-split-stack
+#endif
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \

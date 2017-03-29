@@ -5,7 +5,7 @@ include ./common.mk
 HOST_STAMP_BUILT:=$(HOST_BUILD_DIR)/.built
 HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.uclibc_installed
 
-HOST_BUILD_PARALLEL:=1
+HOST_BUILD_PARALLEL:=0
 
 define Host/SetToolchainInfo
 	$(SED) 's,^\(LIBC_TYPE\)=.*,\1=$(PKG_NAME),' $(TOOLCHAIN_DIR)/info.mk
@@ -32,6 +32,9 @@ define Host/Install
 		  done \
 		done \
 	)
+#	rm -f \
+#		$(TOOLCHAIN_DIR)/lib/libresolv*.so* \
+#		$(TOOLCHAIN_DIR)/lib/libnsl*.so*
 endef
 
 $(eval $(call HostBuild))

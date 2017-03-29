@@ -37,8 +37,6 @@ config EXTRA_GCC_CONFIG_OPTIONS
 config SSP_SUPPORT
 	bool
 	prompt "Enable Stack-Smashing Protection support" if TOOLCHAINOPTS
-	depends on !USE_MUSL
-	default y if !USE_MUSL
 	help
 	    Enable Stack-Smashing Protection support
 
@@ -68,8 +66,7 @@ config INSTALL_GFORTRAN
 
 config INSTALL_GCCGO
 	bool
-	prompt "Build/install Go compiler?" if TOOLCHAINOPTS
-	depends on !GCC_VERSION_4_8 && (USE_GLIBC || BROKEN)
+	prompt "Build/install gccgo compiler?" if TOOLCHAINOPTS && !(GCC_VERSION_4_6 || GCC_VERSION_4_6_LINARO)
 	default n
 	help
 	    Build/install GNU gccgo compiler ?
