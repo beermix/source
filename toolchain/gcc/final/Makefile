@@ -10,25 +10,11 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--enable-plugin \
-	--enable-gold \
-	--enable-ld=default \
-	--enable-checking=release \
-	--enable-libstdcxx-time=yes \
-	--with-default-libstdcxx-abi=new \
-	--without-ppl \
-	--without-cloog \
-	--enable-target-optspace \
-	--enable-linker-build-id \
-	--enable-gnu-unique-object \
-	--disable-vtable-verify \
-	--enable-default-pie \
-	--disable-browser-plugin \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
-#ifdef CONFIG_USE_MUSL
+ifdef CONFIG_USE_MUSL
   GCC_MAKE += gcc_cv_libc_provides_ssp=yes
-#endif
+endif
 
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
   GCC_CONFIGURE += \
