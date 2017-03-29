@@ -40,6 +40,14 @@ ifeq ($(PKG_VERSION),6.3.1)
     HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
 endif
 
+ifeq ($(PKG_VERSION),7.0.1)
+    PKG_SOURCE_URL:=https://fossies.org/linux/misc
+    PKG_REV:=7-20170326
+    PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
+    GCC_DIR:=$(PKG_NAME)-$(PKG_REV)
+    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
+endif
+
 ifneq ($(CONFIG_GCC_VERSION_4_8_ARC),)
     PKG_VERSION:=4.8.5
     PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/arc-2016.03
@@ -115,6 +123,18 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--enable-plugin \
+		--enable-lto \
+		--enable-gold \
+		--enable-ld=default \
+		--enable-checking=release \
+		--with-default-libstdcxx-abi=gcc4-compatible \
+		--without-ppl \
+		--without-cloog \
+		--disable-libada \
+		--disable-libatomic \
+		--disable-libitm \
+		--disable-libquadmath \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \

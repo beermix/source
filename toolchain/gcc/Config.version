@@ -7,6 +7,7 @@ config GCC_VERSION
 	default "arc-2016.03"   if GCC_VERSION_4_8_ARC
 	default "6.3.1"         if GCC_USE_VERSION_6
 	default "5.4.0"
+	default "7.0.1"
 
 config GCC_VERSION_4_8
 	bool
