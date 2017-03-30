@@ -12,9 +12,7 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
-ifdef CONFIG_USE_MUSL
-  GCC_MAKE += gcc_cv_libc_provides_ssp=yes
-endif
+GCC_MAKE += gcc_cv_libc_provides_ssp=yes
 
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
   GCC_CONFIGURE += \
