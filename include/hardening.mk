@@ -32,14 +32,13 @@ ifdef CONFIG_PKG_FORTIFY_SOURCE_1
 endif
 ifdef CONFIG_PKG_FORTIFY_SOURCE_2
   ifeq ($(strip $(PKG_FORTIFY_SOURCE)),1)
-    TARGET_CPPFLAGS += -D_FORTIFY_SOURCE=2
-    TARGET_CFLAGS += -fstack-protector-strong
+    TARGET_CFLAGS += -D_FORTIFY_SOURCE=2
   endif
 endif
 ifdef CONFIG_PKG_RELRO_PARTIAL
   ifeq ($(strip $(PKG_RELRO)),1)
     TARGET_CFLAGS += -Wl,-z,relro
-    TARGET_LDFLAGS += -zrelro -s
+    TARGET_LDFLAGS += -zrelro
   endif
 endif
 ifdef CONFIG_PKG_RELRO_FULL
