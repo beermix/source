@@ -9,9 +9,10 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=glibc
 PKG_VERSION:=2.25
 
-PKG_SOURCE_URL:=https://dl.dropboxusercontent.com/s/0005r5o7ujlqewc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-
+PKG_SOURCE_URL:=@GNU/libc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_HASH:=067bd9bb3390e79aa45911537d13c3721f1d9d3769931a30c2681bfee66f23a0
+	
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
@@ -42,7 +43,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -pipe -g -Wall" \
+	CFLAGS="-O2 -pipe -g" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -55,8 +56,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-stack-protector=strong \
-		--enable-obsolete-rpc \
+		--enable-kernel=3.0.0 \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
