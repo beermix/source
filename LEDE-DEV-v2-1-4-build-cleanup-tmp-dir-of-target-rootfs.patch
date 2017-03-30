@@ -1,0 +1,44 @@
+From patchwork Mon Mar 20 11:55:50 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [LEDE-DEV,v2,1/4] build: cleanup tmp/ dir of target rootfs
+From: Yousong Zhou <yszhou4tech@gmail.com>
+X-Patchwork-Id: 740980
+Message-Id: <1490010953-7305-2-git-send-email-yszhou4tech@gmail.com>
+To: jo@mein.io
+Cc: Yousong Zhou <yszhou4tech@gmail.com>, lede-dev@lists.infradead.org,
+ nbd@nbd.name
+Date: Mon, 20 Mar 2017 19:55:50 +0800
+
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+---
+ include/rootfs.mk | 1 +
+ package/Makefile  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/rootfs.mk b/include/rootfs.mk
+index c014b1d..74785cb 100644
+--- a/include/rootfs.mk
++++ b/include/rootfs.mk
+@@ -80,6 +80,7 @@ define prepare_rootfs
+ 	@-find $(1) -name .svn  | $(XARGS) rm -rf
+ 	@-find $(1) -name .git  | $(XARGS) rm -rf
+ 	@-find $(1) -name '.#*' | $(XARGS) rm -f
++	rm -rf $(1)/tmp/*
+ 	rm -f $(1)/usr/lib/opkg/lists/*
+ 	rm -f $(1)/usr/lib/opkg/info/*.postinst*
+ 	rm -f $(1)/usr/lib/opkg/info/*.prerm*
+diff --git a/package/Makefile b/package/Makefile
+index ac8faec..4fdf415 100644
+--- a/package/Makefile
++++ b/package/Makefile
+@@ -63,7 +63,7 @@ endif
+ $(curdir)/install: $(TMP_DIR)/.build $(curdir)/merge $(if $(CONFIG_TARGET_PER_DEVICE_ROOTFS),$(curdir)/merge-index)
+ 	- find $(STAGING_DIR_ROOT) -type d | $(XARGS) chmod 0755
+ 	rm -rf $(TARGET_DIR) $(TARGET_DIR_ORIG)
+-	[ -d $(TARGET_DIR)/tmp ] || mkdir -p $(TARGET_DIR)/tmp
++	mkdir -p $(TARGET_DIR)/tmp
+ 	$(call opkg,$(TARGET_DIR)) install \
+ 		$(call opkg_package_files,$(shell cat $(PACKAGE_INSTALL_FILES) 2>/dev/null))
+ 	@for file in $(PACKAGE_INSTALL_FILES); do \
