@@ -56,7 +56,7 @@ CONFIGURE_ARGS += \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
-	--with-progs \
+	--without-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
@@ -66,10 +66,7 @@ CONFIGURE_ARGS += \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
 	--enable-widec \
-	--with-ncursesw \
-	--with-curses-h \
 	--with-build-cppflags=-D_GNU_SOURCE
-
 
 HOST_CONFIGURE_ARGS += \
 	--without-cxx \
