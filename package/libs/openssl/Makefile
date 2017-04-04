@@ -218,7 +218,7 @@ define Build/Compile
 		CC="$(TARGET_CC)" \
 		INSTALL_PREFIX="$(PKG_INSTALL_DIR)" \
 		$(OPENSSL_MAKEFLAGS) \
-		install
+		install_sw
 endef
 
 define Build/InstallDev
