@@ -240,8 +240,8 @@ comment "C Library"
 
 choice
 	prompt "C Library implementation" if TOOLCHAINOPTS
-	default LIBC_USE_UCLIBC if arc
-	default LIBC_USE_MUSL
+	default LIBC_USE_GLIBC if ! mipsel
+	default LIBC_USE_UCLIBC if mipsel
 	help
 	  Select the C library implementation.
 
@@ -253,13 +253,7 @@ choice
 	config LIBC_USE_UCLIBC
 		select USE_UCLIBC
 		bool "Use uClibc"
-		depends on !(aarch64 || aarch64_be)
-		depends on BROKEN || !(arm || armeb || i386 || x86_64 || mips || mipsel || mips64 || mips64el || powerpc)
 
-	config LIBC_USE_MUSL
-		select USE_MUSL
-		bool "Use musl"
-		depends on !(arc)
 
 endchoice
 
@@ -289,11 +283,7 @@ config USE_GLIBC
 	bool
 
 config USE_UCLIBC
-	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && (arc)
-	bool
-
-config USE_MUSL
-	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && !(arc)
+	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && (arc || mips64 || mips64el)
 	bool
 
 config USE_EXTERNAL_LIBC
@@ -307,6 +297,10 @@ config LIBC
 	string
 	default "glibc"   if USE_GLIBC
 	default "uClibc"  if USE_UCLIBC
+config LIBC_VERSION
+	string
+	default GLIBC_VERSION   if USE_GLIBC
+	default UCLIBC_VERSION  if USE_UCLIBC
 
 config TARGET_SUFFIX
 	string
