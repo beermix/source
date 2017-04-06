@@ -7,7 +7,7 @@ ARCH_USE_MMU=y
 # ARCH_WANTS_BIG_ENDIAN is not set
 # ARCH_WANTS_LITTLE_ENDIAN is not set
 ASSUME_DEVPTS=y
-# COMPAT_ATEXIT is not set
+COMPAT_ATEXIT=y
 CROSS_COMPILER_PREFIX=""
 DEVEL_PREFIX="/usr/"
 # DOASSERTS is not set
@@ -28,7 +28,7 @@ HAVE_DOT_CONFIG=y
 # HAVE_NO_SSP is not set
 UCLIBC_HAS_SSP=y
 UCLIBC_HAS_SSP_COMPAT=y
-# SSP_QUICK_CANARY is not set
+SSP_QUICK_CANARY=y
 UCLIBC_BUILD_SSP=y
 HAVE_SHARED=y
 KERNEL_HEADERS="."
@@ -55,7 +55,7 @@ MALLOC_GLIBC_COMPAT=y
 # MALLOC_SIMPLE is not set
 MALLOC_STANDARD=y
 MULTILIB_DIR="lib"
-# PTHREADS_DEBUG_SUPPORT is not set
+PTHREADS_DEBUG_SUPPORT=y
 RUNTIME_PREFIX="/"
 # SUPPORT_LD_DEBUG is not set
 # SUPPORT_LD_DEBUG_EARLY is not set
@@ -79,7 +79,7 @@ TARGET_SUBARCH=""
 # TARGET_metag is not set
 # TARGET_microblaze is not set
 # TARGET_mips is not set
-# TARGET_nios is not set
+# TARGET_nds32 is not set
 # TARGET_nios2 is not set
 # TARGET_or1k is not set
 # TARGET_powerpc is not set
