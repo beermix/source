@@ -10,9 +10,12 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--with-libelf=$(TOPDIR)/staging_dir/host \
-	gcc_cv_libc_provides_ssp=yes
+	--with-linker-hash-style=gnu \
+	--with-libelf=$(TOPDIR)/staging_dir/host
 
+#ifdef CONFIG_USE_MUSL
+#  GCC_MAKE += gcc_cv_libc_provides_ssp=yes
+#endif
 
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
   GCC_CONFIGURE += \

@@ -52,6 +52,16 @@ BINUTILS_CONFIGURE:= \
 		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
+		--disable-libada \
+		--enable-version-specific-runtime-libs \
+		--enable-ld=default \
+		--enable-gold=yes \
+		--enable-relro \
+		--enable-lto \
+		--disable-shared \
+		--disable-nls \
+		--with-system-zlib \
+		--enable-poison-system-directories \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 
