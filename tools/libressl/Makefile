@@ -8,8 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libressl
-PKG_VERSION:=2.5.2
-#PKG_HASH:=f71ae0a824b78fb1a47ffa23c9c26e9d96c5c9b29234eacedce6b4c7740287cd
+PKG_VERSION:=2.5.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
