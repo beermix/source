@@ -30,7 +30,7 @@ define Package/iperf3
   URL:=https://github.com/esnet/iperf
 endef
 
-TARGET_CFLAGS += -D_POSIX_C_SOURCE
+TARGET_CFLAGS += -D_GNU_SOURCE
 CONFIGURE_ARGS += --disable-shared
 
 MAKE_FLAGS += noinst_PROGRAMS=
