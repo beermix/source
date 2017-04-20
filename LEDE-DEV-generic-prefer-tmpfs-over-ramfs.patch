@@ -1,0 +1,17 @@
+diff --git a/target/linux/generic/patches-4.9/495-use-tmpfs-over-ramfs.patch b/target/linux/generic/patches-4.9/495-use-tmpfs-over-ramfs.patch
+new file mode 100644
+index 0000000..6474ccd
+--- /dev/null
++++ b/target/linux/generic/patches-4.9/495-use-tmpfs-over-ramfs.patch
+@@ -0,0 +1,11 @@
++--- kernel/init/do_mounts.c.orig	2017-03-22 17:15:52.587772894 +0100
+++++ kernel/init/do_mounts.c	2017-03-22 17:52:50.343828875 +0100
++@@ -659,7 +659,7 @@
++ 		return err;
++ 
++ 	if (IS_ENABLED(CONFIG_TMPFS) && !saved_root_name[0] &&
++-		(!root_fs_names || strstr(root_fs_names, "tmpfs"))) {
+++		(!root_fs_names || !strstr(root_fs_names, "ramfs"))) {
++ 		err = shmem_init();
++ 		is_tmpfs = true;
++ 	} else {
