@@ -34,7 +34,7 @@ endif
 
 ifeq ($(PKG_VERSION),6.3.1)
     PKG_SOURCE_URL:=https://fossies.org/linux/misc
-    PKG_REV:=6-20170413
+    PKG_REV:=6-20170426
     PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
     GCC_DIR:=$(PKG_NAME)-$(PKG_REV)
     HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
