@@ -32,21 +32,8 @@ ifeq ($(PKG_VERSION),5.4.0)
   PKG_HASH:=608df76dec2d34de6558249d8af4cbee21eceddbcb580d666f7a5a583ca3303a
 endif
 
-ifeq ($(PKG_VERSION),6.3.1)
-    PKG_SOURCE_URL:=https://fossies.org/linux/misc
-    PKG_REV:=6-20170426
-    PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
-    GCC_DIR:=$(PKG_NAME)-$(PKG_REV)
-    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
-endif
-
-ifeq ($(PKG_VERSION),7.0.1)
-    PKG_VERSION:=7.0.1
-    PKG_SOURCE_URL:=https://fossies.org/linux/misc
-    PKG_REV:=7-20170427
-    PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
-    GCC_DIR:=$(PKG_NAME)-$(PKG_REV)
-    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
+ifeq ($(PKG_VERSION),6.3.0)
+  PKG_HASH:=f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_4_8_ARC),)
