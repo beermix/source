@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2016 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,18 +8,12 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=$(call qstrip,$(CONFIG_GLIBC_VERSION))
-PKG_SOURCE_URL:=@GNU/glibc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_VERSION:=2.23
+
+PKG_SOURCE_URL:=@GNU/libc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-GLIBC_PATH:=
-
-ifeq ($(PKG_VERSION),2.23)
-  PKG_MD5SUM:=0b1e4a240a01233f310b715a4d92c3be
-endif
-
-
-PATCH_DIR:=$(PATH_PREFIX)/patches/$(PKG_VERSION)
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
@@ -43,6 +37,9 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
+# -Os miscompiles w. 2.24 gcc5/gcc6
+# only -O2 tested by upstream changeset
+# "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
