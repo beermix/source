@@ -1,6 +1,5 @@
 GCC_VARIANT:=initial
 
-
 include ../common.mk
 
 GCC_CONFIGURE += \

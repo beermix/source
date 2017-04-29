@@ -247,6 +247,13 @@ choice
 	config LIBC_USE_UCLIBC
 		select USE_UCLIBC
 		bool "Use uClibc"
+		depends on !(x86_64 || aarch64_be)
+		depends on BROKEN || !(arm || armeb || i386 || x86_64 || mips || mipsel || mips64 || mips64el || powerpc)
+
+	config LIBC_USE_MUSL
+		select USE_MUSL
+		bool "Use musl"
+		depends on !(arc)
 
 endchoice
 
@@ -275,7 +282,11 @@ config USE_GLIBC
 	bool
 
 config USE_UCLIBC
-	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && (arc || mips64 || mips64el)
+	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && (arc)
+	bool
+
+config USE_MUSL
+	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && !(arc)
 	bool
 
 config USE_EXTERNAL_LIBC
