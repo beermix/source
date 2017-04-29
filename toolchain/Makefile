@@ -36,8 +36,17 @@ endif
 
 # builddir dependencies
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
-  $(curdir)/kernel-headers/compile:=$(curdir)/gcc/initial/compile
-  $(curdir)/$(LIBC)/compile:=$(curdir)/kernel-headers/compile
+  ifdef CONFIG_USE_MUSL
+    $(curdir)/kernel-headers/compile:=$(curdir)/gcc/initial/compile
+    $(curdir)/$(LIBC)/compile:=$(curdir)/kernel-headers/compile
+  else
+    $(curdir)/builddirs += $(LIBC)/headers gcc/minimal
+    $(curdir)/gcc/minimal/compile:=$(curdir)/binutils/compile
+    $(curdir)/kernel-headers/compile:=$(curdir)/gcc/minimal/compile
+    $(curdir)/$(LIBC)/headers/compile:=$(curdir)/kernel-headers/compile
+    $(curdir)/gcc/initial/compile:=$(curdir)/$(LIBC)/headers/compile
+  endif
+
   $(curdir)/gcc/initial/compile+=$(curdir)/binutils/compile
   $(curdir)/$(LIBC)/compile:=$(curdir)/gcc/initial/compile
   $(curdir)/gcc/final/compile:=$(curdir)/$(LIBC)/compile
