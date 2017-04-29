@@ -43,7 +43,7 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -Wl,-O1,--sort-common,-z,now -Wl,-z,relro -fuse-ld=gold
+    TARGET_CFLAGS += -Wl,-O1,-z,now -Wl,-O1,-z,relro -fuse-ld=gold
     TARGET_LDFLAGS += -znow -zrelro
   endif
 endif
