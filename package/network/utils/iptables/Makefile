@@ -445,11 +445,10 @@ TARGET_CFLAGS += \
 	-I$(PKG_BUILD_DIR)/include \
 	-I$(LINUX_DIR)/user_headers/include \
 	-ffunction-sections -fdata-sections \
-	-flto -ffat-lto-objects \
 	-DNO_LEGACY
 
 TARGET_LDFLAGS += \
-	-Wl,--gc-sections -fuse-ld=gold -fuse-linker-plugin -flto
+	-Wl,--gc-sections
 
 CONFIGURE_ARGS += \
 	--enable-shared \
