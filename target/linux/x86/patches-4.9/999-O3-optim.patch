@@ -1,0 +1,26 @@
+diff -Naur linux-4.9.25-orig/Makefile linux-4.9.25/Makefile
+--- linux-4.9.25-orig/Makefile	2017-04-30 10:46:07.294627079 +0300
++++ linux-4.9.25/Makefile	2017-04-30 10:47:53.565629798 +0300
+@@ -301,8 +301,8 @@
+ 
+ HOSTCC       = gcc
+ HOSTCXX      = g++
+-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
+-HOSTCXXFLAGS = -O2
++HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -std=gnu89
++HOSTCXXFLAGS = -O3
+ 
+ ifeq ($(shell $(HOSTCC) -v 2>&1 | grep -c "clang version"), 1)
+ HOSTCFLAGS  += -Wno-unused-value -Wno-unused-parameter \
+@@ -639,9 +639,9 @@
+ KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
+ else
+ ifdef CONFIG_PROFILE_ALL_BRANCHES
+-KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
++KBUILD_CFLAGS	+= -O3 $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
+ else
+-KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch $(EXTRA_OPTIMIZATION)
++KBUILD_CFLAGS   += -O3 -fno-reorder-blocks -fno-tree-ch $(EXTRA_OPTIMIZATION)
+ endif
+ endif
+ 
