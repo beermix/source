@@ -24,6 +24,7 @@
 # 8) toolchain/libc/utils/compile
 #    build & install libc utilities
 #
+# For musl, steps 2 and 4 are skipped, and step 3 is done after 5
 
 curdir:=toolchain
 
@@ -38,20 +39,15 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
     $(curdir)/builddirs += $(LIBC)/headers gcc/minimal
     $(curdir)/gcc/minimal/compile:=$(curdir)/binutils/compile
     $(curdir)/kernel-headers/compile:=$(curdir)/gcc/minimal/compile
-    $(curdir)/gcc/initial/prepare:=$(curdir)/gcc/minimal/prepare
-    $(curdir)/$(LIBC)/prepare:=$(curdir)/$(LIBC)/headers/prepare
     $(curdir)/$(LIBC)/headers/compile:=$(curdir)/kernel-headers/compile
     $(curdir)/gcc/initial/compile:=$(curdir)/$(LIBC)/headers/compile
 
   $(curdir)/gcc/initial/compile+=$(curdir)/binutils/compile
-  $(curdir)/gcc/final/prepare:=$(curdir)/gcc/initial/prepare
   $(curdir)/$(LIBC)/compile:=$(curdir)/gcc/initial/compile
   $(curdir)/gcc/final/compile:=$(curdir)/$(LIBC)/compile
   $(curdir)/$(LIBC)/utils/compile:=$(curdir)/gcc/final/compile
-  $(curdir)/$(LIBC)/utils/prepare:=$(curdir)/$(LIBC)/headers/prepare
 endif
 
-$(curdir)/builddirs-compile:=$($(curdir)/builddirs-prepare)
 ifndef DUMP_TARGET_DB
 ifneq ($(ARCH),)
   $(TOOLCHAIN_DIR)/info.mk: .config

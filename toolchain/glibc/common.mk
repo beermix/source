@@ -5,13 +5,13 @@
 # See /LICENSE for more information.
 #
 include $(TOPDIR)/rules.mk
-include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.23
+PKG_VERSION:=2.25
 
 PKG_SOURCE_URL:=@GNU/libc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_HASH:=067bd9bb3390e79aa45911537d13c3721f1d9d3769931a30c2681bfee66f23a0
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
