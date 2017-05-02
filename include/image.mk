@@ -248,7 +248,7 @@ define Image/mkfs/ubifs
 		-o $@ -d $(call mkfs_target_dir,$(1))
 endef
 
-E2SIZE=$(shell echo $$(($(CONFIG_TARGET_ROOTFS_PARTSIZE)*1024*1024/512)-1))
+E2SIZE=$(shell echo $$(($(CONFIG_TARGET_ROOTFS_PARTSIZE)*1024*1024)))
 
 define Image/mkfs/ext4
 	$(STAGING_DIR_HOST)/bin/make_ext4fs \
