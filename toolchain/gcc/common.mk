@@ -110,6 +110,10 @@ GCC_CONFIGURE:= \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
+		--disable-libada \
+		--disable-libatomic \
+		--disable-libitm \
+		--disable-libquadmath \
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
