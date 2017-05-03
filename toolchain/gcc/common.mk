@@ -32,16 +32,29 @@ ifeq ($(PKG_VERSION),5.4.0)
   PKG_HASH:=608df76dec2d34de6558249d8af4cbee21eceddbcb580d666f7a5a583ca3303a
 endif
 
-ifeq ($(PKG_VERSION),7.1.0)
-  #PKG_HASH:=f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f
+ifeq ($(PKG_VERSION),6.3.1)
+    PKG_SOURCE_URL:=https://fossies.org/linux/misc
+    PKG_REV:=6-20170426
+    PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
+    GCC_DIR:=$(PKG_NAME)-$(PKG_REV)
+    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
 endif
 
-ifneq ($(CONFIG_GCC_VERSION_6_2_ARC),)
-    PKG_VERSION:=6.2.1
-    PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
+ifeq ($(PKG_VERSION),7.0.1)
+    PKG_VERSION:=7.0.1
+    PKG_SOURCE_URL:=https://fossies.org/linux/misc
+    PKG_REV:=7-20170330
+    PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
+    GCC_DIR:=$(PKG_NAME)-$(PKG_REV)
+    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
+endif
+
+ifneq ($(CONFIG_GCC_VERSION_4_8_ARC),)
+    PKG_VERSION:=4.8.5
+    PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/arc-2016.03
     PKG_SOURCE:=$(PKG_NAME)-$(GCC_VERSION).tar.gz
-    PKG_HASH:=d6f842dd266ccb0d5a53b51e2b2951503569f2ff3c84f81b2a1d9fea109ec077
-    PKG_REV:=2016.09
+    PKG_HASH:=6a5eb0c83dca16f228ac836677a1fbb42a53c30334487ac37c2c18db80a38f35
+    PKG_REV:=2016.03
     GCC_DIR:=gcc-arc-$(PKG_REV)
     HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
 endif
@@ -111,6 +124,10 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--disable-libada \
+		--disable-libatomic \
+		--disable-libitm \
+		--disable-libquadmath \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
