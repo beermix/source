@@ -1,3 +1,10 @@
+Author: 
+Description: Description: correct where ld scripts are installed
+Author: Chris Chimelis <chris@debian.org>
+Upstream status: N/A
+Date: ??
+Index: b/ld/Makefile.am
+===================================================================
 --- a/ld/Makefile.am
 +++ b/ld/Makefile.am
 @@ -57,7 +57,7 @@ endif
@@ -9,9 +16,11 @@
  
  EMUL = @EMUL@
  EMULATION_OFILES = @EMULATION_OFILES@
+Index: b/ld/Makefile.in
+===================================================================
 --- a/ld/Makefile.in
 +++ b/ld/Makefile.in
-@@ -451,7 +451,7 @@ AM_CFLAGS = $(WARN_CFLAGS) $(ELF_CLFAGS)
+@@ -452,7 +452,7 @@ AM_CFLAGS = $(WARN_CFLAGS) $(ELF_CLFAGS)
  # We put the scripts in the directory $(scriptdir)/ldscripts.
  # We can't put the scripts in $(datadir) because the SEARCH_DIR
  # directives need to be different for native and cross linkers.
