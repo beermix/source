@@ -27,7 +27,6 @@ choice
 endchoice
 
 config GCC_USE_GRAPHITE
-	depends on !GCC_VERSION_4_8_ARC
 	bool
 	prompt "Compile in support for the new Graphite framework in GCC 4.4+" if TOOLCHAINOPTS
 

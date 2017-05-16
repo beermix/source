@@ -142,6 +142,10 @@ append_pxe_service() {
 	xappend "--pxe-service=$1"
 }
 
+append_interface_name() {
+	xappend "--interface-name=$1,$2"
+}
+
 filter_dnsmasq() {
 	local cfg="$1" func="$2" match_cfg="$3" found_cfg
 
@@ -252,7 +256,7 @@ dhcp_match_add() {
 
 dhcp_host_add() {
 	local cfg="$1"
-	local hosttag nametime addrs
+	local hosttag nametime addrs duids
 
 	config_get_bool force "$cfg" force 0
 
@@ -333,14 +337,14 @@ dhcp_this_host_add() {
 		if [ "$mode" -gt 1 ] ; then
 			if [ "$mode" -gt 2 ] ; then
 				if [ "$mode" -gt 3 ] ; then
-					xappend "--interface-name=$ifdashname.$routername.$DOMAIN,$ifname"
+					append_interface_name "$ifdashname.$routername.$DOMAIN" "$ifname"
 				fi
 
-				xappend "--interface-name=$routername.$DOMAIN,$ifname"
+				append_interface_name "$routername.$DOMAIN" "$ifname"
 			fi
 
 			# All IP addresses discovered by dnsmasq will be labeled (except fe80::)
-			xappend "--interface-name=$routername,$ifname"
+			append_interface_name "$routername" "$ifname"
 
 		else
 			# This uses a static host file entry for only limited addresses.
@@ -467,6 +471,8 @@ dhcp_add() {
 	config_get ra_management "$cfg" ra_management
 	config_get ra_preference "$cfg" ra_preference
 
+	config_list_foreach "$cfg" "interface_name" append_interface_name "$ifname"
+
 	# Put the router host name on this DHCP served interface address(es)
 	dhcp_this_host_add "$net" "$ifname" "$ADD_LOCAL_FQDN"
 
@@ -560,8 +566,9 @@ dhcp_option_add() {
 	if [ -n "$list_len" ]; then
 		config_list_foreach "$cfg" dhcp_option dhcp_option_append "$networkid" "$force"
 	else
-		echo "Warning: the 'option dhcp_option' syntax is deprecated, use 'list dhcp_option'" >&2
 		config_get dhcp_option "$cfg" dhcp_option
+
+		[ -n "$dhcp_option" ] && echo "Warning: the 'option dhcp_option' syntax is deprecated, use 'list dhcp_option'" >&2
 
 		local option
 		for option in $dhcp_option; do
@@ -761,7 +768,7 @@ dnsmasq_start()
 	append_bool "$cfg" dbus "--enable-dbus"
 	append_bool "$cfg" expandhosts "--expand-hosts"
 	config_get tftp_root "$cfg" "tftp_root"
-	[ -d "$tftp_root" ] && append_bool "$cfg" enable_tftp "--enable-tftp"
+	[ -n "$tftp_root" ] && mkdir -p "$tftp_root" && append_bool "$cfg" enable_tftp "--enable-tftp"
 	append_bool "$cfg" tftp_no_fail "--tftp-no-fail"
 	append_bool "$cfg" nonwildcard "--bind-dynamic"
 	append_bool "$cfg" fqdn "--dhcp-fqdn"
