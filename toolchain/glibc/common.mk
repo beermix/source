@@ -59,7 +59,6 @@ GLIBC_CONFIGURE:= \
 		--enable-obsolete-rpc \
 		--enable-kernel=2.6.32 \
 		--enable-bind-now \
-		--enable-stackguard-randomization \
 		--enable-stack-protector=strong \
 		--enable-lock-elision \
 		--disable-werror \
