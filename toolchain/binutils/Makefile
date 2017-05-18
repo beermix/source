@@ -63,7 +63,7 @@ ifneq ($(CONFIG_SSP_SUPPORT),)
 		--enable-libssp
 else
   BINUTILS_CONFIGURE+= \
-		--disable-libssp
+		--enable-libssp
 endif
 
 ifneq ($(CONFIG_EXTRA_TARGET_ARCH),)
