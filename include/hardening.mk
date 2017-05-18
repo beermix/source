@@ -39,7 +39,6 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
   ifeq ($(strip $(PKG_RELRO)),1)
     TARGET_CFLAGS += -Wl,-O1,--sort-common,-z,relro
     TARGET_LDFLAGS += -zrelro
-    TARGET_CFLAGS += -fstack-protector-strong
   endif
 endif
 ifdef CONFIG_PKG_RELRO_FULL
