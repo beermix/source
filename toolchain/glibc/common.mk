@@ -57,7 +57,7 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-obsolete-rpc \
-		--enable-kernel=2.6.32 \
+		--enable-kernel=3.0.0 \
 		--enable-bind-now \
 		--enable-stack-protector=strong \
 		--enable-lock-elision \
