@@ -37,8 +37,8 @@ ifdef CONFIG_PKG_FORTIFY_SOURCE_2
 endif
 ifdef CONFIG_PKG_RELRO_PARTIAL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -Wl,-O1,--sort-common,-z,relro -s
-    TARGET_LDFLAGS += -zrelro
+    TARGET_CFLAGS += -Wl,-O1,--sort-common,-z,relro -fuse-linker-plugin -flto -s
+    TARGET_LDFLAGS += -zrelro -flto -ffat-lto-objects
   endif
 endif
 ifdef CONFIG_PKG_RELRO_FULL
