@@ -61,7 +61,6 @@ GLIBC_CONFIGURE:= \
 		--enable-bind-now \
 		--enable-stack-protector=strong \
 		--enable-lock-elision \
-		--disable-werror \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_forced_unwind=yes
