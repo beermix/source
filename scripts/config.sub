@@ -867,7 +867,7 @@ case $basic_machine in
 		os=-nacl
 		;;
 	ncr3000)
-		basic_machine=i486-ncr
+		basic_machine=i686-ncr
 		os=-sysv4
 		;;
 	netbsd386)

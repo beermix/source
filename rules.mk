@@ -59,7 +59,7 @@ version_abbrev = $(if $(if $(CHECK),,$(DUMP)),$(1),$(shell printf '%.8s' $(1)))
 
 _SINGLE=export MAKEFLAGS=$(space);
 CFLAGS:=
-ARCH:=$(subst i486,i386,$(subst i586,i386,$(subst i686,i386,$(call qstrip,$(CONFIG_ARCH)))))
+ARCH:=$(subst i686,i386,$(subst i586,i386,$(subst i686,i386,$(call qstrip,$(CONFIG_ARCH)))))
 ARCH_PACKAGES:=$(call qstrip,$(CONFIG_TARGET_ARCH_PACKAGES))
 BOARD:=$(call qstrip,$(CONFIG_TARGET_BOARD))
 SUBTARGET:=$(call qstrip,$(CONFIG_TARGET_SUBTARGET))
@@ -73,7 +73,7 @@ export SHELL:=/usr/bin/env bash
 
 IS_PACKAGE_BUILD := $(if $(filter package/%,$(BUILD_SUBDIR)),1)
 
-OPTIMIZE_FOR_CPU=$(subst i386,i486,$(ARCH))
+OPTIMIZE_FOR_CPU=$(subst i386,i686,$(ARCH))
 
 ifeq ($(ARCH),powerpc)
   FPIC:=-fPIC
