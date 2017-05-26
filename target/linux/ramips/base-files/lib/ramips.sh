@@ -217,6 +217,9 @@ ramips_board_detect() {
 	*"GL-MT750")
 		name="gl-mt750"
 		;;
+	*"GL-MT300N-V2")
+		name="gl-mt300n-v2"
+		;;
 	*"HC5661")
 		name="hc5661"
 		;;
@@ -435,6 +438,9 @@ ramips_board_detect() {
 		;;
 	*"RT5350F-OLinuXino-EVB")
 		name="rt5350f-olinuxino-evb"
+		;;
+	*"RT-AC51U")
+		name="rt-ac51u"
 		;;
 	*"RT-G32 B1")
 		name="rt-g32-b1"
@@ -669,6 +675,9 @@ ramips_board_detect() {
 		;;
 	*"ZBT-WR8305RT")
 		name="zbt-wr8305rt"
+		;;
+	*"ZyXEL Keenetic")
+		name="kn"
 		;;
 	*"ZyXEL Keenetic Omni")
 		name="kn_rc"
