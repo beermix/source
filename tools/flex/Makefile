@@ -16,7 +16,7 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --disable-shared
+HOST_CONFIGURE_ARGS += ac_cv_lib_util_getloadavg=no --disable-shared
 
 define Host/Clean
 	-$(MAKE) -C $(HOST_BUILD_DIR) uninstall
