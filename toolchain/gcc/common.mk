@@ -91,7 +91,7 @@ ifdef CONFIG_INSTALL_GCCGO
 endif
 
 ifdef CONFIG_GCC_USE_GRAPHITE
-  GRAPHITE_CONFIGURE=--with-isl=$(HOST_BUILD_PREFIX)
+  GRAPHITE_CONFIGURE=--with-isl=$(REAL_STAGING_DIR_HOST)
 else
   GRAPHITE_CONFIGURE=--without-isl --without-cloog
 endif
