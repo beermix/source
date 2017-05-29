@@ -83,9 +83,10 @@ menu "Global build settings"
 		  Useful for release builds, so that kernel issues can be debugged offline
 		  later.
 
-	comment "Kernel build options"
+	menu "Kernel build options"
 
 	source "config/Config-kernel.in"
+	endmenu
 
 	comment "Package build options"
 
@@ -183,7 +184,7 @@ menu "Global build settings"
 
 	choice
 		prompt "User space Stack-Smashing Protection"
-		#depends on USE_MUSL
+		depends on USE_MUSL
 		default PKG_CC_STACKPROTECTOR_REGULAR
 		help
 		  Enable GCC Stack Smashing Protection (SSP) for userspace applications
@@ -203,7 +204,7 @@ menu "Global build settings"
 	choice
 		prompt "Kernel space Stack-Smashing Protection"
 		default KERNEL_CC_STACKPROTECTOR_REGULAR
-		#depends on USE_MUSL || !(x86_64 || i386)
+		depends on USE_MUSL || !(x86_64 || i386)
 		help
 		  Enable GCC Stack-Smashing Protection (SSP) for the kernel
 		config KERNEL_CC_STACKPROTECTOR_NONE
