@@ -438,7 +438,6 @@ endef
 TARGET_CPPFLAGS := \
 	-I$(PKG_BUILD_DIR)/include \
 	-I$(LINUX_DIR)/user_headers/include \
-	-D_DEFAULT_SOURCE \
 	$(TARGET_CPPFLAGS)
 
 TARGET_CFLAGS += \

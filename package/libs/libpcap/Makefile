@@ -45,8 +45,7 @@ endef
 
 TARGET_CFLAGS += \
 	-ffunction-sections \
-	-fdata-sections \
-	-D_DEFAULT_SOURCE
+	-fdata-sections
 
 CONFIGURE_VARS += \
 	ac_cv_linux_vers=$(LINUX_VERSION) \
