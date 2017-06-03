@@ -106,8 +106,6 @@ $(call Package/e2fsprogs)
   DEPENDS:= +e2fsprogs
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections
-
 CONFIGURE_VARS += \
 	ac_cv_lib_pthread_sem_init=no
 
