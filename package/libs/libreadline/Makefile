@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=readline
 PKG_VERSION:=7.0
-PKG_REV:=6c32f81
+PKG_REV:=2b2ef89
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
