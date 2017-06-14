@@ -13,11 +13,8 @@ PKG_VERSION:=2.02
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=http://alpha.gnu.org/gnu/grub \
-	http://gnualpha.uib.no/grub/ \
-	http://mirrors.fe.up.pt/pub/gnu-alpha/grub/ \
-	http://www.nic.funet.fi/pub/gnu/alpha/gnu/grub/ \
-	https://fossies.org/linux/misc/
+PKG_SOURCE_URL:=@GNU/grub
+PKG_HASH:=810b3798d316394f94096ec2797909dbf23c858e48f7b3830826b8daa06b7b0f
 
 PKG_FIXUP:=autoreconf
 HOST_BUILD_PARALLEL:=1
