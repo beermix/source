@@ -37,7 +37,8 @@ ifdef CONFIG_PKG_FORTIFY_SOURCE_2
 endif
 ifdef CONFIG_PKG_RELRO_PARTIAL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_LDFLAGS += -Wl,-O1,--sort-common,-z,relro
+    TARGET_CFLAGS += -Wl,-z,relro
+    TARGET_LDFLAGS += -zrelro
   endif
 endif
 ifdef CONFIG_PKG_RELRO_FULL
