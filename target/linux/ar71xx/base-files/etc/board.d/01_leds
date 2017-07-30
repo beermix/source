@@ -4,11 +4,10 @@
 #
 
 . /lib/functions/uci-defaults.sh
-. /lib/ar71xx.sh
 
 board_config_update
 
-board=$(ar71xx_board_name)
+board=$(board_name)
 
 case "$board" in
 a40)
@@ -48,6 +47,10 @@ antminer-s3)
 antrouter-r1)
 	ucidef_set_led_wlan "wlan" "WLAN" "$board:green:wlan" "phy0tpt"
 	ucidef_set_led_default "btc" "BTC" "$board:green:btc" "0"
+	;;
+ap121f)
+	ucidef_set_led_netdev "lan" "LAN" "$board:green:lan" "eth0"
+	ucidef_set_led_wlan "wlan" "WLAN" "$board:green:wlan" "phy0tpt"
 	;;
 ap531b0|\
 sc1750|\
