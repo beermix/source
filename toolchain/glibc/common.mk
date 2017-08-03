@@ -55,10 +55,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--disable-build-nscd \
-		--disable-nscd \
+		--enable-kernel=3.0.0 \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
