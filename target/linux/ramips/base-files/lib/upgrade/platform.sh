@@ -2,13 +2,10 @@
 # Copyright (C) 2010 OpenWrt.org
 #
 
-. /lib/ramips.sh
-
 PART_NAME=firmware
-RAMFS_COPY_DATA=/lib/ramips.sh
 
 platform_check_image() {
-	local board=$(ramips_board_name)
+	local board=$(board_name)
 	local magic="$(get_magic_long "$1")"
 
 	[ "$#" -gt 1 ] && return 1
@@ -30,7 +27,6 @@ platform_check_image() {
 	awapn2403|\
 	awm002-evb-4M|\
 	awm002-evb-8M|\
-	awm003-evb|\
 	bc2|\
 	broadway|\
 	carambola|\
@@ -62,6 +58,7 @@ platform_check_image() {
 	firewrt|\
 	fonera20n|\
 	freestation5|\
+	gb-pc1|\
 	gl-mt300a|\
 	gl-mt300n|\
 	gl-mt750|\
@@ -77,6 +74,7 @@ platform_check_image() {
 	jhr-n805r|\
 	jhr-n825r|\
 	jhr-n926r|\
+	k2p|\
 	kn|\
 	kn_rc|\
 	kn_rf|\
@@ -171,6 +169,7 @@ platform_check_image() {
 	wl-wn575a3|\
 	wli-tx4-ag300n|\
 	wlr-6000|\
+	wmdr-143n|\
 	wmr-300|\
 	wn3000rpv3|\
 	wnce2001|\
@@ -255,6 +254,13 @@ platform_check_image() {
 		# these boards use metadata images
 		return 0
 		;;
+	re350-v1)
+		[ "$magic" != "01000000" ] && {
+			echo "Invalid image type."
+			return 1
+		}
+		return 0
+		;;
 	ubnt-erx|\
 	ubnt-erx-sfp)
 		nand_do_platform_check "$board" "$1"
@@ -275,7 +281,7 @@ platform_check_image() {
 }
 
 platform_nand_pre_upgrade() {
-	local board=$(ramips_board_name)
+	local board=$(board_name)
 
 	case "$board" in
 	ubnt-erx|\
@@ -286,7 +292,7 @@ platform_nand_pre_upgrade() {
 }
 
 platform_do_upgrade() {
-	local board=$(ramips_board_name)
+	local board=$(board_name)
 
 	case "$board" in
 	hc5962|\

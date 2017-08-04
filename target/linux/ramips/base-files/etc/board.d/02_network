@@ -1,7 +1,6 @@
 #!/bin/sh
 
 . /lib/functions.sh
-. /lib/ramips.sh
 . /lib/functions/uci-defaults.sh
 . /lib/functions/system.sh
 
@@ -84,6 +83,7 @@ ramips_setup_interfaces()
 	hc5661a|\
 	hc5962|\
 	hlk-rm04|\
+	k2p|\
 	kn|\
 	kn_rc|\
 	mac1200rv2|\
@@ -153,11 +153,8 @@ ramips_setup_interfaces()
 	atp-52b|\
 	awm002-evb-4M|\
 	awm002-evb-8M|\
-	awm003-evb|\
 	c20i|\
-	c50|\
 	dir-645|\
-	dir-860l-b1|\
 	f5d8235-v2|\
 	gl-mt300a|\
 	gl-mt300n|\
@@ -182,6 +179,18 @@ ramips_setup_interfaces()
 	zbt-wa05)
 		ucidef_add_switch "switch0" \
 			"1:lan" "2:lan" "3:lan" "4:lan" "0:wan" "6@eth0"
+		;;
+	c50)
+		ucidef_add_switch "switch0" \
+			"1:lan:3" "2:lan:4" "3:lan:1" "4:lan:2" "0:wan" "6@eth0"
+		;;
+	dir-860l-b1)
+		ucidef_add_switch "switch0" \
+			"1:lan:4" "2:lan:3" "3:lan:2" "4:lan:1" "0:wan" "6@eth0"
+		;;
+	gb-pc1)
+		ucidef_add_switch "switch0" \
+			"0:lan" "4:lan" "6@eth0"
 		;;
 	gl-mt300n-v2)
 		ucidef_add_switch "switch0" \
@@ -223,6 +232,7 @@ ramips_setup_interfaces()
 	na930|\
 	pbr-d1|\
 	wli-tx4-ag300n|\
+	wmdr-143n|\
 	wmr-300|\
 	wn3000rpv3|\
 	wrh-300cr)
@@ -269,6 +279,10 @@ ramips_setup_interfaces()
 	newifi-d1)
 		ucidef_add_switch "switch0" \
 		"1:lan:2" "2:lan:1" "4:wan" "6@eth0"
+		;;
+	re350-v1)
+		ucidef_add_switch "switch0" \
+			"0:lan" "6@eth0"
 		;;
 	re6500)
 		ucidef_add_switch "switch0" \
@@ -334,7 +348,8 @@ ramips_setup_macs()
 
 	case $board in
 	a5-v11|\
-	ht-tm02)
+	ht-tm02|\
+	wmdr-143n)
 		lan_mac=$(cat /sys/class/net/eth0/address)
 		;;
 	all0239-3g|\
@@ -494,7 +509,7 @@ ramips_setup_macs()
 }
 
 board_config_update
-board=$(ramips_board_name)
+board=$(board_name)
 ramips_setup_interfaces $board
 ramips_setup_macs $board
 board_config_flush
