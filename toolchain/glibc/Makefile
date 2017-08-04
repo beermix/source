@@ -30,3 +30,5 @@ define Host/Install
 endef
 
 $(eval $(call HostBuild))
+
+PATCH_DIR:=./patches
