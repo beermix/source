@@ -54,6 +54,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--enable-stack-protector=strong \
 		--enable-kernel=3.0.0 \
 		--without-cvs \
 		--without-gd \

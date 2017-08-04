@@ -2,7 +2,7 @@ PATH_PREFIX := .
 VARIANT:=final
 HOST_BUILD_PARALLEL:=1
 
-PATCH_DIR:=../patches
+PATCH_DIR:=./patches
 
 include ./common.mk
 
