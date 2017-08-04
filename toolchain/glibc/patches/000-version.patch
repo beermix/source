@@ -1,12 +1,13 @@
 diff --git a/version.h b/version.h
 old mode 100644
 new mode 100755
-index b6a0412847..f18fed1d50
+index b6a0412847..7df3b33086
 --- a/version.h
 +++ b/version.h
 @@ -1,4 +1,4 @@
  /* This file just defines the current version number of libc.  */
  
 -#define RELEASE "development"
+-#define VERSION "2.26.90"
 +#define RELEASE "stable"
- #define VERSION "2.26.90"
++#define VERSION "2.26"
