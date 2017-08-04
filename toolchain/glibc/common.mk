@@ -56,8 +56,6 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
 		--enable-kernel=3.0.0 \
-		--without-cvs \
-		--without-gd \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--disable-build-nscd \
