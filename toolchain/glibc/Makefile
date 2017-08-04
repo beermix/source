@@ -2,6 +2,8 @@ PATH_PREFIX := .
 VARIANT:=final
 HOST_BUILD_PARALLEL:=1
 
+PATCH_DIR:=../patches
+
 include ./common.mk
 
 define Host/Compile
@@ -31,4 +33,3 @@ endef
 
 $(eval $(call HostBuild))
 
-PATCH_DIR:=./patches
