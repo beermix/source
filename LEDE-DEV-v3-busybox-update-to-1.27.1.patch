@@ -1,0 +1,4336 @@
+diff --git a/package/utils/busybox/Config-defaults.in b/package/utils/busybox/Config-defaults.in
+index 9438cb26e7..4f39a5ea7e 100644
+--- a/package/utils/busybox/Config-defaults.in
++++ b/package/utils/busybox/Config-defaults.in
+@@ -196,9 +196,6 @@ config BUSYBOX_DEFAULT_FEATURE_FAST_TOP
+ config BUSYBOX_DEFAULT_FEATURE_ETC_NETWORKS
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_FEATURE_USE_TERMIOS
+-	bool
+-	default n
+ config BUSYBOX_DEFAULT_FEATURE_EDITING
+ 	bool
+ 	default y
+@@ -355,6 +352,9 @@ config BUSYBOX_DEFAULT_XZ
+ config BUSYBOX_DEFAULT_BZIP2
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_FEATURE_BZIP2_DECOMPRESS
++	bool
++	default y
+ config BUSYBOX_DEFAULT_CPIO
+ 	bool
+ 	default n
+@@ -382,6 +382,9 @@ config BUSYBOX_DEFAULT_GZIP_FAST
+ config BUSYBOX_DEFAULT_FEATURE_GZIP_LEVELS
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_FEATURE_GZIP_DECOMPRESS
++	bool
++	default y
+ config BUSYBOX_DEFAULT_LZOP
+ 	bool
+ 	default n
+@@ -439,16 +442,25 @@ config BUSYBOX_DEFAULT_FEATURE_TAR_SELINUX
+ config BUSYBOX_DEFAULT_UNZIP
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_BASENAME
++config BUSYBOX_DEFAULT_FEATURE_UNZIP_CDF
+ 	bool
+-	default y
+-config BUSYBOX_DEFAULT_CAL
++	default n
++config BUSYBOX_DEFAULT_FEATURE_UNZIP_BZIP2
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_FEATURE_UNZIP_LZMA
++	bool
++	default n
++config BUSYBOX_DEFAULT_FEATURE_UNZIP_XZ
++	bool
++	default n
++config BUSYBOX_DEFAULT_BASENAME
++	bool
++	default y
+ config BUSYBOX_DEFAULT_CAT
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_CATV
++config BUSYBOX_DEFAULT_FEATURE_CATV
+ 	bool
+ 	default n
+ config BUSYBOX_DEFAULT_CHGRP
+@@ -559,6 +571,9 @@ config BUSYBOX_DEFAULT_EXPR
+ config BUSYBOX_DEFAULT_EXPR_MATH_SUPPORT_64
+ 	bool
+ 	default y
++config BUSYBOX_DEFAULT_FACTOR
++	bool
++	default n
+ config BUSYBOX_DEFAULT_FALSE
+ 	bool
+ 	default y
+@@ -589,6 +604,9 @@ config BUSYBOX_DEFAULT_INSTALL
+ config BUSYBOX_DEFAULT_FEATURE_INSTALL_LONG_OPTIONS
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_LINK
++	bool
++	default n
+ config BUSYBOX_DEFAULT_LN
+ 	bool
+ 	default y
+@@ -607,6 +625,9 @@ config BUSYBOX_DEFAULT_FEATURE_LS_FOLLOWLINKS
+ config BUSYBOX_DEFAULT_FEATURE_LS_RECURSIVE
+ 	bool
+ 	default y
++config BUSYBOX_DEFAULT_FEATURE_LS_WIDTH
++	bool
++	default y
+ config BUSYBOX_DEFAULT_FEATURE_LS_SORTFILES
+ 	bool
+ 	default y
+@@ -661,12 +682,21 @@ config BUSYBOX_DEFAULT_FEATURE_MV_LONG_OPTIONS
+ config BUSYBOX_DEFAULT_NICE
+ 	bool
+ 	default y
++config BUSYBOX_DEFAULT_NL
++	bool
++	default n
+ config BUSYBOX_DEFAULT_NOHUP
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_NPROC
++	bool
++	default n
+ config BUSYBOX_DEFAULT_OD
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_PASTE
++	bool
++	default n
+ config BUSYBOX_DEFAULT_PRINTENV
+ 	bool
+ 	default n
+@@ -697,6 +727,9 @@ config BUSYBOX_DEFAULT_FEATURE_RMDIR_LONG_OPTIONS
+ config BUSYBOX_DEFAULT_SEQ
+ 	bool
+ 	default y
++config BUSYBOX_DEFAULT_SHRED
++	bool
++	default n
+ config BUSYBOX_DEFAULT_SHUF
+ 	bool
+ 	default n
+@@ -829,6 +862,9 @@ config BUSYBOX_DEFAULT_FEATURE_WC_LARGE
+ config BUSYBOX_DEFAULT_WHO
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_W
++	bool
++	default n
+ config BUSYBOX_DEFAULT_USERS
+ 	bool
+ 	default n
+@@ -844,9 +880,6 @@ config BUSYBOX_DEFAULT_FEATURE_VERBOSE
+ config BUSYBOX_DEFAULT_FEATURE_PRESERVE_HARDLINKS
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_FEATURE_AUTOWIDTH
+-	bool
+-	default y
+ config BUSYBOX_DEFAULT_FEATURE_HUMAN_READABLE
+ 	bool
+ 	default y
+@@ -1174,7 +1207,7 @@ config BUSYBOX_DEFAULT_FEATURE_INIT_SCTTY
+ config BUSYBOX_DEFAULT_FEATURE_INIT_SYSLOG
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_FEATURE_EXTRA_QUIET
++config BUSYBOX_DEFAULT_FEATURE_INIT_QUIET
+ 	bool
+ 	default n
+ config BUSYBOX_DEFAULT_FEATURE_INIT_COREDUMPS
+@@ -1294,6 +1327,9 @@ config BUSYBOX_DEFAULT_FEATURE_SU_SYSLOG
+ config BUSYBOX_DEFAULT_FEATURE_SU_CHECKS_SHELLS
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_FEATURE_SU_BLANK_PW_NEEDS_SECURE_TTY
++	bool
++	default n
+ config BUSYBOX_DEFAULT_SULOGIN
+ 	bool
+ 	default n
+@@ -1330,12 +1366,6 @@ config BUSYBOX_DEFAULT_FEATURE_LSMOD_PRETTY_2_6_OUTPUT
+ config BUSYBOX_DEFAULT_MODINFO
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_FEATURE_MODPROBE_SMALL_OPTIONS_ON_CMDLINE
+-	bool
+-	default n
+-config BUSYBOX_DEFAULT_FEATURE_MODPROBE_SMALL_CHECK_ALREADY_LOADED
+-	bool
+-	default n
+ config BUSYBOX_DEFAULT_MODPROBE
+ 	bool
+ 	default n
+@@ -1345,10 +1375,13 @@ config BUSYBOX_DEFAULT_FEATURE_MODPROBE_BLACKLIST
+ config BUSYBOX_DEFAULT_RMMOD
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_FEATURE_2_4_MODULES
++config BUSYBOX_DEFAULT_FEATURE_CMDLINE_MODULE_OPTIONS
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_FEATURE_INSMOD_TRY_MMAP
++config BUSYBOX_DEFAULT_FEATURE_MODPROBE_SMALL_CHECK_ALREADY_LOADED
++	bool
++	default n
++config BUSYBOX_DEFAULT_FEATURE_2_4_MODULES
+ 	bool
+ 	default n
+ config BUSYBOX_DEFAULT_FEATURE_INSMOD_VERSION_CHECKING
+@@ -1369,6 +1402,9 @@ config BUSYBOX_DEFAULT_FEATURE_INSMOD_LOAD_MAP_FULL
+ config BUSYBOX_DEFAULT_FEATURE_CHECK_TAINTED_MODULE
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_FEATURE_INSMOD_TRY_MMAP
++	bool
++	default n
+ config BUSYBOX_DEFAULT_FEATURE_MODUTILS_ALIAS
+ 	bool
+ 	default n
+@@ -1399,12 +1435,18 @@ config BUSYBOX_DEFAULT_FEATURE_BLKID_TYPE
+ config BUSYBOX_DEFAULT_BLOCKDEV
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_CAL
++	bool
++	default n
+ config BUSYBOX_DEFAULT_DMESG
+ 	bool
+ 	default y
+ config BUSYBOX_DEFAULT_FEATURE_DMESG_PRETTY
+ 	bool
+ 	default y
++config BUSYBOX_DEFAULT_FALLOCATE
++	bool
++	default n
+ config BUSYBOX_DEFAULT_FATATTR
+ 	bool
+ 	default n
+@@ -1462,6 +1504,9 @@ config BUSYBOX_DEFAULT_FREERAMDISK
+ config BUSYBOX_DEFAULT_FSCK_MINIX
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_FSFREEZE
++	bool
++	default n
+ config BUSYBOX_DEFAULT_FSTRIM
+ 	bool
+ 	default n
+@@ -1480,6 +1525,9 @@ config BUSYBOX_DEFAULT_FEATURE_HEXDUMP_REVERSE
+ config BUSYBOX_DEFAULT_HD
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_XXD
++	bool
++	default n
+ config BUSYBOX_DEFAULT_HWCLOCK
+ 	bool
+ 	default y
+@@ -1621,6 +1669,9 @@ config BUSYBOX_DEFAULT_LINUX32
+ config BUSYBOX_DEFAULT_LINUX64
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_SETPRIV
++	bool
++	default n
+ config BUSYBOX_DEFAULT_SWAPON
+ 	bool
+ 	default n
+@@ -1918,6 +1969,9 @@ config BUSYBOX_DEFAULT_FEATURE_LESS_LINENUMS
+ config BUSYBOX_DEFAULT_LOCK
+ 	bool
+ 	default y
++config BUSYBOX_DEFAULT_LSSCSI
++	bool
++	default n
+ config BUSYBOX_DEFAULT_MAKEDEVS
+ 	bool
+ 	default n
+@@ -1945,6 +1999,9 @@ config BUSYBOX_DEFAULT_NANDWRITE
+ config BUSYBOX_DEFAULT_NANDDUMP
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_PARTPROBE
++	bool
++	default n
+ config BUSYBOX_DEFAULT_RAIDAUTORUN
+ 	bool
+ 	default n
+@@ -2275,6 +2332,9 @@ config BUSYBOX_DEFAULT_NSLOOKUP
+ config BUSYBOX_DEFAULT_NSLOOKUP_LEDE
+ 	bool
+ 	default y
++config BUSYBOX_DEFAULT_FEATURE_NSLOOKUP_LEDE_LONG_OPTIONS
++	bool
++	default n
+ config BUSYBOX_DEFAULT_NTPD
+ 	bool
+ 	default y
+@@ -2302,6 +2362,9 @@ config BUSYBOX_DEFAULT_ROUTE
+ config BUSYBOX_DEFAULT_SLATTACH
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_SSL_CLIENT
++	bool
++	default n
+ config BUSYBOX_DEFAULT_TCPSVD
+ 	bool
+ 	default n
+@@ -2317,6 +2380,9 @@ config BUSYBOX_DEFAULT_FEATURE_TELNET_TTYPE
+ config BUSYBOX_DEFAULT_FEATURE_TELNET_AUTOLOGIN
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_FEATURE_TELNET_WIDTH
++	bool
++	default n
+ config BUSYBOX_DEFAULT_TELNETD
+ 	bool
+ 	default n
+@@ -2347,6 +2413,9 @@ config BUSYBOX_DEFAULT_FEATURE_TFTP_PROGRESS_BAR
+ config BUSYBOX_DEFAULT_TFTP_DEBUG
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_TLS
++	bool
++	default n
+ config BUSYBOX_DEFAULT_TRACEROUTE
+ 	bool
+ 	default y
+@@ -2383,10 +2452,10 @@ config BUSYBOX_DEFAULT_FEATURE_WGET_LONG_OPTIONS
+ config BUSYBOX_DEFAULT_FEATURE_WGET_TIMEOUT
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_FEATURE_WGET_OPENSSL
++config BUSYBOX_DEFAULT_FEATURE_WGET_HTTPS
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_FEATURE_WGET_SSL_HELPER
++config BUSYBOX_DEFAULT_FEATURE_WGET_OPENSSL
+ 	bool
+ 	default n
+ config BUSYBOX_DEFAULT_WHOIS
+@@ -2398,13 +2467,16 @@ config BUSYBOX_DEFAULT_ZCIP
+ config BUSYBOX_DEFAULT_UDHCPC6
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_UDHCPD
++config BUSYBOX_DEFAULT_FEATURE_UDHCPC6_RFC3646
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_DHCPRELAY
++config BUSYBOX_DEFAULT_FEATURE_UDHCPC6_RFC4704
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_DUMPLEASES
++config BUSYBOX_DEFAULT_FEATURE_UDHCPC6_RFC4833
++	bool
++	default n
++config BUSYBOX_DEFAULT_UDHCPD
+ 	bool
+ 	default n
+ config BUSYBOX_DEFAULT_FEATURE_UDHCPD_WRITE_LEASES_EARLY
+@@ -2416,6 +2488,12 @@ config BUSYBOX_DEFAULT_FEATURE_UDHCPD_BASE_IP_ON_MAC
+ config BUSYBOX_DEFAULT_DHCPD_LEASES_FILE
+ 	string
+ 	default ""
++config BUSYBOX_DEFAULT_DUMPLEASES
++	bool
++	default n
++config BUSYBOX_DEFAULT_DHCPRELAY
++	bool
++	default n
+ config BUSYBOX_DEFAULT_UDHCPC
+ 	bool
+ 	default y
+@@ -2524,6 +2602,9 @@ config BUSYBOX_DEFAULT_PMAP
+ config BUSYBOX_DEFAULT_POWERTOP
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_FEATURE_POWERTOP_INTERACTIVE
++	bool
++	default n
+ config BUSYBOX_DEFAULT_PS
+ 	bool
+ 	default y
+@@ -2560,6 +2641,9 @@ config BUSYBOX_DEFAULT_BB_SYSCTL
+ config BUSYBOX_DEFAULT_TOP
+ 	bool
+ 	default y
++config BUSYBOX_DEFAULT_FEATURE_TOP_INTERACTIVE
++	bool
++	default n
+ config BUSYBOX_DEFAULT_FEATURE_TOP_CPU_USAGE_PERCENTAGE
+ 	bool
+ 	default y
+@@ -2698,45 +2782,45 @@ config BUSYBOX_DEFAULT_ASH_OPTIMIZE_FOR_SIZE
+ config BUSYBOX_DEFAULT_ASH_INTERNAL_GLOB
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_ASH_RANDOM_SUPPORT
+-	bool
+-	default n
+-config BUSYBOX_DEFAULT_ASH_EXPAND_PRMT
+-	bool
+-	default y
+ config BUSYBOX_DEFAULT_ASH_BASH_COMPAT
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_ASH_IDLE_TIMEOUT
+-	bool
+-	default n
+ config BUSYBOX_DEFAULT_ASH_JOB_CONTROL
+ 	bool
+ 	default y
+ config BUSYBOX_DEFAULT_ASH_ALIAS
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_ASH_GETOPTS
++config BUSYBOX_DEFAULT_ASH_RANDOM_SUPPORT
++	bool
++	default n
++config BUSYBOX_DEFAULT_ASH_EXPAND_PRMT
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_ASH_BUILTIN_ECHO
++config BUSYBOX_DEFAULT_ASH_IDLE_TIMEOUT
++	bool
++	default n
++config BUSYBOX_DEFAULT_ASH_MAIL
++	bool
++	default n
++config BUSYBOX_DEFAULT_ASH_ECHO
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_ASH_BUILTIN_PRINTF
++config BUSYBOX_DEFAULT_ASH_PRINTF
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_ASH_BUILTIN_TEST
++config BUSYBOX_DEFAULT_ASH_TEST
+ 	bool
+ 	default y
+ config BUSYBOX_DEFAULT_ASH_HELP
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_ASH_CMDCMD
++config BUSYBOX_DEFAULT_ASH_GETOPTS
+ 	bool
+ 	default y
+-config BUSYBOX_DEFAULT_ASH_MAIL
++config BUSYBOX_DEFAULT_ASH_CMDCMD
+ 	bool
+-	default n
++	default y
+ config BUSYBOX_DEFAULT_CTTYHACK
+ 	bool
+ 	default n
+@@ -2782,10 +2866,52 @@ config BUSYBOX_DEFAULT_HUSH_LOCAL
+ config BUSYBOX_DEFAULT_HUSH_RANDOM_SUPPORT
+ 	bool
+ 	default n
++config BUSYBOX_DEFAULT_HUSH_MODE_X
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_ECHO
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_PRINTF
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_TEST
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_EXPORT
++	bool
++	default n
+ config BUSYBOX_DEFAULT_HUSH_EXPORT_N
+ 	bool
+ 	default n
+-config BUSYBOX_DEFAULT_HUSH_MODE_X
++config BUSYBOX_DEFAULT_HUSH_KILL
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_WAIT
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_TRAP
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_TYPE
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_READ
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_SET
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_UNSET
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_ULIMIT
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_UMASK
++	bool
++	default n
++config BUSYBOX_DEFAULT_HUSH_MEMLEAK
+ 	bool
+ 	default n
+ config BUSYBOX_DEFAULT_MSH
+diff --git a/package/utils/busybox/Makefile b/package/utils/busybox/Makefile
+index ebc824e435..653d09ca47 100644
+--- a/package/utils/busybox/Makefile
++++ b/package/utils/busybox/Makefile
+@@ -8,14 +8,14 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=busybox
+-PKG_VERSION:=1.26.2
+-PKG_RELEASE:=7
++PKG_VERSION:=1.27.1
++PKG_RELEASE:=1
+ PKG_FLAGS:=essential
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+ PKG_SOURCE_URL:=https://www.busybox.net/downloads \
+ 		http://sources.buildroot.net
+-PKG_HASH:=da3e44913fc1a9c9b7c5337ea5292da518683cbff32be630777f565d6036af16
++PKG_HASH:=c890ac53fb218eb4c6ad9ed3207a896783b142e6d306f292b8d9bec82af5f936
+ 
+ PKG_BUILD_DEPENDS:=BUSYBOX_USE_LIBRPC:librpc BUSYBOX_CONFIG_PAM:libpam
+ PKG_BUILD_PARALLEL:=1
+diff --git a/package/utils/busybox/config/Config.in b/package/utils/busybox/config/Config.in
+index 3ee3aa2f47..ebcf526428 100644
+--- a/package/utils/busybox/config/Config.in
++++ b/package/utils/busybox/config/Config.in
+@@ -49,17 +49,6 @@ config BUSYBOX_CONFIG_USE_PORTABLE_CODE
+ 	  compiler other than gcc.
+ 	  If you do use gcc, this option may needlessly increase code size.
+ 
+-config BUSYBOX_CONFIG_PLATFORM_LINUX
+-	bool "Enable Linux-specific applets and features"
+-	default BUSYBOX_DEFAULT_PLATFORM_LINUX
+-	help
+-	  For the most part, busybox requires only POSIX compatibility
+-	  from the target system, but some applets and features use
+-	  Linux-specific interfaces.
+-
+-	  Answering 'N' here will disable such applets and hide the
+-	  corresponding configuration options.
+-
+ config BUSYBOX_CONFIG_SHOW_USAGE
+ 	bool "Show applet usage messages"
+ 	default BUSYBOX_DEFAULT_SHOW_USAGE
+@@ -123,14 +112,14 @@ config BUSYBOX_CONFIG_INSTALL_NO_USR
+ 	  never to /usr/bin or /usr/sbin.
+ 
+ config BUSYBOX_CONFIG_PAM
+-	bool "Support for PAM (Pluggable Authentication Modules)"
++	bool "Support PAM (Pluggable Authentication Modules)"
+ 	default BUSYBOX_DEFAULT_PAM
+ 	help
+ 	  Use PAM in some busybox applets (currently login and httpd) instead
+ 	  of direct access to password database.
+ 
+ config BUSYBOX_CONFIG_LONG_OPTS
+-	bool "Support for --long-options"
++	bool "Support --long-options"
+ 	default BUSYBOX_DEFAULT_LONG_OPTS
+ 	help
+ 	  Enable this if you want busybox applets to use the gnu --long-option
+@@ -197,7 +186,7 @@ config BUSYBOX_CONFIG_PID_FILE_PATH
+ 	  specify a pidfile path.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SUID
+-	bool "Support for SUID/SGID handling"
++	bool "Support SUID/SGID handling"
+ 	default BUSYBOX_DEFAULT_FEATURE_SUID
+ 	help
+ 	  With this option you can install the busybox binary belonging
+@@ -337,6 +326,17 @@ config BUSYBOX_CONFIG_FEATURE_HAVE_RPC
+ 	#  This is automatically selected if any of enabled applets need it.
+ 	#  You do not need to select it manually.
+ 
++config BUSYBOX_CONFIG_PLATFORM_LINUX
++	bool #No description makes it a hidden option
++	default BUSYBOX_DEFAULT_PLATFORM_LINUX
++	#help
++	#  For the most part, busybox requires only POSIX compatibility
++	#  from the target system, but some applets and features use
++	#  Linux-specific interfaces.
++	#
++	#  This is automatically selected if any applet or feature requires
++	#  Linux-specific interfaces. You do not need to select it manually.
++
+ comment 'Build Options'
+ 
+ config BUSYBOX_CONFIG_STATIC
+@@ -610,6 +610,8 @@ config BUSYBOX_CONFIG_DEBUG_SANITIZE
+ 	  catch bad memory accesses (e.g. buffer overflows), but will make
+ 	  the executable larger and slow down runtime a bit.
+ 
++	  This adds -fsanitize=foo options to gcc command line.
++
+ 	  If you aren't developing/testing busybox, say N here.
+ 
+ config BUSYBOX_CONFIG_UNIT_TEST
+@@ -624,7 +626,7 @@ config BUSYBOX_CONFIG_WERROR
+ 	bool "Abort compilation on any warning"
+ 	default BUSYBOX_DEFAULT_WERROR
+ 	help
+-	  Selecting this will add -Werror to gcc command line.
++	  This adds -Werror to gcc command line.
+ 
+ 	  Most people should answer N.
+ 
+diff --git a/package/utils/busybox/config/archival/Config.in b/package/utils/busybox/config/archival/Config.in
+index cf47e6591b..ccfb828a84 100644
+--- a/package/utils/busybox/config/archival/Config.in
++++ b/package/utils/busybox/config/archival/Config.in
+@@ -9,32 +9,22 @@ menu "Archival Utilities"
+ config BUSYBOX_CONFIG_FEATURE_SEAMLESS_XZ
+ 	bool "Make tar, rpm, modprobe etc understand .xz data"
+ 	default BUSYBOX_DEFAULT_FEATURE_SEAMLESS_XZ
+-	help
+-	  Make tar, rpm, modprobe etc understand .xz data.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SEAMLESS_LZMA
+ 	bool "Make tar, rpm, modprobe etc understand .lzma data"
+ 	default BUSYBOX_DEFAULT_FEATURE_SEAMLESS_LZMA
+-	help
+-	  Make tar, rpm, modprobe etc understand .lzma data.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SEAMLESS_BZ2
+ 	bool "Make tar, rpm, modprobe etc understand .bz2 data"
+ 	default BUSYBOX_DEFAULT_FEATURE_SEAMLESS_BZ2
+-	help
+-	  Make tar, rpm, modprobe etc understand .bz2 data.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SEAMLESS_GZ
+ 	bool "Make tar, rpm, modprobe etc understand .gz data"
+ 	default BUSYBOX_DEFAULT_FEATURE_SEAMLESS_GZ
+-	help
+-	  Make tar, rpm, modprobe etc understand .gz data.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SEAMLESS_Z
+ 	bool "Make tar, rpm, modprobe etc understand .Z data"
+ 	default BUSYBOX_DEFAULT_FEATURE_SEAMLESS_Z  # it is ancient
+-	help
+-	  Make tar, rpm, modprobe etc understand .Z data.
+ 
+ config BUSYBOX_CONFIG_AR
+ 	bool "ar"
+@@ -50,7 +40,7 @@ config BUSYBOX_CONFIG_AR
+ 	  probably say N here: most compilers come with their own ar utility.
+ 
+ config BUSYBOX_CONFIG_FEATURE_AR_LONG_FILENAMES
+-	bool "Support for long filenames (not needed for debs)"
++	bool "Support long filenames (not needed for debs)"
+ 	default BUSYBOX_DEFAULT_FEATURE_AR_LONG_FILENAMES
+ 	depends on BUSYBOX_CONFIG_AR
+ 	help
+@@ -74,6 +64,7 @@ config BUSYBOX_CONFIG_UNCOMPRESS
+ config BUSYBOX_CONFIG_GUNZIP
+ 	bool "gunzip"
+ 	default BUSYBOX_DEFAULT_GUNZIP
++	select BUSYBOX_CONFIG_FEATURE_GZIP_DECOMPRESS
+ 	help
+ 	  gunzip is used to decompress archives created by gzip.
+ 	  You can use the `-t' option to test the integrity of
+@@ -82,6 +73,7 @@ config BUSYBOX_CONFIG_GUNZIP
+ config BUSYBOX_CONFIG_ZCAT
+ 	bool "zcat"
+ 	default BUSYBOX_DEFAULT_ZCAT
++	select BUSYBOX_CONFIG_FEATURE_GZIP_DECOMPRESS
+ 	help
+ 	  Alias to "gunzip -c".
+ 
+@@ -89,11 +81,10 @@ config BUSYBOX_CONFIG_FEATURE_GUNZIP_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_GUNZIP_LONG_OPTIONS
+ 	depends on (BUSYBOX_CONFIG_GUNZIP || BUSYBOX_CONFIG_ZCAT) && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Enable use of long options.
+ config BUSYBOX_CONFIG_BUNZIP2
+ 	bool "bunzip2"
+ 	default BUSYBOX_DEFAULT_BUNZIP2
++	select BUSYBOX_CONFIG_FEATURE_BZIP2_DECOMPRESS
+ 	help
+ 	  bunzip2 is a compression utility using the Burrows-Wheeler block
+ 	  sorting text compression algorithm, and Huffman coding. Compression
+@@ -107,6 +98,7 @@ config BUSYBOX_CONFIG_BUNZIP2
+ config BUSYBOX_CONFIG_BZCAT
+ 	bool "bzcat"
+ 	default BUSYBOX_DEFAULT_BZCAT
++	select BUSYBOX_CONFIG_FEATURE_BZIP2_DECOMPRESS
+ 	help
+ 	  Alias to "bunzip2 -c".
+ config BUSYBOX_CONFIG_UNLZMA
+@@ -141,7 +133,7 @@ config BUSYBOX_CONFIG_LZMA
+ 	  IOW: you'll get lzma applet, but it will always require -d option.
+ 
+ config BUSYBOX_CONFIG_FEATURE_LZMA_FAST
+-	bool "Optimize unlzma for speed"
++	bool "Optimize for speed"
+ 	default BUSYBOX_DEFAULT_FEATURE_LZMA_FAST
+ 	depends on BUSYBOX_CONFIG_UNLZMA || BUSYBOX_CONFIG_LZCAT || BUSYBOX_CONFIG_LZMA
+ 	help
+@@ -177,6 +169,15 @@ config BUSYBOX_CONFIG_BZIP2
+ 
+ 	  Unless you have a specific application which requires bzip2, you
+ 	  should probably say N here.
++
++config BUSYBOX_CONFIG_FEATURE_BZIP2_DECOMPRESS
++	bool "Enable decompression"
++	default BUSYBOX_DEFAULT_FEATURE_BZIP2_DECOMPRESS
++	depends on BUSYBOX_CONFIG_BZIP2 || BUSYBOX_CONFIG_BUNZIP2 || BUSYBOX_CONFIG_BZCAT
++	help
++	  Enable -d (--decompress) and -t (--test) options for bzip2.
++	  This will be automatically selected if bunzip2 or bzcat is
++	  enabled.
+ config BUSYBOX_CONFIG_CPIO
+ 	bool "cpio"
+ 	default BUSYBOX_DEFAULT_CPIO
+@@ -192,7 +193,7 @@ config BUSYBOX_CONFIG_CPIO
+ 	  should probably say N here.
+ 
+ config BUSYBOX_CONFIG_FEATURE_CPIO_O
+-	bool "Support for archive creation"
++	bool "Support archive creation"
+ 	default BUSYBOX_DEFAULT_FEATURE_CPIO_O
+ 	depends on BUSYBOX_CONFIG_CPIO
+ 	help
+@@ -200,7 +201,7 @@ config BUSYBOX_CONFIG_FEATURE_CPIO_O
+ 	  format only.
+ 
+ config BUSYBOX_CONFIG_FEATURE_CPIO_P
+-	bool "Support for passthrough mode"
++	bool "Support passthrough mode"
+ 	default BUSYBOX_DEFAULT_FEATURE_CPIO_P
+ 	depends on BUSYBOX_CONFIG_FEATURE_CPIO_O
+ 	help
+@@ -237,11 +238,9 @@ config BUSYBOX_CONFIG_FEATURE_GZIP_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_GZIP_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_GZIP && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Enable use of long options, increases size by about 106 Bytes
+ 
+ config BUSYBOX_CONFIG_GZIP_FAST
+-	int "Trade memory for gzip speed (0:small,slow - 2:fast,big)"
++	int "Trade memory for speed (0:small,slow - 2:fast,big)"
+ 	default BUSYBOX_DEFAULT_GZIP_FAST
+ 	range 0 2
+ 	depends on BUSYBOX_CONFIG_GZIP
+@@ -261,6 +260,15 @@ config BUSYBOX_CONFIG_FEATURE_GZIP_LEVELS
+ 	  is 6. If levels 1-3 are specified, 4 is used.
+ 	  If this option is not selected, -N options are ignored and -9
+ 	  is used.
++
++config BUSYBOX_CONFIG_FEATURE_GZIP_DECOMPRESS
++	bool "Enable decompression"
++	default BUSYBOX_DEFAULT_FEATURE_GZIP_DECOMPRESS
++	depends on BUSYBOX_CONFIG_GZIP || BUSYBOX_CONFIG_GUNZIP || BUSYBOX_CONFIG_ZCAT
++	help
++	  Enable -d (--decompress) and -t (--test) options for gzip.
++	  This will be automatically selected if gunzip or zcat is
++	  enabled.
+ config BUSYBOX_CONFIG_LZOP
+ 	bool "lzop"
+ 	default BUSYBOX_DEFAULT_LZOP
+@@ -269,13 +277,13 @@ config BUSYBOX_CONFIG_LZOP
+ 
+ config BUSYBOX_CONFIG_UNLZOP
+ 	bool "unlzop"
+-	default BUSYBOX_DEFAULT_UNLZOP
++	default BUSYBOX_DEFAULT_UNLZOP  # INCOMPAT: upstream lzop does not provide such tool
+ 	help
+ 	  Lzop decompresion.
+ 
+ config BUSYBOX_CONFIG_LZOPCAT
+ 	bool "lzopcat"
+-	default BUSYBOX_DEFAULT_LZOPCAT
++	default BUSYBOX_DEFAULT_LZOPCAT  # INCOMPAT: upstream lzop does not provide such tool
+ 	help
+ 	  Alias to "unlzop -c".
+ 
+@@ -305,13 +313,15 @@ config BUSYBOX_CONFIG_TAR
+ 	  create compressed archives. It's probably the most widely used
+ 	  UNIX archive program.
+ 
++config BUSYBOX_CONFIG_FEATURE_TAR_LONG_OPTIONS
++	bool "Enable long options"
++	default BUSYBOX_DEFAULT_FEATURE_TAR_LONG_OPTIONS
++	depends on BUSYBOX_CONFIG_TAR && BUSYBOX_CONFIG_LONG_OPTS
++
+ config BUSYBOX_CONFIG_FEATURE_TAR_CREATE
+-	bool "Enable archive creation"
++	bool "Enable -c (archive creation)"
+ 	default BUSYBOX_DEFAULT_FEATURE_TAR_CREATE
+ 	depends on BUSYBOX_CONFIG_TAR
+-	help
+-	  If you enable this option you'll be able to create
+-	  tar archives using the `-c' option.
+ 
+ config BUSYBOX_CONFIG_FEATURE_TAR_AUTODETECT
+ 	bool "Autodetect compressed tarballs"
+@@ -330,7 +340,7 @@ config BUSYBOX_CONFIG_FEATURE_TAR_FROM
+ 	  a list of files to include or exclude from an archive.
+ 
+ config BUSYBOX_CONFIG_FEATURE_TAR_OLDGNU_COMPATIBILITY
+-	bool "Support for old tar header format"
++	bool "Support old tar header format"
+ 	default BUSYBOX_DEFAULT_FEATURE_TAR_OLDGNU_COMPATIBILITY
+ 	depends on BUSYBOX_CONFIG_TAR || BUSYBOX_CONFIG_DPKG
+ 	help
+@@ -349,22 +359,12 @@ config BUSYBOX_CONFIG_FEATURE_TAR_OLDSUN_COMPATIBILITY
+ 	  tarballs still exist.
+ 
+ config BUSYBOX_CONFIG_FEATURE_TAR_GNU_EXTENSIONS
+-	bool "Support for GNU tar extensions (long filenames)"
++	bool "Support GNU tar extensions (long filenames)"
+ 	default BUSYBOX_DEFAULT_FEATURE_TAR_GNU_EXTENSIONS
+ 	depends on BUSYBOX_CONFIG_TAR || BUSYBOX_CONFIG_DPKG
+-	help
+-	  With this option busybox supports GNU long filenames and
+-	  linknames.
+-
+-config BUSYBOX_CONFIG_FEATURE_TAR_LONG_OPTIONS
+-	bool "Enable long options"
+-	default BUSYBOX_DEFAULT_FEATURE_TAR_LONG_OPTIONS
+-	depends on BUSYBOX_CONFIG_TAR && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Enable use of long options, increases size by about 400 Bytes
+ 
+ config BUSYBOX_CONFIG_FEATURE_TAR_TO_COMMAND
+-	bool "Support for writing to an external program"
++	bool "Support writing to an external program (--to-command)"
+ 	default BUSYBOX_DEFAULT_FEATURE_TAR_TO_COMMAND
+ 	depends on BUSYBOX_CONFIG_TAR && BUSYBOX_CONFIG_FEATURE_TAR_LONG_OPTIONS
+ 	help
+@@ -377,20 +377,17 @@ config BUSYBOX_CONFIG_FEATURE_TAR_UNAME_GNAME
+ 	default BUSYBOX_DEFAULT_FEATURE_TAR_UNAME_GNAME
+ 	depends on BUSYBOX_CONFIG_TAR
+ 	help
+-	  Enables use of user and group names in tar. This affects contents
++	  Enable use of user and group names in tar. This affects contents
+ 	  listings (-t) and preserving permissions when unpacking (-p).
+ 	  +200 bytes.
+ 
+ config BUSYBOX_CONFIG_FEATURE_TAR_NOPRESERVE_TIME
+-	bool "Enable -m (do not preserve time) option"
++	bool "Enable -m (do not preserve time) GNU option"
+ 	default BUSYBOX_DEFAULT_FEATURE_TAR_NOPRESERVE_TIME
+ 	depends on BUSYBOX_CONFIG_TAR
+-	help
+-	  With this option busybox supports GNU tar -m
+-	  (do not preserve time) option.
+ 
+ config BUSYBOX_CONFIG_FEATURE_TAR_SELINUX
+-	bool "Support for extracting SELinux labels"
++	bool "Support extracting SELinux labels"
+ 	default BUSYBOX_DEFAULT_FEATURE_TAR_SELINUX
+ 	depends on BUSYBOX_CONFIG_TAR && BUSYBOX_CONFIG_SELINUX
+ 	help
+@@ -403,7 +400,31 @@ config BUSYBOX_CONFIG_UNZIP
+ 	  unzip will list or extract files from a ZIP archive,
+ 	  commonly found on DOS/WIN systems. The default behavior
+ 	  (with no options) is to extract the archive into the
+-	  current directory. Use the `-d' option to extract to a
+-	  directory of your choice.
++	  current directory.
++
++config BUSYBOX_CONFIG_FEATURE_UNZIP_CDF
++	bool "Read and use Central Directory data"
++	default BUSYBOX_DEFAULT_FEATURE_UNZIP_CDF
++	depends on BUSYBOX_CONFIG_UNZIP
++	help
++	  If you know that you only need to deal with simple
++	  ZIP files without deleted/updated files, SFX archives etc,
++	  you can reduce code size by unselecting this option.
++	  To support less trivial ZIPs, say Y.
++
++config BUSYBOX_CONFIG_FEATURE_UNZIP_BZIP2
++	bool "Support compression method 12 (bzip2)"
++	default BUSYBOX_DEFAULT_FEATURE_UNZIP_BZIP2
++	depends on BUSYBOX_CONFIG_FEATURE_UNZIP_CDF && BUSYBOX_CONFIG_DESKTOP
++
++config BUSYBOX_CONFIG_FEATURE_UNZIP_LZMA
++	bool "Support compression method 14 (lzma)"
++	default BUSYBOX_DEFAULT_FEATURE_UNZIP_LZMA
++	depends on BUSYBOX_CONFIG_FEATURE_UNZIP_CDF && BUSYBOX_CONFIG_DESKTOP
++
++config BUSYBOX_CONFIG_FEATURE_UNZIP_XZ
++	bool "Support compression method 95 (xz)"
++	default BUSYBOX_DEFAULT_FEATURE_UNZIP_XZ
++	depends on BUSYBOX_CONFIG_FEATURE_UNZIP_CDF && BUSYBOX_CONFIG_DESKTOP
+ 
+ endmenu
+diff --git a/package/utils/busybox/config/console-tools/Config.in b/package/utils/busybox/config/console-tools/Config.in
+index e5a4bfbeaf..dcc19a567d 100644
+--- a/package/utils/busybox/config/console-tools/Config.in
++++ b/package/utils/busybox/config/console-tools/Config.in
+@@ -76,18 +76,14 @@ comment "Common options for loadfont and setfont"
+ 	depends on BUSYBOX_CONFIG_LOADFONT || BUSYBOX_CONFIG_SETFONT
+ 
+ config BUSYBOX_CONFIG_FEATURE_LOADFONT_PSF2
+-	bool "Support for PSF2 console fonts"
++	bool "Support PSF2 console fonts"
+ 	default BUSYBOX_DEFAULT_FEATURE_LOADFONT_PSF2
+ 	depends on BUSYBOX_CONFIG_LOADFONT || BUSYBOX_CONFIG_SETFONT
+-	help
+-	  Support PSF2 console fonts.
+ 
+ config BUSYBOX_CONFIG_FEATURE_LOADFONT_RAW
+-	bool "Support for old (raw) console fonts"
++	bool "Support old (raw) console fonts"
+ 	default BUSYBOX_DEFAULT_FEATURE_LOADFONT_RAW
+ 	depends on BUSYBOX_CONFIG_LOADFONT || BUSYBOX_CONFIG_SETFONT
+-	help
+-	  Support old (raw) console fonts.
+ config BUSYBOX_CONFIG_LOADKMAP
+ 	bool "loadkmap"
+ 	default BUSYBOX_DEFAULT_LOADKMAP
+@@ -136,8 +132,6 @@ config BUSYBOX_CONFIG_FEATURE_SETCONSOLE_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_SETCONSOLE_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_SETCONSOLE && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the setconsole applet.
+ config BUSYBOX_CONFIG_SETKEYCODES
+ 	bool "setkeycodes"
+ 	default BUSYBOX_DEFAULT_SETKEYCODES
+diff --git a/package/utils/busybox/config/coreutils/Config.in b/package/utils/busybox/config/coreutils/Config.in
+index 855bcd1b44..c4ef1f4fb7 100644
+--- a/package/utils/busybox/config/coreutils/Config.in
++++ b/package/utils/busybox/config/coreutils/Config.in
+@@ -13,23 +13,19 @@ config BUSYBOX_CONFIG_BASENAME
+ 	  basename is used to strip the directory and suffix from filenames,
+ 	  leaving just the filename itself. Enable this option if you wish
+ 	  to enable the 'basename' utility.
+-config BUSYBOX_CONFIG_CAL
+-	bool "cal"
+-	default BUSYBOX_DEFAULT_CAL
+-	help
+-	  cal is used to display a monthly calendar.
+ config BUSYBOX_CONFIG_CAT
+ 	bool "cat"
+ 	default BUSYBOX_DEFAULT_CAT
+ 	help
+ 	  cat is used to concatenate files and print them to the standard
+ 	  output. Enable this option if you wish to enable the 'cat' utility.
+-config BUSYBOX_CONFIG_CATV
+-	bool "catv"
+-	default BUSYBOX_DEFAULT_CATV
++
++config BUSYBOX_CONFIG_FEATURE_CATV
++	bool "cat -v[etA]"
++	default BUSYBOX_DEFAULT_FEATURE_CATV
++	depends on BUSYBOX_CONFIG_CAT
+ 	help
+-	  Display nonprinting characters as escape sequences (like some
+-	  implementations' cat -v option).
++	  Display nonprinting characters as escape sequences
+ config BUSYBOX_CONFIG_CHGRP
+ 	bool "chgrp"
+ 	default BUSYBOX_DEFAULT_CHGRP
+@@ -51,8 +47,6 @@ config BUSYBOX_CONFIG_FEATURE_CHOWN_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_CHOWN_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_CHOWN && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Enable use of long options
+ config BUSYBOX_CONFIG_CHROOT
+ 	bool "chroot"
+ 	default BUSYBOX_DEFAULT_CHROOT
+@@ -77,11 +71,11 @@ config BUSYBOX_CONFIG_CP
+ 	  cp is used to copy files and directories.
+ 
+ config BUSYBOX_CONFIG_FEATURE_CP_LONG_OPTIONS
+-	bool "Enable long options for cp"
++	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_CP_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_CP && BUSYBOX_CONFIG_LONG_OPTS
+ 	help
+-	  Enable long options for cp.
++	  Enable long options.
+ 	  Also add support for --parents option.
+ config BUSYBOX_CONFIG_CUT
+ 	bool "cut"
+@@ -163,7 +157,7 @@ config BUSYBOX_CONFIG_FEATURE_DD_IBS_OBS
+ 	default BUSYBOX_DEFAULT_FEATURE_DD_IBS_OBS
+ 	depends on BUSYBOX_CONFIG_DD
+ 	help
+-	  Enables support for writing a certain number of bytes in and out,
++	  Enable support for writing a certain number of bytes in and out,
+ 	  at a time, and performing conversions on the data stream.
+ 
+ config BUSYBOX_CONFIG_FEATURE_DD_STATUS
+@@ -171,7 +165,7 @@ config BUSYBOX_CONFIG_FEATURE_DD_STATUS
+ 	default BUSYBOX_DEFAULT_FEATURE_DD_STATUS
+ 	depends on BUSYBOX_CONFIG_DD
+ 	help
+-	  Enables support for status=noxfer/none option.
++	  Enable support for status=noxfer/none option.
+ config BUSYBOX_CONFIG_DF
+ 	bool "df"
+ 	default BUSYBOX_DEFAULT_DF
+@@ -184,11 +178,9 @@ config BUSYBOX_CONFIG_FEATURE_DF_FANCY
+ 	default BUSYBOX_DEFAULT_FEATURE_DF_FANCY
+ 	depends on BUSYBOX_CONFIG_DF
+ 	help
+-	  This option enables -a, -i and -B.
+-
+-	    -a Show all filesystems
+-	    -i Inodes
+-	    -B <SIZE> Blocksize
++	  -a Show all filesystems
++	  -i Inodes
++	  -B <SIZE> Blocksize
+ config BUSYBOX_CONFIG_DIRNAME
+ 	bool "dirname"
+ 	default BUSYBOX_DEFAULT_DIRNAME
+@@ -229,11 +221,9 @@ config BUSYBOX_CONFIG_ECHO
+ 
+ # this entry also appears in shell/Config.in, next to the echo builtin
+ config BUSYBOX_CONFIG_FEATURE_FANCY_ECHO
+-	bool "Enable echo options (-n and -e)"
++	bool "Enable -n and -e options"
+ 	default BUSYBOX_DEFAULT_FEATURE_FANCY_ECHO
+-	depends on BUSYBOX_CONFIG_ECHO || BUSYBOX_CONFIG_ASH_BUILTIN_ECHO || BUSYBOX_CONFIG_HUSH
+-	help
+-	  This adds options (-n and -e) to echo.
++	depends on BUSYBOX_CONFIG_ECHO || BUSYBOX_CONFIG_ASH_ECHO || BUSYBOX_CONFIG_HUSH_ECHO
+ config BUSYBOX_CONFIG_ENV
+ 	bool "env"
+ 	default BUSYBOX_DEFAULT_ENV
+@@ -246,8 +236,6 @@ config BUSYBOX_CONFIG_FEATURE_ENV_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_ENV_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_ENV && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the env applet.
+ config BUSYBOX_CONFIG_EXPAND
+ 	bool "expand"
+ 	default BUSYBOX_DEFAULT_EXPAND
+@@ -258,8 +246,6 @@ config BUSYBOX_CONFIG_FEATURE_EXPAND_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_EXPAND_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_EXPAND && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the expand applet.
+ 
+ config BUSYBOX_CONFIG_UNEXPAND
+ 	bool "unexpand"
+@@ -271,8 +257,6 @@ config BUSYBOX_CONFIG_FEATURE_UNEXPAND_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_UNEXPAND_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_UNEXPAND && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the unexpand applet.
+ config BUSYBOX_CONFIG_EXPR
+ 	bool "expr"
+ 	default BUSYBOX_DEFAULT_EXPR
+@@ -288,6 +272,11 @@ config BUSYBOX_CONFIG_EXPR_MATH_SUPPORT_64
+ 	  Enable 64-bit math support in the expr applet. This will make
+ 	  the applet slightly larger, but will allow computation with very
+ 	  large numbers.
++config BUSYBOX_CONFIG_FACTOR
++	bool "factor"
++	default BUSYBOX_DEFAULT_FACTOR
++	help
++	  factor factorizes integers
+ config BUSYBOX_CONFIG_FALSE
+ 	bool "false"
+ 	default BUSYBOX_DEFAULT_FALSE
+@@ -311,11 +300,9 @@ config BUSYBOX_CONFIG_HEAD
+ 	  from files.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FANCY_HEAD
+-	bool "Enable head options (-c, -q, and -v)"
++	bool "Enable -c, -q, and -v"
+ 	default BUSYBOX_DEFAULT_FEATURE_FANCY_HEAD
+ 	depends on BUSYBOX_CONFIG_HEAD
+-	help
+-	  This enables the head options (-c, -q, and -v).
+ config BUSYBOX_CONFIG_HOSTID
+ 	bool "hostid"
+ 	default BUSYBOX_DEFAULT_HOSTID
+@@ -343,8 +330,11 @@ config BUSYBOX_CONFIG_FEATURE_INSTALL_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_INSTALL_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_INSTALL && BUSYBOX_CONFIG_LONG_OPTS
++config BUSYBOX_CONFIG_LINK
++	bool "link"
++	default BUSYBOX_DEFAULT_LINK
+ 	help
+-	  Support long options for the install applet.
++	  link creates hard links between files.
+ config BUSYBOX_CONFIG_LN
+ 	bool "ln"
+ 	default BUSYBOX_DEFAULT_LN
+@@ -365,22 +355,21 @@ config BUSYBOX_CONFIG_FEATURE_LS_FILETYPES
+ 	bool "Enable filetyping options (-p and -F)"
+ 	default BUSYBOX_DEFAULT_FEATURE_LS_FILETYPES
+ 	depends on BUSYBOX_CONFIG_LS
+-	help
+-	  Enable the ls options (-p and -F).
+ 
+ config BUSYBOX_CONFIG_FEATURE_LS_FOLLOWLINKS
+ 	bool "Enable symlinks dereferencing (-L)"
+ 	default BUSYBOX_DEFAULT_FEATURE_LS_FOLLOWLINKS
+ 	depends on BUSYBOX_CONFIG_LS
+-	help
+-	  Enable the ls option (-L).
+ 
+ config BUSYBOX_CONFIG_FEATURE_LS_RECURSIVE
+ 	bool "Enable recursion (-R)"
+ 	default BUSYBOX_DEFAULT_FEATURE_LS_RECURSIVE
+ 	depends on BUSYBOX_CONFIG_LS
+-	help
+-	  Enable the ls option (-R).
++
++config BUSYBOX_CONFIG_FEATURE_LS_WIDTH
++	bool "Enable -w WIDTH and window size autodetection"
++	default BUSYBOX_DEFAULT_FEATURE_LS_WIDTH
++	depends on BUSYBOX_CONFIG_LS
+ 
+ config BUSYBOX_CONFIG_FEATURE_LS_SORTFILES
+ 	bool "Sort the file names"
+@@ -460,7 +449,6 @@ config BUSYBOX_CONFIG_FEATURE_MD5_SHA1_SUM_CHECK
+ 	help
+ 	  Enabling the -c options allows files to be checked
+ 	  against pre-calculated hash values.
+-
+ 	  -s and -w are useful options when verifying checksums.
+ config BUSYBOX_CONFIG_MKDIR
+ 	bool "mkdir"
+@@ -472,8 +460,6 @@ config BUSYBOX_CONFIG_FEATURE_MKDIR_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_MKDIR_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_MKDIR && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the mkdir applet.
+ config BUSYBOX_CONFIG_MKFIFO
+ 	bool "mkfifo"
+ 	default BUSYBOX_DEFAULT_MKFIFO
+@@ -486,6 +472,11 @@ config BUSYBOX_CONFIG_MKNOD
+ 	help
+ 	  mknod is used to create FIFOs or block/character special
+ 	  files with the specified names.
++config BUSYBOX_CONFIG_MKTEMP
++	bool "mktemp"
++	default BUSYBOX_DEFAULT_MKTEMP
++	help
++	  mktemp is used to create unique temporary files
+ config BUSYBOX_CONFIG_MV
+ 	bool "mv"
+ 	default BUSYBOX_DEFAULT_MV
+@@ -496,23 +487,37 @@ config BUSYBOX_CONFIG_FEATURE_MV_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_MV_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_MV && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the mv applet.
+ config BUSYBOX_CONFIG_NICE
+ 	bool "nice"
+ 	default BUSYBOX_DEFAULT_NICE
+ 	help
+ 	  nice runs a program with modified scheduling priority.
++config BUSYBOX_CONFIG_NL
++	bool "nl"
++	default BUSYBOX_DEFAULT_NL
++	help
++	  nl is used to number lines of files.
+ config BUSYBOX_CONFIG_NOHUP
+ 	bool "nohup"
+ 	default BUSYBOX_DEFAULT_NOHUP
+ 	help
+ 	  run a command immune to hangups, with output to a non-tty.
++config BUSYBOX_CONFIG_NPROC
++	bool "nproc"
++	default BUSYBOX_DEFAULT_NPROC
++	help
++	  Print number of CPUs
+ config BUSYBOX_CONFIG_OD
+ 	bool "od"
+ 	default BUSYBOX_DEFAULT_OD
+ 	help
+ 	  od is used to dump binary files in octal and other formats.
++config BUSYBOX_CONFIG_PASTE
++	bool "paste"
++	default BUSYBOX_DEFAULT_PASTE
++	help
++	  paste is used to paste lines of different files together
++	  and write the result to stdout
+ config BUSYBOX_CONFIG_PRINTENV
+ 	bool "printenv"
+ 	default BUSYBOX_DEFAULT_PRINTENV
+@@ -571,6 +576,11 @@ config BUSYBOX_CONFIG_SEQ
+ 	default BUSYBOX_DEFAULT_SEQ
+ 	help
+ 	  print a sequence of numbers
++config BUSYBOX_CONFIG_SHRED
++	bool "shred"
++	default BUSYBOX_DEFAULT_SHRED
++	help
++	  Overwrite a file to hide its contents, and optionally delete it
+ config BUSYBOX_CONFIG_SHUF
+ 	bool "shuf"
+ 	default BUSYBOX_DEFAULT_SHUF
+@@ -624,7 +634,7 @@ config BUSYBOX_CONFIG_SPLIT
+ 	bool "split"
+ 	default BUSYBOX_DEFAULT_SPLIT
+ 	help
+-	  split a file into pieces.
++	  Split a file into pieces.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SPLIT_FANCY
+ 	bool "Fancy extensions"
+@@ -692,13 +702,12 @@ config BUSYBOX_CONFIG_TAIL
+ 	  from files.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FANCY_TAIL
+-	bool "Enable extra tail options (-q, -s, -v, and -F)"
++	bool "Enable -q, -s, -v, and -F options"
+ 	default BUSYBOX_DEFAULT_FEATURE_FANCY_TAIL
+ 	depends on BUSYBOX_CONFIG_TAIL
+ 	help
+-	  The options (-q, -s, -v and -F) are provided by GNU tail, but
+-	  are not specific in the SUSv3 standard.
+-
++	  These options are provided by GNU tail, but
++	  are not specific in the SUSv3 standard:
+ 	    -q      Never output headers giving file names
+ 	    -s SEC  Wait SEC seconds between reads with -f
+ 	    -v      Always output headers giving file names
+@@ -739,9 +748,15 @@ config BUSYBOX_CONFIG_TEST2
+ config BUSYBOX_CONFIG_FEATURE_TEST_64
+ 	bool "Extend test to 64 bit"
+ 	default BUSYBOX_DEFAULT_FEATURE_TEST_64
+-	depends on BUSYBOX_CONFIG_TEST || BUSYBOX_CONFIG_TEST1 || BUSYBOX_CONFIG_TEST2 || BUSYBOX_CONFIG_ASH_BUILTIN_TEST || BUSYBOX_CONFIG_HUSH
++	depends on BUSYBOX_CONFIG_TEST || BUSYBOX_CONFIG_TEST1 || BUSYBOX_CONFIG_TEST2 || BUSYBOX_CONFIG_ASH_TEST || BUSYBOX_CONFIG_HUSH_TEST
+ 	help
+ 	  Enable 64-bit support in test.
++config BUSYBOX_CONFIG_TIMEOUT
++	bool "timeout"
++	default BUSYBOX_DEFAULT_TIMEOUT
++	help
++	  Runs a program and watches it. If it does not terminate in
++	  specified number of seconds, it is sent a signal.
+ config BUSYBOX_CONFIG_TOUCH
+ 	bool "touch"
+ 	default BUSYBOX_DEFAULT_TOUCH
+@@ -856,11 +871,11 @@ config BUSYBOX_CONFIG_WC
+ 	  in specified files.
+ 
+ config BUSYBOX_CONFIG_FEATURE_WC_LARGE
+-	bool "Support very large files in wc"
++	bool "Support very large counts"
+ 	default BUSYBOX_DEFAULT_FEATURE_WC_LARGE
+ 	depends on BUSYBOX_CONFIG_WC
+ 	help
+-	  Use "unsigned long long" in wc for counter variables.
++	  Use "unsigned long long" for counter variables.
+ config BUSYBOX_CONFIG_WHO
+       bool "who"
+       default BUSYBOX_DEFAULT_WHO
+@@ -868,6 +883,13 @@ config BUSYBOX_CONFIG_WHO
+       help
+         who is used to show who is logged on.
+ 
++config BUSYBOX_CONFIG_W
++      bool "w"
++      default BUSYBOX_DEFAULT_W
++      depends on BUSYBOX_CONFIG_FEATURE_UTMP
++      help
++        w is used to show who is logged on.
++
+ config BUSYBOX_CONFIG_USERS
+       bool "users"
+       default BUSYBOX_DEFAULT_USERS
+@@ -907,25 +929,11 @@ config BUSYBOX_CONFIG_FEATURE_PRESERVE_HARDLINKS
+ 	help
+ 	  Allow cp and mv to preserve hard links.
+ 
+-comment "Common options for ls, more and telnet"
+-	depends on BUSYBOX_CONFIG_LS || BUSYBOX_CONFIG_MORE || BUSYBOX_CONFIG_TELNET
+-
+-config BUSYBOX_CONFIG_FEATURE_AUTOWIDTH
+-	bool "Calculate terminal & column widths"
+-	default BUSYBOX_DEFAULT_FEATURE_AUTOWIDTH
+-	depends on BUSYBOX_CONFIG_LS || BUSYBOX_CONFIG_MORE || BUSYBOX_CONFIG_TELNET
+-	help
+-	  This option allows utilities such as 'ls', 'more' and 'telnet'
+-	  to determine the width of the screen, which can allow them to
+-	  display additional text or avoid wrapping text onto the next line.
+-	  If you leave this disabled, your utilities will be especially
+-	  primitive and will be unable to determine the current screen width.
+-
+ comment "Common options for df, du, ls"
+ 	depends on BUSYBOX_CONFIG_DF || BUSYBOX_CONFIG_DU || BUSYBOX_CONFIG_LS
+ 
+ config BUSYBOX_CONFIG_FEATURE_HUMAN_READABLE
+-	bool "Support for human readable output (example 13k, 23M, 235G)"
++	bool "Support human readable output (example 13k, 23M, 235G)"
+ 	default BUSYBOX_DEFAULT_FEATURE_HUMAN_READABLE
+ 	depends on BUSYBOX_CONFIG_DF || BUSYBOX_CONFIG_DU || BUSYBOX_CONFIG_LS
+ 	help
+diff --git a/package/utils/busybox/config/debianutils/Config.in b/package/utils/busybox/config/debianutils/Config.in
+index d39c60f43e..6b9de0de56 100644
+--- a/package/utils/busybox/config/debianutils/Config.in
++++ b/package/utils/busybox/config/debianutils/Config.in
+@@ -6,11 +6,6 @@
+ 
+ menu "Debian Utilities"
+ 
+-config BUSYBOX_CONFIG_MKTEMP
+-	bool "mktemp"
+-	default BUSYBOX_DEFAULT_MKTEMP
+-	help
+-	  mktemp is used to create unique temporary files
+ config BUSYBOX_CONFIG_PIPE_PROGRESS
+ 	bool "pipe_progress"
+ 	default BUSYBOX_DEFAULT_PIPE_PROGRESS
+@@ -35,8 +30,6 @@ config BUSYBOX_CONFIG_FEATURE_RUN_PARTS_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_RUN_PARTS_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_RUN_PARTS && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the run-parts applet.
+ 
+ config BUSYBOX_CONFIG_FEATURE_RUN_PARTS_FANCY
+ 	bool "Support additional arguments"
+@@ -54,22 +47,19 @@ config BUSYBOX_CONFIG_START_STOP_DAEMON
+ 	  termination of system-level processes, usually the ones
+ 	  started during the startup of the system.
+ 
++config BUSYBOX_CONFIG_FEATURE_START_STOP_DAEMON_LONG_OPTIONS
++	bool "Enable long options"
++	default BUSYBOX_DEFAULT_FEATURE_START_STOP_DAEMON_LONG_OPTIONS
++	depends on BUSYBOX_CONFIG_START_STOP_DAEMON && BUSYBOX_CONFIG_LONG_OPTS
++
+ config BUSYBOX_CONFIG_FEATURE_START_STOP_DAEMON_FANCY
+ 	bool "Support additional arguments"
+ 	default BUSYBOX_DEFAULT_FEATURE_START_STOP_DAEMON_FANCY
+ 	depends on BUSYBOX_CONFIG_START_STOP_DAEMON
+ 	help
+-	  Support additional arguments.
+ 	  -o|--oknodo ignored since we exit with 0 anyway
+ 	  -v|--verbose
+ 	  -N|--nicelevel N
+-
+-config BUSYBOX_CONFIG_FEATURE_START_STOP_DAEMON_LONG_OPTIONS
+-	bool "Enable long options"
+-	default BUSYBOX_DEFAULT_FEATURE_START_STOP_DAEMON_LONG_OPTIONS
+-	depends on BUSYBOX_CONFIG_START_STOP_DAEMON && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the start-stop-daemon applet.
+ config BUSYBOX_CONFIG_WHICH
+ 	bool "which"
+ 	default BUSYBOX_DEFAULT_WHICH
+diff --git a/package/utils/busybox/config/editors/Config.in b/package/utils/busybox/config/editors/Config.in
+index 6ae361f7ff..da4eaedd79 100644
+--- a/package/utils/busybox/config/editors/Config.in
++++ b/package/utils/busybox/config/editors/Config.in
+@@ -49,8 +49,6 @@ config BUSYBOX_CONFIG_FEATURE_DIFF_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_DIFF_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_DIFF && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Enable use of long options.
+ 
+ config BUSYBOX_CONFIG_FEATURE_DIFF_DIR
+ 	bool "Enable directory support"
+@@ -87,7 +85,7 @@ config BUSYBOX_CONFIG_VI
+ 	  you may wish to use something else.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_MAX_LEN
+-	int "Maximum screen width in vi"
++	int "Maximum screen width"
+ 	range 256 16384
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_MAX_LEN
+ 	depends on BUSYBOX_CONFIG_VI
+@@ -96,7 +94,7 @@ config BUSYBOX_CONFIG_FEATURE_VI_MAX_LEN
+ 	  Make it smaller than 4k only if you are very limited on memory.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_8BIT
+-	bool "Allow vi to display 8-bit chars (otherwise shows dots)"
++	bool "Allow to display 8-bit chars (otherwise shows dots)"
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_8BIT
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+@@ -110,7 +108,7 @@ config BUSYBOX_CONFIG_FEATURE_VI_COLON
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_COLON
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+-	  Enable a limited set of colon commands for vi. This does not
++	  Enable a limited set of colon commands. This does not
+ 	  provide an "ex" mode.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_YANKMARK
+@@ -118,16 +116,14 @@ config BUSYBOX_CONFIG_FEATURE_VI_YANKMARK
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_YANKMARK
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+-	  This will enable you to use yank and put, as well as mark in
+-	  busybox vi.
++	  This will enable you to use yank and put, as well as mark.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_SEARCH
+ 	bool "Enable search and replace cmds"
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_SEARCH
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+-	  Select this if you wish to be able to do search and replace in
+-	  busybox vi.
++	  Select this if you wish to be able to do search and replace.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_REGEX_SEARCH
+ 	bool "Enable regex in search and replace"
+@@ -141,16 +137,15 @@ config BUSYBOX_CONFIG_FEATURE_VI_USE_SIGNALS
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_USE_SIGNALS
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+-	  Selecting this option will make busybox vi signal aware. This will
+-	  make busybox vi support SIGWINCH to deal with Window Changes, catch
+-	  Ctrl-Z and Ctrl-C and alarms.
++	  Selecting this option will make vi signal aware. This will support
++	  SIGWINCH to deal with Window Changes, catch ^Z and ^C and alarms.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_DOT_CMD
+ 	bool "Remember previous cmd and \".\" cmd"
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_DOT_CMD
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+-	  Make busybox vi remember the last command and be able to repeat it.
++	  Make vi remember the last command and be able to repeat it.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_READONLY
+ 	bool "Enable -R option and \"view\" mode"
+@@ -161,25 +156,23 @@ config BUSYBOX_CONFIG_FEATURE_VI_READONLY
+ 	  open a file in read-only mode.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_SETOPTS
+-	bool "Enable set-able options, ai ic showmatch"
++	bool "Enable settable options, ai ic showmatch"
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_SETOPTS
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+ 	  Enable the editor to set some (ai, ic, showmatch) options.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_SET
+-	bool "Support for :set"
++	bool "Support :set"
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_SET
+ 	depends on BUSYBOX_CONFIG_VI
+-	help
+-	  Support for ":set".
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_WIN_RESIZE
+ 	bool "Handle window resize"
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_WIN_RESIZE
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+-	  Make busybox vi behave nicely with terminals that get resized.
++	  Behave nicely with terminals that get resized.
+ 
+ config BUSYBOX_CONFIG_FEATURE_VI_ASK_TERMINAL
+ 	bool "Use 'tell me cursor position' ESC sequence to measure window"
+@@ -190,15 +183,16 @@ config BUSYBOX_CONFIG_FEATURE_VI_ASK_TERMINAL
+ 	  this option makes vi perform a last-ditch effort to find it:
+ 	  position cursor to 999,999 and ask terminal to report real
+ 	  cursor position using "ESC [ 6 n" escape sequence, then read stdin.
+-
+ 	  This is not clean but helps a lot on serial lines and such.
++
+ config BUSYBOX_CONFIG_FEATURE_VI_UNDO
+-	bool "Support undo command 'u'"
++	bool "Support undo command \"u\""
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_UNDO
+ 	depends on BUSYBOX_CONFIG_VI
+ 	help
+ 	  Support the 'u' command to undo insertion, deletion, and replacement
+ 	  of text.
++
+ config BUSYBOX_CONFIG_FEATURE_VI_UNDO_QUEUE
+ 	bool "Enable undo operation queuing"
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_UNDO_QUEUE
+@@ -209,6 +203,7 @@ config BUSYBOX_CONFIG_FEATURE_VI_UNDO_QUEUE
+ 	  reached, the contents of the queue are committed to the undo stack.
+ 	  This increases the size of the undo code and allows some undo
+ 	  operations (especially un-typing/backspacing) to be far more useful.
++
+ config BUSYBOX_CONFIG_FEATURE_VI_UNDO_QUEUE_MAX
+ 	int "Maximum undo character queue size"
+ 	default BUSYBOX_DEFAULT_FEATURE_VI_UNDO_QUEUE_MAX
+@@ -228,7 +223,7 @@ config BUSYBOX_CONFIG_FEATURE_ALLOW_EXEC
+ 	default BUSYBOX_DEFAULT_FEATURE_ALLOW_EXEC
+ 	depends on BUSYBOX_CONFIG_VI || BUSYBOX_CONFIG_AWK
+ 	help
+-	  Enables vi and awk features which allows user to execute
++	  Enables vi and awk features which allow user to execute
+ 	  shell commands (using system() C call).
+ 
+ endmenu
+diff --git a/package/utils/busybox/config/findutils/Config.in b/package/utils/busybox/config/findutils/Config.in
+index 7d636d1ac4..3393adbe3b 100644
+--- a/package/utils/busybox/config/findutils/Config.in
++++ b/package/utils/busybox/config/findutils/Config.in
+@@ -42,8 +42,6 @@ config BUSYBOX_CONFIG_FEATURE_FIND_PERM
+ 	bool "Enable -perm: permissions matching"
+ 	default BUSYBOX_DEFAULT_FEATURE_FIND_PERM
+ 	depends on BUSYBOX_CONFIG_FIND
+-	help
+-	  Enable searching based on file permissions.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FIND_TYPE
+ 	bool "Enable -type: file type matching (file/dir/link/...)"
+@@ -57,15 +55,11 @@ config BUSYBOX_CONFIG_FEATURE_FIND_XDEV
+ 	bool "Enable -xdev: 'stay in filesystem'"
+ 	default BUSYBOX_DEFAULT_FEATURE_FIND_XDEV
+ 	depends on BUSYBOX_CONFIG_FIND
+-	help
+-	  This option allows find to restrict searches to a single filesystem.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FIND_MAXDEPTH
+ 	bool "Enable -mindepth N and -maxdepth N"
+ 	default BUSYBOX_DEFAULT_FEATURE_FIND_MAXDEPTH
+ 	depends on BUSYBOX_CONFIG_FIND
+-	help
+-	  This option enables -mindepth N and -maxdepth N option.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FIND_NEWER
+ 	bool "Enable -newer: compare file modification times"
+@@ -79,8 +73,6 @@ config BUSYBOX_CONFIG_FEATURE_FIND_INUM
+ 	bool "Enable -inum: inode number matching"
+ 	default BUSYBOX_DEFAULT_FEATURE_FIND_INUM
+ 	depends on BUSYBOX_CONFIG_FIND
+-	help
+-	  Support the 'find -inum' option for searching by inode number.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FIND_EXEC
+ 	bool "Enable -exec: execute commands"
+@@ -104,15 +96,11 @@ config BUSYBOX_CONFIG_FEATURE_FIND_USER
+ 	bool "Enable -user: username/uid matching"
+ 	default BUSYBOX_DEFAULT_FEATURE_FIND_USER
+ 	depends on BUSYBOX_CONFIG_FIND
+-	help
+-	  Support the 'find -user' option for searching by username or uid.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FIND_GROUP
+ 	bool "Enable -group: group/gid matching"
+ 	default BUSYBOX_DEFAULT_FEATURE_FIND_GROUP
+ 	depends on BUSYBOX_CONFIG_FIND
+-	help
+-	  Support the 'find -group' option for searching by group name or gid.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FIND_NOT
+ 	bool "Enable the 'not' (!) operator"
+@@ -141,15 +129,13 @@ config BUSYBOX_CONFIG_FEATURE_FIND_SIZE
+ 	bool "Enable -size: file size matching"
+ 	default BUSYBOX_DEFAULT_FEATURE_FIND_SIZE
+ 	depends on BUSYBOX_CONFIG_FIND
+-	help
+-	  Support the 'find -size' option for searching by file size.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FIND_PRUNE
+ 	bool "Enable -prune: exclude subdirectories"
+ 	default BUSYBOX_DEFAULT_FEATURE_FIND_PRUNE
+ 	depends on BUSYBOX_CONFIG_FIND
+ 	help
+-	  If the file is a directory, dont descend into it. Useful for
++	  If the file is a directory, don't descend into it. Useful for
+ 	  exclusion .svn and CVS directories.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FIND_DELETE
+@@ -209,7 +195,7 @@ config BUSYBOX_CONFIG_FGREP
+ config BUSYBOX_CONFIG_FEATURE_GREP_CONTEXT
+ 	bool "Enable before and after context flags (-A, -B and -C)"
+ 	default BUSYBOX_DEFAULT_FEATURE_GREP_CONTEXT
+-	depends on BUSYBOX_CONFIG_GREP || BUSYBOX_CONFIG_EGREP
++	depends on BUSYBOX_CONFIG_GREP || BUSYBOX_CONFIG_EGREP || BUSYBOX_CONFIG_FGREP
+ 	help
+ 	  Print the specified number of leading (-B) and/or trailing (-A)
+ 	  context surrounding our matching lines.
+diff --git a/package/utils/busybox/config/init/Config.in b/package/utils/busybox/config/init/Config.in
+index cd1a345197..072df33893 100644
+--- a/package/utils/busybox/config/init/Config.in
++++ b/package/utils/busybox/config/init/Config.in
+@@ -89,7 +89,7 @@ config BUSYBOX_CONFIG_INIT
+ 	  init is the first program run when the system boots.
+ 
+ config BUSYBOX_CONFIG_LINUXRC
+-	bool "Support running init from within an initrd (not initramfs)"
++	bool "linuxrc: support running init from initrd (not initramfs)"
+ 	default BUSYBOX_DEFAULT_LINUXRC
+ 	select BUSYBOX_CONFIG_FEATURE_SYSLOG
+ 	help
+@@ -145,13 +145,15 @@ config BUSYBOX_CONFIG_FEATURE_INIT_SYSLOG
+ 	bool "Enable init to write to syslog"
+ 	default BUSYBOX_DEFAULT_FEATURE_INIT_SYSLOG
+ 	depends on BUSYBOX_CONFIG_INIT || BUSYBOX_CONFIG_LINUXRC
++	help
++	  If selected, some init messages are sent to syslog.
++	  Otherwise, they are sent to VT #5 if linux virtual tty is detected
++	  (if not, no separate logging is done).
+ 
+-config BUSYBOX_CONFIG_FEATURE_EXTRA_QUIET
+-	bool "Be _extra_ quiet on boot"
+-	default BUSYBOX_DEFAULT_FEATURE_EXTRA_QUIET
++config BUSYBOX_CONFIG_FEATURE_INIT_QUIET
++	bool "Be quiet on boot (no 'init started:' message)"
++	default BUSYBOX_DEFAULT_FEATURE_INIT_QUIET
+ 	depends on BUSYBOX_CONFIG_INIT || BUSYBOX_CONFIG_LINUXRC
+-	help
+-	  Prevent init from logging some messages to the console during boot.
+ 
+ config BUSYBOX_CONFIG_FEATURE_INIT_COREDUMPS
+ 	bool "Support dumping core for child processes (debugging only)"
+@@ -176,36 +178,18 @@ config BUSYBOX_CONFIG_INIT_TERMINAL_TYPE
+ 	  sets TERM to "vt102" if one is found.
+ 
+ config BUSYBOX_CONFIG_FEATURE_INIT_MODIFY_CMDLINE
+-	bool "Modify the command-line to \"init\""
++	bool "Clear init's command line"
+ 	default BUSYBOX_DEFAULT_FEATURE_INIT_MODIFY_CMDLINE
+ 	depends on BUSYBOX_CONFIG_INIT || BUSYBOX_CONFIG_LINUXRC
+ 	help
+ 	  When launched as PID 1 and after parsing its arguments, init
+ 	  wipes all the arguments but argv[0] and rewrites argv[0] to
+-	  contain only "init", so that its command-line appears solely as
++	  contain only "init", so that its command line appears solely as
+ 	  "init" in tools such as ps.
+ 	  If this option is set to Y, init will keep its original behavior,
+ 	  otherwise, all the arguments including argv[0] will be preserved,
+ 	  be they parsed or ignored by init.
+ 	  The original command-line used to launch init can then be
+ 	  retrieved in /proc/1/cmdline on Linux, for example.
+-config BUSYBOX_CONFIG_MESG
+-	bool "mesg"
+-	default BUSYBOX_DEFAULT_MESG
+-	help
+-	  Mesg controls access to your terminal by others. It is typically
+-	  used to allow or disallow other users to write to your terminal
+-
+-config BUSYBOX_CONFIG_FEATURE_MESG_ENABLE_ONLY_GROUP
+-	bool "Enable writing to tty only by group, not by everybody"
+-	default BUSYBOX_DEFAULT_FEATURE_MESG_ENABLE_ONLY_GROUP
+-	depends on BUSYBOX_CONFIG_MESG
+-	help
+-	  Usually, ttys are owned by group "tty", and "write" tool is
+-	  setgid to this group. This way, "mesg y" only needs to enable
+-	  "write by owning group" bit in tty mode.
+-
+-	  If you set this option to N, "mesg y" will enable writing
+-	  by anybody at all. This is not recommended.
+ 
+ endmenu
+diff --git a/package/utils/busybox/config/libbb/Config.in b/package/utils/busybox/config/libbb/Config.in
+index ec08351b5c..1687ed5c78 100644
+--- a/package/utils/busybox/config/libbb/Config.in
++++ b/package/utils/busybox/config/libbb/Config.in
+@@ -108,24 +108,13 @@ config BUSYBOX_CONFIG_FEATURE_FAST_TOP
+ 	  but code size is slightly bigger.
+ 
+ config BUSYBOX_CONFIG_FEATURE_ETC_NETWORKS
+-	bool "Support for /etc/networks"
++	bool "Support /etc/networks"
+ 	default BUSYBOX_DEFAULT_FEATURE_ETC_NETWORKS
+ 	help
+ 	  Enable support for network names in /etc/networks. This is
+ 	  a rarely used feature which allows you to use names
+ 	  instead of IP/mask pairs in route command.
+ 
+-config BUSYBOX_CONFIG_FEATURE_USE_TERMIOS
+-	bool "Use termios to manipulate the screen"
+-	default BUSYBOX_DEFAULT_FEATURE_USE_TERMIOS
+-	depends on BUSYBOX_CONFIG_MORE || BUSYBOX_CONFIG_TOP || BUSYBOX_CONFIG_POWERTOP
+-	help
+-	  This option allows utilities such as 'more' and 'top' to determine
+-	  the size of the screen. If you leave this disabled, your utilities
+-	  that display things on the screen will be especially primitive and
+-	  will be unable to determine the current screen size, and will be
+-	  unable to move the cursor.
+-
+ config BUSYBOX_CONFIG_FEATURE_EDITING
+ 	bool "Command line editing"
+ 	default BUSYBOX_DEFAULT_FEATURE_EDITING
+@@ -185,15 +174,11 @@ config BUSYBOX_CONFIG_FEATURE_TAB_COMPLETION
+ 	bool "Tab completion"
+ 	default BUSYBOX_DEFAULT_FEATURE_TAB_COMPLETION
+ 	depends on BUSYBOX_CONFIG_FEATURE_EDITING
+-	help
+-	  Enable tab completion.
+ 
+ config BUSYBOX_CONFIG_FEATURE_USERNAME_COMPLETION
+ 	bool "Username completion"
+ 	default BUSYBOX_DEFAULT_FEATURE_USERNAME_COMPLETION
+ 	depends on BUSYBOX_CONFIG_FEATURE_TAB_COMPLETION
+-	help
+-	  Enable username completion.
+ 
+ config BUSYBOX_CONFIG_FEATURE_EDITING_FANCY_PROMPT
+ 	bool "Fancy shell prompts"
+diff --git a/package/utils/busybox/config/loginutils/Config.in b/package/utils/busybox/config/loginutils/Config.in
+index 956115c7f4..fa00595877 100644
+--- a/package/utils/busybox/config/loginutils/Config.in
++++ b/package/utils/busybox/config/loginutils/Config.in
+@@ -7,7 +7,7 @@
+ menu "Login/Password Management Utilities"
+ 
+ config BUSYBOX_CONFIG_FEATURE_SHADOWPASSWDS
+-	bool "Support for shadow passwords"
++	bool "Support shadow passwords"
+ 	default BUSYBOX_DEFAULT_FEATURE_SHADOWPASSWDS
+ 	help
+ 	  Build support for shadow password in /etc/shadow. This file is only
+@@ -113,15 +113,13 @@ config BUSYBOX_CONFIG_FEATURE_ADDGROUP_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_ADDGROUP_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_ADDGROUP && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the addgroup applet.
+ 
+ config BUSYBOX_CONFIG_FEATURE_ADDUSER_TO_GROUP
+-	bool "Support for adding users to groups"
++	bool "Support adding users to groups"
+ 	default BUSYBOX_DEFAULT_FEATURE_ADDUSER_TO_GROUP
+ 	depends on BUSYBOX_CONFIG_ADDGROUP
+ 	help
+-	  If  called  with two non-option arguments,
++	  If called with two non-option arguments,
+ 	  addgroup will add an existing user to an
+ 	  existing group.
+ config BUSYBOX_CONFIG_ADDUSER
+@@ -134,8 +132,6 @@ config BUSYBOX_CONFIG_FEATURE_ADDUSER_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_ADDUSER_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_ADDUSER && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the adduser applet.
+ 
+ config BUSYBOX_CONFIG_FEATURE_CHECK_NAMES
+ 	bool "Enable sanity check on user/group names in adduser and addgroup"
+@@ -179,9 +175,9 @@ config BUSYBOX_CONFIG_CHPASSWD
+ 	  and uses this information to update a group of existing users.
+ 
+ config BUSYBOX_CONFIG_FEATURE_DEFAULT_PASSWD_ALGO
+-	string "Default password encryption method (passwd -a, cryptpw -m parameter)"
++	string "Default encryption method (passwd -a, cryptpw -m, chpasswd -c ALG)"
+ 	default BUSYBOX_DEFAULT_FEATURE_DEFAULT_PASSWD_ALGO
+-	depends on BUSYBOX_CONFIG_PASSWD || BUSYBOX_CONFIG_CRYPTPW
++	depends on BUSYBOX_CONFIG_PASSWD || BUSYBOX_CONFIG_CRYPTPW || BUSYBOX_CONFIG_CHPASSWD
+ 	help
+ 	  Possible choices are "d[es]", "m[d5]", "s[ha256]" or "sha512".
+ config BUSYBOX_CONFIG_CRYPTPW
+@@ -211,7 +207,7 @@ config BUSYBOX_CONFIG_DELGROUP
+ 	  Utility for deleting a group account.
+ 
+ config BUSYBOX_CONFIG_FEATURE_DEL_USER_FROM_GROUP
+-	bool "Support for removing users from groups"
++	bool "Support removing users from groups"
+ 	default BUSYBOX_DEFAULT_FEATURE_DEL_USER_FROM_GROUP
+ 	depends on BUSYBOX_CONFIG_DELGROUP
+ 	help
+@@ -257,7 +253,7 @@ config BUSYBOX_CONFIG_LOGIN_SESSION_AS_CHILD
+ 	  will not be cleaned up.
+ 
+ config BUSYBOX_CONFIG_LOGIN_SCRIPTS
+-	bool "Support for login scripts"
++	bool "Support login scripts"
+ 	depends on BUSYBOX_CONFIG_LOGIN
+ 	default BUSYBOX_DEFAULT_LOGIN_SCRIPTS
+ 	help
+@@ -265,7 +261,7 @@ config BUSYBOX_CONFIG_LOGIN_SCRIPTS
+ 	  just prior to switching from root to logged-in user.
+ 
+ config BUSYBOX_CONFIG_FEATURE_NOLOGIN
+-	bool "Support for /etc/nologin"
++	bool "Support /etc/nologin"
+ 	default BUSYBOX_DEFAULT_FEATURE_NOLOGIN
+ 	depends on BUSYBOX_CONFIG_LOGIN
+ 	help
+@@ -273,7 +269,7 @@ config BUSYBOX_CONFIG_FEATURE_NOLOGIN
+ 	  If it exists, non-root logins are prohibited.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SECURETTY
+-	bool "Support for /etc/securetty"
++	bool "Support /etc/securetty"
+ 	default BUSYBOX_DEFAULT_FEATURE_SECURETTY
+ 	depends on BUSYBOX_CONFIG_LOGIN
+ 	help
+@@ -306,19 +302,23 @@ config BUSYBOX_CONFIG_SU
+ 	help
+ 	  su is used to become another user during a login session.
+ 	  Invoked without a username, su defaults to becoming the super user.
+-
+-	  Note that Busybox binary must be setuid root for this applet to
++	  Note that busybox binary must be setuid root for this applet to
+ 	  work properly.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SU_SYSLOG
+-	bool "Enable su to write to syslog"
++	bool "Log to syslog all attempts to use su"
+ 	default BUSYBOX_DEFAULT_FEATURE_SU_SYSLOG
+ 	depends on BUSYBOX_CONFIG_SU
+ 
+ config BUSYBOX_CONFIG_FEATURE_SU_CHECKS_SHELLS
+-	bool "Enable su to check user's shell to be listed in /etc/shells"
+-	depends on BUSYBOX_CONFIG_SU
++	bool "If user's shell is not in /etc/shells, disallow -s PROG"
+ 	default BUSYBOX_DEFAULT_FEATURE_SU_CHECKS_SHELLS
++	depends on BUSYBOX_CONFIG_SU
++
++config BUSYBOX_CONFIG_FEATURE_SU_BLANK_PW_NEEDS_SECURE_TTY
++	bool "Allow blank passwords only on TTYs in /etc/securetty"
++	default BUSYBOX_DEFAULT_FEATURE_SU_BLANK_PW_NEEDS_SECURE_TTY
++	depends on BUSYBOX_CONFIG_SU
+ config BUSYBOX_CONFIG_SULOGIN
+ 	bool "sulogin"
+ 	default BUSYBOX_DEFAULT_SULOGIN
+diff --git a/package/utils/busybox/config/miscutils/Config.in b/package/utils/busybox/config/miscutils/Config.in
+index 817a514b75..61c5458b63 100644
+--- a/package/utils/busybox/config/miscutils/Config.in
++++ b/package/utils/busybox/config/miscutils/Config.in
+@@ -42,7 +42,7 @@ config BUSYBOX_CONFIG_BEEP
+ 
+ config BUSYBOX_CONFIG_FEATURE_BEEP_FREQ
+ 	int "default frequency"
+-	range 0 2147483647
++	range 20 50000	# allowing 0 here breaks the build
+ 	default BUSYBOX_DEFAULT_FEATURE_BEEP_FREQ
+ 	depends on BUSYBOX_CONFIG_BEEP
+ 	help
+@@ -121,12 +121,6 @@ config BUSYBOX_CONFIG_FEATURE_CHAT_CLR_ABORT
+ 	default BUSYBOX_DEFAULT_FEATURE_CHAT_CLR_ABORT
+ 	help
+ 	  Support CLR_ABORT directive.
+-config BUSYBOX_CONFIG_CHRT
+-	bool "chrt"
+-	default BUSYBOX_DEFAULT_CHRT
+-	help
+-	  manipulate real-time attributes of a process.
+-	  This requires sched_{g,s}etparam support in your libc.
+ config BUSYBOX_CONFIG_CONSPY
+ 	bool "conspy"
+ 	default BUSYBOX_DEFAULT_CONSPY
+@@ -220,7 +214,7 @@ config BUSYBOX_CONFIG_DEVFSD_MODLOAD
+ 	  the external modutils.
+ 
+ config BUSYBOX_CONFIG_DEVFSD_FG_NP
+-	bool "Enables the -fg and -np options"
++	bool "Enable the -fg and -np options"
+ 	default BUSYBOX_DEFAULT_DEVFSD_FG_NP
+ 	depends on BUSYBOX_CONFIG_DEVFSD
+ 	help
+@@ -253,20 +247,6 @@ config BUSYBOX_CONFIG_DEVMEM
+ 	help
+ 	  devmem is a small program that reads and writes from physical
+ 	  memory using /dev/mem.
+-config BUSYBOX_CONFIG_EJECT
+-	bool "eject"
+-	default BUSYBOX_DEFAULT_EJECT
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+-	help
+-	  Used to eject cdroms. (defaults to /dev/cdrom)
+-
+-config BUSYBOX_CONFIG_FEATURE_EJECT_SCSI
+-	bool "SCSI support"
+-	default BUSYBOX_DEFAULT_FEATURE_EJECT_SCSI
+-	depends on BUSYBOX_CONFIG_EJECT
+-	help
+-	  Add the -s option to eject, this allows to eject SCSI-Devices and
+-	  usb-storage devices.
+ config BUSYBOX_CONFIG_FBSPLASH
+ 	bool "fbsplash"
+ 	default BUSYBOX_DEFAULT_FBSPLASH
+@@ -327,7 +307,7 @@ config BUSYBOX_CONFIG_FEATURE_HDPARM_GET_IDENTITY
+ 	default BUSYBOX_DEFAULT_FEATURE_HDPARM_GET_IDENTITY
+ 	depends on BUSYBOX_CONFIG_HDPARM
+ 	help
+-	  Enables the -I and -i options to obtain detailed information
++	  Enable the -I and -i options to obtain detailed information
+ 	  directly from drives about their capabilities and supported ATA
+ 	  feature set. If no device name is specified, hdparm will read
+ 	  identify data from stdin. Enabling this option will add about 16k...
+@@ -337,7 +317,7 @@ config BUSYBOX_CONFIG_FEATURE_HDPARM_HDIO_SCAN_HWIF
+ 	default BUSYBOX_DEFAULT_FEATURE_HDPARM_HDIO_SCAN_HWIF
+ 	depends on BUSYBOX_CONFIG_HDPARM
+ 	help
+-	  Enables the 'hdparm -R' option to register an IDE interface.
++	  Enable the 'hdparm -R' option to register an IDE interface.
+ 	  This is dangerous stuff, so you should probably say N.
+ 
+ config BUSYBOX_CONFIG_FEATURE_HDPARM_HDIO_UNREGISTER_HWIF
+@@ -345,7 +325,7 @@ config BUSYBOX_CONFIG_FEATURE_HDPARM_HDIO_UNREGISTER_HWIF
+ 	default BUSYBOX_DEFAULT_FEATURE_HDPARM_HDIO_UNREGISTER_HWIF
+ 	depends on BUSYBOX_CONFIG_HDPARM
+ 	help
+-	  Enables the 'hdparm -U' option to un-register an IDE interface.
++	  Enable the 'hdparm -U' option to un-register an IDE interface.
+ 	  This is dangerous stuff, so you should probably say N.
+ 
+ config BUSYBOX_CONFIG_FEATURE_HDPARM_HDIO_DRIVE_RESET
+@@ -353,7 +333,7 @@ config BUSYBOX_CONFIG_FEATURE_HDPARM_HDIO_DRIVE_RESET
+ 	default BUSYBOX_DEFAULT_FEATURE_HDPARM_HDIO_DRIVE_RESET
+ 	depends on BUSYBOX_CONFIG_HDPARM
+ 	help
+-	  Enables the 'hdparm -w' option to perform a device reset.
++	  Enable the 'hdparm -w' option to perform a device reset.
+ 	  This is dangerous stuff, so you should probably say N.
+ 
+ config BUSYBOX_CONFIG_FEATURE_HDPARM_HDIO_TRISTATE_HWIF
+@@ -361,7 +341,7 @@ config BUSYBOX_CONFIG_FEATURE_HDPARM_HDIO_TRISTATE_HWIF
+ 	default BUSYBOX_DEFAULT_FEATURE_HDPARM_HDIO_TRISTATE_HWIF
+ 	depends on BUSYBOX_CONFIG_HDPARM
+ 	help
+-	  Enables the 'hdparm -x' option to tristate device for hotswap,
++	  Enable the 'hdparm -x' option to tristate device for hotswap,
+ 	  and the '-b' option to get/set bus state. This is dangerous
+ 	  stuff, so you should probably say N.
+ 
+@@ -370,7 +350,7 @@ config BUSYBOX_CONFIG_FEATURE_HDPARM_HDIO_GETSET_DMA
+ 	default BUSYBOX_DEFAULT_FEATURE_HDPARM_HDIO_GETSET_DMA
+ 	depends on BUSYBOX_CONFIG_HDPARM
+ 	help
+-	  Enables the 'hdparm -d' option to get/set using_dma flag.
++	  Enable the 'hdparm -d' option to get/set using_dma flag.
+ config BUSYBOX_CONFIG_I2CGET
+ 	bool "i2cget"
+ 	default BUSYBOX_DEFAULT_I2CGET
+@@ -405,27 +385,6 @@ config BUSYBOX_CONFIG_INOTIFYD
+ 	help
+ 	  Simple inotify daemon. Reports filesystem changes. Requires
+ 	  kernel >= 2.6.13
+-config BUSYBOX_CONFIG_IONICE
+-	bool "ionice"
+-	default BUSYBOX_DEFAULT_IONICE
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+-	help
+-	  Set/set program io scheduling class and priority
+-	  Requires kernel >= 2.6.13
+-config BUSYBOX_CONFIG_LAST
+-	bool "last"
+-	default BUSYBOX_DEFAULT_LAST
+-	depends on BUSYBOX_CONFIG_FEATURE_WTMP
+-	help
+-	  'last' displays a list of the last users that logged into the system.
+-
+-config BUSYBOX_CONFIG_FEATURE_LAST_FANCY
+-	bool "Turn on output of extra information"
+-	default BUSYBOX_DEFAULT_FEATURE_LAST_FANCY
+-	depends on BUSYBOX_CONFIG_LAST
+-	help
+-	  'last' displays detailed information about the last users that
+-	  logged into the system (mimics sysvinit last). +900 bytes.
+ config BUSYBOX_CONFIG_LESS
+ 	bool "less"
+ 	default BUSYBOX_DEFAULT_LESS
+@@ -492,7 +451,6 @@ config BUSYBOX_CONFIG_FEATURE_LESS_ASK_TERMINAL
+ 	  this option makes less perform a last-ditch effort to find it:
+ 	  position cursor to 999,999 and ask terminal to report real
+ 	  cursor position using "ESC [ 6 n" escape sequence, then read stdin.
+-
+ 	  This is not clean but helps a lot on serial lines and such.
+ 
+ config BUSYBOX_CONFIG_FEATURE_LESS_DASHCMD
+@@ -504,16 +462,23 @@ config BUSYBOX_CONFIG_FEATURE_LESS_DASHCMD
+ 	  less itself ('-' keyboard command).
+ 
+ config BUSYBOX_CONFIG_FEATURE_LESS_LINENUMS
+-	bool "Enable dynamic switching of line numbers"
++	bool "Enable -N (dynamic switching of line numbers)"
+ 	default BUSYBOX_DEFAULT_FEATURE_LESS_LINENUMS
+ 	depends on BUSYBOX_CONFIG_FEATURE_LESS_DASHCMD
+-	help
+-	  Enables "-N" command.
+ config BUSYBOX_CONFIG_LOCK
+ 	bool "lock"
+ 	default BUSYBOX_DEFAULT_LOCK
+ 	help
+ 	  Small utility for using locks in scripts
++config BUSYBOX_CONFIG_LSSCSI
++	bool "lsscsi"
++	default BUSYBOX_DEFAULT_LSSCSI
++	#select PLATFORM_LINUX
++	help
++	  lsscsi is a utility for displaying information about SCSI buses in the
++	  system and devices connected to them.
++
++	  This version uses sysfs (/sys/bus/scsi/devices) only.
+ config BUSYBOX_CONFIG_MAKEDEVS
+ 	bool "makedevs"
+ 	default BUSYBOX_DEFAULT_MAKEDEVS
+@@ -555,11 +520,6 @@ config BUSYBOX_CONFIG_MICROCOM
+ 	default BUSYBOX_DEFAULT_MICROCOM
+ 	help
+ 	  The poor man's minicom utility for chatting with serial port devices.
+-config BUSYBOX_CONFIG_MOUNTPOINT
+-	bool "mountpoint"
+-	default BUSYBOX_DEFAULT_MOUNTPOINT
+-	help
+-	  mountpoint checks if the directory is a mountpoint.
+ config BUSYBOX_CONFIG_MT
+ 	bool "mt"
+ 	default BUSYBOX_DEFAULT_MT
+@@ -580,6 +540,12 @@ config BUSYBOX_CONFIG_NANDDUMP
+ 	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  Dump the content of raw NAND chip
++config BUSYBOX_CONFIG_PARTPROBE
++	bool "partprobe"
++	default BUSYBOX_DEFAULT_PARTPROBE
++	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	help
++	  Ask kernel to rescan partition table.
+ config BUSYBOX_CONFIG_RAIDAUTORUN
+ 	bool "raidautorun"
+ 	default BUSYBOX_DEFAULT_RAIDAUTORUN
+@@ -637,32 +603,12 @@ config BUSYBOX_CONFIG_SETSERIAL
+ 	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  Retrieve or set Linux serial port.
+-config BUSYBOX_CONFIG_SETSID
+-	bool "setsid"
+-	default BUSYBOX_DEFAULT_SETSID
+-	help
+-	  setsid runs a program in a new session
+ config BUSYBOX_CONFIG_STRINGS
+ 	bool "strings"
+ 	default BUSYBOX_DEFAULT_STRINGS
+ 	help
+ 	  strings prints the printable character sequences for each file
+ 	  specified.
+-config BUSYBOX_CONFIG_TASKSET
+-	bool "taskset"
+-	default BUSYBOX_DEFAULT_TASKSET  # doesn't build on some non-x86 targets (m68k)
+-	help
+-	  Retrieve or set a processes's CPU affinity.
+-	  This requires sched_{g,s}etaffinity support in your libc.
+-
+-config BUSYBOX_CONFIG_FEATURE_TASKSET_FANCY
+-	bool "Fancy output"
+-	default BUSYBOX_DEFAULT_FEATURE_TASKSET_FANCY
+-	depends on BUSYBOX_CONFIG_TASKSET
+-	help
+-	  Add code for fancy output. This merely silences a compiler-warning
+-	  and adds about 135 Bytes. May be needed for machines with alot
+-	  of CPUs.
+ config BUSYBOX_CONFIG_TIME
+ 	bool "time"
+ 	default BUSYBOX_DEFAULT_TIME
+@@ -670,12 +616,6 @@ config BUSYBOX_CONFIG_TIME
+ 	  The time command runs the specified program with the given arguments.
+ 	  When the command finishes, time writes a message to standard output
+ 	  giving timing statistics about this program run.
+-config BUSYBOX_CONFIG_TIMEOUT
+-	bool "timeout"
+-	default BUSYBOX_DEFAULT_TIMEOUT
+-	help
+-	  Runs a program and watches it. If it does not terminate in
+-	  specified number of seconds, it is sent a signal.
+ config BUSYBOX_CONFIG_TTYSIZE
+ 	bool "ttysize"
+ 	default BUSYBOX_DEFAULT_TTYSIZE
+@@ -736,12 +676,6 @@ config BUSYBOX_CONFIG_VOLNAME
+ 	default BUSYBOX_DEFAULT_VOLNAME
+ 	help
+ 	  Prints a CD-ROM volume name.
+-config BUSYBOX_CONFIG_WALL
+-	bool "wall"
+-	default BUSYBOX_DEFAULT_WALL
+-	depends on BUSYBOX_CONFIG_FEATURE_UTMP
+-	help
+-	  Write a message to all users that are logged in.
+ config BUSYBOX_CONFIG_WATCHDOG
+ 	bool "watchdog"
+ 	default BUSYBOX_DEFAULT_WATCHDOG
+diff --git a/package/utils/busybox/config/modutils/Config.in b/package/utils/busybox/config/modutils/Config.in
+index 5203db8c59..9791af65a0 100644
+--- a/package/utils/busybox/config/modutils/Config.in
++++ b/package/utils/busybox/config/modutils/Config.in
+@@ -9,9 +9,11 @@ menu "Linux Module Utilities"
+ config BUSYBOX_CONFIG_MODPROBE_SMALL
+ 	bool "Simplified modutils"
+ 	default BUSYBOX_DEFAULT_MODPROBE_SMALL
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+-	  Simplified modutils.
++	  Build smaller (~1.5 kbytes), simplified module tools.
++
++	  This option by itself does not enable any applets -
++	  you need to select applets individually below.
+ 
+ 	  With this option modprobe does not require modules.dep file
+ 	  and does not use /etc/modules.conf file.
+@@ -32,11 +34,6 @@ config BUSYBOX_CONFIG_MODPROBE_SMALL
+ 	  Additional module parameters can be stored in
+ 	  /etc/modules/$module_name files.
+ 
+-	  Apart from modprobe, other utilities are also provided:
+-	  - insmod is an alias to modprobe
+-	  - rmmod is an alias to modprobe -r
+-	  - depmod generates modules.dep.bb
+-
+ config BUSYBOX_CONFIG_DEPMOD
+ 	bool "depmod"
+ 	default BUSYBOX_DEFAULT_DEPMOD
+@@ -62,7 +59,6 @@ config BUSYBOX_CONFIG_FEATURE_LSMOD_PRETTY_2_6_OUTPUT
+ 	bool "Pretty output"
+ 	default BUSYBOX_DEFAULT_FEATURE_LSMOD_PRETTY_2_6_OUTPUT
+ 	depends on BUSYBOX_CONFIG_LSMOD && !BUSYBOX_CONFIG_MODPROBE_SMALL
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  This option makes output format of lsmod adjusted to
+ 	  the format of module-init-tools for Linux kernel 2.6.
+@@ -73,20 +69,6 @@ config BUSYBOX_CONFIG_MODINFO
+ 	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  Show information about a Linux Kernel module
+-config BUSYBOX_CONFIG_FEATURE_MODPROBE_SMALL_OPTIONS_ON_CMDLINE
+-	bool "Accept module options on modprobe command line"
+-	default BUSYBOX_DEFAULT_FEATURE_MODPROBE_SMALL_OPTIONS_ON_CMDLINE
+-	depends on BUSYBOX_CONFIG_MODPROBE_SMALL
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+-	help
+-	  Allow insmod and modprobe take module options from command line.
+-
+-config BUSYBOX_CONFIG_FEATURE_MODPROBE_SMALL_CHECK_ALREADY_LOADED
+-	bool "Skip loading of already loaded modules"
+-	default BUSYBOX_DEFAULT_FEATURE_MODPROBE_SMALL_CHECK_ALREADY_LOADED
+-	depends on BUSYBOX_CONFIG_MODPROBE_SMALL
+-	help
+-	  Check if the module is already loaded.
+ config BUSYBOX_CONFIG_MODPROBE
+ 	bool "modprobe"
+ 	default BUSYBOX_DEFAULT_MODPROBE
+@@ -99,7 +81,6 @@ config BUSYBOX_CONFIG_FEATURE_MODPROBE_BLACKLIST
+ 	bool "Blacklist support"
+ 	default BUSYBOX_DEFAULT_FEATURE_MODPROBE_BLACKLIST
+ 	depends on BUSYBOX_CONFIG_MODPROBE && !BUSYBOX_CONFIG_MODPROBE_SMALL
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  Say 'y' here to enable support for the 'blacklist' command in
+ 	  modprobe.conf. This prevents the alias resolver to resolve
+@@ -115,38 +96,34 @@ config BUSYBOX_CONFIG_RMMOD
+ 
+ comment "Options common to multiple modutils"
+ 
++config BUSYBOX_CONFIG_FEATURE_CMDLINE_MODULE_OPTIONS
++	bool "Accept module options on modprobe command line"
++	default BUSYBOX_DEFAULT_FEATURE_CMDLINE_MODULE_OPTIONS
++	depends on BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_MODPROBE
++	help
++	  Allow insmod and modprobe take module options from the applets'
++	  command line.
++
++config BUSYBOX_CONFIG_FEATURE_MODPROBE_SMALL_CHECK_ALREADY_LOADED
++	bool "Skip loading of already loaded modules"
++	default BUSYBOX_DEFAULT_FEATURE_MODPROBE_SMALL_CHECK_ALREADY_LOADED
++	depends on BUSYBOX_CONFIG_MODPROBE_SMALL && (BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_MODPROBE)
++	help
++	  Check if the module is already loaded.
++
+ config BUSYBOX_CONFIG_FEATURE_2_4_MODULES
+ 	bool "Support version 2.2/2.4 Linux kernels"
+ 	default BUSYBOX_DEFAULT_FEATURE_2_4_MODULES
+-	depends on BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_RMMOD || BUSYBOX_CONFIG_LSMOD
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	depends on (BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_LSMOD || BUSYBOX_CONFIG_MODPROBE || BUSYBOX_CONFIG_RMMOD) && !BUSYBOX_CONFIG_MODPROBE_SMALL
+ 	help
+ 	  Support module loading for 2.2.x and 2.4.x Linux kernels.
+ 	  This increases size considerably. Say N unless you plan
+ 	  to run ancient kernels.
+ 
+-config BUSYBOX_CONFIG_FEATURE_INSMOD_TRY_MMAP
+-	bool "Try to load module from a mmap'ed area"
+-	default BUSYBOX_DEFAULT_FEATURE_INSMOD_TRY_MMAP
+-	depends on BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_MODPROBE_SMALL
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+-	help
+-	  This option causes module loading code to try to mmap
+-	  module first. If it does not work (for example,
+-	  it does not work for compressed modules), module will be read
+-	  (and unpacked if needed) into a memory block allocated by malloc.
+-
+-	  The only case when mmap works but malloc does not is when
+-	  you are trying to load a big module on a very memory-constrained
+-	  machine. Malloc will momentarily need 2x as much memory as mmap.
+-
+-	  Choosing N saves about 250 bytes of code (on 32-bit x86).
+-
+ config BUSYBOX_CONFIG_FEATURE_INSMOD_VERSION_CHECKING
+ 	bool "Enable module version checking"
+ 	default BUSYBOX_DEFAULT_FEATURE_INSMOD_VERSION_CHECKING
+ 	depends on BUSYBOX_CONFIG_FEATURE_2_4_MODULES && (BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_MODPROBE)
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  Support checking of versions for modules. This is used to
+ 	  ensure that the kernel and module are made for each other.
+@@ -155,10 +132,9 @@ config BUSYBOX_CONFIG_FEATURE_INSMOD_KSYMOOPS_SYMBOLS
+ 	bool "Add module symbols to kernel symbol table"
+ 	default BUSYBOX_DEFAULT_FEATURE_INSMOD_KSYMOOPS_SYMBOLS
+ 	depends on BUSYBOX_CONFIG_FEATURE_2_4_MODULES && (BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_MODPROBE)
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  By adding module symbols to the kernel symbol table, Oops messages
+-	  occuring within kernel modules can be properly debugged. By enabling
++	  occurring within kernel modules can be properly debugged. By enabling
+ 	  this feature, module symbols will always be added to the kernel symbol
+ 	  table for proper debugging support. If you are not interested in
+ 	  Oops messages from kernel modules, say N.
+@@ -167,7 +143,6 @@ config BUSYBOX_CONFIG_FEATURE_INSMOD_LOADINKMEM
+ 	bool "In kernel memory optimization (uClinux only)"
+ 	default BUSYBOX_DEFAULT_FEATURE_INSMOD_LOADINKMEM
+ 	depends on BUSYBOX_CONFIG_FEATURE_2_4_MODULES && (BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_MODPROBE)
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  This is a special uClinux only memory optimization that lets insmod
+ 	  load the specified kernel module directly into kernel space, reducing
+@@ -178,7 +153,6 @@ config BUSYBOX_CONFIG_FEATURE_INSMOD_LOAD_MAP
+ 	bool "Enable insmod load map (-m) option"
+ 	default BUSYBOX_DEFAULT_FEATURE_INSMOD_LOAD_MAP
+ 	depends on BUSYBOX_CONFIG_FEATURE_2_4_MODULES && BUSYBOX_CONFIG_INSMOD
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  Enabling this, one would be able to get a load map
+ 	  output on stdout. This makes kernel module debugging
+@@ -189,8 +163,7 @@ config BUSYBOX_CONFIG_FEATURE_INSMOD_LOAD_MAP
+ config BUSYBOX_CONFIG_FEATURE_INSMOD_LOAD_MAP_FULL
+ 	bool "Symbols in load map"
+ 	default BUSYBOX_DEFAULT_FEATURE_INSMOD_LOAD_MAP_FULL
+-	depends on BUSYBOX_CONFIG_FEATURE_INSMOD_LOAD_MAP && !BUSYBOX_CONFIG_MODPROBE_SMALL
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	depends on BUSYBOX_CONFIG_FEATURE_INSMOD_LOAD_MAP
+ 	help
+ 	  Without this option, -m will only output section
+ 	  load map. With this option, -m will also output
+@@ -200,18 +173,32 @@ config BUSYBOX_CONFIG_FEATURE_CHECK_TAINTED_MODULE
+ 	bool "Support tainted module checking with new kernels"
+ 	default BUSYBOX_DEFAULT_FEATURE_CHECK_TAINTED_MODULE
+ 	depends on (BUSYBOX_CONFIG_LSMOD || BUSYBOX_CONFIG_FEATURE_2_4_MODULES) && !BUSYBOX_CONFIG_MODPROBE_SMALL
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  Support checking for tainted modules. These are usually binary
+ 	  only modules that will make the linux-kernel list ignore your
+ 	  support request.
+ 	  This option is required to support GPLONLY modules.
+ 
++config BUSYBOX_CONFIG_FEATURE_INSMOD_TRY_MMAP
++	bool "Try to load module from a mmap'ed area"
++	default BUSYBOX_DEFAULT_FEATURE_INSMOD_TRY_MMAP
++	depends on (BUSYBOX_CONFIG_INSMOD || BUSYBOX_CONFIG_MODPROBE) && !BUSYBOX_CONFIG_MODPROBE_SMALL
++	help
++	  This option causes module loading code to try to mmap
++	  module first. If it does not work (for example,
++	  it does not work for compressed modules), module will be read
++	  (and unpacked if needed) into a memory block allocated by malloc.
++
++	  The only case when mmap works but malloc does not is when
++	  you are trying to load a big module on a very memory-constrained
++	  machine. Malloc will momentarily need 2x as much memory as mmap.
++
++	  Choosing N saves about 250 bytes of code (on 32-bit x86).
++
+ config BUSYBOX_CONFIG_FEATURE_MODUTILS_ALIAS
+-	bool "Support for module.aliases file"
++	bool "Support module.aliases file"
+ 	default BUSYBOX_DEFAULT_FEATURE_MODUTILS_ALIAS
+-	depends on BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_MODPROBE
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	depends on (BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_MODPROBE) && !BUSYBOX_CONFIG_MODPROBE_SMALL
+ 	help
+ 	  Generate and parse modules.alias containing aliases for bus
+ 	  identifiers:
+@@ -225,10 +212,9 @@ config BUSYBOX_CONFIG_FEATURE_MODUTILS_ALIAS
+ 	  Say Y if unsure.
+ 
+ config BUSYBOX_CONFIG_FEATURE_MODUTILS_SYMBOLS
+-	bool "Support for module.symbols file"
++	bool "Support module.symbols file"
+ 	default BUSYBOX_DEFAULT_FEATURE_MODUTILS_SYMBOLS
+-	depends on BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_MODPROBE
+-	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	depends on (BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_MODPROBE) && !BUSYBOX_CONFIG_MODPROBE_SMALL
+ 	help
+ 	  Generate and parse modules.symbols containing aliases for
+ 	  symbol_request() kernel calls, such as:
+@@ -239,7 +225,7 @@ config BUSYBOX_CONFIG_FEATURE_MODUTILS_SYMBOLS
+ config BUSYBOX_CONFIG_DEFAULT_MODULES_DIR
+ 	string "Default directory containing modules"
+ 	default BUSYBOX_DEFAULT_DEFAULT_MODULES_DIR
+-	depends on BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_MODPROBE || BUSYBOX_CONFIG_MODPROBE_SMALL || BUSYBOX_CONFIG_MODINFO
++	depends on BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_MODPROBE || BUSYBOX_CONFIG_MODINFO
+ 	help
+ 	  Directory that contains kernel modules.
+ 	  Defaults to "/lib/modules"
+@@ -247,9 +233,13 @@ config BUSYBOX_CONFIG_DEFAULT_MODULES_DIR
+ config BUSYBOX_CONFIG_DEFAULT_DEPMOD_FILE
+ 	string "Default name of modules.dep"
+ 	default BUSYBOX_DEFAULT_DEFAULT_DEPMOD_FILE
+-	depends on BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_MODPROBE || BUSYBOX_CONFIG_MODPROBE_SMALL || BUSYBOX_CONFIG_MODINFO
++	depends on BUSYBOX_CONFIG_DEPMOD || BUSYBOX_CONFIG_MODPROBE || BUSYBOX_CONFIG_MODINFO
+ 	help
+ 	  Filename that contains kernel modules dependencies.
+-	  Defaults to "modules.dep"
++	  Defaults to "modules.dep".
++	  If you configured the "simplified modutils" (MODPROBE_SMALL), a
++	  ".bb" suffix will be added after this name. Do not specify ".bb"
++	  here unless you intend your depmod or modprobe to work on
++	  "modules.dep.bb.bb" or such.
+ 
+ endmenu
+diff --git a/package/utils/busybox/config/networking/Config.in b/package/utils/busybox/config/networking/Config.in
+index 4ae8779dc6..14875d5e68 100644
+--- a/package/utils/busybox/config/networking/Config.in
++++ b/package/utils/busybox/config/networking/Config.in
+@@ -101,7 +101,7 @@ config BUSYBOX_CONFIG_FTPD
+ 	bool "ftpd"
+ 	default BUSYBOX_DEFAULT_FTPD
+ 	help
+-	  simple FTP daemon. You have to run it via inetd.
++	  Simple FTP daemon. You have to run it via inetd.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FTPD_WRITE
+ 	bool "Enable upload commands"
+@@ -143,8 +143,6 @@ config BUSYBOX_CONFIG_FEATURE_FTPGETPUT_LONG_OPTIONS
+ 	bool "Enable long options in ftpget/ftpput"
+ 	default BUSYBOX_DEFAULT_FEATURE_FTPGETPUT_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_LONG_OPTS && (BUSYBOX_CONFIG_FTPGET || BUSYBOX_CONFIG_FTPPUT)
+-	help
+-	  Support long options for the ftpget/ftpput applet.
+ config BUSYBOX_CONFIG_HOSTNAME
+ 	bool "hostname"
+ 	default BUSYBOX_DEFAULT_HOSTNAME
+@@ -160,7 +158,7 @@ config BUSYBOX_CONFIG_HTTPD
+ 	bool "httpd"
+ 	default BUSYBOX_DEFAULT_HTTPD
+ 	help
+-	  Serve web pages via an HTTP server.
++	  HTTP server.
+ 
+ config BUSYBOX_CONFIG_FEATURE_HTTPD_RANGES
+ 	bool "Support 'Ranges:' header"
+@@ -214,7 +212,7 @@ config BUSYBOX_CONFIG_FEATURE_HTTPD_CGI
+ 	  when specific URLs are requested.
+ 
+ config BUSYBOX_CONFIG_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
+-	bool "Support for running scripts through an interpreter"
++	bool "Support running scripts through an interpreter"
+ 	default BUSYBOX_DEFAULT_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
+ 	depends on BUSYBOX_CONFIG_FEATURE_HTTPD_CGI
+ 	help
+@@ -243,7 +241,7 @@ config BUSYBOX_CONFIG_FEATURE_HTTPD_ENCODE_URL_STR
+ 	  "&#60Hello&#32World&#62".
+ 
+ config BUSYBOX_CONFIG_FEATURE_HTTPD_ERROR_PAGES
+-	bool "Support for custom error pages"
++	bool "Support custom error pages"
+ 	default BUSYBOX_DEFAULT_FEATURE_HTTPD_ERROR_PAGES
+ 	depends on BUSYBOX_CONFIG_HTTPD
+ 	help
+@@ -256,7 +254,7 @@ config BUSYBOX_CONFIG_FEATURE_HTTPD_ERROR_PAGES
+ 	  message.
+ 
+ config BUSYBOX_CONFIG_FEATURE_HTTPD_PROXY
+-	bool "Support for reverse proxy"
++	bool "Support reverse proxy"
+ 	default BUSYBOX_DEFAULT_FEATURE_HTTPD_PROXY
+ 	depends on BUSYBOX_CONFIG_HTTPD
+ 	help
+@@ -268,7 +266,7 @@ config BUSYBOX_CONFIG_FEATURE_HTTPD_PROXY
+ 	  http://hostname[:port]/new/path/myfile.
+ 
+ config BUSYBOX_CONFIG_FEATURE_HTTPD_GZIP
+-	bool "Support for GZIP content encoding"
++	bool "Support GZIP content encoding"
+ 	default BUSYBOX_DEFAULT_FEATURE_HTTPD_GZIP
+ 	depends on BUSYBOX_CONFIG_HTTPD
+ 	help
+@@ -383,14 +381,14 @@ config BUSYBOX_CONFIG_FEATURE_IFUPDOWN_IP
+ 	  utilities, or enable these applets in Busybox.
+ 
+ config BUSYBOX_CONFIG_FEATURE_IFUPDOWN_IPV4
+-	bool "Support for IPv4"
++	bool "Support IPv4"
+ 	default BUSYBOX_DEFAULT_FEATURE_IFUPDOWN_IPV4
+ 	depends on BUSYBOX_CONFIG_IFUP || BUSYBOX_CONFIG_IFDOWN
+ 	help
+ 	  If you want ifup/ifdown to talk IPv4, leave this on.
+ 
+ config BUSYBOX_CONFIG_FEATURE_IFUPDOWN_IPV6
+-	bool "Support for IPv6"
++	bool "Support IPv6"
+ 	default BUSYBOX_DEFAULT_FEATURE_IFUPDOWN_IPV6
+ 	depends on (BUSYBOX_CONFIG_IFUP || BUSYBOX_CONFIG_IFDOWN) && BUSYBOX_CONFIG_FEATURE_IPV6
+ 	help
+@@ -406,7 +404,7 @@ config BUSYBOX_CONFIG_FEATURE_IFUPDOWN_MAPPING
+ 	  a weird network setup you don't need it.
+ 
+ config BUSYBOX_CONFIG_FEATURE_IFUPDOWN_EXTERNAL_DHCP
+-	bool "Support for external dhcp clients"
++	bool "Support external DHCP clients"
+ 	default BUSYBOX_DEFAULT_FEATURE_IFUPDOWN_EXTERNAL_DHCP
+ 	depends on BUSYBOX_CONFIG_IFUP || BUSYBOX_CONFIG_IFDOWN
+ 	help
+@@ -585,6 +583,11 @@ config BUSYBOX_CONFIG_IPCALC
+ 	  ipcalc takes an IP address and netmask and calculates the
+ 	  resulting broadcast, network, and host range.
+ 
++config BUSYBOX_CONFIG_FEATURE_IPCALC_LONG_OPTIONS
++	bool "Enable long options"
++	default BUSYBOX_DEFAULT_FEATURE_IPCALC_LONG_OPTIONS
++	depends on BUSYBOX_CONFIG_IPCALC && BUSYBOX_CONFIG_LONG_OPTS
++
+ config BUSYBOX_CONFIG_FEATURE_IPCALC_FANCY
+ 	bool "Fancy IPCALC, more options, adds 1 kbyte"
+ 	default BUSYBOX_DEFAULT_FEATURE_IPCALC_FANCY
+@@ -592,13 +595,6 @@ config BUSYBOX_CONFIG_FEATURE_IPCALC_FANCY
+ 	help
+ 	  Adds the options hostname, prefix and silent to the output of
+ 	  "ipcalc".
+-
+-config BUSYBOX_CONFIG_FEATURE_IPCALC_LONG_OPTIONS
+-	bool "Enable long options"
+-	default BUSYBOX_DEFAULT_FEATURE_IPCALC_LONG_OPTIONS
+-	depends on BUSYBOX_CONFIG_IPCALC && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the ipcalc applet.
+ config BUSYBOX_CONFIG_FAKEIDENTD
+ 	bool "fakeidentd"
+ 	default BUSYBOX_DEFAULT_FAKEIDENTD
+@@ -685,7 +681,7 @@ config BUSYBOX_CONFIG_NETSTAT
+ 	  netstat prints information about the Linux networking subsystem.
+ 
+ config BUSYBOX_CONFIG_FEATURE_NETSTAT_WIDE
+-	bool "Enable wide netstat output"
++	bool "Enable wide output"
+ 	default BUSYBOX_DEFAULT_FEATURE_NETSTAT_WIDE
+ 	depends on BUSYBOX_CONFIG_NETSTAT
+ 	help
+@@ -779,6 +775,12 @@ config BUSYBOX_CONFIG_SLATTACH
+ 	help
+ 	  slattach is a small utility to attach network interfaces to serial
+ 	  lines.
++config BUSYBOX_CONFIG_SSL_CLIENT
++	bool "ssl_client"
++	default BUSYBOX_DEFAULT_SSL_CLIENT
++	select BUSYBOX_CONFIG_TLS
++	help
++	  This tool pipes data to/from a socket, TLS-encrypting it.
+ config BUSYBOX_CONFIG_TCPSVD
+ 	bool "tcpsvd"
+ 	default BUSYBOX_DEFAULT_TCPSVD
+@@ -817,6 +819,11 @@ config BUSYBOX_CONFIG_FEATURE_TELNET_AUTOLOGIN
+ 	  remote host you are connecting to. This is useful when you need to
+ 	  log into a machine without telling the username (autologin). This
+ 	  option enables `-a' and `-l USER' arguments.
++
++config BUSYBOX_CONFIG_FEATURE_TELNET_WIDTH
++	bool "Enable window size autodetection"
++	default BUSYBOX_DEFAULT_FEATURE_TELNET_WIDTH
++	depends on BUSYBOX_CONFIG_TELNET
+ config BUSYBOX_CONFIG_TELNETD
+ 	bool "telnetd"
+ 	default BUSYBOX_DEFAULT_TELNETD
+@@ -936,11 +943,9 @@ config BUSYBOX_CONFIG_FEATURE_TFTP_BLOCKSIZE
+ 	  "blksize" and "tsize" options.
+ 
+ config BUSYBOX_CONFIG_FEATURE_TFTP_PROGRESS_BAR
+-	bool "Enable tftp progress meter"
++	bool "Enable progress bar"
+ 	default BUSYBOX_DEFAULT_FEATURE_TFTP_PROGRESS_BAR
+ 	depends on BUSYBOX_CONFIG_TFTP && BUSYBOX_CONFIG_FEATURE_TFTP_BLOCKSIZE
+-	help
+-	  Show progress bar.
+ 
+ config BUSYBOX_CONFIG_TFTP_DEBUG
+ 	bool "Enable debug"
+@@ -949,6 +954,9 @@ config BUSYBOX_CONFIG_TFTP_DEBUG
+ 	help
+ 	  Make tftp[d] print debugging messages on stderr.
+ 	  This is useful if you are diagnosing a bug in tftp[d].
++config BUSYBOX_CONFIG_TLS
++	bool #No description makes it a hidden option
++	default BUSYBOX_DEFAULT_TLS
+ config BUSYBOX_CONFIG_TRACEROUTE
+ 	bool "traceroute"
+ 	default BUSYBOX_DEFAULT_TRACEROUTE
+@@ -975,8 +983,6 @@ config BUSYBOX_CONFIG_FEATURE_TRACEROUTE_USE_ICMP
+ 	bool "Enable -I option (use ICMP instead of UDP)"
+ 	default BUSYBOX_DEFAULT_FEATURE_TRACEROUTE_USE_ICMP
+ 	depends on BUSYBOX_CONFIG_TRACEROUTE || BUSYBOX_CONFIG_TRACEROUTE6
+-	help
+-	  Add option -I to use ICMP ECHO instead of UDP datagrams.
+ config BUSYBOX_CONFIG_TUNCTL
+ 	bool "tunctl"
+ 	default BUSYBOX_DEFAULT_TUNCTL
+@@ -1004,12 +1010,15 @@ config BUSYBOX_CONFIG_WGET
+ 	  wget is a utility for non-interactive download of files from HTTP
+ 	  and FTP servers.
+ 
++config BUSYBOX_CONFIG_FEATURE_WGET_LONG_OPTIONS
++	bool "Enable long options"
++	default BUSYBOX_DEFAULT_FEATURE_WGET_LONG_OPTIONS
++	depends on BUSYBOX_CONFIG_WGET && BUSYBOX_CONFIG_LONG_OPTS
++
+ config BUSYBOX_CONFIG_FEATURE_WGET_STATUSBAR
+-	bool "Enable a nifty process meter (+2k)"
++	bool "Enable progress bar (+2k)"
+ 	default BUSYBOX_DEFAULT_FEATURE_WGET_STATUSBAR
+ 	depends on BUSYBOX_CONFIG_WGET
+-	help
+-	  Enable the transfer progress bar for wget transfers.
+ 
+ config BUSYBOX_CONFIG_FEATURE_WGET_AUTHENTICATION
+ 	bool "Enable HTTP authentication"
+@@ -1018,13 +1027,6 @@ config BUSYBOX_CONFIG_FEATURE_WGET_AUTHENTICATION
+ 	help
+ 	  Support authenticated HTTP transfers.
+ 
+-config BUSYBOX_CONFIG_FEATURE_WGET_LONG_OPTIONS
+-	bool "Enable long options"
+-	default BUSYBOX_DEFAULT_FEATURE_WGET_LONG_OPTIONS
+-	depends on BUSYBOX_CONFIG_WGET && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the wget applet.
+-
+ config BUSYBOX_CONFIG_FEATURE_WGET_TIMEOUT
+ 	bool "Enable timeout option -T SEC"
+ 	default BUSYBOX_DEFAULT_FEATURE_WGET_TIMEOUT
+@@ -1039,18 +1041,59 @@ config BUSYBOX_CONFIG_FEATURE_WGET_TIMEOUT
+ 	  FEATURE_WGET_LONG_OPTIONS is also enabled, the --timeout option
+ 	  will work in addition to -T.
+ 
++config BUSYBOX_CONFIG_FEATURE_WGET_HTTPS
++	bool "Support HTTPS using internal TLS code"
++	default BUSYBOX_DEFAULT_FEATURE_WGET_HTTPS
++	depends on BUSYBOX_CONFIG_WGET
++	select BUSYBOX_CONFIG_TLS
++	help
++	  wget will use internal TLS code to connect to https:// URLs.
++	  Note:
++	  On NOMMU machines, ssl_helper applet should be available
++	  in the $PATH for this to work. Make sure to select that applet.
++
++	  Note: currently, TLS code only makes TLS I/O work, it
++	  does *not* check that the peer is who it claims to be, etc.
++	  IOW: it uses peer-supplied public keys to establish encryption
++	  and signing keys, then encrypts and signs outgoing data and
++	  decrypts incoming data.
++	  It does not check signature hashes on the incoming data:
++	  this means that attackers manipulating TCP packets can
++	  send altered data and we unknowingly receive garbage.
++	  (This check might be relatively easy to add).
++	  It does not check public key's certificate:
++	  this means that the peer may be an attacker impersonating
++	  the server we think we are talking to.
++
++	  If you think this is unacceptable, consider this. As more and more
++	  servers switch to HTTPS-only operation, without such "crippled"
++	  TLS code it is *impossible* to simply download a kernel source
++	  from kernel.org. Which can in real world translate into
++	  "my small automatic tooling to build cross-compilers from sources
++	  no longer works, I need to additionally keep a local copy
++	  of ~4 megabyte source tarball of a SSL library and ~2 megabyte
++	  source of wget, need to compile and built both before I can
++	  download anything. All this despite the fact that the build
++	  is done in a QEMU sandbox on a machine with absolutely nothing
++	  worth stealing, so I don't care if someone would go to a lot
++	  of trouble to intercept my HTTPS download to send me an altered
++	  kernel tarball".
++
++	  If you still think this is unacceptable, send patches.
++
++	  If you still think this is unacceptable, do not want to send
++	  patches, but do want to waste bandwidth expaining how wrong
++	  it is, you will be ignored.
++
+ config BUSYBOX_CONFIG_FEATURE_WGET_OPENSSL
+ 	bool "Try to connect to HTTPS using openssl"
+ 	default BUSYBOX_DEFAULT_FEATURE_WGET_OPENSSL
+ 	depends on BUSYBOX_CONFIG_WGET
+ 	help
+-	  Choose how wget establishes SSL connection for https:// URLs.
+-
+-	  Busybox itself contains no SSL code. wget will spawn
+-	  a helper program to talk over HTTPS.
++	  Try to use openssl to handle HTTPS.
+ 
+ 	  OpenSSL has a simple SSL client for debug purposes.
+-	  If you select "openssl" helper, wget will effectively run:
++	  If you select this option, wget will effectively run:
+ 	  "openssl s_client -quiet -connect hostname:443
+ 	  -servername hostname 2>/dev/null" and pipe its data
+ 	  through it. -servername is not used if hostname is numeric.
+@@ -1063,24 +1106,9 @@ config BUSYBOX_CONFIG_FEATURE_WGET_OPENSSL
+ 	  openssl is also a big binary, often dynamically linked
+ 	  against ~15 libraries.
+ 
+-config BUSYBOX_CONFIG_FEATURE_WGET_SSL_HELPER
+-	bool "Try to connect to HTTPS using ssl_helper"
+-	default BUSYBOX_DEFAULT_FEATURE_WGET_SSL_HELPER
+-	depends on BUSYBOX_CONFIG_WGET
+-	help
+-	  Choose how wget establishes SSL connection for https:// URLs.
+-
+-	  Busybox itself contains no SSL code. wget will spawn
+-	  a helper program to talk over HTTPS.
+-
+-	  ssl_helper is a tool which can be built statically
+-	  from busybox sources against a small embedded SSL library.
+-	  Please see networking/ssl_helper/README.
+-	  It does not require double host resolution and emits
+-	  error messages to stderr.
+-
+-	  Precompiled static binary may be available at
+-	  http://busybox.net/downloads/binaries/
++	  If openssl can't be executed, internal TLS code will be used
++	  (if you enabled it); if openssl can be executed but fails later,
++	  wget can't detect this, and download will fail.
+ config BUSYBOX_CONFIG_WHOIS
+ 	bool "whois"
+ 	default BUSYBOX_DEFAULT_WHOIS
+diff --git a/package/utils/busybox/config/networking/udhcp/Config.in b/package/utils/busybox/config/networking/udhcp/Config.in
+index cdba5d5d17..e7a98750d2 100644
+--- a/package/utils/busybox/config/networking/udhcp/Config.in
++++ b/package/utils/busybox/config/networking/udhcp/Config.in
+@@ -5,36 +5,44 @@
+ #
+ 
+ config BUSYBOX_CONFIG_UDHCPC6
+-	bool "udhcp client for DHCPv6 (udhcpc6)"
++	bool "udhcpc6 (DHCPv6 client, EXPERIMENTAL)"
+ 	default BUSYBOX_DEFAULT_UDHCPC6  # not yet ready
+ 	depends on BUSYBOX_CONFIG_FEATURE_IPV6
+ 	help
+ 	  udhcpc6 is a DHCPv6 client
+ 
++config BUSYBOX_CONFIG_FEATURE_UDHCPC6_RFC3646
++	bool "Support RFC 3646 (DNS server and search list)"
++	default BUSYBOX_DEFAULT_FEATURE_UDHCPC6_RFC3646
++	depends on BUSYBOX_CONFIG_UDHCPC6
++	help
++	  List of DNS servers and domain search list can be requested with
++	  "-O dns" and "-O search". If server gives these values,
++	  they will be set in environment variables "dns" and "search".
++
++config BUSYBOX_CONFIG_FEATURE_UDHCPC6_RFC4704
++	bool "Support RFC 4704 (Client FQDN)"
++	default BUSYBOX_DEFAULT_FEATURE_UDHCPC6_RFC4704
++	depends on BUSYBOX_CONFIG_UDHCPC6
++	help
++	  You can request FQDN to be given by server using "-O fqdn".
++
++config BUSYBOX_CONFIG_FEATURE_UDHCPC6_RFC4833
++	bool "Support RFC 4833 (Timezones)"
++	default BUSYBOX_DEFAULT_FEATURE_UDHCPC6_RFC4833
++	depends on BUSYBOX_CONFIG_UDHCPC6
++	help
++	  You can request POSIX timezone with "-O tz" and timezone name
++	  with "-O timezone".
++
+ config BUSYBOX_CONFIG_UDHCPD
+-	bool "udhcp server (udhcpd)"
++	bool "udhcpd (DHCP server)"
+ 	default BUSYBOX_DEFAULT_UDHCPD
+ 	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  udhcpd is a DHCP server geared primarily toward embedded systems,
+ 	  while striving to be fully functional and RFC compliant.
+ 
+-config BUSYBOX_CONFIG_DHCPRELAY
+-	bool "dhcprelay"
+-	default BUSYBOX_DEFAULT_DHCPRELAY
+-	help
+-	  dhcprelay listens for dhcp requests on one or more interfaces
+-	  and forwards these requests to a different interface or dhcp
+-	  server.
+-
+-config BUSYBOX_CONFIG_DUMPLEASES
+-	bool "Lease display utility (dumpleases)"
+-	default BUSYBOX_DEFAULT_DUMPLEASES
+-	help
+-	  dumpleases displays the leases written out by the udhcpd server.
+-	  Lease times are stored in the file by time remaining in lease, or
+-	  by the absolute time that it expires in seconds from epoch.
+-
+ config BUSYBOX_CONFIG_FEATURE_UDHCPD_WRITE_LEASES_EARLY
+ 	bool "Rewrite the lease file at every new acknowledge"
+ 	default BUSYBOX_DEFAULT_FEATURE_UDHCPD_WRITE_LEASES_EARLY
+@@ -67,8 +75,24 @@ config BUSYBOX_CONFIG_DHCPD_LEASES_FILE
+ 	  udhcpd stores addresses in a lease file. This is the absolute path
+ 	  of the file. Normally it is safe to leave it untouched.
+ 
++config BUSYBOX_CONFIG_DUMPLEASES
++	bool "dumpleases"
++	default BUSYBOX_DEFAULT_DUMPLEASES
++	help
++	  dumpleases displays the leases written out by the udhcpd.
++	  Lease times are stored in the file by time remaining in lease, or
++	  by the absolute time that it expires in seconds from epoch.
++
++config BUSYBOX_CONFIG_DHCPRELAY
++	bool "dhcprelay"
++	default BUSYBOX_DEFAULT_DHCPRELAY
++	help
++	  dhcprelay listens for dhcp requests on one or more interfaces
++	  and forwards these requests to a different interface or dhcp
++	  server.
++
+ config BUSYBOX_CONFIG_UDHCPC
+-	bool "udhcp client (udhcpc)"
++	bool "udhcpc (DHCP client)"
+ 	default BUSYBOX_DEFAULT_UDHCPC
+ 	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+@@ -99,6 +123,15 @@ config BUSYBOX_CONFIG_FEATURE_UDHCPC_SANITIZEOPT
+ 	  they will be replaced with string "bad" when exporting
+ 	  to the environment.
+ 
++config BUSYBOX_CONFIG_UDHCPC_DEFAULT_SCRIPT
++	string "Absolute path to config script"
++	default BUSYBOX_DEFAULT_UDHCPC_DEFAULT_SCRIPT
++	depends on BUSYBOX_CONFIG_UDHCPC
++	help
++	  This script is called after udhcpc receives an answer. See
++	  examples/udhcp for a working example. Normally it is safe
++	  to leave this untouched.
++
+ config BUSYBOX_CONFIG_FEATURE_UDHCP_PORT
+ 	bool "Enable '-P port' option for udhcpd and udhcpc"
+ 	default BUSYBOX_DEFAULT_FEATURE_UDHCP_PORT
+@@ -120,7 +153,7 @@ config BUSYBOX_CONFIG_UDHCP_DEBUG
+ 	  are very verbose and useful for debugging only.
+ 
+ config BUSYBOX_CONFIG_FEATURE_UDHCP_RFC3397
+-	bool "Support for RFC3397 domain search (experimental)"
++	bool "Support RFC3397 domain search (experimental)"
+ 	default BUSYBOX_DEFAULT_FEATURE_UDHCP_RFC3397
+ 	depends on BUSYBOX_CONFIG_UDHCPD || BUSYBOX_CONFIG_UDHCPC
+ 	help
+@@ -129,22 +162,13 @@ config BUSYBOX_CONFIG_FEATURE_UDHCP_RFC3397
+ 	  and SIP servers option 120, specified in RFC 3361.
+ 
+ config BUSYBOX_CONFIG_FEATURE_UDHCP_8021Q
+-	bool "Support for 802.1Q VLAN parameters"
++	bool "Support 802.1Q VLAN parameters"
+ 	default BUSYBOX_DEFAULT_FEATURE_UDHCP_8021Q
+ 	depends on BUSYBOX_CONFIG_UDHCPD || BUSYBOX_CONFIG_UDHCPC
+ 	help
+ 	  If selected, both client and server will support passing of VLAN
+ 	  ID and priority via options 132 and 133 as per 802.1Q.
+ 
+-config BUSYBOX_CONFIG_UDHCPC_DEFAULT_SCRIPT
+-	string "Absolute path to config script"
+-	default BUSYBOX_DEFAULT_UDHCPC_DEFAULT_SCRIPT
+-	depends on BUSYBOX_CONFIG_UDHCPC
+-	help
+-	  This script is called after udhcpc receives an answer. See
+-	  examples/udhcp for a working example. Normally it is safe
+-	  to leave this untouched.
+-
+ config BUSYBOX_CONFIG_UDHCPC_SLACK_FOR_BUGGY_SERVERS
+ 	int "DHCP options slack buffer size"
+ 	default BUSYBOX_DEFAULT_UDHCPC_SLACK_FOR_BUGGY_SERVERS
+diff --git a/package/utils/busybox/config/procps/Config.in b/package/utils/busybox/config/procps/Config.in
+index 6bc5ec058a..acd4ed882b 100644
+--- a/package/utils/busybox/config/procps/Config.in
++++ b/package/utils/busybox/config/procps/Config.in
+@@ -85,18 +85,18 @@ config BUSYBOX_CONFIG_PIDOF
+ 	  those id's on the standard output.
+ 
+ config BUSYBOX_CONFIG_FEATURE_PIDOF_SINGLE
+-	bool "Enable argument for single shot (-s)"
++	bool "Enable single shot (-s)"
+ 	default BUSYBOX_DEFAULT_FEATURE_PIDOF_SINGLE
+ 	depends on BUSYBOX_CONFIG_PIDOF
+ 	help
+-	  Support argument '-s' for returning only the first pid found.
++	  Support '-s' for returning only the first pid found.
+ 
+ config BUSYBOX_CONFIG_FEATURE_PIDOF_OMIT
+-	bool "Enable argument for omitting pids (-o)"
++	bool "Enable omitting pids (-o PID)"
+ 	default BUSYBOX_DEFAULT_FEATURE_PIDOF_OMIT
+ 	depends on BUSYBOX_CONFIG_PIDOF
+ 	help
+-	  Support argument '-o' for omitting the given pids in output.
++	  Support '-o PID' for omitting the given pid(s) in output.
+ 	  The special pid %PPID can be used to name the parent process
+ 	  of the pidof, in other words the calling shell or shell script.
+ config BUSYBOX_CONFIG_PMAP
+@@ -109,6 +109,14 @@ config BUSYBOX_CONFIG_POWERTOP
+ 	default BUSYBOX_DEFAULT_POWERTOP
+ 	help
+ 	  Analyze power consumption on Intel-based laptops
++
++config BUSYBOX_CONFIG_FEATURE_POWERTOP_INTERACTIVE
++	bool "Accept keyboard commands"
++	default BUSYBOX_DEFAULT_FEATURE_POWERTOP_INTERACTIVE
++	depends on BUSYBOX_CONFIG_POWERTOP
++	help
++	  Without this, powertop will only refresh display every 10 seconds.
++	  No keyboard commands will work, only ^C to terminate.
+ config BUSYBOX_CONFIG_PS
+ 	bool "ps"
+ 	default BUSYBOX_DEFAULT_PS
+@@ -133,19 +141,10 @@ config BUSYBOX_CONFIG_FEATURE_PS_LONG
+ 	  Adds fields PPID, RSS, START, TIME & TTY
+ 
+ config BUSYBOX_CONFIG_FEATURE_PS_TIME
+-	bool "Enable time and elapsed time output"
++	bool "Support -o time and -o etime output specifiers"
+ 	default BUSYBOX_DEFAULT_FEATURE_PS_TIME
+ 	depends on BUSYBOX_CONFIG_PS && BUSYBOX_CONFIG_DESKTOP
+ 	select BUSYBOX_CONFIG_PLATFORM_LINUX
+-	help
+-	  Support -o time and -o etime output specifiers.
+-
+-config BUSYBOX_CONFIG_FEATURE_PS_ADDITIONAL_COLUMNS
+-	bool "Enable additional ps columns"
+-	default BUSYBOX_DEFAULT_FEATURE_PS_ADDITIONAL_COLUMNS
+-	depends on BUSYBOX_CONFIG_PS && BUSYBOX_CONFIG_DESKTOP
+-	help
+-	  Support -o rgroup, -o ruser, -o nice output specifiers.
+ 
+ config BUSYBOX_CONFIG_FEATURE_PS_UNUSUAL_SYSTEMS
+ 	bool "Support Linux prior to 2.4.0 and non-ELF systems"
+@@ -154,6 +153,11 @@ config BUSYBOX_CONFIG_FEATURE_PS_UNUSUAL_SYSTEMS
+ 	help
+ 	  Include support for measuring HZ on old kernels and non-ELF systems
+ 	  (if you are on Linux 2.4.0+ and use ELF, you don't need this)
++
++config BUSYBOX_CONFIG_FEATURE_PS_ADDITIONAL_COLUMNS
++	bool "Support -o rgroup, -o ruser, -o nice specifiers"
++	default BUSYBOX_DEFAULT_FEATURE_PS_ADDITIONAL_COLUMNS
++	depends on BUSYBOX_CONFIG_PS && BUSYBOX_CONFIG_DESKTOP
+ config BUSYBOX_CONFIG_PSTREE
+ 	bool "pstree"
+ 	default BUSYBOX_DEFAULT_PSTREE
+@@ -164,12 +168,6 @@ config BUSYBOX_CONFIG_PWDX
+ 	default BUSYBOX_DEFAULT_PWDX
+ 	help
+ 	  Report current working directory of a process
+-config BUSYBOX_CONFIG_RENICE
+-	bool "renice"
+-	default BUSYBOX_DEFAULT_RENICE
+-	help
+-	  Renice alters the scheduling priority of one or more running
+-	  processes.
+ config BUSYBOX_CONFIG_SMEMCAP
+ 	bool "smemcap"
+ 	default BUSYBOX_DEFAULT_SMEMCAP
+@@ -188,6 +186,14 @@ config BUSYBOX_CONFIG_TOP
+ 	  The top program provides a dynamic real-time view of a running
+ 	  system.
+ 
++config BUSYBOX_CONFIG_FEATURE_TOP_INTERACTIVE
++	bool "Accept keyboard commands"
++	default BUSYBOX_DEFAULT_FEATURE_TOP_INTERACTIVE
++	depends on BUSYBOX_CONFIG_TOP
++	help
++	  Without this, top will only refresh display every 5 seconds.
++	  No keyboard commands will work, only ^C to terminate.
++
+ config BUSYBOX_CONFIG_FEATURE_TOP_CPU_USAGE_PERCENTAGE
+ 	bool "Show CPU per-process usage percentage"
+ 	default BUSYBOX_DEFAULT_FEATURE_TOP_CPU_USAGE_PERCENTAGE
+@@ -244,11 +250,11 @@ config BUSYBOX_CONFIG_UPTIME
+ 	  on, and the system load averages for the past 1, 5, and 15 minutes.
+ 
+ config BUSYBOX_CONFIG_FEATURE_UPTIME_UTMP_SUPPORT
+-	bool "Support for showing the number of users"
++	bool "Show the number of users"
+ 	default BUSYBOX_DEFAULT_FEATURE_UPTIME_UTMP_SUPPORT
+ 	depends on BUSYBOX_CONFIG_UPTIME && BUSYBOX_CONFIG_FEATURE_UTMP
+ 	help
+-	  Makes uptime display the number of users currently logged on.
++	  Display the number of users currently logged on.
+ config BUSYBOX_CONFIG_WATCH
+ 	bool "watch"
+ 	default BUSYBOX_DEFAULT_WATCH
+@@ -257,7 +263,7 @@ config BUSYBOX_CONFIG_WATCH
+ 	  output to the screen.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SHOW_THREADS
+-	bool "Support for showing threads in ps/pstree/top"
++	bool "Support thread display in ps/pstree/top"
+ 	default BUSYBOX_DEFAULT_FEATURE_SHOW_THREADS
+ 	depends on BUSYBOX_CONFIG_PS || BUSYBOX_CONFIG_TOP || BUSYBOX_CONFIG_PSTREE
+ 	help
+diff --git a/package/utils/busybox/config/selinux/Config.in b/package/utils/busybox/config/selinux/Config.in
+index 1aac9f4ec5..71eb0dcd77 100644
+--- a/package/utils/busybox/config/selinux/Config.in
++++ b/package/utils/busybox/config/selinux/Config.in
+@@ -18,8 +18,6 @@ config BUSYBOX_CONFIG_FEATURE_CHCON_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_CHCON_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_CHCON && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the chcon applet.
+ config BUSYBOX_CONFIG_GETENFORCE
+ 	bool "getenforce"
+ 	default BUSYBOX_DEFAULT_GETENFORCE
+@@ -56,8 +54,6 @@ config BUSYBOX_CONFIG_FEATURE_RUNCON_LONG_OPTIONS
+ 	bool "Enable long options"
+ 	default BUSYBOX_DEFAULT_FEATURE_RUNCON_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_RUNCON && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  Support long options for the runcon applet.
+ config BUSYBOX_CONFIG_SELINUXENABLED
+ 	bool "selinuxenabled"
+ 	default BUSYBOX_DEFAULT_SELINUXENABLED
+diff --git a/package/utils/busybox/config/shell/Config.in b/package/utils/busybox/config/shell/Config.in
+index 4193c18806..e455d3832d 100644
+--- a/package/utils/busybox/config/shell/Config.in
++++ b/package/utils/busybox/config/shell/Config.in
+@@ -18,9 +18,19 @@ choice
+ config BUSYBOX_CONFIG_SH_IS_ASH
+ 	depends on !BUSYBOX_CONFIG_NOMMU
+ 	bool "ash"
++	help
++	  Choose ash to be the shell executed by 'sh' name.
++	  The ash code will be built into busybox. If you don't select
++	  "ash" choice (CONFIG_ASH), this shell may only be invoked by
++	  the name 'sh' (and not 'ash').
+ 
+ config BUSYBOX_CONFIG_SH_IS_HUSH
+ 	bool "hush"
++	help
++	  Choose hush to be the shell executed by 'sh' name.
++	  The hush code will be built into busybox. If you don't select
++	  "hush" choice (CONFIG_HUSH), this shell may only be invoked by
++	  the name 'sh' (and not 'hush').
+ 
+ config BUSYBOX_CONFIG_SH_IS_NONE
+ 	bool "none"
+@@ -32,7 +42,8 @@ choice
+ 	default BUSYBOX_CONFIG_BASH_IS_NONE
+ 	help
+ 	  Choose which shell you want to be executed by 'bash' alias.
+-	  The ash shell is the most bash compatible and full featured one.
++	  The ash shell is the most bash compatible and full featured one,
++	  although compatibility is far from being complete.
+ 
+ 	  Note that selecting this option does not switch on any bash
+ 	  compatibility code. It merely makes it possible to install
+@@ -47,9 +58,19 @@ choice
+ config BUSYBOX_CONFIG_BASH_IS_ASH
+ 	depends on !BUSYBOX_CONFIG_NOMMU
+ 	bool "ash"
++	help
++	  Choose ash to be the shell executed by 'bash' name.
++	  The ash code will be built into busybox. If you don't select
++	  "ash" choice (CONFIG_ASH), this shell may only be invoked by
++	  the name 'bash' (and not 'ash').
+ 
+ config BUSYBOX_CONFIG_BASH_IS_HUSH
+ 	bool "hush"
++	help
++	  Choose hush to be the shell executed by 'bash' name.
++	  The hush code will be built into busybox. If you don't select
++	  "hush" choice (CONFIG_HUSH), this shell may only be invoked by
++	  the name 'bash' (and not 'hush').
+ 
+ config BUSYBOX_CONFIG_BASH_IS_NONE
+ 	bool "none"
+@@ -68,12 +89,15 @@ config BUSYBOX_CONFIG_ASH
+ 	  shell (by Herbert Xu), which was created by porting the 'ash' shell
+ 	  (written by Kenneth Almquist) from NetBSD.
+ 
++# ash options
++# note: Don't remove !NOMMU part in the next line; it would break
++# menuconfig's indenting.
++if !NOMMU && (BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH)
++
+ config BUSYBOX_CONFIG_ASH_OPTIMIZE_FOR_SIZE
+ 	bool "Optimize for size instead of speed"
+ 	default BUSYBOX_DEFAULT_ASH_OPTIMIZE_FOR_SIZE
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Compile ash for reduced size at the price of speed.
+ 
+ config BUSYBOX_CONFIG_ASH_INTERNAL_GLOB
+ 	bool "Use internal glob() implementation"
+@@ -83,6 +107,23 @@ config BUSYBOX_CONFIG_ASH_INTERNAL_GLOB
+ 	  Do not use glob() function from libc, use internal implementation.
+ 	  Use this if you are getting "glob.h: No such file or directory"
+ 	  or similar build errors.
++	  Note that as of now (2017-01), uclibc and musl glob() both have bugs
++	  which would break ash if you select N here.
++
++config BUSYBOX_CONFIG_ASH_BASH_COMPAT
++	bool "bash-compatible extensions"
++	default BUSYBOX_DEFAULT_ASH_BASH_COMPAT
++	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
++
++config BUSYBOX_CONFIG_ASH_JOB_CONTROL
++	bool "Job control"
++	default BUSYBOX_DEFAULT_ASH_JOB_CONTROL
++	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
++
++config BUSYBOX_CONFIG_ASH_ALIAS
++	bool "Alias support"
++	default BUSYBOX_DEFAULT_ASH_ALIAS
++	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+ 
+ config BUSYBOX_CONFIG_ASH_RANDOM_SUPPORT
+ 	bool "Pseudorandom generator and $RANDOM variable"
+@@ -100,88 +141,62 @@ config BUSYBOX_CONFIG_ASH_EXPAND_PRMT
+ 	default BUSYBOX_DEFAULT_ASH_EXPAND_PRMT
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+ 	help
+-	  "PS#" may contain volatile content, such as backquote commands.
++	  $PS# may contain volatile content, such as backquote commands.
+ 	  This option recreates the prompt string from the environment
+ 	  variable each time it is displayed.
+ 
+-config BUSYBOX_CONFIG_ASH_BASH_COMPAT
+-	bool "bash-compatible extensions"
+-	default BUSYBOX_DEFAULT_ASH_BASH_COMPAT
+-	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Enable bash-compatible extensions.
+-
+ config BUSYBOX_CONFIG_ASH_IDLE_TIMEOUT
+-	bool "Idle timeout variable"
++	bool "Idle timeout variable $TMOUT"
+ 	default BUSYBOX_DEFAULT_ASH_IDLE_TIMEOUT
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+ 	help
+-	  Enables bash-like auto-logout after $TMOUT seconds of idle time.
++	  Enable bash-like auto-logout after $TMOUT seconds of idle time.
+ 
+-config BUSYBOX_CONFIG_ASH_JOB_CONTROL
+-	bool "Job control"
+-	default BUSYBOX_DEFAULT_ASH_JOB_CONTROL
+-	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Enable job control in the ash shell.
+-
+-config BUSYBOX_CONFIG_ASH_ALIAS
+-	bool "Alias support"
+-	default BUSYBOX_DEFAULT_ASH_ALIAS
+-	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Enable alias support in the ash shell.
+-
+-config BUSYBOX_CONFIG_ASH_GETOPTS
+-	bool "Builtin getopt to parse positional parameters"
+-	default BUSYBOX_DEFAULT_ASH_GETOPTS
++config BUSYBOX_CONFIG_ASH_MAIL
++	bool "Check for new mail in interactive shell"
++	default BUSYBOX_DEFAULT_ASH_MAIL
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+ 	help
+-	  Enable support for getopts builtin in ash.
++	  Enable "check for new mail" function:
++	  if set, $MAIL file and $MAILPATH list of files
++	  are checked for mtime changes, and "you have mail"
++	  message is printed if change is detected.
+ 
+-config BUSYBOX_CONFIG_ASH_BUILTIN_ECHO
+-	bool "Builtin version of 'echo'"
+-	default BUSYBOX_DEFAULT_ASH_BUILTIN_ECHO
++config BUSYBOX_CONFIG_ASH_ECHO
++	bool "echo builtin"
++	default BUSYBOX_DEFAULT_ASH_ECHO
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Enable support for echo builtin in ash.
+ 
+-config BUSYBOX_CONFIG_ASH_BUILTIN_PRINTF
+-	bool "Builtin version of 'printf'"
+-	default BUSYBOX_DEFAULT_ASH_BUILTIN_PRINTF
++config BUSYBOX_CONFIG_ASH_PRINTF
++	bool "printf builtin"
++	default BUSYBOX_DEFAULT_ASH_PRINTF
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Enable support for printf builtin in ash.
+ 
+-config BUSYBOX_CONFIG_ASH_BUILTIN_TEST
+-	bool "Builtin version of 'test'"
+-	default BUSYBOX_DEFAULT_ASH_BUILTIN_TEST
++config BUSYBOX_CONFIG_ASH_TEST
++	bool "test builtin"
++	default BUSYBOX_DEFAULT_ASH_TEST
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Enable support for test builtin in ash.
+ 
+ config BUSYBOX_CONFIG_ASH_HELP
+ 	bool "help builtin"
+ 	default BUSYBOX_DEFAULT_ASH_HELP
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Enable help builtin in ash.
++
++config BUSYBOX_CONFIG_ASH_GETOPTS
++	bool "getopts builtin"
++	default BUSYBOX_DEFAULT_ASH_GETOPTS
++	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+ 
+ config BUSYBOX_CONFIG_ASH_CMDCMD
+-	bool "'command' command to override shell builtins"
++	bool "command builtin"
+ 	default BUSYBOX_DEFAULT_ASH_CMDCMD
+ 	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+ 	help
+-	  Enable support for the ash 'command' builtin, which allows
+-	  you to run the specified command with the specified arguments,
+-	  even when there is an ash builtin command with the same name.
++	  Enable support for the 'command' builtin, which allows
++	  you to run the specified command or builtin,
++	  even when there is a function with the same name.
+ 
+-config BUSYBOX_CONFIG_ASH_MAIL
+-	bool "Check for new mail on interactive shells"
+-	default BUSYBOX_DEFAULT_ASH_MAIL
+-	depends on BUSYBOX_CONFIG_ASH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH
+-	help
+-	  Enable "check for new mail" function in the ash shell.
++endif # ash options
+ config BUSYBOX_CONFIG_CTTYHACK
+ 	bool "cttyhack"
+ 	default BUSYBOX_DEFAULT_CTTYHACK
+@@ -243,8 +258,6 @@ config BUSYBOX_CONFIG_HUSH_BASH_COMPAT
+ 	bool "bash-compatible extensions"
+ 	default BUSYBOX_DEFAULT_HUSH_BASH_COMPAT
+ 	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
+-	help
+-	  Enable bash-compatible extensions.
+ 
+ config BUSYBOX_CONFIG_HUSH_BRACE_EXPANSION
+ 	bool "Brace expansion"
+@@ -253,13 +266,6 @@ config BUSYBOX_CONFIG_HUSH_BRACE_EXPANSION
+ 	help
+ 	  Enable {abc,def} extension.
+ 
+-config BUSYBOX_CONFIG_HUSH_HELP
+-	bool "help builtin"
+-	default BUSYBOX_DEFAULT_HUSH_HELP
+-	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
+-	help
+-	  Enable help builtin in hush. Code size + ~1 kbyte.
+-
+ config BUSYBOX_CONFIG_HUSH_INTERACTIVE
+ 	bool "Interactive mode"
+ 	default BUSYBOX_DEFAULT_HUSH_INTERACTIVE
+@@ -274,8 +280,6 @@ config BUSYBOX_CONFIG_HUSH_SAVEHISTORY
+ 	bool "Save command history to .hush_history"
+ 	default BUSYBOX_DEFAULT_HUSH_SAVEHISTORY
+ 	depends on BUSYBOX_CONFIG_HUSH_INTERACTIVE && BUSYBOX_CONFIG_FEATURE_EDITING_SAVEHISTORY
+-	help
+-	  Enable history saving in hush.
+ 
+ config BUSYBOX_CONFIG_HUSH_JOB
+ 	bool "Job control"
+@@ -289,42 +293,38 @@ config BUSYBOX_CONFIG_HUSH_JOB
+ 	  but no separate process group is formed.
+ 
+ config BUSYBOX_CONFIG_HUSH_TICK
+-	bool "Process substitution"
++	bool "Support process substitution"
+ 	default BUSYBOX_DEFAULT_HUSH_TICK
+ 	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
+ 	help
+-	  Enable process substitution `command` and $(command) in hush.
++	  Enable `command` and $(command).
+ 
+ config BUSYBOX_CONFIG_HUSH_IF
+ 	bool "Support if/then/elif/else/fi"
+ 	default BUSYBOX_DEFAULT_HUSH_IF
+ 	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
+-	help
+-	  Enable if/then/elif/else/fi in hush.
+ 
+ config BUSYBOX_CONFIG_HUSH_LOOPS
+ 	bool "Support for, while and until loops"
+ 	default BUSYBOX_DEFAULT_HUSH_LOOPS
+ 	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
+-	help
+-	  Enable for, while and until loops in hush.
+ 
+ config BUSYBOX_CONFIG_HUSH_CASE
+ 	bool "Support case ... esac statement"
+ 	default BUSYBOX_DEFAULT_HUSH_CASE
+ 	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
+ 	help
+-	  Enable case ... esac statement in hush. +400 bytes.
++	  Enable case ... esac statement. +400 bytes.
+ 
+ config BUSYBOX_CONFIG_HUSH_FUNCTIONS
+ 	bool "Support funcname() { commands; } syntax"
+ 	default BUSYBOX_DEFAULT_HUSH_FUNCTIONS
+ 	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
+ 	help
+-	  Enable support for shell functions in hush. +800 bytes.
++	  Enable support for shell functions. +800 bytes.
+ 
+ config BUSYBOX_CONFIG_HUSH_LOCAL
+-	bool "Support local builtin"
++	bool "local builtin"
+ 	default BUSYBOX_DEFAULT_HUSH_LOCAL
+ 	depends on BUSYBOX_CONFIG_HUSH_FUNCTIONS
+ 	help
+@@ -338,13 +338,6 @@ config BUSYBOX_CONFIG_HUSH_RANDOM_SUPPORT
+ 	  Enable pseudorandom generator and dynamic variable "$RANDOM".
+ 	  Each read of "$RANDOM" will generate a new pseudorandom value.
+ 
+-config BUSYBOX_CONFIG_HUSH_EXPORT_N
+-	bool "Support 'export -n' option"
+-	default BUSYBOX_DEFAULT_HUSH_EXPORT_N
+-	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
+-	help
+-	  export -n unexports variables. It is a bash extension.
+-
+ config BUSYBOX_CONFIG_HUSH_MODE_X
+ 	bool "Support 'hush -x' option and 'set -x' command"
+ 	default BUSYBOX_DEFAULT_HUSH_MODE_X
+@@ -353,6 +346,88 @@ config BUSYBOX_CONFIG_HUSH_MODE_X
+ 	  This instructs hush to print commands before execution.
+ 	  Adds ~300 bytes.
+ 
++config BUSYBOX_CONFIG_HUSH_ECHO
++	bool "echo builtin"
++	default BUSYBOX_DEFAULT_HUSH_ECHO
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_PRINTF
++	bool "printf builtin"
++	default BUSYBOX_DEFAULT_HUSH_PRINTF
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_TEST
++	bool "test builtin"
++	default BUSYBOX_DEFAULT_HUSH_TEST
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_HELP
++	bool "help builtin"
++	default BUSYBOX_DEFAULT_HUSH_HELP
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_EXPORT
++	bool "export builtin"
++	default BUSYBOX_DEFAULT_HUSH_EXPORT
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_EXPORT_N
++	bool "Support 'export -n' option"
++	default BUSYBOX_DEFAULT_HUSH_EXPORT_N
++	depends on BUSYBOX_CONFIG_HUSH_EXPORT
++	help
++	  export -n unexports variables. It is a bash extension.
++
++config BUSYBOX_CONFIG_HUSH_KILL
++	bool "kill builtin (supports kill %jobspec)"
++	default BUSYBOX_DEFAULT_HUSH_KILL
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_WAIT
++	bool "wait builtin"
++	default BUSYBOX_DEFAULT_HUSH_WAIT
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_TRAP
++	bool "trap builtin"
++	default BUSYBOX_DEFAULT_HUSH_TRAP
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_TYPE
++	bool "type builtin"
++	default BUSYBOX_DEFAULT_HUSH_TYPE
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_READ
++	bool "read builtin"
++	default BUSYBOX_DEFAULT_HUSH_READ
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_SET
++	bool "set builtin"
++	default BUSYBOX_DEFAULT_HUSH_SET
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_UNSET
++	bool "unset builtin"
++	default BUSYBOX_DEFAULT_HUSH_UNSET
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_ULIMIT
++	bool "ulimit builtin"
++	default BUSYBOX_DEFAULT_HUSH_ULIMIT
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_UMASK
++	bool "umask builtin"
++	default BUSYBOX_DEFAULT_HUSH_UMASK
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
++config BUSYBOX_CONFIG_HUSH_MEMLEAK
++	bool "memleak builtin (debugging)"
++	default BUSYBOX_DEFAULT_HUSH_MEMLEAK
++	depends on BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
+ config BUSYBOX_CONFIG_MSH
+ 	bool "msh (deprecated: aliased to hush)"
+ 	default BUSYBOX_DEFAULT_MSH
+@@ -361,6 +436,9 @@ config BUSYBOX_CONFIG_MSH
+ 	  msh is deprecated and will be removed, please migrate to hush.
+ 
+ 
++comment "Options common to all shells"
++if ASH || BUSYBOX_CONFIG_HUSH || BUSYBOX_CONFIG_SH_IS_ASH || BUSYBOX_CONFIG_BASH_IS_ASH || BUSYBOX_CONFIG_SH_IS_HUSH || BUSYBOX_CONFIG_BASH_IS_HUSH
++
+ config BUSYBOX_CONFIG_FEATURE_SH_MATH
+ 	bool "POSIX math support"
+ 	default BUSYBOX_DEFAULT_FEATURE_SH_MATH
+@@ -399,23 +477,11 @@ config BUSYBOX_CONFIG_FEATURE_SH_STANDALONE
+ 	  for use as a rescue shell, in the event that you screw up your system.
+ 
+ 	  This is implemented by re-execing /proc/self/exe (typically)
+-	  with right parameters. Some selected applets ("NOFORK" applets)
+-	  can even be executed without creating new process.
+-	  Instead, busybox will call <applet>_main() internally.
+-
+-	  However, this causes problems in chroot jails without mounted /proc
+-	  and with ps/top (command name can be shown as 'exe' for applets
+-	  started this way).
+-# untrue?
+-#	  Note that this will *also* cause applets to take precedence
+-#	  over shell builtins of the same name. So turning this on will
+-#	  eliminate any performance gained by turning on the builtin "echo"
+-#	  and "test" commands in ash.
+-# untrue?
+-#	  Note that when using this option, the shell will attempt to directly
+-#	  run '/bin/busybox'. If you do not have the busybox binary sitting in
+-#	  that exact location with that exact name, this option will not work at
+-#	  all.
++	  with right parameters.
++
++	  However, there are drawbacks: it is problematic in chroot jails
++	  without mounted /proc, and ps/top may show command name as 'exe'
++	  for applets started this way.
+ 
+ config BUSYBOX_CONFIG_FEATURE_SH_NOFORK
+ 	bool "Run 'nofork' applets directly"
+@@ -444,5 +510,6 @@ config BUSYBOX_CONFIG_FEATURE_SH_HISTFILESIZE
+ 	  to set shell history size. Note that its max value is capped
+ 	  by "History size" setting in library tuning section.
+ 
++endif # Options common to all shells
+ 
+ endmenu
+diff --git a/package/utils/busybox/config/sysklogd/Config.in b/package/utils/busybox/config/sysklogd/Config.in
+index 1f8f3cf160..2045a7ae38 100644
+--- a/package/utils/busybox/config/sysklogd/Config.in
++++ b/package/utils/busybox/config/sysklogd/Config.in
+@@ -58,7 +58,7 @@ config BUSYBOX_CONFIG_FEATURE_LOGREAD_REDUCED_LOCKING
+ 	default BUSYBOX_DEFAULT_FEATURE_LOGREAD_REDUCED_LOCKING
+ 	depends on BUSYBOX_CONFIG_LOGREAD
+ 	help
+-	  'logread' ouput to slow serial terminals can have
++	  'logread' output to slow serial terminals can have
+ 	  side effects on syslog because of the semaphore.
+ 	  This option make logread to double buffer copy
+ 	  from circular buffer, minimizing semaphore
+diff --git a/package/utils/busybox/config/util-linux/Config.in b/package/utils/busybox/config/util-linux/Config.in
+index 8df023c35b..74a49d00c2 100644
+--- a/package/utils/busybox/config/util-linux/Config.in
++++ b/package/utils/busybox/config/util-linux/Config.in
+@@ -54,6 +54,17 @@ config BUSYBOX_CONFIG_BLOCKDEV
+ 	default BUSYBOX_DEFAULT_BLOCKDEV
+ 	help
+ 	  Performs some ioctls with block devices.
++config BUSYBOX_CONFIG_CAL
++	bool "cal"
++	default BUSYBOX_DEFAULT_CAL
++	help
++	  cal is used to display a monthly calendar.
++config BUSYBOX_CONFIG_CHRT
++	bool "chrt"
++	default BUSYBOX_DEFAULT_CHRT
++	help
++	  manipulate real-time attributes of a process.
++	  This requires sched_{g,s}etparam support in your libc.
+ config BUSYBOX_CONFIG_DMESG
+ 	bool "dmesg"
+ 	default BUSYBOX_DEFAULT_DMESG
+@@ -68,7 +79,7 @@ config BUSYBOX_CONFIG_DMESG
+ 	  wish to enable the 'dmesg' utility.
+ 
+ config BUSYBOX_CONFIG_FEATURE_DMESG_PRETTY
+-	bool "Pretty dmesg output"
++	bool "Pretty output"
+ 	default BUSYBOX_DEFAULT_FEATURE_DMESG_PRETTY
+ 	depends on BUSYBOX_CONFIG_DMESG
+ 	help
+@@ -87,6 +98,25 @@ config BUSYBOX_CONFIG_FEATURE_DMESG_PRETTY
+ 	    <5>Linux version 2.6.17.4 .....
+ 	    <6>BIOS-provided physical RAM map:
+ 	    <6> BIOS-e820: 0000000000000000 - 000000000009f000 (usable)
++config BUSYBOX_CONFIG_EJECT
++	bool "eject"
++	default BUSYBOX_DEFAULT_EJECT
++	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	help
++	  Used to eject cdroms. (defaults to /dev/cdrom)
++
++config BUSYBOX_CONFIG_FEATURE_EJECT_SCSI
++	bool "SCSI support"
++	default BUSYBOX_DEFAULT_FEATURE_EJECT_SCSI
++	depends on BUSYBOX_CONFIG_EJECT
++	help
++	  Add the -s option to eject, this allows to eject SCSI-Devices and
++	  usb-storage devices.
++config BUSYBOX_CONFIG_FALLOCATE
++	bool "fallocate"
++	default BUSYBOX_DEFAULT_FALLOCATE
++	help
++	  Preallocate space for files.
+ config BUSYBOX_CONFIG_FATATTR
+ 	bool "fatattr"
+ 	default BUSYBOX_DEFAULT_FATATTR
+@@ -104,7 +134,7 @@ config BUSYBOX_CONFIG_FBSET
+ 	  if you wish to enable the 'fbset' utility.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FBSET_FANCY
+-	bool "Turn on extra fbset options"
++	bool "Enable extra options"
+ 	default BUSYBOX_DEFAULT_FEATURE_FBSET_FANCY
+ 	depends on BUSYBOX_CONFIG_FBSET
+ 	help
+@@ -114,7 +144,7 @@ config BUSYBOX_CONFIG_FEATURE_FBSET_FANCY
+ 	  options.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FBSET_READMODE
+-	bool "Turn on fbset readmode support"
++	bool "Enable readmode support"
+ 	default BUSYBOX_DEFAULT_FEATURE_FBSET_READMODE
+ 	depends on BUSYBOX_CONFIG_FBSET
+ 	help
+@@ -142,8 +172,6 @@ config BUSYBOX_CONFIG_FDISK_SUPPORT_LARGE_DISKS
+ 	default BUSYBOX_DEFAULT_FDISK_SUPPORT_LARGE_DISKS
+ 	depends on BUSYBOX_CONFIG_FDISK
+ 	depends on !BUSYBOX_CONFIG_LFS   # with LFS no special code is needed
+-	help
+-	  Enable this option to support large disks > 4GB.
+ 
+ config BUSYBOX_CONFIG_FEATURE_FDISK_WRITABLE
+ 	bool "Write support"
+@@ -251,6 +279,13 @@ config BUSYBOX_CONFIG_FSCK_MINIX
+ 	  power goes off in the middle of a write. This utility allows you to
+ 	  check for and attempt to repair any corruption that occurs to a minix
+ 	  filesystem.
++config BUSYBOX_CONFIG_FSFREEZE
++	bool "fsfreeze"
++	default BUSYBOX_DEFAULT_FSFREEZE
++	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	select BUSYBOX_CONFIG_LONG_OPTS
++	help
++	  Halt new accesses and flush writes on a mounted filesystem.
+ config BUSYBOX_CONFIG_FSTRIM
+ 	bool "fstrim"
+ 	default BUSYBOX_DEFAULT_FSTRIM
+@@ -296,6 +331,12 @@ config BUSYBOX_CONFIG_HD
+ 	default BUSYBOX_DEFAULT_HD
+ 	help
+ 	  hd is an alias to hexdump -C.
++config BUSYBOX_CONFIG_XXD
++	bool "xxd"
++	default BUSYBOX_DEFAULT_XXD
++	help
++	  The xxd utility is used to display binary data in a readable
++	  way that is comparable to the output from most hex editors.
+ config BUSYBOX_CONFIG_HWCLOCK
+ 	bool "hwclock"
+ 	default BUSYBOX_DEFAULT_HWCLOCK
+@@ -310,10 +351,6 @@ config BUSYBOX_CONFIG_FEATURE_HWCLOCK_LONG_OPTIONS
+ 	bool "Support long options (--hctosys,...)"
+ 	default BUSYBOX_DEFAULT_FEATURE_HWCLOCK_LONG_OPTIONS
+ 	depends on BUSYBOX_CONFIG_HWCLOCK && BUSYBOX_CONFIG_LONG_OPTS
+-	help
+-	  By default, the hwclock utility only uses short options. If you
+-	  are overly fond of its long options, such as --hctosys, --utc, etc)
+-	  then enable this option.
+ 
+ config BUSYBOX_CONFIG_FEATURE_HWCLOCK_ADJTIME_FHS
+ 	bool "Use FHS /var/lib/hwclock/adjtime"
+@@ -326,6 +363,13 @@ config BUSYBOX_CONFIG_FEATURE_HWCLOCK_ADJTIME_FHS
+ 	  classic /etc/adjtime path.
+ 
+ 	  pathname.com/fhs/pub/fhs-2.3.html#VARLIBHWCLOCKSTATEDIRECTORYFORHWCLO
++config BUSYBOX_CONFIG_IONICE
++	bool "ionice"
++	default BUSYBOX_DEFAULT_IONICE
++	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	help
++	  Set/set program io scheduling class and priority
++	  Requires kernel >= 2.6.13
+ config BUSYBOX_CONFIG_IPCRM
+ 	bool "ipcrm"
+ 	default BUSYBOX_DEFAULT_IPCRM
+@@ -340,6 +384,20 @@ config BUSYBOX_CONFIG_IPCS
+ 	help
+ 	  The ipcs utility is used to provide information on the currently
+ 	  allocated System V interprocess (IPC) objects in the system.
++config BUSYBOX_CONFIG_LAST
++	bool "last"
++	default BUSYBOX_DEFAULT_LAST
++	depends on BUSYBOX_CONFIG_FEATURE_WTMP
++	help
++	  'last' displays a list of the last users that logged into the system.
++
++config BUSYBOX_CONFIG_FEATURE_LAST_FANCY
++	bool "Output extra information"
++	default BUSYBOX_DEFAULT_FEATURE_LAST_FANCY
++	depends on BUSYBOX_CONFIG_LAST
++	help
++	  'last' displays detailed information about the last users that
++	  logged into the system (mimics sysvinit last). +900 bytes.
+ config BUSYBOX_CONFIG_LOSETUP
+ 	bool "losetup"
+ 	default BUSYBOX_DEFAULT_LOSETUP
+@@ -423,6 +481,24 @@ config BUSYBOX_CONFIG_FEATURE_MDEV_LOAD_FIRMWARE
+ 	  These devices will request userspace look up the files in
+ 	  /lib/firmware/ and if it exists, send it to the kernel for
+ 	  loading into the hardware.
++config BUSYBOX_CONFIG_MESG
++	bool "mesg"
++	default BUSYBOX_DEFAULT_MESG
++	help
++	  Mesg controls access to your terminal by others. It is typically
++	  used to allow or disallow other users to write to your terminal
++
++config BUSYBOX_CONFIG_FEATURE_MESG_ENABLE_ONLY_GROUP
++	bool "Enable writing to tty only by group, not by everybody"
++	default BUSYBOX_DEFAULT_FEATURE_MESG_ENABLE_ONLY_GROUP
++	depends on BUSYBOX_CONFIG_MESG
++	help
++	  Usually, ttys are owned by group "tty", and "write" tool is
++	  setgid to this group. This way, "mesg y" only needs to enable
++	  "write by owning group" bit in tty mode.
++
++	  If you set this option to N, "mesg y" will enable writing
++	  by anybody at all. This is not recommended.
+ config BUSYBOX_CONFIG_MKE2FS
+ 	bool "mke2fs"
+ 	default BUSYBOX_DEFAULT_MKE2FS
+@@ -574,7 +650,7 @@ config BUSYBOX_CONFIG_FEATURE_MOUNT_CIFS
+ 
+ config BUSYBOX_CONFIG_FEATURE_MOUNT_FLAGS
+ 	depends on BUSYBOX_CONFIG_MOUNT
+-	bool "Support lots of -o flags in mount"
++	bool "Support lots of -o flags"
+ 	default BUSYBOX_DEFAULT_FEATURE_MOUNT_FLAGS
+ 	help
+ 	  Without this, mount only supports ro/rw/remount. With this, it
+@@ -595,6 +671,11 @@ config BUSYBOX_CONFIG_FEATURE_MOUNT_OTHERTAB
+ 	default BUSYBOX_DEFAULT_FEATURE_MOUNT_OTHERTAB
+ 	help
+ 	  Support mount -T (specifying an alternate fstab)
++config BUSYBOX_CONFIG_MOUNTPOINT
++	bool "mountpoint"
++	default BUSYBOX_DEFAULT_MOUNTPOINT
++	help
++	  mountpoint checks if the directory is a mountpoint.
+ config BUSYBOX_CONFIG_NSENTER
+ 	bool "nsenter"
+ 	default BUSYBOX_DEFAULT_NSENTER
+@@ -640,6 +721,12 @@ config BUSYBOX_CONFIG_READPROFILE
+ 	#select PLATFORM_LINUX
+ 	help
+ 	  This allows you to parse /proc/profile for basic profiling.
++config BUSYBOX_CONFIG_RENICE
++	bool "renice"
++	default BUSYBOX_DEFAULT_RENICE
++	help
++	  Renice alters the scheduling priority of one or more running
++	  processes.
+ config BUSYBOX_CONFIG_REV
+ 	bool "rev"
+ 	default BUSYBOX_DEFAULT_REV
+@@ -685,6 +772,19 @@ config BUSYBOX_CONFIG_LINUX64
+ 	select BUSYBOX_CONFIG_PLATFORM_LINUX
+ 	help
+ 	  Alias to "setarch linux64".
++config BUSYBOX_CONFIG_SETPRIV
++	bool "setpriv"
++	default BUSYBOX_DEFAULT_SETPRIV
++	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	select BUSYBOX_CONFIG_LONG_OPTS
++	help
++	  Run a program with different Linux privilege settings.
++	  Requires kernel >= 3.5
++config BUSYBOX_CONFIG_SETSID
++	bool "setsid"
++	default BUSYBOX_DEFAULT_SETSID
++	help
++	  setsid runs a program in a new session
+ config BUSYBOX_CONFIG_SWAPON
+ 	bool "swapon"
+ 	default BUSYBOX_DEFAULT_SWAPON
+@@ -738,6 +838,21 @@ config BUSYBOX_CONFIG_SWITCH_ROOT
+ 	  * Because the Linux kernel uses rootfs internally as the starting
+ 	  and ending point for searching through the kernel's doubly linked
+ 	  list of active mount points. That's why.
++config BUSYBOX_CONFIG_TASKSET
++	bool "taskset"
++	default BUSYBOX_DEFAULT_TASKSET
++	help
++	  Retrieve or set a processes's CPU affinity.
++	  This requires sched_{g,s}etaffinity support in your libc.
++
++config BUSYBOX_CONFIG_FEATURE_TASKSET_FANCY
++	bool "Fancy output"
++	default BUSYBOX_DEFAULT_FEATURE_TASKSET_FANCY
++	depends on BUSYBOX_CONFIG_TASKSET
++	help
++	  Needed for machines with more than 32-64 CPUs:
++	  affinity parameter 0xHHHHHHHHHHHHHHHHHHHH can be arbitrarily long
++	  in this case. Otherwise, it is limited to sizeof(long).
+ config BUSYBOX_CONFIG_UEVENT
+ 	bool "uevent"
+ 	default BUSYBOX_DEFAULT_UEVENT
+@@ -764,10 +879,17 @@ config BUSYBOX_CONFIG_FEATURE_UMOUNT_ALL
+ config BUSYBOX_CONFIG_UNSHARE
+ 	bool "unshare"
+ 	default BUSYBOX_DEFAULT_UNSHARE
+-	depends on BUSYBOX_CONFIG_LONG_OPTS && !BUSYBOX_CONFIG_NOMMU
++	depends on !BUSYBOX_CONFIG_NOMMU
+ 	select BUSYBOX_CONFIG_PLATFORM_LINUX
++	select BUSYBOX_CONFIG_LONG_OPTS
+ 	help
+ 	  Run program with some namespaces unshared from parent.
++config BUSYBOX_CONFIG_WALL
++	bool "wall"
++	default BUSYBOX_DEFAULT_WALL
++	depends on BUSYBOX_CONFIG_FEATURE_UTMP
++	help
++	  Write a message to all users that are logged in.
+ 
+ comment "Common options for mount/umount"
+ 	depends on BUSYBOX_CONFIG_MOUNT || BUSYBOX_CONFIG_UMOUNT
+@@ -802,7 +924,7 @@ config BUSYBOX_CONFIG_FEATURE_MOUNT_LOOP_CREATE
+ 	  if it does not find a free one.
+ 
+ config BUSYBOX_CONFIG_FEATURE_MTAB_SUPPORT
+-	bool "Support for the old /etc/mtab file"
++	bool "Support old /etc/mtab file"
+ 	default BUSYBOX_DEFAULT_FEATURE_MTAB_SUPPORT
+ 	depends on BUSYBOX_CONFIG_MOUNT || BUSYBOX_CONFIG_UMOUNT
+ 	select BUSYBOX_CONFIG_FEATURE_MOUNT_FAKE
+diff --git a/package/utils/busybox/config/util-linux/volume_id/Config.in b/package/utils/busybox/config/util-linux/volume_id/Config.in
+index 49a5785847..afbfa4ae5e 100644
+--- a/package/utils/busybox/config/util-linux/volume_id/Config.in
++++ b/package/utils/busybox/config/util-linux/volume_id/Config.in
+@@ -11,31 +11,18 @@ config BUSYBOX_CONFIG_VOLUMEID
+ menu "Filesystem/Volume identification"
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+ 
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_BCACHE
+ 	bool "bcache filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_BCACHE
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_BTRFS
+ 	bool "btrfs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_BTRFS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_CRAMFS
+ 	bool "cramfs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_CRAMFS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_EXFAT
+ 	bool "exFAT filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_EXFAT
+@@ -44,16 +31,10 @@ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_EXFAT
+ 	  exFAT (extended FAT) is a proprietary file system designed especially
+ 	  for flash drives. It has many features from NTFS, but with less
+ 	  overhead. exFAT is used on most SDXC cards for consumer electronics.
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_EXT
+ 	bool "Ext filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_EXT
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_F2FS
+ 	bool "f2fs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_F2FS
+@@ -63,64 +44,34 @@ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_F2FS
+ 	  which is adapted to newer forms of storage. F2FS also remedies some
+ 	  known issues of the older log structured file systems, such as high
+ 	  cleaning overhead.
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_FAT
+ 	bool "fat filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_FAT
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_HFS
+ 	bool "hfs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_HFS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_ISO9660
+ 	bool "iso9660 filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_ISO9660
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_JFS
+ 	bool "jfs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_JFS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_LINUXRAID
+ 	bool "linuxraid"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_LINUXRAID
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_LINUXSWAP
+ 	bool "linux swap filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_LINUXSWAP
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_LUKS
+ 	bool "luks filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_LUKS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_NILFS
+ 	bool "nilfs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_NILFS
+@@ -136,40 +87,22 @@ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_NILFS
+ 	  SOX compliance logging, and so forth. It can serve as an alternative
+ 	  filesystem for Linux desktop environment, or as a basis of advanced
+ 	  storage appliances.
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_NTFS
+ 	bool "ntfs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_NTFS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_OCFS2
+ 	bool "ocfs2 filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_OCFS2
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_REISERFS
+ 	bool "Reiser filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_REISERFS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_ROMFS
+ 	bool "romfs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_ROMFS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_SQUASHFS
+ 	bool "SquashFS filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_SQUASHFS
+@@ -179,16 +112,10 @@ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_SQUASHFS
+ 	  intended for general read-only filesystem use and in constrained block
+ 	  device/memory systems (e.g. embedded systems) where low overhead is
+ 	  needed.
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_SYSV
+ 	bool "sysv filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_SYSV
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_UBIFS
+ 	bool "UBIFS filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_UBIFS
+@@ -196,126 +123,65 @@ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_UBIFS
+ 	help
+ 	  UBIFS (Unsorted Block Image File System) is a file
+ 	  system for use with raw flash memory media.
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_UDF
+ 	bool "udf filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_UDF
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_HIGHPOINTRAID
+ ###	bool "highpoint raid"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_HPFS
+ ###	bool "hpfs filesystem"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_ISWRAID
+ ###	bool "intel raid"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_LSIRAID
+ ###	bool "lsi raid"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_LVM
+ ###	bool "lvm"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_MAC
+ ###	bool "mac filesystem"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_MINIX
+ ###	bool "minix filesystem"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_MSDOS
+ ###	bool "msdos filesystem"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_NVIDIARAID
+ ###	bool "nvidia raid"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_PROMISERAID
+ ###	bool "promise raid"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_SILICONRAID
+ ###	bool "silicon raid"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_UFS
+ ###	bool "ufs filesystem"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ ### config FEATURE_VOLUMEID_VIARAID
+ ###	bool "via raid"
+ ###	default y
+ ###	depends on VOLUMEID
+-###	help
+-###	  TODO
+-
+-
+ config BUSYBOX_CONFIG_FEATURE_VOLUMEID_XFS
+ 	bool "xfs filesystem"
+ 	default BUSYBOX_DEFAULT_FEATURE_VOLUMEID_XFS
+ 	depends on BUSYBOX_CONFIG_VOLUMEID
+-	help
+-	  TODO
+-
+ 
+ endmenu
+diff --git a/package/utils/busybox/patches/120-remove_uclibc_rpc_check.patch b/package/utils/busybox/patches/120-remove_uclibc_rpc_check.patch
+deleted file mode 100644
+index 682a68eebd..0000000000
+--- a/package/utils/busybox/patches/120-remove_uclibc_rpc_check.patch
++++ /dev/null
+@@ -1,12 +0,0 @@
+---- a/util-linux/mount.c
+-+++ b/util-linux/mount.c
+-@@ -245,9 +245,6 @@
+- #if ENABLE_FEATURE_MOUNT_NFS
+- /* This is just a warning of a common mistake.  Possibly this should be a
+-  * uclibc faq entry rather than in busybox... */
+--# if defined(__UCLIBC__) && ! defined(__UCLIBC_HAS_RPC__)
+--#  error "You need to build uClibc with UCLIBC_HAS_RPC for NFS support"
+--# endif
+- # include <rpc/rpc.h>
+- # include <rpc/pmap_prot.h>
+- # include <rpc/pmap_clnt.h>
+diff --git a/package/utils/busybox/patches/200-udhcpc_reduce_msgs.patch b/package/utils/busybox/patches/200-udhcpc_reduce_msgs.patch
+index 8ef8f2211b..5f64c19d05 100644
+--- a/package/utils/busybox/patches/200-udhcpc_reduce_msgs.patch
++++ b/package/utils/busybox/patches/200-udhcpc_reduce_msgs.patch
+@@ -1,6 +1,6 @@
+ --- a/networking/udhcp/dhcpc.c
+ +++ b/networking/udhcp/dhcpc.c
+-@@ -704,6 +704,7 @@ static int bcast_or_ucast(struct dhcp_pa
++@@ -706,6 +706,7 @@ static int bcast_or_ucast(struct dhcp_pa
+  static NOINLINE int send_discover(uint32_t xid, uint32_t requested)
+  {
+  	struct dhcp_packet packet;
+@@ -8,7 +8,7 @@
+  
+  	/* Fill in: op, htype, hlen, cookie, chaddr fields,
+  	 * random xid field (we override it below),
+-@@ -721,6 +722,7 @@ static NOINLINE int send_discover(uint32
++@@ -723,6 +724,7 @@ static NOINLINE int send_discover(uint32
+  	 */
+  	add_client_options(&packet);
+  
+diff --git a/package/utils/busybox/patches/201-udhcpc_changed_ifindex.patch b/package/utils/busybox/patches/201-udhcpc_changed_ifindex.patch
+index f5e3a075ae..727f69409c 100644
+--- a/package/utils/busybox/patches/201-udhcpc_changed_ifindex.patch
++++ b/package/utils/busybox/patches/201-udhcpc_changed_ifindex.patch
+@@ -1,6 +1,6 @@
+ --- a/networking/udhcp/dhcpc.c
+ +++ b/networking/udhcp/dhcpc.c
+-@@ -1439,6 +1439,12 @@ int udhcpc_main(int argc UNUSED_PARAM, c
++@@ -1442,6 +1442,12 @@ int udhcpc_main(int argc UNUSED_PARAM, c
+  		/* silence "uninitialized!" warning */
+  		unsigned timestamp_before_wait = timestamp_before_wait;
+  
+diff --git a/package/utils/busybox/patches/203-udhcpc_renew_no_deconfig.patch b/package/utils/busybox/patches/203-udhcpc_renew_no_deconfig.patch
+index 3df8d930b1..7b77d2970b 100644
+--- a/package/utils/busybox/patches/203-udhcpc_renew_no_deconfig.patch
++++ b/package/utils/busybox/patches/203-udhcpc_renew_no_deconfig.patch
+@@ -1,6 +1,6 @@
+ --- a/networking/udhcp/dhcpc.c
+ +++ b/networking/udhcp/dhcpc.c
+-@@ -1110,7 +1110,6 @@ static void perform_renew(void)
++@@ -1112,7 +1112,6 @@ static void perform_renew(void)
+  		state = RENEW_REQUESTED;
+  		break;
+  	case RENEW_REQUESTED: /* impatient are we? fine, square 1 */
+diff --git a/package/utils/busybox/patches/301-ip-link-fix-netlink-msg-size.patch b/package/utils/busybox/patches/301-ip-link-fix-netlink-msg-size.patch
+index 360324bf7c..ca76c44cc8 100644
+--- a/package/utils/busybox/patches/301-ip-link-fix-netlink-msg-size.patch
++++ b/package/utils/busybox/patches/301-ip-link-fix-netlink-msg-size.patch
+@@ -1,6 +1,6 @@
+ --- a/networking/libiproute/iplink.c
+ +++ b/networking/libiproute/iplink.c
+-@@ -470,7 +470,7 @@ static int do_add_or_delete(char **argv,
++@@ -598,7 +598,7 @@ static int do_add_or_delete(char **argv,
+  	}
+  	xrtnl_open(&rth);
+  	ll_init_map(&rth);
+diff --git a/package/utils/busybox/patches/302-ip-rule-add-suppress-prefixlength.patch b/package/utils/busybox/patches/302-ip-rule-add-suppress-prefixlength.patch
+deleted file mode 100644
+index 7b4797505e..0000000000
+--- a/package/utils/busybox/patches/302-ip-rule-add-suppress-prefixlength.patch
++++ /dev/null
+@@ -1,145 +0,0 @@
+-From dbac30c3784c267bbe44a2a3ebed4e827c8fe82a Mon Sep 17 00:00:00 2001
+-From: Stefan Tomanek <stefan.tomanek@wertarbyte.de>
+-Date: Tue, 13 Jun 2017 19:06:09 +0200
+-Subject: [PATCH] ip rule: add suppress_{prefixlength,ifgroup} options
+-
+-(cherry-picked from 192dce4b84fb32346ebc5194de7daa5da3b8d1b4)
+-
+-function                                             old     new   delta
+-iprule_modify                                        816     887     +71
+-print_rule                                           610     680     +70
+-------------------------------------------------------------------------------
+-(add/remove: 0/0 grow/shrink: 2/0 up/down: 141/0)             Total: 141 bytes
+-
+-Signed-off-by: Stefan Tomanek <stefan.tomanek@wertarbyte.de>
+-Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+----
+- networking/libiproute/iprule.c | 73 ++++++++++++++++++++++++++----------------
+- 1 file changed, 46 insertions(+), 27 deletions(-)
+-
+---- a/networking/libiproute/iprule.c
+-+++ b/networking/libiproute/iprule.c
+-@@ -17,25 +17,32 @@
+- #include <netinet/ip.h>
+- #include <arpa/inet.h>
+- 
+-+/* from <linux/fib_rules.h>: */
+-+#define FRA_SUPPRESS_IFGROUP   13
+-+#define FRA_SUPPRESS_PREFIXLEN 14
+-+
+- #include "ip_common.h"  /* #include "libbb.h" is inside */
+- #include "rt_names.h"
+- #include "utils.h"
+- 
+--/*
+--static void usage(void) __attribute__((noreturn));
+--
+--static void usage(void)
+--{
+--	fprintf(stderr, "Usage: ip rule [ list | add | del ] SELECTOR ACTION\n");
+--	fprintf(stderr, "SELECTOR := [ from PREFIX ] [ to PREFIX ] [ tos TOS ] [ fwmark FWMARK ]\n");
+--	fprintf(stderr, "            [ dev STRING ] [ pref NUMBER ]\n");
+--	fprintf(stderr, "ACTION := [ table TABLE_ID ] [ nat ADDRESS ]\n");
+--	fprintf(stderr, "          [ prohibit | reject | unreachable ]\n");
+--	fprintf(stderr, "          [ realms [SRCREALM/]DSTREALM ]\n");
+--	fprintf(stderr, "TABLE_ID := [ local | main | default | NUMBER ]\n");
+--	exit(-1);
+--}
+--*/
+-+/* If you add stuff here, update iprule_full_usage */
+-+static const char keywords[] ALIGN1 =
+-+	"from\0""to\0""preference\0""order\0""priority\0"
+-+	"tos\0""fwmark\0""realms\0""table\0""lookup\0"
+-+	"suppress_prefixlength\0""suppress_ifgroup\0"
+-+	"dev\0""iif\0""nat\0""map-to\0""type\0""help\0"
+-+	;
+-+#define keyword_preference            (keywords           + sizeof("from") + sizeof("to"))
+-+#define keyword_fwmark                (keyword_preference + sizeof("preference") + sizeof("order") + sizeof("priority") + sizeof("tos"))
+-+#define keyword_realms                (keyword_fwmark     + sizeof("fwmark"))
+-+#define keyword_suppress_prefixlength (keyword_realms     + sizeof("realms") + sizeof("table") + sizeof("lookup"))
+-+#define keyword_suppress_ifgroup      (keyword_suppress_prefixlength + sizeof("suppress_prefixlength"))
+-+enum {
+-+	ARG_from = 1, ARG_to, ARG_preference, ARG_order, ARG_priority,
+-+	ARG_tos, ARG_fwmark, ARG_realms, ARG_table, ARG_lookup,
+-+	ARG_suppress_prefixlength, ARG_suppress_ifgroup,
+-+	ARG_dev, ARG_iif, ARG_nat, ARG_map_to, ARG_type, ARG_help,
+-+};
+- 
+- static int FAST_FUNC print_rule(const struct sockaddr_nl *who UNUSED_PARAM,
+- 					struct nlmsghdr *n, void *arg UNUSED_PARAM)
+-@@ -119,6 +126,17 @@ static int FAST_FUNC print_rule(const st
+- 	else if (r->rtm_table)
+- 		printf("lookup %s ", rtnl_rttable_n2a(r->rtm_table));
+- 
+-+	if (tb[FRA_SUPPRESS_PREFIXLEN]) {
+-+		int pl = *(uint32_t*)RTA_DATA(tb[FRA_SUPPRESS_PREFIXLEN]);
+-+		if (pl != -1)
+-+			printf("%s %d ", keyword_suppress_prefixlength, pl);
+-+	}
+-+	if (tb[FRA_SUPPRESS_IFGROUP]) {
+-+		int grp = *(uint32_t*)RTA_DATA(tb[FRA_SUPPRESS_IFGROUP]);
+-+		if (grp != -1)
+-+			printf("%s %d ", keyword_suppress_ifgroup, grp);
+-+	}
+-+
+- 	if (tb[RTA_FLOW]) {
+- 		uint32_t to = *(uint32_t*)RTA_DATA(tb[RTA_FLOW]);
+- 		uint32_t from = to>>16;
+-@@ -174,15 +192,6 @@ static int iprule_list(char **argv)
+- /* Return value becomes exitcode. It's okay to not return at all */
+- static int iprule_modify(int cmd, char **argv)
+- {
+--	static const char keywords[] ALIGN1 =
+--		"from\0""to\0""preference\0""order\0""priority\0"
+--		"tos\0""fwmark\0""realms\0""table\0""lookup\0""dev\0"
+--		"iif\0""nat\0""map-to\0""type\0""help\0";
+--	enum {
+--		ARG_from = 1, ARG_to, ARG_preference, ARG_order, ARG_priority,
+--		ARG_tos, ARG_fwmark, ARG_realms, ARG_table, ARG_lookup, ARG_dev,
+--		ARG_iif, ARG_nat, ARG_map_to, ARG_type, ARG_help
+--	};
+- 	bool table_ok = 0;
+- 	struct rtnl_handle rth;
+- 	struct {
+-@@ -232,7 +241,7 @@ static int iprule_modify(int cmd, char *
+- 		) {
+- 			uint32_t pref;
+- 			NEXT_ARG();
+--			pref = get_u32(*argv, "preference");
+-+			pref = get_u32(*argv, keyword_preference);
+- 			addattr32(&req.n, sizeof(req), RTA_PRIORITY, pref);
+- 		} else if (key == ARG_tos) {
+- 			uint32_t tos;
+-@@ -243,13 +252,13 @@ static int iprule_modify(int cmd, char *
+- 		} else if (key == ARG_fwmark) {
+- 			uint32_t fwmark;
+- 			NEXT_ARG();
+--			fwmark = get_u32(*argv, "fwmark");
+-+			fwmark = get_u32(*argv, keyword_fwmark);
+- 			addattr32(&req.n, sizeof(req), RTA_PROTOINFO, fwmark);
+- 		} else if (key == ARG_realms) {
+- 			uint32_t realm;
+- 			NEXT_ARG();
+- 			if (get_rt_realms(&realm, *argv))
+--				invarg_1_to_2(*argv, "realms");
+-+				invarg_1_to_2(*argv, keyword_realms);
+- 			addattr32(&req.n, sizeof(req), RTA_FLOW, realm);
+- 		} else if (key == ARG_table ||
+- 			   key == ARG_lookup
+-@@ -265,6 +274,16 @@ static int iprule_modify(int cmd, char *
+- 				addattr32(&req.n, sizeof(req), RTA_TABLE, tid);
+- 			}
+- 			table_ok = 1;
+-+		} else if (key == ARG_suppress_prefixlength) {
+-+			int prefix_length;
+-+			NEXT_ARG();
+-+			prefix_length = get_u32(*argv, keyword_suppress_prefixlength);
+-+			addattr32(&req.n, sizeof(req), FRA_SUPPRESS_PREFIXLEN, prefix_length);
+-+		} else if (key == ARG_suppress_ifgroup) {
+-+			int grp;
+-+			NEXT_ARG();
+-+			grp = get_u32(*argv, keyword_suppress_ifgroup);
+-+			addattr32(&req.n, sizeof(req), FRA_SUPPRESS_IFGROUP, grp);
+- 		} else if (key == ARG_dev ||
+- 			   key == ARG_iif
+- 		) {
+diff --git a/package/utils/busybox/patches/401-vi-don-t-touch-file-with-x-when-modified_count-0.patch b/package/utils/busybox/patches/401-vi-don-t-touch-file-with-x-when-modified_count-0.patch
+deleted file mode 100644
+index e83999d303..0000000000
+--- a/package/utils/busybox/patches/401-vi-don-t-touch-file-with-x-when-modified_count-0.patch
++++ /dev/null
+@@ -1,100 +0,0 @@
+-From e88608eae24ae5934034e1ecb6c494fefbf1b9ae Mon Sep 17 00:00:00 2001
+-From: Denys Vlasenko <vda.linux@googlemail.com>
+-Date: Mon, 13 Mar 2017 20:50:42 +0100
+-Subject: [PATCH 1/2] vi: don't touch file with :x when modified_count == 0
+-
+-Along with it, there are other changes
+-
+- - Check for uppercase X is removed as the expression will be always false and
+-   :X itself is another totally different command in standard vim
+- - The status line will show number of written lines instead of lines requested
+-   by the colon command.  This is also how the standard vim is doing, though
+-   the difference is that '!' has to be explicitly specified in vim to allow
+-   partial writes
+-
+-Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+-Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+----
+- editors/vi.c | 43 ++++++++++++++++++++++++++-----------------
+- 1 file changed, 26 insertions(+), 17 deletions(-)
+-
+---- a/editors/vi.c
+-+++ b/editors/vi.c
+-@@ -1038,7 +1038,9 @@ static void colon(char *buf)
+- 	 || strncmp(p, "wn", cnt) == 0
+- 	 || (p[0] == 'x' && !p[1])
+- 	) {
+--		cnt = file_write(current_filename, text, end - 1);
+-+		if (modified_count != 0 || p[0] != 'x') {
+-+			cnt = file_write(current_filename, text, end - 1);
+-+		}
+- 		if (cnt < 0) {
+- 			if (cnt == -1)
+- 				status_line_bold("Write error: %s", strerror(errno));
+-@@ -1049,8 +1051,9 @@ static void colon(char *buf)
+- 				current_filename,
+- 				count_lines(text, end - 1), cnt
+- 			);
+--			if (p[0] == 'x' || p[1] == 'q' || p[1] == 'n'
+--			 || p[0] == 'X' || p[1] == 'Q' || p[1] == 'N'
+-+			if (p[0] == 'x'
+-+			 || p[1] == 'q' || p[1] == 'n'
+-+			 || p[1] == 'Q' || p[1] == 'N'
+- 			) {
+- 				editing = 0;
+- 			}
+-@@ -1480,16 +1483,19 @@ static void colon(char *buf)
+- 			goto ret;
+- 		}
+- #endif
+--		// how many lines in text[]?
+--		li = count_lines(q, r);
+--		size = r - q + 1;
+- 		//if (useforce) {
+- 			// if "fn" is not write-able, chmod u+w
+- 			// sprintf(syscmd, "chmod u+w %s", fn);
+- 			// system(syscmd);
+- 			// forced = TRUE;
+- 		//}
+--		l = file_write(fn, q, r);
+-+		if (modified_count != 0 || cmd[0] != 'x') {
+-+			size = r - q + 1;
+-+			l = file_write(fn, q, r);
+-+		} else {
+-+			size = 0;
+-+			l = 0;
+-+		}
+- 		//if (useforce && forced) {
+- 			// chmod u-w
+- 			// sprintf(syscmd, "chmod u-w %s", fn);
+-@@ -1500,17 +1506,20 @@ static void colon(char *buf)
+- 			if (l == -1)
+- 				status_line_bold_errno(fn);
+- 		} else {
+-+			// how many lines written
+-+			li = count_lines(q, q + l - 1);
+- 			status_line("'%s' %dL, %dC", fn, li, l);
+--			if (q == text && r == end - 1 && l == size) {
+--				modified_count = 0;
+--				last_modified_count = -1;
+--			}
+--			if ((cmd[0] == 'x' || cmd[1] == 'q' || cmd[1] == 'n'
+--			    || cmd[0] == 'X' || cmd[1] == 'Q' || cmd[1] == 'N'
+--			    )
+--			 && l == size
+--			) {
+--				editing = 0;
+-+			if (l == size) {
+-+				if (q == text && q + l == end) {
+-+					modified_count = 0;
+-+					last_modified_count = -1;
+-+				}
+-+				if (cmd[0] == 'x'
+-+				 || cmd[1] == 'q' || cmd[1] == 'n'
+-+				 || cmd[1] == 'Q' || cmd[1] == 'N'
+-+				) {
+-+					editing = 0;
+-+				}
+- 			}
+- 		}
+- #if ENABLE_FEATURE_VI_YANKMARK
+diff --git a/package/utils/busybox/patches/402-vi-avoid-touching-a-new-file-with-ZZ-when-no-editing.patch b/package/utils/busybox/patches/402-vi-avoid-touching-a-new-file-with-ZZ-when-no-editing.patch
+deleted file mode 100644
+index b56cf735c2..0000000000
+--- a/package/utils/busybox/patches/402-vi-avoid-touching-a-new-file-with-ZZ-when-no-editing.patch
++++ /dev/null
+@@ -1,53 +0,0 @@
+-From 8f3bf4f0d3605b50a8e4c48c89aeabc455f04884 Mon Sep 17 00:00:00 2001
+-From: Yousong Zhou <yszhou4tech@gmail.com>
+-Date: Fri, 24 Mar 2017 21:13:10 +0100
+-Subject: [PATCH 2/2] vi: avoid touching a new file with ZZ when no editing has
+- been done
+-
+-This is the behaviour observed with standard vim and busybox vi of at
+-least 1.22.1.  It was changed with commit "32afd3a vi: some
+-simplifications" which happened before 1.23.0.
+-
+-Mistyping filename on command line happens fairly often and it's better
+-we restore the old behaviour to avoid a few unnecessary flash writes and
+-sometimes efforts of debugging bugs caused by those unneeded stray
+-files.
+-
+-Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+-Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+----
+- editors/vi.c | 16 ++++++++--------
+- 1 file changed, 8 insertions(+), 8 deletions(-)
+-
+---- a/editors/vi.c
+-+++ b/editors/vi.c
+-@@ -719,14 +719,6 @@ static int init_text_buffer(char *fn)
+- {
+- 	int rc;
+- 
+--	flush_undo_data();
+--	modified_count = 0;
+--	last_modified_count = -1;
+--#if ENABLE_FEATURE_VI_YANKMARK
+--	/* init the marks */
+--	memset(mark, 0, sizeof(mark));
+--#endif
+--
+- 	/* allocate/reallocate text buffer */
+- 	free(text);
+- 	text_size = 10240;
+-@@ -741,6 +733,14 @@ static int init_text_buffer(char *fn)
+- 		// file doesnt exist. Start empty buf with dummy line
+- 		char_insert(text, '\n', NO_UNDO);
+- 	}
+-+
+-+	flush_undo_data();
+-+	modified_count = 0;
+-+	last_modified_count = -1;
+-+#if ENABLE_FEATURE_VI_YANKMARK
+-+	/* init the marks */
+-+	memset(mark, 0, sizeof(mark));
+-+#endif
+- 	return rc;
+- }
+- 
