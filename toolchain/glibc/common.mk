@@ -60,7 +60,6 @@ GLIBC_CONFIGURE:= \
 		--enable-obsolete-nsl \
 		--disable-build-nscd \
 		--disable-nscd \
-		--enable-lock-elision \
 		--disable-timezone-tools \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
