@@ -1,0 +1,53 @@
+diff -Naur iproute2-4.12.0-orig/include/linux/if_ether.h iproute2-4.12.0/include/linux/if_ether.h
+--- iproute2-4.12.0-orig/include/linux/if_ether.h	2017-08-18 15:35:35.681981626 +0300
++++ iproute2-4.12.0/include/linux/if_ether.h	2017-08-18 15:36:59.298622722 +0300
+@@ -22,6 +22,7 @@
+ #define _LINUX_IF_ETHER_H
+ 
+ #include <linux/types.h>
++#include <linux/libc-compat.h>
+ 
+ /*
+  *	IEEE 802.3 Ethernet magic constants.  The frame sizes omit the preamble
+@@ -142,11 +143,13 @@
+  *	This is an Ethernet frame header.
+  */
+ 
++#if __UAPI_DEF_ETHHDR
+ struct ethhdr {
+ 	unsigned char	h_dest[ETH_ALEN];	/* destination eth addr	*/
+ 	unsigned char	h_source[ETH_ALEN];	/* source ether addr	*/
+ 	__be16		h_proto;		/* packet type ID field	*/
+ } __attribute__((packed));
++#endif
+ 
+ 
+ #endif /* _LINUX_IF_ETHER_H */
+diff -Naur iproute2-4.12.0-orig/include/linux/libc-compat.h iproute2-4.12.0/include/linux/libc-compat.h
+--- iproute2-4.12.0-orig/include/linux/libc-compat.h	2017-08-18 15:35:35.681981626 +0300
++++ iproute2-4.12.0/include/linux/libc-compat.h	2017-08-18 15:39:13.556755914 +0300
+@@ -85,6 +85,14 @@
+ 
+ #endif /* _NET_IF_H */
+ 
++/* musl defines the ethhdr struct itself in its netinet/if_ether.h.
++ * Glibc just includes the kernel header and uses a different guard. */
++#if defined(_NETINET_IF_ETHER_H)
++#define __UAPI_DEF_ETHHDR		0
++#else
++#define __UAPI_DEF_ETHHDR		1
++#endif
++
+ /* Coordinate with glibc netinet/in.h header. */
+ #if defined(_NETINET_IN_H)
+ 
+@@ -180,6 +188,9 @@
+ /* For the future if glibc adds IFF_LOWER_UP, IFF_DORMANT and IFF_ECHO */
+ #define __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO 1
+ 
++/* Definitions for if_ether.h */
++#define __UAPI_DEF_ETHHDR
++
+ /* Definitions for in.h */
+ #define __UAPI_DEF_IN_ADDR		1
+ #define __UAPI_DEF_IN_IPPROTO		1
