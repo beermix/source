@@ -14226,3 +14226,2115 @@ index 1d605d5e37..cb4b624d40 100644
      dstp[i] = src[i];
    dstp[i] = 0;
    *srcp = src + i;
+
+commit 71c09dc378a98219bd621ab1175711cde1b6ecd6
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sat Aug 19 00:02:23 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 819355a4dd..a79e1a7dae 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170818
++#define BFD_VERSION_DATE 20170819
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 17b6cc61ebcfbf77c192a89d7a49cf97ccf58b2b
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sun Aug 20 00:02:34 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index a79e1a7dae..24565ebe24 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170819
++#define BFD_VERSION_DATE 20170820
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit b0fc8b888adbc1546a325f90cb8a622d8a914f39
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Mon Aug 21 00:02:40 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 24565ebe24..ad30d59340 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170820
++#define BFD_VERSION_DATE 20170821
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 2dfec5719ca30331b8dd1bb33076f8153b81d272
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Wed Aug 23 00:02:22 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index ad30d59340..5e3f30ceaa 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170821
++#define BFD_VERSION_DATE 20170823
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit eaaf8fb3be20e977b9d74091e8a501132c0ff7cb
+Author: Alan Modra <amodra@gmail.com>
+Date:   Fri Jul 14 18:37:26 2017 +0930
+
+    ppc32 tlsopt tests
+    
+    These all were odd in that they used r13 as the GOT pointer.  That
+    didn't matter for the purpose of testing, but would never occur in
+    practice.  Also, the tlsopt5 tests could have their global dynamic
+    sequences optimized to initial exec, so link with -shared.
+    
+            * testsuite/ld-powerpc/powerpc.exp: Add -shared to tlsop5 tests.
+            * testsuite/ld-powerpc/tlsopt5.d: Adjust.
+            * testsuite/ld-powerpc/tlsopt1_32.s: Use r30 as GOT pointer.
+            * testsuite/ld-powerpc/tlsopt2_32.s: Likewise.
+            * testsuite/ld-powerpc/tlsopt3_32.s: Likewise.
+            * testsuite/ld-powerpc/tlsopt4_32.s: Likewise.
+            * testsuite/ld-powerpc/tlsopt5_32.s: Rewrite.
+            * testsuite/ld-powerpc/tlsopt1_32.d: Adjust.
+            * testsuite/ld-powerpc/tlsopt2_32.d: Adjust.
+            * testsuite/ld-powerpc/tlsopt3_32.d: Adjust.
+            * testsuite/ld-powerpc/tlsopt5_32.d: Adjust.
+
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 8b656e66eb..9820c5a118 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,17 @@
++2017-07-14  Alan Modra  <amodra@gmail.com>
++
++	* testsuite/ld-powerpc/powerpc.exp: Add -shared to tlsop5 tests.
++	* testsuite/ld-powerpc/tlsopt5.d: Adjust.
++	* testsuite/ld-powerpc/tlsopt1_32.s: Use r30 as GOT pointer.
++	* testsuite/ld-powerpc/tlsopt2_32.s: Likewise.
++	* testsuite/ld-powerpc/tlsopt3_32.s: Likewise.
++	* testsuite/ld-powerpc/tlsopt4_32.s: Likewise.
++	* testsuite/ld-powerpc/tlsopt5_32.s: Rewrite.
++	* testsuite/ld-powerpc/tlsopt1_32.d: Adjust.
++	* testsuite/ld-powerpc/tlsopt2_32.d: Adjust.
++	* testsuite/ld-powerpc/tlsopt3_32.d: Adjust.
++	* testsuite/ld-powerpc/tlsopt5_32.d: Adjust.
++
+ 2017-08-13  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	PR ld/21923
+diff --git a/ld/testsuite/ld-powerpc/powerpc.exp b/ld/testsuite/ld-powerpc/powerpc.exp
+index f709b1ed69..9816eff33c 100644
+--- a/ld/testsuite/ld-powerpc/powerpc.exp
++++ b/ld/testsuite/ld-powerpc/powerpc.exp
+@@ -140,7 +140,7 @@ set ppcelftests {
+       "tlsopt4_32"}
+     {"TLS32 DLL" "-shared -melf32ppc --version-script tlsdll.ver" "" "-a32" {tlsdll_32.s}
+      {} "tlsdll32.so"}
+-    {"TLS32 opt 5" "-melf32ppc --gc-sections --secure-plt tmpdir/tlsdll32.so" "" "-a32"  {tlsopt5_32.s}
++    {"TLS32 opt 5" "-melf32ppc -shared --gc-sections --secure-plt tmpdir/tlsdll32.so" "" "-a32"  {tlsopt5_32.s}
+      {{objdump -dr tlsopt5_32.d}}
+       "tlsopt5_32"}
+     {"Shared library with global symbol" "-shared -melf32ppc" "" "-a32" {sdalib.s}
+@@ -210,7 +210,7 @@ set ppc64elftests {
+       "tlsopt4"}
+     {"TLS DLL" "-shared -melf64ppc --version-script tlsdll.ver" "" "-a64" {tlsdll.s}
+      {} "tlsdll.so"}
+-    {"TLS opt 5" "-melf64ppc --gc-sections --no-plt-localentry tmpdir/tlsdll.so" "" "-a64"  {tlsopt5.s}
++    {"TLS opt 5" "-melf64ppc -shared --gc-sections --no-plt-localentry tmpdir/tlsdll.so" "" "-a64"  {tlsopt5.s}
+      {{objdump -dr tlsopt5.d}}
+       "tlsopt5"}
+     {"sym@tocbase" "-shared -melf64ppc" "" "-a64" {symtocbase-1.s symtocbase-2.s}
+diff --git a/ld/testsuite/ld-powerpc/tlsopt1_32.d b/ld/testsuite/ld-powerpc/tlsopt1_32.d
+index ec9c7caf5a..fd0f7eb468 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt1_32.d
++++ b/ld/testsuite/ld-powerpc/tlsopt1_32.d
+@@ -15,7 +15,7 @@ Disassembly of section \.text:
+ Disassembly of section \.no_opt1:
+ 
+ 0+1800098 <\.no_opt1>:
+-.*:	(38 6d ff f4|f4 ff 6d 38) 	addi    r3,r13,-12
++.*:	(38 7e ff f4|f4 ff 7e 38) 	addi    r3,r30,-12
+ .*:	(2c 04 00 00|00 00 04 2c) 	cmpwi   r4,0
+ .*:	(41 82 00 0c|0c 00 82 41) 	beq     .*
+ .*:	(4b ff ff f1|f1 ff ff 4b) 	bl      1800094 <__tls_get_addr>
+diff --git a/ld/testsuite/ld-powerpc/tlsopt1_32.s b/ld/testsuite/ld-powerpc/tlsopt1_32.s
+index aba2bbcaaa..79d6662f58 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt1_32.s
++++ b/ld/testsuite/ld-powerpc/tlsopt1_32.s
+@@ -2,7 +2,7 @@
+ # this section should not be optimised since we have old-style
+ # __tls_get_addr without marker relocs, and the arg setup insn
+ # is shared with two __tls_get_addr calls.
+- addi 3,13,gd@got@tlsgd
++ addi 3,30,gd@got@tlsgd
+  cmpwi 4,0
+  beq 0f
+  bl __tls_get_addr
+diff --git a/ld/testsuite/ld-powerpc/tlsopt2_32.d b/ld/testsuite/ld-powerpc/tlsopt2_32.d
+index baffe91e97..7dc1bced69 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt2_32.d
++++ b/ld/testsuite/ld-powerpc/tlsopt2_32.d
+@@ -15,9 +15,9 @@ Disassembly of section \.text:
+ Disassembly of section \.no_opt2:
+ 
+ 0+1800098 <\.no_opt2>:
+-.*:	(38 6d ff f4|f4 ff 6d 38) 	addi    r3,r13,-12
++.*:	(38 7e ff f4|f4 ff 7e 38) 	addi    r3,r30,-12
+ .*:	(2c 04 00 00|00 00 04 2c) 	cmpwi   r4,0
+ .*:	(41 82 00 08|08 00 82 41) 	beq     .*
+-.*:	(38 6d ff f4|f4 ff 6d 38) 	addi    r3,r13,-12
++.*:	(38 7e ff f4|f4 ff 7e 38) 	addi    r3,r30,-12
+ .*:	(4b ff ff ed|ed ff ff 4b) 	bl      1800094 <__tls_get_addr>
+ #pass
+diff --git a/ld/testsuite/ld-powerpc/tlsopt2_32.s b/ld/testsuite/ld-powerpc/tlsopt2_32.s
+index bca12476d3..8c387d08d6 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt2_32.s
++++ b/ld/testsuite/ld-powerpc/tlsopt2_32.s
+@@ -2,9 +2,9 @@
+ # this section should not be optimised since we have old-style
+ # __tls_get_addr without marker relocs, and two arg setup insns
+ # feed into one __tls_get_addr call.
+- addi 3,13,gd@got@tlsgd
++ addi 3,30,gd@got@tlsgd
+  cmpwi 4,0
+  beq 0f
+- addi 3,13,gd@got@tlsgd
++ addi 3,30,gd@got@tlsgd
+ 0:
+  bl __tls_get_addr
+diff --git a/ld/testsuite/ld-powerpc/tlsopt3_32.d b/ld/testsuite/ld-powerpc/tlsopt3_32.d
+index 55827a2c6d..2bc999f1fe 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt3_32.d
++++ b/ld/testsuite/ld-powerpc/tlsopt3_32.d
+@@ -15,9 +15,9 @@ Disassembly of section \.text:
+ Disassembly of section \.no_opt3:
+ 
+ 0+1800098 <\.no_opt3>:
+-.*:	(38 6d ff ec|ec ff 6d 38) 	addi    r3,r13,-20
++.*:	(38 7e ff ec|ec ff 7e 38) 	addi    r3,r30,-20
+ .*:	(48 00 00 0c|0c 00 00 48) 	b       .*
+-.*:	(38 6d ff f4|f4 ff 6d 38) 	addi    r3,r13,-12
++.*:	(38 7e ff f4|f4 ff 7e 38) 	addi    r3,r30,-12
+ .*:	(48 00 00 0c|0c 00 00 48) 	b       .*
+ .*:	(4b ff ff ed|ed ff ff 4b) 	bl      1800094 <__tls_get_addr>
+ .*:	(48 00 00 08|08 00 00 48) 	b       .*
+diff --git a/ld/testsuite/ld-powerpc/tlsopt3_32.s b/ld/testsuite/ld-powerpc/tlsopt3_32.s
+index 6432c24156..c2b5fcd0ec 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt3_32.s
++++ b/ld/testsuite/ld-powerpc/tlsopt3_32.s
+@@ -5,9 +5,9 @@ gd0: .space 8
+ 
+  .section ".no_opt3", "ax", %progbits
+ # this section should also not be optimised
+- addi 3,13,gd@got@tlsgd
++ addi 3,30,gd@got@tlsgd
+  b 0f
+- addi 3,13,gd0@got@tlsgd
++ addi 3,30,gd0@got@tlsgd
+  b 1f
+ 0:
+  bl __tls_get_addr
+diff --git a/ld/testsuite/ld-powerpc/tlsopt4_32.s b/ld/testsuite/ld-powerpc/tlsopt4_32.s
+index 9643fcb202..762067ed51 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt4_32.s
++++ b/ld/testsuite/ld-powerpc/tlsopt4_32.s
+@@ -4,7 +4,7 @@
+ gd0: .space 8
+ 
+  .section ".opt1", "ax", %progbits
+- addi 3,13,gd@got@tlsgd
++ addi 3,30,gd@got@tlsgd
+  cmpwi 4,0
+  beq 0f
+  bl __tls_get_addr(gd@tlsgd)
+@@ -14,17 +14,17 @@ gd0: .space 8
+ 1:
+ 
+  .section ".opt2", "ax", %progbits
+- addi 3,13,gd@got@tlsgd
++ addi 3,30,gd@got@tlsgd
+  cmpwi 4,0
+  beq 0f
+- addi 3,13,gd@got@tlsgd
++ addi 3,30,gd@got@tlsgd
+ 0:
+  bl __tls_get_addr(gd@tlsgd)
+ 
+  .section ".opt3", "ax", %progbits
+- addi 3,13,gd@got@tlsgd
++ addi 3,30,gd@got@tlsgd
+  b 0f
+- addi 3,13,gd0@got@tlsgd
++ addi 3,30,gd0@got@tlsgd
+  b 1f
+ 0:
+  bl __tls_get_addr(gd@tlsgd)
+diff --git a/ld/testsuite/ld-powerpc/tlsopt5.d b/ld/testsuite/ld-powerpc/tlsopt5.d
+index b356a2e293..7a746790c3 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt5.d
++++ b/ld/testsuite/ld-powerpc/tlsopt5.d
+@@ -1,6 +1,6 @@
+ #source: tlsopt5.s
+ #as: -a64
+-#ld: --gc-sections --no-plt-localentry tlsdll.so
++#ld: -shared --gc-sections --no-plt-localentry tlsdll.so
+ #objdump: -dr
+ #target: powerpc64*-*-*
+ 
+@@ -8,7 +8,7 @@
+ 
+ Disassembly of section \.text:
+ 
+-0000000010000300 <.*\.plt_call\.__tls_get_addr_opt@@GLIBC_2\.22>:
++0+2c0 <.*\.plt_call\.__tls_get_addr_opt@@GLIBC_2\.22>:
+ .*:	(00 00 63 e9|e9 63 00 00) 	ld      r11,0\(r3\)
+ .*:	(08 00 83 e9|e9 83 00 08) 	ld      r12,8\(r3\)
+ .*:	(78 1b 60 7c|7c 60 1b 78) 	mr      r0,r3
+@@ -27,14 +27,14 @@ Disassembly of section \.text:
+ .*:	(a6 03 68 7d|7d 68 03 a6) 	mtlr    r11
+ .*:	(20 00 80 4e|4e 80 00 20) 	blr
+ 
+-0000000010000344 <_start>:
++0+304 <_start>:
+ .*:	(08 80 62 38|38 62 80 08) 	addi    r3,r2,-32760
+ .*:	(b9 ff ff 4b|4b ff ff b9) 	bl      .*
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+-.*:	(b8 02 01 00|00 00 00 00) 	.*
+-.*:	(00 00 00 00|00 01 02 b8) 	.*
++.*:	(f8 01 01 00|00 00 00 00) 	.*
++.*:	(00 00 00 00|00 01 01 f8) 	.*
+ 
+-0000000010000358 <__glink_PLTresolve>:
++0+318 <__glink_PLTresolve>:
+ .*:	(a6 02 08 7c|7c 08 02 a6) 	mflr    r0
+ .*:	(05 00 9f 42|42 9f 00 05) 	bcl     .*
+ .*:	(a6 02 68 7d|7d 68 02 a6) 	mflr    r11
+@@ -50,5 +50,5 @@ Disassembly of section \.text:
+ .*:	(08 00 6b e9|e9 6b 00 08) 	ld      r11,8\(r11\)
+ .*:	(20 04 80 4e|4e 80 04 20) 	bctr
+ 
+-0000000010000390 <__tls_get_addr_opt@plt>:
++0+350 <__tls_get_addr_opt@plt>:
+ .*:	(c8 ff ff 4b|4b ff ff c8) 	b       .*
+diff --git a/ld/testsuite/ld-powerpc/tlsopt5_32.d b/ld/testsuite/ld-powerpc/tlsopt5_32.d
+index 9749248ae6..64acf1029a 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt5_32.d
++++ b/ld/testsuite/ld-powerpc/tlsopt5_32.d
+@@ -1,6 +1,6 @@
+ #source: tlsopt5_32.s
+ #as: -a32
+-#ld: --gc-sections --secure-plt tlsdll32.so
++#ld: -shared --gc-sections --secure-plt tlsdll32.so
+ #objdump: -dr
+ #target: powerpc*-*-*
+ 
+@@ -8,12 +8,25 @@
+ 
+ Disassembly of section \.text:
+ 
+-01800230 <_start>:
+-.*:	(f8 ff 6d 38|38 6d ff f8) 	addi    r3,r13,-8
+-.*:	(0d 00 00 48|48 00 00 0d) 	bl      1800240 <__tls_get_addr_opt@plt>
+-	\.\.\.
++0+200 <_start>:
++.*:	(f0 ff 21 94|94 21 ff f0) 	stwu    r1,-16\(r1\)
++.*:	(a6 02 08 7c|7c 08 02 a6) 	mflr    r0
++.*:	(05 00 9f 42|42 9f 00 05) 	bcl     .*
++.*:	(08 00 c1 93|93 c1 00 08) 	stw     r30,8\(r1\)
++.*:	(a6 02 c8 7f|7f c8 02 a6) 	mflr    r30
++.*:	(01 00 de 3f|3f de 00 01) 	addis   r30,r30,1
++.*:	(14 00 01 90|90 01 00 14) 	stw     r0,20\(r1\)
++.*:	(7c 01 de 3b|3b de 01 7c) 	addi    r30,r30,380
++.*:	(f8 ff 7e 38|38 7e ff f8) 	addi    r3,r30,-8
++.*:	(1d 00 00 48|48 00 00 1d) 	bl      240 <.*__tls_get_addr_opt.*>
++.*:	(14 00 01 80|80 01 00 14) 	lwz     r0,20\(r1\)
++.*:	(08 00 c1 83|83 c1 00 08) 	lwz     r30,8\(r1\)
++.*:	(a6 03 08 7c|7c 08 03 a6) 	mtlr    r0
++.*:	(10 00 21 38|38 21 00 10) 	addi    r1,r1,16
++.*:	(20 00 80 4e|4e 80 00 20) 	blr
++.*
+ 
+-01800240 <__tls_get_addr_opt@plt>:
++0+240 <.*__tls_get_addr_opt.*>:
+ .*:	(00 00 63 81|81 63 00 00) 	lwz     r11,0\(r3\)
+ .*:	(04 00 83 81|81 83 00 04) 	lwz     r12,4\(r3\)
+ .*:	(78 1b 60 7c|7c 60 1b 78) 	mr      r0,r3
+@@ -22,31 +35,31 @@ Disassembly of section \.text:
+ .*:	(20 00 82 4d|4d 82 00 20) 	beqlr   
+ .*:	(78 03 03 7c|7c 03 03 78) 	mr      r3,r0
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+-.*:	(81 01 60 3d|3d 60 01 81) 	lis     r11,385
+-.*:	(9c 03 6b 81|81 6b 03 9c) 	lwz     r11,924\(r11\)
++.*:	(0c 00 7e 81|81 7e 00 0c) 	lwz     r11,12\(r30\)
+ .*:	(a6 03 69 7d|7d 69 03 a6) 	mtctr   r11
+ .*:	(20 04 80 4e|4e 80 04 20) 	bctr
++.*:	(00 00 00 60|60 00 00 00) 	nop
+ 
+-01800270 <__glink>:
++0+270 <__glink>:
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+ 
+-01800280 <__glink_PLTresolve>:
+-.*:	(81 01 80 3d|3d 80 01 81) 	lis     r12,385
+-.*:	(80 fe 6b 3d|3d 6b fe 80) 	addis   r11,r11,-384
+-.*:	(94 03 0c 80|80 0c 03 94) 	lwz     r0,916\(r12\)
+-.*:	(90 fd 6b 39|39 6b fd 90) 	addi    r11,r11,-624
++0+280 <__glink_PLTresolve>:
++.*:	(00 00 6b 3d|3d 6b 00 00) 	addis   r11,r11,0
++.*:	(a6 02 08 7c|7c 08 02 a6) 	mflr    r0
++.*:	(05 00 9f 42|42 9f 00 05) 	bcl     .*
++.*:	(1c 00 6b 39|39 6b 00 1c) 	addi    r11,r11,28
++.*:	(a6 02 88 7d|7d 88 02 a6) 	mflr    r12
++.*:	(a6 03 08 7c|7c 08 03 a6) 	mtlr    r0
++.*:	(50 58 6c 7d|7d 6c 58 50) 	subf    r11,r12,r11
++.*:	(01 00 8c 3d|3d 8c 00 01) 	addis   r12,r12,1
++.*:	(00 01 0c 80|80 0c 01 00) 	lwz     r0,256\(r12\)
++.*:	(04 01 8c 81|81 8c 01 04) 	lwz     r12,260\(r12\)
+ .*:	(a6 03 09 7c|7c 09 03 a6) 	mtctr   r0
+ .*:	(14 5a 0b 7c|7c 0b 5a 14) 	add     r0,r11,r11
+-.*:	(98 03 8c 81|81 8c 03 98) 	lwz     r12,920\(r12\)
+ .*:	(14 5a 60 7d|7d 60 5a 14) 	add     r11,r0,r11
+ .*:	(20 04 80 4e|4e 80 04 20) 	bctr
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+-.*:	(00 00 00 60|60 00 00 00) 	nop
+-.*:	(00 00 00 60|60 00 00 00) 	nop
+-.*:	(00 00 00 60|60 00 00 00) 	nop
+-.*:	(00 00 00 60|60 00 00 00) 	nop
+-.*:	(00 00 00 60|60 00 00 00) 	nop
+diff --git a/ld/testsuite/ld-powerpc/tlsopt5_32.s b/ld/testsuite/ld-powerpc/tlsopt5_32.s
+index 36b4858ee3..d07b742579 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt5_32.s
++++ b/ld/testsuite/ld-powerpc/tlsopt5_32.s
+@@ -1,4 +1,18 @@
+  .globl _start
+ _start:
+- addi 3,13,gd@got@tlsgd
+- bl __tls_get_addr(gd@tlsgd)
++ stwu 1,-16(1)
++ mflr 0
++ bcl 20,31,.L2
++.L2:
++ stw 30,8(1)
++ mflr 30
++ addis 30,30,_GLOBAL_OFFSET_TABLE_-.L2@ha
++ stw 0,20(1)
++ addi 30,30,_GLOBAL_OFFSET_TABLE_-.L2@l
++ addi 3,30,gd@got@tlsgd
++ bl __tls_get_addr(gd@tlsgd)@plt
++ lwz 0,20(1)
++ lwz 30,8(1)
++ mtlr 0
++ addi 1,1,16
++ blr
+
+commit 247a9b458793e449e3a8e26349acba99e8c0453a
+Author: Alan Modra <amodra@gmail.com>
+Date:   Tue Jul 25 13:52:32 2017 +0930
+
+    __tls_get_addr_opt stub eh_frame info
+    
+    Since the __tls_get_addr_opt stub saves LR and makes a call, eh_frame
+    info should be generated to describe how to unwind through the stub.
+    
+    The patch also changes the way the backend iterates over stubs, from
+    looking at all sections in stub_bfd to which all dynamic sections are
+    attached as well, to iterating over the group list, which gets just
+    the stub sections.  Most binaries will have just one or two stub
+    groups, so this is a little faster.
+    
+    bfd/
+            * elf64-ppc.c (struct map_stub): Add tls_get_addr_opt_bctrl.
+            (stub_eh_frame_size): New function.
+            (ppc_size_one_stub): Set group tls_get_addr_opt_bctrl.
+            (group_sections): Init group tls_get_addr_opt_bctrl.
+            (ppc64_elf_size_stubs): Update sizing and initialization of
+            .eh_frame.  Iteration over stubs via group list.
+            (ppc64_elf_build_stubs): Iterate over stubs via group list.
+            (ppc64_elf_finish_dynamic_sections): Update finalization of
+            .eh_frame.
+    ld/
+            * testsuite/ld-powerpc/tlsopt5.s: Add cfi.
+            * testsuite/ld-powerpc/tlsopt5.d: Update.
+            * testsuite/ld-powerpc/tlsopt5.wf: New file.
+            * testsuite/ld-powerpc/powerpc.exp: Perform new tlsopt5 test.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index f9b551557c..71e285a85d 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,15 @@
++2017-07-25  Alan Modra  <amodra@gmail.com>
++
++	* elf64-ppc.c (struct map_stub): Add tls_get_addr_opt_bctrl.
++	(stub_eh_frame_size): New function.
++	(ppc_size_one_stub): Set group tls_get_addr_opt_bctrl.
++	(group_sections): Init group tls_get_addr_opt_bctrl.
++	(ppc64_elf_size_stubs): Update sizing and initialization of
++	.eh_frame.  Iteration over stubs via group list.
++	(ppc64_elf_build_stubs): Iterate over stubs via group list.
++	(ppc64_elf_finish_dynamic_sections): Update finalization of
++	.eh_frame.
++
+ 2017-08-18  Nick Clifton  <nickc@redhat.com>
+ 
+ 	Import from mainline:
+diff --git a/bfd/elf64-ppc.c b/bfd/elf64-ppc.c
+index 689eac8c3f..55a6728df7 100644
+--- a/bfd/elf64-ppc.c
++++ b/bfd/elf64-ppc.c
+@@ -3919,6 +3919,9 @@ struct map_stub
+   /* Whether to emit a copy of register save/restore functions in this
+      group.  */
+   int needs_save_res;
++  /* The offset of the __tls_get_addr_opt plt stub bctrl in this group,
++     or -1u if no such stub with bctrl exists.  */
++  unsigned int tls_get_addr_opt_bctrl;
+ };
+ 
+ struct ppc_stub_hash_entry {
+@@ -11411,6 +11414,15 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+ 	      - htab->sec_info[stub_entry->group->link_sec->id].toc_off);
+ 
+       size = plt_stub_size (htab, stub_entry, off);
++      if (stub_entry->h != NULL
++	  && (stub_entry->h == htab->tls_get_addr_fd
++	      || stub_entry->h == htab->tls_get_addr)
++	  && htab->params->tls_get_addr_opt
++	  && (ALWAYS_EMIT_R2SAVE
++	      || stub_entry->stub_type == ppc_stub_plt_call_r2save))
++	stub_entry->group->tls_get_addr_opt_bctrl
++	  = stub_entry->group->stub_sec->size + size - 5 * 4;
++
+       if (htab->params->plt_stub_align)
+ 	size += plt_stub_pad (htab, stub_entry, off);
+       if (info->emitrelocations)
+@@ -12277,6 +12289,7 @@ group_sections (struct bfd_link_info *info,
+ 	  group->link_sec = curr;
+ 	  group->stub_sec = NULL;
+ 	  group->needs_save_res = 0;
++	  group->tls_get_addr_opt_bctrl = -1u;
+ 	  group->next = htab->group;
+ 	  htab->group = group;
+ 	  do
+@@ -12327,6 +12340,27 @@ static const unsigned char glink_eh_frame_cie[] =
+   DW_CFA_def_cfa, 1, 0			/* def_cfa: r1 offset 0.  */
+ };
+ 
++static size_t
++stub_eh_frame_size (struct map_stub *group, size_t align)
++{
++  size_t this_size = 17;
++  if (group->tls_get_addr_opt_bctrl != -1u)
++    {
++      unsigned int to_bctrl = group->tls_get_addr_opt_bctrl / 4;
++      if (to_bctrl < 64)
++	this_size += 1;
++      else if (to_bctrl < 256)
++	this_size += 2;
++      else if (to_bctrl < 65536)
++	this_size += 3;
++      else
++	this_size += 5;
++      this_size += 6;
++    }
++  this_size = (this_size + align - 1) & -align;
++  return this_size;
++}
++
+ /* Stripping output sections is normally done before dynamic section
+    symbols have been allocated.  This function is called later, and
+    handles cases like htab->brlt which is mapped to its own output
+@@ -12429,7 +12463,6 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+       bfd *input_bfd;
+       unsigned int bfd_indx;
+       struct map_stub *group;
+-      asection *stub_sec;
+ 
+       htab->stub_iteration += 1;
+ 
+@@ -12747,11 +12780,11 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+ 
+       /* We may have added some stubs.  Find out the new size of the
+ 	 stub sections.  */
+-      for (stub_sec = htab->params->stub_bfd->sections;
+-	   stub_sec != NULL;
+-	   stub_sec = stub_sec->next)
+-	if ((stub_sec->flags & SEC_LINKER_CREATED) == 0)
++      for (group = htab->group; group != NULL; group = group->next)
++	if (group->stub_sec != NULL)
+ 	  {
++	    asection *stub_sec = group->stub_sec;
++
+ 	    if (htab->stub_iteration <= STUB_SHRINK_ITER
+ 		|| stub_sec->rawsize < stub_sec->size)
+ 	      /* Past STUB_SHRINK_ITER, rawsize is the max size seen.  */
+@@ -12786,11 +12819,9 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+ 	{
+ 	  size_t size = 0, align = 4;
+ 
+-	  for (stub_sec = htab->params->stub_bfd->sections;
+-	       stub_sec != NULL;
+-	       stub_sec = stub_sec->next)
+-	    if ((stub_sec->flags & SEC_LINKER_CREATED) == 0)
+-	      size += (17 + align - 1) & -align;
++	  for (group = htab->group; group != NULL; group = group->next)
++	    if (group->stub_sec != NULL)
++	      size += stub_eh_frame_size (group, align);
+ 	  if (htab->glink != NULL && htab->glink->size != 0)
+ 	    size += (24 + align - 1) & -align;
+ 	  if (size != 0)
+@@ -12802,24 +12833,20 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+ 	}
+ 
+       if (htab->params->plt_stub_align != 0)
+-	for (stub_sec = htab->params->stub_bfd->sections;
+-	     stub_sec != NULL;
+-	     stub_sec = stub_sec->next)
+-	  if ((stub_sec->flags & SEC_LINKER_CREATED) == 0)
+-	    stub_sec->size = ((stub_sec->size
+-			       + (1 << htab->params->plt_stub_align) - 1)
+-			      & -(1 << htab->params->plt_stub_align));
+-
+-      for (stub_sec = htab->params->stub_bfd->sections;
+-	   stub_sec != NULL;
+-	   stub_sec = stub_sec->next)
+-	if ((stub_sec->flags & SEC_LINKER_CREATED) == 0
+-	    && stub_sec->rawsize != stub_sec->size
++	for (group = htab->group; group != NULL; group = group->next)
++	  if (group->stub_sec != NULL)
++	    group->stub_sec->size = ((group->stub_sec->size
++				      + (1 << htab->params->plt_stub_align) - 1)
++				     & -(1 << htab->params->plt_stub_align));
++
++      for (group = htab->group; group != NULL; group = group->next)
++	if (group->stub_sec != NULL
++	    && group->stub_sec->rawsize != group->stub_sec->size
+ 	    && (htab->stub_iteration <= STUB_SHRINK_ITER
+-		|| stub_sec->rawsize < stub_sec->size))
++		|| group->stub_sec->rawsize < group->stub_sec->size))
+ 	  break;
+ 
+-      if (stub_sec == NULL
++      if (group == NULL
+ 	  && (htab->glink_eh_frame == NULL
+ 	      || htab->glink_eh_frame->rawsize == htab->glink_eh_frame->size))
+ 	break;
+@@ -12834,7 +12861,7 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+       bfd_vma val;
+       bfd_byte *p, *last_fde;
+       size_t last_fde_len, size, align, pad;
+-      asection *stub_sec;
++      struct map_stub *group;
+ 
+       p = bfd_zalloc (htab->glink_eh_frame->owner, htab->glink_eh_frame->size);
+       if (p == NULL)
+@@ -12849,13 +12876,11 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+       bfd_put_32 (htab->elf.dynobj, last_fde_len, p);
+       p += last_fde_len + 4;
+ 
+-      for (stub_sec = htab->params->stub_bfd->sections;
+-	   stub_sec != NULL;
+-	   stub_sec = stub_sec->next)
+-	if ((stub_sec->flags & SEC_LINKER_CREATED) == 0)
++      for (group = htab->group; group != NULL; group = group->next)
++	if (group->stub_sec != NULL)
+ 	  {
+ 	    last_fde = p;
+-	    last_fde_len = ((17 + align - 1) & -align) - 4;
++	    last_fde_len = stub_eh_frame_size (group, align) - 4;
+ 	    /* FDE length.  */
+ 	    bfd_put_32 (htab->elf.dynobj, last_fde_len, p);
+ 	    p += 4;
+@@ -12866,12 +12891,44 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+ 	    /* Offset to stub section, written later.  */
+ 	    p += 4;
+ 	    /* stub section size.  */
+-	    bfd_put_32 (htab->elf.dynobj, stub_sec->size, p);
++	    bfd_put_32 (htab->elf.dynobj, group->stub_sec->size, p);
+ 	    p += 4;
+ 	    /* Augmentation.  */
+ 	    p += 1;
++	    if (group->tls_get_addr_opt_bctrl != -1u)
++	      {
++		unsigned int to_bctrl = group->tls_get_addr_opt_bctrl / 4;
++
++		/* This FDE needs more than just the default.
++		   Describe __tls_get_addr_opt stub LR.  */
++		if (to_bctrl < 64)
++		  *p++ = DW_CFA_advance_loc + to_bctrl;
++		else if (to_bctrl < 256)
++		  {
++		    *p++ = DW_CFA_advance_loc1;
++		    *p++ = to_bctrl;
++		  }
++		else if (to_bctrl < 65536)
++		  {
++		    *p++ = DW_CFA_advance_loc2;
++		    bfd_put_16 (htab->elf.dynobj, to_bctrl, p);
++		    p += 2;
++		  }
++		else
++		  {
++		    *p++ = DW_CFA_advance_loc4;
++		    bfd_put_32 (htab->elf.dynobj, to_bctrl, p);
++		    p += 4;
++		  }
++		*p++ = DW_CFA_offset_extended_sf;
++		*p++ = 65;
++		*p++ = -(STK_LINKER (htab) / 8) & 0x7f;
++		*p++ = DW_CFA_advance_loc + 4;
++		*p++ = DW_CFA_restore_extended;
++		*p++ = 65;
++	      }
+ 	    /* Pad.  */
+-	    p += ((17 + align - 1) & -align) - 17;
++	    p = last_fde + last_fde_len + 4;
+ 	  }
+       if (htab->glink != NULL && htab->glink->size != 0)
+ 	{
+@@ -13140,10 +13197,8 @@ ppc64_elf_build_stubs (struct bfd_link_info *info,
+     return FALSE;
+ 
+   /* Allocate memory to hold the linker stubs.  */
+-  for (stub_sec = htab->params->stub_bfd->sections;
+-       stub_sec != NULL;
+-       stub_sec = stub_sec->next)
+-    if ((stub_sec->flags & SEC_LINKER_CREATED) == 0
++  for (group = htab->group; group != NULL; group = group->next)
++    if ((stub_sec = group->stub_sec) != NULL
+ 	&& stub_sec->size != 0)
+       {
+ 	stub_sec->contents = bfd_zalloc (htab->params->stub_bfd, stub_sec->size);
+@@ -13325,18 +13380,14 @@ ppc64_elf_build_stubs (struct bfd_link_info *info,
+     htab->relbrlt->reloc_count = 0;
+ 
+   if (htab->params->plt_stub_align != 0)
+-    for (stub_sec = htab->params->stub_bfd->sections;
+-	 stub_sec != NULL;
+-	 stub_sec = stub_sec->next)
+-      if ((stub_sec->flags & SEC_LINKER_CREATED) == 0)
++    for (group = htab->group; group != NULL; group = group->next)
++      if ((stub_sec = group->stub_sec) != NULL)
+ 	stub_sec->size = ((stub_sec->size
+ 			   + (1 << htab->params->plt_stub_align) - 1)
+ 			  & -(1 << htab->params->plt_stub_align));
+ 
+-  for (stub_sec = htab->params->stub_bfd->sections;
+-       stub_sec != NULL;
+-       stub_sec = stub_sec->next)
+-    if ((stub_sec->flags & SEC_LINKER_CREATED) == 0)
++  for (group = htab->group; group != NULL; group = group->next)
++    if ((stub_sec = group->stub_sec) != NULL)
+       {
+ 	stub_sec_count += 1;
+ 	if (stub_sec->rawsize != stub_sec->size
+@@ -13348,7 +13399,7 @@ ppc64_elf_build_stubs (struct bfd_link_info *info,
+   /* Note that the glink_eh_frame check here is not only testing that
+      the generated size matched the calculated size but also that
+      bfd_elf_discard_info didn't make any changes to the section.  */
+-  if (stub_sec != NULL
++  if (group != NULL
+       || (htab->glink_eh_frame != NULL
+ 	  && htab->glink_eh_frame->rawsize != htab->glink_eh_frame->size))
+     {
+@@ -15768,55 +15819,40 @@ ppc64_elf_finish_dynamic_sections (bfd *output_bfd,
+     {
+       bfd_vma val;
+       bfd_byte *p;
+-      asection *stub_sec;
++      struct map_stub *group;
+       size_t align = 4;
+ 
+       p = htab->glink_eh_frame->contents;
+       p += (sizeof (glink_eh_frame_cie) + align - 1) & -align;
+-      for (stub_sec = htab->params->stub_bfd->sections;
+-	   stub_sec != NULL;
+-	   stub_sec = stub_sec->next)
+-	if ((stub_sec->flags & SEC_LINKER_CREATED) == 0)
++
++      for (group = htab->group; group != NULL; group = group->next)
++	if (group->stub_sec != NULL)
+ 	  {
+-	    /* FDE length.  */
+-	    p += 4;
+-	    /* CIE pointer.  */
+-	    p += 4;
+ 	    /* Offset to stub section.  */
+-	    val = (stub_sec->output_section->vma
+-		   + stub_sec->output_offset);
++	    val = (group->stub_sec->output_section->vma
++		   + group->stub_sec->output_offset);
+ 	    val -= (htab->glink_eh_frame->output_section->vma
+ 		    + htab->glink_eh_frame->output_offset
+-		    + (p - htab->glink_eh_frame->contents));
++		    + (p + 8 - htab->glink_eh_frame->contents));
+ 	    if (val + 0x80000000 > 0xffffffff)
+ 	      {
+ 		info->callbacks->einfo
+ 		  (_("%P: %s offset too large for .eh_frame sdata4 encoding"),
+-		   stub_sec->name);
++		   group->stub_sec->name);
+ 		return FALSE;
+ 	      }
+-	    bfd_put_32 (dynobj, val, p);
+-	    p += 4;
+-	    /* stub section size.  */
+-	    p += 4;
+-	    /* Augmentation.  */
+-	    p += 1;
+-	    /* Pad.  */
+-	    p += ((17 + align - 1) & -align) - 17;
++	    bfd_put_32 (dynobj, val, p + 8);
++	    p += stub_eh_frame_size (group, align);
+ 	  }
+       if (htab->glink != NULL && htab->glink->size != 0)
+ 	{
+-	  /* FDE length.  */
+-	  p += 4;
+-	  /* CIE pointer.  */
+-	  p += 4;
+ 	  /* Offset to .glink.  */
+ 	  val = (htab->glink->output_section->vma
+ 		 + htab->glink->output_offset
+ 		 + 8);
+ 	  val -= (htab->glink_eh_frame->output_section->vma
+ 		  + htab->glink_eh_frame->output_offset
+-		  + (p - htab->glink_eh_frame->contents));
++		  + (p + 8 - htab->glink_eh_frame->contents));
+ 	  if (val + 0x80000000 > 0xffffffff)
+ 	    {
+ 	      info->callbacks->einfo
+@@ -15824,15 +15860,8 @@ ppc64_elf_finish_dynamic_sections (bfd *output_bfd,
+ 		 htab->glink->name);
+ 	      return FALSE;
+ 	    }
+-	  bfd_put_32 (dynobj, val, p);
+-	  p += 4;
+-	  /* .glink size.  */
+-	  p += 4;
+-	  /* Augmentation.  */
+-	  p += 1;
+-	  /* Ops.  */
+-	  p += 7;
+-	  p += ((24 + align - 1) & -align) - 24;
++	  bfd_put_32 (dynobj, val, p + 8);
++	  p += (24 + align - 1) & -align;
+ 	}
+ 
+       if (htab->glink_eh_frame->sec_info_type == SEC_INFO_TYPE_EH_FRAME
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 9820c5a118..81b3dc68cc 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,10 @@
++2017-07-25  Alan Modra  <amodra@gmail.com>
++
++	* testsuite/ld-powerpc/tlsopt5.s: Add cfi.
++	* testsuite/ld-powerpc/tlsopt5.d: Update.
++	* testsuite/ld-powerpc/tlsopt5.wf: New file.
++	* testsuite/ld-powerpc/powerpc.exp: Perform new tlsopt5 test.
++
+ 2017-07-14  Alan Modra  <amodra@gmail.com>
+ 
+ 	* testsuite/ld-powerpc/powerpc.exp: Add -shared to tlsop5 tests.
+diff --git a/ld/testsuite/ld-powerpc/powerpc.exp b/ld/testsuite/ld-powerpc/powerpc.exp
+index 9816eff33c..6249ccbdb9 100644
+--- a/ld/testsuite/ld-powerpc/powerpc.exp
++++ b/ld/testsuite/ld-powerpc/powerpc.exp
+@@ -211,7 +211,7 @@ set ppc64elftests {
+     {"TLS DLL" "-shared -melf64ppc --version-script tlsdll.ver" "" "-a64" {tlsdll.s}
+      {} "tlsdll.so"}
+     {"TLS opt 5" "-melf64ppc -shared --gc-sections --no-plt-localentry tmpdir/tlsdll.so" "" "-a64"  {tlsopt5.s}
+-     {{objdump -dr tlsopt5.d}}
++     {{objdump -dr tlsopt5.d} {readelf -wf tlsopt5.wf}}
+       "tlsopt5"}
+     {"sym@tocbase" "-shared -melf64ppc" "" "-a64" {symtocbase-1.s symtocbase-2.s}
+ 	{{objdump -dj.data symtocbase.d}} "symtocbase.so"}
+diff --git a/ld/testsuite/ld-powerpc/tlsopt5.d b/ld/testsuite/ld-powerpc/tlsopt5.d
+index 7a746790c3..3c8518503c 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt5.d
++++ b/ld/testsuite/ld-powerpc/tlsopt5.d
+@@ -31,8 +31,8 @@ Disassembly of section \.text:
+ .*:	(08 80 62 38|38 62 80 08) 	addi    r3,r2,-32760
+ .*:	(b9 ff ff 4b|4b ff ff b9) 	bl      .*
+ .*:	(00 00 00 60|60 00 00 00) 	nop
+-.*:	(f8 01 01 00|00 00 00 00) 	.*
+-.*:	(00 00 00 00|00 01 01 f8) 	.*
++.*:	(f8 02 01 00|00 00 00 00) 	.*
++.*:	(00 00 00 00|00 01 02 f8) 	.*
+ 
+ 0+318 <__glink_PLTresolve>:
+ .*:	(a6 02 08 7c|7c 08 02 a6) 	mflr    r0
+diff --git a/ld/testsuite/ld-powerpc/tlsopt5.s b/ld/testsuite/ld-powerpc/tlsopt5.s
+index 598bbd99b0..70902ef96a 100644
+--- a/ld/testsuite/ld-powerpc/tlsopt5.s
++++ b/ld/testsuite/ld-powerpc/tlsopt5.s
+@@ -1,5 +1,7 @@
+  .globl _start
+ _start:
++ .cfi_startproc
+  addi 3,2,gd@got@tlsgd
+  bl __tls_get_addr(gd@tlsgd)
+  nop
++ .cfi_endproc
+diff --git a/ld/testsuite/ld-powerpc/tlsopt5.wf b/ld/testsuite/ld-powerpc/tlsopt5.wf
+new file mode 100644
+index 0000000000..05ef7e058e
+--- /dev/null
++++ b/ld/testsuite/ld-powerpc/tlsopt5.wf
+@@ -0,0 +1,32 @@
++Contents of the \.eh_frame section:
++
++0+ 0+10 0+ CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 4
++  Data alignment factor: -8
++  Return address column: 65
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r1 ofs 0
++
++0+14 0+14 0+18 FDE cie=0+ pc=0+2c0\.\.0+304
++  DW_CFA_advance_loc: 48 to 0+2f0
++  DW_CFA_offset_extended_sf: r65 at cfa\+8
++  DW_CFA_advance_loc: 16 to 0+300
++  DW_CFA_restore_extended: r65
++
++0+2c 0+18 0+30 FDE cie=0+ pc=0+318\.\.0+354
++  DW_CFA_advance_loc: 4 to 0+31c
++  DW_CFA_register: r65 in r0
++  DW_CFA_advance_loc: 28 to 0+338
++  DW_CFA_restore_extended: r65
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+48 0+10 0+4c FDE cie=0+ pc=0+304\.\.0+310
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
+
+commit 7476906bc53665adfef4c4598774584eb34cc5af
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Thu Aug 3 11:59:32 2017 +0100
+
+    Add more targets to the list of architectures not supporting format changing during linking.  Fix seg-faults triggered when this is attempted.
+    
+            PR ld/21884
+            * testsuite/ld-elf/pr21884.d: Add AVR, HPPA, IA64, M68HC1x and
+            SCORE to list of targets not supporting file format changes during
+            linking.
+            * testsuite/ld-unique/pr21529.d: Likewise.
+            * emultempl/avrelf.em (_before_allocation): Skip for non-ELF
+            output formats.
+            (avr_elf_create_output_section_statements): Fail if the output
+            format is not ELF.
+            (avr_finish): Do not access the ELF header in non-ELF format
+            output bfds.
+            * emultempl/m68hc1xelf.em (_before_allocation): Skip for non-ELF
+            output formats.
+            (m68hc11elf_create_output_section_statements): Fail if the putput
+            format is not ELF.
+            (m68hc11elf_after_allocation): Skip for non-ELF output formats.
+
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 81b3dc68cc..2854372244 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,22 @@
++2017-08-03  Nick Clifton  <nickc@redhat.com>
++
++	PR ld/21884
++	* testsuite/ld-elf/pr21884.d: Add AVR, HPPA, IA64, M68HC1x and
++	SCORE to list of targets not supporting file format changes during
++	linking.
++	* testsuite/ld-unique/pr21529.d: Likewise.
++	* emultempl/avrelf.em (_before_allocation): Skip for non-ELF
++	output formats.
++	(avr_elf_create_output_section_statements): Fail if the output
++	format is not ELF.
++	(avr_finish): Do not access the ELF header in non-ELF format
++	output bfds.
++	* emultempl/m68hc1xelf.em (_before_allocation): Skip for non-ELF
++	output formats.
++	(m68hc11elf_create_output_section_statements): Fail if the putput
++	format is not ELF.
++	(m68hc11elf_after_allocation): Skip for non-ELF output formats.
++
+ 2017-07-25  Alan Modra  <amodra@gmail.com>
+ 
+ 	* testsuite/ld-powerpc/tlsopt5.s: Add cfi.
+diff --git a/ld/emultempl/avrelf.em b/ld/emultempl/avrelf.em
+index 20721244a9..acb478fc54 100644
+--- a/ld/emultempl/avrelf.em
++++ b/ld/emultempl/avrelf.em
+@@ -71,6 +71,12 @@ avr_elf_${EMULATION_NAME}_before_allocation (void)
+ 
+   gld${EMULATION_NAME}_before_allocation ();
+ 
++  if (bfd_get_flavour (link_info.output_bfd) != bfd_target_elf_flavour)
++    {
++      avr_no_stubs = TRUE;
++      return;
++    }
++
+   /* We only need stubs for avr6, avrxmega6, and avrxmega7. */
+   if (strcmp ("${EMULATION_NAME}","avr6")
+       && strcmp ("${EMULATION_NAME}","avrxmega6")
+@@ -108,6 +114,12 @@ avr_elf_create_output_section_statements (void)
+ {
+   flagword flags;
+ 
++  if (bfd_get_flavour (link_info.output_bfd) != bfd_target_elf_flavour)
++    {
++      einfo ("%X%P: changing output format whilst linking is not supported\n");
++      return;
++    }
++
+   stub_file = lang_add_input_file ("linker stubs",
+                                    lang_input_file_is_fake_enum,
+                                    NULL);
+@@ -204,10 +216,14 @@ avr_finish (void)
+     }
+ 
+   abfd = link_info.output_bfd;
+-  if (avr_link_relax)
+-    elf_elfheader (abfd)->e_flags |= EF_AVR_LINKRELAX_PREPARED;
+-  else
+-    elf_elfheader (abfd)->e_flags &= ~EF_AVR_LINKRELAX_PREPARED;
++
++  if (bfd_get_flavour (link_info.output_bfd) == bfd_target_elf_flavour)
++    {
++      if (avr_link_relax)
++	elf_elfheader (abfd)->e_flags |= EF_AVR_LINKRELAX_PREPARED;
++      else
++	elf_elfheader (abfd)->e_flags &= ~EF_AVR_LINKRELAX_PREPARED;
++    }
+ 
+   finish_default ();
+ }
+diff --git a/ld/emultempl/m68hc1xelf.em b/ld/emultempl/m68hc1xelf.em
+index bfe88d604f..f7337da206 100644
+--- a/ld/emultempl/m68hc1xelf.em
++++ b/ld/emultempl/m68hc1xelf.em
+@@ -66,6 +66,9 @@ m68hc11_elf_${EMULATION_NAME}_before_allocation (void)
+ 
+   gld${EMULATION_NAME}_before_allocation ();
+ 
++  if (bfd_get_flavour (link_info.output_bfd) != bfd_target_elf_flavour)
++    return;
++
+   /* If generating a relocatable output file, then we don't
+      have to generate the trampolines.  */
+   if (bfd_link_relocatable (&link_info))
+@@ -141,6 +144,12 @@ m68hc11_elf_${EMULATION_NAME}_before_allocation (void)
+ static void
+ m68hc11elf_create_output_section_statements (void)
+ {
++  if (bfd_get_flavour (link_info.output_bfd) != bfd_target_elf_flavour)
++    {
++      einfo ("%X%P: changing output format whilst linking is not supported\n");
++      return;
++    }
++
+   stub_file = lang_add_input_file ("linker stubs",
+ 				   lang_input_file_is_fake_enum,
+ 				   NULL);
+@@ -286,22 +295,25 @@ m68hc11elf_add_stub_section (const char *stub_sec_name,
+ static void
+ m68hc11elf_after_allocation (void)
+ {
+-  /* Now build the linker stubs.  */
+-  if (stub_file->the_bfd->sections != NULL)
++  if (bfd_get_flavour (link_info.output_bfd) == bfd_target_elf_flavour)
+     {
+-      /* Call again the trampoline analyzer to initialize the trampoline
+-	 stubs with the correct symbol addresses.  Since there could have
+-	 been relaxation, the symbol addresses that were found during
+-	 first call may no longer be correct.  */
+-      if (!elf32_m68hc11_size_stubs (link_info.output_bfd,
+-				     stub_file->the_bfd,
+-				     &link_info, 0))
++      /* Now build the linker stubs.  */
++      if (stub_file->the_bfd->sections != NULL)
+ 	{
+-	  einfo ("%X%P: can not size stub section: %E\n");
+-	  return;
++	  /* Call again the trampoline analyzer to initialize the trampoline
++	     stubs with the correct symbol addresses.  Since there could have
++	     been relaxation, the symbol addresses that were found during
++	     first call may no longer be correct.  */
++	  if (!elf32_m68hc11_size_stubs (link_info.output_bfd,
++					 stub_file->the_bfd,
++					 &link_info, 0))
++	    {
++	      einfo ("%X%P: can not size stub section: %E\n");
++	      return;
++	    }
++	  if (!elf32_m68hc11_build_stubs (link_info.output_bfd, &link_info))
++	    einfo ("%X%P: can not build stubs: %E\n");
+ 	}
+-      if (!elf32_m68hc11_build_stubs (link_info.output_bfd, &link_info))
+-	einfo ("%X%P: can not build stubs: %E\n");
+     }
+ 
+   gld${EMULATION_NAME}_after_allocation ();
+diff --git a/ld/testsuite/ld-elf/pr21884.d b/ld/testsuite/ld-elf/pr21884.d
+index 52cd2c1984..0de7b83b18 100644
+--- a/ld/testsuite/ld-elf/pr21884.d
++++ b/ld/testsuite/ld-elf/pr21884.d
+@@ -2,7 +2,7 @@
+ #source: pr21884b.s
+ #ld: -T pr21884.t
+ #objdump: -b binary -s
+-#notarget: aarch64*-*-* arm*-*-* nds32*-*-*
++#notarget: aarch64*-*-* arm*-*-* avr-*-* hppa-*-* ia64-*-* m68hc1*-*-* nds32*-*-* score-*-*
+ # Skip targets which can't change output format to binary.
+ 
+ .*:     file format binary
+diff --git a/ld/testsuite/ld-unique/pr21529.d b/ld/testsuite/ld-unique/pr21529.d
+index bc4763dfeb..5d3436badb 100644
+--- a/ld/testsuite/ld-unique/pr21529.d
++++ b/ld/testsuite/ld-unique/pr21529.d
+@@ -1,5 +1,6 @@
+ #ld: --oformat binary -T pr21529.ld -e main
+ #objdump: -s -b binary
+-#xfail: aarch64*-*-* arm*-*-* hppa-*-* ia64-*-* nds32*-*-* score-*-*
++#notarget: aarch64*-*-* arm*-*-* avr-*-* hppa-*-* ia64-*-* m68hc1*-*-* nds32*-*-* score-*-*
++# Skip targets which can't change output format to binary.
+ 
+ #pass
+
+commit bf234c7b396b80c3da512554502f4cb15eec3fff
+Author: Alan Modra <amodra@gmail.com>
+Date:   Sat Aug 5 23:28:21 2017 +0930
+
+    Don't fail in elf32_hppa_set_gp
+    
+    The base bfd_link_hash_table works fine here, the only thing to watch
+    out for is to only set elf_gp if the output is ELF.
+    
+    bfd/
+            * elf32-hppa.c (elf32_hppa_set_gp): Don't require an
+            hppa_link_hash_table.
+    ld/
+            * testsuite/ld-unique/pr21529.d: Don't xfail hppa.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 71e285a85d..37c6665f17 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,8 @@
++2017-08-05  Alan Modra  <amodra@gmail.com>
++
++	* elf32-hppa.c (elf32_hppa_set_gp): Don't require an
++	hppa_link_hash_table.
++
+ 2017-07-25  Alan Modra  <amodra@gmail.com>
+ 
+ 	* elf64-ppc.c (struct map_stub): Add tls_get_addr_opt_bctrl.
+diff --git a/bfd/elf32-hppa.c b/bfd/elf32-hppa.c
+index 0087c71a60..0b7f43438d 100644
+--- a/bfd/elf32-hppa.c
++++ b/bfd/elf32-hppa.c
+@@ -3090,13 +3090,8 @@ elf32_hppa_set_gp (bfd *abfd, struct bfd_link_info *info)
+   struct bfd_link_hash_entry *h;
+   asection *sec = NULL;
+   bfd_vma gp_val = 0;
+-  struct elf32_hppa_link_hash_table *htab;
+ 
+-  htab = hppa_link_hash_table (info);
+-  if (htab == NULL)
+-    return FALSE;
+-
+-  h = bfd_link_hash_lookup (&htab->etab.root, "$global$", FALSE, FALSE, FALSE);
++  h = bfd_link_hash_lookup (info->hash, "$global$", FALSE, FALSE, FALSE);
+ 
+   if (h != NULL
+       && (h->type == bfd_link_hash_defined
+@@ -3159,10 +3154,13 @@ elf32_hppa_set_gp (bfd *abfd, struct bfd_link_info *info)
+ 	}
+     }
+ 
+-  if (sec != NULL && sec->output_section != NULL)
+-    gp_val += sec->output_section->vma + sec->output_offset;
++  if (bfd_get_flavour (abfd) == bfd_target_elf_flavour)
++    {
++      if (sec != NULL && sec->output_section != NULL)
++	gp_val += sec->output_section->vma + sec->output_offset;
+ 
+-  elf_gp (abfd) = gp_val;
++      elf_gp (abfd) = gp_val;
++    }
+   return TRUE;
+ }
+ 
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 2854372244..618a17253f 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,7 @@
++2017-08-05  Alan Modra  <amodra@gmail.com>
++
++	* testsuite/ld-unique/pr21529.d: Don't xfail hppa.
++
+ 2017-08-03  Nick Clifton  <nickc@redhat.com>
+ 
+ 	PR ld/21884
+diff --git a/ld/testsuite/ld-unique/pr21529.d b/ld/testsuite/ld-unique/pr21529.d
+index 5d3436badb..ffc1a72440 100644
+--- a/ld/testsuite/ld-unique/pr21529.d
++++ b/ld/testsuite/ld-unique/pr21529.d
+@@ -1,6 +1,6 @@
+ #ld: --oformat binary -T pr21529.ld -e main
+ #objdump: -s -b binary
+-#notarget: aarch64*-*-* arm*-*-* avr-*-* hppa-*-* ia64-*-* m68hc1*-*-* nds32*-*-* score-*-*
++#notarget: aarch64*-*-* arm*-*-* avr-*-* ia64-*-* m68hc1*-*-* nds32*-*-* score-*-*
+ # Skip targets which can't change output format to binary.
+ 
+ #pass
+
+commit ee24a27bb197787eb0935046a8ff1da9df34a502
+Author: Alan Modra <amodra@gmail.com>
+Date:   Mon Aug 7 18:02:49 2017 +0930
+
+    PR21910, segfault in common symbol override test when hash-style=gnu
+    
+            PR 21910
+            * elflink.c (bfd_elf_final_link): Don't segfault when sections
+            needed to define various dynamic tags have been discarded.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 37c6665f17..8ac8332ee0 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,9 @@
++2017-08-07  Alan Modra  <amodra@gmail.com>
++
++	PR 21910
++	* elflink.c (bfd_elf_final_link): Don't segfault when sections
++	needed to define various dynamic tags have been discarded.
++
+ 2017-08-05  Alan Modra  <amodra@gmail.com>
+ 
+ 	* elf32-hppa.c (elf32_hppa_set_gp): Don't require an
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index bb1a30a8c5..13647bbb81 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+@@ -12338,7 +12338,7 @@ bfd_elf_final_link (bfd *abfd, struct bfd_link_info *info)
+ 	    get_vma:
+ 	      o = bfd_get_linker_section (dynobj, name);
+ 	    do_vma:
+-	      if (o == NULL)
++	      if (o == NULL || bfd_is_abs_section (o->output_section))
+ 		{
+ 		  _bfd_error_handler
+ 		    (_("could not find section %s"), name);
+
+commit 325696767d54f24172b46ab6e296f3abd458aa14
+Author: Alan Modra <amodra@gmail.com>
+Date:   Sat Aug 12 16:27:29 2017 +0930
+
+    Collision between NT_GNU_BUILD_ATTRIBUTE_OPEN and NT_PPC_VMX
+    
+            * readelf.c (process_note): Qualify NT_GNU_BUILD_ATTRIBUTE notes
+            by name data.
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index 35c9a61d05..7c9b86f950 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -1,3 +1,8 @@
++2017-08-12  Alan Modra  <amodra@gmail.com>
++
++	* readelf.c (process_note): Qualify NT_GNU_BUILD_ATTRIBUTE notes
++	by name data.
++
+ 2017-07-24  Tristan Gingold  <gingold@adacore.com>
+ 
+ 	* configure: Regenerate.
+diff --git a/binutils/readelf.c b/binutils/readelf.c
+index b2f75c0048..9bbfc957e4 100644
+--- a/binutils/readelf.c
++++ b/binutils/readelf.c
+@@ -17465,8 +17465,11 @@ process_note (Elf_Internal_Note *  pnote,
+ 
+   printf ("  ");
+ 
+-  if (pnote->type == NT_GNU_BUILD_ATTRIBUTE_OPEN
+-      || pnote->type == NT_GNU_BUILD_ATTRIBUTE_FUNC)
++  if (((const_strneq (pnote->namedata, "GA")
++	&& strchr ("*$!+", pnote->namedata[2]) != NULL)
++       || strchr ("*$!+", pnote->namedata[0]) != NULL)
++      && (pnote->type == NT_GNU_BUILD_ATTRIBUTE_OPEN
++	  || pnote->type == NT_GNU_BUILD_ATTRIBUTE_FUNC))
+     print_gnu_build_attribute_name (pnote);
+   else
+     print_symbol (-20, name);
+@@ -17484,8 +17487,11 @@ process_note (Elf_Internal_Note *  pnote,
+     return print_stapsdt_note (pnote);
+   else if (const_strneq (pnote->namedata, "CORE"))
+     return print_core_note (pnote);
+-  else if (pnote->type == NT_GNU_BUILD_ATTRIBUTE_OPEN
+-	   || pnote->type == NT_GNU_BUILD_ATTRIBUTE_FUNC)
++  else if (((const_strneq (pnote->namedata, "GA")
++	     && strchr ("*$!+", pnote->namedata[2]) != NULL)
++	    || strchr ("*$!+", pnote->namedata[0]) != NULL)
++	   && (pnote->type == NT_GNU_BUILD_ATTRIBUTE_OPEN
++	       || pnote->type == NT_GNU_BUILD_ATTRIBUTE_FUNC))
+     return print_gnu_build_attribute_description (pnote, file);
+ 
+   if (pnote->descsz)
+
+commit f399679112df997c1416f7993eaac0f5fd76c144
+Author: Alan Modra <amodra@gmail.com>
+Date:   Mon Aug 21 13:28:06 2017 +0930
+
+    Make __start/__stop symbols protected visibility
+    
+    They can't be hidden visibility since apparently people use dlsym to
+    look them up.
+    
+    bfd/
+            PR ld/21964
+            * elf-bfd.h (SYMBOLIC_BIND): Return TRUE for __start/__stop symbols.
+            * elflink.c (bfd_elf_define_start_stop): Rewrite.
+    ld/
+            PR ld/21964
+            * testsuite/ld-elf/pr21562a.d: Update for changed start/stop symbols.
+            * testsuite/ld-elf/pr21562b.d: Likewise.
+            * testsuite/ld-elf/pr21562c.d: Likewise.
+            * testsuite/ld-elf/pr21562d.d: Likewise.
+            * testsuite/ld-elf/pr21562e.d: Likewise.
+            * testsuite/ld-elf/pr21562f.d: Likewise.
+            * testsuite/ld-elf/pr21562g.d: Likewise.
+            * testsuite/ld-elf/pr21562h.d: Likewise.
+            * testsuite/ld-elf/pr21562i.d: Likewise.
+            * testsuite/ld-elf/pr21562j.d: Likewise.
+            * testsuite/ld-elf/pr21562k.d: Likewise.
+            * testsuite/ld-elf/pr21562l.d: Likewise.
+            * testsuite/ld-elf/pr21562m.d: Likewise.
+            * testsuite/ld-elf/pr21562n.d: Likewise.
+            * testsuite/ld-elf/sizeofa.d: Likewise.
+            * testsuite/ld-elf/sizeofb.d: Likewise.
+            * testsuite/ld-elf/startofa.d: Likewise.
+            * testsuite/ld-elf/startofb.d: Likewise.
+            * testsuite/ld-gc/pr20022.d: Likewise.
+            * testsuite/ld-gc/start.d: Likewise.
+            * testsuite/ld-elf/pr21964-1a.c: New file.
+            * testsuite/ld-elf/pr21964-1b.c: New file.
+            * testsuite/ld-elf/pr21964-2a.c: New file.
+            * testsuite/ld-elf/pr21964-2b.c: New file.
+            * testsuite/ld-elf/shared.exp: Run PR ld/21964 tests.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 8ac8332ee0..aaec44d233 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,10 @@
++2017-08-21  Alan Modra  <amodra@gmail.com>
++	    H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR ld/21964
++	* elf-bfd.h (SYMBOLIC_BIND): Return TRUE for __start/__stop symbols.
++	* elflink.c (bfd_elf_define_start_stop): Rewrite.
++
+ 2017-08-07  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 21910
+diff --git a/bfd/elf-bfd.h b/bfd/elf-bfd.h
+index 92a8e02e59..83958e41e0 100644
+--- a/bfd/elf-bfd.h
++++ b/bfd/elf-bfd.h
+@@ -2802,7 +2802,9 @@ extern asection _bfd_elf_large_com_section;
+    library, if any.  A unique symbol can never be bound locally.  */
+ #define SYMBOLIC_BIND(INFO, H) \
+     (!(H)->unique_global \
+-     && ((INFO)->symbolic || ((INFO)->dynamic && !(H)->dynamic)))
++     && ((INFO)->symbolic \
++	 || (H)->start_stop \
++	 || ((INFO)->dynamic && !(H)->dynamic)))
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index 13647bbb81..736fb4c2f7 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+@@ -14226,18 +14226,30 @@ struct bfd_link_hash_entry *
+ bfd_elf_define_start_stop (struct bfd_link_info *info,
+ 			   const char *symbol, asection *sec)
+ {
+-  struct bfd_link_hash_entry *h;
++  struct elf_link_hash_entry *h;
+ 
+-  h = bfd_generic_define_start_stop (info, symbol, sec);
+-  if (h != NULL)
++  h = elf_link_hash_lookup (elf_hash_table (info), symbol,
++			    FALSE, FALSE, TRUE);
++  if (h != NULL
++      && (h->root.type == bfd_link_hash_undefined
++	  || h->root.type == bfd_link_hash_undefweak
++	  || (h->ref_regular && !h->def_regular)))
+     {
+-      struct elf_link_hash_entry *eh = (struct elf_link_hash_entry *) h;
+-      eh->start_stop = 1;
+-      eh->u2.start_stop_section = sec;
+-      _bfd_elf_link_hash_hide_symbol (info, eh, TRUE);
+-      if (ELF_ST_VISIBILITY (eh->other) != STV_INTERNAL)
+-	eh->other = ((eh->other & ~ELF_ST_VISIBILITY (-1))
+-		     | STV_HIDDEN);
++      h->root.type = bfd_link_hash_defined;
++      h->root.u.def.section = sec;
++      h->root.u.def.value = 0;
++      h->def_regular = 1;
++      h->def_dynamic = 0;
++      h->start_stop = 1;
++      h->u2.start_stop_section = sec;
++      if (symbol[0] == '.')
++	{
++	  /* .startof. and .sizeof. symbols are local.  */
++	  _bfd_elf_link_hash_hide_symbol (info, h, TRUE);
++	}
++      else if (ELF_ST_VISIBILITY (h->other) == STV_DEFAULT)
++	h->other = (h->other & ~ELF_ST_VISIBILITY (-1)) | STV_PROTECTED;
++      return &h->root;
+     }
+-  return h;
++  return NULL;
+ }
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 618a17253f..8d8e6c9802 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,33 @@
++2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
++	    Alan Modra  <amodra@gmail.com>
++
++	PR ld/21964
++	* testsuite/ld-elf/pr21562a.d: Update for changed start/stop symbols.
++	* testsuite/ld-elf/pr21562b.d: Likewise.
++	* testsuite/ld-elf/pr21562c.d: Likewise.
++	* testsuite/ld-elf/pr21562d.d: Likewise.
++	* testsuite/ld-elf/pr21562e.d: Likewise.
++	* testsuite/ld-elf/pr21562f.d: Likewise.
++	* testsuite/ld-elf/pr21562g.d: Likewise.
++	* testsuite/ld-elf/pr21562h.d: Likewise.
++	* testsuite/ld-elf/pr21562i.d: Likewise.
++	* testsuite/ld-elf/pr21562j.d: Likewise.
++	* testsuite/ld-elf/pr21562k.d: Likewise.
++	* testsuite/ld-elf/pr21562l.d: Likewise.
++	* testsuite/ld-elf/pr21562m.d: Likewise.
++	* testsuite/ld-elf/pr21562n.d: Likewise.
++	* testsuite/ld-elf/sizeofa.d: Likewise.
++	* testsuite/ld-elf/sizeofb.d: Likewise.
++	* testsuite/ld-elf/startofa.d: Likewise.
++	* testsuite/ld-elf/startofb.d: Likewise.
++	* testsuite/ld-gc/pr20022.d: Likewise.
++	* testsuite/ld-gc/start.d: Likewise.
++	* testsuite/ld-elf/pr21964-1a.c: New file.
++	* testsuite/ld-elf/pr21964-1b.c: New file.
++	* testsuite/ld-elf/pr21964-2a.c: New file.
++	* testsuite/ld-elf/pr21964-2b.c: New file.
++	* testsuite/ld-elf/shared.exp: Run PR ld/21964 tests.
++
+ 2017-08-05  Alan Modra  <amodra@gmail.com>
+ 
+ 	* testsuite/ld-unique/pr21529.d: Don't xfail hppa.
+diff --git a/ld/testsuite/ld-elf/pr21562a.d b/ld/testsuite/ld-elf/pr21562a.d
+index ecf013f432..e978734db9 100644
+--- a/ld/testsuite/ld-elf/pr21562a.d
++++ b/ld/testsuite/ld-elf/pr21562a.d
+@@ -8,5 +8,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562b.d b/ld/testsuite/ld-elf/pr21562b.d
+index 063a141741..f1d058a67f 100644
+--- a/ld/testsuite/ld-elf/pr21562b.d
++++ b/ld/testsuite/ld-elf/pr21562b.d
+@@ -8,5 +8,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?stop_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?stop_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562c.d b/ld/testsuite/ld-elf/pr21562c.d
+index 1d72a0d02f..1bfbff3866 100644
+--- a/ld/testsuite/ld-elf/pr21562c.d
++++ b/ld/testsuite/ld-elf/pr21562c.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562d.d b/ld/testsuite/ld-elf/pr21562d.d
+index f752a2465a..4f8e91efc9 100644
+--- a/ld/testsuite/ld-elf/pr21562d.d
++++ b/ld/testsuite/ld-elf/pr21562d.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?stop_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?stop_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562e.d b/ld/testsuite/ld-elf/pr21562e.d
+index 769f2f8a4b..ee969bd47a 100644
+--- a/ld/testsuite/ld-elf/pr21562e.d
++++ b/ld/testsuite/ld-elf/pr21562e.d
+@@ -6,5 +6,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562f.d b/ld/testsuite/ld-elf/pr21562f.d
+index cb81c2a36b..119f43e116 100644
+--- a/ld/testsuite/ld-elf/pr21562f.d
++++ b/ld/testsuite/ld-elf/pr21562f.d
+@@ -6,5 +6,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?stop_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?stop_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562g.d b/ld/testsuite/ld-elf/pr21562g.d
+index 9926416abe..f3d2a31325 100644
+--- a/ld/testsuite/ld-elf/pr21562g.d
++++ b/ld/testsuite/ld-elf/pr21562g.d
+@@ -6,5 +6,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562h.d b/ld/testsuite/ld-elf/pr21562h.d
+index 1e723ba099..0517aec9cd 100644
+--- a/ld/testsuite/ld-elf/pr21562h.d
++++ b/ld/testsuite/ld-elf/pr21562h.d
+@@ -6,5 +6,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?stop_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?stop_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562i.d b/ld/testsuite/ld-elf/pr21562i.d
+index f5b59c54b8..8baa583279 100644
+--- a/ld/testsuite/ld-elf/pr21562i.d
++++ b/ld/testsuite/ld-elf/pr21562i.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562j.d b/ld/testsuite/ld-elf/pr21562j.d
+index 70e311e231..99d987c75a 100644
+--- a/ld/testsuite/ld-elf/pr21562j.d
++++ b/ld/testsuite/ld-elf/pr21562j.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] scnfoo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?stop_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?stop_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562k.d b/ld/testsuite/ld-elf/pr21562k.d
+index 4c62eb7966..6aa833497f 100644
+--- a/ld/testsuite/ld-elf/pr21562k.d
++++ b/ld/testsuite/ld-elf/pr21562k.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] \.foo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562l.d b/ld/testsuite/ld-elf/pr21562l.d
+index b0ba90dd3c..82bab1e18a 100644
+--- a/ld/testsuite/ld-elf/pr21562l.d
++++ b/ld/testsuite/ld-elf/pr21562l.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] \.foo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?stop_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?stop_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562m.d b/ld/testsuite/ld-elf/pr21562m.d
+index fbcf76f476..e1ad8767bd 100644
+--- a/ld/testsuite/ld-elf/pr21562m.d
++++ b/ld/testsuite/ld-elf/pr21562m.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] \.foo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21562n.d b/ld/testsuite/ld-elf/pr21562n.d
+index 2453169999..583c7711ef 100644
+--- a/ld/testsuite/ld-elf/pr21562n.d
++++ b/ld/testsuite/ld-elf/pr21562n.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] \.foo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +0*10[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?stop_scnfoo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?stop_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/pr21964-1a.c b/ld/testsuite/ld-elf/pr21964-1a.c
+new file mode 100644
+index 0000000000..f2eae53552
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr21964-1a.c
+@@ -0,0 +1,11 @@
++extern int __start___verbose[];
++extern int __stop___verbose[];
++int foo (void)
++{
++  static int my_var __attribute__((used, section("__verbose"))) = 5;
++  if (__start___verbose == __stop___verbose
++      || __start___verbose[0] != 5)
++    return -1;
++  else
++    return 0;
++}
+diff --git a/ld/testsuite/ld-elf/pr21964-1b.c b/ld/testsuite/ld-elf/pr21964-1b.c
+new file mode 100644
+index 0000000000..440c937f78
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr21964-1b.c
+@@ -0,0 +1,24 @@
++#include <stdio.h>
++
++extern int foo (void);
++
++extern int __start___verbose[];
++extern int __stop___verbose[];
++static int my_var __attribute__((used, section("__verbose"))) = 6;
++int bar (void)
++{
++  if (__start___verbose == __stop___verbose)
++    return -1;
++
++  if (__start___verbose[0] != 6)
++    return -2;
++  else
++    return 0;
++}
++
++int main()
++{
++  if (bar () == 0 && foo () == 0)
++    printf ("PASS\n");
++  return 0;
++}
+diff --git a/ld/testsuite/ld-elf/pr21964-2a.c b/ld/testsuite/ld-elf/pr21964-2a.c
+new file mode 100644
+index 0000000000..617ce75eea
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr21964-2a.c
+@@ -0,0 +1,11 @@
++extern int __start___verbose[];
++extern int __stop___verbose[];
++int foo (void)
++{
++  static int my_var __attribute__((used, section("__verbose"))) = 5;
++  if (__start___verbose == __stop___verbose
++      && __start___verbose[0] != 5)
++    return -1;
++  else
++    return 0;
++}
+diff --git a/ld/testsuite/ld-elf/pr21964-2b.c b/ld/testsuite/ld-elf/pr21964-2b.c
+new file mode 100644
+index 0000000000..5f638a3dec
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr21964-2b.c
+@@ -0,0 +1,27 @@
++#include <dlfcn.h>
++#include <stdio.h>
++
++int main()
++{
++  void *dl;
++  void *sym;
++  int (*func) (void);
++
++  dl = dlopen("pr21964-2.so", RTLD_LAZY);
++  if (!dl)
++    return 1;
++
++  sym = dlsym(dl, "__start___verbose");
++  if (!sym)
++    return 2;
++
++  func = dlsym(dl, "foo");
++  if (!func)
++    return 3;
++  if (func () == 0)
++    printf ("PASS\n");
++
++  dlclose(dl);
++
++  return 0;
++}
+diff --git a/ld/testsuite/ld-elf/shared.exp b/ld/testsuite/ld-elf/shared.exp
+index 8b139ec874..0802fa24c6 100644
+--- a/ld/testsuite/ld-elf/shared.exp
++++ b/ld/testsuite/ld-elf/shared.exp
+@@ -423,6 +423,12 @@ set build_tests {
+   {"Build libpr19073.so"
+    "-shared -Wl,--version-script=pr19073.map tmpdir/pr19073a.o" "-fPIC"
+    {dummy.c} {{readelf {--dyn-syms --wide} pr19073.rd}} "libpr19073.so"}
++  {"Build pr21964-1.so"
++   "-shared" "-fPIC"
++   {pr21964-1a.c} {} "pr21964-1.so"}
++  {"Build pr21964-2.so"
++   "-shared" "-fPIC"
++   {pr21964-2a.c} {} "pr21964-2.so"}
+ }
+ 
+ run_cc_link_tests $build_tests
+@@ -540,6 +546,9 @@ set run_tests [list \
+     [list "Run pr18458" \
+      "-Wl,--no-as-needed,-z,now tmpdir/libpr18458a.so tmpdir/libpr18458b.so" "" \
+      {pr18458c.c} "pr18458" "pass.out" ] \
++    [list "Run pr21964-1" \
++     "-Wl,--no-as-needed,-rpath,tmpdir tmpdir/pr21964-1.so" "" \
++     {pr21964-1b.c} "pr21964-1" "pass.out" ] \
+ ]
+ 
+ # NetBSD ELF systems do not currently support the .*_array sections.
+@@ -586,6 +595,9 @@ set dlopen_run_tests [list \
+     [list "Run dl6d1 with --dynamic-list-data and dlopen on libdl6d.so" \
+      "-Wl,--no-as-needed,--dynamic-list-data $extralibs" "" \
+      {dl6dmain.c} "dl6d1" "dl6b.out" ] \
++    [list "Run pr21964-2" \
++     "-Wl,--no-as-needed,-rpath,tmpdir $extralibs" "" \
++     {pr21964-2b.c} "pr21964-2" "pass.out" ] \
+ ]
+ 
+ # Only run them when libdl is available.
+diff --git a/ld/testsuite/ld-elf/sizeofa.d b/ld/testsuite/ld-elf/sizeofa.d
+index 572ffbd3ec..3eaa4e594e 100644
+--- a/ld/testsuite/ld-elf/sizeofa.d
++++ b/ld/testsuite/ld-elf/sizeofa.d
+@@ -6,7 +6,7 @@ Symbol table '\.symtab' contains [0-9]+ entries:
+  +Num: +Value +Size Type +Bind +Vis +Ndx Name
+  +0: 0+ +0 +NOTYPE +LOCAL +DEFAULT +UND +
+ #...
+- +[0-9]+: +[a-f0-9]+ +0 +(NOTYPE|OBJECT) +(LOC|GLOB)AL +DEFAULT +[0-9]+ +___?stop_scnfoo
++ +[0-9]+: +[a-f0-9]+ +0 +(NOTYPE|OBJECT) +GLOBAL +(PROTECTED|DEFAULT) +[0-9]+ +___?stop_scnfoo
+ #...
+  +[0-9]+: +[a-f0-9]+ +0 +(NOTYPE|OBJECT) +GLOBAL +DEFAULT +UND +.sizeof.scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/sizeofb.d b/ld/testsuite/ld-elf/sizeofb.d
+index ac4a6a474e..c7d4edd55d 100644
+--- a/ld/testsuite/ld-elf/sizeofb.d
++++ b/ld/testsuite/ld-elf/sizeofb.d
+@@ -7,7 +7,5 @@ Symbol table '\.dynsym' contains [0-9]+ entries:
+  +Num: +Value +Size Type +Bind +Vis +Ndx Name
+  +0: 0+ +0 +NOTYPE +LOCAL +DEFAULT +UND +
+ #...
+- +[0-9]+: +[a-f0-9]+ +0 +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?stop_scnfoo
+-#...
+- +[0-9]+: 0+10 + +0 +NOTYPE +LOCAL +DEFAULT +ABS +.sizeof.scnfoo
++ +[0-9]+: +[a-f0-9]+ +0 +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?stop_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/startofa.d b/ld/testsuite/ld-elf/startofa.d
+index 07d5ddaec8..6a4460f08a 100644
+--- a/ld/testsuite/ld-elf/startofa.d
++++ b/ld/testsuite/ld-elf/startofa.d
+@@ -6,7 +6,7 @@ Symbol table '\.symtab' contains [0-9]+ entries:
+  +Num: +Value +Size Type +Bind +Vis +Ndx Name
+  +0: 0+ +0 +NOTYPE +LOCAL +DEFAULT +UND +
+ #...
+- +[0-9]+: +[a-f0-9]+ +0 +(NOTYPE|OBJECT) +(LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo|GLOBAL +DEFAULT +UND +.startof.scnfoo)
++ +[0-9]+: +[a-f0-9]+ +0 +(NOTYPE|OBJECT) +GLOBAL +DEFAULT +UND +.startof.scnfoo
+ #...
+- +[0-9]+: +[a-f0-9]+ +0 +(NOTYPE|OBJECT) +GLOBAL +DEFAULT +(UND +.startof.scnfoo|[0-9]+ +___?start_scnfoo)
++ +[0-9]+: +[a-f0-9]+ +0 +(NOTYPE|OBJECT) +GLOBAL +(PROTECTED|DEFAULT) +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-elf/startofb.d b/ld/testsuite/ld-elf/startofb.d
+index 5d659bb8e5..b0cf563340 100644
+--- a/ld/testsuite/ld-elf/startofb.d
++++ b/ld/testsuite/ld-elf/startofb.d
+@@ -7,7 +7,5 @@ Symbol table '\.dynsym' contains [0-9]+ entries:
+  +Num: +Value +Size Type +Bind +Vis +Ndx Name
+  +0: 0+ +0 +NOTYPE +LOCAL +DEFAULT +UND +
+ #...
+- +[0-9]+: +[a-f0-9]+ +0 +NOTYPE +LOCAL +DEFAULT +[0-9]+ +.startof.scnfoo
+-#...
+- +[0-9]+: +[a-f0-9]+ +0 +NOTYPE +LOCAL +DEFAULT +[0-9]+ +___?start_scnfoo
++ +[0-9]+: +[a-f0-9]+ +0 +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +___?start_scnfoo
+ #pass
+diff --git a/ld/testsuite/ld-gc/pr20022.d b/ld/testsuite/ld-gc/pr20022.d
+index 906f73d4e0..40473c278a 100644
+--- a/ld/testsuite/ld-gc/pr20022.d
++++ b/ld/testsuite/ld-gc/pr20022.d
+@@ -9,5 +9,5 @@
+ #...
+   \[[ 0-9]+\] _foo[ \t]+PROGBITS[ \t]+[0-9a-f]+ +[0-9a-f]+ +[0-9a-f]+[ \t]+.*
+ #...
+- +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +LOCAL +DEFAULT +[0-9]+ +__start__foo
++ +[0-9]+: +[0-9a-f]+ +[0-9a-f]+ +NOTYPE +GLOBAL +PROTECTED +[0-9]+ +__start__foo
+ #pass
+diff --git a/ld/testsuite/ld-gc/start.d b/ld/testsuite/ld-gc/start.d
+index 9113b48204..18e74c109c 100644
+--- a/ld/testsuite/ld-gc/start.d
++++ b/ld/testsuite/ld-gc/start.d
+@@ -5,5 +5,5 @@
+ #notarget: *-*-*aout *-*-*oldld frv-*-linux* metag-*-linux*
+ 
+ #...
+-[0-9a-f]+ d +__start__foo
++[0-9a-f]+ D +__start__foo
+ #...
+
+commit 3c08b8dcc22a1b7a7fcbce7a6d8f863ff1a3a83e
+Author: Alan Modra <amodra@gmail.com>
+Date:   Wed Aug 23 08:58:08 2017 +0930
+
+    Make undefined symbols in allocate_dynrelocs dynamic
+    
+    ..if they have dynamic relocs.  An undefined symbol in a PIC object
+    that finds no definition ought to become dynamic in order to support
+    --allow-shlib-undefined, but there is nothing in the generic ELF
+    linker code to do this if the reference isn't via the GOT or PLT.  (An
+    initialized function pointer is an example.)  So it falls to backend
+    code to ensure the symbol is made dynamic.
+    
+            PR 21988
+            * elf64-ppc.c (ensure_undef_dynamic): Rename from
+            ensure_undefweak_dynamic.  Handle undefined too.
+            * elf32-ppc.c (ensure_undef_dynamic): Likewise.
+            * elf32-hppa.c (ensure_undef_dynamic): Likewise.
+            (allocate_dynrelocs): Discard undefined non-default visibility
+            relocs first.  Make undefined syms dynamic.  Tidy goto.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index aaec44d233..c5739aed96 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,13 @@
++2017-08-23  Alan Modra  <amodra@gmail.com>
++
++	PR 21988
++	* elf64-ppc.c (ensure_undef_dynamic): Rename from
++	ensure_undefweak_dynamic.  Handle undefined too.
++	* elf32-ppc.c (ensure_undef_dynamic): Likewise.
++	* elf32-hppa.c (ensure_undef_dynamic): Likewise.
++	(allocate_dynrelocs): Discard undefined non-default visibility
++	relocs first.  Make undefined syms dynamic.  Tidy goto.
++
+ 2017-08-21  Alan Modra  <amodra@gmail.com>
+ 	    H.J. Lu  <hongjiu.lu@intel.com>
+ 
+diff --git a/bfd/elf32-hppa.c b/bfd/elf32-hppa.c
+index 0b7f43438d..548d656776 100644
+--- a/bfd/elf32-hppa.c
++++ b/bfd/elf32-hppa.c
+@@ -1919,16 +1919,20 @@ elf32_hppa_adjust_dynamic_symbol (struct bfd_link_info *info,
+   return _bfd_elf_adjust_dynamic_copy (info, eh, sec);
+ }
+ 
+-/* Make an undefined weak symbol dynamic.  */
++/* If EH is undefined, make it dynamic if that makes sense.  */
+ 
+ static bfd_boolean
+-ensure_undef_weak_dynamic (struct bfd_link_info *info,
+-			   struct elf_link_hash_entry *eh)
++ensure_undef_dynamic (struct bfd_link_info *info,
++		      struct elf_link_hash_entry *eh)
+ {
+-  if (eh->dynindx == -1
++  struct elf_link_hash_table *htab = elf_hash_table (info);
++
++  if (htab->dynamic_sections_created
++      && (eh->root.type == bfd_link_hash_undefweak
++	  || eh->root.type == bfd_link_hash_undefined)
++      && eh->dynindx == -1
+       && !eh->forced_local
+       && eh->type != STT_PARISC_MILLI
+-      && eh->root.type == bfd_link_hash_undefweak
+       && ELF_ST_VISIBILITY (eh->other) == STV_DEFAULT)
+     return bfd_elf_link_record_dynamic_symbol (info, eh);
+   return TRUE;
+@@ -1957,7 +1961,7 @@ allocate_plt_static (struct elf_link_hash_entry *eh, void *inf)
+   if (htab->etab.dynamic_sections_created
+       && eh->plt.refcount > 0)
+     {
+-      if (!ensure_undef_weak_dynamic (info, eh))
++      if (!ensure_undef_dynamic (info, eh))
+ 	return FALSE;
+ 
+       if (WILL_CALL_FINISH_DYNAMIC_SYMBOL (1, bfd_link_pic (info), eh))
+@@ -2034,7 +2038,7 @@ allocate_dynrelocs (struct elf_link_hash_entry *eh, void *inf)
+ 
+   if (eh->got.refcount > 0)
+     {
+-      if (!ensure_undef_weak_dynamic (info, eh))
++      if (!ensure_undef_dynamic (info, eh))
+ 	return FALSE;
+ 
+       sec = htab->etab.sgot;
+@@ -2070,8 +2074,14 @@ allocate_dynrelocs (struct elf_link_hash_entry *eh, void *inf)
+      changes.  */
+   if (bfd_link_pic (info))
+     {
++      /* Discard relocs on undefined syms with non-default visibility.  */
++      if ((eh->root.type == bfd_link_hash_undefined
++	   || eh->root.type == bfd_link_hash_undefweak)
++	  && ELF_ST_VISIBILITY (eh->other) != STV_DEFAULT)
++	hh->dyn_relocs = NULL;
++
+ #if RELATIVE_DYNRELOCS
+-      if (SYMBOL_CALLS_LOCAL (info, eh))
++      else if (SYMBOL_CALLS_LOCAL (info, eh))
+ 	{
+ 	  struct elf32_hppa_dyn_reloc_entry **hdh_pp;
+ 
+@@ -2087,15 +2097,9 @@ allocate_dynrelocs (struct elf_link_hash_entry *eh, void *inf)
+ 	}
+ #endif
+ 
+-      /* Also discard relocs on undefined weak syms with non-default
+-	 visibility.  */
+-      if (hh->dyn_relocs != NULL
+-	  && eh->root.type == bfd_link_hash_undefweak)
++      if (hh->dyn_relocs != NULL)
+ 	{
+-	  if (ELF_ST_VISIBILITY (eh->other) != STV_DEFAULT)
+-	    hh->dyn_relocs = NULL;
+-
+-	  else if (!ensure_undef_weak_dynamic (info, eh))
++	  if (!ensure_undef_dynamic (info, eh))
+ 	    return FALSE;
+ 	}
+     }
+@@ -2113,19 +2117,14 @@ allocate_dynrelocs (struct elf_link_hash_entry *eh, void *inf)
+ 		   && (eh->root.type == bfd_link_hash_undefweak
+ 		       || eh->root.type == bfd_link_hash_undefined))))
+ 	{
+-	  if (!ensure_undef_weak_dynamic (info, eh))
++	  if (!ensure_undef_dynamic (info, eh))
+ 	    return FALSE;
+ 
+-	  /* If that succeeded, we know we'll be keeping all the
+-	     relocs.  */
+-	  if (eh->dynindx != -1)
+-	    goto keep;
++	  if (eh->dynindx == -1)
++	    hh->dyn_relocs = NULL;
+ 	}
+-
+-      hh->dyn_relocs = NULL;
+-      return TRUE;
+-
+-    keep: ;
++      else
++	hh->dyn_relocs = NULL;
+     }
+ 
+   /* Finally, allocate space.  */
+diff --git a/bfd/elf32-ppc.c b/bfd/elf32-ppc.c
+index 8a00fb4225..f9a32c2e87 100644
+--- a/bfd/elf32-ppc.c
++++ b/bfd/elf32-ppc.c
+@@ -5942,17 +5942,18 @@ allocate_got (struct ppc_elf_link_hash_table *htab, unsigned int need)
+   return where;
+ }
+ 
+-/* If H is undefined weak, make it dynamic if that makes sense.  */
++/* If H is undefined, make it dynamic if that makes sense.  */
+ 
+ static bfd_boolean
+-ensure_undefweak_dynamic (struct bfd_link_info *info,
+-			  struct elf_link_hash_entry *h)
++ensure_undef_dynamic (struct bfd_link_info *info,
++		      struct elf_link_hash_entry *h)
+ {
+   struct elf_link_hash_table *htab = elf_hash_table (info);
+ 
+   if (htab->dynamic_sections_created
+-      && info->dynamic_undefined_weak != 0
+-      && h->root.type == bfd_link_hash_undefweak
++      && ((info->dynamic_undefined_weak != 0
++	   && h->root.type == bfd_link_hash_undefweak)
++	  || h->root.type == bfd_link_hash_undefined)
+       && h->dynindx == -1
+       && !h->forced_local
+       && ELF_ST_VISIBILITY (h->other) == STV_DEFAULT)
+@@ -5986,9 +5987,8 @@ allocate_dynrelocs (struct elf_link_hash_entry *h, void *inf)
+     {
+       unsigned int need;
+ 
+-      /* Make sure this symbol is output as a dynamic symbol.
+-	 Undefined weak syms won't yet be marked as dynamic.  */
+-      if (!ensure_undefweak_dynamic (info, &eh->elf))
++      /* Make sure this symbol is output as a dynamic symbol.  */
++      if (!ensure_undef_dynamic (info, &eh->elf))
+ 	return FALSE;
+ 
+       need = 0;
+@@ -6102,9 +6102,8 @@ allocate_dynrelocs (struct elf_link_hash_entry *h, void *inf)
+ 
+       if (eh->dyn_relocs != NULL)
+ 	{
+-	  /* Make sure undefined weak symbols are output as a dynamic
+-	     symbol in PIEs.  */
+-	  if (!ensure_undefweak_dynamic (info, h))
++	  /* Make sure this symbol is output as a dynamic symbol.  */
++	  if (!ensure_undef_dynamic (info, h))
+ 	    return FALSE;
+ 	}
+     }
+@@ -6120,9 +6119,8 @@ allocate_dynrelocs (struct elf_link_hash_entry *h, void *inf)
+ 	       && eh->has_addr16_lo
+ 	       && htab->params->pic_fixup > 0))
+ 	{
+-	  /* Make sure this symbol is output as a dynamic symbol.
+-	     Undefined weak syms won't yet be marked as dynamic.  */
+-	  if (!ensure_undefweak_dynamic (info, h))
++	  /* Make sure this symbol is output as a dynamic symbol.  */
++	  if (!ensure_undef_dynamic (info, h))
+ 	    return FALSE;
+ 
+ 	  if (h->dynindx == -1)
+diff --git a/bfd/elf64-ppc.c b/bfd/elf64-ppc.c
+index 55a6728df7..4ff3f064f3 100644
+--- a/bfd/elf64-ppc.c
++++ b/bfd/elf64-ppc.c
+@@ -9743,17 +9743,18 @@ merge_got_entries (struct got_entry **pent)
+ 	  }
+ }
+ 
+-/* If H is undefined weak, make it dynamic if that makes sense.  */
++/* If H is undefined, make it dynamic if that makes sense.  */
+ 
+ static bfd_boolean
+-ensure_undefweak_dynamic (struct bfd_link_info *info,
+-			  struct elf_link_hash_entry *h)
++ensure_undef_dynamic (struct bfd_link_info *info,
++		      struct elf_link_hash_entry *h)
+ {
+   struct elf_link_hash_table *htab = elf_hash_table (info);
+ 
+   if (htab->dynamic_sections_created
+-      && info->dynamic_undefined_weak != 0
+-      && h->root.type == bfd_link_hash_undefweak
++      && ((info->dynamic_undefined_weak != 0
++	   && h->root.type == bfd_link_hash_undefweak)
++	  || h->root.type == bfd_link_hash_undefined)
+       && h->dynindx == -1
+       && !h->forced_local
+       && ELF_ST_VISIBILITY (h->other) == STV_DEFAULT)
+@@ -9832,9 +9833,8 @@ allocate_dynrelocs (struct elf_link_hash_entry *h, void *inf)
+   for (gent = h->got.glist; gent != NULL; gent = gent->next)
+     if (!gent->is_indirect)
+       {
+-	/* Make sure this symbol is output as a dynamic symbol.
+-	   Undefined weak syms won't yet be marked as dynamic.  */
+-	if (!ensure_undefweak_dynamic (info, h))
++	/* Make sure this symbol is output as a dynamic symbol.  */
++	if (!ensure_undef_dynamic (info, h))
+ 	  return FALSE;
+ 
+ 	if (!is_ppc64_elf (gent->owner))
+@@ -9888,9 +9888,8 @@ allocate_dynrelocs (struct elf_link_hash_entry *h, void *inf)
+ 
+ 	  if (eh->dyn_relocs != NULL)
+ 	    {
+-	      /* Make sure this symbol is output as a dynamic symbol.
+-		 Undefined weak syms won't yet be marked as dynamic.  */
+-	      if (!ensure_undefweak_dynamic (info, h))
++	      /* Make sure this symbol is output as a dynamic symbol.  */
++	      if (!ensure_undef_dynamic (info, h))
+ 		return FALSE;
+ 	    }
+ 	}
+@@ -9925,9 +9924,8 @@ allocate_dynrelocs (struct elf_link_hash_entry *h, void *inf)
+ 	  if (!h->non_got_ref
+ 	      && !h->def_regular)
+ 	    {
+-	      /* Make sure this symbol is output as a dynamic symbol.
+-		 Undefined weak syms won't yet be marked as dynamic.  */
+-	      if (!ensure_undefweak_dynamic (info, h))
++	      /* Make sure this symbol is output as a dynamic symbol.  */
++	      if (!ensure_undef_dynamic (info, h))
+ 		return FALSE;
+ 
+ 	      if (h->dynindx == -1)
+
+commit e59c7117fadea02ef8ed598f09d88c4e5ebc8848
+Author: Alan Modra <amodra@gmail.com>
+Date:   Wed Aug 23 08:58:42 2017 +0930
+
+    Remove pr19161 test hppa xfail
+    
+            * testsuite/ld-gc/pr19161.d: Don't xfail hppa.
+
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 8d8e6c9802..aeee2c85c6 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,7 @@
++2017-08-23  Alan Modra  <amodra@gmail.com>
++
++	* testsuite/ld-gc/pr19161.d: Don't xfail hppa.
++
+ 2017-08-21  H.J. Lu  <hongjiu.lu@intel.com>
+ 	    Alan Modra  <amodra@gmail.com>
+ 
+diff --git a/ld/testsuite/ld-gc/pr19161.d b/ld/testsuite/ld-gc/pr19161.d
+index baee8da3af..474cbd4b1b 100644
+--- a/ld/testsuite/ld-gc/pr19161.d
++++ b/ld/testsuite/ld-gc/pr19161.d
+@@ -2,7 +2,7 @@
+ #source: dummy.s
+ #ld: --gc-sections -e main tmpdir/pr19161-1.o tmpdir/pr19161-2.o
+ #nm: --format=bsd
+-#xfail: epiphany-*-* frv-*-* hppa-*-* iq2000-*-* lm32-*-* m32c-*-*
++#xfail: epiphany-*-* frv-*-* iq2000-*-* lm32-*-* m32c-*-*
+ #xfail: mips64vr-*-* msp430-*-* powerpc*-*-eabivle rl78-*-* rx-*-* sh*-*-*
+ 
+ #...
