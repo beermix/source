@@ -16338,3 +16338,247 @@ index baee8da3af..474cbd4b1b 100644
  #xfail: mips64vr-*-* msp430-*-* powerpc*-*-eabivle rl78-*-* rx-*-* sh*-*-*
  
  #...
+
+commit 60a9426c0cd41ef30a3ca893545143eb5bbacc53
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Thu Aug 24 00:02:45 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 5e3f30ceaa..ff7b85d486 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170823
++#define BFD_VERSION_DATE 20170824
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit dbb8f8b80b108dd60ab51c3e482c9c0865408b68
+Author: Andrew Burgess <andrew.burgess@embecosm.com>
+Date:   Thu Aug 17 11:29:04 2017 +0100
+
+    ld: Early detection of orphans we know will be discarded
+    
+    When processing an orphan section we first call lang_place_orphans, this
+    function handles a few sections for which the behaviour is known COMMON
+    sections, or sections marked as SEC_EXCLUDE.
+    
+    Any orphans that are not handled in lang_place_orphans are passed on to
+    ldlang_place_orphan, this is where we decide where to put the orphan,
+    and then call lang_add_section to perform the actual orphan placement.
+    
+    We previously had a larger set of checks at the start of the function
+    lang_add_section to discard some sections that we _knew_ should not be
+    added into the output file, this was where .group sections (in a final
+    link) and .debug* sections (with --strip-debug) were dropped.
+    
+    The problem with dropping these sections at the lang_add_section stage
+    is that a user might also be using --orphan-handling=error to prevent
+    orphans.  If they are then they should not be get errors about sections
+    that we know will be discarded, and which are not mentioned in the
+    linker script.
+    
+    The solution proposed in this patch is to move the "will this section be
+    discarded" check into a separate function, and use this in
+    lang_place_orphans to have the early discard phase discard sections that
+    we know should not be included in the output file.
+    
+    ld/ChangeLog:
+    
+            PR 21961
+            * ldlang.c (lang_discard_section_p): New function.
+            (lang_add_section): Checks moved out into new function, which is
+            now called.
+            (lang_place_orphans): Call lang_discard_section_p instead of
+            duplicating some of the checks from lang_add_section.
+            * testsuite/ld-elf/orphan-11.d: New file.
+            * testsuite/ld-elf/orphan-11.ld: New file.
+            * testsuite/ld-elf/orphan-11.s: New file.
+            * testsuite/ld-elf/orphan-12.d: New file.
+            * testsuite/ld-elf/orphan-12.s: New file.
+
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index aeee2c85c6..c806a5312b 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,17 @@
++2017-08-17  Andrew Burgess  <andrew.burgess@embecosm.com>
++
++	PR 21961
++	* ldlang.c (lang_discard_section_p): New function.
++	(lang_add_section): Checks moved out into new function, which is
++	now called.
++	(lang_place_orphans): Call lang_discard_section_p instead of
++	duplicating some of the checks from lang_add_section.
++	* testsuite/ld-elf/orphan-11.d: New file.
++	* testsuite/ld-elf/orphan-11.ld: New file.
++	* testsuite/ld-elf/orphan-11.s: New file.
++	* testsuite/ld-elf/orphan-12.d: New file.
++	* testsuite/ld-elf/orphan-12.s: New file.
++
+ 2017-08-23  Alan Modra  <amodra@gmail.com>
+ 
+ 	* testsuite/ld-gc/pr19161.d: Don't xfail hppa.
+diff --git a/ld/ldlang.c b/ld/ldlang.c
+index 726bc8e384..4ce0f5115b 100644
+--- a/ld/ldlang.c
++++ b/ld/ldlang.c
+@@ -2274,6 +2274,34 @@ section_already_linked (bfd *abfd, asection *sec, void *data)
+     bfd_section_already_linked (abfd, sec, &link_info);
+ }
+ 
++
++/* Returns true if SECTION is one we know will be discarded based on its
++   section flags, otherwise returns false.  */
++
++static bfd_boolean
++lang_discard_section_p (asection *section)
++{
++  bfd_boolean discard;
++  flagword flags = section->flags;
++
++  /* Discard sections marked with SEC_EXCLUDE.  */
++  discard = (flags & SEC_EXCLUDE) != 0;
++
++  /* Discard the group descriptor sections when we're finally placing the
++     sections from within the group.  */
++  if ((flags & SEC_GROUP) != 0
++      && link_info.resolve_section_groups)
++    discard = TRUE;
++
++  /* Discard debugging sections if we are stripping debugging
++     information.  */
++  if ((link_info.strip == strip_debugger || link_info.strip == strip_all)
++      && (flags & SEC_DEBUGGING) != 0)
++    discard = TRUE;
++
++  return discard;
++}
++
+ /* The wild routines.
+ 
+    These expand statements like *(.text) and foo.o to a list of
+@@ -2295,26 +2323,14 @@ lang_add_section (lang_statement_list_type *ptr,
+   lang_input_section_type *new_section;
+   bfd *abfd = link_info.output_bfd;
+ 
+-  /* Discard sections marked with SEC_EXCLUDE.  */
+-  discard = (flags & SEC_EXCLUDE) != 0;
++  /* Is this section one we know should be discarded?  */
++  discard = lang_discard_section_p (section);
+ 
+   /* Discard input sections which are assigned to a section named
+      DISCARD_SECTION_NAME.  */
+   if (strcmp (output->name, DISCARD_SECTION_NAME) == 0)
+     discard = TRUE;
+ 
+-  /* Discard the group descriptor sections when we're finally placing the
+-     sections from within the group.  */
+-  if ((section->flags & SEC_GROUP) == SEC_GROUP
+-      && link_info.resolve_section_groups)
+-    discard = TRUE;
+-
+-  /* Discard debugging sections if we are stripping debugging
+-     information.  */
+-  if ((link_info.strip == strip_debugger || link_info.strip == strip_all)
+-      && (flags & SEC_DEBUGGING) != 0)
+-    discard = TRUE;
+-
+   if (discard)
+     {
+       if (section->output_section == NULL)
+@@ -6411,7 +6427,7 @@ lang_place_orphans (void)
+ 
+ 	      if (file->flags.just_syms)
+ 		bfd_link_just_syms (file->the_bfd, s, &link_info);
+-	      else if ((s->flags & SEC_EXCLUDE) != 0)
++	      else if (lang_discard_section_p (s))
+ 		s->output_section = bfd_abs_section_ptr;
+ 	      else if (strcmp (s->name, "COMMON") == 0)
+ 		{
+diff --git a/ld/testsuite/ld-elf/orphan-11.d b/ld/testsuite/ld-elf/orphan-11.d
+new file mode 100644
+index 0000000000..3daefba5d4
+--- /dev/null
++++ b/ld/testsuite/ld-elf/orphan-11.d
+@@ -0,0 +1,9 @@
++#source: orphan-11.s
++#ld: -T orphan-11.ld --orphan-handling=error
++#objdump: -wh
++#notarget: d30v-* dlx-* fr30-* frv-* ft32-* i860-* i960-* iq2000-* mn10200-* moxie-* ms1-* msp430-* mt-* pj-*
++
++#...
++  . \.text .*
++  . \.data .*
++#pass
+diff --git a/ld/testsuite/ld-elf/orphan-11.ld b/ld/testsuite/ld-elf/orphan-11.ld
+new file mode 100644
+index 0000000000..74c7789457
+--- /dev/null
++++ b/ld/testsuite/ld-elf/orphan-11.ld
+@@ -0,0 +1,16 @@
++SECTIONS
++{
++  . = SIZEOF_HEADERS;
++  .text : { *(.text .text.*) }
++  .data : { *(.data .data.*) }
++  .bss : { *(.bss .bss.*) *(COMMON) }
++  .sbss : { *(.sbss .sbss.*) }
++  .note : { *(.note .note.*) }
++  .rela : { *(.rela .rela.*) }
++  .rel : { *(.rel .rel.*) }
++
++  /DISCARD/ : {
++            *(.reginfo) *(.MIPS.abiflags) *(.trampolines) *(.iplt*)
++            *(.note*) *(.got*) *(.igot*) *(.*.attributes) *(.*.info)
++            *(.pdr) "linker stubs*"(*)  }
++}
+diff --git a/ld/testsuite/ld-elf/orphan-11.s b/ld/testsuite/ld-elf/orphan-11.s
+new file mode 100644
+index 0000000000..3d7961bb2c
+--- /dev/null
++++ b/ld/testsuite/ld-elf/orphan-11.s
+@@ -0,0 +1,11 @@
++	.section .text.foo,"axG",%progbits,foo_group
++	.word 0
++
++	.section .data.foo,"waG",%progbits,foo_group
++	.word 1
++
++	.section .text, "ax"
++	.word 0
++
++	.section .data, "wa"
++	.word 1
+diff --git a/ld/testsuite/ld-elf/orphan-12.d b/ld/testsuite/ld-elf/orphan-12.d
+new file mode 100644
+index 0000000000..71a8c93e61
+--- /dev/null
++++ b/ld/testsuite/ld-elf/orphan-12.d
+@@ -0,0 +1,9 @@
++#source: orphan-12.s
++#ld: -T orphan-11.ld --strip-debug --orphan-handling=error
++#objdump: -wh
++#notarget: d30v-* dlx-* fr30-* frv-* ft32-* i860-* i960-* iq2000-* mn10200-* moxie-* ms1-* msp430-* mt-* pj-*
++
++#...
++  . \.text .*
++  . \.data .*
++#pass
+diff --git a/ld/testsuite/ld-elf/orphan-12.s b/ld/testsuite/ld-elf/orphan-12.s
+new file mode 100644
+index 0000000000..f9cbcf7e15
+--- /dev/null
++++ b/ld/testsuite/ld-elf/orphan-12.s
+@@ -0,0 +1,8 @@
++	.section .debug_info, "",%progbits
++	.word 0
++
++	.section .text, "ax"
++	.word 0
++
++	.section .data, "wa"
++	.word 1
