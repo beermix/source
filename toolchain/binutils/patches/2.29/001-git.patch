@@ -16582,3 +16582,20 @@ index 0000000000..f9cbcf7e15
 +
 +	.section .data, "wa"
 +	.word 1
+
+commit 44a278282d960c039fef7f514a8a48289a58236d
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Fri Aug 25 00:02:23 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index ff7b85d486..dfc9b7b11d 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170824
++#define BFD_VERSION_DATE 20170825
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
