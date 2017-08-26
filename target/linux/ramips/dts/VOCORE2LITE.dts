@@ -1,19 +1,33 @@
-#include "rt5350.dtsi"
+/dts-v1/;
+
+#include "VOCORE2.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
 
 / {
-	compatible = "AWM002", "ralink,rt5350-soc";
-	model = "AsiaRF AWM002";
+	compatible = "vocore,vocore2lite", "vocore,vocore2", "mediatek,mt7628an-soc";
+	model = "VoCore2-Lite";
+
+	gpio-leds {
+		compatible = "gpio-leds";
+
+		status {
+			label = "vocore2lite:green:status";
+			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
+		};
+	};
 };
 
 &spi0 {
 	status = "okay";
 
-	m25p80: m25p80@0 {
+	m25p80@0 {
 		#address-cells = <1>;
 		#size-cells = <1>;
-		reg = <0>;
 		compatible = "jedec,spi-nor";
+		reg = <0>;
 		spi-max-frequency = <10000000>;
+		m25p,chunked-io = <32>;
 
 		partition@0 {
 			label = "u-boot";
@@ -35,28 +49,7 @@
 
 		partition@50000 {
 			label = "firmware";
-			reg = <0x50000 0x1fb0000>;
+			reg = <0x50000 0x7b0000>;
 		};
 	};
-};
-
-&pinctrl {
-	state_default: pinctrl0 {
-		gpio {
-			ralink,group = "i2c", "jtag";
-			ralink,function = "gpio";
-		};
-	};
-};
-
-&esw {
-	mediatek,portmap = <0x3f>;
-};
-
-&ehci {
-	status = "okay";
-};
-
-&ohci {
-	status = "okay";
 };

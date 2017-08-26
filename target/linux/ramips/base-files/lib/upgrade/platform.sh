@@ -149,6 +149,7 @@ platform_check_image() {
 	vocore-8M|\
 	vocore-16M|\
 	vocore2|\
+	vocore2lite|\
 	vr500|\
 	w150m|\
 	w2914nsv2|\
@@ -250,6 +251,7 @@ platform_check_image() {
 		return 0
 		;;
 	hc5962|\
+	mir3g|\
 	r6220)
 		# these boards use metadata images
 		return 0
@@ -296,6 +298,7 @@ platform_do_upgrade() {
 
 	case "$board" in
 	hc5962|\
+	mir3g|\
 	r6220|\
 	ubnt-erx|\
 	ubnt-erx-sfp)

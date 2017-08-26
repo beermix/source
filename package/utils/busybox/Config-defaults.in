@@ -7,6 +7,9 @@ config BUSYBOX_DEFAULT_DESKTOP
 config BUSYBOX_DEFAULT_EXTRA_COMPAT
 	bool
 	default n
+config BUSYBOX_DEFAULT_FEDORA_COMPAT
+	bool
+	default n
 config BUSYBOX_DEFAULT_INCLUDE_SUSv2
 	bool
 	default y
