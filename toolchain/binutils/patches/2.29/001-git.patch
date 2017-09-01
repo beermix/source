@@ -21152,3 +21152,2458 @@ index 116998f2f7..cd1b9a2a8e 100644
 +#: xstormy16-asm.c:164
  msgid "Syntax error: No trailing ')'"
  msgstr "Erreur de syntaxe : pas de « ) » en suffixe"
+
+commit 8950116852c4d3695c59e96c30642ab1babe986b
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Fri Sep 1 00:01:27 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 1dd6292d5d..54b6d99917 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170831
++#define BFD_VERSION_DATE 20170901
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit aceaeff8140af6ba50469e8b63d664cc91e5485b
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Fri Sep 1 09:59:17 2017 +0100
+
+    Fix buffer overrun when parsing an ELF attribute string that is not NUL terminated.
+    
+            PR 22058
+            * elf-attrs.c (_bfd_elf_parse_attributes): Ensure that the
+            attribute buffer is NUL terminated.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 7d997fde55..e9ea6cfdda 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,9 @@
++2017-09-01  Nick Clifton  <nickc@redhat.com>
++
++	PR 22058
++	* elf-attrs.c (_bfd_elf_parse_attributes): Ensure that the
++	attribute buffer is NUL terminated.
++
+ 2017-08-30  Maciej W. Rozycki  <macro@imgtec.com>
+ 
+ 	* elfxx-mips.c (mips_elf_perform_relocation): Correct microMIPS
+diff --git a/bfd/elf-attrs.c b/bfd/elf-attrs.c
+index def1345eeb..02105433b6 100644
+--- a/bfd/elf-attrs.c
++++ b/bfd/elf-attrs.c
+@@ -438,7 +438,7 @@ _bfd_elf_parse_attributes (bfd *abfd, Elf_Internal_Shdr * hdr)
+   /* PR 17512: file: 2844a11d.  */
+   if (hdr->sh_size == 0)
+     return;
+-  contents = (bfd_byte *) bfd_malloc (hdr->sh_size);
++  contents = (bfd_byte *) bfd_malloc (hdr->sh_size + 1);
+   if (!contents)
+     return;
+   if (!bfd_get_section_contents (abfd, hdr->bfd_section, contents, 0,
+@@ -447,6 +447,8 @@ _bfd_elf_parse_attributes (bfd *abfd, Elf_Internal_Shdr * hdr)
+       free (contents);
+       return;
+     }
++  /* Ensure that the buffer is NUL terminated.  */
++  contents[hdr->sh_size] = 0;
+   p = contents;
+   p_end = p + hdr->sh_size;
+   std_sec = get_elf_backend_data (abfd)->obj_attrs_vendor;
+
+commit 30326b094b8fc2594c76cf4beab70965afa7a111
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Fri Sep 1 10:17:00 2017 +0100
+
+    Check for an invalid note size when parsing ELF notes.
+    
+            PR 21933
+            PR 22060
+            * elf.c (elf_read_notes): Check for a note size of -1.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index e9ea6cfdda..8db7080931 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,5 +1,11 @@
+ 2017-09-01  Nick Clifton  <nickc@redhat.com>
+ 
++	PR 21933
++	PR 22060
++	* elf.c (elf_read_notes): Check for a note size of -1.
++
++2017-09-01  Nick Clifton  <nickc@redhat.com>
++
+ 	PR 22058
+ 	* elf-attrs.c (_bfd_elf_parse_attributes): Ensure that the
+ 	attribute buffer is NUL terminated.
+diff --git a/bfd/elf.c b/bfd/elf.c
+index 063a6e4bb3..fbf639b357 100644
+--- a/bfd/elf.c
++++ b/bfd/elf.c
+@@ -10976,7 +10976,7 @@ elf_read_notes (bfd *abfd, file_ptr offset, bfd_size_type size)
+ {
+   char *buf;
+ 
+-  if (size <= 0)
++  if (size == 0 || (size + 1) == 0)
+     return TRUE;
+ 
+   if (bfd_seek (abfd, offset, SEEK_SET) != 0)
+
+commit d4ea9548f3b16d85973b3e4f07995b27ef2d328e
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Fri Sep 1 10:56:58 2017 +0100
+
+    Import latest bug fixes for the libiberty sources from GCC mainline.
+    
+            PR lto/81968
+            * simple-object-elf.c (simple_object_elf_copy_lto_debug_section):
+            Keep names of removed global symbols.
+    
+            * simple-object-xcoff.c (simple_object_xcoff_find_sections):
+            Improve .go_export csect handling.  Don't make assumptions
+            on containing section or number of auxiliary entries.
+    
+            PR lto/81968
+            * simple-object-elf.c (simple_object_elf_copy_lto_debug_section):
+            Adjust field with for sh_type write, set SHF_EXCLUDE only for
+            removed sections.
+    
+            PR lto/81925
+            * simple-object-elf.c (simple_object_elf_write_shdr): Adjust
+            type of sh_addralign and sh_entsize and properly write
+            sh_entsize as Elf_Addr.
+            (simple_object_elf_write_to_file): Read sh_entsize as Elf_Addr.
+    
+            * simple-object-common.h (struct simple_object_functions): Add
+            copy_lto_debug_sections hook.
+            * simple-object.c: Include fcntl.h.
+            (handle_lto_debug_sections): New helper function.
+            (simple_object_copy_lto_debug_sections): New function copying
+            early LTO debug sections to regular debug sections in a new file.
+            (simple_object_start_write): Handle NULL segment_name.
+            * simple-object-coff.c (simple_object_coff_functions): Adjust
+            for not implemented copy_lto_debug_sections hook.
+            * simple-object-mach-o.c (simple_object_mach_o_functions): Likewise.
+            * simple-object-xcoff.c (simple_object_xcoff_functions): Likewise.
+            * simple-object-elf.c (SHT_NULL, SHT_SYMTAB, SHT_RELA, SHT_REL,
+            SHT_GROUP): Add various sectopn header types.
+            (SHF_EXCLUDE): Add flag.
+            (Elf32_External_Sym, Elf64_External_Sym): Add symbol struct.
+            (ELF_ST_BIND, ELF_ST_TYPE, ELF_ST_INFO): Add accessors.
+            (STT_OBJECT, STT_FUNC, STT_TLS, STT_GNU_IFUNC): Add Symbol types.
+            (STV_DEFAULT): Add symbol visibility.
+            (SHN_COMMON): Add special section index name.
+            (struct simple_object_elf_write): New.
+            (simple_object_elf_start_write): Adjust for new private data.
+            (simple_object_elf_write_shdr): Pass in values for all fields
+            we write.
+            (simple_object_elf_write_to_file): Adjust.  Copy from recorded
+            section headers if requested.
+            (simple_object_elf_release_write): Release private data.
+            (simple_object_elf_copy_lto_debug_sections): Copy and rename sections
+            as denoted by PFN and all their dependences, symbols and relocations
+            to the empty destination file.
+            (simple_object_elf_functions): Adjust for copy_lto_debug_sections hook.
+    
+            * simple-object-xcoff.c (simple_object_xcoff_find_sections):
+            Search symbol table for .go_export symbol and apply pfn if found.
+
+diff --git a/libiberty/ChangeLog b/libiberty/ChangeLog
+index 925b1521d6..191a3116bb 100644
+--- a/libiberty/ChangeLog
++++ b/libiberty/ChangeLog
+@@ -1,18 +1,80 @@
++2017-08-31  Richard Biener  <rguenther@suse.de>
++
++	PR lto/81968
++	* simple-object-elf.c (simple_object_elf_copy_lto_debug_section):
++	Keep names of removed global symbols.
++
++2017-08-29  Tony Reix  <tony.reix@atos.net>
++
++	* simple-object-xcoff.c (simple_object_xcoff_find_sections):
++	Improve .go_export csect handling.  Don't make assumptions
++	on containing section or number of auxiliary entries.
++
++2017-08-28  Richard Biener  <rguenther@suse.de>
++
++	PR lto/81968
++	* simple-object-elf.c (simple_object_elf_copy_lto_debug_section):
++	Adjust field with for sh_type write, set SHF_EXCLUDE only for
++	removed sections.
++
++2017-08-22  Richard Biener  <rguenther@suse.de>
++
++	PR lto/81925
++	* simple-object-elf.c (simple_object_elf_write_shdr): Adjust
++	type of sh_addralign and sh_entsize and properly write
++	sh_entsize as Elf_Addr.
++	(simple_object_elf_write_to_file): Read sh_entsize as Elf_Addr.
++
++2017-08-21  Richard Biener  <rguenther@suse.de>
++
++	* simple-object-common.h (struct simple_object_functions): Add
++	copy_lto_debug_sections hook.
++	* simple-object.c: Include fcntl.h.
++	(handle_lto_debug_sections): New helper function.
++	(simple_object_copy_lto_debug_sections): New function copying
++	early LTO debug sections to regular debug sections in a new file.
++	(simple_object_start_write): Handle NULL segment_name.
++	* simple-object-coff.c (simple_object_coff_functions): Adjust
++	for not implemented copy_lto_debug_sections hook.
++	* simple-object-mach-o.c (simple_object_mach_o_functions): Likewise.
++	* simple-object-xcoff.c (simple_object_xcoff_functions): Likewise.
++	* simple-object-elf.c (SHT_NULL, SHT_SYMTAB, SHT_RELA, SHT_REL,
++	SHT_GROUP): Add various sectopn header types.
++	(SHF_EXCLUDE): Add flag.
++	(Elf32_External_Sym, Elf64_External_Sym): Add symbol struct.
++	(ELF_ST_BIND, ELF_ST_TYPE, ELF_ST_INFO): Add accessors.
++	(STT_OBJECT, STT_FUNC, STT_TLS, STT_GNU_IFUNC): Add Symbol types.
++	(STV_DEFAULT): Add symbol visibility.
++	(SHN_COMMON): Add special section index name.
++	(struct simple_object_elf_write): New.
++	(simple_object_elf_start_write): Adjust for new private data.
++	(simple_object_elf_write_shdr): Pass in values for all fields
++	we write.
++	(simple_object_elf_write_to_file): Adjust.  Copy from recorded
++	section headers if requested.
++	(simple_object_elf_release_write): Release private data.
++	(simple_object_elf_copy_lto_debug_sections): Copy and rename sections
++	as denoted by PFN and all their dependences, symbols and relocations
++	to the empty destination file.
++	(simple_object_elf_functions): Adjust for copy_lto_debug_sections hook.
++
+ 2017-07-02  Jan Kratochvil  <jan.kratochvil@redhat.com>
+ 
+ 	* dwarfnames.c (DW_FIRST_IDX, DW_END_IDX, DW_IDX, DW_IDX_DUP): New.
+ 
++2017-06-07  Tony Reix  <tony.reix@atos.net>
++	    Matthieu Sarter  <matthieu.sarter.external@atos.net>
++	    David Edelsohn  <dje.gcc@gmail.com>
++
++	* simple-object-xcoff.c (simple_object_xcoff_find_sections):
++	Search symbol table for .go_export symbol and apply pfn if found.
++
+ 2017-05-31  DJ Delorie  <dj@redhat.com>
+ 
+ 	* configure.ac (strnlen): Add to AC_CHECK_DECLS.
+ 	* configure: Likewise.
+ 	* config.in: Add HACE_DECL_STRNLEN.
+ 
+-2017-05-31  Eli Zaretskii  <eliz@gnu.org>
+-
+-	* waitpid.c (wait) [__MINGW32__]: Define as a macro
+-	that calls _cwait, so that this function works on MinGW.
+-
+ 2017-05-27  Iain Buclaw  <ibuclaw@gdcproject.org>
+ 
+ 	* d-demangle.c (dlang_identifier): Prefix mangled init symbols
+@@ -32,6 +94,11 @@
+ 	the demangled hexadecimal directly to string.
+ 	* testsuite/d-demangle-expected: Add tests.
+ 
++2017-05-24  Eli Zaretskii  <eliz@gnu.org>
++
++	* waitpid.c (wait) [__MINGW32__]: Define as a macro
++	that calls _cwait, so that this function works on MinGW.
++
+ 2017-05-02  Iain Buclaw  <ibuclaw@gdcproject.org>
+ 
+ 	* d-demangle.c (dlang_hexdigit): New function.
+diff --git a/libiberty/simple-object-coff.c b/libiberty/simple-object-coff.c
+index 0283b15c80..54d430dad9 100644
+--- a/libiberty/simple-object-coff.c
++++ b/libiberty/simple-object-coff.c
+@@ -800,5 +800,6 @@ const struct simple_object_functions simple_object_coff_functions =
+   simple_object_coff_release_attributes,
+   simple_object_coff_start_write,
+   simple_object_coff_write_to_file,
+-  simple_object_coff_release_write
++  simple_object_coff_release_write,
++  NULL
+ };
+diff --git a/libiberty/simple-object-common.h b/libiberty/simple-object-common.h
+index cda4038c9d..733bdd0e7b 100644
+--- a/libiberty/simple-object-common.h
++++ b/libiberty/simple-object-common.h
+@@ -141,6 +141,12 @@ struct simple_object_functions
+ 
+   /* Release the private data for an simple_object_write.  */
+   void (*release_write) (void *);
++
++  /* Copy LTO debug sections.  */
++  const char *(*copy_lto_debug_sections) (simple_object_read *sobj,
++					  simple_object_write *dobj,
++					  int (*pfn) (const char **),
++					  int *err);
+ };
+ 
+ /* The known object file formats.  */
+diff --git a/libiberty/simple-object-elf.c b/libiberty/simple-object-elf.c
+index a733e4b1a2..9799e72546 100644
+--- a/libiberty/simple-object-elf.c
++++ b/libiberty/simple-object-elf.c
+@@ -122,9 +122,12 @@ typedef struct {
+ 
+ /* Special section index values.  */
+ 
++#define SHN_UNDEF	0		/* Undefined section */
+ #define SHN_LORESERVE	0xFF00		/* Begin range of reserved indices */
++#define SHN_COMMON	0xFFF2	/* Associated symbol is in common */
+ #define SHN_XINDEX	0xFFFF		/* Section index is held elsewhere */
+ 
++
+ /* 32-bit ELF program header.  */
+ 
+ typedef struct {
+@@ -183,8 +186,57 @@ typedef struct {
+ 
+ /* Values for sh_type field.  */
+ 
++#define SHT_NULL	0		/* Section header table entry unused */
+ #define SHT_PROGBITS	1		/* Program data */
++#define SHT_SYMTAB	2		/* Link editing symbol table */
+ #define SHT_STRTAB	3		/* A string table */
++#define SHT_RELA	4		/* Relocation entries with addends */
++#define SHT_REL		9		/* Relocation entries, no addends */
++#define SHT_GROUP	17		/* Section contains a section group */
++
++/* Values for sh_flags field.  */
++
++#define SHF_EXCLUDE	0x80000000	/* Link editor is to exclude this
++					   section from executable and
++					   shared library that it builds
++					   when those objects are not to be
++					   further relocated.  */
++/* Symbol table entry.  */
++
++typedef struct
++{
++  unsigned char st_name[4];                /* Symbol name (string tbl index) */
++  unsigned char st_value[4];               /* Symbol value */
++  unsigned char st_size[4];                /* Symbol size */
++  unsigned char st_info;                /* Symbol type and binding */
++  unsigned char st_other;               /* Symbol visibility */
++  unsigned char st_shndx[2];               /* Section index */
++} Elf32_External_Sym;
++
++typedef struct
++{
++  unsigned char st_name[4];                /* Symbol name (string tbl index) */
++  unsigned char st_info;                /* Symbol type and binding */
++  unsigned char st_other;               /* Symbol visibility */
++  unsigned char st_shndx[2];               /* Section index */
++  unsigned char st_value[8];               /* Symbol value */
++  unsigned char st_size[8];                /* Symbol size */
++} Elf64_External_Sym;
++
++#define ELF_ST_BIND(val)              (((unsigned char) (val)) >> 4)
++#define ELF_ST_TYPE(val)              ((val) & 0xf)
++#define ELF_ST_INFO(bind, type)       (((bind) << 4) + ((type) & 0xf))
++
++#define STT_NOTYPE	0	/* Symbol type is unspecified */
++#define STT_OBJECT	1	/* Symbol is a data object */
++#define STT_FUNC	2	/* Symbol is a code object */
++#define STT_TLS		6	/* Thread local data object */
++#define STT_GNU_IFUNC	10	/* Symbol is an indirect code object */
++
++#define STB_LOCAL	0	/* Local symbol */
++#define STB_GLOBAL	1	/* Global symbol */
++
++#define STV_DEFAULT	0	/* Visibility is specified by binding type */
+ 
+ /* Functions to fetch and store different ELF types, depending on the
+    endianness and size.  */
+@@ -348,6 +400,14 @@ struct simple_object_elf_attributes
+   unsigned int flags;
+ };
+ 
++/* Private data for an simple_object_write.  */
++
++struct simple_object_elf_write
++{
++  struct simple_object_elf_attributes attrs;
++  unsigned char *shdrs;
++};
++
+ /* See if we have an ELF file.  */
+ 
+ static void *
+@@ -527,6 +587,11 @@ simple_object_elf_find_sections (simple_object_read *sobj,
+ 
+   /* Read the section names.  */
+ 
++  if (eor->shstrndx == 0)
++    {
++      XDELETEVEC (shdrs);
++      return "ELF section header string table missing";
++    }
+   shstrhdr = shdrs + (eor->shstrndx - 1) * shdr_size;
+   name_size = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
+ 			       shstrhdr, sh_size, Elf_Addr);
+@@ -675,12 +740,13 @@ simple_object_elf_start_write (void *attributes_data,
+ {
+   struct simple_object_elf_attributes *attrs =
+     (struct simple_object_elf_attributes *) attributes_data;
+-  struct simple_object_elf_attributes *ret;
++  struct simple_object_elf_write *ret;
+ 
+   /* We're just going to record the attributes, but we need to make a
+      copy because the user may delete them.  */
+-  ret = XNEW (struct simple_object_elf_attributes);
+-  *ret = *attrs;
++  ret = XNEW (struct simple_object_elf_write);
++  ret->attrs = *attrs;
++  ret->shdrs = NULL;
+   return ret;
+ }
+ 
+@@ -766,8 +832,11 @@ static int
+ simple_object_elf_write_shdr (simple_object_write *sobj, int descriptor,
+ 			      off_t offset, unsigned int sh_name,
+ 			      unsigned int sh_type, unsigned int sh_flags,
++			      off_t sh_addr,
+ 			      unsigned int sh_offset, unsigned int sh_size,
+-			      unsigned int sh_link, unsigned int sh_addralign,
++			      unsigned int sh_link, unsigned int sh_info,
++			      size_t sh_addralign,
++			      size_t sh_entsize,
+ 			      const char **errmsg, int *err)
+ {
+   struct simple_object_elf_attributes *attrs =
+@@ -788,12 +857,13 @@ simple_object_elf_write_shdr (simple_object_write *sobj, int descriptor,
+   ELF_SET_FIELD (fns, cl, Shdr, buf, sh_name, Elf_Word, sh_name);
+   ELF_SET_FIELD (fns, cl, Shdr, buf, sh_type, Elf_Word, sh_type);
+   ELF_SET_FIELD (fns, cl, Shdr, buf, sh_flags, Elf_Addr, sh_flags);
++  ELF_SET_FIELD (fns, cl, Shdr, buf, sh_addr, Elf_Addr, sh_addr);
+   ELF_SET_FIELD (fns, cl, Shdr, buf, sh_offset, Elf_Addr, sh_offset);
+   ELF_SET_FIELD (fns, cl, Shdr, buf, sh_size, Elf_Addr, sh_size);
+   ELF_SET_FIELD (fns, cl, Shdr, buf, sh_link, Elf_Word, sh_link);
+-  /* sh_info left as zero.  */
++  ELF_SET_FIELD (fns, cl, Shdr, buf, sh_info, Elf_Word, sh_info);
+   ELF_SET_FIELD (fns, cl, Shdr, buf, sh_addralign, Elf_Addr, sh_addralign);
+-  /* sh_entsize left as zero.  */
++  ELF_SET_FIELD (fns, cl, Shdr, buf, sh_entsize, Elf_Addr, sh_entsize);
+ 
+   return simple_object_internal_write (descriptor, offset, buf, shdr_size,
+ 				       errmsg, err);
+@@ -811,8 +881,9 @@ static const char *
+ simple_object_elf_write_to_file (simple_object_write *sobj, int descriptor,
+ 				 int *err)
+ {
+-  struct simple_object_elf_attributes *attrs =
+-    (struct simple_object_elf_attributes *) sobj->data;
++  struct simple_object_elf_write *eow =
++    (struct simple_object_elf_write *) sobj->data;
++  struct simple_object_elf_attributes *attrs = &eow->attrs;
+   unsigned char cl;
+   size_t ehdr_size;
+   size_t shdr_size;
+@@ -825,6 +896,7 @@ simple_object_elf_write_to_file (simple_object_write *sobj, int descriptor,
+   unsigned int first_sh_link;
+   size_t sh_name;
+   unsigned char zero;
++  unsigned secnum;
+ 
+   if (!simple_object_elf_write_ehdr (sobj, descriptor, &errmsg, err))
+     return errmsg;
+@@ -862,21 +934,54 @@ simple_object_elf_write_to_file (simple_object_write *sobj, int descriptor,
+   else
+     first_sh_link = shnum - 1;
+   if (!simple_object_elf_write_shdr (sobj, descriptor, shdr_offset,
+-				     0, 0, 0, 0, first_sh_size, first_sh_link,
+-				     0, &errmsg, err))
++				     0, 0, 0, 0, 0, first_sh_size, first_sh_link,
++				     0, 0, 0, &errmsg, err))
+     return errmsg;
+ 
+   shdr_offset += shdr_size;
+ 
+   sh_name = 1;
++  secnum = 0;
+   for (section = sobj->sections; section != NULL; section = section->next)
+     {
+       size_t mask;
+       size_t new_sh_offset;
+       size_t sh_size;
+       struct simple_object_write_section_buffer *buffer;
++      unsigned int sh_type = SHT_PROGBITS;
++      unsigned int sh_flags = 0;
++      off_t sh_addr = 0;
++      unsigned int sh_link = 0;
++      unsigned int sh_info = 0;
++      size_t sh_addralign = 1U << section->align;
++      size_t sh_entsize = 0;
++      if (eow->shdrs)
++	{
++	  sh_type = ELF_FETCH_FIELD (attrs->type_functions, attrs->ei_class, Shdr,
++				     eow->shdrs + secnum * shdr_size,
++				     sh_type, Elf_Word);
++	  sh_flags = ELF_FETCH_FIELD (attrs->type_functions, attrs->ei_class, Shdr,
++				      eow->shdrs + secnum * shdr_size,
++				      sh_flags, Elf_Addr);
++	  sh_addr = ELF_FETCH_FIELD (attrs->type_functions, attrs->ei_class, Shdr,
++				     eow->shdrs + secnum * shdr_size,
++				     sh_addr, Elf_Addr);
++	  sh_link = ELF_FETCH_FIELD (attrs->type_functions, attrs->ei_class, Shdr,
++				     eow->shdrs + secnum * shdr_size,
++				     sh_link, Elf_Word);
++	  sh_info = ELF_FETCH_FIELD (attrs->type_functions, attrs->ei_class, Shdr,
++				     eow->shdrs + secnum * shdr_size,
++				     sh_info, Elf_Word);
++	  sh_addralign = ELF_FETCH_FIELD (attrs->type_functions, attrs->ei_class, Shdr,
++					  eow->shdrs + secnum * shdr_size,
++					  sh_addralign, Elf_Addr);
++	  sh_entsize = ELF_FETCH_FIELD (attrs->type_functions, attrs->ei_class, Shdr,
++					eow->shdrs + secnum * shdr_size,
++					sh_entsize, Elf_Addr);
++	  secnum++;
++	}
+ 
+-      mask = (1U << section->align) - 1;
++      mask = sh_addralign - 1;
+       new_sh_offset = sh_offset + mask;
+       new_sh_offset &= ~ mask;
+       while (new_sh_offset > sh_offset)
+@@ -906,8 +1011,10 @@ simple_object_elf_write_to_file (simple_object_write *sobj, int descriptor,
+ 	}
+ 
+       if (!simple_object_elf_write_shdr (sobj, descriptor, shdr_offset,
+-					 sh_name, SHT_PROGBITS, 0, sh_offset,
+-					 sh_size, 0, 1U << section->align,
++					 sh_name, sh_type, sh_flags,
++					 sh_addr, sh_offset,
++					 sh_size, sh_link, sh_info,
++					 sh_addralign, sh_entsize,
+ 					 &errmsg, err))
+ 	return errmsg;
+ 
+@@ -917,9 +1024,9 @@ simple_object_elf_write_to_file (simple_object_write *sobj, int descriptor,
+     }
+ 
+   if (!simple_object_elf_write_shdr (sobj, descriptor, shdr_offset,
+-				     sh_name, SHT_STRTAB, 0, sh_offset,
+-				     sh_name + strlen (".shstrtab") + 1, 0,
+-				     1, &errmsg, err))
++				     sh_name, SHT_STRTAB, 0, 0, sh_offset,
++				     sh_name + strlen (".shstrtab") + 1, 0, 0,
++				     1, 0, &errmsg, err))
+     return errmsg;
+ 
+   /* .shstrtab has a leading zero byte.  */
+@@ -954,9 +1061,356 @@ simple_object_elf_write_to_file (simple_object_write *sobj, int descriptor,
+ static void
+ simple_object_elf_release_write (void *data)
+ {
++  struct simple_object_elf_write *eow = (struct simple_object_elf_write *) data;
++  if (eow->shdrs)
++    XDELETE (eow->shdrs);
+   XDELETE (data);
+ }
+ 
++/* Copy all sections in an ELF file.  */
++
++static const char *
++simple_object_elf_copy_lto_debug_sections (simple_object_read *sobj,
++					   simple_object_write *dobj,
++					   int (*pfn) (const char **),
++					   int *err)
++{
++  struct simple_object_elf_read *eor =
++    (struct simple_object_elf_read *) sobj->data;
++  const struct elf_type_functions *type_functions = eor->type_functions;
++  struct simple_object_elf_write *eow =
++    (struct simple_object_elf_write *) dobj->data;
++  unsigned char ei_class = eor->ei_class;
++  size_t shdr_size;
++  unsigned int shnum;
++  unsigned char *shdrs;
++  const char *errmsg;
++  unsigned char *shstrhdr;
++  size_t name_size;
++  off_t shstroff;
++  unsigned char *names;
++  unsigned int i;
++  int *pfnret;
++  const char **pfnname;
++
++  shdr_size = (ei_class == ELFCLASS32
++	       ? sizeof (Elf32_External_Shdr)
++	       : sizeof (Elf64_External_Shdr));
++
++  /* Read the section headers.  We skip section 0, which is not a
++     useful section.  */
++
++  shnum = eor->shnum;
++  shdrs = XNEWVEC (unsigned char, shdr_size * (shnum - 1));
++
++  if (!simple_object_internal_read (sobj->descriptor,
++				    sobj->offset + eor->shoff + shdr_size,
++				    shdrs,
++				    shdr_size * (shnum - 1),
++				    &errmsg, err))
++    {
++      XDELETEVEC (shdrs);
++      return errmsg;
++    }
++
++  /* Read the section names.  */
++
++  shstrhdr = shdrs + (eor->shstrndx - 1) * shdr_size;
++  name_size = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++			       shstrhdr, sh_size, Elf_Addr);
++  shstroff = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++			      shstrhdr, sh_offset, Elf_Addr);
++  names = XNEWVEC (unsigned char, name_size);
++  if (!simple_object_internal_read (sobj->descriptor,
++				    sobj->offset + shstroff,
++				    names, name_size, &errmsg, err))
++    {
++      XDELETEVEC (names);
++      XDELETEVEC (shdrs);
++      return errmsg;
++    }
++
++  eow->shdrs = XNEWVEC (unsigned char, shdr_size * (shnum - 1));
++  pfnret = XNEWVEC (int, shnum);
++  pfnname = XNEWVEC (const char *, shnum);
++
++  /* First perform the callbacks to know which sections to preserve and
++     what name to use for those.  */
++  for (i = 1; i < shnum; ++i)
++    {
++      unsigned char *shdr;
++      unsigned int sh_name;
++      const char *name;
++      int ret;
++
++      shdr = shdrs + (i - 1) * shdr_size;
++      sh_name = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				 shdr, sh_name, Elf_Word);
++      if (sh_name >= name_size)
++	{
++	  *err = 0;
++	  XDELETEVEC (names);
++	  XDELETEVEC (shdrs);
++	  return "ELF section name out of range";
++	}
++
++      name = (const char *) names + sh_name;
++
++      ret = (*pfn) (&name);
++      pfnret[i - 1] = ret == 1 ? 0 : -1;
++      pfnname[i - 1] = name;
++    }
++
++  /* Mark sections as preserved that are required by to be preserved
++     sections.  */
++  for (i = 1; i < shnum; ++i)
++    {
++      unsigned char *shdr;
++      unsigned int sh_type, sh_info, sh_link;
++      off_t offset;
++      off_t length;
++
++      shdr = shdrs + (i - 1) * shdr_size;
++      sh_type = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				 shdr, sh_type, Elf_Word);
++      sh_info = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				 shdr, sh_info, Elf_Word);
++      sh_link = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				 shdr, sh_link, Elf_Word);
++      if (sh_type == SHT_GROUP)
++	{
++	  /* Mark groups containing copied sections.  */
++	  unsigned entsize = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++					      shdr, sh_entsize, Elf_Addr);
++	  unsigned char *ent, *buf;
++	  int keep = 0;
++	  offset = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				    shdr, sh_offset, Elf_Addr);
++	  length = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				    shdr, sh_size, Elf_Addr);
++	  buf = XNEWVEC (unsigned char, length);
++	  if (!simple_object_internal_read (sobj->descriptor,
++					    sobj->offset + offset, buf,
++					    (size_t) length, &errmsg, err))
++	    {
++	      XDELETEVEC (buf);
++	      XDELETEVEC (names);
++	      XDELETEVEC (shdrs);
++	      return errmsg;
++	    }
++	  for (ent = buf + entsize; ent < buf + length; ent += entsize)
++	    {
++	      unsigned sec = type_functions->fetch_Elf_Word (ent);
++	      if (pfnret[sec - 1] == 0)
++		keep = 1;
++	    }
++	  if (keep)
++	    {
++	      pfnret[sh_link - 1] = 0;
++	      pfnret[i - 1] = 0;
++	    }
++	}
++      if (sh_type == SHT_RELA
++	  || sh_type == SHT_REL)
++	{
++	  /* Mark relocation sections and symtab of copied sections.  */
++	  if (pfnret[sh_info - 1] == 0)
++	    {
++	      pfnret[sh_link - 1] = 0;
++	      pfnret[i - 1] = 0;
++	    }
++	}
++      if (sh_type == SHT_SYMTAB)
++	{
++	  /* Mark strings sections of copied symtabs.  */
++	  if (pfnret[i - 1] == 0)
++	    pfnret[sh_link - 1] = 0;
++	}
++    }
++
++  /* Then perform the actual copying.  */
++  for (i = 1; i < shnum; ++i)
++    {
++      unsigned char *shdr;
++      unsigned int sh_name, sh_type;
++      const char *name;
++      off_t offset;
++      off_t length;
++      int ret;
++      const char *errmsg;
++      simple_object_write_section *dest;
++      off_t flags;
++      unsigned char *buf;
++
++      shdr = shdrs + (i - 1) * shdr_size;
++      sh_name = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				 shdr, sh_name, Elf_Word);
++      if (sh_name >= name_size)
++	{
++	  *err = 0;
++	  XDELETEVEC (names);
++	  XDELETEVEC (shdrs);
++	  return "ELF section name out of range";
++	}
++
++      name = (const char *) names + sh_name;
++      offset = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				shdr, sh_offset, Elf_Addr);
++      length = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				shdr, sh_size, Elf_Addr);
++      sh_type = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++				 shdr, sh_type, Elf_Word);
++
++      ret = pfnret[i - 1];
++      name = ret == 0 ? pfnname[i - 1] : "";
++
++      dest = simple_object_write_create_section (dobj, name, 0, &errmsg, err);
++      if (dest == NULL)
++	{
++	  XDELETEVEC (names);
++	  XDELETEVEC (shdrs);
++	  return errmsg;
++	}
++
++      /* Record the SHDR of the source.  */
++      memcpy (eow->shdrs + (i - 1) * shdr_size, shdr, shdr_size);
++      shdr = eow->shdrs + (i - 1) * shdr_size;
++
++      /* Copy the data.
++	 ???  This is quite wasteful and ideally would be delayed until
++	 write_to_file ().  Thus it questions the interfacing
++	 which eventually should contain destination creation plus
++	 writing.  */
++      /* Keep empty sections for sections we should discard.  This avoids
++         the need to rewrite section indices in symtab and relocation
++	 sections.  */
++      if (ret == 0)
++	{
++	  buf = XNEWVEC (unsigned char, length);
++	  if (!simple_object_internal_read (sobj->descriptor,
++					    sobj->offset + offset, buf,
++					    (size_t) length, &errmsg, err))
++	    {
++	      XDELETEVEC (buf);
++	      XDELETEVEC (names);
++	      XDELETEVEC (shdrs);
++	      return errmsg;
++	    }
++
++	  /* If we are processing .symtab purge __gnu_lto_v1 and
++	     __gnu_lto_slim symbols from it.  */
++	  if (sh_type == SHT_SYMTAB)
++	    {
++	      unsigned entsize = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++						  shdr, sh_entsize, Elf_Addr);
++	      unsigned strtab = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++						 shdr, sh_link, Elf_Word);
++	      unsigned char *strshdr = shdrs + (strtab - 1) * shdr_size;
++	      off_t stroff = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++					      strshdr, sh_offset, Elf_Addr);
++	      size_t strsz = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++					      strshdr, sh_size, Elf_Addr);
++	      char *strings = XNEWVEC (char, strsz);
++	      unsigned char *ent;
++	      simple_object_internal_read (sobj->descriptor,
++					   sobj->offset + stroff,
++					   (unsigned char *)strings,
++					   strsz, &errmsg, err);
++	      for (ent = buf; ent < buf + length; ent += entsize)
++		{
++		  unsigned st_shndx = ELF_FETCH_FIELD (type_functions, ei_class,
++						       Sym, ent,
++						       st_shndx, Elf_Half);
++		  unsigned char *st_info;
++		  unsigned char *st_other;
++		  int discard = 0;
++		  if (ei_class == ELFCLASS32)
++		    {
++		      st_info = &((Elf32_External_Sym *)ent)->st_info;
++		      st_other = &((Elf32_External_Sym *)ent)->st_other;
++		    }
++		  else
++		    {
++		      st_info = &((Elf64_External_Sym *)ent)->st_info;
++		      st_other = &((Elf64_External_Sym *)ent)->st_other;
++		    }
++		  /* Eliminate all COMMONs - this includes __gnu_lto_v1
++		     and __gnu_lto_slim which otherwise cause endless
++		     LTO plugin invocation.  */
++		  if (st_shndx == SHN_COMMON)
++		    /* Setting st_name to "" seems to work to purge
++		       COMMON symbols (in addition to setting their
++		       size to zero).  */
++		    discard = 1;
++		  /* We also need to remove symbols refering to sections
++		     we'll eventually remove as with fat LTO objects
++		     we otherwise get duplicate symbols at final link
++		     (with GNU ld, gold is fine and ignores symbols in
++		     sections marked as EXCLUDE).  ld/20513  */
++		  else if (st_shndx != SHN_UNDEF
++			   && st_shndx < shnum
++			   && pfnret[st_shndx - 1] == -1)
++		    discard = 1;
++
++		  if (discard)
++		    {
++		      /* Make discarded symbols undefined and unnamed
++		         in case it is local.  */
++		      if (ELF_ST_BIND (*st_info) == STB_LOCAL)
++			ELF_SET_FIELD (type_functions, ei_class, Sym,
++				       ent, st_name, Elf_Word, 0);
++		      ELF_SET_FIELD (type_functions, ei_class, Sym,
++				     ent, st_value, Elf_Addr, 0);
++		      ELF_SET_FIELD (type_functions, ei_class, Sym,
++				     ent, st_size, Elf_Word, 0);
++		      ELF_SET_FIELD (type_functions, ei_class, Sym,
++				     ent, st_shndx, Elf_Half, SHN_UNDEF);
++		      *st_info = ELF_ST_INFO (ELF_ST_BIND (*st_info),
++					      STT_NOTYPE);
++		      *st_other = STV_DEFAULT;
++		    }
++		}
++	      XDELETEVEC (strings);
++	    }
++
++	  errmsg = simple_object_write_add_data (dobj, dest,
++						 buf, length, 1, err);
++	  XDELETEVEC (buf);
++	  if (errmsg)
++	    {
++	      XDELETEVEC (names);
++	      XDELETEVEC (shdrs);
++	      return errmsg;
++	    }
++	}
++      else
++	{
++	  /* For deleted sections mark the section header table entry as
++	     unused.  That allows the link editor to remove it in a partial
++	     link.  */
++	  ELF_SET_FIELD (type_functions, ei_class, Shdr,
++			 shdr, sh_type, Elf_Word, SHT_NULL);
++	}
++
++      flags = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
++			       shdr, sh_flags, Elf_Addr);
++      if (ret == 0)
++	flags &= ~SHF_EXCLUDE;
++      else if (ret == -1)
++	flags = SHF_EXCLUDE;
++      ELF_SET_FIELD (type_functions, ei_class, Shdr,
++		     shdr, sh_flags, Elf_Addr, flags);
++    }
++
++  XDELETEVEC (names);
++  XDELETEVEC (shdrs);
++  XDELETEVEC (pfnret);
++  XDELETEVEC (pfnname);
++
++  return NULL;
++}
++
++
+ /* The ELF functions.  */
+ 
+ const struct simple_object_functions simple_object_elf_functions =
+@@ -969,5 +1423,6 @@ const struct simple_object_functions simple_object_elf_functions =
+   simple_object_elf_release_attributes,
+   simple_object_elf_start_write,
+   simple_object_elf_write_to_file,
+-  simple_object_elf_release_write
++  simple_object_elf_release_write,
++  simple_object_elf_copy_lto_debug_sections
+ };
+diff --git a/libiberty/simple-object-mach-o.c b/libiberty/simple-object-mach-o.c
+index bbadf5d833..b90fca88b2 100644
+--- a/libiberty/simple-object-mach-o.c
++++ b/libiberty/simple-object-mach-o.c
+@@ -1374,5 +1374,6 @@ const struct simple_object_functions simple_object_mach_o_functions =
+   simple_object_mach_o_release_attributes,
+   simple_object_mach_o_start_write,
+   simple_object_mach_o_write_to_file,
+-  simple_object_mach_o_release_write
++  simple_object_mach_o_release_write,
++  NULL
+ };
+diff --git a/libiberty/simple-object-xcoff.c b/libiberty/simple-object-xcoff.c
+index 8a15939878..9a8f581563 100644
+--- a/libiberty/simple-object-xcoff.c
++++ b/libiberty/simple-object-xcoff.c
+@@ -138,15 +138,15 @@ struct external_syment
+   union {
+     struct {
+       union {
+-        /* The name of the symbol.  There is an implicit null character
+-           after the end of the array.  */
+-        char n_name[N_SYMNMLEN];
+-        struct {
+-          /* If n_zeroes is zero, n_offset is the offset the name from
+-             the start of the string table.  */
+-          unsigned char n_zeroes[4];
+-          unsigned char n_offset[4];
+-        } n;
++/* The name of the symbol.  There is an implicit null character
++   after the end of the array.  */
++	char n_name[N_SYMNMLEN];
++	struct {
++	  /* If n_zeroes is zero, n_offset is the offset the name from
++	     the start of the string table.  */
++	  unsigned char n_zeroes[4];
++	  unsigned char n_offset[4];
++	} n;
+       } n;
+ 
+       /* The symbol's value.  */
+@@ -255,8 +255,14 @@ union external_auxent
+ #define IMAGE_SYM_TYPE \
+   ((IMAGE_SYM_DTYPE_NULL << 4) | IMAGE_SYM_TYPE_NULL)
+ 
++#define C_EXT		(2)
+ #define C_STAT		(3)
+ #define C_FILE		(103)
++#define C_HIDEXT	(107)
++
++#define XTY_SD		(1)	/* section definition */
++
++#define XMC_XO		(7)	/* extended operation */
+ 
+ /* Private data for an simple_object_read.  */
+ 
+@@ -398,11 +404,13 @@ simple_object_xcoff_find_sections (simple_object_read *sobj,
+   size_t scnhdr_size;
+   unsigned char *scnbuf;
+   const char *errmsg;
++  unsigned short (*fetch_16) (const unsigned char *);
+   unsigned int (*fetch_32) (const unsigned char *);
+   ulong_type (*fetch_64) (const unsigned char *);
+   unsigned int nscns;
+   char *strtab;
+   size_t strtab_size;
++  struct external_syment *symtab = NULL;
+   unsigned int i;
+ 
+   scnhdr_size = u64 ? SCNHSZ64 : SCNHSZ32;
+@@ -416,6 +424,7 @@ simple_object_xcoff_find_sections (simple_object_read *sobj,
+       return errmsg;
+     }
+ 
++  fetch_16 = simple_object_fetch_big_16;
+   fetch_32 = simple_object_fetch_big_32;
+   fetch_64 = simple_object_fetch_big_64;
+ 
+@@ -429,7 +438,7 @@ simple_object_xcoff_find_sections (simple_object_read *sobj,
+       char namebuf[SCNNMLEN + 1];
+       char *name;
+       off_t scnptr;
+-      unsigned int size;
++      off_t size;
+ 
+       scnhdr = scnbuf + i * scnhdr_size;
+       scnname = scnhdr + offsetof (struct external_scnhdr, s_name);
+@@ -489,6 +498,151 @@ simple_object_xcoff_find_sections (simple_object_read *sobj,
+ 	break;
+     }
+ 
++  /* Special handling for .go_export csect.  */
++  if (ocr->nsyms > 0)
++    {
++      unsigned char *sym;
++      const char *n_name;
++      off_t size, n_value;
++      unsigned int n_numaux, n_offset, n_zeroes;
++      short n_scnum;
++
++      /* Read symbol table.  */
++      symtab = XNEWVEC (struct external_syment, ocr->nsyms * SYMESZ);
++      if (!simple_object_internal_read (sobj->descriptor,
++					sobj->offset + ocr->symptr,
++					(unsigned char *) symtab,
++					ocr->nsyms * SYMESZ,
++					&errmsg, err))
++	{
++	  XDELETEVEC (symtab);
++	  XDELETEVEC (scnbuf);
++	  return NULL;
++	}
++
++      /* Search in symbol table if we have a ".go_export" symbol.  */
++      for (i = 0; i < ocr->nsyms; i += n_numaux + 1)
++	{
++	  sym = (unsigned char *) &symtab[i];
++	  n_numaux = symtab[i].n_numaux[0];
++
++	  if (symtab[i].n_sclass[0] != C_EXT
++	      && symtab[i].n_sclass[0] != C_HIDEXT)
++	    continue;
++
++	  /* Must have at least one csect auxiliary entry.  */
++	  if (n_numaux < 1 || i + n_numaux >= ocr->nsyms)
++	    continue;
++
++	  n_scnum = fetch_16 (sym + offsetof (struct external_syment,
++					      n_scnum));
++	  if (n_scnum < 1 || (unsigned int) n_scnum > nscns)
++	    continue;
++
++	  if (u64)
++	    {
++	      n_value = fetch_64 (sym + offsetof (struct external_syment,
++						  u.xcoff64.n_value));
++	      n_offset = fetch_32 (sym + offsetof (struct external_syment,
++						   u.xcoff64.n_offset));
++	    }
++	  else
++	    {
++	      /* ".go_export" is longer than N_SYMNMLEN.  */
++	      n_zeroes = fetch_32 (sym + offsetof (struct external_syment,
++						   u.xcoff32.n.n.n_zeroes));
++	      if (n_zeroes != 0)
++		continue;
++
++	      n_value = fetch_32 (sym + offsetof (struct external_syment,
++						  u.xcoff32.n_value));
++	      n_offset = fetch_32 (sym + offsetof (struct external_syment,
++						   u.xcoff32.n.n.n_offset));
++	    }
++
++	  /* The real symbol name is found in the string table.  */
++	  if (strtab == NULL)
++	    {
++	      strtab = simple_object_xcoff_read_strtab (sobj,
++	  						&strtab_size,
++							&errmsg, err);
++	      if (strtab == NULL)
++		{
++		  XDELETEVEC (symtab);
++		  XDELETEVEC (scnbuf);
++		  return errmsg;
++		}
++	    }
++
++	  if (n_offset >= strtab_size)
++	    {
++	      XDELETEVEC (strtab);
++	      XDELETEVEC (symtab);
++	      XDELETEVEC (scnbuf);
++	      *err = 0;
++	      return "symbol string index out of range";
++	    }
++	  n_name = strtab + n_offset;
++
++	  if (!strcmp (n_name, ".go_export"))
++	    {
++	      union external_auxent *auxent;
++	      unsigned char *aux, *scnhdr;
++	      off_t scnptr, x_scnlen;
++
++	      /* Found .go_export symbol, read its csect auxiliary entry.
++		 By convention, it is the last auxiliary entry.  */
++	      auxent = (union external_auxent *) &symtab[i + n_numaux];
++	      aux = (unsigned char *) auxent;
++	      if (u64)
++		{
++		  if ((auxent->u.xcoff64.x_csect.x_smtyp & 0x7) != XTY_SD
++		      || auxent->u.xcoff64.x_csect.x_smclas != XMC_XO)
++		    continue;
++
++		  x_scnlen = fetch_32 (aux + offsetof (union external_auxent,
++						       u.xcoff64.x_csect.x_scnlen_hi));
++		  x_scnlen = x_scnlen << 32
++			   | fetch_32 (aux + offsetof (union external_auxent,
++						       u.xcoff64.x_csect.x_scnlen_lo));
++		}
++	      else
++		{
++		  if ((auxent->u.xcoff32.x_csect.x_smtyp & 0x7) != XTY_SD
++		      || auxent->u.xcoff32.x_csect.x_smclas != XMC_XO)
++		    continue;
++
++		  x_scnlen = fetch_32 (aux + offsetof (union external_auxent,
++						       u.xcoff32.x_csect.x_scnlen));
++		}
++
++	      /* Get header of containing section.  */
++	      scnhdr = scnbuf + (n_scnum - 1) * scnhdr_size;
++	      if (u64)
++		{
++		  scnptr = fetch_64 (scnhdr + offsetof (struct external_scnhdr,
++							u.xcoff64.s_scnptr));
++		  size = fetch_64 (scnhdr + offsetof (struct external_scnhdr,
++						      u.xcoff64.s_size));
++		}
++	      else
++		{
++		  scnptr = fetch_32 (scnhdr + offsetof (struct external_scnhdr,
++							u.xcoff32.s_scnptr));
++		  size = fetch_32 (scnhdr + offsetof (struct external_scnhdr,
++						      u.xcoff32.s_size));
++		}
++	      if (n_value + x_scnlen > size)
++		break;
++
++	      (*pfn) (data, ".go_export", scnptr + n_value, x_scnlen);
++	      break;
++	    }
++	}
++    }
++
++  if (symtab != NULL)
++    XDELETEVEC (symtab);
+   if (strtab != NULL)
+     XDELETEVEC (strtab);
+   XDELETEVEC (scnbuf);
+@@ -894,5 +1048,6 @@ const struct simple_object_functions simple_object_xcoff_functions =
+   simple_object_xcoff_release_attributes,
+   simple_object_xcoff_start_write,
+   simple_object_xcoff_write_to_file,
+-  simple_object_xcoff_release_write
++  simple_object_xcoff_release_write,
++  NULL
+ };
+diff --git a/libiberty/simple-object.c b/libiberty/simple-object.c
+index 8ea9cf129f..553e90f504 100644
+--- a/libiberty/simple-object.c
++++ b/libiberty/simple-object.c
+@@ -22,6 +22,7 @@ Boston, MA 02110-1301, USA.  */
+ #include "simple-object.h"
+ 
+ #include <errno.h>
++#include <fcntl.h>
+ 
+ #ifdef HAVE_STDLIB_H
+ #include <stdlib.h>
+@@ -249,6 +250,86 @@ simple_object_find_section (simple_object_read *sobj, const char *name,
+   return 1;
+ }
+ 
++/* Callback to identify and rename LTO debug sections by name.
++   Returns 1 if NAME is a LTO debug section, 0 if not.  */
++
++static int
++handle_lto_debug_sections (const char **name)
++{
++  /* ???  So we can't use .gnu.lto_ prefixed sections as the assembler
++     complains about bogus section flags.  Which means we need to arrange
++     for that to be fixed or .gnu.debuglto_ marked as SHF_EXCLUDE (to make
++     fat lto object tooling work for the fat part).  */
++  /* ???  For now this handles both .gnu.lto_ and .gnu.debuglto_ prefixed
++     sections.  */
++  /* Copy LTO debug sections and rename them to their non-LTO name.  */
++  if (strncmp (*name, ".gnu.debuglto_", sizeof (".gnu.debuglto_") - 1) == 0)
++    {
++      *name = *name + sizeof (".gnu.debuglto_") - 1;
++      return 1;
++    }
++  else if (strncmp (*name, ".gnu.lto_.debug_", sizeof (".gnu.lto_.debug_") -1) == 0)
++    {
++      *name = *name + sizeof (".gnu.lto_") - 1;
++      return 1;
++    }
++  return 0;
++}
++
++/* Copy LTO debug sections.  */
++
++const char *
++simple_object_copy_lto_debug_sections (simple_object_read *sobj,
++				       const char *dest, int *err)
++{
++  const char *errmsg;
++  simple_object_write *dest_sobj;
++  simple_object_attributes *attrs;
++  int outfd;
++
++  if (! sobj->functions->copy_lto_debug_sections)
++    {
++      *err = EINVAL;
++      return "simple_object_copy_lto_debug_sections not implemented";
++    }
++
++  attrs = simple_object_fetch_attributes (sobj, &errmsg, err);
++  if (! attrs)
++    return errmsg;
++  dest_sobj = simple_object_start_write (attrs, NULL, &errmsg, err);
++  simple_object_release_attributes (attrs);
++  if (! dest_sobj)
++    return errmsg;
++
++  errmsg = sobj->functions->copy_lto_debug_sections (sobj, dest_sobj,
++						     handle_lto_debug_sections,
++						     err);
++  if (errmsg)
++    {
++      simple_object_release_write (dest_sobj);
++      return errmsg;
++    }
++
++  outfd = creat (dest, 00777);
++  if (outfd == -1)
++    {
++      *err = errno;
++      simple_object_release_write (dest_sobj);
++      return "open failed";
++    }
++
++  errmsg = simple_object_write_to_file (dest_sobj, outfd, err);
++  close (outfd);
++  if (errmsg)
++    {
++      simple_object_release_write (dest_sobj);
++      return errmsg;
++    }
++
++  simple_object_release_write (dest_sobj);
++  return NULL;
++}
++
+ /* Fetch attributes.  */
+ 
+ simple_object_attributes *
+@@ -315,7 +396,7 @@ simple_object_start_write (simple_object_attributes *attrs,
+     return NULL;
+   ret = XNEW (simple_object_write);
+   ret->functions = attrs->functions;
+-  ret->segment_name = xstrdup (segment_name);
++  ret->segment_name = segment_name ? xstrdup (segment_name) : NULL;
+   ret->sections = NULL;
+   ret->last_section = NULL;
+   ret->data = data;
+
+commit 6bdd6269844b3dd73dd57f9d361c0bebe7f2778a
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Fri Sep 1 11:22:43 2017 +0100
+
+    Prevent an address violation parsing corrupt DWARF information by fixing the test for an overlong debug line info structure.
+    
+            PR 22059
+            * dwarf2.c (decode_line_info): Fix test for an overlong line info
+            structure.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 8db7080931..ce926fe727 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,5 +1,11 @@
+ 2017-09-01  Nick Clifton  <nickc@redhat.com>
+ 
++	PR 22059
++	* dwarf2.c (decode_line_info): Fix test for an overlong line info
++	structure.
++
++2017-09-01  Nick Clifton  <nickc@redhat.com>
++
+ 	PR 21933
+ 	PR 22060
+ 	* elf.c (elf_read_notes): Check for a note size of -1.
+diff --git a/bfd/dwarf2.c b/bfd/dwarf2.c
+index 04a2585be2..877962783b 100644
+--- a/bfd/dwarf2.c
++++ b/bfd/dwarf2.c
+@@ -2073,12 +2073,12 @@ decode_line_info (struct comp_unit *unit, struct dwarf2_debug *stash)
+       offset_size = 8;
+     }
+ 
+-  if (lh.total_length > stash->dwarf_line_size)
++  if (unit->line_offset + lh.total_length > stash->dwarf_line_size)
+     {
+       _bfd_error_handler
+ 	/* xgettext: c-format */
+-	(_("Dwarf Error: Line info data is bigger (0x%lx) than the section (0x%lx)"),
+-	 (long) lh.total_length, (long) stash->dwarf_line_size);
++	(_("Dwarf Error: Line info data is bigger (%#Lx) than the space remaining in the section (%#Lx)"),
++	 lh.total_length, stash->dwarf_line_size - unit->line_offset);
+       bfd_set_error (bfd_error_bad_value);
+       return NULL;
+     }
+
+commit e6d76f0cef2ca8043aeabc49bc5c19a885499e8c
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Fri Sep 1 06:11:54 2017 -0700
+
+    x86: Correct unwind information for the second PLT
+    
+    For i386, generate unwind information for the second PLT.  For x32,
+    correct alignment of .eh_frame section for the second PLT.
+    
+    bfd/
+    
+            PR ld/22061
+            * elf32-i386.c (elf_i386_link_setup_gnu_properties): Create
+            .eh_frame section for the second PLT.
+            * elf64-x86-64.c (elf_x86_64_link_setup_gnu_properties): Correct
+            alignment of .eh_frame section for the second PLT.
+    
+    ld/
+    
+            PR ld/22061
+            * testsuite/ld-i386/ibt-plt-1.d: Pass --hash-style=sysv to ld.
+            Updated.
+            * testsuite/ld-i386/ibt-plt-2a.d: Likewise.
+            * testsuite/ld-i386/ibt-plt-2c.d: Likewise.
+            * testsuite/ld-i386/ibt-plt-3a.d: Likewise.
+            * testsuite/ld-i386/ibt-plt-3c.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-1-x32.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-2a-x32.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-2c-x32.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-3a-x32.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-3c-x32.d: Likewise.
+            * testsuite/ld-i386/ibt-plt-2b.d: Pass --hash-style=sysv to ld
+            and dump unwind information.
+            * testsuite/ld-i386/ibt-plt-2d.d: Likewise.
+            * testsuite/ld-i386/ibt-plt-3b.d: Likewise.
+            * testsuite/ld-i386/ibt-plt-3d.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-2b-x32.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-2b.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-2d-x32.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-2d.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-3b-x32.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-3b.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-3d-x32.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-3d.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-1.d: Pass --hash-style=sysv to ld.
+            * testsuite/ld-x86-64/ibt-plt-2a.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-2c.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-3a.d: Likewise.
+            * testsuite/ld-x86-64/ibt-plt-3c.d: Likewise.
+    
+    (cherry picked from commit e10c9c620c3335731bb0052987affdc40942fd71)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index ce926fe727..93142541d0 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,11 @@
++2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR ld/22061
++	* elf32-i386.c (elf_i386_link_setup_gnu_properties): Create
++	.eh_frame section for the second PLT.
++	* elf64-x86-64.c (elf_x86_64_link_setup_gnu_properties): Correct
++	alignment of .eh_frame section for the second PLT.
++
+ 2017-09-01  Nick Clifton  <nickc@redhat.com>
+ 
+ 	PR 22059
+diff --git a/bfd/elf32-i386.c b/bfd/elf32-i386.c
+index b46ed2dd13..a2866c5d7f 100644
+--- a/bfd/elf32-i386.c
++++ b/bfd/elf32-i386.c
+@@ -7142,6 +7142,20 @@ elf_i386_link_setup_gnu_properties (struct bfd_link_info *info)
+ 
+ 	      htab->plt_got_eh_frame = sec;
+ 	    }
++
++	  if (htab->plt_second != NULL)
++	    {
++	      sec = bfd_make_section_anyway_with_flags (dynobj,
++							".eh_frame",
++							flags);
++	      if (sec == NULL)
++		info->callbacks->einfo (_("%F: failed to create the second PLT .eh_frame section\n"));
++
++	      if (!bfd_set_section_alignment (dynobj, sec, 2))
++		goto error_alignment;
++
++	      htab->plt_second_eh_frame = sec;
++	    }
+ 	}
+     }
+ 
+diff --git a/bfd/elf64-x86-64.c b/bfd/elf64-x86-64.c
+index 821a7d9cbe..bc60012f1e 100644
+--- a/bfd/elf64-x86-64.c
++++ b/bfd/elf64-x86-64.c
+@@ -7709,9 +7709,10 @@ error_alignment:
+ 							".eh_frame",
+ 							flags);
+ 	      if (sec == NULL)
+-		info->callbacks->einfo (_("%F: failed to create BND PLT .eh_frame section\n"));
++		info->callbacks->einfo (_("%F: failed to create the second PLT .eh_frame section\n"));
+ 
+-	      if (!bfd_set_section_alignment (dynobj, sec, 3))
++	      if (!bfd_set_section_alignment (dynobj, sec,
++					      ABI_64_P (dynobj) ? 3 : 2))
+ 		goto error_alignment;
+ 
+ 	      htab->plt_second_eh_frame = sec;
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 23bdba42bf..f4335cfe26 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,36 @@
++2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR ld/22061
++	* testsuite/ld-i386/ibt-plt-1.d: Pass --hash-style=sysv to ld.
++	Updated.
++	* testsuite/ld-i386/ibt-plt-2a.d: Likewise.
++	* testsuite/ld-i386/ibt-plt-2c.d: Likewise.
++	* testsuite/ld-i386/ibt-plt-3a.d: Likewise.
++	* testsuite/ld-i386/ibt-plt-3c.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-1-x32.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-2a-x32.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-2c-x32.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-3a-x32.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-3c-x32.d: Likewise.
++	* testsuite/ld-i386/ibt-plt-2b.d: Pass --hash-style=sysv to ld
++	and dump unwind information.
++	* testsuite/ld-i386/ibt-plt-2d.d: Likewise.
++	* testsuite/ld-i386/ibt-plt-3b.d: Likewise.
++	* testsuite/ld-i386/ibt-plt-3d.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-2b-x32.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-2b.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-2d-x32.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-2d.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-3b-x32.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-3b.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-3d-x32.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-3d.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-1.d: Pass --hash-style=sysv to ld.
++	* testsuite/ld-x86-64/ibt-plt-2a.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-2c.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-3a.d: Likewise.
++	* testsuite/ld-x86-64/ibt-plt-3c.d: Likewise.
++
+ 2017-08-30  Maciej W. Rozycki  <macro@imgtec.com>
+ 
+ 	* testsuite/ld-mips-elf/bal-jalx-addend-micromips.d: New test.
+diff --git a/ld/testsuite/ld-i386/ibt-plt-1.d b/ld/testsuite/ld-i386/ibt-plt-1.d
+index 1c905915e4..a131675328 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-1.d
++++ b/ld/testsuite/ld-i386/ibt-plt-1.d
+@@ -1,5 +1,5 @@
+ #as: --32
+-#ld: -shared -m elf_i386
++#ld: -shared -m elf_i386 --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -37,7 +37,7 @@ Disassembly of section .text:
+ 0+200 <foo>:
+  +[a-f0-9]+:	53                   	push   %ebx
+  +[a-f0-9]+:	e8 18 00 00 00       	call   21e <__x86.get_pc_thunk.bx>
+- +[a-f0-9]+:	81 c3 22 11 00 00    	add    \$0x1122,%ebx
++ +[a-f0-9]+:	81 c3 36 11 00 00    	add    \$0x1136,%ebx
+  +[a-f0-9]+:	83 ec 08             	sub    \$0x8,%esp
+  +[a-f0-9]+:	e8 dc ff ff ff       	call   1f0 <bar2@plt>
+  +[a-f0-9]+:	e8 c7 ff ff ff       	call   1e0 <bar1@plt>
+diff --git a/ld/testsuite/ld-i386/ibt-plt-2a.d b/ld/testsuite/ld-i386/ibt-plt-2a.d
+index 4881dea1c4..13c6949e0d 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-2a.d
++++ b/ld/testsuite/ld-i386/ibt-plt-2a.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-2.s
+ #as: --32
+-#ld: -shared -m elf_i386 -z ibtplt
++#ld: -shared -m elf_i386 -z ibtplt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -38,7 +38,7 @@ Disassembly of section .text:
+ 0+200 <foo>:
+  +[a-f0-9]+:	53                   	push   %ebx
+  +[a-f0-9]+:	e8 18 00 00 00       	call   21e <__x86.get_pc_thunk.bx>
+- +[a-f0-9]+:	81 c3 22 11 00 00    	add    \$0x1122,%ebx
++ +[a-f0-9]+:	81 c3 36 11 00 00    	add    \$0x1136,%ebx
+  +[a-f0-9]+:	83 ec 08             	sub    \$0x8,%esp
+  +[a-f0-9]+:	e8 dc ff ff ff       	call   1f0 <bar2@plt>
+  +[a-f0-9]+:	e8 c7 ff ff ff       	call   1e0 <bar1@plt>
+diff --git a/ld/testsuite/ld-i386/ibt-plt-2b.d b/ld/testsuite/ld-i386/ibt-plt-2b.d
+index 740b889b98..90541f19f6 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-2b.d
++++ b/ld/testsuite/ld-i386/ibt-plt-2b.d
+@@ -1,7 +1,52 @@
+ #source: ibt-plt-2.s
+ #as: --32
+-#ld: -shared -m elf_i386 -z ibtplt
+-#readelf: -n
++#ld: -shared -m elf_i386 -z ibtplt --hash-style=sysv
++#readelf: -n -wf
++
++Contents of the .eh_frame section:
++
++0+ 00000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -4
++  Return address column: 8
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r4 \(esp\) ofs 4
++  DW_CFA_offset: r8 \(eip\) at cfa-4
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 0000001c 0000001c FDE cie=00000000 pc=00000200..0000021e
++  DW_CFA_advance_loc: 1 to 00000201
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_offset: r3 \(ebx\) at cfa-8
++  DW_CFA_advance_loc: 14 to 0000020f
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 13 to 0000021c
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_advance_loc: 1 to 0000021d
++  DW_CFA_restore: r3 \(ebx\)
++  DW_CFA_def_cfa_offset: 4
++
++0+38 00000010 0000003c FDE cie=00000000 pc=0000021e..00000222
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+4c 00000020 00000050 FDE cie=00000000 pc=000001b0..000001e0
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_advance_loc: 6 to 000001b6
++  DW_CFA_def_cfa_offset: 12
++  DW_CFA_advance_loc: 10 to 000001c0
++  DW_CFA_def_cfa_expression \(DW_OP_breg4 \(esp\): 4; DW_OP_breg8 \(eip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit9; DW_OP_ge; DW_OP_lit2; DW_OP_shl; DW_OP_plus\)
++
++0+70 00000010 00000074 FDE cie=00000000 pc=000001e0..00000200
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
+diff --git a/ld/testsuite/ld-i386/ibt-plt-2c.d b/ld/testsuite/ld-i386/ibt-plt-2c.d
+index 2ba1d78c54..63f4427221 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-2c.d
++++ b/ld/testsuite/ld-i386/ibt-plt-2c.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-2.s
+ #as: --32
+-#ld: -shared -m elf_i386 -z ibt
++#ld: -shared -m elf_i386 -z ibt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -38,7 +38,7 @@ Disassembly of section .text:
+ 0+200 <foo>:
+  +[a-f0-9]+:	53                   	push   %ebx
+  +[a-f0-9]+:	e8 18 00 00 00       	call   21e <__x86.get_pc_thunk.bx>
+- +[a-f0-9]+:	81 c3 22 11 00 00    	add    \$0x1122,%ebx
++ +[a-f0-9]+:	81 c3 36 11 00 00    	add    \$0x1136,%ebx
+  +[a-f0-9]+:	83 ec 08             	sub    \$0x8,%esp
+  +[a-f0-9]+:	e8 dc ff ff ff       	call   1f0 <bar2@plt>
+  +[a-f0-9]+:	e8 c7 ff ff ff       	call   1e0 <bar1@plt>
+diff --git a/ld/testsuite/ld-i386/ibt-plt-2d.d b/ld/testsuite/ld-i386/ibt-plt-2d.d
+index 3e02a62464..f57c7e84e3 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-2d.d
++++ b/ld/testsuite/ld-i386/ibt-plt-2d.d
+@@ -1,7 +1,52 @@
+ #source: ibt-plt-2.s
+ #as: --32
+-#ld: -shared -m elf_i386 -z ibt
+-#readelf: -n
++#ld: -shared -m elf_i386 -z ibt --hash-style=sysv
++#readelf: -n -wf
++
++Contents of the .eh_frame section:
++
++0+ 00000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -4
++  Return address column: 8
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r4 \(esp\) ofs 4
++  DW_CFA_offset: r8 \(eip\) at cfa-4
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 0000001c 0000001c FDE cie=00000000 pc=00000200..0000021e
++  DW_CFA_advance_loc: 1 to 00000201
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_offset: r3 \(ebx\) at cfa-8
++  DW_CFA_advance_loc: 14 to 0000020f
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 13 to 0000021c
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_advance_loc: 1 to 0000021d
++  DW_CFA_restore: r3 \(ebx\)
++  DW_CFA_def_cfa_offset: 4
++
++0+38 00000010 0000003c FDE cie=00000000 pc=0000021e..00000222
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+4c 00000020 00000050 FDE cie=00000000 pc=000001b0..000001e0
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_advance_loc: 6 to 000001b6
++  DW_CFA_def_cfa_offset: 12
++  DW_CFA_advance_loc: 10 to 000001c0
++  DW_CFA_def_cfa_expression \(DW_OP_breg4 \(esp\): 4; DW_OP_breg8 \(eip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit9; DW_OP_ge; DW_OP_lit2; DW_OP_shl; DW_OP_plus\)
++
++0+70 00000010 00000074 FDE cie=00000000 pc=000001e0..00000200
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
+diff --git a/ld/testsuite/ld-i386/ibt-plt-3a.d b/ld/testsuite/ld-i386/ibt-plt-3a.d
+index c2ce3fd6fc..5455c928eb 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-3a.d
++++ b/ld/testsuite/ld-i386/ibt-plt-3a.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-3.s
+ #as: --32
+-#ld: -shared -m elf_i386 -z ibtplt
++#ld: -shared -m elf_i386 -z ibtplt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -38,7 +38,7 @@ Disassembly of section .text:
+ 0+1e0 <foo>:
+  +[a-f0-9]+:	53                   	push   %ebx
+  +[a-f0-9]+:	e8 18 00 00 00       	call   1fe <__x86.get_pc_thunk.bx>
+- +[a-f0-9]+:	81 c3 06 11 00 00    	add    \$0x1106,%ebx
++ +[a-f0-9]+:	81 c3 1a 11 00 00    	add    \$0x111a,%ebx
+  +[a-f0-9]+:	83 ec 08             	sub    \$0x8,%esp
+  +[a-f0-9]+:	e8 dc ff ff ff       	call   1d0 <bar2@plt>
+  +[a-f0-9]+:	e8 c7 ff ff ff       	call   1c0 <bar1@plt>
+diff --git a/ld/testsuite/ld-i386/ibt-plt-3b.d b/ld/testsuite/ld-i386/ibt-plt-3b.d
+index d9b5be231b..6e6637ff9a 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-3b.d
++++ b/ld/testsuite/ld-i386/ibt-plt-3b.d
+@@ -1,5 +1,49 @@
+ #source: ibt-plt-3.s
+ #as: --32
+-#ld: -shared -m elf_i386 -z ibtplt
+-#readelf: -n
++#ld: -shared -m elf_i386 -z ibtplt --hash-style=sysv
++#readelf: -wf -n
++
++Contents of the .eh_frame section:
++
++0+ 00000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -4
++  Return address column: 8
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r4 \(esp\) ofs 4
++  DW_CFA_offset: r8 \(eip\) at cfa-4
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 0000001c 0000001c FDE cie=00000000 pc=000001e0..000001fe
++  DW_CFA_advance_loc: 1 to 000001e1
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_offset: r3 \(ebx\) at cfa-8
++  DW_CFA_advance_loc: 14 to 000001ef
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 13 to 000001fc
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_advance_loc: 1 to 000001fd
++  DW_CFA_restore: r3 \(ebx\)
++  DW_CFA_def_cfa_offset: 4
++
++0+38 00000010 0000003c FDE cie=00000000 pc=000001fe..00000202
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+4c 00000020 00000050 FDE cie=00000000 pc=00000190..000001c0
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_advance_loc: 6 to 00000196
++  DW_CFA_def_cfa_offset: 12
++  DW_CFA_advance_loc: 10 to 000001a0
++  DW_CFA_def_cfa_expression \(DW_OP_breg4 \(esp\): 4; DW_OP_breg8 \(eip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit9; DW_OP_ge; DW_OP_lit2; DW_OP_shl; DW_OP_plus\)
++
++0+70 00000010 00000074 FDE cie=00000000 pc=000001c0..000001e0
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
+ 
+diff --git a/ld/testsuite/ld-i386/ibt-plt-3c.d b/ld/testsuite/ld-i386/ibt-plt-3c.d
+index c2ce3fd6fc..5455c928eb 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-3c.d
++++ b/ld/testsuite/ld-i386/ibt-plt-3c.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-3.s
+ #as: --32
+-#ld: -shared -m elf_i386 -z ibtplt
++#ld: -shared -m elf_i386 -z ibtplt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -38,7 +38,7 @@ Disassembly of section .text:
+ 0+1e0 <foo>:
+  +[a-f0-9]+:	53                   	push   %ebx
+  +[a-f0-9]+:	e8 18 00 00 00       	call   1fe <__x86.get_pc_thunk.bx>
+- +[a-f0-9]+:	81 c3 06 11 00 00    	add    \$0x1106,%ebx
++ +[a-f0-9]+:	81 c3 1a 11 00 00    	add    \$0x111a,%ebx
+  +[a-f0-9]+:	83 ec 08             	sub    \$0x8,%esp
+  +[a-f0-9]+:	e8 dc ff ff ff       	call   1d0 <bar2@plt>
+  +[a-f0-9]+:	e8 c7 ff ff ff       	call   1c0 <bar1@plt>
+diff --git a/ld/testsuite/ld-i386/ibt-plt-3d.d b/ld/testsuite/ld-i386/ibt-plt-3d.d
+index 3cf159aba8..1ef91db7fc 100644
+--- a/ld/testsuite/ld-i386/ibt-plt-3d.d
++++ b/ld/testsuite/ld-i386/ibt-plt-3d.d
+@@ -1,7 +1,52 @@
+ #source: ibt-plt-3.s
+ #as: --32
+-#ld: -shared -m elf_i386 -z ibt
+-#readelf: -n
++#ld: -shared -m elf_i386 -z ibt --hash-style=sysv
++#readelf: -wf -n
++
++Contents of the .eh_frame section:
++
++0+ 00000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -4
++  Return address column: 8
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r4 \(esp\) ofs 4
++  DW_CFA_offset: r8 \(eip\) at cfa-4
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 0000001c 0000001c FDE cie=00000000 pc=00000200..0000021e
++  DW_CFA_advance_loc: 1 to 00000201
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_offset: r3 \(ebx\) at cfa-8
++  DW_CFA_advance_loc: 14 to 0000020f
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 13 to 0000021c
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_advance_loc: 1 to 0000021d
++  DW_CFA_restore: r3 \(ebx\)
++  DW_CFA_def_cfa_offset: 4
++
++0+38 00000010 0000003c FDE cie=00000000 pc=0000021e..00000222
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+4c 00000020 00000050 FDE cie=00000000 pc=000001b0..000001e0
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_advance_loc: 6 to 000001b6
++  DW_CFA_def_cfa_offset: 12
++  DW_CFA_advance_loc: 10 to 000001c0
++  DW_CFA_def_cfa_expression \(DW_OP_breg4 \(esp\): 4; DW_OP_breg8 \(eip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit9; DW_OP_ge; DW_OP_lit2; DW_OP_shl; DW_OP_plus\)
++
++0+70 00000010 00000074 FDE cie=00000000 pc=000001e0..00000200
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-1-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-1-x32.d
+index 6147ab49fd..665eaa5559 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-1-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-1-x32.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-1.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64
++#ld: -shared -m elf32_x86_64 --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -9,8 +9,8 @@
+ Disassembly of section .plt:
+ 
+ 0+1c0 <.plt>:
+- +[a-f0-9]+:	ff 35 6a 01 20 00    	pushq  0x20016a\(%rip\)        # 200330 <_GLOBAL_OFFSET_TABLE_\+0x8>
+- +[a-f0-9]+:	ff 25 6c 01 20 00    	jmpq   \*0x20016c\(%rip\)        # 200338 <_GLOBAL_OFFSET_TABLE_\+0x10>
++ +[a-f0-9]+:	ff 35 62 01 20 00    	pushq  0x200162\(%rip\)        # 200328 <_GLOBAL_OFFSET_TABLE_\+0x8>
++ +[a-f0-9]+:	ff 25 64 01 20 00    	jmpq   \*0x200164\(%rip\)        # 200330 <_GLOBAL_OFFSET_TABLE_\+0x10>
+  +[a-f0-9]+:	0f 1f 40 00          	nopl   0x0\(%rax\)
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+  +[a-f0-9]+:	68 00 00 00 00       	pushq  \$0x0
+@@ -25,12 +25,12 @@ Disassembly of section .plt.sec:
+ 
+ 0+1f0 <bar1@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 46 01 20 00    	jmpq   \*0x200146\(%rip\)        # 200340 <bar1>
++ +[a-f0-9]+:	ff 25 3e 01 20 00    	jmpq   \*0x20013e\(%rip\)        # 200338 <bar1>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ 0+200 <bar2@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 3e 01 20 00    	jmpq   \*0x20013e\(%rip\)        # 200348 <bar2>
++ +[a-f0-9]+:	ff 25 36 01 20 00    	jmpq   \*0x200136\(%rip\)        # 200340 <bar2>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ Disassembly of section .text:
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-1.d b/ld/testsuite/ld-x86-64/ibt-plt-1.d
+index dbec3ede87..8c36cfbde1 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-1.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-1.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-1.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64
++#ld: -shared -m elf_x86_64 --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-2a-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-2a-x32.d
+index df9dc8e3d7..3d934b5e67 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-2a-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-2a-x32.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-2.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64 -z ibtplt
++#ld: -shared -m elf32_x86_64 -z ibtplt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -9,8 +9,8 @@
+ Disassembly of section .plt:
+ 
+ 0+1c0 <.plt>:
+- +[a-f0-9]+:	ff 35 6a 01 20 00    	pushq  0x20016a\(%rip\)        # 200330 <_GLOBAL_OFFSET_TABLE_\+0x8>
+- +[a-f0-9]+:	ff 25 6c 01 20 00    	jmpq   \*0x20016c\(%rip\)        # 200338 <_GLOBAL_OFFSET_TABLE_\+0x10>
++ +[a-f0-9]+:	ff 35 62 01 20 00    	pushq  0x200162\(%rip\)        # 200328 <_GLOBAL_OFFSET_TABLE_\+0x8>
++ +[a-f0-9]+:	ff 25 64 01 20 00    	jmpq   \*0x200164\(%rip\)        # 200330 <_GLOBAL_OFFSET_TABLE_\+0x10>
+  +[a-f0-9]+:	0f 1f 40 00          	nopl   0x0\(%rax\)
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+  +[a-f0-9]+:	68 00 00 00 00       	pushq  \$0x0
+@@ -25,12 +25,12 @@ Disassembly of section .plt.sec:
+ 
+ 0+1f0 <bar1@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 46 01 20 00    	jmpq   \*0x200146\(%rip\)        # 200340 <bar1>
++ +[a-f0-9]+:	ff 25 3e 01 20 00    	jmpq   \*0x20013e\(%rip\)        # 200338 <bar1>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ 0+200 <bar2@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 3e 01 20 00    	jmpq   \*0x20013e\(%rip\)        # 200348 <bar2>
++ +[a-f0-9]+:	ff 25 36 01 20 00    	jmpq   \*0x200136\(%rip\)        # 200340 <bar2>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ Disassembly of section .text:
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-2a.d b/ld/testsuite/ld-x86-64/ibt-plt-2a.d
+index 0e4f424d3f..4bdf8bddd9 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-2a.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-2a.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-2.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64 -z ibtplt
++#ld: -shared -m elf_x86_64 -z ibtplt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-2b-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-2b-x32.d
+index e9e5638ea3..54a708d458 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-2b-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-2b-x32.d
+@@ -1,7 +1,42 @@
+ #source: ibt-plt-2.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64 -z ibtplt
+-#readelf: -n
++#ld: -shared -m elf32_x86_64 -z ibtplt --hash-style=sysv
++#readelf: -n -wf
++
++Contents of the .eh_frame section:
++
++0+ 00000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -8
++  Return address column: 16
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r7 \(rsp\) ofs 8
++  DW_CFA_offset: r16 \(rip\) at cfa-8
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 00000014 0000001c FDE cie=00000000 pc=00000210..00000222
++  DW_CFA_advance_loc: 4 to 00000214
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 9 to 0000021d
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_nop
++
++0+30 00000020 00000034 FDE cie=00000000 pc=000001c0..000001f0
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 6 to 000001c6
++  DW_CFA_def_cfa_offset: 24
++  DW_CFA_advance_loc: 10 to 000001d0
++  DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit9; DW_OP_ge; DW_OP_lit3; DW_OP_shl; DW_OP_plus\)
++
++0+54 00000010 00000058 FDE cie=00000000 pc=000001f0..00000210
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-2b.d b/ld/testsuite/ld-x86-64/ibt-plt-2b.d
+index 604db82745..9cd1462d5e 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-2b.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-2b.d
+@@ -1,7 +1,46 @@
+ #source: ibt-plt-2.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64 -z ibtplt
+-#readelf: -n
++#ld: -shared -m elf_x86_64 -z ibtplt --hash-style=sysv
++#readelf: -wf -n
++
++Contents of the .eh_frame section:
++
++0+ 0000000000000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -8
++  Return address column: 16
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r7 \(rsp\) ofs 8
++  DW_CFA_offset: r16 \(rip\) at cfa-8
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 0000000000000014 0000001c FDE cie=00000000 pc=00000000000002e0..00000000000002f2
++  DW_CFA_advance_loc: 4 to 00000000000002e4
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 9 to 00000000000002ed
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_nop
++
++0+30 0000000000000024 00000034 FDE cie=00000000 pc=0000000000000290..00000000000002c0
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 6 to 0000000000000296
++  DW_CFA_def_cfa_offset: 24
++  DW_CFA_advance_loc: 10 to 00000000000002a0
++  DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit10; DW_OP_ge; DW_OP_lit3; DW_OP_shl; DW_OP_plus\)
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+58 0000000000000010 0000005c FDE cie=00000000 pc=00000000000002c0..00000000000002e0
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-2c-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-2c-x32.d
+index e908804cfa..88d6da8995 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-2c-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-2c-x32.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-2.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64 -z ibt
++#ld: -shared -m elf32_x86_64 -z ibt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -9,8 +9,8 @@
+ Disassembly of section .plt:
+ 
+ 0+1c0 <.plt>:
+- +[a-f0-9]+:	ff 35 6a 01 20 00    	pushq  0x20016a\(%rip\)        # 200330 <_GLOBAL_OFFSET_TABLE_\+0x8>
+- +[a-f0-9]+:	ff 25 6c 01 20 00    	jmpq   \*0x20016c\(%rip\)        # 200338 <_GLOBAL_OFFSET_TABLE_\+0x10>
++ +[a-f0-9]+:	ff 35 62 01 20 00    	pushq  0x200162\(%rip\)        # 200328 <_GLOBAL_OFFSET_TABLE_\+0x8>
++ +[a-f0-9]+:	ff 25 64 01 20 00    	jmpq   \*0x200164\(%rip\)        # 200330 <_GLOBAL_OFFSET_TABLE_\+0x10>
+  +[a-f0-9]+:	0f 1f 40 00          	nopl   0x0\(%rax\)
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+  +[a-f0-9]+:	68 00 00 00 00       	pushq  \$0x0
+@@ -25,12 +25,12 @@ Disassembly of section .plt.sec:
+ 
+ 0+1f0 <bar1@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 46 01 20 00    	jmpq   \*0x200146\(%rip\)        # 200340 <bar1>
++ +[a-f0-9]+:	ff 25 3e 01 20 00    	jmpq   \*0x20013e\(%rip\)        # 200338 <bar1>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ 0+200 <bar2@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 3e 01 20 00    	jmpq   \*0x20013e\(%rip\)        # 200348 <bar2>
++ +[a-f0-9]+:	ff 25 36 01 20 00    	jmpq   \*0x200136\(%rip\)        # 200340 <bar2>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ Disassembly of section .text:
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-2c.d b/ld/testsuite/ld-x86-64/ibt-plt-2c.d
+index 0ef1131271..7502d83bb6 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-2c.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-2c.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-2.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64 -z ibt
++#ld: -shared -m elf_x86_64 -z ibt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-2d-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-2d-x32.d
+index b3be9048d8..f22154a0fd 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-2d-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-2d-x32.d
+@@ -1,7 +1,42 @@
+ #source: ibt-plt-2.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64 -z ibt
+-#readelf: -n
++#ld: -shared -m elf32_x86_64 -z ibt --hash-style=sysv
++#readelf: -n -wf
++
++Contents of the .eh_frame section:
++
++0+ 00000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -8
++  Return address column: 16
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r7 \(rsp\) ofs 8
++  DW_CFA_offset: r16 \(rip\) at cfa-8
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 00000014 0000001c FDE cie=00000000 pc=00000210..00000222
++  DW_CFA_advance_loc: 4 to 00000214
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 9 to 0000021d
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_nop
++
++0+30 00000020 00000034 FDE cie=00000000 pc=000001c0..000001f0
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 6 to 000001c6
++  DW_CFA_def_cfa_offset: 24
++  DW_CFA_advance_loc: 10 to 000001d0
++  DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit9; DW_OP_ge; DW_OP_lit3; DW_OP_shl; DW_OP_plus\)
++
++0+54 00000010 00000058 FDE cie=00000000 pc=000001f0..00000210
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-2d.d b/ld/testsuite/ld-x86-64/ibt-plt-2d.d
+index 7226b695d4..779f754090 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-2d.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-2d.d
+@@ -1,7 +1,46 @@
+ #source: ibt-plt-2.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64 -z ibt
+-#readelf: -n
++#ld: -shared -m elf_x86_64 -z ibt --hash-style=sysv
++#readelf: -wf -n
++
++Contents of the .eh_frame section:
++
++0+ 0000000000000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -8
++  Return address column: 16
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r7 \(rsp\) ofs 8
++  DW_CFA_offset: r16 \(rip\) at cfa-8
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 0000000000000014 0000001c FDE cie=00000000 pc=00000000000002e0..00000000000002f2
++  DW_CFA_advance_loc: 4 to 00000000000002e4
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 9 to 00000000000002ed
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_nop
++
++0+30 0000000000000024 00000034 FDE cie=00000000 pc=0000000000000290..00000000000002c0
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 6 to 0000000000000296
++  DW_CFA_def_cfa_offset: 24
++  DW_CFA_advance_loc: 10 to 00000000000002a0
++  DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit10; DW_OP_ge; DW_OP_lit3; DW_OP_shl; DW_OP_plus\)
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+58 0000000000000010 0000005c FDE cie=00000000 pc=00000000000002c0..00000000000002e0
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-3a-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-3a-x32.d
+index 0f7835d966..42136890cc 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-3a-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-3a-x32.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-3.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64 -z ibtplt
++#ld: -shared -m elf32_x86_64 -z ibtplt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -9,8 +9,8 @@
+ Disassembly of section .plt:
+ 
+ 0+1a0 <.plt>:
+- +[a-f0-9]+:	ff 35 52 01 20 00    	pushq  0x200152\(%rip\)        # 2002f8 <_GLOBAL_OFFSET_TABLE_\+0x8>
+- +[a-f0-9]+:	ff 25 54 01 20 00    	jmpq   \*0x200154\(%rip\)        # 200300 <_GLOBAL_OFFSET_TABLE_\+0x10>
++ +[a-f0-9]+:	ff 35 4a 01 20 00    	pushq  0x20014a\(%rip\)        # 2002f0 <_GLOBAL_OFFSET_TABLE_\+0x8>
++ +[a-f0-9]+:	ff 25 4c 01 20 00    	jmpq   \*0x20014c\(%rip\)        # 2002f8 <_GLOBAL_OFFSET_TABLE_\+0x10>
+  +[a-f0-9]+:	0f 1f 40 00          	nopl   0x0\(%rax\)
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+  +[a-f0-9]+:	68 00 00 00 00       	pushq  \$0x0
+@@ -25,12 +25,12 @@ Disassembly of section .plt.sec:
+ 
+ 0+1d0 <bar1@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 2e 01 20 00    	jmpq   \*0x20012e\(%rip\)        # 200308 <bar1>
++ +[a-f0-9]+:	ff 25 26 01 20 00    	jmpq   \*0x200126\(%rip\)        # 200300 <bar1>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ 0+1e0 <bar2@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 26 01 20 00    	jmpq   \*0x200126\(%rip\)        # 200310 <bar2>
++ +[a-f0-9]+:	ff 25 1e 01 20 00    	jmpq   \*0x20011e\(%rip\)        # 200308 <bar2>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ Disassembly of section .text:
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-3a.d b/ld/testsuite/ld-x86-64/ibt-plt-3a.d
+index b8f2ebc04e..7ee2f175ff 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-3a.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-3a.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-3.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64 -z ibtplt
++#ld: -shared -m elf_x86_64 -z ibtplt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-3b-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-3b-x32.d
+index fb0a834be5..e55406f7d8 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-3b-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-3b-x32.d
+@@ -1,5 +1,39 @@
+ #source: ibt-plt-3.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64 -z ibtplt
+-#readelf: -n
++#ld: -shared -m elf32_x86_64 -z ibtplt --hash-style=sysv
++#readelf: -wf -n
++
++Contents of the .eh_frame section:
++
++0+ 00000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -8
++  Return address column: 16
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r7 \(rsp\) ofs 8
++  DW_CFA_offset: r16 \(rip\) at cfa-8
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 00000014 0000001c FDE cie=00000000 pc=000001f0..00000202
++  DW_CFA_advance_loc: 4 to 000001f4
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 9 to 000001fd
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_nop
++
++0+30 00000020 00000034 FDE cie=00000000 pc=000001a0..000001d0
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 6 to 000001a6
++  DW_CFA_def_cfa_offset: 24
++  DW_CFA_advance_loc: 10 to 000001b0
++  DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit9; DW_OP_ge; DW_OP_lit3; DW_OP_shl; DW_OP_plus\)
++
++0+54 00000010 00000058 FDE cie=00000000 pc=000001d0..000001f0
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
+ 
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-3b.d b/ld/testsuite/ld-x86-64/ibt-plt-3b.d
+index 5a3843bc3a..220371da28 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-3b.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-3b.d
+@@ -1,5 +1,43 @@
+ #source: ibt-plt-3.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64 -z ibtplt
+-#readelf: -n
++#ld: -shared -m elf_x86_64 -z ibtplt --hash-style=sysv
++#readelf: -wf -n
++
++Contents of the .eh_frame section:
++
++0+ 0000000000000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -8
++  Return address column: 16
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r7 \(rsp\) ofs 8
++  DW_CFA_offset: r16 \(rip\) at cfa-8
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 0000000000000014 0000001c FDE cie=00000000 pc=00000000000002a0..00000000000002b2
++  DW_CFA_advance_loc: 4 to 00000000000002a4
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 9 to 00000000000002ad
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_nop
++
++0+30 0000000000000024 00000034 FDE cie=00000000 pc=0000000000000250..0000000000000280
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 6 to 0000000000000256
++  DW_CFA_def_cfa_offset: 24
++  DW_CFA_advance_loc: 10 to 0000000000000260
++  DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit10; DW_OP_ge; DW_OP_lit3; DW_OP_shl; DW_OP_plus\)
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+58 0000000000000010 0000005c FDE cie=00000000 pc=0000000000000280..00000000000002a0
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
+ 
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-3c-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-3c-x32.d
+index 234944ddc4..2f70d04f72 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-3c-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-3c-x32.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-3.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64 -z ibt
++#ld: -shared -m elf32_x86_64 -z ibt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+@@ -9,8 +9,8 @@
+ Disassembly of section .plt:
+ 
+ 0+1c0 <.plt>:
+- +[a-f0-9]+:	ff 35 6a 01 20 00    	pushq  0x20016a\(%rip\)        # 200330 <_GLOBAL_OFFSET_TABLE_\+0x8>
+- +[a-f0-9]+:	ff 25 6c 01 20 00    	jmpq   \*0x20016c\(%rip\)        # 200338 <_GLOBAL_OFFSET_TABLE_\+0x10>
++ +[a-f0-9]+:	ff 35 62 01 20 00    	pushq  0x200162\(%rip\)        # 200328 <_GLOBAL_OFFSET_TABLE_\+0x8>
++ +[a-f0-9]+:	ff 25 64 01 20 00    	jmpq   \*0x200164\(%rip\)        # 200330 <_GLOBAL_OFFSET_TABLE_\+0x10>
+  +[a-f0-9]+:	0f 1f 40 00          	nopl   0x0\(%rax\)
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+  +[a-f0-9]+:	68 00 00 00 00       	pushq  \$0x0
+@@ -25,12 +25,12 @@ Disassembly of section .plt.sec:
+ 
+ 0+1f0 <bar1@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 46 01 20 00    	jmpq   \*0x200146\(%rip\)        # 200340 <bar1>
++ +[a-f0-9]+:	ff 25 3e 01 20 00    	jmpq   \*0x20013e\(%rip\)        # 200338 <bar1>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ 0+200 <bar2@plt>:
+  +[a-f0-9]+:	f3 0f 1e fa          	endbr64 
+- +[a-f0-9]+:	ff 25 3e 01 20 00    	jmpq   \*0x20013e\(%rip\)        # 200348 <bar2>
++ +[a-f0-9]+:	ff 25 36 01 20 00    	jmpq   \*0x200136\(%rip\)        # 200340 <bar2>
+  +[a-f0-9]+:	66 0f 1f 44 00 00    	nopw   0x0\(%rax,%rax,1\)
+ 
+ Disassembly of section .text:
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-3c.d b/ld/testsuite/ld-x86-64/ibt-plt-3c.d
+index b299f22b6f..d0665aef6b 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-3c.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-3c.d
+@@ -1,6 +1,6 @@
+ #source: ibt-plt-3.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64 -z ibt
++#ld: -shared -m elf_x86_64 -z ibt --hash-style=sysv
+ #objdump: -dw
+ 
+ .*: +file format .*
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-3d-x32.d b/ld/testsuite/ld-x86-64/ibt-plt-3d-x32.d
+index 447e8116a9..ceaf75a649 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-3d-x32.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-3d-x32.d
+@@ -1,7 +1,42 @@
+ #source: ibt-plt-3.s
+ #as: --x32
+-#ld: -shared -m elf32_x86_64 -z ibt
+-#readelf: -n
++#ld: -shared -m elf32_x86_64 -z ibt --hash-style=sysv
++#readelf: -wf -n
++
++Contents of the .eh_frame section:
++
++0+ 00000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -8
++  Return address column: 16
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r7 \(rsp\) ofs 8
++  DW_CFA_offset: r16 \(rip\) at cfa-8
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 00000014 0000001c FDE cie=00000000 pc=00000210..00000222
++  DW_CFA_advance_loc: 4 to 00000214
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 9 to 0000021d
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_nop
++
++0+30 00000020 00000034 FDE cie=00000000 pc=000001c0..000001f0
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 6 to 000001c6
++  DW_CFA_def_cfa_offset: 24
++  DW_CFA_advance_loc: 10 to 000001d0
++  DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit9; DW_OP_ge; DW_OP_lit3; DW_OP_shl; DW_OP_plus\)
++
++0+54 00000010 00000058 FDE cie=00000000 pc=000001f0..00000210
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
+diff --git a/ld/testsuite/ld-x86-64/ibt-plt-3d.d b/ld/testsuite/ld-x86-64/ibt-plt-3d.d
+index 342626a472..d5cade017b 100644
+--- a/ld/testsuite/ld-x86-64/ibt-plt-3d.d
++++ b/ld/testsuite/ld-x86-64/ibt-plt-3d.d
+@@ -1,7 +1,46 @@
+ #source: ibt-plt-3.s
+ #as: --64 -defsym __64_bit__=1
+-#ld: -shared -m elf_x86_64 -z ibt
+-#readelf: -n
++#ld: -shared -m elf_x86_64 -z ibt --hash-style=sysv
++#readelf: -wf -n
++
++Contents of the .eh_frame section:
++
++0+ 0000000000000014 00000000 CIE
++  Version:               1
++  Augmentation:          "zR"
++  Code alignment factor: 1
++  Data alignment factor: -8
++  Return address column: 16
++  Augmentation data:     1b
++
++  DW_CFA_def_cfa: r7 \(rsp\) ofs 8
++  DW_CFA_offset: r16 \(rip\) at cfa-8
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+18 0000000000000014 0000001c FDE cie=00000000 pc=00000000000002e0..00000000000002f2
++  DW_CFA_advance_loc: 4 to 00000000000002e4
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 9 to 00000000000002ed
++  DW_CFA_def_cfa_offset: 8
++  DW_CFA_nop
++
++0+30 0000000000000024 00000034 FDE cie=00000000 pc=0000000000000290..00000000000002c0
++  DW_CFA_def_cfa_offset: 16
++  DW_CFA_advance_loc: 6 to 0000000000000296
++  DW_CFA_def_cfa_offset: 24
++  DW_CFA_advance_loc: 10 to 00000000000002a0
++  DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0; DW_OP_lit15; DW_OP_and; DW_OP_lit10; DW_OP_ge; DW_OP_lit3; DW_OP_shl; DW_OP_plus\)
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
++0+58 0000000000000010 0000005c FDE cie=00000000 pc=00000000000002c0..00000000000002e0
++  DW_CFA_nop
++  DW_CFA_nop
++  DW_CFA_nop
++
+ 
+ Displaying notes found in: .note.gnu.property
+   Owner                 Data size	Description
