@@ -117,6 +117,11 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--with-gnu-as \
+		--with-gnu-ld \
+		--enable-plugin \
+		--enable-lto \
+		--enable-gold \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
