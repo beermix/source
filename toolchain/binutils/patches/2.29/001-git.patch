@@ -23607,3 +23607,2096 @@ index 342626a472..d5cade017b 100644
  
  Displaying notes found in: .note.gnu.property
    Owner                 Data size	Description
+
+commit e86c2603939a7203a5cbc140b57f59f7687f2c2f
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sat Sep 2 00:01:34 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 54b6d99917..c65cb0aa75 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170901
++#define BFD_VERSION_DATE 20170902
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 78a6a9c3a3a37868fd7014a67606281aea1c2c84
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Fri Sep 1 18:53:26 2017 -0700
+
+    x86-64: Check ELF_COMMON_DEF_P for common symbols
+    
+    bfd/
+    
+            PR ld/22064
+            * elf64-x86-64.c (elf_x86_64_finish_dynamic_symbol): Check
+            ELF_COMMON_DEF_P for common symbols.
+    
+    ld/
+    
+            PR ld/22064
+            * testsuite/ld-x86-64/pr22064a.S: New file.
+            * testsuite/ld-x86-64/pr22064b.c: Likewise.
+            * testsuite/ld-x86-64/x86-64.exp: Run PR ld/22064 test.
+    
+    (cherry picked from commit ad71ce8de7dba823f5fc478e6d5eba03f1a2e822)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 93142541d0..b5f1204e64 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,5 +1,11 @@
+ 2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
+ 
++	PR ld/22064
++	* elf64-x86-64.c (elf_x86_64_finish_dynamic_symbol): Check
++	ELF_COMMON_DEF_P for common symbols.
++
++2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
++
+ 	PR ld/22061
+ 	* elf32-i386.c (elf_i386_link_setup_gnu_properties): Create
+ 	.eh_frame section for the second PLT.
+diff --git a/bfd/elf64-x86-64.c b/bfd/elf64-x86-64.c
+index bc60012f1e..59926b6092 100644
+--- a/bfd/elf64-x86-64.c
++++ b/bfd/elf64-x86-64.c
+@@ -6181,7 +6181,7 @@ elf_x86_64_finish_dynamic_symbol (bfd *output_bfd,
+       else if (bfd_link_pic (info)
+ 	       && SYMBOL_REFERENCES_LOCAL (info, h))
+ 	{
+-	  if (!h->def_regular)
++	  if (!(h->def_regular || ELF_COMMON_DEF_P (h)))
+ 	    return FALSE;
+ 	  BFD_ASSERT((h->got.offset & 1) != 0);
+ 	  rela.r_info = htab->r_info (0, R_X86_64_RELATIVE);
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index f4335cfe26..24d0ed26a7 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,5 +1,12 @@
+ 2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
+ 
++	PR ld/22064
++	* testsuite/ld-x86-64/pr22064a.S: New file.
++	* testsuite/ld-x86-64/pr22064b.c: Likewise.
++	* testsuite/ld-x86-64/x86-64.exp: Run PR ld/22064 test.
++
++2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
++
+ 	PR ld/22061
+ 	* testsuite/ld-i386/ibt-plt-1.d: Pass --hash-style=sysv to ld.
+ 	Updated.
+diff --git a/ld/testsuite/ld-x86-64/pr22064a.S b/ld/testsuite/ld-x86-64/pr22064a.S
+new file mode 100644
+index 0000000000..8065a112d7
+--- /dev/null
++++ b/ld/testsuite/ld-x86-64/pr22064a.S
+@@ -0,0 +1,33 @@
++	.section	.rodata.str1.1,"aMS",@progbits,1
++.LC0:
++	.string	"PASS"
++	.text
++	.globl	main
++	.type	main, @function
++main:
++	movq	foo@GOTPCREL(%rip), %rax
++	cmpl	$0, (%rax)
++	jne	.L4
++	subq	$8, %rsp
++	call	foo_p@PLT
++	cmpq	foo@GOTPCREL(%rip), %rax
++	jne	.L2
++	movq	bar@GOTPCREL(%rip), %rax
++	cmpl	$-1, (%rax)
++	jne	.L2
++	call	bar_p@PLT
++	cmpq	bar@GOTPCREL(%rip), %rax
++	jne	.L2
++	leaq	.LC0(%rip), %rdi
++	call	puts@PLT
++.L2:
++	movl	$0, %eax
++	addq	$8, %rsp
++	ret
++.L4:
++	movl	$0, %eax
++	ret
++	.size	main, .-main
++	.comm	bar,8,4
++	.comm	foo,4,4
++	.section	.note.GNU-stack,"",@progbits
+diff --git a/ld/testsuite/ld-x86-64/pr22064b.c b/ld/testsuite/ld-x86-64/pr22064b.c
+new file mode 100644
+index 0000000000..d9065458ed
+--- /dev/null
++++ b/ld/testsuite/ld-x86-64/pr22064b.c
+@@ -0,0 +1,14 @@
++int foo[2];
++int bar[2] = { -1, -1 };
++
++int *
++foo_p (void)
++{
++  return foo;
++}
++
++int *
++bar_p (void)
++{
++  return bar;
++}
+diff --git a/ld/testsuite/ld-x86-64/x86-64.exp b/ld/testsuite/ld-x86-64/x86-64.exp
+index 13c68b82ee..2535fb7091 100644
+--- a/ld/testsuite/ld-x86-64/x86-64.exp
++++ b/ld/testsuite/ld-x86-64/x86-64.exp
+@@ -1039,6 +1039,20 @@ if { [isnative] && [which $CC] != 0 } {
+ 	    {{readelf {-n} property-7.r}} \
+ 	    "property-7b.o" \
+ 	] \
++	[list \
++	    "Build pr22064a.o" \
++	    "" \
++	    "" \
++	    { pr22064a.S } \
++	] \
++	[list \
++	    "Build pr22064.so" \
++	    "-shared" \
++	    "-fPIC" \
++	    { pr22064b.c } \
++	    {} \
++	    "pr22064.so" \
++	] \
+     ]
+ 
+     run_ld_link_exec_tests [list \
+@@ -1215,6 +1229,15 @@ if { [isnative] && [which $CC] != 0 } {
+ 	    {property-x86-2.S property-x86-1.S pass.c property-stack.S} \
+ 	    "property-5-static" "pass.out" \
+ 	] \
++	[list \
++	    "Run pr22064" \
++	    "-pie -Wl,--no-as-needed tmpdir/pr22064a.o tmpdir/pr22064.so" \
++	    "" \
++	    { dummy.s } \
++	    "pr22064-pie" \
++	    "pass.out" \
++	    "-fPIE" \
++	] \
+     ]
+ 
+     # Run-time tests which require working ifunc attribute support.
+
+commit 89b69822ec341d8a01f7d9fc1bdee0c1339f55b5
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sun Sep 3 00:01:37 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index c65cb0aa75..f9c06bd017 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170902
++#define BFD_VERSION_DATE 20170903
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 4b2b2eec571dd6b78368661c3084df0ce6d9fff2
+Author: Alan Modra <amodra@gmail.com>
+Date:   Mon Sep 4 08:35:21 2017 +0930
+
+    PR22067, x86 check_relocs invalid read
+    
+            PR 22067
+            * elf32-i386.c (elf_i386_hash_table): Check is_elf_hash_table first.
+            * elf64-x86-64.c (elf_x86_64_hash_table): Likewise.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index b5f1204e64..9df9bc6646 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,9 @@
++2017-09-04  Alan Modra  <amodra@gmail.com>
++
++	PR 22067
++	* elf32-i386.c (elf_i386_hash_table): Check is_elf_hash_table first.
++	* elf64-x86-64.c (elf_x86_64_hash_table): Likewise.
++
+ 2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	PR ld/22064
+diff --git a/bfd/elf32-i386.c b/bfd/elf32-i386.c
+index a2866c5d7f..c123f122c3 100644
+--- a/bfd/elf32-i386.c
++++ b/bfd/elf32-i386.c
+@@ -1113,7 +1113,8 @@ struct elf_i386_link_hash_table
+ /* Get the i386 ELF linker hash table from a link_info structure.  */
+ 
+ #define elf_i386_hash_table(p) \
+-  (elf_hash_table_id  ((struct elf_link_hash_table *) ((p)->hash)) \
++  (is_elf_hash_table ((p)->hash) \
++   && elf_hash_table_id  ((struct elf_link_hash_table *) ((p)->hash))	\
+   == I386_ELF_DATA ? ((struct elf_i386_link_hash_table *) ((p)->hash)) : NULL)
+ 
+ #define elf_i386_compute_jump_table_size(htab) \
+diff --git a/bfd/elf64-x86-64.c b/bfd/elf64-x86-64.c
+index 59926b6092..c59b8c015b 100644
+--- a/bfd/elf64-x86-64.c
++++ b/bfd/elf64-x86-64.c
+@@ -1227,7 +1227,8 @@ struct elf_x86_64_link_hash_table
+ /* Get the x86-64 ELF linker hash table from a link_info structure.  */
+ 
+ #define elf_x86_64_hash_table(p) \
+-  (elf_hash_table_id ((struct elf_link_hash_table *) ((p)->hash)) \
++  (is_elf_hash_table ((p)->hash) \
++   && elf_hash_table_id ((struct elf_link_hash_table *) ((p)->hash))	\
+   == X86_64_ELF_DATA ? ((struct elf_x86_64_link_hash_table *) ((p)->hash)) : NULL)
+ 
+ #define elf_x86_64_compute_jump_table_size(htab) \
+
+commit 75d67a6c5b6eb9aa5a93f99f678a09a918c5e8dc
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Mon Sep 4 00:01:28 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index f9c06bd017..c41ec3dddd 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170903
++#define BFD_VERSION_DATE 20170904
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 353c8680bcb654ab104cccf5647126226cac868b
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Mon Sep 4 15:51:32 2017 +0100
+
+    Import patch from mainline to replace an abort when parsing a corrupt COFF binary with an error message instead.
+    
+            PR binutils/21781
+            * coffcode.h (handle_COMDAT): Replace abort with an error message
+            and return.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 9df9bc6646..9384d3ac28 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,11 @@
++2017-09-04  Nick Clifton  <nickc@redhat.com>
++
++	Import from mainline:
++
++	PR binutils/21781
++	* coffcode.h (handle_COMDAT): Replace abort with an error message
++	and return.
++
+ 2017-09-04  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 22067
+diff --git a/bfd/coffcode.h b/bfd/coffcode.h
+index 4aa974136a..6d2a007ad3 100644
+--- a/bfd/coffcode.h
++++ b/bfd/coffcode.h
+@@ -997,7 +997,13 @@ handle_COMDAT (bfd * abfd,
+ 			|| isym.n_sclass == C_EXT)
+ 		       && BTYPE (isym.n_type) == T_NULL
+ 		       && isym.n_value == 0))
+-		  abort ();
++		  {
++		    /* Malformed input files can trigger this test.
++		       cf PR 21781.  */
++		    _bfd_error_handler (_("%B: error: unexpected symbol '%s' in COMDAT section"),
++					abfd, symname);
++		    goto breakloop;
++		  }
+ 
+ 		/* FIXME LATER: MSVC generates section names
+ 		   like .text for comdats.  Gas generates
+
+commit 7e693dd5cede637daf4456a2a8f207be1044c6e8
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Mon Sep 4 16:04:44 2017 +0100
+
+    Import patch from mainline to fix address violations when parsing corrupt COFF binaries
+    
+            PR 21786
+            * coff-rs6000.c (_bfd_strntol): New function.
+            (_bfd_strntoll): New function.
+            (GET_VALUE_IN_FIELD): New macro.
+            (EQ_VALUE_IN_FIELD): new macro.
+            (_bfd_xcoff_slurp_armap): Use new macros.
+            (_bfd_xcoff_archive_p): Likewise.
+            (_bfd_xcoff_read_ar_hdr): Likewise.
+            (_bfd_xcoff_openr_next_archived_file): Likewise.
+            (_bfd_xcoff_stat_arch_elt): Likewise.
+            * coff64-rs6000.c (_bfd_strntol): New function.
+            (_bfd_strntoll): New function.
+            (GET_VALUE_IN_FIELD): New macro.
+            (xcoff64_slurp_armap): Use new macros.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 9384d3ac28..1bba945409 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -6,6 +6,21 @@
+ 	* coffcode.h (handle_COMDAT): Replace abort with an error message
+ 	and return.
+ 
++	PR 21786
++	* coff-rs6000.c (_bfd_strntol): New function.
++	(_bfd_strntoll): New function.
++	(GET_VALUE_IN_FIELD): New macro.
++	(EQ_VALUE_IN_FIELD): new macro.
++	(_bfd_xcoff_slurp_armap): Use new macros.
++	(_bfd_xcoff_archive_p): Likewise.
++	(_bfd_xcoff_read_ar_hdr): Likewise.
++	(_bfd_xcoff_openr_next_archived_file): Likewise.
++	(_bfd_xcoff_stat_arch_elt): Likewise.
++	* coff64-rs6000.c (_bfd_strntol): New function.
++	(_bfd_strntoll): New function.
++	(GET_VALUE_IN_FIELD): New macro.
++	(xcoff64_slurp_armap): Use new macros.
++
+ 2017-09-04  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 22067
+diff --git a/bfd/coff-rs6000.c b/bfd/coff-rs6000.c
+index 3c5042fe20..cf4f0ba51d 100644
+--- a/bfd/coff-rs6000.c
++++ b/bfd/coff-rs6000.c
+@@ -203,7 +203,8 @@ bfd_boolean (*xcoff_complain_overflow[XCOFF_MAX_COMPLAIN_OVERFLOW])
+ };
+ 
+ /* Information about one member of an archive.  */
+-struct member_layout {
++struct member_layout
++{
+   /* The archive member that this structure describes.  */
+   bfd *member;
+ 
+@@ -237,7 +238,8 @@ struct member_layout {
+ };
+ 
+ /* A structure used for iterating over the members of an archive.  */
+-struct archive_iterator {
++struct archive_iterator
++{
+   /* The archive itself.  */
+   bfd *archive;
+ 
+@@ -654,8 +656,6 @@ _bfd_xcoff_swap_aux_out (bfd *abfd, void * inp, int type, int in_class,
+ end:
+   return bfd_coff_auxesz (abfd);
+ }
+-
+-
+ 
+ /* The XCOFF reloc table.  Actually, XCOFF relocations specify the
+    bitsize and whether they are signed or not, along with a
+@@ -663,7 +663,6 @@ end:
+    different algorithms for putting in the reloc.  Many of these
+    relocs need special_function entries, which I have not written.  */
+ 
+-
+ reloc_howto_type xcoff_howto_table[] =
+ {
+   /* 0x00: Standard 32 bit relocation.  */
+@@ -1185,6 +1184,51 @@ bfd_xcoff_ar_archive_set_magic (bfd *abfd ATTRIBUTE_UNUSED,
+  /* bfd_xcoff_archive_set_magic (abfd, magic); */
+ }
+ 
++/* PR 21786:  The PE/COFF standard does not require NUL termination for any of
++   the ASCII fields in the archive headers.  So in order to be able to extract
++   numerical values we provide our own versions of strtol and strtoll which
++   take a maximum length as an additional parameter.  Also - just to save space,
++   we omit the endptr return parameter, since we know that it is never used.  */
++
++static long
++_bfd_strntol (const char * nptr, int base, unsigned int maxlen)
++{
++  char buf[24]; /* Should be enough.  */
++
++  BFD_ASSERT (maxlen < (sizeof (buf) - 1));
++
++  memcpy (buf, nptr, maxlen);
++  buf[maxlen] = 0;
++  return strtol (buf, NULL, base);
++}
++
++static long long
++_bfd_strntoll (const char * nptr, int base, unsigned int maxlen)
++{
++  char buf[32]; /* Should be enough.  */
++
++  BFD_ASSERT (maxlen < (sizeof (buf) - 1));
++
++  memcpy (buf, nptr, maxlen);
++  buf[maxlen] = 0;
++  return strtoll (buf, NULL, base);
++}
++
++/* Macro to read an ASCII value stored in an archive header field.  */
++#define GET_VALUE_IN_FIELD(VAR, FIELD)		  \
++  do						  \
++    {						  \
++      (VAR) = sizeof (VAR) > sizeof (long)	  \
++        ? _bfd_strntoll (FIELD, 10, sizeof FIELD) \
++	: _bfd_strntol (FIELD, 10, sizeof FIELD); \
++    }						  \
++  while (0)
++
++#define EQ_VALUE_IN_FIELD(VAR, FIELD)			\
++  (sizeof (VAR) > sizeof (long)				\
++   ? (VAR) ==_bfd_strntoll (FIELD, 10, sizeof FIELD)	\
++   : (VAR) == _bfd_strntol (FIELD, 10, sizeof FIELD))
++
+ /* Read in the armap of an XCOFF archive.  */
+ 
+ bfd_boolean
+@@ -1209,7 +1253,7 @@ _bfd_xcoff_slurp_armap (bfd *abfd)
+       /* This is for the old format.  */
+       struct xcoff_ar_hdr hdr;
+ 
+-      off = strtol (xcoff_ardata (abfd)->symoff, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (off, xcoff_ardata (abfd)->symoff);
+       if (off == 0)
+ 	{
+ 	  bfd_has_map (abfd) = FALSE;
+@@ -1225,12 +1269,12 @@ _bfd_xcoff_slurp_armap (bfd *abfd)
+ 	return FALSE;
+ 
+       /* Skip the name (normally empty).  */
+-      namlen = strtol (hdr.namlen, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (namlen, hdr.namlen);
+       off = ((namlen + 1) & ~ (size_t) 1) + SXCOFFARFMAG;
+       if (bfd_seek (abfd, off, SEEK_CUR) != 0)
+ 	return FALSE;
+ 
+-      sz = strtol (hdr.size, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (sz, hdr.size);
+ 
+       /* Read in the entire symbol table.  */
+       contents = (bfd_byte *) bfd_alloc (abfd, sz);
+@@ -1264,7 +1308,7 @@ _bfd_xcoff_slurp_armap (bfd *abfd)
+       /* This is for the new format.  */
+       struct xcoff_ar_hdr_big hdr;
+ 
+-      off = strtol (xcoff_ardata_big (abfd)->symoff, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (off, xcoff_ardata_big (abfd)->symoff);
+       if (off == 0)
+ 	{
+ 	  bfd_has_map (abfd) = FALSE;
+@@ -1280,15 +1324,12 @@ _bfd_xcoff_slurp_armap (bfd *abfd)
+ 	return FALSE;
+ 
+       /* Skip the name (normally empty).  */
+-      namlen = strtol (hdr.namlen, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (namlen, hdr.namlen);
+       off = ((namlen + 1) & ~ (size_t) 1) + SXCOFFARFMAG;
+       if (bfd_seek (abfd, off, SEEK_CUR) != 0)
+ 	return FALSE;
+ 
+-      /* XXX This actually has to be a call to strtoll (at least on 32-bit
+-	 machines) since the field width is 20 and there numbers with more
+-	 than 32 bits can be represented.  */
+-      sz = strtol (hdr.size, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (sz, hdr.size);
+ 
+       /* Read in the entire symbol table.  */
+       contents = (bfd_byte *) bfd_alloc (abfd, sz);
+@@ -1393,8 +1434,8 @@ _bfd_xcoff_archive_p (bfd *abfd)
+ 	  goto error_ret;
+ 	}
+ 
+-      bfd_ardata (abfd)->first_file_filepos = strtol (hdr.firstmemoff,
+-						      (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (bfd_ardata (abfd)->first_file_filepos,
++			  hdr.firstmemoff);
+ 
+       amt = SIZEOF_AR_FILE_HDR;
+       bfd_ardata (abfd)->tdata = bfd_zalloc (abfd, amt);
+@@ -1469,7 +1510,7 @@ _bfd_xcoff_read_ar_hdr (bfd *abfd)
+ 	  return NULL;
+ 	}
+ 
+-      namlen = strtol (hdr.namlen, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (namlen, hdr.namlen);
+       amt = SIZEOF_AR_HDR + namlen + 1;
+       hdrp = (struct xcoff_ar_hdr *) bfd_alloc (abfd, amt);
+       if (hdrp == NULL)
+@@ -1486,7 +1527,7 @@ _bfd_xcoff_read_ar_hdr (bfd *abfd)
+       ((char *) hdrp)[SIZEOF_AR_HDR + namlen] = '\0';
+ 
+       ret->arch_header = (char *) hdrp;
+-      ret->parsed_size = strtol (hdr.size, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (ret->parsed_size, hdr.size);
+       ret->filename = (char *) hdrp + SIZEOF_AR_HDR;
+     }
+   else
+@@ -1501,7 +1542,7 @@ _bfd_xcoff_read_ar_hdr (bfd *abfd)
+ 	  return NULL;
+ 	}
+ 
+-      namlen = strtol (hdr.namlen, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (namlen, hdr.namlen);
+       amt = SIZEOF_AR_HDR_BIG + namlen + 1;
+       hdrp = (struct xcoff_ar_hdr_big *) bfd_alloc (abfd, amt);
+       if (hdrp == NULL)
+@@ -1518,10 +1559,7 @@ _bfd_xcoff_read_ar_hdr (bfd *abfd)
+       ((char *) hdrp)[SIZEOF_AR_HDR_BIG + namlen] = '\0';
+ 
+       ret->arch_header = (char *) hdrp;
+-      /* XXX This actually has to be a call to strtoll (at least on 32-bit
+-	 machines) since the field width is 20 and there numbers with more
+-	 than 32 bits can be represented.  */
+-      ret->parsed_size = strtol (hdr.size, (char **) NULL, 10);
++      GET_VALUE_IN_FIELD (ret->parsed_size, hdr.size);
+       ret->filename = (char *) hdrp + SIZEOF_AR_HDR_BIG;
+     }
+ 
+@@ -1550,14 +1588,11 @@ _bfd_xcoff_openr_next_archived_file (bfd *archive, bfd *last_file)
+       if (last_file == NULL)
+ 	filestart = bfd_ardata (archive)->first_file_filepos;
+       else
+-	filestart = strtol (arch_xhdr (last_file)->nextoff, (char **) NULL,
+-			    10);
++	GET_VALUE_IN_FIELD (filestart, arch_xhdr (last_file)->nextoff);
+ 
+       if (filestart == 0
+-	  || filestart == strtol (xcoff_ardata (archive)->memoff,
+-				  (char **) NULL, 10)
+-	  || filestart == strtol (xcoff_ardata (archive)->symoff,
+-				  (char **) NULL, 10))
++	  || EQ_VALUE_IN_FIELD (filestart, xcoff_ardata (archive)->memoff)
++	  || EQ_VALUE_IN_FIELD (filestart, xcoff_ardata (archive)->symoff))
+ 	{
+ 	  bfd_set_error (bfd_error_no_more_archived_files);
+ 	  return NULL;
+@@ -1568,20 +1603,11 @@ _bfd_xcoff_openr_next_archived_file (bfd *archive, bfd *last_file)
+       if (last_file == NULL)
+ 	filestart = bfd_ardata (archive)->first_file_filepos;
+       else
+-	/* XXX These actually have to be a calls to strtoll (at least
+-	   on 32-bit machines) since the fields's width is 20 and
+-	   there numbers with more than 32 bits can be represented.  */
+-	filestart = strtol (arch_xhdr_big (last_file)->nextoff, (char **) NULL,
+-			    10);
+-
+-      /* XXX These actually have to be calls to strtoll (at least on 32-bit
+-	 machines) since the fields's width is 20 and there numbers with more
+-	 than 32 bits can be represented.  */
++	GET_VALUE_IN_FIELD (filestart, arch_xhdr_big (last_file)->nextoff);
++
+       if (filestart == 0
+-	  || filestart == strtol (xcoff_ardata_big (archive)->memoff,
+-				  (char **) NULL, 10)
+-	  || filestart == strtol (xcoff_ardata_big (archive)->symoff,
+-				  (char **) NULL, 10))
++	  || EQ_VALUE_IN_FIELD (filestart, xcoff_ardata_big (archive)->memoff)
++	  || EQ_VALUE_IN_FIELD (filestart, xcoff_ardata_big (archive)->symoff))
+ 	{
+ 	  bfd_set_error (bfd_error_no_more_archived_files);
+ 	  return NULL;
+@@ -1606,20 +1632,20 @@ _bfd_xcoff_stat_arch_elt (bfd *abfd, struct stat *s)
+     {
+       struct xcoff_ar_hdr *hdrp = arch_xhdr (abfd);
+ 
+-      s->st_mtime = strtol (hdrp->date, (char **) NULL, 10);
+-      s->st_uid = strtol (hdrp->uid, (char **) NULL, 10);
+-      s->st_gid = strtol (hdrp->gid, (char **) NULL, 10);
+-      s->st_mode = strtol (hdrp->mode, (char **) NULL, 8);
++      GET_VALUE_IN_FIELD (s->st_mtime, hdrp->date);
++      GET_VALUE_IN_FIELD (s->st_uid, hdrp->uid);
++      GET_VALUE_IN_FIELD (s->st_gid, hdrp->gid);
++      GET_VALUE_IN_FIELD (s->st_mode, hdrp->mode);
+       s->st_size = arch_eltdata (abfd)->parsed_size;
+     }
+   else
+     {
+       struct xcoff_ar_hdr_big *hdrp = arch_xhdr_big (abfd);
+ 
+-      s->st_mtime = strtol (hdrp->date, (char **) NULL, 10);
+-      s->st_uid = strtol (hdrp->uid, (char **) NULL, 10);
+-      s->st_gid = strtol (hdrp->gid, (char **) NULL, 10);
+-      s->st_mode = strtol (hdrp->mode, (char **) NULL, 8);
++      GET_VALUE_IN_FIELD (s->st_mtime, hdrp->date);
++      GET_VALUE_IN_FIELD (s->st_uid, hdrp->uid);
++      GET_VALUE_IN_FIELD (s->st_gid, hdrp->gid);
++      GET_VALUE_IN_FIELD (s->st_mode, hdrp->mode);
+       s->st_size = arch_eltdata (abfd)->parsed_size;
+     }
+ 
+
+commit a541116faa5716d5c1a4bc9d1567855902b89a87
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Mon Sep 4 16:14:19 2017 +0100
+
+    Import patch from mainline to improve reporting of corrupt archives.
+    
+            PR 21787
+            * archive.c (bfd_generic_archive_p): If the bfd does not have the
+            correct magic bytes at the start, set the error to wrong format
+            and clear the format selector before returning NULL.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 1bba945409..7be3d8267a 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -21,6 +21,11 @@
+ 	(GET_VALUE_IN_FIELD): New macro.
+ 	(xcoff64_slurp_armap): Use new macros.
+ 
++	PR 21787
++	* archive.c (bfd_generic_archive_p): If the bfd does not have the
++	correct magic bytes at the start, set the error to wrong format
++	and clear the format selector before returning NULL.
++
+ 2017-09-04  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 22067
+diff --git a/bfd/archive.c b/bfd/archive.c
+index f209babe14..885bf489c0 100644
+--- a/bfd/archive.c
++++ b/bfd/archive.c
+@@ -834,7 +834,12 @@ bfd_generic_archive_p (bfd *abfd)
+   if (strncmp (armag, ARMAG, SARMAG) != 0
+       && strncmp (armag, ARMAGB, SARMAG) != 0
+       && ! bfd_is_thin_archive (abfd))
+-    return NULL;
++    {
++      bfd_set_error (bfd_error_wrong_format);
++      if (abfd->format == bfd_archive)
++	abfd->format = bfd_unknown;
++      return NULL;
++    }
+ 
+   tdata_hold = bfd_ardata (abfd);
+ 
+
+commit deeb3d27c254ad8bf8c3877fa6b61817f56191f5
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Mon Sep 4 16:31:12 2017 +0100
+
+    Import patch from mainline to fix address violation errors when parsing corrupt VMS and MACHO binaries.
+    
+            PR 21813
+            * mach-o.c (bfd_mach_o_canonicalize_relocs): Pass the base address
+            of the relocs to the canonicalize_one_reloc routine.
+            * mach-o.h (struct bfd_mach_o_backend_data): Update the prototype
+            for the _bfd_mach_o_canonicalize_one_reloc field.
+            * mach-o-arm.c (bfd_mach_o_arm_canonicalize_one_reloc): Add
+            res_base parameter.  Use to check for corrupt pair relocs.
+            * mach-o-aarch64.c (bfd_mach_o_arm64_canonicalize_one_reloc):
+            Likewise.
+            * mach-o-i386.c (bfd_mach_o_i386_canonicalize_one_reloc):
+            Likewise.
+            * mach-o-x86-64.c (bfd_mach_o_x86_64_canonicalize_one_reloc):
+            Likewise.
+            * vms-alpha.c (_bfd_vms_slurp_eihd): Make sure that there is
+            enough data in the record before attempting to parse it.
+            (_bfd_vms_slurp_eeom): Likewise.
+            (_bfd_vms_slurp_egsd): Check for an invalid section index.
+            (image_set_ptr): Likewise.
+            (alpha_vms_slurp_relocs): Likewise.
+            (alpha_vms_object_p): Check for a truncated record.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 7be3d8267a..ac1e404081 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -26,6 +26,27 @@
+ 	correct magic bytes at the start, set the error to wrong format
+ 	and clear the format selector before returning NULL.
+ 
++	PR 21813
++	* mach-o.c (bfd_mach_o_canonicalize_relocs): Pass the base address
++	of the relocs to the canonicalize_one_reloc routine.
++	* mach-o.h (struct bfd_mach_o_backend_data): Update the prototype
++	for the _bfd_mach_o_canonicalize_one_reloc field.
++	* mach-o-arm.c (bfd_mach_o_arm_canonicalize_one_reloc): Add
++	res_base parameter.  Use to check for corrupt pair relocs.
++	* mach-o-aarch64.c (bfd_mach_o_arm64_canonicalize_one_reloc):
++	Likewise.
++	* mach-o-i386.c (bfd_mach_o_i386_canonicalize_one_reloc):
++	Likewise.
++	* mach-o-x86-64.c (bfd_mach_o_x86_64_canonicalize_one_reloc):
++	Likewise.
++	* vms-alpha.c (_bfd_vms_slurp_eihd): Make sure that there is
++	enough data in the record before attempting to parse it.
++	(_bfd_vms_slurp_eeom): Likewise.
++	(_bfd_vms_slurp_egsd): Check for an invalid section index.
++	(image_set_ptr): Likewise.
++	(alpha_vms_slurp_relocs): Likewise.
++	(alpha_vms_object_p): Check for a truncated record.
++
+ 2017-09-04  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 22067
+diff --git a/bfd/mach-o-aarch64.c b/bfd/mach-o-aarch64.c
+index 12fc47eb0a..8fc6831a39 100644
+--- a/bfd/mach-o-aarch64.c
++++ b/bfd/mach-o-aarch64.c
+@@ -148,8 +148,10 @@ static reloc_howto_type arm64_howto_table[]=
+ 
+ static bfd_boolean
+ bfd_mach_o_arm64_canonicalize_one_reloc (bfd *abfd,
+-				       struct mach_o_reloc_info_external *raw,
+-					 arelent *res, asymbol **syms)
++					 struct mach_o_reloc_info_external *raw,
++					 arelent *res,
++					 asymbol **syms,
++					 arelent *res_base ATTRIBUTE_UNUSED)
+ {
+   bfd_mach_o_reloc_info reloc;
+ 
+diff --git a/bfd/mach-o-arm.c b/bfd/mach-o-arm.c
+index da58679761..daeae70ce7 100644
+--- a/bfd/mach-o-arm.c
++++ b/bfd/mach-o-arm.c
+@@ -148,8 +148,10 @@ static reloc_howto_type arm_howto_table[]=
+ 
+ static bfd_boolean
+ bfd_mach_o_arm_canonicalize_one_reloc (bfd *abfd,
+-                                      struct mach_o_reloc_info_external *raw,
+-                                      arelent *res, asymbol **syms)
++				       struct mach_o_reloc_info_external *raw,
++				       arelent *res,
++				       asymbol **syms,
++				       arelent *res_base)
+ {
+   bfd_mach_o_reloc_info reloc;
+ 
+@@ -161,6 +163,9 @@ bfd_mach_o_arm_canonicalize_one_reloc (bfd *abfd,
+       switch (reloc.r_type)
+         {
+         case BFD_MACH_O_ARM_RELOC_PAIR:
++	  /* PR 21813: Check for a corrupt PAIR reloc at the start.  */
++	  if (res == res_base)
++	    return FALSE;
+           if (reloc.r_length == 2)
+             {
+ 	      res->howto = &arm_howto_table[7];
+diff --git a/bfd/mach-o-i386.c b/bfd/mach-o-i386.c
+index 82a711e661..a2f8380913 100644
+--- a/bfd/mach-o-i386.c
++++ b/bfd/mach-o-i386.c
+@@ -114,7 +114,9 @@ static reloc_howto_type i386_howto_table[]=
+ static bfd_boolean
+ bfd_mach_o_i386_canonicalize_one_reloc (bfd *abfd,
+ 				        struct mach_o_reloc_info_external *raw,
+-					arelent *res, asymbol **syms)
++					arelent *res,
++					asymbol **syms,
++					arelent *res_base)
+ {
+   bfd_mach_o_reloc_info reloc;
+ 
+@@ -126,6 +128,9 @@ bfd_mach_o_i386_canonicalize_one_reloc (bfd *abfd,
+       switch (reloc.r_type)
+         {
+         case BFD_MACH_O_GENERIC_RELOC_PAIR:
++	  /* PR 21813: Check for a corrupt PAIR reloc at the start.  */
++	  if (res == res_base)
++	    return FALSE;
+           if (reloc.r_length == 2)
+             {
+ 	      res->howto = &i386_howto_table[7];
+diff --git a/bfd/mach-o-x86-64.c b/bfd/mach-o-x86-64.c
+index 1c83b1083d..a374550d33 100644
+--- a/bfd/mach-o-x86-64.c
++++ b/bfd/mach-o-x86-64.c
+@@ -121,8 +121,10 @@ static reloc_howto_type x86_64_howto_table[]=
+ 
+ static bfd_boolean
+ bfd_mach_o_x86_64_canonicalize_one_reloc (bfd *abfd,
+-				        struct mach_o_reloc_info_external *raw,
+-					arelent *res, asymbol **syms)
++					  struct mach_o_reloc_info_external *raw,
++					  arelent *res,
++					  asymbol **syms,
++					  arelent *res_base ATTRIBUTE_UNUSED)
+ {
+   bfd_mach_o_reloc_info reloc;
+ 
+diff --git a/bfd/mach-o.c b/bfd/mach-o.c
+index 51920df683..3190774b43 100644
+--- a/bfd/mach-o.c
++++ b/bfd/mach-o.c
+@@ -1496,7 +1496,7 @@ bfd_mach_o_canonicalize_relocs (bfd *abfd, unsigned long filepos,
+   for (i = 0; i < count; i++)
+     {
+       if (!(*bed->_bfd_mach_o_canonicalize_one_reloc)(abfd, &native_relocs[i],
+-						      &res[i], syms))
++						      &res[i], syms, res))
+         goto err;
+     }
+   free (native_relocs);
+diff --git a/bfd/mach-o.h b/bfd/mach-o.h
+index 83660a4ce9..0719b53b1e 100644
+--- a/bfd/mach-o.h
++++ b/bfd/mach-o.h
+@@ -746,7 +746,7 @@ typedef struct bfd_mach_o_backend_data
+   enum bfd_architecture arch;
+   bfd_vma page_size;
+   bfd_boolean (*_bfd_mach_o_canonicalize_one_reloc)
+-    (bfd *, struct mach_o_reloc_info_external *, arelent *, asymbol **);
++  (bfd *, struct mach_o_reloc_info_external *, arelent *, asymbol **, arelent *);
+   bfd_boolean (*_bfd_mach_o_swap_reloc_out)(arelent *, bfd_mach_o_reloc_info *);
+   bfd_boolean (*_bfd_mach_o_print_thread)(bfd *, bfd_mach_o_thread_flavour *,
+                                           void *, char *);
+diff --git a/bfd/vms-alpha.c b/bfd/vms-alpha.c
+index 0b41db4409..d8ffa4ea65 100644
+--- a/bfd/vms-alpha.c
++++ b/bfd/vms-alpha.c
+@@ -473,6 +473,14 @@ _bfd_vms_slurp_eihd (bfd *abfd, unsigned int *eisd_offset,
+ 
+   vms_debug2 ((8, "_bfd_vms_slurp_eihd\n"));
+ 
++  /* PR 21813: Check for an undersized record.  */
++  if (PRIV (recrd.buf_size) < sizeof (* eihd))
++    {
++      _bfd_error_handler (_("Corrupt EIHD record - size is too small"));
++      bfd_set_error (bfd_error_bad_value);
++      return FALSE;
++    }
++
+   size = bfd_getl32 (eihd->size);
+   imgtype = bfd_getl32 (eihd->imgtype);
+ 
+@@ -1312,19 +1320,38 @@ _bfd_vms_slurp_egsd (bfd *abfd)
+ 	    if (old_flags & EGSY__V_DEF)
+               {
+                 struct vms_esdf *esdf = (struct vms_esdf *)vms_rec;
++		long psindx;
+ 
+ 		entry->value = bfd_getl64 (esdf->value);
+ 		if (PRIV (sections) == NULL)
+ 		  return FALSE;
+-		entry->section = PRIV (sections)[bfd_getl32 (esdf->psindx)];
++
++		psindx = bfd_getl32 (esdf->psindx);
++		/* PR 21813: Check for an out of range index.  */
++		if (psindx < 0 || psindx >= (int) PRIV (section_count))
++		  {
++		    _bfd_error_handler (_("Corrupt EGSD record: its psindx field is too big (%#lx)"),
++					psindx);
++		    bfd_set_error (bfd_error_bad_value);
++		    return FALSE;
++		  }
++		entry->section = PRIV (sections)[psindx];
+ 
+                 if (old_flags & EGSY__V_NORM)
+                   {
+                     PRIV (norm_sym_count)++;
+ 
+                     entry->code_value = bfd_getl64 (esdf->code_address);
+-                    entry->code_section =
+-                      PRIV (sections)[bfd_getl32 (esdf->ca_psindx)];
++		    psindx = bfd_getl32 (esdf->ca_psindx);
++		    /* PR 21813: Check for an out of range index.  */
++		    if (psindx < 0 || psindx >= (int) PRIV (section_count))
++		      {
++			_bfd_error_handler (_("Corrupt EGSD record: its psindx field is too big (%#lx)"),
++					    psindx);
++			bfd_set_error (bfd_error_bad_value);
++			return FALSE;
++		      }
++                    entry->code_section = PRIV (sections)[psindx];
+                   }
+               }
+ 	  }
+@@ -1351,9 +1378,20 @@ _bfd_vms_slurp_egsd (bfd *abfd)
+ 
+             if (old_flags & EGSY__V_REL)
+ 	      {
++		long psindx;
++
+ 		if (PRIV (sections) == NULL)
+ 		  return FALSE;
+-		entry->section = PRIV (sections)[bfd_getl32 (egst->psindx)];
++		psindx = bfd_getl32 (egst->psindx);
++		/* PR 21813: Check for an out of range index.  */
++		if (psindx < 0 || psindx >= (int) PRIV (section_count))
++		  {
++		    _bfd_error_handler (_("Corrupt EGSD record: its psindx field is too big (%#lx)"),
++					psindx);
++		    bfd_set_error (bfd_error_bad_value);
++		    return FALSE;
++		  }
++		entry->section = PRIV (sections)[psindx];
+ 	      }
+             else
+               entry->section = bfd_abs_section_ptr;
+@@ -1446,6 +1484,9 @@ image_set_ptr (bfd *abfd, bfd_vma vma, int sect, struct bfd_link_info *info)
+ 
+   if (PRIV (sections) == NULL)
+     return;
++  if (sect < 0 || sect >= (int) PRIV (section_count))
++    return;
++
+   sec = PRIV (sections)[sect];
+ 
+   if (info)
+@@ -2450,6 +2491,14 @@ _bfd_vms_slurp_eeom (bfd *abfd)
+ 
+   vms_debug2 ((2, "EEOM\n"));
+ 
++  /* PR 21813: Check for an undersized record.  */
++  if (PRIV (recrd.buf_size) < sizeof (* eeom))
++    {
++      _bfd_error_handler (_("Corrupt EEOM record - size is too small"));
++      bfd_set_error (bfd_error_bad_value);
++      return FALSE;
++    }
++
+   PRIV (eom_data).eom_l_total_lps = bfd_getl32 (eeom->total_lps);
+   PRIV (eom_data).eom_w_comcod = bfd_getl16 (eeom->comcod);
+   if (PRIV (eom_data).eom_w_comcod > 1)
+@@ -2630,6 +2679,9 @@ alpha_vms_object_p (bfd *abfd)
+           PRIV (recrd.buf_size) = PRIV (recrd.rec_size);
+         }
+ 
++      /* PR 21813: Check for a truncated record.  */
++      if (PRIV (recrd.rec_size < test_len))
++	goto error_ret;
+       /* Read the remaining record.  */
+       remaining = PRIV (recrd.rec_size) - test_len;
+       to_read = MIN (VMS_BLOCK_SIZE - test_len, remaining);
+@@ -5173,7 +5225,7 @@ alpha_vms_slurp_relocs (bfd *abfd)
+               }
+             else if (cur_psidx >= 0)
+ 	      {
+-		if (PRIV (sections) == NULL)
++		if (PRIV (sections) == NULL || cur_psidx >= (int) PRIV (section_count))
+ 		  return FALSE;
+ 		reloc->sym_ptr_ptr =
+ 		  PRIV (sections)[cur_psidx]->symbol_ptr_ptr;
+
+commit 3a6dbb3b26286620530c131430f5052949e5c6a6
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Mon Sep 4 16:43:00 2017 +0100
+
+    Import patch from mainline to allows 16-bit MSP430 absolute branches to be relaxed ino 1-bit PC-relative branches.
+    
+            PR 21824
+            * elf32-msp430.c (msp430_elf_relax_section): Allow conversion of
+            16-bit absolute branches into 10-bit pc-relative branches on the
+            MSP430 as well as the MSP430X.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index ac1e404081..870962cc8e 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -47,6 +47,11 @@
+ 	(alpha_vms_slurp_relocs): Likewise.
+ 	(alpha_vms_object_p): Check for a truncated record.
+ 
++	PR 21824
++	* elf32-msp430.c (msp430_elf_relax_section): Allow conversion of
++	16-bit absolute branches into 10-bit pc-relative branches on the
++	MSP430 as well as the MSP430X.
++
+ 2017-09-04  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 22067
+diff --git a/bfd/elf32-msp430.c b/bfd/elf32-msp430.c
+index 9fae01573e..e1e6ed0ee5 100644
+--- a/bfd/elf32-msp430.c
++++ b/bfd/elf32-msp430.c
+@@ -2227,8 +2227,10 @@ msp430_elf_relax_section (bfd * abfd, asection * sec,
+ 
+ 	/* Try to turn a 16-bit absolute branch into a 10-bit pc-relative
+ 	   branch.  */
+-	if (uses_msp430x_relocs (abfd)
+-	    && ELF32_R_TYPE (irel->r_info) == R_MSP430X_ABS16)
++	if ((uses_msp430x_relocs (abfd)
++	     && ELF32_R_TYPE (irel->r_info) == R_MSP430X_ABS16)
++	    || (! uses_msp430x_relocs (abfd)
++		&& ELF32_R_TYPE (irel->r_info) == R_MSP430_16))
+ 	  {
+ 	    bfd_vma value = symval;
+ 
+
+commit d6f8dea6798528de0fc762409595251eeeb1f547
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Mon Sep 4 17:05:17 2017 +0100
+
+    Import patch from mainline to fix address violation errors when parsing corrupt ELF binaries.
+    
+            PR 21916
+            * elf-attrs.c (_bfd_elf_parse_attributes): Complain about very
+            small section lengths.
+            * elf.c (_bfd_elf_setup_sections): Skip empty entries in the group
+            table.
+            (elfcore_grok_freebsd_prstatus): Add checks to make sure that
+            there is enough data present in the note.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 870962cc8e..226aea9ce3 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -52,6 +52,14 @@
+ 	16-bit absolute branches into 10-bit pc-relative branches on the
+ 	MSP430 as well as the MSP430X.
+ 
++	PR 21916
++	* elf-attrs.c (_bfd_elf_parse_attributes): Complain about very
++	small section lengths.
++	* elf.c (_bfd_elf_setup_sections): Skip empty entries in the group
++	table.
++	(elfcore_grok_freebsd_prstatus): Add checks to make sure that
++	there is enough data present in the note.
++
+ 2017-09-04  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 22067
+diff --git a/bfd/elf-attrs.c b/bfd/elf-attrs.c
+index 02105433b6..761a4ceb2c 100644
+--- a/bfd/elf-attrs.c
++++ b/bfd/elf-attrs.c
+@@ -470,6 +470,12 @@ _bfd_elf_parse_attributes (bfd *abfd, Elf_Internal_Shdr * hdr)
+ 	  if (section_len > len)
+ 	    section_len = len;
+ 	  len -= section_len;
++	  if (section_len <= 4)
++	    {
++	      _bfd_error_handler (_("%B: error: attribute section length too small: %ld"),
++				  abfd, section_len);
++	      break;
++	    }
+ 	  section_len -= 4;
+ 	  namelen = strnlen ((char *) p, section_len) + 1;
+ 	  if (namelen == 0 || namelen >= section_len)
+diff --git a/bfd/elf.c b/bfd/elf.c
+index fbf639b357..bbaab26918 100644
+--- a/bfd/elf.c
++++ b/bfd/elf.c
+@@ -742,12 +742,22 @@ setup_group (bfd *abfd, Elf_Internal_Shdr *hdr, asection *newsect)
+ 	{
+ 	  Elf_Internal_Shdr *shdr = elf_tdata (abfd)->group_sect_ptr[i];
+ 	  Elf_Internal_Group *idx;
+-	  unsigned int n_elt;
++	  bfd_size_type n_elt;
+ 
+ 	  if (shdr == NULL)
+ 	    continue;
+ 
+ 	  idx = (Elf_Internal_Group *) shdr->contents;
++	  if (idx == NULL || shdr->sh_size < 4)
++	    {
++	      /* See PR 21957 for a reproducer.  */
++	      /* xgettext:c-format */
++	      _bfd_error_handler (_("%B: group section '%A' has no contents"),
++				  abfd, shdr->bfd_section);
++	      elf_tdata (abfd)->group_sect_ptr[i] = NULL;
++	      bfd_set_error (bfd_error_bad_value);
++	      return FALSE;
++	    }
+ 	  n_elt = shdr->sh_size / 4;
+ 
+ 	  /* Look through this group's sections to see if current
+@@ -896,32 +906,39 @@ _bfd_elf_setup_sections (bfd *abfd)
+       n_elt = shdr->sh_size / 4;
+ 
+       while (--n_elt != 0)
+-	if ((++idx)->shdr->bfd_section)
+-	  elf_sec_group (idx->shdr->bfd_section) = shdr->bfd_section;
+-	else if (idx->shdr->sh_type == SHT_RELA
+-		 || idx->shdr->sh_type == SHT_REL)
+-	  /* We won't include relocation sections in section groups in
+-	     output object files. We adjust the group section size here
+-	     so that relocatable link will work correctly when
+-	     relocation sections are in section group in input object
+-	     files.  */
+-	  shdr->bfd_section->size -= 4;
+-	else
+-	  {
+-	    /* There are some unknown sections in the group.  */
+-	    _bfd_error_handler
+-	      /* xgettext:c-format */
+-	      (_("%B: unknown type [%#x] section `%s' in group [%A]"),
+-	       abfd,
+-	       idx->shdr->sh_type,
+-	       bfd_elf_string_from_elf_section (abfd,
+-						(elf_elfheader (abfd)
+-						 ->e_shstrndx),
+-						idx->shdr->sh_name),
+-	       shdr->bfd_section);
+-	    result = FALSE;
+-	  }
++	{
++	  ++ idx;
++
++	  if (idx->shdr == NULL)
++	    continue;
++	  else if (idx->shdr->bfd_section)
++	    elf_sec_group (idx->shdr->bfd_section) = shdr->bfd_section;
++	  else if (idx->shdr->sh_type == SHT_RELA
++		   || idx->shdr->sh_type == SHT_REL)
++	    /* We won't include relocation sections in section groups in
++	       output object files. We adjust the group section size here
++	       so that relocatable link will work correctly when
++	       relocation sections are in section group in input object
++	       files.  */
++	    shdr->bfd_section->size -= 4;
++	  else
++	    {
++	      /* There are some unknown sections in the group.  */
++	      _bfd_error_handler
++		/* xgettext:c-format */
++		(_("%B: unknown type [%#x] section `%s' in group [%A]"),
++		 abfd,
++		 idx->shdr->sh_type,
++		 bfd_elf_string_from_elf_section (abfd,
++						  (elf_elfheader (abfd)
++						   ->e_shstrndx),
++						  idx->shdr->sh_name),
++		 shdr->bfd_section);
++	      result = FALSE;
++	    }
++	}
+     }
++
+   return result;
+ }
+ 
+@@ -5115,7 +5132,7 @@ elf_sort_sections (const void *arg1, const void *arg2)
+    else
+      adjustment = vma_offset - off_offset;
+ 
+-   which can can be collapsed into the expression below.  */
++   which can be collapsed into the expression below.  */
+ 
+ static file_ptr
+ vma_page_aligned_bias (bfd_vma vma, ufile_ptr off, bfd_vma maxpagesize)
+@@ -8954,7 +8971,7 @@ elfcore_maybe_make_sect (bfd *abfd, char *name, asection *sect)
+      such a section already exists.
+    - For the multi-threaded case, a section named "NAME/PID", where
+      PID is elfcore_make_pid (abfd).
+-   Both pseudosections have identical contents. */
++   Both pseudosections have identical contents.  */
+ bfd_boolean
+ _bfd_elfcore_make_pseudosection (bfd *abfd,
+ 				 char *name,
+@@ -9883,58 +9900,68 @@ elfcore_grok_freebsd_prstatus (bfd *abfd, Elf_Internal_Note *note)
+ {
+   size_t offset;
+   size_t size;
++  size_t min_size;
+ 
+-  /* Check for version 1 in pr_version. */
+-  if (bfd_h_get_32 (abfd, (bfd_byte *) note->descdata) != 1)
+-    return FALSE;
+-  offset = 4;
+-
+-  /* Skip over pr_statussz.  */
++  /* Compute offset of pr_getregsz, skipping over pr_statussz.
++     Also compute minimum size of this note.  */
+   switch (elf_elfheader (abfd)->e_ident[EI_CLASS])
+     {
+     case ELFCLASS32:
+-      offset += 4;
++      offset = 4 + 4;
++      min_size = offset + (4 * 2) + 4 + 4 + 4;
+       break;
+ 
+     case ELFCLASS64:
+-      offset += 4;	/* Padding before pr_statussz. */
+-      offset += 8;
++      offset = 4 + 4 + 8;	/* Includes padding before pr_statussz.  */
++      min_size = offset + (8 * 2) + 4 + 4 + 4 + 4;
+       break;
+ 
+     default:
+       return FALSE;
+     }
+ 
+-  /* Extract size of pr_reg from pr_gregsetsz.  */
+-  if (elf_elfheader (abfd)->e_ident[EI_CLASS] == ELFCLASS32)
+-    size = bfd_h_get_32 (abfd, (bfd_byte *) note->descdata + offset);
+-  else
+-    size = bfd_h_get_64 (abfd, (bfd_byte *) note->descdata + offset);
++  if (note->descsz < min_size)
++    return FALSE;
++
++  /* Check for version 1 in pr_version.  */
++  if (bfd_h_get_32 (abfd, (bfd_byte *) note->descdata) != 1)
++    return FALSE;
+ 
+-  /* Skip over pr_gregsetsz and pr_fpregsetsz. */
++  /* Extract size of pr_reg from pr_gregsetsz.  */
++  /* Skip over pr_gregsetsz and pr_fpregsetsz.  */
+   if (elf_elfheader (abfd)->e_ident[EI_CLASS] == ELFCLASS32)
+-    offset += 4 * 2;
++    {
++      size = bfd_h_get_32 (abfd, (bfd_byte *) note->descdata + offset);
++      offset += 4 * 2;
++    }
+   else
+-    offset += 8 * 2;
++    {
++      size = bfd_h_get_64 (abfd, (bfd_byte *) note->descdata + offset);
++      offset += 8 * 2;
++    }
+ 
+-  /* Skip over pr_osreldate. */
++  /* Skip over pr_osreldate.  */
+   offset += 4;
+ 
+-  /* Read signal from pr_cursig. */
++  /* Read signal from pr_cursig.  */
+   if (elf_tdata (abfd)->core->signal == 0)
+     elf_tdata (abfd)->core->signal
+       = bfd_h_get_32 (abfd, (bfd_byte *) note->descdata + offset);
+   offset += 4;
+ 
+-  /* Read TID from pr_pid. */
++  /* Read TID from pr_pid.  */
+   elf_tdata (abfd)->core->lwpid
+       = bfd_h_get_32 (abfd, (bfd_byte *) note->descdata + offset);
+   offset += 4;
+ 
+-  /* Padding before pr_reg. */
++  /* Padding before pr_reg.  */
+   if (elf_elfheader (abfd)->e_ident[EI_CLASS] == ELFCLASS64)
+     offset += 4;
+ 
++  /* Make sure that there is enough data remaining in the note.  */
++  if ((note->descsz - offset) < size)
++    return FALSE;
++
+   /* Make a ".reg/999" section and a ".reg" section.  */
+   return _bfd_elfcore_make_pseudosection (abfd, ".reg",
+ 					  size, note->descpos + offset);
+
+commit 35e01275b59ac867d342379d457e732b5acda6a3
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Mon Sep 4 17:28:17 2017 +0100
+
+    Import patch from mainline to improve padding of .eh_frame sections.
+    
+            PR 21441
+    bfd     * elf-eh-frame.c (_bfd_elf_discard_section_eh_frame): Don't add
+            alignment padding here.
+            * elflink.c (bfd_elf_discard_info): Add .eh_frame padding here
+            in a reverse pass over sections.
+    
+    ld      * testsuite/ld-elf/eh3.d: Update.
+            * testsuite/ld-elf/eh4.d: Update.
+            PR 21441
+            * testsuite/ld-x86-64/pr21038a.d: Adjust.
+            * testsuite/ld-x86-64/pr21038a-now.d: Adjust.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 226aea9ce3..db9d0a9848 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -60,6 +60,12 @@
+ 	(elfcore_grok_freebsd_prstatus): Add checks to make sure that
+ 	there is enough data present in the note.
+ 
++	PR 21441
++	* elf-eh-frame.c (_bfd_elf_discard_section_eh_frame): Don't add
++	alignment padding here.
++	* elflink.c (bfd_elf_discard_info): Add .eh_frame padding here
++	in a reverse pass over sections.
++
+ 2017-09-04  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 22067
+diff --git a/bfd/elf-eh-frame.c b/bfd/elf-eh-frame.c
+index 52ba9c6213..cd81b608d3 100644
+--- a/bfd/elf-eh-frame.c
++++ b/bfd/elf-eh-frame.c
+@@ -619,15 +619,6 @@ _bfd_elf_parse_eh_frame (bfd *abfd, struct bfd_link_info *info,
+ 
+   REQUIRE (bfd_malloc_and_get_section (abfd, sec, &ehbuf));
+ 
+-  if (sec->size >= 4
+-      && bfd_get_32 (abfd, ehbuf) == 0
+-      && cookie->rel == cookie->relend)
+-    {
+-      /* Empty .eh_frame section.  */
+-      free (ehbuf);
+-      return;
+-    }
+-
+   /* If .eh_frame section size doesn't fit into int, we cannot handle
+      it (it would need to use 64-bit .eh_frame format anyway).  */
+   REQUIRE (sec->size == (unsigned int) sec->size);
+@@ -669,8 +660,11 @@ _bfd_elf_parse_eh_frame (bfd *abfd, struct bfd_link_info *info,
+   REQUIRE (sec_info);
+ 
+   /* We need to have a "struct cie" for each CIE in this section.  */
+-  local_cies = (struct cie *) bfd_zmalloc (num_cies * sizeof (*local_cies));
+-  REQUIRE (local_cies);
++  if (num_cies)
++    {
++      local_cies = (struct cie *) bfd_zmalloc (num_cies * sizeof (*local_cies));
++      REQUIRE (local_cies);
++    }
+ 
+   /* FIXME: octets_per_byte.  */
+ #define ENSURE_NO_RELOCS(buf)				\
+@@ -724,7 +718,9 @@ _bfd_elf_parse_eh_frame (bfd *abfd, struct bfd_link_info *info,
+       if (hdr_length == 0)
+ 	{
+ 	  /* A zero-length CIE should only be found at the end of
+-	     the section.  */
++	     the section, but allow multiple terminators.  */
++	  while (skip_bytes (&buf, ehbuf + sec->size, 4))
++	    REQUIRE (bfd_get_32 (abfd, buf - 4) == 0);
+ 	  REQUIRE ((bfd_size_type) (buf - ehbuf) == sec->size);
+ 	  ENSURE_NO_RELOCS (buf);
+ 	  sec_info->count++;
+@@ -1339,7 +1335,7 @@ offset_adjust (bfd_vma offset, const asection *sec)
+   struct eh_frame_sec_info *sec_info
+     = (struct eh_frame_sec_info *) elf_section_data (sec)->sec_info;
+   unsigned int lo, hi, mid;
+-  struct eh_cie_fde *ent;
++  struct eh_cie_fde *ent = NULL;
+   bfd_signed_vma delta;
+ 
+   lo = 0;
+@@ -1594,16 +1590,7 @@ _bfd_elf_discard_section_eh_frame
+ 	offset += size_of_output_cie_fde (ent);
+       }
+ 
+-  /* Pad the last FDE out to the output section alignment if there are
+-     following sections, in order to ensure no padding between this
+-     section and the next.  (Relies on the output section alignment
+-     being the maximum of all input sections alignments, which is the
+-     case unless someone is overriding alignment via scripts.)  */
+   eh_alignment = 4;
+-  if (sec->map_head.s != NULL
+-      && (sec->map_head.s->size != 4
+-	  || sec->map_head.s->map_head.s != NULL))
+-    eh_alignment = 1 << sec->output_section->alignment_power;
+   offset = (offset + eh_alignment - 1) & -eh_alignment;
+   sec->rawsize = sec->size;
+   sec->size = offset;
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index 736fb4c2f7..301cf03436 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+@@ -13831,6 +13831,7 @@ bfd_elf_discard_info (bfd *output_bfd, struct bfd_link_info *info)
+     {
+       asection *i;
+       int eh_changed = 0;
++      unsigned int eh_alignment;
+ 
+       for (i = o->map_head.s; i != NULL; i = i->map_head.s)
+ 	{
+@@ -13856,6 +13857,37 @@ bfd_elf_discard_info (bfd *output_bfd, struct bfd_link_info *info)
+ 
+ 	  fini_reloc_cookie_for_section (&cookie, i);
+ 	}
++
++      eh_alignment = 1 << o->alignment_power;
++      /* Skip over zero terminator, and prevent empty sections from
++	 adding alignment padding at the end.  */
++      for (i = o->map_tail.s; i != NULL; i = i->map_tail.s)
++	if (i->size == 0)
++	  i->flags |= SEC_EXCLUDE;
++	else if (i->size > 4)
++	  break;
++      /* The last non-empty eh_frame section doesn't need padding.  */
++      if (i != NULL)
++	i = i->map_tail.s;
++      /* Any prior sections must pad the last FDE out to the output
++	 section alignment.  Otherwise we might have zero padding
++	 between sections, which would be seen as a terminator.  */
++      for (; i != NULL; i = i->map_tail.s)
++	if (i->size == 4)
++	  /* All but the last zero terminator should have been removed.  */
++	  BFD_FAIL ();
++	else
++	  {
++	    bfd_size_type size
++	      = (i->size + eh_alignment - 1) & -eh_alignment;
++	    if (i->size != size)
++	      {
++		i->size = size;
++		changed = 1;
++		eh_changed = 1;
++	      }
++	  }
++
+       if (eh_changed)
+ 	elf_link_hash_traverse (elf_hash_table (info),
+ 				_bfd_elf_adjust_eh_frame_global_symbol, NULL);
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 24d0ed26a7..e8ee459241 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,14 @@
++2017-09-04  Nick Clifton  <nickc@redhat.com>
++
++	Import from mainline:
++
++	* testsuite/ld-elf/eh3.d: Update.
++	* testsuite/ld-elf/eh4.d: Update.
++
++	PR 21441
++	* testsuite/ld-x86-64/pr21038a.d: Adjust.
++	* testsuite/ld-x86-64/pr21038a-now.d: Adjust.
++
+ 2017-09-01  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	PR ld/22064
+diff --git a/ld/testsuite/ld-elf/eh3.d b/ld/testsuite/ld-elf/eh3.d
+index 3811341158..6ac584a622 100644
+--- a/ld/testsuite/ld-elf/eh3.d
++++ b/ld/testsuite/ld-elf/eh3.d
+@@ -23,20 +23,12 @@ Contents of the .eh_frame section:
+   DW_CFA_nop
+   DW_CFA_nop
+ 
+-0+0018 0+0024 0+001c FDE cie=0+0000 pc=0+400078\.\.0+400090
++0+0018 0+001c 0+001c FDE cie=0+0000 pc=0+400078\.\.0+400090
+   DW_CFA_advance_loc: 8 to 0+400080
+   DW_CFA_def_cfa_offset: 16
+   DW_CFA_offset: r6 \(rbp\) at cfa-16
+   DW_CFA_advance_loc: 8 to 0+400088
+   DW_CFA_def_cfa_register: r6 \(rbp\)
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
+ 
+-0+0040 ZERO terminator
++0+0038 ZERO terminator
+ #pass
+diff --git a/ld/testsuite/ld-elf/eh4.d b/ld/testsuite/ld-elf/eh4.d
+index b5eec2f4d1..6c1cb320d1 100644
+--- a/ld/testsuite/ld-elf/eh4.d
++++ b/ld/testsuite/ld-elf/eh4.d
+@@ -28,14 +28,12 @@ Contents of the .eh_frame section:
+   DW_CFA_set_loc: 0+0417
+   DW_CFA_def_cfa_offset: 80
+ 
+-0+0048 0+0024 0+004c FDE cie=0+0000 pc=[0-9a-f]+\.\.[0-9a-f]+
++0+0048 0+002[04] 0+004c FDE cie=0+0000 pc=[0-9a-f]+\.\.[0-9a-f]+
+   DW_CFA_def_cfa_offset: 16
+   DW_CFA_advance_loc: [0-9a-f]+ to [0-9a-f]+
+   DW_CFA_def_cfa_offset: 24
+   DW_CFA_advance_loc: [0-9a-f]+ to [0-9a-f]+
+   DW_CFA_def_cfa_expression \(DW_OP_breg7 \(rsp\): 8; DW_OP_breg16 \(rip\): 0;.*
+-  DW_CFA_nop
+ #...
+-
+ [0-9a-f]+ ZERO terminator
+ #pass
+diff --git a/ld/testsuite/ld-x86-64/pr21038a-now.d b/ld/testsuite/ld-x86-64/pr21038a-now.d
+index ebc512887a..1d5bec1854 100644
+--- a/ld/testsuite/ld-x86-64/pr21038a-now.d
++++ b/ld/testsuite/ld-x86-64/pr21038a-now.d
+@@ -1,7 +1,7 @@
+ #name: PR ld/21038 (.plt.got, -z now)
+ #source: pr21038a.s
+ #as: --64
+-#ld: -z now -z bndplt -melf_x86_64 -shared -z relro --ld-generated-unwind-info
++#ld: -z now -z bndplt -melf_x86_64 -shared -z relro --ld-generated-unwind-info --hash-style=sysv
+ #objdump: -dw -Wf
+ 
+ .*: +file format .*
+@@ -41,11 +41,7 @@ Contents of the .eh_frame section:
+   DW_CFA_nop
+   DW_CFA_nop
+ 
+-0+58 0000000000000014 0000005c FDE cie=00000000 pc=0000000000000230..0000000000000238
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
++0+58 0000000000000010 0000005c FDE cie=00000000 pc=0000000000000230..0000000000000238
+   DW_CFA_nop
+   DW_CFA_nop
+   DW_CFA_nop
+diff --git a/ld/testsuite/ld-x86-64/pr21038a.d b/ld/testsuite/ld-x86-64/pr21038a.d
+index 81b26cb53c..01770ec671 100644
+--- a/ld/testsuite/ld-x86-64/pr21038a.d
++++ b/ld/testsuite/ld-x86-64/pr21038a.d
+@@ -1,6 +1,6 @@
+ #name: PR ld/21038 (.plt.got)
+ #as: --64
+-#ld: -z bndplt -melf_x86_64 -shared -z relro --ld-generated-unwind-info
++#ld: -z bndplt -melf_x86_64 -shared -z relro --ld-generated-unwind-info --hash-style=sysv
+ #objdump: -dw -Wf
+ 
+ .*: +file format .*
+@@ -40,11 +40,7 @@ Contents of the .eh_frame section:
+   DW_CFA_nop
+   DW_CFA_nop
+ 
+-0+58 0000000000000014 0000005c FDE cie=00000000 pc=0000000000000230..0000000000000238
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
+-  DW_CFA_nop
++0+58 0000000000000010 0000005c FDE cie=00000000 pc=0000000000000230..0000000000000238
+   DW_CFA_nop
+   DW_CFA_nop
+   DW_CFA_nop
+
+commit 39b3e0740eb103996380c49273421bc6eca5f381
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Tue Sep 5 00:01:19 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index c41ec3dddd..2b6db806e8 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170904
++#define BFD_VERSION_DATE 20170905
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 81d80fc079069b721fa806db9789852858aa09f1
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Tue Sep 5 13:27:56 2017 +0100
+
+    Import parch from mainline to prevent buffer overrun.
+    
+            PR 21995
+            * readelf.c (process_mips_specific): Add checks for a NULL data
+            pointer.
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index 7c9b86f950..f74a4367b8 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -1,3 +1,11 @@
++2017-09-05  Nick Clifton  <nickc@redhat.com>
++
++	Import from mainline:
++
++	PR 21995
++	* readelf.c (process_mips_specific): Add checks for a NULL data
++	pointer.
++
+ 2017-08-12  Alan Modra  <amodra@gmail.com>
+ 
+ 	* readelf.c (process_note): Qualify NT_GNU_BUILD_ATTRIBUTE notes
+diff --git a/binutils/readelf.c b/binutils/readelf.c
+index 9bbfc957e4..9349662197 100644
+--- a/binutils/readelf.c
++++ b/binutils/readelf.c
+@@ -15296,7 +15296,7 @@ process_mips_specific (FILE * file)
+ 	      printf ("\n");
+ 	    }
+ 
+-	  if (ent < end)
++	  if (data != NULL && ent < end)
+ 	    {
+ 	      printf (_(" Local entries:\n"));
+ 	      printf ("  %*s %10s %*s\n",
+@@ -15826,7 +15826,7 @@ process_mips_specific (FILE * file)
+ 	}
+       printf ("\n");
+ 
+-      if (ent < local_end)
++      if (data != NULL && ent < local_end)
+ 	{
+ 	  printf (_(" Local entries:\n"));
+ 	  printf ("  %*s %10s %*s\n",
+@@ -15842,7 +15842,7 @@ process_mips_specific (FILE * file)
+ 	  printf ("\n");
+ 	}
+ 
+-      if (gotsym < symtabno)
++      if (data != NULL && gotsym < symtabno)
+ 	{
+ 	  int sym_width;
+ 
+
+commit 5709459090fb152a85141d34e6817bc597c6997a
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Tue Sep 5 14:53:37 2017 +0100
+
+    Import patch from mainline to fix memory leak.
+    
+            PR binutils/22032
+            * opncls.c (bfd_close_all_done): Don't call bfd_cache_close
+            before _close_and_cleanup.  Call iovec->bclose after.
+            (bfd_close): Remove code common to, and call, bfd_close_all_done.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index db9d0a9848..fc93decfae 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,12 @@
++2017-09-05  Nick Clifton  <nickc@redhat.com>
++
++	Import from mainline:
++
++	PR binutils/22032
++	* opncls.c (bfd_close_all_done): Don't call bfd_cache_close
++	before _close_and_cleanup.  Call iovec->bclose after.
++	(bfd_close): Remove code common to, and call, bfd_close_all_done.
++
+ 2017-09-04  Nick Clifton  <nickc@redhat.com>
+ 
+ 	Import from mainline:
+diff --git a/bfd/opncls.c b/bfd/opncls.c
+index 913341c9ff..fa54986854 100644
+--- a/bfd/opncls.c
++++ b/bfd/opncls.c
+@@ -726,25 +726,13 @@ RETURNS
+ bfd_boolean
+ bfd_close (bfd *abfd)
+ {
+-  bfd_boolean ret;
+-
+   if (bfd_write_p (abfd))
+     {
+       if (! BFD_SEND_FMT (abfd, _bfd_write_contents, (abfd)))
+ 	return FALSE;
+     }
+ 
+-  if (! BFD_SEND (abfd, _close_and_cleanup, (abfd)))
+-    return FALSE;
+-
+-  ret = abfd->iovec->bclose (abfd) == 0;
+-
+-  if (ret)
+-    _maybe_make_executable (abfd);
+-
+-  _bfd_delete_bfd (abfd);
+-
+-  return ret;
++  return bfd_close_all_done (abfd);
+ }
+ 
+ /*
+@@ -774,7 +762,10 @@ bfd_close_all_done (bfd *abfd)
+ {
+   bfd_boolean ret;
+ 
+-  ret = bfd_cache_close (abfd);
++  if (! BFD_SEND (abfd, _close_and_cleanup, (abfd)))
++    return FALSE;
++
++  ret = abfd->iovec->bclose (abfd) == 0;
+ 
+   if (ret)
+     _maybe_make_executable (abfd);
+
+commit 64aa1246572306b72dc479b46d13ff749b0c3236
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Tue Sep 5 15:32:04 2017 +0100
+
+    Import patches from mainline to fix minor binutils bugs:
+    
+            PR 21861
+            * winduni.c (codepages): Use cp1252 for codepage 0.
+    
+            PR 21813
+            * rddbg.c (read_symbol_stabs_debugging_info): Check for an empty
+            string whilst concatenating symbol names.
+    
+            PR 21909
+            * prdbg.c (pr_int_type): Increase size of local string buffer.
+            (pr_float_type): Likewise.
+            (pr_bool_type): Likewise.
+    
+            PR 21820
+            * readelf.c (dump_section_as_strings): Do not fail if the section
+            was empty.
+            (dump_section_as_bytes): Likewise.
+    
+            PR 21990
+            * readelf.c (process_version_sections <SHT_GNU_verneed>): Check
+            for invalid vn_next field before adding to idx.  Use unsigned
+            long for index vars.  Move index checks.
+            <SHT_GNU_verdef>: Likewise for vd_next.
+    
+            PR 21994
+            * readelf.c (process_version_sections <SHT_GNU_verdef>): Check
+            vd_aux and vda_next for sanity.  Delete "end".  Correct overflow
+            checks.
+            (process_version_sections <SHT_GNU_verneed>): Correct overflow
+            check.  Don't report invalid vna_next on overflow.  Do report
+            invalid vna_next on size less than aux info.
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index f74a4367b8..cffc49a66e 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -6,6 +6,37 @@
+ 	* readelf.c (process_mips_specific): Add checks for a NULL data
+ 	pointer.
+ 
++	PR 21861
++	* winduni.c (codepages): Use cp1252 for codepage 0.
++
++	PR 21813
++	* rddbg.c (read_symbol_stabs_debugging_info): Check for an empty
++	string whilst concatenating symbol names.
++
++	PR 21909
++	* prdbg.c (pr_int_type): Increase size of local string buffer.
++	(pr_float_type): Likewise.
++	(pr_bool_type): Likewise.
++
++	PR 21820
++	* readelf.c (dump_section_as_strings): Do not fail if the section
++	was empty.
++	(dump_section_as_bytes): Likewise.
++
++	PR 21990
++	* readelf.c (process_version_sections <SHT_GNU_verneed>): Check
++	for invalid vn_next field before adding to idx.  Use unsigned
++	long for index vars.  Move index checks.
++	<SHT_GNU_verdef>: Likewise for vd_next.
++
++	PR 21994
++	* readelf.c (process_version_sections <SHT_GNU_verdef>): Check
++	vd_aux and vda_next for sanity.  Delete "end".  Correct overflow
++	checks.
++	(process_version_sections <SHT_GNU_verneed>): Correct overflow
++	check.  Don't report invalid vna_next on overflow.  Do report
++	invalid vna_next on size less than aux info.
++
+ 2017-08-12  Alan Modra  <amodra@gmail.com>
+ 
+ 	* readelf.c (process_note): Qualify NT_GNU_BUILD_ATTRIBUTE notes
+diff --git a/binutils/prdbg.c b/binutils/prdbg.c
+index 9bd01bc071..7b24fbe616 100644
+--- a/binutils/prdbg.c
++++ b/binutils/prdbg.c
+@@ -581,7 +581,7 @@ static bfd_boolean
+ pr_int_type (void *p, unsigned int size, bfd_boolean unsignedp)
+ {
+   struct pr_handle *info = (struct pr_handle *) p;
+-  char ab[10];
++  char ab[40];
+ 
+   sprintf (ab, "%sint%d", unsignedp ? "u" : "", size * 8);
+   return push_type (info, ab);
+@@ -593,7 +593,7 @@ static bfd_boolean
+ pr_float_type (void *p, unsigned int size)
+ {
+   struct pr_handle *info = (struct pr_handle *) p;
+-  char ab[10];
++  char ab[40];
+ 
+   if (size == 4)
+     return push_type (info, "float");
+@@ -623,7 +623,7 @@ static bfd_boolean
+ pr_bool_type (void *p, unsigned int size)
+ {
+   struct pr_handle *info = (struct pr_handle *) p;
+-  char ab[10];
++  char ab[40];
+ 
+   sprintf (ab, "bool%d", size * 8);
+ 
+diff --git a/binutils/rddbg.c b/binutils/rddbg.c
+index 1d8c447188..b9780608cf 100644
+--- a/binutils/rddbg.c
++++ b/binutils/rddbg.c
+@@ -303,7 +303,8 @@ read_symbol_stabs_debugging_info (bfd *abfd, asymbol **syms, long symcount,
+ 	    return FALSE;
+ 	  f = NULL;
+ 
+-	  while (s[strlen (s) - 1] == '\\'
++	  while (strlen (s) > 0
++		 && s[strlen (s) - 1] == '\\'
+ 		 && ps + 1 < symend)
+ 	    {
+ 	      char *sc, *n;
+diff --git a/binutils/readelf.c b/binutils/readelf.c
+index 9349662197..fb16df8e2a 100644
+--- a/binutils/readelf.c
++++ b/binutils/readelf.c
+@@ -10153,9 +10153,8 @@ process_version_sections (FILE * file)
+ 	case SHT_GNU_verdef:
+ 	  {
+ 	    Elf_External_Verdef * edefs;
+-	    unsigned int idx;
+-	    unsigned int cnt;
+-	    unsigned int end;
++	    unsigned long idx;
++	    unsigned long cnt;
+ 	    char * endbuf;
+ 
+ 	    found = TRUE;
+@@ -10177,23 +10176,16 @@ process_version_sections (FILE * file)
+ 	      break;
+ 	    endbuf = (char *) edefs + section->sh_size;
+ 
+-	    /* PR 17531: file: id:000001,src:000172+005151,op:splice,rep:2.  */
+-	    end = (section->sh_info < section->sh_size
+-		   ? section->sh_info : section->sh_size);
+-	    for (idx = cnt = 0; cnt < end; ++cnt)
++	    for (idx = cnt = 0; cnt < section->sh_info; ++cnt)
+ 	      {
+ 		char * vstart;
+ 		Elf_External_Verdef * edef;
+ 		Elf_Internal_Verdef ent;
+ 		Elf_External_Verdaux * eaux;
+ 		Elf_Internal_Verdaux aux;
+-		unsigned int isum;
++		unsigned long isum;
+ 		int j;
+ 
+-		/* Check for very large indices.  */
+-		if (idx > (size_t) (endbuf - (char *) edefs))
+-		  break;
+-
+ 		vstart = ((char *) edefs) + idx;
+ 		if (vstart + sizeof (*edef) > endbuf)
+ 		  break;
+@@ -10208,19 +10200,20 @@ process_version_sections (FILE * file)
+ 		ent.vd_aux     = BYTE_GET (edef->vd_aux);
+ 		ent.vd_next    = BYTE_GET (edef->vd_next);
+ 
+-		printf (_("  %#06x: Rev: %d  Flags: %s"),
++		printf (_("  %#06lx: Rev: %d  Flags: %s"),
+ 			idx, ent.vd_version, get_ver_flags (ent.vd_flags));
+ 
+ 		printf (_("  Index: %d  Cnt: %d  "),
+ 			ent.vd_ndx, ent.vd_cnt);
+ 
+-		/* Check for overflow and underflow.  */
+-		if (ent.vd_aux + sizeof (* eaux) > (size_t) (endbuf - vstart)
+-		    || (vstart + ent.vd_aux < vstart))
++		/* Check for overflow.  */
++		if (ent.vd_aux > (size_t) (endbuf - vstart))
+ 		  break;
+ 
+ 		vstart += ent.vd_aux;
+ 
++		if (vstart + sizeof (*eaux) > endbuf)
++		  break;
+ 		eaux = (Elf_External_Verdaux *) vstart;
+ 
+ 		aux.vda_name = BYTE_GET (eaux->vda_name);
+@@ -10235,6 +10228,14 @@ process_version_sections (FILE * file)
+ 
+ 		for (j = 1; j < ent.vd_cnt; j++)
+ 		  {
++		    if (aux.vda_next < sizeof (*eaux)
++			&& !(j == ent.vd_cnt - 1 && aux.vda_next == 0))
++		      {
++			warn (_("Invalid vda_next field of %lx\n"),
++			      aux.vda_next);
++			j = ent.vd_cnt;
++			break;
++		      }
+ 		    /* Check for overflow.  */
+ 		    if (aux.vda_next > (size_t) (endbuf - vstart))
+ 		      break;
+@@ -10242,18 +10243,18 @@ process_version_sections (FILE * file)
+ 		    isum   += aux.vda_next;
+ 		    vstart += aux.vda_next;
+ 
+-		    eaux = (Elf_External_Verdaux *) vstart;
+ 		    if (vstart + sizeof (*eaux) > endbuf)
+ 		      break;
++		    eaux = (Elf_External_Verdaux *) vstart;
+ 
+ 		    aux.vda_name = BYTE_GET (eaux->vda_name);
+ 		    aux.vda_next = BYTE_GET (eaux->vda_next);
+ 
+ 		    if (VALID_DYNAMIC_NAME (aux.vda_name))
+-		      printf (_("  %#06x: Parent %d: %s\n"),
++		      printf (_("  %#06lx: Parent %d: %s\n"),
+ 			      isum, j, GET_DYNAMIC_NAME (aux.vda_name));
+ 		    else
+-		      printf (_("  %#06x: Parent %d, name index: %ld\n"),
++		      printf (_("  %#06lx: Parent %d, name index: %ld\n"),
+ 			      isum, j, aux.vda_name);
+ 		  }
+ 
+@@ -10262,7 +10263,14 @@ process_version_sections (FILE * file)
+ 
+ 		/* PR 17531:
+ 		   file: id:000001,src:000172+005151,op:splice,rep:2.  */
+-		if (idx + ent.vd_next < idx)
++		if (ent.vd_next < sizeof (*edef)
++		    && !(cnt == section->sh_info - 1 && ent.vd_next == 0))
++		  {
++		    warn (_("Invalid vd_next field of %lx\n"), ent.vd_next);
++		    cnt = section->sh_info;
++		    break;
++		  }
++		if (ent.vd_next > (size_t) (endbuf - ((char *) edefs + idx)))
+ 		  break;
+ 
+ 		idx += ent.vd_next;
+@@ -10278,8 +10286,8 @@ process_version_sections (FILE * file)
+ 	case SHT_GNU_verneed:
+ 	  {
+ 	    Elf_External_Verneed * eneed;
+-	    unsigned int idx;
+-	    unsigned int cnt;
++	    unsigned long idx;
++	    unsigned long cnt;
+ 	    char * endbuf;
+ 
+ 	    found = TRUE;
+@@ -10305,13 +10313,10 @@ process_version_sections (FILE * file)
+ 	      {
+ 		Elf_External_Verneed * entry;
+ 		Elf_Internal_Verneed ent;
+-		unsigned int isum;
++		unsigned long isum;
+ 		int j;
+ 		char * vstart;
+ 
+-		if (idx > (size_t) (endbuf - (char *) eneed))
+-		  break;
+-
+ 		vstart = ((char *) eneed) + idx;
+ 		if (vstart + sizeof (*entry) > endbuf)
+ 		  break;
+@@ -10324,7 +10329,7 @@ process_version_sections (FILE * file)
+ 		ent.vn_aux     = BYTE_GET (entry->vn_aux);
+ 		ent.vn_next    = BYTE_GET (entry->vn_next);
+ 
+-		printf (_("  %#06x: Version: %d"), idx, ent.vn_version);
++		printf (_("  %#06lx: Version: %d"), idx, ent.vn_version);
+ 
+ 		if (VALID_DYNAMIC_NAME (ent.vn_file))
+ 		  printf (_("  File: %s"), GET_DYNAMIC_NAME (ent.vn_file));
+@@ -10354,24 +10359,26 @@ process_version_sections (FILE * file)
+ 		    aux.vna_next  = BYTE_GET (eaux->vna_next);
+ 
+ 		    if (VALID_DYNAMIC_NAME (aux.vna_name))
+-		      printf (_("  %#06x:   Name: %s"),
++		      printf (_("  %#06lx:   Name: %s"),
+ 			      isum, GET_DYNAMIC_NAME (aux.vna_name));
+ 		    else
+-		      printf (_("  %#06x:   Name index: %lx"),
++		      printf (_("  %#06lx:   Name index: %lx"),
+ 			      isum, aux.vna_name);
+ 
+ 		    printf (_("  Flags: %s  Version: %d\n"),
+ 			    get_ver_flags (aux.vna_flags), aux.vna_other);
+ 
+-		    /* Check for overflow.  */
+-		    if (aux.vna_next > (size_t) (endbuf - vstart)
+-			|| (aux.vna_next == 0 && j < ent.vn_cnt - 1))
++		    if (aux.vna_next < sizeof (*eaux)
++			&& !(j == ent.vn_cnt - 1 && aux.vna_next == 0))
+ 		      {
+ 			warn (_("Invalid vna_next field of %lx\n"),
+ 			      aux.vna_next);
+ 			j = ent.vn_cnt;
+ 			break;
+ 		      }
++		    /* Check for overflow.  */
++		    if (aux.vna_next > (size_t) (endbuf - vstart))
++		      break;
+ 		    isum   += aux.vna_next;
+ 		    vstart += aux.vna_next;
+ 		  }
+@@ -10379,12 +10386,15 @@ process_version_sections (FILE * file)
+ 		if (j < ent.vn_cnt)
+ 		  warn (_("Missing Version Needs auxillary information\n"));
+ 
+-		if (ent.vn_next == 0 && cnt < section->sh_info - 1)
++		if (ent.vn_next < sizeof (*entry)
++		    && !(cnt == section->sh_info - 1 && ent.vn_next == 0))
+ 		  {
+-		    warn (_("Corrupt Version Needs structure - offset to next structure is zero with entries still left to be processed\n"));
++		    warn (_("Invalid vn_next field of %lx\n"), ent.vn_next);
+ 		    cnt = section->sh_info;
+ 		    break;
+ 		  }
++		if (ent.vn_next > (size_t) (endbuf - ((char *) eneed + idx)))
++		  break;
+ 		idx += ent.vn_next;
+ 	      }
+ 
+@@ -12837,7 +12847,9 @@ dump_section_as_strings (Elf_Internal_Shdr * section, FILE * file)
+   real_start = start = (unsigned char *) get_section_contents (section,
+ 							       file);
+   if (start == NULL)
+-    return FALSE;
++    /* PR 21820: Do not fail if the section was empty.  */
++    return (section->sh_size == 0 || section->sh_type == SHT_NOBITS) ? TRUE : FALSE;
++
+   num_bytes = section->sh_size;
+ 
+   printf (_("\nString dump of section '%s':\n"), printable_section_name (section));
+@@ -12983,7 +12995,8 @@ dump_section_as_bytes (Elf_Internal_Shdr * section,
+ 
+   real_start = start = (unsigned char *) get_section_contents (section, file);
+   if (start == NULL)
+-    return FALSE;
++    /* PR 21820: Do not fail if the section was empty.  */
++    return (section->sh_size == 0 || section->sh_type == SHT_NOBITS) ? TRUE : FALSE;
+ 
+   section_size = section->sh_size;
+ 
+diff --git a/binutils/winduni.c b/binutils/winduni.c
+index 9868d4bc11..ec4f71c5ba 100644
+--- a/binutils/winduni.c
++++ b/binutils/winduni.c
+@@ -57,7 +57,7 @@ static int unichar_isascii (const unichar *, rc_uint_type);
+ /* Codepages mapped.  */
+ static local_iconv_map codepages[] =
+ {
+-  { 0, "MS-ANSI" },
++  { 0, "cp1252" },
+   { 1, "WINDOWS-1252" },
+   { 437, "MS-ANSI" },
+   { 737, "MS-GREEK" },
+
+commit 3920430d4a5585b16de586cc13ce3e99a3c6d156
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Wed Sep 6 00:01:23 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 2b6db806e8..8899733c33 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170905
++#define BFD_VERSION_DATE 20170906
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 0d8a80b95746fc11fada914f619b4306d2bf77b8
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Thu Sep 7 00:01:38 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 8899733c33..176dfa6f4e 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170906
++#define BFD_VERSION_DATE 20170907
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
