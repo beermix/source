@@ -29,6 +29,7 @@ platform_check_image() {
 	awm002-evb-8M|\
 	bc2|\
 	broadway|\
+	c108|\
 	carambola|\
 	cf-wr800n|\
 	cs-qr10|\
@@ -192,6 +193,7 @@ platform_check_image() {
 	x8|\
 	y1|\
 	y1s|\
+	we1026-5g-16m|\
 	zbt-ape522ii|\
 	zbt-cpe102|\
 	zbt-wa05|\

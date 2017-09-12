@@ -64,7 +64,7 @@ CONFIGURE_ARGS += \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
-	--with-progs \
+	--without-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
