@@ -51,7 +51,7 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
-		BASH_SHELL=/bin/bash \
+		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
