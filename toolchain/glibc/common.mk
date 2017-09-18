@@ -61,7 +61,7 @@ GLIBC_CONFIGURE:= \
 		--enable-stackguard-randomization \
 		--enable-bind-now \
 		--enable-lock-elision \
-		--enable-kernel=2.6.32 \
+		--enable-kernel=4.0.0 \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--disable-build-nscd \
