@@ -1,6 +1,6 @@
 --- a/arch/mips/rb532/devices.c
 +++ b/arch/mips/rb532/devices.c
-@@ -199,11 +199,11 @@ static struct platform_device nand_slot0
+@@ -186,11 +186,11 @@ static struct platform_device nand_slot0
  
  static struct mtd_partition rb532_partition_info[] = {
  	{
