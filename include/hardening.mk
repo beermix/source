@@ -43,7 +43,6 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -znow -zrelro
     TARGET_LDFLAGS += -Wl,-O1,--sort-common,-z,relro,-z,now
   endif
 endif
