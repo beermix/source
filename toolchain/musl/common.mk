@@ -13,8 +13,7 @@ PKG_RELEASE=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=5f7efb87a28a311ad377dd26adf53715dedb096d
-PKG_MIRROR_HASH:=da18ef24f270e5cae6bc4c440479da17bec1949ae5a1bc990352ca04f24c4378
+PKG_SOURCE_VERSION:=c10bc61508dc52b8315084e628f36a6c3c2dabb1
 PKG_SOURCE_URL:=git://git.musl-libc.org/musl
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -35,7 +34,7 @@ MUSL_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
-		--enable-debug
+		--disable-debug
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
