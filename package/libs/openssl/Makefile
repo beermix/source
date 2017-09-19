@@ -157,6 +157,16 @@ endif
 ifeq ($(CONFIG_x86_64),y)
   OPENSSL_TARGET:=linux-x86_64-openwrt
   OPENSSL_MAKEFLAGS += LIBDIR=lib
+else
+  OPENSSL_OPTIONS+=
+  ifeq ($(CONFIG_mips)$(CONFIG_mipsel),y)
+    OPENSSL_TARGET:=linux-mips-openwrt
+  else ifeq ($(CONFIG_arm)$(CONFIG_armeb),y)
+    OPENSSL_TARGET:=linux-armv4-openwrt
+  else
+    OPENSSL_TARGET:=linux-generic-openwrt
+    OPENSSL_OPTIONS+=no-perlasm
+  endif
 endif
 
 STAMP_CONFIGURED := $(STAMP_CONFIGURED)_$(shell echo $(OPENSSL_OPTIONS) | mkhash md5)
