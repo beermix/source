@@ -51,8 +51,6 @@ BINUTILS_CONFIGURE:= \
 		--disable-sim \
 		--disable-gdb \
 		--enable-libssp \
-		--enable-lto \
-		--enable-gold \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 
