@@ -11,7 +11,9 @@ PKG_VERSION:=2.26
 
 PKG_SOURCE_URL:=@GNU/libc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_HASH:=e54e0a934cd2bc94429be79da5e9385898d2306b9eaf3c92d5a77af96190f6bd
 
+PATCH_DIR:=$(PATH_PREFIX)/patches/$(PKG_VERSION)
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
@@ -42,7 +44,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-march=bonnell -O2 -mno-tls-direct-seg-refs -g"
+	CFLAGS="-march=bonnell -O2 -mno-tls-direct-seg-refs -g" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -96,6 +98,9 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
+	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
+		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
+	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 
