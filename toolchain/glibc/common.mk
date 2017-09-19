@@ -42,7 +42,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="$(TARGET_CFLAGS) -mno-tls-direct-seg-refs -g"
+	CFLAGS="-march=bonnell -O2 -mno-tls-direct-seg-refs -g"
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -57,6 +57,7 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
+		--enable-stackguard-randomization \
 		--enable-bind-now \
 		--enable-lock-elision \
 		--enable-kernel=2.6.32 \
