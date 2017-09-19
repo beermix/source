@@ -42,7 +42,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="$(TARGET_CFLAGS)" \
+	CFLAGS="$(TARGET_CFLAGS) -mno-tls-direct-seg-refs"
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -59,7 +59,7 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--enable-bind-now \
 		--enable-lock-elision \
-		--enable-kernel=3.0.0 \
+		--enable-kernel=2.6.32 \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--disable-build-nscd \
