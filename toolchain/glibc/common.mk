@@ -57,7 +57,6 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
-		--enable-stackguard-randomization \
 		--enable-bind-now \
 		--enable-lock-elision \
 		--enable-kernel=3.0.0 \
