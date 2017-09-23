@@ -114,6 +114,10 @@ define Build/install-dtb
 	)
 endef
 
+define Build/install-zImage
+    $(CP) $(KDIR)/zImage \
+      $(BIN_DIR)/$(IMG_PREFIX)-$(PROFILE_SANITIZED)-zImage
+endef
 define Build/fit
 	$(TOPDIR)/scripts/mkits.sh \
 		-D $(DEVICE_NAME) -o $@.its -k $@ \

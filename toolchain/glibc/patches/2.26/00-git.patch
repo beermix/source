@@ -4646,3 +4646,195 @@ index 8ae928a3f4..cc682b2ed0 100644
  }
  
  #include <support/test-driver.c>
+
+commit ac6113cb0146494af7ecacbbdc6957ce501a40ec
+Author: Martin Sebor <msebor@redhat.com>
+Date:   Tue Aug 22 09:35:23 2017 -0600
+
+    Declare ifunc resolver to return a pointer to the same type as the target
+    function to help GCC detect incompatibilities between the two when it's
+    enhanced to do so.
+    
+    (cherry picked from commit ee4e992ebe5f9712faedeefe8958b67d61eaa0f2)
+
+diff --git a/ChangeLog b/ChangeLog
+index b53d8830a2..ec9b9f5edb 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,8 @@
++2017-08-22  Martin Sebor  <msebor@redhat.com>
++
++	* include/libc-symbols.h (__ifunc_resolver): Declare resolver
++	to return a pointer to the same type as the target function.
++
+ 2017-08-03  Alan Modra  <amodra@gmail.com>
+ 
+ 	* sysdeps/powerpc/mod-tlsopt-powerpc.c: Extract from
+diff --git a/include/libc-symbols.h b/include/libc-symbols.h
+index 3310e3a678..c50f9adec2 100644
+--- a/include/libc-symbols.h
++++ b/include/libc-symbols.h
+@@ -782,7 +782,8 @@ for linking")
+ 
+ /* Helper / base  macros for indirect function symbols.  */
+ #define __ifunc_resolver(type_name, name, expr, arg, init, classifier)	\
+-  classifier inhibit_stack_protector void *name##_ifunc (arg)					\
++  classifier inhibit_stack_protector					\
++  __typeof (type_name) *name##_ifunc (arg)				\
+   {									\
+     init ();								\
+     __typeof (type_name) *res = expr;					\
+
+commit 37d4262a7a35886cf8ac856457bbad8c0498c8d6
+Author: Gabriel F. T. Gomes <gftg@linux.vnet.ibm.com>
+Date:   Tue Aug 22 14:01:07 2017 -0300
+
+    Fix remaining return type of ifunc resolver declaration
+    
+    Since Martin Sebor's commit
+    
+    commit ee4e992ebe5f9712faedeefe8958b67d61eaa0f2
+    Author: Martin Sebor <msebor@redhat.com>
+    Date:   Tue Aug 22 09:35:23 2017 -0600
+    
+        Declare ifunc resolver to return a pointer to the same type as the target
+        function to help GCC detect incompatibilities between the two when it's
+        enhanced to do so.
+    
+    builds for powerpc64le fail in the declaration of some ifunc resolvers,
+    because the ifunc is declared with unmatching return types.  One of the
+    declarations comes from the __ifunc_resolver macro, which was patched by
+    the aforementioned commit:
+    
+        /* Helper / base  macros for indirect function symbols.  */
+        #define __ifunc_resolver(type_name, name, expr, arg, init, classifier) \
+          classifier inhibit_stack_protector                                   \
+          __typeof (type_name) *name##_ifunc (arg)                             \
+    
+    whereas the other comes from the unpatched __ifunc macro when
+    HAVE_GCC_IFUNC is not defined:
+    
+        # define __ifunc(type_name, name, expr, arg, init)                     \
+          extern __typeof (type_name) name;                                    \
+          void *name##_ifunc (arg) __asm__ (#name);                            \
+    
+    This patch changes the return type of the ifunc resolver in the __ifunc
+    macro, so that it matches the return type of the target function,
+    similarly to what the aforementioned commit does.
+    
+    Tested for powerpc64le and s390x with unpatched GCC.
+    
+            * include/libc-symbols.h: [!defined HAVE_GCC_IFUNC] (__ifunc):
+            Change the return type of the ifunc resolver to match the return
+            type of the target function.
+    
+    (cherry picked from commit b513da7e80febbbfb8e58282075018652b6f7273)
+
+diff --git a/ChangeLog b/ChangeLog
+index ec9b9f5edb..6b09c61d5a 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,9 @@
++2017-08-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
++
++	* include/libc-symbols.h: [!defined HAVE_GCC_IFUNC] (__ifunc):
++	Change the return type of the ifunc resolver to match the return
++	type of the target function.
++
+ 2017-08-22  Martin Sebor  <msebor@redhat.com>
+ 
+ 	* include/libc-symbols.h (__ifunc_resolver): Declare resolver
+diff --git a/include/libc-symbols.h b/include/libc-symbols.h
+index c50f9adec2..5bf57703a9 100644
+--- a/include/libc-symbols.h
++++ b/include/libc-symbols.h
+@@ -810,7 +810,7 @@ for linking")
+ 
+ # define __ifunc(type_name, name, expr, arg, init)			\
+   extern __typeof (type_name) name;					\
+-  void *name##_ifunc (arg) __asm__ (#name);				\
++  __typeof (type_name) *name##_ifunc (arg) __asm__ (#name);		\
+   __ifunc_resolver (type_name, name, expr, arg, init,)			\
+  __asm__ (".type " #name ", %gnu_indirect_function");
+ 
+
+commit d37c951fde57e8acb320a9a7d437ba50a1fc3c8a
+Author: Gabriel F. T. Gomes <gabriel@inconstante.eti.br>
+Date:   Wed Sep 20 15:10:26 2017 -0300
+
+    Let fpclassify use the builtin when optimizing for size in C++ mode (bug 22146)
+    
+    When optimization for size is on (-Os), fpclassify does not use the
+    type-generic __builtin_fpclassify builtin, instead it uses __MATH_TG.
+    However, when library support for float128 is available, __MATH_TG uses
+    __builtin_types_compatible_p, which is not available in C++ mode.
+    
+    On the other hand, libstdc++ undefines (in cmath) many macros from
+    math.h, including fpclassify, so that it can provide its own functions.
+    However, during its configure tests, libstdc++ just tests for the
+    availability of the macros (it does not undefine them, nor does it
+    provide its own functions).
+    
+    Finally, when libstdc++ is configured with optimization for size
+    enabled, its configure tests include math.h and get the definition of
+    fpclassify that uses __MATH_TG (and __builtin_types_compatible_p).
+    Since libstdc++ does not undefine the macros during its configure tests,
+    they fail.
+    
+    This patch lets fpclassify use the builtin in C++ mode, even when
+    optimization for size is on.  This allows the configure test in
+    libstdc++ to work.
+    
+    Tested for powerpc64le and x86_64.
+    
+            [BZ #22146]
+            math/math.h: Let fpclassify use the builtin in C++ mode, even
+            when optimazing for size.
+    
+    (cherry picked from commit c5c4a626098ec884b8527356abdf2a4bb7b6bf27)
+
+diff --git a/ChangeLog b/ChangeLog
+index 6b09c61d5a..382674d5a3 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,9 @@
++2017-09-22  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
++
++	[BZ #22146]
++	math/math.h: Let fpclassify use the builtin in C++ mode, even
++	when optimazing for size.
++
+ 2017-08-22  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+ 
+ 	* include/libc-symbols.h: [!defined HAVE_GCC_IFUNC] (__ifunc):
+diff --git a/NEWS b/NEWS
+index 9bcb176171..48e2064380 100644
+--- a/NEWS
++++ b/NEWS
+@@ -30,6 +30,7 @@ The following bugs are resolved with this release:
+   [21972] assert macro requires operator== (int) for its argument type
+   [22095] resolv: Fix memory leak with OOM during resolv.conf parsing
+   [22096] resolv: __resolv_conf_attach must not free passed conf object
++  [22146] Let fpclassify use the builtin when optimizing for size in C++ mode
+ 
+ Version 2.26
+ 
+diff --git a/math/math.h b/math/math.h
+index 7c0fc6dbb3..f9348ec3ea 100644
+--- a/math/math.h
++++ b/math/math.h
+@@ -402,7 +402,13 @@ enum
+ 
+ /* Return number of classification appropriate for X.  */
+ # if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__			      \
+-     && !defined __OPTIMIZE_SIZE__
++     && (!defined __OPTIMIZE_SIZE__ || defined __cplusplus)
++     /* The check for __cplusplus allows the use of the builtin, even
++	when optimization for size is on.  This is provided for
++	libstdc++, only to let its configure test work when it is built
++	with -Os.  No further use of this definition of fpclassify is
++	expected in C++ mode, since libstdc++ provides its own version
++	of fpclassify in cmath (which undefines fpclassify).  */
+ #  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,	      \
+      FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
+ # else

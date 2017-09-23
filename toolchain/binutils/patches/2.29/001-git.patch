@@ -55682,3 +55682,631 @@ index 87b7973ec1..8ee7fa58ad 100644
  2017-09-18  H.J. Lu  <hongjiu.lu@intel.com>
  
  	PR ld/22148
+
+commit 8161f998b6c3b3d4720e8a4438cfefa67fd23a33
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Tue Sep 19 14:59:01 2017 +0100
+
+    Import xtensa patches from the mainline sources to fix name lookup and sorting.
+    
+            * xtensa-isa.c (xtensa_isa_init): Don't update lookup table
+            entries for sysregs with negative indices.
+    
+            * emultempl/xtensaelf.em (xtensa_wild_group_interleave_callback):
+            Only check for by_name sorting.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 8ee7fa58ad..f699b2ffc6 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,18 @@
++2017-09-19  Nick Clifton  <nickc@redhat.com>
++
++	2.29.1 Release
++
++	* version.m4: Bump version to 2.29.1
++	* configure: Regenerate.
++	* po/bfd.pot: Regenerate.
++
++2017-09-19  Nick Clifton  <nickc@redhat.com>
++
++	Import from maiknline:
++
++	* xtensa-isa.c (xtensa_isa_init): Don't update lookup table
++	entries for sysregs with negative indices.
++
+ 2017-09-19  Alan Modra  <amodra@gmail.com>
+ 
+ 	PR 21441
+@@ -41,14 +56,6 @@
+ 	return from bfd_canonicalize_dynamic_reloc.
+ 	* elf64-x86-64.c (elf_x86_64_get_synthetic_symtab): Likewise.
+ 
+-2017-09-15  Nick Clifton  <nickc@redhat.com>
+-
+-	2.29.1 Release
+-
+-	* version.m4: Bump version to 2.29.1
+-	* configure: Regenerate.
+-	* po/bfd.pot: Regenerate.
+-
+ 2017-09-14  Nick Clifton  <nickc@redhat.com>
+ 
+ 	Import from mainline:
+diff --git a/bfd/xtensa-isa.c b/bfd/xtensa-isa.c
+index 8da75bea81..5656062646 100644
+--- a/bfd/xtensa-isa.c
++++ b/bfd/xtensa-isa.c
+@@ -292,7 +292,8 @@ xtensa_isa_init (xtensa_isa_status *errno_p, char **error_msg_p)
+       xtensa_sysreg_internal *sreg = &isa->sysregs[n];
+       is_user = sreg->is_user;
+ 
+-      isa->sysreg_table[is_user][sreg->number] = n;
++      if (sreg->number >= 0)
++	isa->sysreg_table[is_user][sreg->number] = n;
+     }
+ 
+   /* Set up the interface lookup table.  */
+@@ -1790,4 +1791,3 @@ xtensa_funcUnit_num_copies (xtensa_isa isa, xtensa_funcUnit fun)
+   CHECK_FUNCUNIT (intisa, fun, XTENSA_UNDEFINED);
+   return intisa->funcUnits[fun].num_copies;
+ }
+-
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 65641fc5d6..058755e475 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,18 @@
++2017-09-19  Nick Clifton  <nickc@redhat.com>
++
++	2.29.1 Release
++
++	* configure: Regenerate.
++	* po/ld.pot: Regenerate.
++
++2017-09-19  Nick Clifton  <nickc@redhat.com>
++
++	Import from mainline:
++
++	* emultempl/xtensaelf.em (xtensa_wild_group_interleave_callback):
++	Only check for by_name sorting.
++
++
+ 2017-08-31  Alan Modra  <amodra@gmail.com>
+ 
+ 	* testsuite/ld-elf/eh3.d: Update.
+@@ -17,13 +32,6 @@
+ 	* testsuite/ld-x86-64/tls.exp: Require GCC 5 or above for
+ 	"tlsdesc1" and "tlsdesc1 with PIE" tests.
+ 
+-2017-09-15  Nick Clifton  <nickc@redhat.com>
+-
+-	2.29.1 Release
+-
+-	* configure: Regenerate.
+-	* po/ld.pot: Regenerate.
+-
+ 2017-08-21  Hans-Peter Nilsson  <hp@bitrange.com>
+ 
+ 	Import from mainline:
+diff --git a/ld/emultempl/xtensaelf.em b/ld/emultempl/xtensaelf.em
+index 1447d526a2..3827d91b62 100644
+--- a/ld/emultempl/xtensaelf.em
++++ b/ld/emultempl/xtensaelf.em
+@@ -1432,7 +1432,7 @@ xtensa_wild_group_interleave_callback (lang_statement_union_type *statement)
+ 	  struct wildcard_list *l;
+ 	  for (l = w->section_list; l != NULL; l = l->next)
+ 	    {
+-	      if (l->spec.sorted != none)
++	      if (l->spec.sorted == by_name)
+ 		{
+ 		  no_reorder = TRUE;
+ 		  break;
+
+commit d1a6e7195b9bb0255fa77588985b969ad8aaacf5
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Tue Sep 19 15:18:16 2017 +0100
+
+    Fix spelling ypos in changelog entries
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index f699b2ffc6..417ed273ab 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -8,7 +8,7 @@
+ 
+ 2017-09-19  Nick Clifton  <nickc@redhat.com>
+ 
+-	Import from maiknline:
++	Import from mainline:
+ 
+ 	* xtensa-isa.c (xtensa_isa_init): Don't update lookup table
+ 	entries for sysregs with negative indices.
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 058755e475..73e05b618e 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -12,7 +12,6 @@
+ 	* emultempl/xtensaelf.em (xtensa_wild_group_interleave_callback):
+ 	Only check for by_name sorting.
+ 
+-
+ 2017-08-31  Alan Modra  <amodra@gmail.com>
+ 
+ 	* testsuite/ld-elf/eh3.d: Update.
+
+commit f625a739e567f0110b2675539b7a0e5d5f67c5dc
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Wed Sep 20 00:01:22 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 3405e424f4..955269f804 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170919
++#define BFD_VERSION_DATE 20170920
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 437ea1e4871b36e879ff8dcc821b04411e03e600
+Author: Alan Modra <amodra@gmail.com>
+Date:   Wed Sep 20 09:17:56 2017 +0930
+
+    [GOLD] PowerPC function address in non-PIC
+    
+    ppc32, like many targets, defines the address of a function as the PLT
+    call stub code for functions referenced but not defined in a non-PIC
+    executable.  ppc32 gold, unlike other targets, inherits the ppc64
+    multiple stub capability for dealing with very large binaries where
+    one set of stubs can't be reached from all code locations.  This means
+    there can be multiple choices of address for a function, which might
+    cause function pointer comparison failures.  So for ppc32, make
+    non-branch references always use the first stub group.
+    
+    (PowerPC64 ELFv1 is always PIC so doesn't need to define the address
+    of an external function as the PLT stub.  PowerPC64 ELFv2 needs a
+    special set of global entry stubs to serve as the address of external
+    functions, so it too is not affected by this bug.)
+    
+            * powerpc.cc (Target_powerpc::Branch_info::make_stub): Put
+            stubs for ppc32 non-branch relocs in first stub table.
+            (Target_powerpc::Relocate::relocate): Resolve similarly.
+    
+    (cherry picked from commit 64b5d6d785eb4c337b7c071ab9607186541a8b14)
+
+diff --git a/gold/ChangeLog b/gold/ChangeLog
+index 6071f8977a..795837b64a 100644
+--- a/gold/ChangeLog
++++ b/gold/ChangeLog
+@@ -1,3 +1,9 @@
++2017-09-20  Alan Modra  <amodra@gmail.com>
++
++	* powerpc.cc (Target_powerpc::Branch_info::make_stub): Put
++	stubs for ppc32 non-branch relocs in first stub table.
++	(Target_powerpc::Relocate::relocate): Resolve similarly.
++
+ 2017-09-19  Alan Modra  <amodra@gmail.com>
+ 
+ 	* options.h (stub-group-multi): Default to true.  Add
+diff --git a/gold/powerpc.cc b/gold/powerpc.cc
+index 629da4f8a1..ba20ef1ad7 100644
+--- a/gold/powerpc.cc
++++ b/gold/powerpc.cc
+@@ -3065,11 +3065,17 @@ Target_powerpc<size, big_endian>::Branch_info::make_stub(
+ 	target->glink_section()->add_global_entry(gsym);
+       else
+ 	{
+-	  if (stub_table == NULL)
++	  if (stub_table == NULL
++	      && !(size == 32
++		   && gsym != NULL
++		   && !parameters->options().output_is_position_independent()
++		   && !is_branch_reloc(this->r_type_)))
+ 	    stub_table = this->object_->stub_table(this->shndx_);
+ 	  if (stub_table == NULL)
+ 	    {
+-	      // This is a ref from a data section to an ifunc symbol.
++	      // This is a ref from a data section to an ifunc symbol,
++	      // or a non-branch reloc for which we always want to use
++	      // one set of stubs for resolving function addresses.
+ 	      stub_table = ifunc_stub_table;
+ 	    }
+ 	  gold_assert(stub_table != NULL);
+@@ -8052,11 +8058,20 @@ Target_powerpc<size, big_endian>::Relocate::relocate(
+ 	}
+       else
+ 	{
+-	  Stub_table<size, big_endian>* stub_table
+-	    = object->stub_table(relinfo->data_shndx);
++	  Stub_table<size, big_endian>* stub_table = NULL;
++	  if (target->stub_tables().size() == 1)
++	    stub_table = target->stub_tables()[0];
++	  if (stub_table == NULL
++	      && !(size == 32
++		   && gsym != NULL
++		   && !parameters->options().output_is_position_independent()
++		   && !is_branch_reloc(r_type)))
++	    stub_table = object->stub_table(relinfo->data_shndx);
+ 	  if (stub_table == NULL)
+ 	    {
+-	      // This is a ref from a data section to an ifunc symbol.
++	      // This is a ref from a data section to an ifunc symbol,
++	      // or a non-branch reloc for which we always want to use
++	      // one set of stubs for resolving function addresses.
+ 	      if (target->stub_tables().size() != 0)
+ 		stub_table = target->stub_tables()[0];
+ 	    }
+
+commit db39886ddfef07d6518fefa6bb5fd4ba60344c75
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Wed Sep 20 09:45:15 2017 +0100
+
+    Set the development flag to false on the 2.29 branch.
+    
+            * development.sh (development): Set to false.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 417ed273ab..dfb6351782 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,7 @@
++2017-09-20  Nick Clifton  <nickc@redhat.com>
++
++	* development.sh (development): Set to false.
++
+ 2017-09-19  Nick Clifton  <nickc@redhat.com>
+ 
+ 	2.29.1 Release
+diff --git a/bfd/development.sh b/bfd/development.sh
+index cd31410a8e..b001a888ea 100644
+--- a/bfd/development.sh
++++ b/bfd/development.sh
+@@ -16,4 +16,4 @@
+ # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ # Controls whether to enable development-mode features by default.
+-development=true
++development=false
+
+commit 13d7031e342b76e68dff74120a8f2a4c4e70a142
+Author: James Clarke <jrtc27@jrtc27.com>
+Date:   Thu Aug 3 22:44:21 2017 -0700
+
+    Add --no-relax option.
+    
+    gold/
+            * options.h (General_options): Set a non-NULL second help string
+            argument for relax to allow --no-relax.
+
+diff --git a/gold/ChangeLog b/gold/ChangeLog
+index 795837b64a..0fc54ddf71 100644
+--- a/gold/ChangeLog
++++ b/gold/ChangeLog
+@@ -1,3 +1,8 @@
++2017-08-03  James Clarke  <jrtc27@jrtc27.com>
++
++	* options.h (General_options): Set a non-NULL second help string
++	argument for relax to allow --no-relax.
++
+ 2017-09-20  Alan Modra  <amodra@gmail.com>
+ 
+ 	* powerpc.cc (Target_powerpc::Branch_info::make_stub): Put
+diff --git a/gold/options.h b/gold/options.h
+index 576b2a3c53..4a802cf41f 100644
+--- a/gold/options.h
++++ b/gold/options.h
+@@ -1164,7 +1164,8 @@ class General_options
+ 	      N_("Generate relocatable output"), NULL);
+ 
+   DEFINE_bool(relax, options::TWO_DASHES, '\0', false,
+-	      N_("Relax branches on certain targets"), NULL);
++	      N_("Relax branches on certain targets"),
++	      N_("Do not relax branches"));
+ 
+   DEFINE_string(retain_symbols_file, options::TWO_DASHES, '\0', NULL,
+ 		N_("keep only symbols listed in this file"), N_("FILE"));
+
+commit f7eeee64408f23a56338f4ae71178e6240480830
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Thu Sep 21 00:01:23 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 955269f804..2d17561457 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170920
++#define BFD_VERSION_DATE 20170921
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 2fa45014f1860048a62f1ad7cc65bcbc0c2c0cf8
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Thu Sep 21 15:17:28 2017 +0100
+
+    Re Revert previous change to bfd/development.sh, setting the development flag back to true.
+    
+    This flag should only be set in release tarballs, not on branches,
+    as branches will continue to receive development updates.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index dfb6351782..42d1e51dfd 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,7 @@
++2017-09-21  Nick Clifton  <nickc@redhat.com>
++
++	* development.sh (development): Revert previous delta.
++
+ 2017-09-20  Nick Clifton  <nickc@redhat.com>
+ 
+ 	* development.sh (development): Set to false.
+diff --git a/bfd/development.sh b/bfd/development.sh
+index b001a888ea..cd31410a8e 100644
+--- a/bfd/development.sh
++++ b/bfd/development.sh
+@@ -16,4 +16,4 @@
+ # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ # Controls whether to enable development-mode features by default.
+-development=false
++development=true
+
+commit 36e7aab5a1bad04694a9b06187b5127b75c9bcd0
+Author: Maciej W. Rozycki <macro@imgtec.com>
+Date:   Fri Sep 22 00:54:19 2017 +0100
+
+    readelf: Handle E_MIPS_MACH_5900
+    
+    Fix commit e407c74b5b60 ("Support for MIPS R5900 (Sony Playstation 2)"),
+    <https://sourceware.org/ml/binutils/2012-12/msg00240.html>, and add the
+    handling of E_MIPS_MACH_5900, correctly showing `5900' among `Flags:' in
+    the output of `-h' rather than `unknown CPU'.
+    
+            binutils/
+            * readelf.c (get_machine_flags) <E_MIPS_MACH_5900>: New case.
+    
+            gas/
+            * testsuite/gas/mips/elf_mach_5900.d: New test.
+            * testsuite/gas/mips/mips.exp: Run it.
+    
+    (cherry picked from commit ef272caa7482bd9031e82a2e6f1b81870fe2129e)
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index 84d3d7c1c4..ffb34fbb78 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -1,3 +1,7 @@
++2017-09-21  Maciej W. Rozycki  <macro@imgtec.com>
++
++	* readelf.c (get_machine_flags) <E_MIPS_MACH_5900>: New case.
++
+ 2017-09-15  Nick Clifton  <nickc@redhat.com>
+ 
+ 	2.29.1 Release
+diff --git a/binutils/readelf.c b/binutils/readelf.c
+index fb16df8e2a..41f128ed23 100644
+--- a/binutils/readelf.c
++++ b/binutils/readelf.c
+@@ -3325,6 +3325,7 @@ get_machine_flags (unsigned e_flags, unsigned e_machine)
+ 	    case E_MIPS_MACH_4650: strcat (buf, ", 4650"); break;
+ 	    case E_MIPS_MACH_5400: strcat (buf, ", 5400"); break;
+ 	    case E_MIPS_MACH_5500: strcat (buf, ", 5500"); break;
++	    case E_MIPS_MACH_5900: strcat (buf, ", 5900"); break;
+ 	    case E_MIPS_MACH_SB1:  strcat (buf, ", sb1");  break;
+ 	    case E_MIPS_MACH_9000: strcat (buf, ", 9000"); break;
+   	    case E_MIPS_MACH_LS2E: strcat (buf, ", loongson-2e"); break;
+diff --git a/gas/ChangeLog b/gas/ChangeLog
+index 42a676f598..9aa3dbca3a 100644
+--- a/gas/ChangeLog
++++ b/gas/ChangeLog
+@@ -1,3 +1,8 @@
++2017-09-21  Maciej W. Rozycki  <macro@imgtec.com>
++
++	* testsuite/gas/mips/elf_mach_5900.d: New test.
++	* testsuite/gas/mips/mips.exp: Run it.
++
+ 2017-09-15  Nick Clifton  <nickc@redhat.com>
+ 
+ 	2.29.1 Release
+diff --git a/gas/testsuite/gas/mips/elf_mach_5900.d b/gas/testsuite/gas/mips/elf_mach_5900.d
+new file mode 100644
+index 0000000000..1df668e7e5
+--- /dev/null
++++ b/gas/testsuite/gas/mips/elf_mach_5900.d
+@@ -0,0 +1,22 @@
++#readelf: -Ah
++#name: ELF R5900 markings
++#as: -32 -march=r5900
++#source: empty.s
++
++ELF Header:
++#...
++  Flags: +0x..92...., .*5900.*
++#...
++
++MIPS ABI Flags Version: 0
++
++ISA: MIPS3
++GPR size: 32
++CPR1 size: 32
++CPR2 size: 0
++FP ABI: .*
++ISA Extension: Toshiba R5900
++ASEs:
++	None
++FLAGS 1: .*
++FLAGS 2: .*
+diff --git a/gas/testsuite/gas/mips/mips.exp b/gas/testsuite/gas/mips/mips.exp
+index c71dca4351..25221ae2af 100644
+--- a/gas/testsuite/gas/mips/mips.exp
++++ b/gas/testsuite/gas/mips/mips.exp
+@@ -1149,6 +1149,7 @@ if { [istarget mips*-*-vxworks*] } {
+     run_dump_test "elf_ase_micromips-2"
+ 
+     # Verify that machine markings are handled properly.
++    run_dump_test "elf_mach_5900"
+     run_dump_test "elf_mach_interaptiv-mr2"
+ 
+     run_dump_test "mips-gp32-fp32-pic"
+
+commit ea2fdc5952e26719a31c6dc9f4e641b656a16c28
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Fri Sep 22 00:01:21 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 2d17561457..9e389e9038 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170921
++#define BFD_VERSION_DATE 20170922
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit e70c19e3a4c26e9c1ebf0c9170d105039b56d7cf
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Fri Sep 22 07:25:16 2017 -0700
+
+    x86: Return -1 if bfd_canonicalize_dynamic_reloc returns 0
+    
+    Stop if bfd_canonicalize_dynamic_reloc returns 0.
+    
+            PR binutils/22163
+            * elf32-i386.c (elf_i386_get_synthetic_symtab): Also return -1
+            if bfd_canonicalize_dynamic_reloc returns 0.
+            * elf64-x86-64.c (elf_x86_64_get_synthetic_symtab): Likewise.
+    
+    (cherry picked from commit b69e9267d15a09ce3f3d4599eae2952dfc6df502)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 42d1e51dfd..31e2a7f9c6 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,10 @@
++2017-09-22  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR binutils/22163
++	* elf32-i386.c (elf_i386_get_synthetic_symtab): Also return -1
++	if bfd_canonicalize_dynamic_reloc returns 0.
++	* elf64-x86-64.c (elf_x86_64_get_synthetic_symtab): Likewise.
++
+ 2017-09-21  Nick Clifton  <nickc@redhat.com>
+ 
+ 	* development.sh (development): Revert previous delta.
+diff --git a/bfd/elf32-i386.c b/bfd/elf32-i386.c
+index 5c1c3ff790..9dc2d25863 100644
+--- a/bfd/elf32-i386.c
++++ b/bfd/elf32-i386.c
+@@ -6342,7 +6342,7 @@ elf_i386_get_synthetic_symtab (bfd *abfd,
+ 
+   dynrelcount = bfd_canonicalize_dynamic_reloc (abfd, dynrelbuf,
+ 						dynsyms);
+-  if (dynrelcount < 0)
++  if (dynrelcount <= 0)
+     return -1;
+ 
+   /* Sort the relocs by address.  */
+diff --git a/bfd/elf64-x86-64.c b/bfd/elf64-x86-64.c
+index 80dd791d25..558db98c4a 100644
+--- a/bfd/elf64-x86-64.c
++++ b/bfd/elf64-x86-64.c
+@@ -6717,7 +6717,7 @@ elf_x86_64_get_synthetic_symtab (bfd *abfd,
+ 
+   dynrelcount = bfd_canonicalize_dynamic_reloc (abfd, dynrelbuf,
+ 						dynsyms);
+-  if (dynrelcount < 0)
++  if (dynrelcount <= 0)
+     return -1;
+ 
+   /* Sort the relocs by address.  */
+
+commit 56933f9e3e90eebf1018ed7417d6c1184b91db6b
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Fri Sep 22 14:15:40 2017 -0700
+
+    x86: Guard against corrupted PLT
+    
+    There should be only one entry in PLT for a given symbol.  Set howto to
+    NULL after processing a PLT entry to guard against corrupted PLT so that
+    the duplicated PLT entries are skipped.
+    
+            PR binutils/22170
+             * elf32-i386.c (elf_i386_get_synthetic_symtab): Guard against
+             corrupted PLT.
+             * elf64-x86-64.c (elf_x86_64_get_synthetic_symtab): Likewise.
+    
+    (cherry picked from commit 61e3bf5f83f7e505b6bc51ef65426e5b31e6e360)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 31e2a7f9c6..7091d7543f 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,10 @@
++2017-09-22  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR binutils/22170
++	* elf32-i386.c (elf_i386_get_synthetic_symtab): Guard against
++	corrupted PLT.
++	* elf64-x86-64.c (elf_x86_64_get_synthetic_symtab): Likewise.
++
+ 2017-09-22  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	PR binutils/22163
+diff --git a/bfd/elf32-i386.c b/bfd/elf32-i386.c
+index 9dc2d25863..ba50c93f33 100644
+--- a/bfd/elf32-i386.c
++++ b/bfd/elf32-i386.c
+@@ -6616,6 +6616,10 @@ bad_return:
+ 		  size += sizeof ("+0x") - 1 + 8;
+ 		n++;
+ 		s++;
++		/* There should be only one entry in PLT for a given
++		   symbol.  Set howto to NULL after processing a PLT
++		   entry to guard against corrupted PLT.  */
++		p->howto = NULL;
+ 	      }
+ 	    offset += plt_entry_size;
+ 	  }
+diff --git a/bfd/elf64-x86-64.c b/bfd/elf64-x86-64.c
+index 558db98c4a..d9225adddd 100644
+--- a/bfd/elf64-x86-64.c
++++ b/bfd/elf64-x86-64.c
+@@ -6970,6 +6970,10 @@ bad_return:
+ 		  size += sizeof ("+0x") - 1 + 8 + 8 * ABI_64_P (abfd);
+ 		n++;
+ 		s++;
++		/* There should be only one entry in PLT for a given
++		   symbol.  Set howto to NULL after processing a PLT
++		   entry to guard against corrupted PLT.  */
++		p->howto = NULL;
+ 	      }
+ 	    offset += plt_entry_size;
+ 	  }
+
+commit 25aad9cca7232a36abeba318f21e8d19137ea15f
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sat Sep 23 00:01:24 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 9e389e9038..11151288b8 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20170922
++#define BFD_VERSION_DATE 20170923
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
