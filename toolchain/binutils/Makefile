@@ -13,8 +13,10 @@ BIN_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_URL:=@GNU/binutils/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 
-ifeq ($(PKG_VERSION),2.29)
+ifeq ($(PKG_VERSION),2.29.1)
   #PKG_HASH:=369737ce51587f92466041a97ab7d2358c6d9e1b6490b3940eb09fb0a9a6ac88
+  PKG_SOURCE_URL:=https://fossies.org/linux/misc/
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
 endif
 
 ifeq ($(PKG_VERSION),2.28.1)
@@ -45,6 +47,8 @@ BINUTILS_CONFIGURE:= \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
 		--enable-plugins \
+		--enable-ld=default \
+		--enable-lto \
 		--disable-multilib \
 		--disable-werror \
 		--disable-nls \
