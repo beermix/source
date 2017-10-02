@@ -36,9 +36,13 @@ ifeq ($(PKG_VERSION),6.3.0)
   PKG_HASH:=f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f
 endif
 
-ifeq ($(PKG_VERSION),7.2.0)
-  PKG_HASH:=1cf7adf8ff4b5aa49041c8734bbcf1ad18cc4c94d0029aae0f4e48841088479a
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+ifeq ($(PKG_VERSION),7.2.1)
+  PKG_VERSION:=7.2.1
+  PKG_REV:=20170928
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
+  PKG_SOURCE:=gcc-7-$(PKG_REV).tar.xz
+  GCC_DIR:=gcc-7-$(PKG_REV)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_6_3_ARC),)
@@ -117,6 +121,14 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--disable-libunwind-exceptions \
+		--enable-gnu-unique-object \
+		--enable-linker-build-id \
+		--enable-install-libiberty \
+		--disable-vtable-verify \
+		--enable-gnu-indirect-function \
+		--enable-libstdcxx-time=yes \
+		--enable-clocale=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
