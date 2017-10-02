@@ -42,7 +42,7 @@ ifeq ($(PKG_VERSION),7.2.1)
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
   PKG_SOURCE:=gcc-7-$(PKG_REV).tar.xz
   GCC_DIR:=gcc-7-$(PKG_REV)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-7-$(PKG_REV)
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_6_3_ARC),)
