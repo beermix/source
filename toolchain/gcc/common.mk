@@ -127,6 +127,8 @@ GCC_CONFIGURE:= \
 		--enable-install-libiberty \
 		--disable-vtable-verify \
 		--enable-gnu-indirect-function \
+		--enable-default-pie \
+		--enable-default-ssp \
 		--enable-libstdcxx-time=yes \
 		--enable-clocale=gnu \
 		$(GRAPHITE_CONFIGURE) \
