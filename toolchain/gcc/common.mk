@@ -38,7 +38,7 @@ endif
 
 ifeq ($(PKG_VERSION),7.2.1)
   PKG_VERSION:=7.2.1
-  PKG_REV:=20170928
+  PKG_REV:=20171005
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
   PKG_SOURCE:=gcc-7-$(PKG_REV).tar.xz
   GCC_DIR:=gcc-7-$(PKG_REV)
