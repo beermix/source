@@ -10,8 +10,8 @@ PKG_NAME:=binutils
 PKG_VERSION:=$(call qstrip,$(CONFIG_BINUTILS_VERSION))
 BIN_VERSION:=$(PKG_VERSION)
 
-PKG_SOURCE_URL:=PKG_URL=https://fossies.org/linux/misc/
-PKG_SOURCE:=binutils-2.29.1.tar.xz
+PKG_SOURCE_URL:=@GNU/binutils/
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 
 ifeq ($(PKG_VERSION),2.29)
   #PKG_HASH:=369737ce51587f92466041a97ab7d2358c6d9e1b6490b3940eb09fb0a9a6ac88
