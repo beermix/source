@@ -13,12 +13,16 @@ BIN_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_URL:=@GNU/binutils/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 
-ifeq ($(PKG_VERSION),2.29)
-  #PKG_HASH:=369737ce51587f92466041a97ab7d2358c6d9e1b6490b3940eb09fb0a9a6ac88
+ifeq ($(PKG_VERSION),2.27)
+  PKG_HASH:=369737ce51587f92466041a97ab7d2358c6d9e1b6490b3940eb09fb0a9a6ac88
 endif
 
-ifeq ($(PKG_VERSION),2.28.1)
-  #PKG_HASH:=6297433ee120b11b4b0a1c8f3512d7d73501753142ab9e2daa13c5a3edd32a72
+ifeq ($(PKG_VERSION),2.28)
+  PKG_HASH:=6297433ee120b11b4b0a1c8f3512d7d73501753142ab9e2daa13c5a3edd32a72
+endif
+
+ifeq ($(PKG_VERSION),2.29.1)
+  PKG_HASH:=1509dff41369fb70aed23682351b663b56db894034773e6dbf7d5d6071fc55cc
 endif
 
 ifneq ($(CONFIG_BINUTILS_VERSION_2_28_ARC),)
@@ -45,17 +49,22 @@ BINUTILS_CONFIGURE:= \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
 		--enable-plugins \
-		--enable-ld=default \
-		--enable-lto \
 		--disable-multilib \
 		--disable-werror \
 		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
-		--enable-libssp \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 
+
+ifneq ($(CONFIG_SSP_SUPPORT),)
+  BINUTILS_CONFIGURE+= \
+		--enable-libssp
+else
+  BINUTILS_CONFIGURE+= \
+		--disable-libssp
+endif
 
 ifneq ($(CONFIG_EXTRA_TARGET_ARCH),)
   BINUTILS_CONFIGURE+= \
