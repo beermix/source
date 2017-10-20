@@ -44,7 +44,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-march=bonnell -O2 -mno-tls-direct-seg-refs -g" \
+	CFLAGS="-O2 -pipe -mno-tls-direct-seg-refs" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -59,10 +59,9 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
-		--enable-stackguard-randomization \
 		--enable-bind-now \
 		--enable-lock-elision \
-		--enable-kernel=2.6.32 \
+		--enable-kernel=3.0.0 \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--disable-build-nscd \
@@ -71,10 +70,10 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-export libc_cv_ssp=no
-export libc_cv_ssp_strong=no
-export libc_cv_c_cleanup=yes
-export libc_cv_forced_unwind=yes
+libc_cv_forced_unwind=yes
+libc_cv_c_cleanup=yes
+libc_cv_ssp=no
+libc_cv_ssp_strong=no
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
