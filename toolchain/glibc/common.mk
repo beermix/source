@@ -44,7 +44,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -pipe -mno-tls-direct-seg-refs" \
+	CFLAGS="-O2 $(filter-out -Os,$(call qstrip,$(TARGET_CFLAGS))) -mno-tls-direct-seg-refs" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -70,10 +70,10 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-libc_cv_forced_unwind=yes
-libc_cv_c_cleanup=yes
-libc_cv_ssp=no
-libc_cv_ssp_strong=no
+export libc_cv_ssp=no
+export libc_cv_ssp_strong=no
+export libc_cv_c_cleanup=yes
+export libc_cv_forced_unwind=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
