@@ -61,7 +61,7 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--enable-bind-now \
 		--enable-lock-elision \
-		--enable-kernel=3.0.0 \
+		--enable-kernel=3.2.0 \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--disable-build-nscd \
