@@ -52,13 +52,12 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
-		BASH_SHELL=/bin/sh \
+		BASH_SHELL=/bin/bash \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-stack-protector=strong \
 		--enable-bind-now \
 		--enable-lock-elision \
 		--enable-kernel=3.2.0 \
