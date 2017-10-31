@@ -39,7 +39,6 @@ define KernelPackage/mt76-core
   TITLE:=MediaTek MT76xx wireless driver
   FILES:=\
 	$(PKG_BUILD_DIR)/mt76.ko
-  AUTOLOAD:=$(call AutoLoad,50,mac80211 mt76)
 endef
 
 define KernelPackage/mt76x2
@@ -48,7 +47,7 @@ define KernelPackage/mt76x2
   DEPENDS+=+kmod-mt76-core
   FILES:=\
 	$(PKG_BUILD_DIR)/mt76x2e.ko
-  AUTOLOAD:=$(call AutoLoad,51,mt76x2e)
+  AUTOLOAD:=$(call AutoProbe,mt76x2e)
 endef
 
 define KernelPackage/mt7603
@@ -57,7 +56,7 @@ define KernelPackage/mt7603
   DEPENDS+=+kmod-mt76-core
   FILES:=\
 	$(PKG_BUILD_DIR)/mt7603e.ko
-  AUTOLOAD:=$(call AutoLoad,51,mt7603e)
+  AUTOLOAD:=$(call AutoProbe,mt7603e)
 endef
 
 NOSTDINC_FLAGS = \
@@ -75,8 +74,7 @@ endif
 
 define Build/Compile
 	+$(MAKE) $(PKG_JOBS) -C "$(LINUX_DIR)" \
-		ARCH="$(LINUX_KARCH)" \
-		CROSS_COMPILE="$(TARGET_CROSS)" \
+		$(KERNEL_MAKE_FLAGS) \
 		SUBDIRS="$(PKG_BUILD_DIR)" \
 		NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
 		modules
