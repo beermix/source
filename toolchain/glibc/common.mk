@@ -47,6 +47,8 @@ GLIBC_CONFIGURE:= \
 	CFLAGS="-O2 $(filter-out -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
+	AUTOCONF=false \
+	MAKEINFO=: \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
@@ -60,6 +62,7 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
 		--enable-stackguard-randomization \
+		--without-selinux \
 		--enable-bind-now \
 		--enable-lock-elision \
 		--enable-kernel=3.2.0 \
