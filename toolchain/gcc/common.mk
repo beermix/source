@@ -112,11 +112,15 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
+		--disable-nls \
+		--enable-offload-targets=nvptx-none \
+		--disable-vtable-verify \
+		--enable-checking=release \
+		--disable-libitm \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
-		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
