@@ -140,14 +140,16 @@ diff --git a/ChangeLog b/ChangeLog
 index 3478699b10..4357ad1eb8 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,7 @@
-+2017-08-03  Aurelien Jarno  <aurelien@aurel32.net>
-+
-+	* stdlib/getentropy.c (getentropy): Change return type to int.
-+
+@@ -1,5 +1,9 @@
  2017-08-03  Aurelien Jarno  <aurelien@aurel32.net>
  
++	* stdlib/getentropy.c (getentropy): Change return type to int.
++
++2017-08-03  Aurelien Jarno  <aurelien@aurel32.net>
++
  	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Regenerated.
+ 
+ 2017-08-03  Florian Weimer  <fweimer@redhat.com>
 diff --git a/stdlib/getentropy.c b/stdlib/getentropy.c
 index a71d4cd8f5..a88bbf8de3 100644
 --- a/stdlib/getentropy.c
@@ -820,15 +822,17 @@ diff --git a/ChangeLog b/ChangeLog
 index 415fa3cc79..23c00aed09 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,8 @@
-+2017-08-18  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
-+
+@@ -1,5 +1,10 @@
+ 2017-08-18  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+ 
 +	* misc/sys/cdefs.h (__HAVE_GENERIC_SELECTION): Define to 0, if
 +	in C++ mode.
 +
- 2017-08-18  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
- 
++2017-08-18  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
++
  	[BZ #21930]
+ 	* math/math.h (isinf): Check if in C or C++ mode before using
+ 	__builtin_types_compatible_p, since this is a C mode feature.
 diff --git a/misc/sys/cdefs.h b/misc/sys/cdefs.h
 index 06523bfe9c..0c808216a4 100644
 --- a/misc/sys/cdefs.h
@@ -2067,16 +2071,18 @@ diff --git a/ChangeLog b/ChangeLog
 index 04304bb929..d53c8fe083 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,9 @@
-+2017-09-01  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,11 @@
+ 2017-09-01  Florian Weimer  <fweimer@redhat.com>
+ 
 +	* sysdeps/posix/getaddrinfo.c (gethosts): Use h_errno directly.
 +	(getcanonname): Likewise.
 +	(gaih_inet): Likewise.
 +
- 2017-09-01  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-01  Florian Weimer  <fweimer@redhat.com>
++
  	* sysdeps/posix/getaddrinfo.c (gethosts): Use errno directly.
+ 	(getcanonname): Likewise.
+ 	(gaih_inet): Likewise.
 diff --git a/sysdeps/posix/getaddrinfo.c b/sysdeps/posix/getaddrinfo.c
 index 1a16820b7e..076e1fa62b 100644
 --- a/sysdeps/posix/getaddrinfo.c
@@ -2229,15 +2235,17 @@ diff --git a/ChangeLog b/ChangeLog
 index d53c8fe083..2f959d4c36 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,8 @@
-+2017-09-01  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,10 @@
+ 2017-09-01  Florian Weimer  <fweimer@redhat.com>
+ 
 +	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make reporting of NSS
 +	function lookup failures more reliable.
 +
- 2017-09-01  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-01  Florian Weimer  <fweimer@redhat.com>
++
  	* sysdeps/posix/getaddrinfo.c (gethosts): Use h_errno directly.
+ 	(getcanonname): Likewise.
+ 	(gaih_inet): Likewise.
 diff --git a/sysdeps/posix/getaddrinfo.c b/sysdeps/posix/getaddrinfo.c
 index 076e1fa62b..eaf8bafcf4 100644
 --- a/sysdeps/posix/getaddrinfo.c
@@ -2282,15 +2290,17 @@ diff --git a/ChangeLog b/ChangeLog
 index 2f959d4c36..c58cd5ccd0 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,8 @@
-+2017-09-01  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,10 @@
+ 2017-09-01  Florian Weimer  <fweimer@redhat.com>
+ 
 +	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only use h_errno if
 +	status indicates it is set.
 +
- 2017-09-01  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-01  Florian Weimer  <fweimer@redhat.com>
++
  	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make reporting of NSS
+ 	function lookup failures more reliable.
+ 
 diff --git a/sysdeps/posix/getaddrinfo.c b/sysdeps/posix/getaddrinfo.c
 index eaf8bafcf4..9d9e7e2bf2 100644
 --- a/sysdeps/posix/getaddrinfo.c
@@ -2320,16 +2330,18 @@ diff --git a/ChangeLog b/ChangeLog
 index c58cd5ccd0..f46bbb7c0d 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,9 @@
-+2017-09-01  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,11 @@
+ 2017-09-01  Florian Weimer  <fweimer@redhat.com>
+ 
 +	[BZ #21922]
 +	* sysdeps/posix/getaddrinfo.c (gaih_inet): Report EAI_NODATA error
 +	coming from gethostbyname2_r.
 +
- 2017-09-01  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-01  Florian Weimer  <fweimer@redhat.com>
++
  	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only use h_errno if
+ 	status indicates it is set.
+ 
 diff --git a/NEWS b/NEWS
 index 756e849643..97eb21e868 100644
 --- a/NEWS
@@ -2378,9 +2390,9 @@ diff --git a/ChangeLog b/ChangeLog
 index f46bbb7c0d..3e32d14dbf 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,17 @@
-+2017-09-01  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,19 @@
+ 2017-09-01  Florian Weimer  <fweimer@redhat.com>
+ 
 +	[BZ #21915]
 +	[BZ #21922]
 +	* sysdeps/posix/getaddrinfo.c (gethosts): Look at NSS function
@@ -2393,9 +2405,11 @@ index f46bbb7c0d..3e32d14dbf 100644
 +	* resolv/tst-resolv-basic.c (test_nodata_nxdomain): New function.
 +	(do_test): Call it.
 +
- 2017-09-01  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-01  Florian Weimer  <fweimer@redhat.com>
++
  	[BZ #21922]
+ 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Report EAI_NODATA error
+ 	coming from gethostbyname2_r.
 diff --git a/NEWS b/NEWS
 index 97eb21e868..8fbf4241d1 100644
 --- a/NEWS
@@ -3081,9 +3095,9 @@ diff --git a/ChangeLog b/ChangeLog
 index dd71f6c427..fa215c2729 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,15 @@
-+2017-09-06  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,17 @@
+ 2017-09-06  Florian Weimer  <fweimer@redhat.com>
+ 
 +	Remove dead PTR IPv4-to-IPv6 mapping code from nss_dns.
 +	* resolv/nss_dns/dns-host.c (getanswer_r): Remove dead code.
 +	* resolv/tst-res_use_inet6.c (response_ptr_v4, response_ptr_v6):
@@ -3094,9 +3108,11 @@ index dd71f6c427..fa215c2729 100644
 +	(test_no_inet6): Add 'p' test.
 +	(test_inet6): Likewise.
 +
- 2017-09-06  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-06  Florian Weimer  <fweimer@redhat.com>
++
  	Enhance tst-res_use_inet6 to test IPv4-to-IPv6 address mapping.
+ 	* resolv/tst-res_use_inet6.c (response): Process flags embedded in
+ 	the QNAME.
 diff --git a/resolv/nss_dns/dns-host.c b/resolv/nss_dns/dns-host.c
 index 7cd54ab504..1e85e4f08f 100644
 --- a/resolv/nss_dns/dns-host.c
@@ -3391,16 +3407,18 @@ diff --git a/ChangeLog b/ChangeLog
 index fa215c2729..ef2041b9e5 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,9 @@
-+2017-09-06  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,11 @@
+ 2017-09-06  Florian Weimer  <fweimer@redhat.com>
+ 
 +	[BZ #22095]
 +	* resolv/res_init.c (res_vinit_1): Avoid memory leak in case of
 +	dynarray allocation failure.
 +
- 2017-09-06  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-06  Florian Weimer  <fweimer@redhat.com>
++
  	Remove dead PTR IPv4-to-IPv6 mapping code from nss_dns.
+ 	* resolv/nss_dns/dns-host.c (getanswer_r): Remove dead code.
+ 	* resolv/tst-res_use_inet6.c (response_ptr_v4, response_ptr_v6):
 diff --git a/NEWS b/NEWS
 index 8fbf4241d1..62959274b3 100644
 --- a/NEWS
@@ -3442,16 +3460,18 @@ diff --git a/ChangeLog b/ChangeLog
 index ef2041b9e5..e98a4bbf3c 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,9 @@
-+2017-09-06  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,11 @@
+ 2017-09-06  Florian Weimer  <fweimer@redhat.com>
+ 
 +	[BZ #22096]
 +	* resolv/resolv_conf.c (__resolv_conf_attach): Do not free conf in
 +	case of failure to obtain the global conf object.
 +
- 2017-09-06  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-06  Florian Weimer  <fweimer@redhat.com>
++
  	[BZ #22095]
+ 	* resolv/res_init.c (res_vinit_1): Avoid memory leak in case of
+ 	dynarray allocation failure.
 diff --git a/NEWS b/NEWS
 index 62959274b3..9bcb176171 100644
 --- a/NEWS
@@ -3494,15 +3514,17 @@ diff --git a/ChangeLog b/ChangeLog
 index e98a4bbf3c..f82fd1f97d 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,8 @@
-+2017-09-06  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,10 @@
+ 2017-09-06  Florian Weimer  <fweimer@redhat.com>
+ 
 +	* malloc/dynarray_emplace_enlarge.c
 +	(__libc_dynarray_emplace_enlarge): Add missing else.
 +
- 2017-09-06  Florian Weimer  <fweimer@redhat.com>
- 
++2017-09-06  Florian Weimer  <fweimer@redhat.com>
++
  	[BZ #22096]
+ 	* resolv/resolv_conf.c (__resolv_conf_attach): Do not free conf in
+ 	case of failure to obtain the global conf object.
 diff --git a/malloc/dynarray_emplace_enlarge.c b/malloc/dynarray_emplace_enlarge.c
 index dfc70017ce..09cd09268b 100644
 --- a/malloc/dynarray_emplace_enlarge.c
@@ -10030,9 +10052,9 @@ diff --git a/ChangeLog b/ChangeLog
 index 60a1554fac..9ecf757e81 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,12 @@
-+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
-+
+@@ -1,5 +1,14 @@
+ 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+ 
 +	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c
 +	(__finitef128): Define to __redirect___finitef128.
 +	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c
@@ -10040,9 +10062,11 @@ index 60a1554fac..9ecf757e81 100644
 +	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan.c
 +	(__isnanf128): Define to __redirect___isnanf128.
 +
- 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
- 
++2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
++
  	* sysdeps/powerpc/powerpc64le/Makefile
+ 	(CFLAGS-tst-strtod-nan-locale.c): New variable.
+ 	(CFLAGS-tst-wcstod-nan-locale.c): New variable.
 diff --git a/sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c b/sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c
 index a5ec36b72f..7efc84b56a 100644
 --- a/sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c
@@ -10168,9 +10192,9 @@ diff --git a/ChangeLog b/ChangeLog
 index 9ecf757e81..9713fd8e21 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,16 @@
-+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
-+
+@@ -1,5 +1,18 @@
+ 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+ 
 +	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Include tables from
 +	sysdeps/ieee754/ldbl-128ibm.
 +	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Copy contents from the
@@ -10182,9 +10206,11 @@ index 9ecf757e81..9713fd8e21 100644
 +	* sysdeps/ieee754/ldbl-128ibm/s_cbrtl.c: Likewise.
 +	* sysdeps/ieee754/ldbl-128ibm/t_expl.h: Likewise.
 +
- 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
- 
++2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
++
  	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c
+ 	(__finitef128): Define to __redirect___finitef128.
+ 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c
 diff --git a/sysdeps/ieee754/ldbl-128ibm/e_expl.c b/sysdeps/ieee754/ldbl-128ibm/e_expl.c
 index 10df6bb7d5..db812e9b82 100644
 --- a/sysdeps/ieee754/ldbl-128ibm/e_expl.c
@@ -14115,9 +14141,9 @@ diff --git a/ChangeLog b/ChangeLog
 index 9713fd8e21..21e923c2f7 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,15 @@
-+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
-+
+@@ -1,5 +1,17 @@
+ 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+ 
 +	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Remove definitions of
 +	_Float128 and L().
 +	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Remove definitions of
@@ -14128,9 +14154,11 @@ index 9713fd8e21..21e923c2f7 100644
 +	* sysdeps/ieee754/ldbl-128ibm/s_cbrtl.c: Likewise.
 +	* sysdeps/ieee754/ldbl-128ibm/t_expl.h: Likewise.
 +
- 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
- 
++2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
++
  	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Include tables from
+ 	sysdeps/ieee754/ldbl-128ibm.
+ 	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Copy contents from the
 diff --git a/sysdeps/ieee754/ldbl-128ibm/e_expl.c b/sysdeps/ieee754/ldbl-128ibm/e_expl.c
 index db812e9b82..9185e7cb5c 100644
 --- a/sysdeps/ieee754/ldbl-128ibm/e_expl.c
@@ -19555,17 +19583,19 @@ diff --git a/ChangeLog b/ChangeLog
 index 21e923c2f7..846601bc21 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,10 @@
-+2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
-+
+@@ -1,5 +1,12 @@
+ 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+ 
 +	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
 +	Remove conditionals on LDBL_MANT_DIG.
 +	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c
 +	(__ieee754_lgammal_r): Likewise.
 +
- 2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
- 
++2017-09-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
++
  	* sysdeps/ieee754/ldbl-128ibm/e_expl.c: Remove definitions of
+ 	_Float128 and L().
+ 	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Remove definitions of
 diff --git a/sysdeps/ieee754/ldbl-128/e_lgammal_r.c b/sysdeps/ieee754/ldbl-128/e_lgammal_r.c
 index bef2601bce..a80c9eaf33 100644
 --- a/sysdeps/ieee754/ldbl-128/e_lgammal_r.c
@@ -20440,9 +20470,9 @@ diff --git a/ChangeLog b/ChangeLog
 index 40867db75a..ad3adc0bdc 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,13 @@
-+2017-10-11  Florian Weimer  <fweimer@redhat.com>
-+
+@@ -1,5 +1,15 @@
+ 2017-10-11  Florian Weimer  <fweimer@redhat.com>
+ 
 +	[BZ #22078]
 +	Avoid large NSS buffers with many addresses, aliases.
 +	* nss/nss_files/files-hosts.c (gethostbyname3_multi): Rewrite
@@ -20451,9 +20481,11 @@ index 40867db75a..ad3adc0bdc 100644
 +	(tst-nss-files-hosts-multi): Link with -ldl.
 +	* nss/tst-nss-files-hosts-multi.c: New file.
 +
- 2017-10-11  Florian Weimer  <fweimer@redhat.com>
- 
++2017-10-11  Florian Weimer  <fweimer@redhat.com>
++
  	[BZ #18023]
+ 	* nss/nss_files/files-hosts.c (gethostbyname3_multi): Use struct
+ 	scratch_buffer.  Eliminate gotos.
 diff --git a/NEWS b/NEWS
 index d6d1f90008..9cb8f00529 100644
 --- a/NEWS
@@ -24073,9 +24105,9 @@ diff --git a/ChangeLog b/ChangeLog
 index 2c1ee0bac1..cd598788f1 100644
 --- a/ChangeLog
 +++ b/ChangeLog
-@@ -1,3 +1,69 @@
-+2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
-+
+@@ -1,5 +1,71 @@
+ 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
+ 
 +	[BZ #21265]
 +	* sysdeps/x86/cpu-features-offsets.sym (XSAVE_STATE_SIZE_OFFSET):
 +	New.
@@ -24140,9 +24172,11 @@ index 2c1ee0bac1..cd598788f1 100644
 +	(_dl_runtime_resolve_xsave): Likewise.
 +	(_dl_runtime_resolve_xsavec): Likewise.
 +
- 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
- 
++2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
++
  	[BZ #22093]
+ 	* sysdeps/x86/cpu-features.c (init_cpu_features): Initialize
+ 	GLRO(dl_hwcap) to HWCAP_X86_64 for x86-64.
 diff --git a/NEWS b/NEWS
 index bb625e699e..87d48025e2 100644
 --- a/NEWS
