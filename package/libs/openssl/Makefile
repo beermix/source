@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssl
-PKG_BASE:=1.1.0
-PKG_BUGFIX:=g
+PKG_BASE:=1.0.2
+PKG_BUGFIX:=m
 PKG_VERSION:=$(PKG_BASE)$(PKG_BUGFIX)
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_USE_MIPS16:=0
 
 PKG_BUILD_PARALLEL:=0
@@ -24,7 +24,7 @@ PKG_SOURCE_URL:= \
 	http://gd.tuwien.ac.at/infosys/security/openssl/source/ \
 	http://www.openssl.org/source/ \
 	http://www.openssl.org/source/old/$(PKG_BASE)/
-#PKG_HASH:=12f746f3f2493b2f39da7ecf63d7ee19c6ac9ec6a4fcd8c229da8a522cb12765
+#PKG_HASH:=ce07195b659e75f4e1db43552860070061f156a98bb37b672b101ba6e3ddf30c
 
 PKG_LICENSE:=OpenSSL
 PKG_LICENSE_FILES:=LICENSE
@@ -40,11 +40,7 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_OPENSSL_WITH_COMPRESSION \
 	CONFIG_OPENSSL_WITH_NPN \
 	CONFIG_OPENSSL_WITH_PSK \
-	CONFIG_OPENSSL_WITH_SRP \
-	CONFIG_OPENSSL_WITH_BLAKE2 \
-	CONFIG_OPENSSL_WITH_CHACHA20 \
-	CONFIG_OPENSSL_WITH_POLY1305 \
-	CONFIG_OPENSSL_WITH_OCB
+	CONFIG_OPENSSL_WITH_SRP
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -63,9 +59,10 @@ source "$(SOURCE)/Config.in"
 endef
 
 define Package/openssl/Default/description
-OpenSSL is a robust, commercial-grade, and full-featured toolkit for the
-Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols.
-It is also a general-purpose cryptography library.
+The OpenSSL Project is a collaborative effort to develop a robust,
+commercial-grade, full-featured, and Open Source toolkit implementing the Secure
+Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols as well
+as a full-strength general purpose cryptography library.
 endef
 
 define Package/libopenssl
@@ -88,7 +85,7 @@ define Package/openssl-util
   $(call Package/openssl/Default)
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libopenssl 
+  DEPENDS:=+libopenssl
   TITLE+= (utility)
 endef
 
@@ -102,9 +99,9 @@ This package contains the OpenSSL command-line utility.
 endef
 
 
-OPENSSL_NO_CIPHERS := no-idea no-md2 no-mdc2 no-rc5 no-camellia \
- no-whirlpool no-seed no-cms
-OPENSSL_OPTIONS := no-err no-heartbeats no-async threads
+OPENSSL_NO_CIPHERS:= no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-camellia no-krb5 \
+ no-whrlpool no-whirlpool no-seed no-jpake
+OPENSSL_OPTIONS:= shared no-err no-ssl2 no-ssl2-method no-heartbeats threads
 
 ifdef CONFIG_OPENSSL_ENGINE_CRYPTO
   OPENSSL_OPTIONS += -DHAVE_CRYPTODEV
@@ -112,42 +109,30 @@ ifdef CONFIG_OPENSSL_ENGINE_CRYPTO
     OPENSSL_OPTIONS += -DUSE_CRYPTODEV_DIGESTS
   endif
 else
-  OPENSSL_OPTIONS += no-engine
+  OPENSSL_OPTIONS += no-engines
 endif
 
-ifdef CONFIG_OPENSSL_WITH_EC
-  OPENSSL_OPTIONS += enable-ec
-else
+ifndef CONFIG_OPENSSL_WITH_EC
   OPENSSL_OPTIONS += no-ec
 endif
 
-ifdef CONFIG_OPENSSL_WITH_EC2M
-  OPENSSL_OPTIONS += enable-ec2m
-else
+ifndef CONFIG_OPENSSL_WITH_EC2M
   OPENSSL_OPTIONS += no-ec2m
 endif
 
-ifdef CONFIG_OPENSSL_WITH_SSL3
-  OPENSSL_OPTIONS += enable-ssl3 enable-ssl3-method
-else
-  OPENSSL_OPTIONS += no-ssl3 no-ssl3-method
+ifndef CONFIG_OPENSSL_WITH_SSL3
+  OPENSSL_OPTIONS += no-ssl3
 endif
 
-ifdef CONFIG_OPENSSL_HARDWARE_SUPPORT
-  OPENSSL_OPTIONS += enable-hw
-else
+ifndef CONFIG_OPENSSL_HARDWARE_SUPPORT
   OPENSSL_OPTIONS += no-hw
 endif
 
-ifdef CONFIG_OPENSSL_WITH_DEPRECATED
-  OPENSSL_OPTIONS += enable-deprecated
-else
+ifndef CONFIG_OPENSSL_WITH_DEPRECATED
   OPENSSL_OPTIONS += no-deprecated
 endif
 
-ifdef CONFIG_OPENSSL_WITH_DTLS
-  OPENSSL_OPTIONS += enable-dtls
-else
+ifndef CONFIG_OPENSSL_WITH_DTLS
   OPENSSL_OPTIONS += no-dtls
 endif
 
@@ -157,46 +142,16 @@ else
   OPENSSL_OPTIONS += no-comp
 endif
 
-ifdef CONFIG_OPENSSL_WITH_NPN
-  OPENSSL_OPTIONS += enable-nextprotoneg
-else
+ifndef CONFIG_OPENSSL_WITH_NPN
   OPENSSL_OPTIONS += no-nextprotoneg
 endif
 
-ifdef CONFIG_OPENSSL_WITH_PSK
-  OPENSSL_OPTIONS += enable-psk
-else
+ifndef CONFIG_OPENSSL_WITH_PSK
   OPENSSL_OPTIONS += no-psk
 endif
 
-ifdef CONFIG_OPENSSL_WITH_SRP
-  OPENSSL_OPTIONS += enable-srp
-else
+ifndef CONFIG_OPENSSL_WITH_SRP
   OPENSSL_OPTIONS += no-srp
-endif
-
-ifdef CONFIG_OPENSSL_WITH_BLAKE2
-  OPENSSL_OPTIONS += enable-blake2
-else
-  OPENSSL_OPTIONS += no-blake2
-endif
-
-ifdef CONFIG_OPENSSL_WITH_CHACHA20
-  OPENSSL_OPTIONS += enable-chacha
-else
-  OPENSSL_OPTIONS += no-chacha
-endif
-
-ifdef CONFIG_OPENSSL_WITH_POLY1305
-  OPENSSL_OPTIONS += enable-poly1305
-else
-  OPENSSL_OPTIONS += no-poly1305
-endif
-
-ifdef CONFIG_OPENSSL_WITH_OCB
-  OPENSSL_OPTIONS += enable-ocb
-else
-  OPENSSL_OPTIONS += no-ocb
 endif
 
 ifeq ($(CONFIG_x86_64),y)
@@ -228,7 +183,7 @@ define Build/Configure
 			--prefix=/usr \
 			--openssldir=/etc/ssl \
 			$(TARGET_CPPFLAGS) \
-			$(TARGET_LDFLAGS) -ldl -lpthread \
+			$(TARGET_LDFLAGS) -ldl \
 			-DOPENSSL_SMALL_FOOTPRINT \
 			$(OPENSSL_NO_CIPHERS) \
 			$(OPENSSL_OPTIONS) \
@@ -255,11 +210,26 @@ define Build/Compile
 		OPENWRT_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
 		$(OPENSSL_MAKEFLAGS) \
 		all
+	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		CC="$(TARGET_CC)" \
+		ASFLAGS="$(TARGET_ASFLAGS) -I$(PKG_BUILD_DIR)/crypto -c" \
+		AR="$(TARGET_CROSS)ar r" \
+		RANLIB="$(TARGET_CROSS)ranlib" \
+		OPENWRT_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
+		$(OPENSSL_MAKEFLAGS) \
+		build-shared
+	# Work around openssl build bug to link libssl.so with libcrypto.so.
+	-rm $(PKG_BUILD_DIR)/libssl.so.*.*.*
+	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		CC="$(TARGET_CC)" \
+		OPENWRT_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
+		$(OPENSSL_MAKEFLAGS) \
+		do_linux-shared
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		CC="$(TARGET_CC)" \
-		DESTDIR="$(PKG_INSTALL_DIR)" \
+		INSTALL_PREFIX="$(PKG_INSTALL_DIR)" \
 		$(OPENSSL_MAKEFLAGS) \
-		install_ssldirs install_sw
+		install
 endef
 
 define Build/InstallDev
@@ -276,8 +246,6 @@ define Package/libopenssl/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libcrypto.so.* $(1)/usr/lib/
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libssl.so.* $(1)/usr/lib/
-	$(if $(CONFIG_OPENSSL_ENGINE_CRYPTO),$(INSTALL_DIR) $(1)/usr/lib/engines-1.1,)
-	$(if $(CONFIG_OPENSSL_ENGINE_CRYPTO),$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/engines-1.1/*.so $(1)/usr/lib/engines-1.1/,)
 endef
 
 define Package/openssl-util/install

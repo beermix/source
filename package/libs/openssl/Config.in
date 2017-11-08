@@ -45,26 +45,6 @@ config OPENSSL_WITH_SRP
 	default y
 	prompt "Enable SRP support"
 
-config OPENSSL_WITH_BLAKE2
-	bool
-	default n
-	prompt "Enable BLAKE2 support"
-
-config OPENSSL_WITH_CHACHA20
-	bool
-	default n
-	prompt "Enable CHACHA20 support"
-
-config OPENSSL_WITH_POLY1305
-	bool
-	default n
-	prompt "Enable POLY1305 support"
-
-config OPENSSL_WITH_OCB
-	bool
-	default n
-	prompt "Enable support for OCB mode"
-
 config OPENSSL_ENGINE_DIGEST
 	bool
 	depends on OPENSSL_ENGINE_CRYPTO
