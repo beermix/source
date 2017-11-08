@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssl
 PKG_BASE:=1.0.2
-PKG_BUGFIX:=l
+PKG_BUGFIX:=m
 PKG_VERSION:=$(PKG_BASE)$(PKG_BUGFIX)
 PKG_RELEASE:=2
 PKG_USE_MIPS16:=0
@@ -24,7 +24,7 @@ PKG_SOURCE_URL:= \
 	http://gd.tuwien.ac.at/infosys/security/openssl/source/ \
 	http://www.openssl.org/source/ \
 	http://www.openssl.org/source/old/$(PKG_BASE)/
-PKG_HASH:=ce07195b659e75f4e1db43552860070061f156a98bb37b672b101ba6e3ddf30c
+#PKG_HASH:=ce07195b659e75f4e1db43552860070061f156a98bb37b672b101ba6e3ddf30c
 
 PKG_LICENSE:=OpenSSL
 PKG_LICENSE_FILES:=LICENSE
@@ -101,7 +101,7 @@ endef
 
 OPENSSL_NO_CIPHERS:= no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-camellia no-krb5 \
  no-whrlpool no-whirlpool no-seed no-jpake
-OPENSSL_OPTIONS:= shared no-err no-sse2 no-ssl2 no-ssl2-method no-heartbeats
+OPENSSL_OPTIONS:= shared no-err no-ssl2 no-ssl2-method no-heartbeats
 
 ifdef CONFIG_OPENSSL_ENGINE_CRYPTO
   OPENSSL_OPTIONS += -DHAVE_CRYPTODEV
@@ -121,7 +121,7 @@ ifndef CONFIG_OPENSSL_WITH_EC2M
 endif
 
 ifndef CONFIG_OPENSSL_WITH_SSL3
-  OPENSSL_OPTIONS += no-ssl3 no-ssl3-method
+  OPENSSL_OPTIONS += no-ssl3
 endif
 
 ifndef CONFIG_OPENSSL_HARDWARE_SUPPORT
