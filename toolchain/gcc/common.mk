@@ -113,7 +113,6 @@ GCC_CONFIGURE:= \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
-		--disable-libitm \
 		--disable-vtable-verify \
 		--with-tune=generic \
 		--disable-nls \
