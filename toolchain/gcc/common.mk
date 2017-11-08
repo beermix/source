@@ -115,6 +115,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-libitm \
 		--disable-vtable-verify \
+		--with-tune=generic \
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
