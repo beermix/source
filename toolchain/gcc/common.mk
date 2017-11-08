@@ -113,8 +113,6 @@ GCC_CONFIGURE:= \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
-		--disable-vtable-verify \
-		--disable-libitm \
 		--with-tune=generic \
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
