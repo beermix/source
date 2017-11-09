@@ -58899,3 +58899,20 @@ index 73df3b1d23..b3ac0437b4 100644
  #define BFD_VERSION @bfd_version@
  #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
  #define REPORT_BUGS_TO @report_bugs_to@
+
+commit ff3d98f3fe69cf395a7d61428690757aed1833a2
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Thu Nov 9 00:01:14 2017 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index b3ac0437b4..dd394f202f 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -1,4 +1,4 @@
+-#define BFD_VERSION_DATE 20171108
++#define BFD_VERSION_DATE 20171109
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
