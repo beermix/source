@@ -48,7 +48,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 $(filter-out -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-march=bonnell -mmmx -msse -msse2 -msse3 -mssse3 -msahf -mmovbe -mfxsr --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -mtune=bonnell -O2 -g" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -68,8 +68,6 @@ GLIBC_CONFIGURE:= \
 		--enable-kernel=3.2.0 \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
-		--disable-build-nscd \
-		--disable-nscd \
 		--disable-timezone-tools \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
@@ -78,6 +76,7 @@ export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export libc_cv_c_cleanup=yes
 export libc_cv_forced_unwind=yes
+export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
