@@ -63,12 +63,7 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
-		--enable-bind-now \
-		--enable-lock-elision \
 		--enable-kernel=3.2.0 \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--disable-timezone-tools \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
