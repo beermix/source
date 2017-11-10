@@ -1,0 +1,2 @@
+#!/bin/bash
+exec '/root/-3SDC/ledex/.build/tools/bin/objdump' "${@}"

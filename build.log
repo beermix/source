@@ -1,0 +1,1249 @@
+[INFO ]  Performing some trivial sanity checks
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  Testing '! ( -n  )'
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/-3SDC/ledex/.build'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'rm' '-f' '/root/-3SDC/ledex/.build/backtrace'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'touch' '/root/-3SDC/ledex/.build/foo'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Testing '! ( -f /root/-3SDC/ledex/.build/FOO )'
+[DEBUG]  ==> Executing:  'rm' '-f' '/root/-3SDC/ledex/.build/foo'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Testing '-f /bin/bash -a -x /bin/bash'
+[DEBUG]  Creating bin-override for tools in '/root/-3SDC/ledex/.build/tools'
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/-3SDC/ledex/.build/tools/bin'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'install' -> '/usr/bin/install -c' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/install' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/install' '/root/-3SDC/ledex/.build/tools/bin/install'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/install -c#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/install'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/install'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'bash' -> '/bin/bash' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/bash'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/bin/bash#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/bash'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/bash'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'awk' -> '/usr/bin/gawk' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/awk'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/gawk#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/awk'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/awk'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'grep' -> '/bin/grep' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/grep'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/bin/grep#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/grep'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/grep'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'make' -> '/usr/bin/make' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/make'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/make#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/make'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/make'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'sed' -> '/bin/sed' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/sed'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/bin/sed#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/sed'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/sed'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'libtoolize' -> '/usr/bin/libtoolize' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/libtoolize'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/libtoolize#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/libtoolize'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/libtoolize'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'objcopy' -> '/usr/bin/objcopy' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/objcopy'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/objcopy#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/objcopy'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/objcopy'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'objdump' -> '/usr/bin/objdump' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/objdump'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/objdump#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/objdump'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/objdump'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'readelf' -> '/usr/bin/readelf' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/readelf'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/readelf#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/readelf'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/readelf'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'patch' -> '/usr/bin/patch' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/patch'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/patch#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/patch'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/patch'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Creating script-override for 'gperf' -> '/usr/bin/gperf' using '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' template
+[DEBUG]  ==> Executing:  'cp' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/override/__default' '/root/-3SDC/ledex/.build/tools/bin/gperf'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-r' '-e' 's#@CONFIG_SHELL@#/bin/bash#g' '-e' 's#@TOOL_PATH@#/usr/bin/gperf#g' '-e' 's#@TOOLS_OVERRIDE_DIR@#/root/-3SDC/ledex/.build/tools#g' '/root/-3SDC/ledex/.build/tools/bin/gperf'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/tools/bin/gperf'
+[DEBUG]  ==> Return status 0
+[INFO ]  Build started 20171110.152314
+[DEBUG]  =================================================================
+[DEBUG]  Dumping user-supplied crosstool-NG configuration
+[DEBUG]    ==> Executing:  '/bin/grep' '-E' '^(# )?CT_' '.config'
+[DEBUG]    CT_CONFIGURE_has_static_link=y
+[DEBUG]    CT_CONFIGURE_has_wget=y
+[DEBUG]    CT_CONFIGURE_has_stat_flavor_GNU=y
+[DEBUG]    CT_CONFIGURE_has_make_3_81_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_libtoolize_2_4_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_autoconf_2_63_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_autoreconf_2_63_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_automake_1_15_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_gnu_m4_1_4_12_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_svn=y
+[DEBUG]    CT_CONFIGURE_has_git=y
+[DEBUG]    CT_MODULES=y
+[DEBUG]    # CT_OBSOLETE is not set
+[DEBUG]    CT_EXPERIMENTAL=y
+[DEBUG]    CT_ALLOW_BUILD_AS_ROOT=y
+[DEBUG]    CT_ALLOW_BUILD_AS_ROOT_SURE=y
+[DEBUG]    # CT_DEBUG_CT is not set
+[DEBUG]    CT_LOCAL_TARBALLS_DIR="/root/.dl"
+[DEBUG]    CT_SAVE_TARBALLS=y
+[DEBUG]    CT_WORK_DIR="${CT_TOP_DIR}/.build"
+[DEBUG]    CT_BUILD_TOP_DIR="${CT_WORK_DIR}/${CT_HOST:+HOST-${CT_HOST}/}${CT_TARGET}"
+[DEBUG]    CT_PREFIX_DIR="${CT_PREFIX:-${HOME}/x-tools}/${CT_HOST:+HOST-${CT_HOST}/}${CT_TARGET}"
+[DEBUG]    CT_RM_RF_PREFIX_DIR=y
+[DEBUG]    CT_REMOVE_DOCS=y
+[DEBUG]    CT_PREFIX_DIR_RO=y
+[DEBUG]    CT_STRIP_HOST_TOOLCHAIN_EXECUTABLES=y
+[DEBUG]    # CT_STRIP_TARGET_TOOLCHAIN_EXECUTABLES is not set
+[DEBUG]    CT_DOWNLOAD_AGENT_WGET=y
+[DEBUG]    # CT_DOWNLOAD_AGENT_NONE is not set
+[DEBUG]    # CT_FORBID_DOWNLOAD is not set
+[DEBUG]    # CT_FORCE_DOWNLOAD is not set
+[DEBUG]    CT_CONNECT_TIMEOUT=10
+[DEBUG]    CT_DOWNLOAD_WGET_OPTIONS="--passive-ftp --tries=3 -nc --progress=dot:binary"
+[DEBUG]    # CT_ONLY_DOWNLOAD is not set
+[DEBUG]    # CT_USE_MIRROR is not set
+[DEBUG]    # CT_VERIFY_DOWNLOAD_DIGEST is not set
+[DEBUG]    # CT_VERIFY_DOWNLOAD_SIGNATURE is not set
+[DEBUG]    CT_FORCE_EXTRACT=y
+[DEBUG]    CT_OVERRIDE_CONFIG_GUESS_SUB=y
+[DEBUG]    # CT_ONLY_EXTRACT is not set
+[DEBUG]    CT_PATCH_BUNDLED=y
+[DEBUG]    # CT_PATCH_LOCAL is not set
+[DEBUG]    # CT_PATCH_BUNDLED_LOCAL is not set
+[DEBUG]    # CT_PATCH_LOCAL_BUNDLED is not set
+[DEBUG]    # CT_PATCH_NONE is not set
+[DEBUG]    CT_PATCH_ORDER="bundled"
+[DEBUG]    CT_PARALLEL_JOBS=0
+[DEBUG]    CT_LOAD=""
+[DEBUG]    CT_USE_PIPES=y
+[DEBUG]    CT_EXTRA_CFLAGS_FOR_BUILD=""
+[DEBUG]    CT_EXTRA_LDFLAGS_FOR_BUILD=""
+[DEBUG]    CT_EXTRA_CFLAGS_FOR_HOST=""
+[DEBUG]    CT_EXTRA_LDFLAGS_FOR_HOST=""
+[DEBUG]    # CT_CONFIG_SHELL_SH is not set
+[DEBUG]    # CT_CONFIG_SHELL_ASH is not set
+[DEBUG]    CT_CONFIG_SHELL_BASH=y
+[DEBUG]    # CT_CONFIG_SHELL_CUSTOM is not set
+[DEBUG]    CT_CONFIG_SHELL="${bash}"
+[DEBUG]    # CT_LOG_ERROR is not set
+[DEBUG]    # CT_LOG_WARN is not set
+[DEBUG]    # CT_LOG_INFO is not set
+[DEBUG]    CT_LOG_EXTRA=y
+[DEBUG]    # CT_LOG_ALL is not set
+[DEBUG]    # CT_LOG_DEBUG is not set
+[DEBUG]    CT_LOG_LEVEL_MAX="EXTRA"
+[DEBUG]    CT_LOG_SEE_TOOLS_WARN=y
+[DEBUG]    CT_LOG_PROGRESS_BAR=y
+[DEBUG]    CT_LOG_TO_FILE=y
+[DEBUG]    CT_LOG_FILE_COMPRESS=y
+[DEBUG]    # CT_ARCH_ALPHA is not set
+[DEBUG]    # CT_ARCH_ARM is not set
+[DEBUG]    # CT_ARCH_AVR is not set
+[DEBUG]    # CT_ARCH_M68K is not set
+[DEBUG]    # CT_ARCH_MICROBLAZE is not set
+[DEBUG]    # CT_ARCH_MIPS is not set
+[DEBUG]    # CT_ARCH_MSP430 is not set
+[DEBUG]    # CT_ARCH_NIOS2 is not set
+[DEBUG]    # CT_ARCH_POWERPC is not set
+[DEBUG]    # CT_ARCH_S390 is not set
+[DEBUG]    # CT_ARCH_SH is not set
+[DEBUG]    # CT_ARCH_SPARC is not set
+[DEBUG]    CT_ARCH_X86=y
+[DEBUG]    # CT_ARCH_XTENSA is not set
+[DEBUG]    CT_ARCH="x86"
+[DEBUG]    CT_ARCH_CPU=""
+[DEBUG]    CT_ARCH_TUNE=""
+[DEBUG]    CT_ARCH_SUFFIX=""
+[DEBUG]    # CT_MULTILIB is not set
+[DEBUG]    CT_DEMULTILIB=y
+[DEBUG]    CT_ARCH_USE_MMU=y
+[DEBUG]    CT_ARCH_SUPPORTS_32=y
+[DEBUG]    CT_ARCH_SUPPORTS_64=y
+[DEBUG]    CT_ARCH_DEFAULT_32=y
+[DEBUG]    CT_ARCH_BITNESS=32
+[DEBUG]    CT_ARCH_32=y
+[DEBUG]    # CT_ARCH_64 is not set
+[DEBUG]    CT_ARCH_SUPPORTS_WITH_ARCH=y
+[DEBUG]    CT_ARCH_SUPPORTS_WITH_CPU=y
+[DEBUG]    CT_ARCH_SUPPORTS_WITH_TUNE=y
+[DEBUG]    CT_ARCH_ARCH=""
+[DEBUG]    CT_TARGET_CFLAGS=""
+[DEBUG]    CT_TARGET_LDFLAGS=""
+[DEBUG]    CT_FORCE_SYSROOT=y
+[DEBUG]    CT_USE_SYSROOT=y
+[DEBUG]    CT_SYSROOT_NAME="sysroot"
+[DEBUG]    CT_SYSROOT_DIR_PREFIX=""
+[DEBUG]    CT_WANTS_STATIC_LINK=y
+[DEBUG]    CT_WANTS_STATIC_LINK_CXX=y
+[DEBUG]    CT_STATIC_TOOLCHAIN=y
+[DEBUG]    CT_SHOW_CT_VERSION=y
+[DEBUG]    CT_TOOLCHAIN_PKGVERSION=""
+[DEBUG]    CT_TOOLCHAIN_BUGURL=""
+[DEBUG]    CT_TARGET_VENDOR="unknown"
+[DEBUG]    CT_TARGET_ALIAS_SED_EXPR=""
+[DEBUG]    CT_TARGET_ALIAS=""
+[DEBUG]    # CT_NATIVE is not set
+[DEBUG]    CT_CROSS=y
+[DEBUG]    # CT_CROSS_NATIVE is not set
+[DEBUG]    # CT_CANADIAN is not set
+[DEBUG]    CT_TOOLCHAIN_TYPE="cross"
+[DEBUG]    CT_BUILD=""
+[DEBUG]    CT_BUILD_PREFIX=""
+[DEBUG]    CT_BUILD_SUFFIX=""
+[DEBUG]    CT_TOOLCHAIN_ENABLE_NLS=y
+[DEBUG]    CT_KERNEL_SUPPORTS_SHARED_LIBS=y
+[DEBUG]    # CT_KERNEL_BARE_METAL is not set
+[DEBUG]    CT_KERNEL_LINUX=y
+[DEBUG]    # CT_KERNEL_WINDOWS is not set
+[DEBUG]    CT_KERNEL="linux"
+[DEBUG]    CT_LINUX_DIR_NAME="linux"
+[DEBUG]    CT_LINUX_PKG_NAME="linux"
+[DEBUG]    CT_LINUX_SRC_RELEASE=y
+[DEBUG]    # CT_LINUX_SRC_DEVEL is not set
+[DEBUG]    # CT_LINUX_SRC_CUSTOM is not set
+[DEBUG]    # CT_LINUX_V_4_13 is not set
+[DEBUG]    # CT_LINUX_V_4_12 is not set
+[DEBUG]    # CT_LINUX_V_4_11 is not set
+[DEBUG]    # CT_LINUX_V_4_10 is not set
+[DEBUG]    CT_LINUX_V_4_9=y
+[DEBUG]    # CT_LINUX_V_4_4 is not set
+[DEBUG]    # CT_LINUX_V_4_1 is not set
+[DEBUG]    # CT_LINUX_V_3_16 is not set
+[DEBUG]    # CT_LINUX_V_3_13 is not set
+[DEBUG]    # CT_LINUX_V_3_12 is not set
+[DEBUG]    # CT_LINUX_V_3_10 is not set
+[DEBUG]    # CT_LINUX_V_3_4 is not set
+[DEBUG]    # CT_LINUX_V_3_2 is not set
+[DEBUG]    CT_LINUX_VERSION="4.9.58"
+[DEBUG]    CT_LINUX_MIRRORS="$(CT_Mirrors kernel.org linux ${CT_LINUX_VERSION})"
+[DEBUG]    CT_LINUX_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_LINUX_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_LINUX_ARCHIVE_FORMATS=".tar.xz .tar.gz"
+[DEBUG]    CT_LINUX_SIGNATURE_FORMAT="unpacked/.sign"
+[DEBUG]    CT_LINUX_3_2_or_later=y
+[DEBUG]    CT_LINUX_REQUIRE_3_2_or_later=y
+[DEBUG]    CT_KERNEL_LINUX_VERBOSITY_0=y
+[DEBUG]    # CT_KERNEL_LINUX_VERBOSITY_1 is not set
+[DEBUG]    # CT_KERNEL_LINUX_VERBOSITY_2 is not set
+[DEBUG]    CT_KERNEL_LINUX_VERBOSE_LEVEL=0
+[DEBUG]    # CT_KERNEL_LINUX_INSTALL_CHECK is not set
+[DEBUG]    # CT_SHARED_LIBS is not set
+[DEBUG]    CT_ARCH_BINFMT_ELF=y
+[DEBUG]    CT_BINUTILS_BINUTILS=y
+[DEBUG]    CT_BINUTILS="binutils"
+[DEBUG]    CT_BINUTILS_DIR_NAME="binutils"
+[DEBUG]    CT_BINUTILS_USE_GNU=y
+[DEBUG]    CT_BINUTILS_USE="BINUTILS"
+[DEBUG]    CT_BINUTILS_PKG_NAME="binutils"
+[DEBUG]    CT_BINUTILS_SRC_RELEASE=y
+[DEBUG]    # CT_BINUTILS_SRC_DEVEL is not set
+[DEBUG]    # CT_BINUTILS_SRC_CUSTOM is not set
+[DEBUG]    CT_BINUTILS_V_2_29_1=y
+[DEBUG]    # CT_BINUTILS_V_2_28_1 is not set
+[DEBUG]    # CT_BINUTILS_V_2_27 is not set
+[DEBUG]    # CT_BINUTILS_V_2_26_1 is not set
+[DEBUG]    CT_BINUTILS_VERSION="2.29.1"
+[DEBUG]    CT_BINUTILS_MIRRORS="$(CT_Mirrors GNU binutils) $(CT_Mirrors sourceware binutils/releases)"
+[DEBUG]    CT_BINUTILS_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_BINUTILS_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_BINUTILS_ARCHIVE_FORMATS=".tar.xz .tar.bz2 .tar.gz"
+[DEBUG]    CT_BINUTILS_SIGNATURE_FORMAT="packed/.sig"
+[DEBUG]    CT_BINUTILS_2_25_or_later=y
+[DEBUG]    CT_BINUTILS_REQUIRE_2_25_or_later=y
+[DEBUG]    CT_BINUTILS_2_23_or_later=y
+[DEBUG]    CT_BINUTILS_HAS_HASH_STYLE=y
+[DEBUG]    CT_BINUTILS_HAS_GOLD=y
+[DEBUG]    CT_BINUTILS_HAS_PLUGINS=y
+[DEBUG]    CT_BINUTILS_HAS_PKGVERSION_BUGURL=y
+[DEBUG]    CT_BINUTILS_GOLD_SUPPORTS_ARCH=y
+[DEBUG]    CT_BINUTILS_FORCE_LD_BFD_DEFAULT=y
+[DEBUG]    CT_BINUTILS_LINKER_LD=y
+[DEBUG]    CT_BINUTILS_LINKERS_LIST="ld"
+[DEBUG]    CT_BINUTILS_LINKER_DEFAULT="bfd"
+[DEBUG]    CT_BINUTILS_EXTRA_CONFIG_ARRAY=""
+[DEBUG]    # CT_BINUTILS_FOR_TARGET is not set
+[DEBUG]    # CT_LIBC_BIONIC is not set
+[DEBUG]    CT_LIBC_GLIBC=y
+[DEBUG]    # CT_LIBC_MUSL is not set
+[DEBUG]    # CT_LIBC_UCLIBC is not set
+[DEBUG]    CT_LIBC="glibc"
+[DEBUG]    CT_THREADS="nptl"
+[DEBUG]    CT_GLIBC_DIR_NAME="glibc"
+[DEBUG]    CT_GLIBC_USE_GNU=y
+[DEBUG]    CT_GLIBC_USE="GLIBC"
+[DEBUG]    CT_GLIBC_PKG_NAME="glibc"
+[DEBUG]    # CT_GLIBC_SRC_RELEASE is not set
+[DEBUG]    CT_GLIBC_SRC_DEVEL=y
+[DEBUG]    CT_GLIBC_DEVEL_VCS_git=y
+[DEBUG]    # CT_GLIBC_DEVEL_VCS_svn is not set
+[DEBUG]    # CT_GLIBC_DEVEL_VCS_hg is not set
+[DEBUG]    # CT_GLIBC_DEVEL_VCS_cvs is not set
+[DEBUG]    CT_GLIBC_DEVEL_VCS="git"
+[DEBUG]    CT_GLIBC_DEVEL_URL="https://github.com/bminor/glibc"
+[DEBUG]    CT_GLIBC_DEVEL_BRANCH=""
+[DEBUG]    CT_GLIBC_DEVEL_REVISION="8cb5295"
+[DEBUG]    CT_GLIBC_DEVEL_SUBDIR=""
+[DEBUG]    CT_GLIBC_DEVEL_BOOTSTRAP=""
+[DEBUG]    # CT_GLIBC_SRC_CUSTOM is not set
+[DEBUG]    CT_GLIBC_VERY_NEW=y
+[DEBUG]    # CT_GLIBC_V_2_26 is not set
+[DEBUG]    # CT_GLIBC_V_2_25 is not set
+[DEBUG]    # CT_GLIBC_V_2_24 is not set
+[DEBUG]    # CT_GLIBC_V_2_23 is not set
+[DEBUG]    # CT_GLIBC_V_2_19 is not set
+[DEBUG]    # CT_GLIBC_V_2_17 is not set
+[DEBUG]    # CT_GLIBC_V_2_12_1 is not set
+[DEBUG]    CT_GLIBC_VERSION="unknown"
+[DEBUG]    CT_GLIBC_MIRRORS="$(CT_Mirrors GNU glibc)"
+[DEBUG]    CT_GLIBC_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_GLIBC_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_GLIBC_ARCHIVE_FORMATS=".tar.xz .tar.bz2 .tar.gz"
+[DEBUG]    CT_GLIBC_SIGNATURE_FORMAT="packed/.sig"
+[DEBUG]    CT_GLIBC_2_26_or_later=y
+[DEBUG]    CT_GLIBC_2_24_or_later=y
+[DEBUG]    CT_GLIBC_2_23_or_later=y
+[DEBUG]    CT_GLIBC_2_20_or_later=y
+[DEBUG]    CT_GLIBC_2_17_or_later=y
+[DEBUG]    CT_GLIBC_2_14_or_later=y
+[DEBUG]    CT_GLIBC_DEP_KERNEL_HEADERS_VERSION=y
+[DEBUG]    CT_GLIBC_DEP_BINUTILS=y
+[DEBUG]    CT_GLIBC_DEP_GCC=y
+[DEBUG]    CT_GLIBC_HAS_LIBIDN_ADDON=y
+[DEBUG]    CT_GLIBC_USE_LIBIDN_ADDON=y
+[DEBUG]    CT_GLIBC_NO_SPARC_V8=y
+[DEBUG]    CT_GLIBC_HAS_OBSOLETE_RPC=y
+[DEBUG]    CT_GLIBC_EXTRA_CONFIG_ARRAY=""
+[DEBUG]    CT_GLIBC_CONFIGPARMS=""
+[DEBUG]    CT_GLIBC_EXTRA_CFLAGS=""
+[DEBUG]    CT_GLIBC_ENABLE_OBSOLETE_RPC=y
+[DEBUG]    # CT_GLIBC_ENABLE_FORTIFIED_BUILD is not set
+[DEBUG]    # CT_GLIBC_DISABLE_VERSIONING is not set
+[DEBUG]    CT_GLIBC_OLDEST_ABI=""
+[DEBUG]    # CT_GLIBC_FORCE_UNWIND is not set
+[DEBUG]    # CT_GLIBC_LOCALES is not set
+[DEBUG]    # CT_GLIBC_KERNEL_VERSION_NONE is not set
+[DEBUG]    # CT_GLIBC_KERNEL_VERSION_AS_HEADERS is not set
+[DEBUG]    CT_GLIBC_KERNEL_VERSION_CHOSEN=y
+[DEBUG]    CT_GLIBC_MIN_KERNEL_VERSION="3.2.0"
+[DEBUG]    CT_GLIBC_MIN_KERNEL="3.2.0"
+[DEBUG]    CT_LIBC_SUPPORT_THREADS_ANY=y
+[DEBUG]    CT_LIBC_SUPPORT_THREADS_NATIVE=y
+[DEBUG]    CT_THREADS_NATIVE=y
+[DEBUG]    CT_CC_CORE_PASSES_NEEDED=y
+[DEBUG]    CT_CC_CORE_PASS_1_NEEDED=y
+[DEBUG]    CT_CC_CORE_PASS_2_NEEDED=y
+[DEBUG]    CT_CC_SUPPORT_CXX=y
+[DEBUG]    CT_CC_SUPPORT_FORTRAN=y
+[DEBUG]    CT_CC_SUPPORT_ADA=y
+[DEBUG]    CT_CC_SUPPORT_OBJC=y
+[DEBUG]    CT_CC_SUPPORT_OBJCXX=y
+[DEBUG]    CT_CC_SUPPORT_GOLANG=y
+[DEBUG]    CT_CC_GCC=y
+[DEBUG]    CT_CC="gcc"
+[DEBUG]    CT_GCC_DIR_NAME="gcc"
+[DEBUG]    CT_GCC_USE_GNU=y
+[DEBUG]    # CT_GCC_USE_LINARO is not set
+[DEBUG]    CT_GCC_USE="GCC"
+[DEBUG]    CT_GCC_PKG_NAME="gcc"
+[DEBUG]    CT_GCC_SRC_RELEASE=y
+[DEBUG]    # CT_GCC_SRC_DEVEL is not set
+[DEBUG]    # CT_GCC_SRC_CUSTOM is not set
+[DEBUG]    CT_GCC_V_7_2_0=y
+[DEBUG]    # CT_GCC_V_6_4_0 is not set
+[DEBUG]    # CT_GCC_V_5_5_0 is not set
+[DEBUG]    # CT_GCC_V_4_9_4 is not set
+[DEBUG]    CT_GCC_VERSION="7.2.0"
+[DEBUG]    CT_GCC_MIRRORS="$(CT_Mirrors GNU gcc/gcc-${CT_GCC_VERSION}) $(CT_Mirrors sourceware gcc/releases/gcc-${CT_GCC_VERSION})"
+[DEBUG]    CT_GCC_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_GCC_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_GCC_ARCHIVE_FORMATS=".tar.xz .tar.gz"
+[DEBUG]    CT_GCC_SIGNATURE_FORMAT=""
+[DEBUG]    CT_GCC_7_or_later=y
+[DEBUG]    CT_GCC_6_or_later=y
+[DEBUG]    CT_GCC_5_or_later=y
+[DEBUG]    CT_GCC_4_9_2_or_later=y
+[DEBUG]    CT_GCC_4_9_or_later=y
+[DEBUG]    CT_GCC_REQUIRE_4_9_or_later=y
+[DEBUG]    CT_GCC_4_8_or_later=y
+[DEBUG]    CT_CC_GCC_HAS_LIBMPX=y
+[DEBUG]    CT_CC_GCC_ENABLE_CXX_FLAGS=""
+[DEBUG]    CT_CC_GCC_CORE_EXTRA_CONFIG_ARRAY=""
+[DEBUG]    CT_CC_GCC_EXTRA_CONFIG_ARRAY=""
+[DEBUG]    CT_CC_GCC_STATIC_LIBSTDCXX=y
+[DEBUG]    # CT_CC_GCC_SYSTEM_ZLIB is not set
+[DEBUG]    CT_CC_GCC_CONFIG_TLS=m
+[DEBUG]    CT_CC_GCC_USE_GRAPHITE=y
+[DEBUG]    CT_CC_GCC_ENABLE_TARGET_OPTSPACE=y
+[DEBUG]    CT_CC_GCC_LIBMUDFLAP=y
+[DEBUG]    CT_CC_GCC_LIBGOMP=y
+[DEBUG]    # CT_CC_GCC_LIBSSP is not set
+[DEBUG]    CT_CC_GCC_LIBQUADMATH=y
+[DEBUG]    CT_CC_GCC_LIBSANITIZER=y
+[DEBUG]    CT_CC_GCC_LIBMPX=y
+[DEBUG]    CT_CC_CXA_ATEXIT=y
+[DEBUG]    # CT_CC_GCC_DISABLE_PCH is not set
+[DEBUG]    CT_CC_GCC_SJLJ_EXCEPTIONS=m
+[DEBUG]    CT_CC_GCC_LDBL_128=m
+[DEBUG]    # CT_CC_GCC_BUILD_ID is not set
+[DEBUG]    CT_CC_GCC_LNK_HASH_STYLE_DEFAULT=y
+[DEBUG]    # CT_CC_GCC_LNK_HASH_STYLE_SYSV is not set
+[DEBUG]    # CT_CC_GCC_LNK_HASH_STYLE_GNU is not set
+[DEBUG]    # CT_CC_GCC_LNK_HASH_STYLE_BOTH is not set
+[DEBUG]    CT_CC_GCC_LNK_HASH_STYLE=""
+[DEBUG]    CT_CC_GCC_DEC_FLOAT_AUTO=y
+[DEBUG]    # CT_CC_GCC_DEC_FLOAT_BID is not set
+[DEBUG]    # CT_CC_GCC_DEC_FLOAT_DPD is not set
+[DEBUG]    # CT_CC_GCC_DEC_FLOATS_NO is not set
+[DEBUG]    CT_CC_LANG_CXX=y
+[DEBUG]    # CT_CC_LANG_FORTRAN is not set
+[DEBUG]    # CT_CC_LANG_ADA is not set
+[DEBUG]    # CT_CC_LANG_OBJC is not set
+[DEBUG]    # CT_CC_LANG_OBJCXX is not set
+[DEBUG]    # CT_CC_LANG_GOLANG is not set
+[DEBUG]    CT_CC_LANG_OTHERS=""
+[DEBUG]    # CT_DEBUG_DUMA is not set
+[DEBUG]    # CT_DEBUG_GDB is not set
+[DEBUG]    # CT_DEBUG_LTRACE is not set
+[DEBUG]    # CT_DEBUG_STRACE is not set
+[DEBUG]    CT_COMPLIBS_NEEDED=y
+[DEBUG]    CT_LIBICONV_NEEDED=y
+[DEBUG]    CT_GETTEXT_NEEDED=y
+[DEBUG]    CT_GMP_NEEDED=y
+[DEBUG]    CT_MPFR_NEEDED=y
+[DEBUG]    CT_ISL_NEEDED=y
+[DEBUG]    CT_MPC_NEEDED=y
+[DEBUG]    CT_NCURSES_NEEDED=y
+[DEBUG]    CT_COMPLIBS=y
+[DEBUG]    CT_LIBICONV=y
+[DEBUG]    CT_GETTEXT=y
+[DEBUG]    CT_GMP=y
+[DEBUG]    CT_MPFR=y
+[DEBUG]    CT_ISL=y
+[DEBUG]    CT_MPC=y
+[DEBUG]    CT_NCURSES=y
+[DEBUG]    # CT_ZLIB is not set
+[DEBUG]    CT_LIBICONV_DIR_NAME="libiconv"
+[DEBUG]    CT_LIBICONV_PKG_NAME="libiconv"
+[DEBUG]    CT_LIBICONV_SRC_RELEASE=y
+[DEBUG]    # CT_LIBICONV_SRC_DEVEL is not set
+[DEBUG]    # CT_LIBICONV_SRC_CUSTOM is not set
+[DEBUG]    CT_LIBICONV_V_1_15=y
+[DEBUG]    CT_LIBICONV_VERSION="1.15"
+[DEBUG]    CT_LIBICONV_MIRRORS="$(CT_Mirrors GNU libiconv)"
+[DEBUG]    CT_LIBICONV_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_LIBICONV_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_LIBICONV_ARCHIVE_FORMATS=".tar.gz"
+[DEBUG]    CT_LIBICONV_SIGNATURE_FORMAT="packed/.sig"
+[DEBUG]    CT_GETTEXT_DIR_NAME="gettext"
+[DEBUG]    CT_GETTEXT_PKG_NAME="gettext"
+[DEBUG]    CT_GETTEXT_SRC_RELEASE=y
+[DEBUG]    # CT_GETTEXT_SRC_DEVEL is not set
+[DEBUG]    # CT_GETTEXT_SRC_CUSTOM is not set
+[DEBUG]    CT_GETTEXT_V_0_19_8_1=y
+[DEBUG]    CT_GETTEXT_VERSION="0.19.8.1"
+[DEBUG]    CT_GETTEXT_MIRRORS="$(CT_Mirrors GNU gettext)"
+[DEBUG]    CT_GETTEXT_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_GETTEXT_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_GETTEXT_ARCHIVE_FORMATS=".tar.xz .tar.lz .tar.gz"
+[DEBUG]    CT_GETTEXT_SIGNATURE_FORMAT="packed/.sig"
+[DEBUG]    CT_GMP_DIR_NAME="gmp"
+[DEBUG]    CT_GMP_PKG_NAME="gmp"
+[DEBUG]    CT_GMP_SRC_RELEASE=y
+[DEBUG]    # CT_GMP_SRC_DEVEL is not set
+[DEBUG]    # CT_GMP_SRC_CUSTOM is not set
+[DEBUG]    CT_GMP_V_6_1_2=y
+[DEBUG]    CT_GMP_VERSION="6.1.2"
+[DEBUG]    CT_GMP_MIRRORS="https://gmplib.org/download/gmp https://gmplib.org/download/gmp/archive $(CT_Mirrors GNU gmp)"
+[DEBUG]    CT_GMP_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_GMP_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_GMP_ARCHIVE_FORMATS=".tar.xz .tar.lz .tar.bz2"
+[DEBUG]    CT_GMP_SIGNATURE_FORMAT="packed/.sig"
+[DEBUG]    CT_GMP_5_1_or_later=y
+[DEBUG]    CT_MPFR_DIR_NAME="mpfr"
+[DEBUG]    CT_MPFR_PKG_NAME="mpfr"
+[DEBUG]    CT_MPFR_SRC_RELEASE=y
+[DEBUG]    # CT_MPFR_SRC_DEVEL is not set
+[DEBUG]    # CT_MPFR_SRC_CUSTOM is not set
+[DEBUG]    CT_MPFR_V_3_1_6=y
+[DEBUG]    CT_MPFR_VERSION="3.1.6"
+[DEBUG]    CT_MPFR_MIRRORS="http://www.mpfr.org/mpfr-${CT_MPFR_VERSION} $(CT_Mirrors GNU mpfr)"
+[DEBUG]    CT_MPFR_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_MPFR_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_MPFR_ARCHIVE_FORMATS=".tar.xz .tar.bz2 .tar.gz .zip"
+[DEBUG]    CT_MPFR_SIGNATURE_FORMAT="packed/.asc"
+[DEBUG]    CT_ISL_DIR_NAME="isl"
+[DEBUG]    CT_ISL_PKG_NAME="isl"
+[DEBUG]    CT_ISL_SRC_RELEASE=y
+[DEBUG]    # CT_ISL_SRC_DEVEL is not set
+[DEBUG]    # CT_ISL_SRC_CUSTOM is not set
+[DEBUG]    CT_ISL_V_0_18=y
+[DEBUG]    # CT_ISL_V_0_17_1 is not set
+[DEBUG]    # CT_ISL_V_0_16_1 is not set
+[DEBUG]    # CT_ISL_V_0_15 is not set
+[DEBUG]    CT_ISL_VERSION="0.18"
+[DEBUG]    CT_ISL_MIRRORS="http://isl.gforge.inria.fr"
+[DEBUG]    CT_ISL_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_ISL_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_ISL_ARCHIVE_FORMATS=".tar.xz .tar.bz2 .tar.gz"
+[DEBUG]    CT_ISL_SIGNATURE_FORMAT=""
+[DEBUG]    CT_ISL_0_15_or_later=y
+[DEBUG]    CT_ISL_REQUIRE_0_15_or_later=y
+[DEBUG]    CT_ISL_0_14_or_later=y
+[DEBUG]    CT_ISL_REQUIRE_0_14_or_later=y
+[DEBUG]    CT_ISL_0_13_or_later=y
+[DEBUG]    CT_ISL_0_12_or_later=y
+[DEBUG]    CT_ISL_REQUIRE_0_12_or_later=y
+[DEBUG]    CT_MPC_DIR_NAME="mpc"
+[DEBUG]    CT_MPC_PKG_NAME="mpc"
+[DEBUG]    CT_MPC_SRC_RELEASE=y
+[DEBUG]    # CT_MPC_SRC_DEVEL is not set
+[DEBUG]    # CT_MPC_SRC_CUSTOM is not set
+[DEBUG]    CT_MPC_V_1_0_3=y
+[DEBUG]    CT_MPC_VERSION="1.0.3"
+[DEBUG]    CT_MPC_MIRRORS="http://www.multiprecision.org/mpc/download $(CT_Mirrors GNU mpc)"
+[DEBUG]    CT_MPC_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_MPC_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_MPC_ARCHIVE_FORMATS=".tar.gz"
+[DEBUG]    CT_MPC_SIGNATURE_FORMAT="packed/.sig"
+[DEBUG]    CT_NCURSES_DIR_NAME="ncurses"
+[DEBUG]    CT_NCURSES_PKG_NAME="ncurses"
+[DEBUG]    CT_NCURSES_SRC_RELEASE=y
+[DEBUG]    # CT_NCURSES_SRC_DEVEL is not set
+[DEBUG]    # CT_NCURSES_SRC_CUSTOM is not set
+[DEBUG]    CT_NCURSES_V_6_0=y
+[DEBUG]    CT_NCURSES_VERSION="6.0"
+[DEBUG]    CT_NCURSES_MIRRORS="ftp://invisible-island.net/ncurses $(CT_Mirrors GNU ncurses)"
+[DEBUG]    CT_NCURSES_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_NCURSES_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
+[DEBUG]    CT_NCURSES_ARCHIVE_FORMATS=".tar.gz"
+[DEBUG]    CT_NCURSES_SIGNATURE_FORMAT="packed/.sig"
+[DEBUG]    # CT_NCURSES_NEW_ABI is not set
+[DEBUG]    CT_NCURSES_HOST_CONFIG_ARGS=""
+[DEBUG]    CT_NCURSES_HOST_DISABLE_DB=y
+[DEBUG]    CT_NCURSES_HOST_FALLBACKS="linux,xterm,xterm-color,xterm-256color,vt100"
+[DEBUG]    CT_NCURSES_TARGET_CONFIG_ARGS=""
+[DEBUG]    # CT_NCURSES_TARGET_DISABLE_DB is not set
+[DEBUG]    CT_NCURSES_TARGET_FALLBACKS=""
+[DEBUG]    # CT_COMPLIBS_CHECK is not set
+[DEBUG]    # CT_COMP_TOOLS_FOR_HOST is not set
+[DEBUG]    # CT_COMP_TOOLS_AUTOCONF is not set
+[DEBUG]    # CT_COMP_TOOLS_AUTOMAKE is not set
+[DEBUG]    # CT_COMP_TOOLS_LIBTOOL is not set
+[DEBUG]    # CT_COMP_TOOLS_M4 is not set
+[DEBUG]    # CT_COMP_TOOLS_MAKE is not set
+[DEBUG]    # CT_TEST_SUITE_GCC is not set
+[DEBUG]    ==> Return status 0
+[DEBUG]  Dumping user-supplied crosstool-NG configuration: done in 0.04s (at 00:00)
+[DEBUG]  Unsetting MAKEFLAGS
+[INFO ]  Building environment variables
+[DEBUG]  Testing '! ( -z /root/x-tools/i386-unknown-linux-gnu )'
+[DEBUG]  Testing '! ( ! -w /root/x-tools )'
+[EXTRA]  Preparing working directories
+[DEBUG]  ==> Executing:  'chmod' 'u+w' '/root/x-tools'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '-R' 'u+w' '/root/x-tools/i386-unknown-linux-gnu'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'rm' '-rf' '/root/x-tools/i386-unknown-linux-gnu'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '755' '/root/x-tools'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/-3SDC/ledex/.build/tarballs'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/-3SDC/ledex/.build/src'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/src'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/x-tools/i386-unknown-linux-gnu'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'touch' '/root/x-tools/i386-unknown-linux-gnu/foo'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Testing '! ( -f /root/x-tools/i386-unknown-linux-gnu/FOO )'
+[DEBUG]  ==> Executing:  'rm' '-f' '/root/x-tools/i386-unknown-linux-gnu/foo'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'chmod' '-R' 'u+w' '/root/x-tools/i386-unknown-linux-gnu'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Sanitized 'CT_PREFIX_DIR': '/root/x-tools/i386-unknown-linux-gnu' -> '/root/x-tools/i386-unknown-linux-gnu'
+[DEBUG]  Sanitized 'CT_SYSROOT_DIR': '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu//sysroot' -> '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot'
+[DEBUG]  Sanitized 'CT_DEBUGROOT_DIR': '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu//debug-root' -> '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/debug-root'
+[DEBUG]  Sanitized 'CT_HEADERS_DIR': '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu//sysroot/usr/include' -> '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot/usr/include'
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/debug-root'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot/usr/include'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/x-tools/i386-unknown-linux-gnu/lib'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot/lib'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot/usr/lib'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Making build system tools available
+[DEBUG]    'x86_64-build_pc-linux-gnu-ar' -> '/usr/bin/ar'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-ar'
+[DEBUG]  ==> Return status 0
+[DEBUG]    'x86_64-build_pc-linux-gnu-as' -> '/usr/bin/as'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-as'
+[DEBUG]  ==> Return status 0
+[DEBUG]    Missing: 'x86_64-pc-linux-gnu-dlltool' or 'x86_64-pc-linux-gnu-dlltool' or 'dlltool' : not required.
+[DEBUG]    'x86_64-build_pc-linux-gnu-gcc' -> '/usr/bin/gcc'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-gcc'
+[DEBUG]  ==> Return status 0
+[DEBUG]    'x86_64-build_pc-linux-gnu-g++' -> '/usr/bin/g++'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-g++'
+[DEBUG]  ==> Return status 0
+[DEBUG]  Testing '! (  = y )'
+[DEBUG]    Missing: 'x86_64-pc-linux-gnu-gnatbind' or 'x86_64-pc-linux-gnu-gnatbind' or 'gnatbind' : not required.
+[DEBUG]    Missing: 'x86_64-pc-linux-gnu-gnatmake' or 'x86_64-pc-linux-gnu-gnatmake' or 'gnatmake' : not required.
+[DEBUG]    'x86_64-build_pc-linux-gnu-ld' -> '/usr/bin/ld'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-ld'
+[DEBUG]  ==> Return status 0
+[DEBUG]    'x86_64-build_pc-linux-gnu-nm' -> '/usr/bin/nm'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-nm'
+[DEBUG]  ==> Return status 0
+[DEBUG]    'x86_64-build_pc-linux-gnu-objcopy' -> '/root/-3SDC/ledex/.build/tools/bin/objcopy'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-objcopy'
+[DEBUG]  ==> Return status 0
+[DEBUG]    'x86_64-build_pc-linux-gnu-objdump' -> '/root/-3SDC/ledex/.build/tools/bin/objdump'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-objdump'
+[DEBUG]  ==> Return status 0
+[DEBUG]    'x86_64-build_pc-linux-gnu-ranlib' -> '/usr/bin/ranlib'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-ranlib'
+[DEBUG]  ==> Return status 0
+[DEBUG]    'x86_64-build_pc-linux-gnu-strip' -> '/usr/bin/strip'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/x86_64-build_pc-linux-gnu-strip'
+[DEBUG]  ==> Return status 0
+[DEBUG]    Missing: 'x86_64-pc-linux-gnu-windres' or 'x86_64-pc-linux-gnu-windres' or 'windres' : not required.
+[DEBUG]    'makeinfo' -> '/usr/bin/makeinfo'
+[DEBUG]  ==> Executing:  'chmod' '700' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin/makeinfo'
+[DEBUG]  ==> Return status 0
+[DEBUG]  CFLAGS for build compiler: '-O2 -g -I/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/include  '
+[DEBUG]  LDFLAGS for build compiler: '-L/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/lib  '
+[DEBUG]  CFLAGS for host compiler: '-O2 -g -pipe -I/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/include  '
+[DEBUG]  LDFLAGS for host compiler: '-L/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/lib  '
+[DEBUG]  =================================================================
+[DEBUG]  Checking that we can run gcc -v
+[DEBUG]    ==> Executing:  'x86_64-build_pc-linux-gnu-gcc' '-v'
+[DEBUG]    Using built-in specs.
+[DEBUG]    COLLECT_GCC=/usr/bin/gcc
+[DEBUG]    COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/7/lto-wrapper
+[DEBUG]    OFFLOAD_TARGET_NAMES=nvptx-none
+[DEBUG]    OFFLOAD_TARGET_DEFAULT=1
+[DEBUG]    Target: x86_64-linux-gnu
+[DEBUG]    Configured with: ../src/configure -v --with-pkgversion='Debian 7.2.0-12' --with-bugurl=file:///usr/share/doc/gcc-7/README.Bugs --enable-languages=c,ada,c++,go,brig,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-7 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --enable-default-pie --with-system-zlib --with-target-system-zlib --enable-objc-gc=auto --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+[DEBUG]    Thread model: posix
+[DEBUG]    gcc version 7.2.1 20171025 (Debian 7.2.0-12) 
+[DEBUG]    ==> Return status 0
+[DEBUG]  Checking that we can run gcc -v: done in 0.00s (at 00:01)
+[DEBUG]  =================================================================
+[DEBUG]  Checking that gcc can compile a trivial program
+[DEBUG]    ==> Executing:  'x86_64-build_pc-linux-gnu-gcc' '-O2' '-g' '-pipe' '-I/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/include' '-L/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/lib' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/test.c' '-o' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/.gccout'
+[DEBUG]    ==> Return status 0
+[DEBUG]  Checking that gcc can compile a trivial program: done in 0.02s (at 00:01)
+[DEBUG]  =================================================================
+[DEBUG]  Checking that gcc can compile a trivial statically linked program (CT_WANTS_STATIC_LINK)
+[DEBUG]    You may need to ensure that static libraries such as libc.a are installed on your system
+[DEBUG]    ==> Executing:  'x86_64-build_pc-linux-gnu-gcc' '-O2' '-g' '-I/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/include' '-L/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/lib' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/test.c' '-static' '-o' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/.gccout'
+[DEBUG]    ==> Return status 0
+[DEBUG]  Checking that gcc can compile a trivial statically linked program (CT_WANTS_STATIC_LINK): done in 0.04s (at 00:01)
+[DEBUG]  =================================================================
+[DEBUG]  Checking that gcc can statically link libstdc++ (CT_WANTS_STATIC_LINK_CXX)
+[DEBUG]    You may need to ensure that libstdc++.a is installed on your system
+[DEBUG]    ==> Executing:  'x86_64-build_pc-linux-gnu-gcc' '-O2' '-g' '-I/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/include' '-L/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/lib' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/test.c' '-static' '-lstdc++' '-o' '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/.gccout'
+[DEBUG]    ==> Return status 0
+[DEBUG]  Checking that gcc can statically link libstdc++ (CT_WANTS_STATIC_LINK_CXX): done in 0.04s (at 00:01)
+[EXTRA]  Installing user-supplied crosstool-NG configuration
+[DEBUG]  ==> Executing:  'mkdir' '-p' '/root/x-tools/i386-unknown-linux-gnu/bin'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/usr/bin/install' '-c' '-m' '0755' '/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/scripts/toolchain-config.in' '/root/x-tools/i386-unknown-linux-gnu/bin/i386-unknown-linux-gnu-ct-ng.config'
+[DEBUG]  ==> Return status 0
+[DEBUG]  ==> Executing:  '/bin/sed' '-i' '-e' 's,@@grep@@,"/bin/grep",;' '/root/x-tools/i386-unknown-linux-gnu/bin/i386-unknown-linux-gnu-ct-ng.config'
+[DEBUG]  ==> Return status 0
+[EXTRA]  =================================================================
+[EXTRA]  Dumping internal crosstool-NG configuration
+[EXTRA]    Building a toolchain for:
+[EXTRA]      build  = x86_64-pc-linux-gnu
+[EXTRA]      host   = x86_64-pc-linux-gnu
+[EXTRA]      target = i386-unknown-linux-gnu
+[DEBUG]    CT_ALLOW_BUILD_AS_ROOT=y
+[DEBUG]    CT_ALLOW_BUILD_AS_ROOT_SURE=y
+[DEBUG]    CT_ARCH=x86
+[DEBUG]    CT_ARCH_32=y
+[DEBUG]    CT_ARCH_ARCH=
+[DEBUG]    CT_ARCH_BINFMT_ELF=y
+[DEBUG]    CT_ARCH_BITNESS=32
+[DEBUG]    CT_ARCH_CPU=
+[DEBUG]    CT_ARCH_DEFAULT_32=y
+[DEBUG]    CT_ARCH_SUFFIX=
+[DEBUG]    CT_ARCH_SUPPORTS_32=y
+[DEBUG]    CT_ARCH_SUPPORTS_64=y
+[DEBUG]    CT_ARCH_SUPPORTS_WITH_ARCH=y
+[DEBUG]    CT_ARCH_SUPPORTS_WITH_CPU=y
+[DEBUG]    CT_ARCH_SUPPORTS_WITH_TUNE=y
+[DEBUG]    CT_ARCH_TARGET_CFLAGS='       '
+[DEBUG]    CT_ARCH_TARGET_LDFLAGS=' '
+[DEBUG]    CT_ARCH_TUNE=
+[DEBUG]    CT_ARCH_USE_MMU=y
+[DEBUG]    CT_ARCH_X86=y
+[DEBUG]    CT_BINUTILS=binutils
+[DEBUG]    CT_BINUTILS_2_23_or_later=y
+[DEBUG]    CT_BINUTILS_2_25_or_later=y
+[DEBUG]    CT_BINUTILS_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_BINUTILS_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_BINUTILS_ARCHIVE_FORMATS='.tar.xz .tar.bz2 .tar.gz'
+[DEBUG]    CT_BINUTILS_BINUTILS=y
+[DEBUG]    CT_BINUTILS_DIR_NAME=binutils
+[DEBUG]    CT_BINUTILS_EXTRA_CONFIG_ARRAY=()
+[DEBUG]    CT_BINUTILS_FORCE_LD_BFD_DEFAULT=y
+[DEBUG]    CT_BINUTILS_GOLD_SUPPORTS_ARCH=y
+[DEBUG]    CT_BINUTILS_HAS_GOLD=y
+[DEBUG]    CT_BINUTILS_HAS_HASH_STYLE=y
+[DEBUG]    CT_BINUTILS_HAS_PKGVERSION_BUGURL=y
+[DEBUG]    CT_BINUTILS_HAS_PLUGINS=y
+[DEBUG]    CT_BINUTILS_LINKERS_LIST=ld
+[DEBUG]    CT_BINUTILS_LINKER_DEFAULT=bfd
+[DEBUG]    CT_BINUTILS_LINKER_LD=y
+[DEBUG]    CT_BINUTILS_MIRRORS=$'https://ftpmirror.gnu.org/gnu/binutilsnhttp://ftpmirror.gnu.org/gnu/binutilsnhttps://ftp.gnu.org/gnu/binutilsnhttp://ftp.gnu.org/gnu/binutilsnftp://ftp.gnu.org/gnu/binutils ftp://sourceware.org/pub/binutils/releasesnhttp://mirrors.kernel.org/sourceware/binutils/releasesnhttp://gcc.gnu.org/pub/binutils/releases'
+[DEBUG]    CT_BINUTILS_PKG_NAME=binutils
+[DEBUG]    CT_BINUTILS_REQUIRE_2_25_or_later=y
+[DEBUG]    CT_BINUTILS_SIGNATURE_FORMAT=packed/.sig
+[DEBUG]    CT_BINUTILS_SRC_RELEASE=y
+[DEBUG]    CT_BINUTILS_SYSROOT_ARG=--with-sysroot=/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot
+[DEBUG]    CT_BINUTILS_USE=BINUTILS
+[DEBUG]    CT_BINUTILS_USE_GNU=y
+[DEBUG]    CT_BINUTILS_VERSION=2.29.1
+[DEBUG]    CT_BINUTILS_V_2_29_1=y
+[DEBUG]    CT_BUILD=x86_64-build_pc-linux-gnu
+[DEBUG]    CT_BUILDTOOLS_PREFIX_DIR=/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools
+[DEBUG]    CT_BUILD_COMPTOOLS_DIR=/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools
+[DEBUG]    CT_BUILD_DIR=/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build
+[DEBUG]    CT_BUILD_LOG=/root/-3SDC/ledex/build.log
+[DEBUG]    CT_BUILD_PREFIX=
+[DEBUG]    CT_BUILD_SUFFIX=
+[DEBUG]    CT_BUILD_TOP_DIR=/root/-3SDC/ledex/.build/i386-unknown-linux-gnu
+[DEBUG]    CT_CC=gcc
+[DEBUG]    CT_CC_CORE_PASSES_NEEDED=y
+[DEBUG]    CT_CC_CORE_PASS_1_NEEDED=y
+[DEBUG]    CT_CC_CORE_PASS_2_NEEDED=y
+[DEBUG]    CT_CC_CORE_SYSROOT_ARG=--with-sysroot=/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot
+[DEBUG]    CT_CC_CXA_ATEXIT=y
+[DEBUG]    CT_CC_GCC=y
+[DEBUG]    CT_CC_GCC_CONFIG_TLS=m
+[DEBUG]    CT_CC_GCC_CORE_EXTRA_CONFIG_ARRAY=()
+[DEBUG]    CT_CC_GCC_DEC_FLOAT_AUTO=y
+[DEBUG]    CT_CC_GCC_ENABLE_CXX_FLAGS=
+[DEBUG]    CT_CC_GCC_ENABLE_TARGET_OPTSPACE=y
+[DEBUG]    CT_CC_GCC_EXTRA_CONFIG_ARRAY=()
+[DEBUG]    CT_CC_GCC_HAS_LIBMPX=y
+[DEBUG]    CT_CC_GCC_LDBL_128=m
+[DEBUG]    CT_CC_GCC_LIBGOMP=y
+[DEBUG]    CT_CC_GCC_LIBMPX=y
+[DEBUG]    CT_CC_GCC_LIBMUDFLAP=y
+[DEBUG]    CT_CC_GCC_LIBQUADMATH=y
+[DEBUG]    CT_CC_GCC_LIBSANITIZER=y
+[DEBUG]    CT_CC_GCC_LNK_HASH_STYLE=
+[DEBUG]    CT_CC_GCC_LNK_HASH_STYLE_DEFAULT=y
+[DEBUG]    CT_CC_GCC_SJLJ_EXCEPTIONS=m
+[DEBUG]    CT_CC_GCC_STATIC_LIBSTDCXX=y
+[DEBUG]    CT_CC_GCC_USE_GRAPHITE=y
+[DEBUG]    CT_CC_LANG_CXX=y
+[DEBUG]    CT_CC_LANG_OTHERS=
+[DEBUG]    CT_CC_SUPPORT_ADA=y
+[DEBUG]    CT_CC_SUPPORT_CXX=y
+[DEBUG]    CT_CC_SUPPORT_FORTRAN=y
+[DEBUG]    CT_CC_SUPPORT_GOLANG=y
+[DEBUG]    CT_CC_SUPPORT_OBJC=y
+[DEBUG]    CT_CC_SUPPORT_OBJCXX=y
+[DEBUG]    CT_CC_SYSROOT_ARG=--with-sysroot=/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot
+[DEBUG]    CT_CFLAGS_FOR_BUILD='-O2 -g -I/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/include  '
+[DEBUG]    CT_CFLAGS_FOR_HOST='-O2 -g -pipe -I/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/include  '
+[DEBUG]    CT_COMMON_SRC_DIR=/root/-3SDC/ledex/.build/src
+[DEBUG]    CT_COMPLIBS=y
+[DEBUG]    CT_COMPLIBS_NEEDED=y
+[DEBUG]    CT_COMP_LIBS_FACILITY_LIST=' zlib gmp mpfr isl cloog mpc libelf expat ncurses libiconv gettext'
+[DEBUG]    CT_COMP_TOOLS_FACILITY_LIST=
+[DEBUG]    CT_CONFIGURE_has_autoconf_2_63_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_automake_1_15_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_autoreconf_2_63_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_git=y
+[DEBUG]    CT_CONFIGURE_has_gnu_m4_1_4_12_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_libtoolize_2_4_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_make_3_81_or_newer=y
+[DEBUG]    CT_CONFIGURE_has_stat_flavor_GNU=y
+[DEBUG]    CT_CONFIGURE_has_static_link=y
+[DEBUG]    CT_CONFIGURE_has_svn=y
+[DEBUG]    CT_CONFIGURE_has_wget=y
+[DEBUG]    CT_CONFIG_SHELL=/bin/bash
+[DEBUG]    CT_CONFIG_SHELL_BASH=y
+[DEBUG]    CT_CONNECT_TIMEOUT=10
+[DEBUG]    CT_CROSS=y
+[DEBUG]    CT_DEBUGROOT_DIR=/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/debug-root
+[DEBUG]    CT_DEBUG_FACILITY_LIST=
+[DEBUG]    CT_DEMULTILIB=y
+[DEBUG]    CT_DOC_DIR=/root/-f2fs/.crosstool-ng/share/doc/crosstool-ng/crosstool-ng-1.23.0-242-g521d6c17
+[DEBUG]    CT_DOWNLOAD_AGENT_WGET=y
+[DEBUG]    CT_DOWNLOAD_WGET_OPTIONS='--passive-ftp --tries=3 -nc --progress=dot:binary'
+[DEBUG]    CT_ECHO=echo
+[DEBUG]    CT_ENVVAR_EXPORTED=' LC_ALL LANG CONFIG_SITE PATH CONFIG_SHELL SHELL'
+[DEBUG]    CT_ENVVAR_UNSET=' GREP_OPTIONS MAKEFLAGS'
+[DEBUG]    CT_EXPERIMENTAL=y
+[DEBUG]    CT_EXTRA_CFLAGS_FOR_BUILD=' '
+[DEBUG]    CT_EXTRA_CFLAGS_FOR_HOST=' '
+[DEBUG]    CT_EXTRA_LDFLAGS_FOR_BUILD=' '
+[DEBUG]    CT_EXTRA_LDFLAGS_FOR_HOST=' '
+[DEBUG]    CT_FORCE_EXTRACT=y
+[DEBUG]    CT_FORCE_SYSROOT=y
+[DEBUG]    CT_GCC_4_8_or_later=y
+[DEBUG]    CT_GCC_4_9_2_or_later=y
+[DEBUG]    CT_GCC_4_9_or_later=y
+[DEBUG]    CT_GCC_5_or_later=y
+[DEBUG]    CT_GCC_6_or_later=y
+[DEBUG]    CT_GCC_7_or_later=y
+[DEBUG]    CT_GCC_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_GCC_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_GCC_ARCHIVE_FORMATS='.tar.xz .tar.gz'
+[DEBUG]    CT_GCC_DIR_NAME=gcc
+[DEBUG]    CT_GCC_MIRRORS=$'https://ftpmirror.gnu.org/gnu/gcc/gcc-7.2.0nhttp://ftpmirror.gnu.org/gnu/gcc/gcc-7.2.0nhttps://ftp.gnu.org/gnu/gcc/gcc-7.2.0nhttp://ftp.gnu.org/gnu/gcc/gcc-7.2.0nftp://ftp.gnu.org/gnu/gcc/gcc-7.2.0 ftp://sourceware.org/pub/gcc/releases/gcc-7.2.0nhttp://mirrors.kernel.org/sourceware/gcc/releases/gcc-7.2.0nhttp://gcc.gnu.org/pub/gcc/releases/gcc-7.2.0'
+[DEBUG]    CT_GCC_PKG_NAME=gcc
+[DEBUG]    CT_GCC_REQUIRE_4_9_or_later=y
+[DEBUG]    CT_GCC_SIGNATURE_FORMAT=
+[DEBUG]    CT_GCC_SRC_RELEASE=y
+[DEBUG]    CT_GCC_USE=GCC
+[DEBUG]    CT_GCC_USE_GNU=y
+[DEBUG]    CT_GCC_VERSION=7.2.0
+[DEBUG]    CT_GCC_V_7_2_0=y
+[DEBUG]    CT_GETTEXT=y
+[DEBUG]    CT_GETTEXT_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_GETTEXT_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_GETTEXT_ARCHIVE_FORMATS='.tar.xz .tar.lz .tar.gz'
+[DEBUG]    CT_GETTEXT_DIR_NAME=gettext
+[DEBUG]    CT_GETTEXT_MIRRORS=$'https://ftpmirror.gnu.org/gnu/gettextnhttp://ftpmirror.gnu.org/gnu/gettextnhttps://ftp.gnu.org/gnu/gettextnhttp://ftp.gnu.org/gnu/gettextnftp://ftp.gnu.org/gnu/gettext'
+[DEBUG]    CT_GETTEXT_NEEDED=y
+[DEBUG]    CT_GETTEXT_PKG_NAME=gettext
+[DEBUG]    CT_GETTEXT_SIGNATURE_FORMAT=packed/.sig
+[DEBUG]    CT_GETTEXT_SRC_RELEASE=y
+[DEBUG]    CT_GETTEXT_VERSION=0.19.8.1
+[DEBUG]    CT_GETTEXT_V_0_19_8_1=y
+[DEBUG]    CT_GLIBC_2_14_or_later=y
+[DEBUG]    CT_GLIBC_2_17_or_later=y
+[DEBUG]    CT_GLIBC_2_20_or_later=y
+[DEBUG]    CT_GLIBC_2_23_or_later=y
+[DEBUG]    CT_GLIBC_2_24_or_later=y
+[DEBUG]    CT_GLIBC_2_26_or_later=y
+[DEBUG]    CT_GLIBC_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_GLIBC_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_GLIBC_ARCHIVE_FORMATS='.tar.xz .tar.bz2 .tar.gz'
+[DEBUG]    CT_GLIBC_CONFIGPARMS=
+[DEBUG]    CT_GLIBC_DEP_BINUTILS=y
+[DEBUG]    CT_GLIBC_DEP_GCC=y
+[DEBUG]    CT_GLIBC_DEP_KERNEL_HEADERS_VERSION=y
+[DEBUG]    CT_GLIBC_DEVEL_BOOTSTRAP=
+[DEBUG]    CT_GLIBC_DEVEL_BRANCH=
+[DEBUG]    CT_GLIBC_DEVEL_REVISION=8cb5295
+[DEBUG]    CT_GLIBC_DEVEL_SUBDIR=
+[DEBUG]    CT_GLIBC_DEVEL_URL=https://github.com/bminor/glibc
+[DEBUG]    CT_GLIBC_DEVEL_VCS=git
+[DEBUG]    CT_GLIBC_DEVEL_VCS_git=y
+[DEBUG]    CT_GLIBC_DIR_NAME=glibc
+[DEBUG]    CT_GLIBC_ENABLE_OBSOLETE_RPC=y
+[DEBUG]    CT_GLIBC_EXTRA_CFLAGS=
+[DEBUG]    CT_GLIBC_EXTRA_CONFIG_ARRAY=()
+[DEBUG]    CT_GLIBC_HAS_LIBIDN_ADDON=y
+[DEBUG]    CT_GLIBC_HAS_OBSOLETE_RPC=y
+[DEBUG]    CT_GLIBC_KERNEL_VERSION_CHOSEN=y
+[DEBUG]    CT_GLIBC_MIN_KERNEL=3.2.0
+[DEBUG]    CT_GLIBC_MIN_KERNEL_VERSION=3.2.0
+[DEBUG]    CT_GLIBC_MIRRORS=$'https://ftpmirror.gnu.org/gnu/glibcnhttp://ftpmirror.gnu.org/gnu/glibcnhttps://ftp.gnu.org/gnu/glibcnhttp://ftp.gnu.org/gnu/glibcnftp://ftp.gnu.org/gnu/glibc'
+[DEBUG]    CT_GLIBC_NO_SPARC_V8=y
+[DEBUG]    CT_GLIBC_OLDEST_ABI=
+[DEBUG]    CT_GLIBC_PKG_NAME=glibc
+[DEBUG]    CT_GLIBC_SIGNATURE_FORMAT=packed/.sig
+[DEBUG]    CT_GLIBC_SRC_DEVEL=y
+[DEBUG]    CT_GLIBC_USE=GLIBC
+[DEBUG]    CT_GLIBC_USE_GNU=y
+[DEBUG]    CT_GLIBC_USE_LIBIDN_ADDON=y
+[DEBUG]    CT_GLIBC_VERSION=unknown
+[DEBUG]    CT_GLIBC_VERY_NEW=y
+[DEBUG]    CT_GMP=y
+[DEBUG]    CT_GMP_5_1_or_later=y
+[DEBUG]    CT_GMP_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_GMP_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_GMP_ARCHIVE_FORMATS='.tar.xz .tar.lz .tar.bz2'
+[DEBUG]    CT_GMP_DIR_NAME=gmp
+[DEBUG]    CT_GMP_MIRRORS=$'https://gmplib.org/download/gmp https://gmplib.org/download/gmp/archive https://ftpmirror.gnu.org/gnu/gmpnhttp://ftpmirror.gnu.org/gnu/gmpnhttps://ftp.gnu.org/gnu/gmpnhttp://ftp.gnu.org/gnu/gmpnftp://ftp.gnu.org/gnu/gmp'
+[DEBUG]    CT_GMP_NEEDED=y
+[DEBUG]    CT_GMP_PKG_NAME=gmp
+[DEBUG]    CT_GMP_SIGNATURE_FORMAT=packed/.sig
+[DEBUG]    CT_GMP_SRC_RELEASE=y
+[DEBUG]    CT_GMP_VERSION=6.1.2
+[DEBUG]    CT_GMP_V_6_1_2=y
+[DEBUG]    CT_HEADERS_DIR=/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot/usr/include
+[DEBUG]    CT_HOST=x86_64-build_pc-linux-gnu
+[DEBUG]    CT_HOST_COMPLIBS_DIR=/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools
+[DEBUG]    CT_ISL=y
+[DEBUG]    CT_ISL_0_12_or_later=y
+[DEBUG]    CT_ISL_0_13_or_later=y
+[DEBUG]    CT_ISL_0_14_or_later=y
+[DEBUG]    CT_ISL_0_15_or_later=y
+[DEBUG]    CT_ISL_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_ISL_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_ISL_ARCHIVE_FORMATS='.tar.xz .tar.bz2 .tar.gz'
+[DEBUG]    CT_ISL_DIR_NAME=isl
+[DEBUG]    CT_ISL_MIRRORS=http://isl.gforge.inria.fr
+[DEBUG]    CT_ISL_NEEDED=y
+[DEBUG]    CT_ISL_PKG_NAME=isl
+[DEBUG]    CT_ISL_REQUIRE_0_12_or_later=y
+[DEBUG]    CT_ISL_REQUIRE_0_14_or_later=y
+[DEBUG]    CT_ISL_REQUIRE_0_15_or_later=y
+[DEBUG]    CT_ISL_SIGNATURE_FORMAT=
+[DEBUG]    CT_ISL_SRC_RELEASE=y
+[DEBUG]    CT_ISL_VERSION=0.18
+[DEBUG]    CT_ISL_V_0_18=y
+[DEBUG]    CT_KERNEL=linux
+[DEBUG]    CT_KERNEL_LINUX=y
+[DEBUG]    CT_KERNEL_LINUX_VERBOSE_LEVEL=0
+[DEBUG]    CT_KERNEL_LINUX_VERBOSITY_0=y
+[DEBUG]    CT_KERNEL_SUPPORTS_SHARED_LIBS=y
+[DEBUG]    CT_LDFLAGS_FOR_BUILD='-L/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/lib  '
+[DEBUG]    CT_LDFLAGS_FOR_HOST='-L/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/lib  '
+[DEBUG]    CT_LIBC=glibc
+[DEBUG]    CT_LIBC_GLIBC=y
+[DEBUG]    CT_LIBC_SUPPORT_THREADS_ANY=y
+[DEBUG]    CT_LIBC_SUPPORT_THREADS_NATIVE=y
+[DEBUG]    CT_LIBICONV=y
+[DEBUG]    CT_LIBICONV_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_LIBICONV_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_LIBICONV_ARCHIVE_FORMATS=.tar.gz
+[DEBUG]    CT_LIBICONV_DIR_NAME=libiconv
+[DEBUG]    CT_LIBICONV_MIRRORS=$'https://ftpmirror.gnu.org/gnu/libiconvnhttp://ftpmirror.gnu.org/gnu/libiconvnhttps://ftp.gnu.org/gnu/libiconvnhttp://ftp.gnu.org/gnu/libiconvnftp://ftp.gnu.org/gnu/libiconv'
+[DEBUG]    CT_LIBICONV_NEEDED=y
+[DEBUG]    CT_LIBICONV_PKG_NAME=libiconv
+[DEBUG]    CT_LIBICONV_SIGNATURE_FORMAT=packed/.sig
+[DEBUG]    CT_LIBICONV_SRC_RELEASE=y
+[DEBUG]    CT_LIBICONV_VERSION=1.15
+[DEBUG]    CT_LIBICONV_V_1_15=y
+[DEBUG]    CT_LIB_DIR=/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17
+[DEBUG]    CT_LINUX_3_2_or_later=y
+[DEBUG]    CT_LINUX_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_LINUX_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_LINUX_ARCHIVE_FORMATS='.tar.xz .tar.gz'
+[DEBUG]    CT_LINUX_DIR_NAME=linux
+[DEBUG]    CT_LINUX_MIRRORS=http://www.kernel.org/pub/linux/kernel/v4.x
+[DEBUG]    CT_LINUX_PKG_NAME=linux
+[DEBUG]    CT_LINUX_REQUIRE_3_2_or_later=y
+[DEBUG]    CT_LINUX_SIGNATURE_FORMAT=unpacked/.sign
+[DEBUG]    CT_LINUX_SRC_RELEASE=y
+[DEBUG]    CT_LINUX_VERSION=4.9.58
+[DEBUG]    CT_LINUX_V_4_9=y
+[DEBUG]    CT_LOAD=
+[DEBUG]    CT_LOCAL_TARBALLS_DIR=/root/.dl
+[DEBUG]    CT_LOG_ENABLED=y
+[DEBUG]    CT_LOG_EXTRA=y
+[DEBUG]    CT_LOG_FILE_COMPRESS=y
+[DEBUG]    CT_LOG_LEVEL_ALL=7
+[DEBUG]    CT_LOG_LEVEL_CFG=4
+[DEBUG]    CT_LOG_LEVEL_DEBUG=8
+[DEBUG]    CT_LOG_LEVEL_ERROR=0
+[DEBUG]    CT_LOG_LEVEL_EXTRA=3
+[DEBUG]    CT_LOG_LEVEL_FILE=5
+[DEBUG]    CT_LOG_LEVEL_INFO=2
+[DEBUG]    CT_LOG_LEVEL_MAX=EXTRA
+[DEBUG]    CT_LOG_LEVEL_STATE=6
+[DEBUG]    CT_LOG_LEVEL_WARN=1
+[DEBUG]    CT_LOG_PROGRESS_BAR=y
+[DEBUG]    CT_LOG_SEE_TOOLS_WARN=y
+[DEBUG]    CT_LOG_TO_FILE=y
+[DEBUG]    CT_MODULES=y
+[DEBUG]    CT_MPC=y
+[DEBUG]    CT_MPC_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_MPC_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_MPC_ARCHIVE_FORMATS=.tar.gz
+[DEBUG]    CT_MPC_DIR_NAME=mpc
+[DEBUG]    CT_MPC_MIRRORS=$'http://www.multiprecision.org/mpc/download https://ftpmirror.gnu.org/gnu/mpcnhttp://ftpmirror.gnu.org/gnu/mpcnhttps://ftp.gnu.org/gnu/mpcnhttp://ftp.gnu.org/gnu/mpcnftp://ftp.gnu.org/gnu/mpc'
+[DEBUG]    CT_MPC_NEEDED=y
+[DEBUG]    CT_MPC_PKG_NAME=mpc
+[DEBUG]    CT_MPC_SIGNATURE_FORMAT=packed/.sig
+[DEBUG]    CT_MPC_SRC_RELEASE=y
+[DEBUG]    CT_MPC_VERSION=1.0.3
+[DEBUG]    CT_MPC_V_1_0_3=y
+[DEBUG]    CT_MPFR=y
+[DEBUG]    CT_MPFR_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_MPFR_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_MPFR_ARCHIVE_FORMATS='.tar.xz .tar.bz2 .tar.gz .zip'
+[DEBUG]    CT_MPFR_DIR_NAME=mpfr
+[DEBUG]    CT_MPFR_MIRRORS=$'http://www.mpfr.org/mpfr-3.1.6 https://ftpmirror.gnu.org/gnu/mpfrnhttp://ftpmirror.gnu.org/gnu/mpfrnhttps://ftp.gnu.org/gnu/mpfrnhttp://ftp.gnu.org/gnu/mpfrnftp://ftp.gnu.org/gnu/mpfr'
+[DEBUG]    CT_MPFR_NEEDED=y
+[DEBUG]    CT_MPFR_PKG_NAME=mpfr
+[DEBUG]    CT_MPFR_SIGNATURE_FORMAT=packed/.asc
+[DEBUG]    CT_MPFR_SRC_RELEASE=y
+[DEBUG]    CT_MPFR_VERSION=3.1.6
+[DEBUG]    CT_MPFR_V_3_1_6=y
+[DEBUG]    CT_NCURSES=y
+[DEBUG]    CT_NCURSES_ARCHIVE_DIRNAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_NCURSES_ARCHIVE_FILENAME='@{pkg_name}-@{version}'
+[DEBUG]    CT_NCURSES_ARCHIVE_FORMATS=.tar.gz
+[DEBUG]    CT_NCURSES_DIR_NAME=ncurses
+[DEBUG]    CT_NCURSES_HOST_CONFIG_ARGS=
+[DEBUG]    CT_NCURSES_HOST_DISABLE_DB=y
+[DEBUG]    CT_NCURSES_HOST_FALLBACKS=linux,xterm,xterm-color,xterm-256color,vt100
+[DEBUG]    CT_NCURSES_MIRRORS=$'ftp://invisible-island.net/ncurses https://ftpmirror.gnu.org/gnu/ncursesnhttp://ftpmirror.gnu.org/gnu/ncursesnhttps://ftp.gnu.org/gnu/ncursesnhttp://ftp.gnu.org/gnu/ncursesnftp://ftp.gnu.org/gnu/ncurses'
+[DEBUG]    CT_NCURSES_NEEDED=y
+[DEBUG]    CT_NCURSES_PKG_NAME=ncurses
+[DEBUG]    CT_NCURSES_SIGNATURE_FORMAT=packed/.sig
+[DEBUG]    CT_NCURSES_SRC_RELEASE=y
+[DEBUG]    CT_NCURSES_TARGET_CONFIG_ARGS=
+[DEBUG]    CT_NCURSES_TARGET_FALLBACKS=
+[DEBUG]    CT_NCURSES_VERSION=6.0
+[DEBUG]    CT_NCURSES_V_6_0=y
+[DEBUG]    CT_NG=/usr/bin/ct-ng
+[DEBUG]    CT_OVERRIDE_CONFIG_GUESS_SUB=y
+[DEBUG]    CT_PARALLEL_JOBS=0
+[DEBUG]    CT_PATCH_BUNDLED=y
+[DEBUG]    CT_PATCH_ORDER=bundled
+[DEBUG]    CT_PKGVERSION='crosstool-NG crosstool-ng-1.23.0-242-g521d6c17'
+[DEBUG]    CT_PREFIX_DIR=/root/x-tools/i386-unknown-linux-gnu
+[DEBUG]    CT_PREFIX_DIR_RO=y
+[DEBUG]    CT_REAL_BUILD=x86_64-pc-linux-gnu
+[DEBUG]    CT_REAL_HOST=x86_64-pc-linux-gnu
+[DEBUG]    CT_REAL_TARGET=i386-unknown-linux-gnu
+[DEBUG]    CT_REMOVE_DOCS=y
+[DEBUG]    CT_RESTART=
+[DEBUG]    CT_RM_RF_PREFIX_DIR=y
+[DEBUG]    CT_SAVE_TARBALLS=y
+[DEBUG]    CT_SHOW_CT_VERSION=y
+[DEBUG]    CT_SRC_DIR=/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/src
+[DEBUG]    CT_STAR_DATE=1510316594925145279
+[DEBUG]    CT_STAR_DATE_HUMAN=20171110.152314
+[DEBUG]    CT_STATE_DIR=/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/state
+[DEBUG]    CT_STATIC_TOOLCHAIN=y
+[DEBUG]    CT_STEPS='companion_tools_for_build companion_libs_for_build binutils_for_build companion_tools_for_host companion_libs_for_host binutils_for_host cc_core_pass_1 kernel_headers libc_start_files cc_core_pass_2 libc cc_for_build cc_for_host libc_post_cc companion_libs_for_target binutils_for_target debug test_suite finish '
+[DEBUG]    CT_STEP_COUNT=2
+[DEBUG]    CT_STEP_LEVEL=([2]="EXTRA")
+[DEBUG]    CT_STEP_MESSAGE=([1]="(top-level)" [2]="Dumping internal crosstool-NG configuration")
+[DEBUG]    CT_STEP_START=([2]="1510316595549795539")
+[DEBUG]    CT_STOP=
+[DEBUG]    CT_STRIP_HOST_TOOLCHAIN_EXECUTABLES=y
+[DEBUG]    CT_SYSROOT_DIR=/root/x-tools/i386-unknown-linux-gnu/i386-unknown-linux-gnu/sysroot
+[DEBUG]    CT_SYSROOT_DIR_PREFIX=
+[DEBUG]    CT_SYSROOT_NAME=sysroot
+[DEBUG]    CT_SYS_GCC=7
+[DEBUG]    CT_SYS_HOSTNAME=vmware.do
+[DEBUG]    CT_SYS_KERNEL=Linux
+[DEBUG]    CT_SYS_MACHINE=x86_64
+[DEBUG]    CT_SYS_OS=Linux
+[DEBUG]    CT_SYS_PROCESSOR=unknown
+[DEBUG]    CT_SYS_REVISION=4.13.0-1-amd64
+[DEBUG]    CT_SYS_TARGET=x86_64-pc-linux-gnu
+[DEBUG]    CT_SYS_USER=root
+[DEBUG]    CT_TARBALLS_DIR=/root/-3SDC/ledex/.build/tarballs
+[DEBUG]    CT_TARGET=i386-unknown-linux-gnu
+[DEBUG]    CT_TARGET_ALIAS=
+[DEBUG]    CT_TARGET_ALIAS_SED_EXPR=
+[DEBUG]    CT_TARGET_ARCH=i386
+[DEBUG]    CT_TARGET_CFLAGS='        '
+[DEBUG]    CT_TARGET_KERNEL=linux
+[DEBUG]    CT_TARGET_LDFLAGS='   -static'
+[DEBUG]    CT_TARGET_SYS=gnu
+[DEBUG]    CT_TARGET_VENDOR=unknown
+[DEBUG]    CT_TEST_SUITE_DIR=/root/x-tools/i386-unknown-linux-gnu/test-suite
+[DEBUG]    CT_TEST_SUITE_FACILITY_LIST=
+[DEBUG]    CT_THREADS=nptl
+[DEBUG]    CT_THREADS_NATIVE=y
+[DEBUG]    CT_TOOLCHAIN_BUGURL=
+[DEBUG]    CT_TOOLCHAIN_ENABLE_NLS=y
+[DEBUG]    CT_TOOLCHAIN_ID='crosstool-crosstool-ng-1.23.0-242-g521d6c17 build 20171110.152314 by root@vmware.do'
+[DEBUG]    CT_TOOLCHAIN_PKGVERSION=
+[DEBUG]    CT_TOOLCHAIN_TYPE=cross
+[DEBUG]    CT_TOOLS_OVERRIDE_DIR=/root/-3SDC/ledex/.build/tools
+[DEBUG]    CT_TOP_DIR=/root/-3SDC/ledex
+[DEBUG]    CT_USE_PIPES=y
+[DEBUG]    CT_USE_SYSROOT=y
+[DEBUG]    CT_VERSION=crosstool-ng-1.23.0-242-g521d6c17
+[DEBUG]    CT_WANTS_STATIC_LINK=y
+[DEBUG]    CT_WANTS_STATIC_LINK_CXX=y
+[DEBUG]    CT_WORK_DIR=/root/-3SDC/ledex/.build
+[DEBUG]    Other environment:
+[DEBUG]    GREP_COLOR=32
+[DEBUG]    LC_ALL=C
+[DEBUG]    LS_COLORS=
+[DEBUG]    SSH_CONNECTION=192.168.1.2 49753 192.168.1.200 22
+[DEBUG]    V=
+[DEBUG]    readelf=/usr/bin/readelf
+[DEBUG]    LANG=C
+[DEBUG]    LESS=-R
+[DEBUG]    DISPLAY=localhost:11.0
+[DEBUG]    NOTI_DEFAULT=pushover
+[DEBUG]    OLDPWD=/root/-3SDC/ledex/buildroot
+[DEBUG]    CONFIG_SITE=
+[DEBUG]    EDITOR=nano
+[DEBUG]    COLORTERM=truecolor
+[DEBUG]    grep=/bin/grep
+[DEBUG]    MAKE_TERMOUT=/dev/pts/1
+[DEBUG]    awk=/usr/bin/gawk
+[DEBUG]    CONFIG_SHELL=/bin/bash
+[DEBUG]    make=/usr/bin/make
+[DEBUG]    REPORTTIME=1
+[DEBUG]    ZSH=/root/.oh-my-zsh
+[DEBUG]    MFLAGS=-r --no-print-directory
+[DEBUG]    KCONFIG_TOP=/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/config/config.in
+[DEBUG]    HOSTCC=gcc-6
+[DEBUG]    XDG_SESSION_ID=4
+[DEBUG]    patch=/usr/bin/patch
+[DEBUG]    USER=root
+[DEBUG]    PAGER=less
+[DEBUG]    LSCOLORS=Gxfxcxdxbxegedabagacad
+[DEBUG]    sed=/bin/sed
+[DEBUG]    SILENT=@
+[DEBUG]    NOTI_PUSHOVER_DEST=eWT7jJVXB94RQZi5qbZCptcECFqOFT
+[DEBUG]    GOPATH=/root/.go
+[DEBUG]    GREPCOLOR=32
+[DEBUG]    PWD=/root/-3SDC/ledex
+[DEBUG]    HOME=/root
+[DEBUG]    SSH_CLIENT=192.168.1.2 49753 22
+[DEBUG]    HISTFILE=/root/.cache/.zsh-history
+[DEBUG]    install=/usr/bin/install -c
+[DEBUG]    libtoolize=/usr/bin/libtoolize
+[DEBUG]    SSH_TTY=/dev/pts/1
+[DEBUG]    MAIL=/var/mail/root
+[DEBUG]    UPDATE_ZSH_DAYS=7
+[DEBUG]    SHELL=/bin/bash
+[DEBUG]    TERM=xterm-256color
+[DEBUG]    objdump=/usr/bin/objdump
+[DEBUG]    srctree=/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17
+[DEBUG]    MAKELEVEL=1
+[DEBUG]    SHLVL=3
+[DEBUG]    LANGUAGE=en_US.UTF-8
+[DEBUG]    MAKE_TERMERR=/dev/pts/1
+[DEBUG]    NOTI_PUSHOVER_TOK=a3h7nfbnix69etohj4x6ometnsyasu
+[DEBUG]    objcopy=/usr/bin/objcopy
+[DEBUG]    LOGNAME=root
+[DEBUG]    DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/0/bus
+[DEBUG]    XDG_RUNTIME_DIR=/run/user/0
+[DEBUG]    PATH=/root/x-tools/i386-unknown-linux-gnu/bin:/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/buildtools/bin:/root/-3SDC/ledex/.build/tools/bin:/root/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.bin:/root/.binm:/root/.go/bin:/root/.fzf/bin
+[DEBUG]    HOSTCXX=g++-6
+[DEBUG]    HISTSIZE=20000
+[DEBUG]    bash=/bin/bash
+[DEBUG]    gperf=/usr/bin/gperf
+[DEBUG]    CONF=/root/-f2fs/.crosstool-ng/lib/crosstool-ng-1.23.0-242-g521d6c17/kconfig/conf
+[DEBUG]    _=/usr/bin/printenv
+[EXTRA]  Dumping internal crosstool-NG configuration: done in 0.05s (at 00:01)
+[INFO ]  =================================================================
+[INFO ]  Retrieving needed toolchain components' tarballs
+[DEBUG]    Got 'linux-4.9.58' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/linux-4.9.58.tar.xz' '/root/-3SDC/ledex/.build/tarballs/linux-4.9.58.tar.xz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_LINUX_BASENAME=linux-4.9.58
+[DEBUG]    Override CT_LINUX_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_LINUX_PKG_DIR=linux/4.9.58
+[DEBUG]    Got 'gmp-6.1.2' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/gmp-6.1.2.tar.xz' '/root/-3SDC/ledex/.build/tarballs/gmp-6.1.2.tar.xz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_GMP_BASENAME=gmp-6.1.2
+[DEBUG]    Override CT_GMP_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_GMP_PKG_DIR=gmp/6.1.2
+[DEBUG]    Got 'mpfr-3.1.6' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/mpfr-3.1.6.tar.xz' '/root/-3SDC/ledex/.build/tarballs/mpfr-3.1.6.tar.xz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_MPFR_BASENAME=mpfr-3.1.6
+[DEBUG]    Override CT_MPFR_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_MPFR_PKG_DIR=mpfr/3.1.6
+[DEBUG]    Got 'isl-0.18' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/isl-0.18.tar.xz' '/root/-3SDC/ledex/.build/tarballs/isl-0.18.tar.xz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_ISL_BASENAME=isl-0.18
+[DEBUG]    Override CT_ISL_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_ISL_PKG_DIR=isl/0.18
+[DEBUG]    Got 'mpc-1.0.3' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/mpc-1.0.3.tar.gz' '/root/-3SDC/ledex/.build/tarballs/mpc-1.0.3.tar.gz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_MPC_BASENAME=mpc-1.0.3
+[DEBUG]    Override CT_MPC_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_MPC_PKG_DIR=mpc/1.0.3
+[DEBUG]    Got 'ncurses-6.0' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/ncurses-6.0.tar.gz' '/root/-3SDC/ledex/.build/tarballs/ncurses-6.0.tar.gz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_NCURSES_BASENAME=ncurses-6.0
+[DEBUG]    Override CT_NCURSES_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_NCURSES_PKG_DIR=ncurses/6.0
+[DEBUG]    Got 'libiconv-1.15' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/libiconv-1.15.tar.gz' '/root/-3SDC/ledex/.build/tarballs/libiconv-1.15.tar.gz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_LIBICONV_BASENAME=libiconv-1.15
+[DEBUG]    Override CT_LIBICONV_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_LIBICONV_PKG_DIR=libiconv/1.15
+[DEBUG]    Got 'gettext-0.19.8.1' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/gettext-0.19.8.1.tar.xz' '/root/-3SDC/ledex/.build/tarballs/gettext-0.19.8.1.tar.xz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_GETTEXT_BASENAME=gettext-0.19.8.1
+[DEBUG]    Override CT_GETTEXT_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_GETTEXT_PKG_DIR=gettext/0.19.8.1
+[DEBUG]    Got 'binutils-2.29.1' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/binutils-2.29.1.tar.xz' '/root/-3SDC/ledex/.build/tarballs/binutils-2.29.1.tar.xz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_BINUTILS_BASENAME=binutils-2.29.1
+[DEBUG]    Override CT_BINUTILS_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_BINUTILS_PKG_DIR=binutils/2.29.1
+[DEBUG]    Got 'gcc-7.2.0' from local storage
+[DEBUG]    ==> Executing:  'ln' '-s' '/root/.dl/gcc-7.2.0.tar.xz' '/root/-3SDC/ledex/.build/tarballs/gcc-7.2.0.tar.xz'
+[DEBUG]    ==> Return status 0
+[DEBUG]    Override CT_GCC_BASENAME=gcc-7.2.0
+[DEBUG]    Override CT_GCC_SRC_DIR=/unknown-src-dir
+[DEBUG]    Override CT_GCC_PKG_DIR=gcc/7.2.0
+[EXTRA]    Retrieving 'glibc-git-8cb5295'
+[EXTRA]    Retrieving 'glibc-git-8cb5295' (git https://github.com/bminor/glibc master 8cb5295)
+[DEBUG]    Testing '-n /root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/tmp.PeYAfv -a -d /root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/tmp.PeYAfv'
+[DEBUG]    Made temporary directory '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/tmp.PeYAfv'
+[DEBUG]    Entering '/root/-3SDC/ledex/.build/i386-unknown-linux-gnu/build/tmp.PeYAfv'
+[DEBUG]    ==> Executing:  'git' 'clone' 'https://github.com/bminor/glibc' 'glibc'
+[ALL  ]    Cloning into 'glibc'...
