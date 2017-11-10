@@ -19,11 +19,9 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
 
-LIBC_SO_VERSION:=$(PKG_VERSION)
 PATCH_DIR:=$(PATH_PREFIX)/patches
 
 include $(INCLUDE_DIR)/toolchain-build.mk
-include $(INCLUDE_DIR)/hardening.mk
 
 HOST_STAMP_PREPARED:=$(HOST_BUILD_DIR)/.prepared
 HOST_STAMP_CONFIGURED:=$(CUR_BUILD_DIR)/.configured
@@ -48,7 +46,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-march=bonnell -mmmx -msse -msse2 -msse3 -mssse3 -msahf -mmovbe -mfxsr --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -mtune=bonnell -O2 -g" \
+	CFLAGS="-O2 $(filter-out -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -62,9 +60,14 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-stack-protector=strong \
 		--enable-kernel=3.2.0 \
 		--disable-debug \
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
+		--enable-lock-elision \
+		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
@@ -82,7 +85,7 @@ endef
 
 define Host/Configure
 	[ -f $(HOST_BUILD_DIR)/.autoconf ] || { \
-		cd $(HOST_BUILD_DIR)/; \
+		cd $(HOST_BUILD_DIR)/$(GLIBC_PATH); \
 		autoconf --force && \
 		touch $(HOST_BUILD_DIR)/.autoconf; \
 	}
