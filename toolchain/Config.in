@@ -98,6 +98,7 @@ menuconfig EXTERNAL_TOOLCHAIN
 	choice TOOLCHAIN_LIBC_TYPE
 		prompt "Toolchain libc"  if DEVEL
 		depends on EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN
+		default EXTERNAL_TOOLCHAIN_LIBC_USE_MUSL
 		help
 		  Specify the libc type used by the external toolchain. The given value
 		  is passed as -m flag to all gcc and g++ invocations. This is mainly
@@ -112,6 +113,9 @@ menuconfig EXTERNAL_TOOLCHAIN
 			bool "uClibc"
 			select USE_UCLIBC
 
+		config EXTERNAL_TOOLCHAIN_LIBC_USE_MUSL
+			bool "musl"
+			select USE_MUSL
 
 	endchoice
 
@@ -230,8 +234,9 @@ comment "C Library"
 
 choice
 	prompt "C Library implementation" if TOOLCHAINOPTS
-	default LIBC_USE_GLIBC if ! mipsel
-	default LIBC_USE_UCLIBC if mipsel
+	default LIBC_USE_UCLIBC if arc
+	default LIBC_USE_GLIBC if powerpc64
+	default LIBC_USE_MUSL
 	help
 	  Select the C library implementation.
 
@@ -246,7 +251,6 @@ choice
 
 endchoice
 
-source "toolchain/glibc/Config.in"
 source "toolchain/uClibc/Config.in"
 
 comment "Debuggers"
@@ -279,9 +283,10 @@ config USE_EXTERNAL_LIBC
 	bool
 	default y if EXTERNAL_TOOLCHAIN || NATIVE_TOOLCHAIN
 
+source "toolchain/binutils/Config.version"
 source "toolchain/gcc/Config.version"
 
-source "toolchain/glibc/Config.version"
+
 source "toolchain/uClibc/Config.version"
 
 config LIBC
