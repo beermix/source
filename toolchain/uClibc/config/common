@@ -1,3 +1,41 @@
+# TARGET_aarch64 is not set
+# TARGET_alpha is not set
+# TARGET_arc is not set
+# TARGET_arm is not set
+# TARGET_avr32 is not set
+# TARGET_bfin is not set
+# TARGET_c6x is not set
+# TARGET_cris is not set
+# TARGET_frv is not set
+# TARGET_h8300 is not set
+# TARGET_hppa is not set
+TARGET_i386=y
+# TARGET_ia64 is not set
+# TARGET_lm32 is not set
+# TARGET_m68k is not set
+# TARGET_metag is not set
+# TARGET_microblaze is not set
+# TARGET_mips is not set
+# TARGET_nds32 is not set
+# TARGET_nios2 is not set
+# TARGET_or1k is not set
+# TARGET_powerpc is not set
+# TARGET_sh is not set
+# TARGET_sparc is not set
+# TARGET_sparc64 is not set
+# TARGET_x86_64 is not set
+# TARGET_xtensa is not set
+TARGET_ARCH="i386"
+FORCE_OPTIONS_FOR_ARCH=y
+# CONFIG_386 is not set
+# CONFIG_486 is not set
+# CONFIG_586 is not set
+CONFIG_686=y
+TARGET_SUBARCH="i686"
+ARCH_HAS_MMU=y
+ARCH_USE_MMU=y
+UCLIBC_HAS_FLOATS=y
+UCLIBC_HAS_FPU=y
 DOPIC=y
 DO_C99_MATH=y
 DO_XSI_MATH=y
@@ -151,7 +189,7 @@ HARDWIRED_ABSPATH=y
 # UCLIBC_HAS_ARC4RANDOM is not set
 UCLIBC_HAS_SSP=y
 # SSP_QUICK_CANARY is not set
-UCLIBC_BUILD_SSP=y
+# UCLIBC_BUILD_SSP is not set
 UCLIBC_BUILD_RELRO=y
 UCLIBC_BUILD_NOW=y
 UCLIBC_BUILD_NOEXECSTACK=y
