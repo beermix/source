@@ -5,7 +5,6 @@
 # See /LICENSE for more information.
 #
 include $(TOPDIR)/rules.mk
-include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=glibc
 PKG_VERSION:=2.26
@@ -79,7 +78,7 @@ endef
 
 define Host/Configure
 	[ -f $(HOST_BUILD_DIR)/.autoconf ] || { \
-		cd $(HOST_BUILD_DIR)/$(GLIBC_PATH); \
+		cd $(HOST_BUILD_DIR)/; \
 		autoconf --force && \
 		touch $(HOST_BUILD_DIR)/.autoconf; \
 	}
