@@ -4,19 +4,15 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
-# locales package added.
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=toolchain
-
-ifeq ($(CONFIG_USE_UCLIBC),y)
-  PKG_RELEASE:=1
-else
-  PKG_RELEASE:=6
-endif
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=GPL-3.0-with-GCC-exception
+
+PKG_FLAGS:=hold essential nonshared
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -79,41 +75,39 @@ endef
 define Package/locales/postinst
 #!/bin/sh
 
-echo "LEDE uses separate locale-archive file independent from main system"
-if [ -f '/usr/lib/locale/locale-archive' ]
+echo "Entware uses separate locale-archive file independent from main system"
+if [ -f '/opt/usr/lib/locale/locale-archive' ]
 then
 	echo "locale-archive file found, checking format"
-	/usr/bin/locale.new -a 2>&1 >/dev/null | grep 'LC_COLLATE' > /dev/null
+	/opt/bin/locale.new -a 2>&1 >/dev/null | grep 'LC_COLLATE' > /dev/null
 	if [ $$? -eq 0 ] ; then
 		echo "Old format locale archive found. Deleting!"
-		rm -f /usr/lib/locale/locale-archive
+		rm -f /opt/usr/lib/locale/locale-archive
 	fi
 fi
-if ! [ -f '/usr/lib/locale/locale-archive' ]
+if ! [ -f '/opt/usr/lib/locale/locale-archive' ]
 then
-	mkdir -p /usr/lib/locale
-	echo "Creating locale archive - /usr/lib/locale/locale-archive"
+	mkdir -p /opt/usr/lib/locale
+	echo "Creating locale archive - /opt/usr/lib/locale/locale-archive"
 	echo "Adding en_EN.UTF-8"
-	/usr/bin/localedef.new -c -f UTF-8 -i en_US en_US.UTF-8
+	/opt/bin/localedef.new -c -f UTF-8 -i en_US en_US.UTF-8
 	echo "Adding ru_RU.UTF-8"
-	/usr/bin/localedef.new -c -f UTF-8 -i ru_RU ru_RU.UTF-8
+	/opt/bin/localedef.new -c -f UTF-8 -i ru_RU ru_RU.UTF-8
 fi
-if [ -f '/usr/lib/locale/locale-archive' ]
+if [ -f '/opt/usr/lib/locale/locale-archive' ]
 then
 	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
-	echo "You can add new locales to LEDE using /usr/bin/localedef.new"
+	echo "You can add new locales to Entware using /opt/bin/localedef.new"
 fi
-if ! [ -f '/usr/lib/locale/locale-archive' ]
+if ! [ -f '/opt/usr/lib/locale/locale-archive' ]
 then
 	echo "locale-archive file was not created, not enough memory? Downloading..."
-	wget http://pkg.entware.net/binaries/other/locale-archive.2.23 -O /usr/lib/locale/locale-archive
+	wget http://pkg.entware.net/binaries/other/locale-archive.2.23 -O /opt/usr/lib/locale/locale-archive
 	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
-	echo "You can add new locales to LEDE using /usr/bin/localedef.new"
+	echo "You can add new locales to Entware using /opt/bin/localedef.new"
 fi
 
 endef
-
-
 define Package/libgcc
 $(call Package/gcc/Default)
   TITLE:=GCC support library
@@ -248,7 +242,7 @@ define Package/libc/config
 		string
 		prompt "libc shared library files (use wildcards)"
 		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libc
-		default "./lib/ld{*.so*,-linux*.so.*} ./lib/lib{anl,c,cidn,crypt,dl,m,nsl,nss_dns,nss_files,resolv,util}{-*.so,.so.*}"
+		default "./lib/ld{*.so*,-linux*.so.*} ./lib/lib{anl,c,cidn,crypt,dl,m,nsl,nss_dns,nss_files,resolv,util}{-*.so,.so.*,.so}"
 
 	endmenu
 endef
@@ -284,6 +278,26 @@ define Package/libthread-db
 $(call Package/libc/Default)
   DEPENDS:=@!USE_MUSL
   TITLE:=POSIX thread library debugging support
+endef
+
+define Package/libthread-db/config
+	menu "Configuration"
+	depends on EXTERNAL_TOOLCHAIN && PACKAGE_libthread-db
+
+	config LIBTHREAD_DB_ROOT_DIR
+		string
+		prompt "POSIX thread debugging shared library base directory"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libthread-db
+		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
+		default "/"  if NATIVE_TOOLCHAIN
+
+	config LIBTHREAD_DB_FILE_SPEC
+		string
+		prompt "POSIX thread debugging shared library files (use wildcards)"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libthread-db
+		default "./lib/libthread_db{-*.so,.so.*}"
+
+	endmenu
 endef
 
 define Package/librt
@@ -340,28 +354,27 @@ define Package/libgfortran/config
 endef
 
 
-define Package/libgo
+define Package/libgomp
 $(call Package/gcc/Default)
-  TITLE:=Go support library
-  DEPENDS+=@INSTALL_GCCGO
+  TITLE:=OpenMP support library
 endef
 
-define Package/libgo/config
+define Package/libgomp/config
 	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
 
-	config LIBGO_ROOT_DIR
+	config LIBGOMP_ROOT_DIR
 		string
-		prompt "libgo shared library base directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		prompt "libgomp shared library base directory"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
 		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
 		default "/"  if NATIVE_TOOLCHAIN
 
-	config LIBGO_FILE_SPEC
+	config LIBGOMP_FILE_SPEC
 		string
-		prompt "libgo shared library files (use wildcards)"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-		default "./usr/lib/libgo.so.*"
+		prompt "libgomp shared library files (use wildcards)"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		default "./lib/libgomp.so*"
 
 	endmenu
 endef
@@ -455,13 +468,13 @@ Build/Compile = $(Build/Compile/Default)
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 
   define Package/libgcc/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libgcc_s.so.* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libgcc_s.so.* $(1)/lib/
   endef
 
   define Package/libatomic/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libatomic.so.* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libatomic.so.* $(1)/lib/
   endef
 
   define Package/libgfortran/install
@@ -469,14 +482,9 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/lib/libgfortran.so.* $(1)/usr/lib/
   endef
 
-  define Package/libgo/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libgo.so.* $(1)/usr/lib/
-  endef
-
   define Package/libssp/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libssp.so.* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libssp.so.* $(1)/lib/
   endef
 
   define Package/libstdcpp/install
@@ -485,50 +493,53 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   endef
 
   define Package/glibc/install
-	$(INSTALL_DIR) $(1)/usr/etc
-	$(CP) ./glibc-files/etc/* $(1)/usr/etc
-	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_DIR) $(1)/etc
+	$(CP) ./glibc-files/etc/* $(1)/etc
+	$(CP) ./glibc-files/* $(1)/
+	rm -f $(1)/etc/localtime
+	$(LN) /tmp/localtime $(1)/etc/localtime
+	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
 		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
 		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
-		$(1)/usr/lib/
+		$(1)/lib/
 	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
 			if [ -e "$$$$file" ]; then \
-				$(CP) $$$$file $(1)/usr/lib/; \
+				$(CP) $$$$file $(1)/lib/; \
 			fi; \
 		done; \
 	done
 ifneq ($(CONFIG_TARGET_x86_64),)
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/usr/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/lib
 endif
   endef
 
   define Package/uClibc/install
-	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*-uClibc.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld*-uClibc-$(LIBC_SO_VERSION).so \
-		$(1)/usr/lib/
+		$(1)/lib/
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libc.so.* \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-$(LIBC_SO_VERSION).so \
-		$(1)/usr/lib/
+		$(1)/lib/
 	for file in libuargp libcrypt libdl libm libutil libnsl libresolv; do \
 		$(CP) \
 			$(TOOLCHAIN_DIR)/lib/$$$$file.so* \
 			$(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so \
-			$(1)/usr/lib/; \
+			$(1)/lib/; \
 	done
 
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
 		$(PKG_BUILD_DIR)/libm-* \
 		$(PKG_BUILD_DIR)/libcrypt-* \
-		$(1)/usr/lib/
+		$(1)/lib/
   endef
 
   LD_MUSL_NAME = $(notdir $(firstword $(wildcard $(TOOLCHAIN_DIR)/lib/libc.so*)))
@@ -549,43 +560,46 @@ endif
   endef
 
   define Package/libc/install_lib
-	$(CP) $(filter-out %/libdl_pic.a %/libpthread_pic.a %/libresolv_pic.a,$(wildcard $(TOOLCHAIN_DIR)/lib/lib*.a)) $(1)/usr/lib/
-	$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libc_so.a),$(CP) $(TOOLCHAIN_DIR)/lib/libc_so.a $(1)/usr/lib/libc_pic.a)
+	$(CP) $(filter-out %/libdl_pic.a %/libpthread_pic.a %/libresolv_pic.a,$(wildcard $(TOOLCHAIN_DIR)/lib/lib*.a)) $(1)/lib/
+	$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libc_so.a),$(CP) $(TOOLCHAIN_DIR)/lib/libc_so.a $(1)/lib/libc_pic.a)
 	$(if $(LIBGCC_MAP), \
-		$(CP) $(LIBGCC_A) $(1)/usr/lib/libgcc_s_pic.a; \
-		$(CP) $(LIBGCC_MAP) $(1)/usr/lib/libgcc_s_pic.map \
+		$(CP) $(LIBGCC_A) $(1)/lib/libgcc_s_pic.a; \
+		$(CP) $(LIBGCC_MAP) $(1)/lib/libgcc_s_pic.map \
 	)
   endef
 
   define Package/libpthread/install
-	$(INSTALL_DIR) $(1)/usr/lib
-  ifneq ($(CONFIG_USE_MUSL),y)
+	$(INSTALL_DIR) $(1)/lib
+  ifneq ($(CONFIG_USE_MUSL)$(CONFIG_USE_UCLIBC),y)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libpthread.so.* \
 		$(TOOLCHAIN_DIR)/lib/libpthread-$(LIBC_SO_VERSION).so \
-		$(1)/usr/lib/
+		$(1)/lib/
   endif
   endef
 
   define Package/libthread-db/install
-	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
-		$(TOOLCHAIN_DIR)/lib/libthread_db.so.* $(1)/usr/lib
+		$(TOOLCHAIN_DIR)/lib/libthread_db.so.* $(1)/lib
+  ifeq ($(CONFIG_USE_UCLIBC),y)
 	$(CP) \
-		$(TOOLCHAIN_DIR)/lib/libthread_db-*.so  $(1)/usr/lib/
+		$(TOOLCHAIN_DIR)/lib/libthread_db-$(LIBC_SO_VERSION).so \
+		$(1)/lib/
+  endif
   endef
 
   define Package/libpthread/install_lib
-	$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libpthread_so.a),$(CP) $(TOOLCHAIN_DIR)/lib/libpthread_so.a $(1)/usr/lib/libpthread_pic.a)
+	$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libpthread_so.a),$(CP) $(TOOLCHAIN_DIR)/lib/libpthread_so.a $(1)/lib/libpthread_pic.a)
   endef
 
   define Package/librt/install
-	$(INSTALL_DIR) $(1)/usr/lib
-  ifneq ($(CONFIG_USE_MUSL),y)
+	$(INSTALL_DIR) $(1)/lib
+  ifneq ($(CONFIG_USE_MUSL)$(CONFIG_USE_UCLIBC),y)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/librt.so.* \
 		$(TOOLCHAIN_DIR)/lib/librt-$(LIBC_SO_VERSION).so \
-		$(1)/usr/lib/
+		$(1)/lib/
   endif
   endef
 
@@ -593,17 +607,11 @@ endif
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
-  ifeq ($(CONFIG_USE_GLIBC),y)
-	$(SED) 's|^\#!.*bash|\#!/usr/bin/sh|g; \
-	s|/lib/ld-linux.so.3|/usr/lib/ld-linux.so.3|g; \
-	s|/lib/ld-linux.so.2|/usr/lib/ld-linux.so.2|g; \
-	s|/lib64/ld-linux-x86-64.so.2|/usr/lib/ld-linux-x86-64.so.2|g' $(1)/usr/bin/ldd
-  endif
   endef
 
   define Package/ldconfig/install
-	$(INSTALL_DIR) $(1)/usr/sbin/
-	$(CP) $(TOOLCHAIN_DIR)/sbin/ldconfig $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/sbin/
+	$(CP) $(TOOLCHAIN_DIR)/sbin/ldconfig $(1)/sbin/
   endef
 
 ilocales=de_DE en_US en_GB fr_FR it_IT ru_RU i18n iso14651_t1 iso14651_t1_common translit_circle translit_combining translit_font translit_narrow translit_small translit_cjk_compat translit_compat translit_fraction translit_neutral translit_wide
@@ -628,95 +636,89 @@ icharmaps=ANSI_X3.4-1968.gz UTF-8.gz
   endef
 
   define Package/gconv-modules/install
-	$(INSTALL_DIR) $(1)/usr/lib/gconv
-	$(CP) $(TOOLCHAIN_DIR)/lib/gconv/* $(1)/usr/lib/gconv/
+	$(INSTALL_DIR) $(1)/lib/gconv
+	$(CP) $(TOOLCHAIN_DIR)/lib/gconv/* $(1)/lib/gconv/
   endef
 
 else
 
   define Package/libgcc/install
 	for file in $(call qstrip,$(CONFIG_LIBGCC_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGCC_ROOT_DIR))/$$$$file $(1)/usr/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBGCC_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
 	exit 0
   endef
 
   define Package/libgfortran/install
 	for file in $(call qstrip,$(CONFIG_LIBGFORTRAN_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGFORTRAN_ROOT_DIR))/$$$$file $(1)/usr/$$$$dir/ ; \
-	done
-  endef
-
-  define Package/libgo/install
-	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGO_ROOT_DIR))/$$$$file $(1)/usr/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBGFORTRAN_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done
   endef
 
   define Package/libssp/install
 	for file in $(call qstrip,$(CONFIG_LIBSSP_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBSSP_ROOT_DIR))/$$$$file $(1)/usr/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBSSP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
 	exit 0
   endef
 
   define Package/libstdcpp/install
 	for file in $(call qstrip,$(CONFIG_LIBSTDCPP_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/usr/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	rm -f $(1)/usr/$$$$dir/*.py ; \
 	exit 0
   endef
 
   define Package/libc/install
 	for file in $(call qstrip,$(CONFIG_LIBC_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBC_ROOT_DIR))/$$$$file $(1)/usr/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBC_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	$(INSTALL_DIR) $(1)/usr/etc ; \
-	$(CP) ./glibc-files/etc/nsswitch.conf $(1)/usr/etc/nsswitch.conf ; \
+	$(INSTALL_DIR) $(1)/etc ; \
+	$(CP) ./glibc-files/etc/nsswitch.conf $(1)/etc/nsswitch.conf ; \
 	exit 0
   endef
 
   define Package/libpthread/install
 	for file in $(call qstrip,$(CONFIG_LIBPTHREAD_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBPTHREAD_ROOT_DIR))/$$$$file $(1)/usr/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBPTHREAD_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
 	exit 0
   endef
 
   define Package/libthread-db/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(call qstrip,$(CONFIG_LIBPTHREAD_ROOT_DIR))/lib/libthread_db{-*.so,.so.*} $(1)/usr/lib/
+	for file in $(call qstrip,$(CONFIG_LIBTHREAD_DB_FILE_SPEC)); do \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBTHREAD_DB_ROOT_DIR))/$$$$file $(1)/lib/ ; \
+	done ; \
+	exit 0
   endef
 
   define Package/librt/install
 	for file in $(call qstrip,$(CONFIG_LIBRT_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBRT_ROOT_DIR))/$$$$file $(1)/usr/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBRT_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
 	exit 0
   endef
 
   define Package/libatomic/install
 	for file in $(call qstrip,$(CONFIG_LIBATOMIC_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBATOMIC_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBATOMIC_ROOT_DIR))/$$$$file $(1)/lib/ ; \
+	done ; \
+	exit 0
+  endef
+
+  define Package/libgomp/install
+	for file in $(call qstrip,$(CONFIG_LIBGOMP_FILE_SPEC)); do \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBGOMP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
 	exit 0
   endef
@@ -724,20 +726,17 @@ else
   define Package/ldd/install
 	for file in $(call qstrip,$(CONFIG_LDD_FILE_SPEC)); do \
 		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/bin ; \
-		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/usr/bin/ ; \
+		$(INSTALL_DIR) $(1)/$$$$dir ; \
+		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
-	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/usr/bin/ldd ; \
-	$(SED) 's!/lib/ld-linux.so.3!/usr/lib/ld-linux.so.3!g' $(1)/usr/bin/ldd ; \
-	$(SED) 's!/lib/ld-linux.so.2!/usr/lib/ld-linux.so.2!g' $(1)/usr/bin/ldd ; \
 	exit 0
   endef
 
   define Package/ldconfig/install
 	for file in $(call qstrip,$(CONFIG_LDCONFIG_FILE_SPEC)); do \
 		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/bin ; \
-		$(CP) $(call qstrip,$(CONFIG_LDCONFIG_ROOT_DIR))/$$$$file $(1)/usr/bin/ ; \
+		$(INSTALL_DIR) $(1)/$$$$dir ; \
+		$(CP) $(call qstrip,$(CONFIG_LDCONFIG_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
 	exit 0
   endef
@@ -749,8 +748,8 @@ else
 		$(INSTALL_DIR) $(1)/usr/bin ; \
 		$(CP) $(call qstrip,$(CONFIG_TOOLCHAIN_USR_DIR))/$$$$file $(1)/usr/bin/ ; \
 	done ; \
-	mv $(1)/usr/bin/locale $(1)/usr/bin/locale.new; \
-	mv $(1)/usr/bin/localedef $(1)/usr/bin/localedef.new; \
+	mv $(1)/opt/bin/locale $(1)/usr/bin/locale.new; \
+	mv $(1)/opt/bin/localedef $(1)/usr/bin/localedef.new; \
 	for file in $(call qstrip,$(CONFIG_i18N_LOCALES)); do \
 		dir=`dirname $$$$file` ; \
 		$(INSTALL_DIR) $(1)/usr/share/i18n/locales; \
@@ -775,7 +774,7 @@ $(eval $(call BuildPackage,libpthread))
 $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
-$(eval $(call BuildPackage,libgo))
+$(eval $(call BuildPackage,libgomp))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
 $(eval $(call BuildPackage,locales))
