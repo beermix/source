@@ -98,7 +98,6 @@ menuconfig EXTERNAL_TOOLCHAIN
 	choice TOOLCHAIN_LIBC_TYPE
 		prompt "Toolchain libc"  if DEVEL
 		depends on EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN
-		default EXTERNAL_TOOLCHAIN_LIBC_USE_MUSL
 		help
 		  Specify the libc type used by the external toolchain. The given value
 		  is passed as -m flag to all gcc and g++ invocations. This is mainly
@@ -113,9 +112,6 @@ menuconfig EXTERNAL_TOOLCHAIN
 			bool "uClibc"
 			select USE_UCLIBC
 
-		config EXTERNAL_TOOLCHAIN_LIBC_USE_MUSL
-			bool "musl"
-			select USE_MUSL
 
 	endchoice
 
@@ -254,6 +250,7 @@ choice
 
 endchoice
 
+source "toolchain/glibc/Config.in"
 source "toolchain/uClibc/Config.in"
 
 comment "Debuggers"
@@ -290,6 +287,7 @@ source "toolchain/binutils/Config.version"
 source "toolchain/gcc/Config.version"
 
 
+source "toolchain/glibc/Config.version"
 source "toolchain/uClibc/Config.version"
 
 config LIBC

@@ -121,7 +121,7 @@ ifndef CONFIG_OPENSSL_WITH_EC2M
 endif
 
 ifndef CONFIG_OPENSSL_WITH_SSL3
-  OPENSSL_OPTIONS += no-ssl3
+  OPENSSL_OPTIONS += no-ssl3 no-ssl3-method
 endif
 
 ifndef CONFIG_OPENSSL_HARDWARE_SUPPORT
