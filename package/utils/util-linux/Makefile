@@ -597,8 +597,8 @@ define Package/fsfreeze/install
 endef
 
 define Package/getopt/install
-	$(INSTALL_DIR) $(1)/opt/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/opt/bin/getopt $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/getopt $(1)/usr/bin/
 endef
 
 define Package/ionice/install
@@ -682,7 +682,7 @@ define Package/sfdisk/install
 endef
 
 define Package/swap-utils/install
-	$(INSTALL_DIR) $(1)/opt/sbin
+	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/mkswap $(1)/usr/sbin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/swaplabel $(1)/usr/sbin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/swap{on,off} $(1)/usr/sbin/
