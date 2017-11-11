@@ -18,8 +18,6 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
 
-PATCH_DIR:=$(PATH_PREFIX)/patches
-
 include $(INCLUDE_DIR)/toolchain-build.mk
 
 HOST_STAMP_PREPARED:=$(HOST_BUILD_DIR)/.prepared
@@ -66,7 +64,7 @@ GLIBC_CONFIGURE:= \
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export libc_cv_c_cleanup=yes
+export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
@@ -90,9 +88,6 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
-	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
-		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
-	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 
