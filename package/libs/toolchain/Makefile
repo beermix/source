@@ -108,6 +108,7 @@ then
 fi
 
 endef
+
 define Package/libgcc
 $(call Package/gcc/Default)
   TITLE:=GCC support library
@@ -493,8 +494,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   endef
 
   define Package/glibc/install
-	$(INSTALL_DIR) $(1)/etc
-	$(CP) ./glibc-files/etc/* $(1)/etc
 	$(CP) ./glibc-files/* $(1)/
 	rm -f $(1)/etc/localtime
 	$(LN) /tmp/localtime $(1)/etc/localtime
