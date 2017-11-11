@@ -44,7 +44,7 @@ define Package/libncursesw
   CATEGORY:=Libraries
   TITLE:=Terminal handling library (Unicode)
   URL:=http://www.gnu.org/software/ncurses/
-  DEPENDS:= +terminfo
+  DEPENDS:= +terminfo +zlib
 endef
 
 define Package/libncurses
@@ -71,8 +71,7 @@ CONFIGURE_ARGS += \
 	--enable-const \
 	--enable-overwrite \
 	--enable-pc-files \
-	--enable-rpath \
-	--disable-rpath-hack \
+	--disable-rpath \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
@@ -122,7 +121,7 @@ endef
 define Package/ncurses-bin/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	$(RM) $(1)/usr/bin/ncurses6-config
+	rm $(1)/usr/bin/ncursesw6-config
 endef
 
 define Package/terminfo/install
@@ -141,12 +140,6 @@ ifneq ($(HOST_OS),FreeBSD)
 			$(1)/usr/share/terminfo/$$$$file; \
 	done
 endif
-endef
-
-define Package/terminfo/postinst
-#!/bin/sh
-
-grep -q "^export TERMINFO" /usr/etc/profile || echo "export TERMINFO=/usr/share/terminfo" >> /usr/etc/profile
 endef
 
 define Package/libncursesw/install
@@ -168,15 +161,15 @@ endef
 
 define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)
-	for lib in ncurses panel menu form; do \
+		for lib in ncurses panel menu form; do \
 		ln -s lib$$$${lib}w.so $(1)/usr/lib/lib$$$${lib}.so; \
 	done
 	$(LN) . $(1)/usr/include/ncursesw
 	$(INSTALL_DIR) $(1)/usr/bin $(2)/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/ncursesw6-config $(2)/bin/
-	$(SED) 's,^\(prefix\|exec_prefix\)=.*,\1=$(STAGING_DIR)/usr,g' -e 's/$$$$INCS //g' \
+	$(SED) 's,^\(prefix\|exec_prefix\)=.*,\1=$(STAGING_DIR)/opt,g' -e 's/$$$$INCS //g' \
 		$(2)/bin/ncursesw6-config
-	ln -sf $(STAGING_DIR)/host/bin/ncursesw6-config $(1)/usr/bin/ncursesw6-config
+	$(LN) $(STAGING_DIR)/host/bin/ncursesw6-config $(1)/usr/bin/ncursesw6-config
 endef
 
 define Host/Compile
