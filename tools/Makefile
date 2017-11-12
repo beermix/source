@@ -22,7 +22,7 @@ ifneq ($(CONFIG_SDK)$(CONFIG_PACKAGE_kmod-b43)$(CONFIG_PACKAGE_b43legacy-firmwar
 endif
 
 tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
-tools-y += m4 libtool autoconf automake flex bison pkg-config mklibs
+tools-y += gettext m4 libtool autoconf automake flex bison pkg-config mklibs
 tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
 tools-y += firmware-utils patch-image quilt padjffs2
 tools-y += mm-macros missing-macros cmake scons bc findutils gengetopt patchelf
@@ -40,7 +40,7 @@ tools-$(CONFIG_TARGET_apm821xx) += genext2fs
 
 # builddir dependencies
 $(curdir)/bison/compile := $(curdir)/flex/compile
-$(curdir)/flex/compile := $(curdir)/libtool/compile
+$(curdir)/flex/compile := $(curdir)/libtool/compile $(curdir)/gettext/compile
 $(curdir)/libtool/compile := $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/automake/compile $(curdir)/missing-macros/compile
 $(curdir)/squashfs/compile := $(curdir)/lzma-old/compile
 $(curdir)/squashfs4/compile := $(curdir)/xz/compile
