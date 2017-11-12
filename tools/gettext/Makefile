@@ -28,9 +28,12 @@ HOST_CONFIGURE_ARGS += \
 	--disable-java \
 	--disable-curses \
 	--with-included-libxml \
-	--with-included-gettext \
 	--disable-native-java \
+	--disable-relocatable \
+	--disable-libasprintf \
 	--disable-csharp \
-	--without-emacs
+	--without-emacs \
+	--disable-openmp \
+	--disable-acl
 
 $(eval $(call HostBuild))
