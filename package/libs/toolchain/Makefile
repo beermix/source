@@ -76,35 +76,35 @@ define Package/locales/postinst
 #!/bin/sh
 
 echo "Entware uses separate locale-archive file independent from main system"
-if [ -f '/opt/usr/lib/locale/locale-archive' ]
+if [ -f '/usr/lib/locale/locale-archive' ]
 then
 	echo "locale-archive file found, checking format"
-	/opt/bin/locale.new -a 2>&1 >/dev/null | grep 'LC_COLLATE' > /dev/null
+	/usr/bin/locale.new -a 2>&1 >/dev/null | grep 'LC_COLLATE' > /dev/null
 	if [ $$? -eq 0 ] ; then
 		echo "Old format locale archive found. Deleting!"
-		rm -f /opt/usr/lib/locale/locale-archive
+		rm -f /usr/lib/locale/locale-archive
 	fi
 fi
-if ! [ -f '/opt/usr/lib/locale/locale-archive' ]
+if ! [ -f '/usr/lib/locale/locale-archive' ]
 then
-	mkdir -p /opt/usr/lib/locale
-	echo "Creating locale archive - /opt/usr/lib/locale/locale-archive"
+	mkdir -p /usr/lib/locale
+	echo "Creating locale archive - /usr/lib/locale/locale-archive"
 	echo "Adding en_EN.UTF-8"
-	/opt/bin/localedef.new -c -f UTF-8 -i en_US en_US.UTF-8
+	/bin/localedef.new -c -f UTF-8 -i en_US en_US.UTF-8
 	echo "Adding ru_RU.UTF-8"
-	/opt/bin/localedef.new -c -f UTF-8 -i ru_RU ru_RU.UTF-8
+	/bin/localedef.new -c -f UTF-8 -i ru_RU ru_RU.UTF-8
 fi
-if [ -f '/opt/usr/lib/locale/locale-archive' ]
+if [ -f '/usr/lib/locale/locale-archive' ]
 then
 	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
-	echo "You can add new locales to Entware using /opt/bin/localedef.new"
+	echo "You can add new locales to Entware using /bin/localedef.new"
 fi
-if ! [ -f '/opt/usr/lib/locale/locale-archive' ]
+if ! [ -f '/usr/lib/locale/locale-archive' ]
 then
 	echo "locale-archive file was not created, not enough memory? Downloading..."
-	wget http://pkg.entware.net/binaries/other/locale-archive.2.23 -O /opt/usr/lib/locale/locale-archive
+	wget http://pkg.entware.net/binaries/other/locale-archive.2.23 -O /usr/lib/locale/locale-archive
 	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
-	echo "You can add new locales to Entware using /opt/bin/localedef.new"
+	echo "You can add new locales to Entware using /bin/localedef.new"
 fi
 
 endef
@@ -747,8 +747,8 @@ else
 		$(INSTALL_DIR) $(1)/usr/bin ; \
 		$(CP) $(call qstrip,$(CONFIG_TOOLCHAIN_USR_DIR))/$$$$file $(1)/usr/bin/ ; \
 	done ; \
-	mv $(1)/opt/bin/locale $(1)/usr/bin/locale.new; \
-	mv $(1)/opt/bin/localedef $(1)/usr/bin/localedef.new; \
+	mv $(1)/usr/bin/locale $(1)/usr/bin/locale.new; \
+	mv $(1)/usr/bin/localedef $(1)/usr/bin/localedef.new; \
 	for file in $(call qstrip,$(CONFIG_i18N_LOCALES)); do \
 		dir=`dirname $$$$file` ; \
 		$(INSTALL_DIR) $(1)/usr/share/i18n/locales; \
