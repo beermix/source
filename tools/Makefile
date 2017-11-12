@@ -39,8 +39,9 @@ tools-$(CONFIG_USE_SPARSE) += sparse
 tools-$(CONFIG_TARGET_apm821xx) += genext2fs
 
 # builddir dependencies
+$(curdir)/m4/compile := $(curdir)/gettext/compile
 $(curdir)/bison/compile := $(curdir)/flex/compile
-$(curdir)/flex/compile := $(curdir)/libtool/compile $(curdir)/gettext/compile
+$(curdir)/flex/compile := $(curdir)/libtool/compile
 $(curdir)/libtool/compile := $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/automake/compile $(curdir)/missing-macros/compile
 $(curdir)/squashfs/compile := $(curdir)/lzma-old/compile
 $(curdir)/squashfs4/compile := $(curdir)/xz/compile

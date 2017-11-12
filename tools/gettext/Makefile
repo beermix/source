@@ -28,8 +28,6 @@ HOST_CONFIGURE_ARGS += \
 	--disable-java \
 	--disable-curses \
 	--with-included-libxml \
-	--with-included-libcroco \
-	--with-included-libunistring \
 	--with-included-gettext \
 	--disable-native-java \
 	--disable-csharp \
