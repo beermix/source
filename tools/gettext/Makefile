@@ -19,21 +19,15 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CFLAGS += $(FPIC)
-
 HOST_CONFIGURE_ARGS += \
-	--enable-static --disable-shared \
+	--disable-shared \
+	--enable-static \
+	--enable-silent-rules \
 	--disable-rpath \
-	--with-gnu-ld \
-	--disable-java \
 	--disable-curses \
-	--with-included-libxml \
+	--disable-java \
 	--disable-native-java \
-	--disable-relocatable \
-	--disable-libasprintf \
-	--disable-csharp \
 	--without-emacs \
-	--disable-openmp \
-	--disable-acl
-
+	--with-included-libxml
+	
 $(eval $(call HostBuild))
