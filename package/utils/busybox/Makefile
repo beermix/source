@@ -23,6 +23,7 @@ PKG_CHECK_FORMAT_SECURITY:=0
 
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=LICENSE archival/libarchive/bz/LICENSE
+PKG_CPE_ID:=cpe:/a:busybox:busybox
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -112,7 +113,6 @@ define Build/Compile
 		CROSS_COMPILE="$(TARGET_CROSS)" \
 		KBUILD_HAVE_NLS=no \
 		EXTRA_CFLAGS="$(TARGET_CFLAGS)" \
-		EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 		ARCH="$(ARCH)" \
 		SKIP_STRIP=y \
 		LDLIBS="$(LDLIBS)" \
@@ -124,7 +124,6 @@ define Build/Compile
 		CC="$(TARGET_CC)" \
 		CROSS_COMPILE="$(TARGET_CROSS)" \
 		EXTRA_CFLAGS="$(TARGET_CFLAGS)" \
-		EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 		ARCH="$(ARCH)" \
 		CONFIG_PREFIX="$(PKG_INSTALL_DIR)" \
 		LDLIBS="$(LDLIBS)" \

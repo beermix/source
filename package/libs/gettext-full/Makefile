@@ -19,10 +19,12 @@ HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/gettext-$(PKG_VERSION)
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-3.0+
+PKG_CPE_ID:=cpe:/a:gnu:gettext
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=0
+PKG_BUILD_DEPENDS:=gettext-full/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -32,7 +34,6 @@ define Package/libintl-full
   CATEGORY:=Libraries
   TITLE:=GNU Internationalization library
   URL:=http://www.gnu.org/software/gettext/
-  DEPENDS:=+libpthread +librt
 endef
 
 TARGET_CFLAGS += $(FPIC)
@@ -43,7 +44,6 @@ ifdef CONFIG_USE_MUSL
   TARGET_CFLAGS += -D__UCLIBC__
 endif
 
-TARGET_LDFLAGS += -lrt -lpthread
 CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \

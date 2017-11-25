@@ -4,17 +4,12 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
-# opkg binary segfaults when a real package is replaced by "provided" package.
-# we removed PROVIDES libncurses field in libncursesw and added a real libncurses package that
-# installes symlinks. We've added more symlinks to make binaries from older packages to be compatible with
-# the new libncurses(w) package.
-# Our patch set is different from LEDE for historical reason, it will be merged after next uptade in LEDE
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
 PKG_VERSION:=6.0
-PKG_RELEASE:=1c
+PKG_RELEASE:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -39,29 +34,22 @@ define Package/terminfo
   URL:=http://www.gnu.org/software/ncurses/
 endef
 
-define Package/libncursesw
+define Package/libncurses
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=Terminal handling library (Unicode)
   URL:=http://www.gnu.org/software/ncurses/
-  DEPENDS:= +terminfo +zlib
+  PROVIDES:=libncursesw
+  DEPENDS:= +terminfo
+  ABI_VERSION:=$(PKG_VERSION)
 endef
 
-define Package/libncurses
-  SECTION:=libs
-  CATEGORY:=Libraries
-  TITLE:=Terminal handling library
-  URL:=http://www.gnu.org/software/ncurses/
-  DEPENDS:= +libncursesw
-endef
-
-define Package/ncurses-bin
-  SECTION:=utils
-  CATEGORY:=Utilities
-  SUBMENU:=Terminal
-  DEPENDS:=+libncursesw
-  TITLE:=Terminal-related programs
-  URL:=http://www.gnu.org/software/ncurses/
+define Package/libncurses-dev
+  SECTION:=devel
+  CATEGORY:=Development
+  SUBMENU:=Libraries
+  DEPENDS:=zlib
+  TITLE:=Development files for the ncurses library
 endef
 
 TARGET_CFLAGS += $(FPIC)
@@ -76,6 +64,7 @@ CONFIGURE_ARGS += \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
+	--without-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
@@ -108,20 +97,13 @@ MAKE_FLAGS += \
 	HOSTCC="$(HOSTCC)" \
 	HOSTCCFLAGS="" \
 	PKG_CONFIG_LIBDIR=/usr/lib/pkgconfig \
-	libs \
-	progs
+	libs
 
 define Build/Install/Default
 	$(MAKE_VARS) \
 	$(MAKE) -C $(PKG_BUILD_DIR)/$(MAKE_PATH) \
 		$(MAKE_INSTALL_FLAGS) \
-		$(1) install.libs install.data install.progs;
-endef
-
-define Package/ncurses-bin/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	rm $(1)/usr/bin/ncursesw6-config
+		$(1) install.libs install.data;
 endef
 
 define Package/terminfo/install
@@ -134,7 +116,7 @@ ifneq ($(HOST_OS),FreeBSD)
 			mv $$$$dir $$$$(echo -ne "\x$$$$dir"); \
 		done \
 	)
-	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen s/screen-256color v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color x/xterm-utf8; do \
+	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color; do \
 		$(INSTALL_DIR) $(1)/usr/share/terminfo/`dirname $$$$file`; \
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/terminfo/$$$$file \
 			$(1)/usr/share/terminfo/$$$$file; \
@@ -142,34 +124,37 @@ ifneq ($(HOST_OS),FreeBSD)
 endif
 endef
 
-define Package/libncursesw/install
+define Package/libncurses/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	for lib in ncurses panel menu form; do \
 		$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib$$$${lib}w.so* $(1)/usr/lib/; \
+		ln -s lib$$$${lib}w.so $(1)/usr/lib/lib$$$${lib}.so; \
 	done
 endef
 
-define Package/libncurses/install
+define Package/libncurses-dev/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/*.h $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
-	ln -s libncurses.so.6.0 $(1)/usr/lib/libcurses.so
-	for lib in ncurses panel menu form; do \
-		ln -s lib$$$${lib}w.so $(1)/usr/lib/lib$$$${lib}.so; \
-		ln -s lib$$$${lib}w.so.6 $(1)/usr/lib/lib$$$${lib}.so.6; \
-		ln -s lib$$$${lib}w.so.6.0 $(1)/usr/lib/lib$$$${lib}.so.6.0; \
-	done
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.a $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/*.pc $(1)/usr/lib/pkgconfig/
 endef
 
 define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)
-		for lib in ncurses panel menu form; do \
+	for lib in ncurses panel menu form; do \
 		ln -s lib$$$${lib}w.so $(1)/usr/lib/lib$$$${lib}.so; \
 	done
-	$(LN) . $(1)/usr/include/ncursesw
-	$(INSTALL_DIR) $(1)/usr/bin $(2)/bin
+	ln -s . $(1)/usr/include/ncursesw
+	$(TARGET_CROSS)ar rc $(1)/usr/lib/libtinfo.a
+	$(INSTALL_DIR) $(2)/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/ncursesw6-config $(2)/bin/
-	$(SED) 's,^\(prefix\|exec_prefix\)=.*,\1=$(STAGING_DIR)/opt,g' -e 's/$$$$INCS //g' \
+	$(SED) 's,^\(prefix\|exec_prefix\)=.*,\1=$(STAGING_DIR)/usr,g' -e 's/$$$$INCS //g' \
 		$(2)/bin/ncursesw6-config
-	$(LN) $(STAGING_DIR)/host/bin/ncursesw6-config $(1)/usr/bin/ncursesw6-config
+	ln -sf $(STAGING_DIR)/host/bin/ncursesw6-config $(1)/usr/bin/ncursesw6-config
 endef
 
 define Host/Compile
@@ -183,6 +168,5 @@ endef
 
 $(eval $(call HostBuild))
 $(eval $(call BuildPackage,terminfo))
-$(eval $(call BuildPackage,libncursesw))
 $(eval $(call BuildPackage,libncurses))
-$(eval $(call BuildPackage,ncurses-bin))
+$(eval $(call BuildPackage,libncurses-dev))
