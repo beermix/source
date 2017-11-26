@@ -1,0 +1,30 @@
+--- a/mt7603_soc.c
++++ b/mt7603_soc.c
+@@ -15,6 +15,7 @@
+  */
+ 
+ #include <linux/kernel.h>
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ 
+--- a/mt7603.h
++++ b/mt7603.h
+@@ -17,6 +17,7 @@
+ #ifndef __MT7603_H
+ #define __MT7603_H
+ 
++#include <linux/interrupt.h>
+ #include "mt76.h"
+ #include "mt7603_regs.h"
+ 
+--- a/mac80211.c
++++ b/mac80211.c
+@@ -13,6 +13,7 @@
+  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  */
++#include <linux/of.h>
+ #include "mt76.h"
+ 
+ #define CHAN2G(_idx, _freq) {			\

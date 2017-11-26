@@ -103,13 +103,14 @@ define KernelPackage/fbcon
 	CONFIG_VT_CONSOLE=y \
 	CONFIG_VT_HW_CONSOLE_BINDING=y
   FILES:= \
-	$(LINUX_DIR)/drivers/video/console/bitblit.ko \
-	$(LINUX_DIR)/drivers/video/console/softcursor.ko \
-	$(LINUX_DIR)/drivers/video/console/fbcon.ko \
-	$(LINUX_DIR)/drivers/video/console/fbcon_rotate.ko \
-	$(LINUX_DIR)/drivers/video/console/fbcon_cw.ko \
-	$(LINUX_DIR)/drivers/video/console/fbcon_ud.ko \
-	$(LINUX_DIR)/drivers/video/console/fbcon_ccw.ko \
+	$(LINUX_DIR)/drivers/video/console/bitblit.ko@lt4.14 \
+	$(LINUX_DIR)/drivers/video/console/softcursor.ko@lt4.14 \
+	$(LINUX_DIR)/drivers/video/console/fbcon.ko@lt4.14 \
+	$(LINUX_DIR)/drivers/video/console/fbcon_rotate.ko@lt4.14 \
+	$(LINUX_DIR)/drivers/video/console/fbcon_cw.ko@lt4.14 \
+	$(LINUX_DIR)/drivers/video/console/fbcon_ud.ko@lt4.14 \
+	$(LINUX_DIR)/drivers/video/console/fbcon_ccw.ko@lt4.14 \
+	$(LINUX_DIR)/drivers/video/fbdev/core/fb.ko@ge4.14 \
 	$(LINUX_DIR)/lib/fonts/font.ko
   AUTOLOAD:=$(call AutoLoad,94,font softcursor tileblit fbcon_cw fbcon_ud fbcon_ccw fbcon_rotate bitblit fbcon)
 endef
