@@ -15,7 +15,7 @@ bintype:=$(shell uname -m | sed \
 )
 
 PKG_SOURCE:=go$(PKG_VERSION).$(OS)-$(bintype).tar.gz
-PKG_SOURCE_URL:=https://redirector.gvt1.com/edgedl/go
+PKG_SOURCE_URL:=https://storage.googleapis.com/golang
 HOST_BUILD_DIR:=$(STAGING_DIR_HOST)/go1.4
 HOST_UNPACK:=gzip -dc $(DL_DIR)/$(PKG_SOURCE) | tar -C $(HOST_BUILD_DIR) --strip-components=1 -xf -
 
