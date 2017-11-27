@@ -8,3 +8,4 @@ src-git telephony https://git.lede-project.org/feed/telephony.git
 #src-git oldpackages http://git.openwrt.org/packages.git
 src-link mypkgs /home/user/-f2fs/pkg-ledex
 src-git rtndev https://github.com/Entware-ng/rtndev
+src-git entware_go https://github.com/Entware-ng/entware-go
