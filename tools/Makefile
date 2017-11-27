@@ -68,12 +68,12 @@ $(curdir)/bc/compile := $(curdir)/bison/compile
 $(curdir)/findutils/compile := $(curdir)/bison/compile
 $(curdir)/gengetopt/compile := $(curdir)/libtool/compile
 $(curdir)/patchelf/compile := $(curdir)/libtool/compile
-$(curdir)/go-src/compile := $(curdir)/go-bootstrap/compile
 $(curdir)/dosfstools/compile := $(curdir)/autoconf/compile $(curdir)/automake/compile
 $(curdir)/libressl/compile := $(curdir)/pkg-config/compile
 $(curdir)/mkimage/compile += $(curdir)/libressl/compile
 $(curdir)/firmware-utils/compile += $(curdir)/libressl/compile
 $(curdir)/cmake/compile += $(curdir)/libressl/compile
+$(curdir)/go-src/compile := $(curdir)/go-bootstrap/compile
 
 ifneq ($(HOST_OS),Linux)
   tools-y += coreutils
