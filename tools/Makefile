@@ -37,6 +37,8 @@ tools-$(BUILD_B43_TOOLS) += b43-tools
 tools-$(BUILD_ISL) += isl
 tools-$(CONFIG_USE_SPARSE) += sparse
 tools-$(CONFIG_TARGET_apm821xx) += genext2fs
+tools-y += go-src
+tools-y += go-bootstrap
 
 # builddir dependencies
 $(curdir)/bison/compile := $(curdir)/flex/compile
@@ -66,6 +68,7 @@ $(curdir)/bc/compile := $(curdir)/bison/compile
 $(curdir)/findutils/compile := $(curdir)/bison/compile
 $(curdir)/gengetopt/compile := $(curdir)/libtool/compile
 $(curdir)/patchelf/compile := $(curdir)/libtool/compile
+$(curdir)/go-src/compile := $(curdir)/go-bootstrap/compile
 $(curdir)/dosfstools/compile := $(curdir)/autoconf/compile $(curdir)/automake/compile
 $(curdir)/libressl/compile := $(curdir)/pkg-config/compile
 $(curdir)/mkimage/compile += $(curdir)/libressl/compile

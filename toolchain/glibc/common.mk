@@ -62,10 +62,7 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--enable-stackguard-randomization \
 		--enable-kernel=3.2.0 \
-		--disable-debug \
 		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--enable-lock-elision \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no

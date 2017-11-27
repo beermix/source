@@ -94,6 +94,9 @@ diffconfig: FORCE
 	mkdir -p $(BIN_DIR)
 	$(SCRIPT_DIR)/diffconfig.sh > $(BIN_DIR)/config.seed
 
+headers: FORCE
+	tar -czf $(BIN_DIR)/include.tar.gz -C $(STAGING_DIR)/opt/include .
+
 prepare: .config $(tools/stamp-compile) $(toolchain/stamp-compile)
 	$(_SINGLE)$(SUBMAKE) -r diffconfig
 
