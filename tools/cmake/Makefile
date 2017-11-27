@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 HOST_CONFIGURE_VARS += \
 	MAKEFLAGS="$(HOST_JOBS)" \
-	CXXFLAGS="$(HOST_CFLAGS)"
+	CXXFLAGS="$(HOST_CFLAGS) -pipe -Wall"
 
 HOST_CONFIGURE_ARGS := \
 	$(if $(MAKE_JOBSERVER),--parallel="$(MAKE_JOBSERVER)") \
