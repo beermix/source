@@ -4,15 +4,20 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
+# locales package added.
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=toolchain
-PKG_RELEASE:=1
+
+ifeq ($(CONFIG_USE_UCLIBC),y)
+  PKG_RELEASE:=1
+else
+  PKG_RELEASE:=6
+endif
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=GPL-3.0-with-GCC-exception
 
-PKG_FLAGS:=hold essential nonshared
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -354,7 +359,6 @@ define Package/libgfortran/config
 	endmenu
 endef
 
-
 define Package/libgomp
 $(call Package/gcc/Default)
   TITLE:=OpenMP support library
@@ -508,6 +512,11 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/lib/libgfortran.so.* $(1)/usr/lib/
   endef
 
+  define Package/libgo/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libgo.so.* $(1)/usr/lib/
+  endef
+
   define Package/libssp/install
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) $(TOOLCHAIN_DIR)/lib/libssp.so.* $(1)/lib/
@@ -519,9 +528,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   endef
 
   define Package/glibc/install
-	$(CP) ./glibc-files/* $(1)/
-	rm -f $(1)/etc/localtime
-	$(LN) /tmp/localtime $(1)/etc/localtime
+	$(INSTALL_DIR) $(1)/etc
+	$(CP) ./glibc-files/etc/* $(1)/etc
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
@@ -585,7 +593,7 @@ endif
 
   define Package/libc/install_lib
 	$(CP) $(filter-out %/libdl_pic.a %/libpthread_pic.a %/libresolv_pic.a,$(wildcard $(TOOLCHAIN_DIR)/lib/lib*.a)) $(1)/lib/
-	$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libc_so.a),$(CP) $(TOOLCHAIN_DIR)/lib/libc_so.a $(1)/lib/libc_pic.a)
+	$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libc_so.a),$(CP) $(TOOLCHAIN_DIR)/lib/libc_so.a $(1)/opt/lib/libc_pic.a)
 	$(if $(LIBGCC_MAP), \
 		$(CP) $(LIBGCC_A) $(1)/lib/libgcc_s_pic.a; \
 		$(CP) $(LIBGCC_MAP) $(1)/lib/libgcc_s_pic.map \
@@ -594,7 +602,7 @@ endif
 
   define Package/libpthread/install
 	$(INSTALL_DIR) $(1)/lib
-  ifneq ($(CONFIG_USE_MUSL)$(CONFIG_USE_UCLIBC),y)
+  ifneq ($(CONFIG_USE_MUSL),y)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libpthread.so.* \
 		$(TOOLCHAIN_DIR)/lib/libpthread-$(LIBC_SO_VERSION).so \
@@ -606,11 +614,8 @@ endif
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libthread_db.so.* $(1)/lib
-  ifeq ($(CONFIG_USE_UCLIBC),y)
 	$(CP) \
-		$(TOOLCHAIN_DIR)/lib/libthread_db-$(LIBC_SO_VERSION).so \
-		$(1)/lib/
-  endif
+		$(TOOLCHAIN_DIR)/lib/libthread_db-*.so  $(1)/lib/
   endef
 
   define Package/libpthread/install_lib
@@ -619,7 +624,7 @@ endif
 
   define Package/librt/install
 	$(INSTALL_DIR) $(1)/lib
-  ifneq ($(CONFIG_USE_MUSL)$(CONFIG_USE_UCLIBC),y)
+  ifneq ($(CONFIG_USE_MUSL),y)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/librt.so.* \
 		$(TOOLCHAIN_DIR)/lib/librt-$(LIBC_SO_VERSION).so \
@@ -702,6 +707,7 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
+	rm -f $(1)/$$$$dir/*.py ; \
 	exit 0
   endef
 
@@ -724,11 +730,8 @@ else
   endef
 
   define Package/libthread-db/install
-	for file in $(call qstrip,$(CONFIG_LIBTHREAD_DB_FILE_SPEC)); do \
-		$(INSTALL_DIR) $(1)/lib ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBTHREAD_DB_ROOT_DIR))/$$$$file $(1)/lib/ ; \
-	done ; \
-	exit 0
+	$(INSTALL_DIR) $(1)/lib
+	$(CP) $(call qstrip,$(CONFIG_LIBPTHREAD_ROOT_DIR))/lib/libthread_db{-*.so,.so.*} $(1)/lib/
   endef
 
   define Package/librt/install
@@ -758,17 +761,20 @@ else
   define Package/ldd/install
 	for file in $(call qstrip,$(CONFIG_LDD_FILE_SPEC)); do \
 		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/bin ; \
+		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/bin/ ; \
 	done ; \
+	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/bin/ldd ; \
+	$(SED) 's!/lib/ld-linux.so.3!/lib/ld-linux.so.3!g' $(1)/bin/ldd ; \
+	$(SED) 's!/lib/ld-linux.so.2!/lib/ld-linux.so.2!g' $(1)/bin/ldd ; \
 	exit 0
   endef
 
   define Package/ldconfig/install
 	for file in $(call qstrip,$(CONFIG_LDCONFIG_FILE_SPEC)); do \
 		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/$$$$dir ; \
-		$(CP) $(call qstrip,$(CONFIG_LDCONFIG_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
+		$(INSTALL_DIR) $(1)/bin ; \
+		$(CP) $(call qstrip,$(CONFIG_LDCONFIG_ROOT_DIR))/$$$$file $(1)/bin/ ; \
 	done ; \
 	exit 0
   endef
