@@ -10,7 +10,7 @@ PKG_NAME:=glibc
 PKG_VERSION:=2.26
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=aaa2eb8
+PKG_SOURCE_VERSION:=de61465
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -64,6 +64,8 @@ GLIBC_CONFIGURE:= \
 		--enable-kernel=3.2.0 \
 		--disable-debug \
 		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
+		--enable-lock-elision \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
