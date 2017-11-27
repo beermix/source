@@ -656,6 +656,14 @@ else
 	done
   endef
 
+  define Package/libgo/install
+	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
+		dir=`dirname $$$$file` ; \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBGO_ROOT_DIR))/$$$$file $(1)/lib/ ; \
+	done
+  endef
+
   define Package/libssp/install
 	for file in $(call qstrip,$(CONFIG_LIBSSP_FILE_SPEC)); do \
 		$(INSTALL_DIR) $(1)/lib ; \
@@ -774,6 +782,7 @@ $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
 $(eval $(call BuildPackage,libgomp))
+$(eval $(call BuildPackage,libgo))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
 $(eval $(call BuildPackage,locales))

@@ -1,3 +1,4 @@
+
 # 
 # Copyright (C) 2006-2015 OpenWrt.org
 #
@@ -8,17 +9,20 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=go-src
 PKG_VERSION:=1.9.2
+PKG_REV:=2ea7d3461bb41d0ae12b56ee52d43314bcdb97f9
 
-PKG_SOURCE:=go$(PKG_VERSION).src.tar.gz
-PKG_SOURCE_URL:=https://storage.googleapis.com/golang
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_SUBDIR:=go
+PKG_SOURCE_URL:=https://github.com/golang/go
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_VERSION:=$(PKG_REV)
 HOST_BUILD_DIR:=$(STAGING_DIR_HOST)/go
-PKG_HASH:=5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6
 
 include $(INCLUDE_DIR)/host-build.mk
 
 define Host/Compile
-	(cd $(STAGING_DIR_HOST)/go/src ; \
-		GOROOT_BOOTSTRAP=$(STAGING_DIR_HOST)/go1.4 ./make.bash --no-clean ; \
+	(cd $(STAGING_DIR_HOST)/go-src-$(PKG_VERSION)/src ; \
+						./make.bash --no-clean ; \
 	)
 endef
 
