@@ -1,7 +1,3 @@
-config GCC_VERSION_6_3_ARC
-	default y if (!TOOLCHAINOPTS && arc)
-	bool
-
 config GCC_VERSION
 	string
 	default "arc-2017.03-release"   if GCC_VERSION_6_3_ARC
