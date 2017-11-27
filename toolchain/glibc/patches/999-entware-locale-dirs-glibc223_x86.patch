@@ -1,0 +1,15 @@
+--- a/locale/Makefile
++++ b/locale/Makefile
+@@ -80,6 +80,12 @@
+ # The path to the compiled binary locale archive or compiled locales,
+ # along with the parent path to the source locales and source
+ # charmaps.
++complocaledir = /usr/lib/locale
++i18ndir = /usr/share/i18n
++rtld-LDFLAGS = -Wl,--dynamic-linker=/lib/ld-linux.so.2
++LDFLAGS-locale = -Wl,-rpath,/lib
++LDFLAGS-localedef = -Wl,-rpath,/lib
++
+ localepath = "$(complocaledir):$(i18ndir)"
+ 
+ # -Iprograms doesn't really belong here, but this gets it at the head

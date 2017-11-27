@@ -41,7 +41,7 @@ endef
 # code for creating tarballs from cvs/svn/git/bzr/hg/darcs checkouts - useful for mirror support
 dl_pack/bz2=bzip2 -c > $(1)
 dl_pack/gz=gzip -nc > $(1)
-dl_pack/xz=xz --threads=0 -zc -7e > $(1)
+dl_pack/xz=xz --threads=7 -zcv -7e > $(1)
 dl_pack/unknown=$(error ERROR: Unknown pack format for file $(1))
 define dl_pack
 	$(if $(dl_pack/$(call ext,$(1))),$(dl_pack/$(call ext,$(1))),$(dl_pack/unknown))
@@ -102,12 +102,18 @@ check_md5 = \
 hash_var = $(if $(filter-out x,$(1)),MD5SUM,HASH)
 endif
 
+ifdef SKIPHASH
+DOWNLOAD_CMD = $(SCRIPT_DIR)/download.pl --skip-hash
+else
+DOWNLOAD_CMD = $(SCRIPT_DIR)/download.pl
+endif
+
 define DownloadMethod/unknown
 	echo "ERROR: No download method available"; false
 endef
 
 define DownloadMethod/default
-	$(SCRIPT_DIR)/download.pl "$(DL_DIR)" "$(FILE)" "$(HASH)" "$(URL_FILE)" $(foreach url,$(URL),"$(url)") \
+	$(DOWNLOAD_CMD) "$(DL_DIR)" "$(FILE)" "$(HASH)" "$(URL_FILE)" $(foreach url,$(URL),"$(url)") \
 	$(if $(filter check,$(1)), \
 		$(call check_hash,$(FILE),$(HASH),$(2)$(call hash_var,$(MD5SUM))) \
 		$(call check_md5,$(MD5SUM),$(2)MD5SUM,$(2)HASH) \
