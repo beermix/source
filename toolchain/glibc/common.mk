@@ -63,14 +63,10 @@ GLIBC_CONFIGURE:= \
 		--enable-stackguard-randomization \
 		--enable-kernel=3.2.0 \
 		--disable-debug \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--enable-lock-elision \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-libc_cv_c_cleanup=yes
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 

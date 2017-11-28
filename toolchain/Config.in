@@ -247,7 +247,6 @@ choice
 
 endchoice
 
-source "toolchain/glibc/Config.in"
 source "toolchain/uClibc/Config.in"
 
 comment "Debuggers"
@@ -284,8 +283,6 @@ config USE_EXTERNAL_LIBC
 source "toolchain/binutils/Config.version"
 source "toolchain/gcc/Config.version"
 
-
-source "toolchain/glibc/Config.version"
 
 config LIBC
 	string
