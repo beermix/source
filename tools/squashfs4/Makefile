@@ -9,12 +9,10 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=squashfs4
 PKG_CPE_ID:=cpe:/a:phillip_lougher:squashfs
 PKG_VERSION:=4.2
-PKG_REV:=e38956b92f738518c29734399629e7cdb33072d3
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.xz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_REV)
-PKG_SOURCE_URL:=git://git.kernel.org/pub/scm/fs/squashfs/squashfs-tools.git
-PKG_SOURCE_PROTO:=git
+PKG_SOURCE:=squashfs$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=@SF/squashfs
+PKG_HASH:=d9e0195aa922dbb665ed322b9aaa96e04a476ee650f39bbeadb0d00b24022e96
 PKG_CAT:=zcat
 
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/squashfs$(PKG_VERSION)
@@ -27,7 +25,6 @@ define Host/Compile
 		XZ_SUPPORT=1 \
 		LZMA_XZ_SUPPORT=1 \
 		XATTR_SUPPORT= \
-            ZSTD_SUPPORT=0 \
 		LZMA_LIB="$(STAGING_DIR_HOST)/lib/liblzma.a" \
 		EXTRA_CFLAGS="-I$(STAGING_DIR_HOST)/include" \
 		mksquashfs unsquashfs
