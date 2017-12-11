@@ -19,7 +19,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 unexport PKG_CONFIG
 
-HOST_CONFIGURE_ARGS += --with-internal-glib --disable-dtrace --with-gnu-ld
+HOST_CONFIGURE_ARGS += --with-internal-glib
 
 ifeq ($(HOST_OS),Darwin)
 HOST_LDFLAGS += -framework CoreFoundation -framework Carbon
