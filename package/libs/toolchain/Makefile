@@ -9,15 +9,12 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=toolchain
 
-ifeq ($(CONFIG_USE_UCLIBC),y)
-  PKG_RELEASE:=1
-else
-  PKG_RELEASE:=6
-endif
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=GPL-3.0-with-GCC-exception
 
+PKG_FLAGS:=hold essential nonshared
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -593,7 +590,7 @@ endif
 
   define Package/libc/install_lib
 	$(CP) $(filter-out %/libdl_pic.a %/libpthread_pic.a %/libresolv_pic.a,$(wildcard $(TOOLCHAIN_DIR)/lib/lib*.a)) $(1)/lib/
-	$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libc_so.a),$(CP) $(TOOLCHAIN_DIR)/lib/libc_so.a $(1)/opt/lib/libc_pic.a)
+	$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libc_so.a),$(CP) $(TOOLCHAIN_DIR)/lib/libc_so.a $(1)/lib/libc_pic.a)
 	$(if $(LIBGCC_MAP), \
 		$(CP) $(LIBGCC_A) $(1)/lib/libgcc_s_pic.a; \
 		$(CP) $(LIBGCC_MAP) $(1)/lib/libgcc_s_pic.map \
@@ -602,7 +599,7 @@ endif
 
   define Package/libpthread/install
 	$(INSTALL_DIR) $(1)/lib
-  ifneq ($(CONFIG_USE_MUSL),y)
+  ifneq ($(CONFIG_USE_MUSL)$(CONFIG_USE_UCLIBC),y)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libpthread.so.* \
 		$(TOOLCHAIN_DIR)/lib/libpthread-$(LIBC_SO_VERSION).so \
@@ -614,8 +611,11 @@ endif
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libthread_db.so.* $(1)/lib
+  ifeq ($(CONFIG_USE_UCLIBC),y)
 	$(CP) \
-		$(TOOLCHAIN_DIR)/lib/libthread_db-*.so  $(1)/lib/
+		$(TOOLCHAIN_DIR)/lib/libthread_db-$(LIBC_SO_VERSION).so \
+		$(1)/lib/
+  endif
   endef
 
   define Package/libpthread/install_lib
@@ -624,7 +624,7 @@ endif
 
   define Package/librt/install
 	$(INSTALL_DIR) $(1)/lib
-  ifneq ($(CONFIG_USE_MUSL),y)
+  ifneq ($(CONFIG_USE_MUSL)$(CONFIG_USE_UCLIBC),y)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/librt.so.* \
 		$(TOOLCHAIN_DIR)/lib/librt-$(LIBC_SO_VERSION).so \
@@ -730,8 +730,11 @@ else
   endef
 
   define Package/libthread-db/install
-	$(INSTALL_DIR) $(1)/lib
-	$(CP) $(call qstrip,$(CONFIG_LIBPTHREAD_ROOT_DIR))/lib/libthread_db{-*.so,.so.*} $(1)/lib/
+	for file in $(call qstrip,$(CONFIG_LIBTHREAD_DB_FILE_SPEC)); do \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBTHREAD_DB_ROOT_DIR))/$$$$file $(1)/lib/ ; \
+	done ; \
+	exit 0
   endef
 
   define Package/librt/install
@@ -773,8 +776,8 @@ else
   define Package/ldconfig/install
 	for file in $(call qstrip,$(CONFIG_LDCONFIG_FILE_SPEC)); do \
 		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/bin ; \
-		$(CP) $(call qstrip,$(CONFIG_LDCONFIG_ROOT_DIR))/$$$$file $(1)/bin/ ; \
+		$(INSTALL_DIR) $(1)/$$$$dir ; \
+		$(CP) $(call qstrip,$(CONFIG_LDCONFIG_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
 	exit 0
   endef
