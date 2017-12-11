@@ -130,6 +130,7 @@ platform_check_image() {
 	rt-ac51u|\
 	rt-g32-b1|\
 	rt-n10-plus|\
+	rt-n12p|\
 	rt-n13u|\
 	rt-n14u|\
 	rt-n15|\
@@ -144,6 +145,9 @@ platform_check_image() {
 	tew-714tru|\
 	timecloud|\
 	tiny-ac|\
+	u25awf-h1|\
+	u7621-06-256M-16M|\
+	u7628-01-128M-16M|\
 	ur-326n4g|\
 	ur-336un|\
 	v22rw-2x2|\
@@ -199,6 +203,7 @@ platform_check_image() {
 	zbt-wa05|\
 	zbt-we1326|\
 	zbt-we2026|\
+	zbt-we3526|\
 	zbt-we826-16M|\
 	zbt-we826-32M|\
 	zbt-wg2626|\
@@ -235,6 +240,7 @@ platform_check_image() {
 	c50|\
 	mr200|\
 	tl-wr840n-v4|\
+	tl-wr840n-v5|\
 	tl-wr841n-v13)
 		[ "$magic" != "03000000" ] && {
 			echo "Invalid image type."
