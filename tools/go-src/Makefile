@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2008-2015 OpenWrt.org
+# Copyright (C) 2006-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -18,7 +18,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 define Host/Compile
 	(cd $(STAGING_DIR_HOST)/go/src ; \
-		GOROOT_BOOTSTRAP=$(STAGING_DIR_HOST)/go1.4 CGO_ENABLED=0 CC_FOR_TARGET=$(TARGET_CC) CXX_FOR_TARGET=$(TARGET_CXX) ./make.bash --no-clean ; \
+		GOROOT_BOOTSTRAP=$(STAGING_DIR_HOST)/go1.4 ./make.bash --no-clean ; \
 	)
 endef
 

@@ -180,6 +180,37 @@ else
 LIBGCC_A=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/gcc/*/*/libgcc.a))
 LIBGCC_S=$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so),-L$(TOOLCHAIN_DIR)/lib -lgcc_s,$(LIBGCC_A))
 endif
+#
+# glibc does not have librpc, so we set it only for uclibc
+# dynamic linker depends on libc and arch. it is set for the targets we compile
+# may be it is better to patch gcc & glibc to set the path of dynamic linker ????
+#
+#LIBRPC=-lrpc
+#LIBRPC_DEPENDS=+librpc
+
+ifeq ($(LIBC),uClibc)
+DYNLINKER=ld-uClibc.so.0
+endif
+
+ifeq  ($(LIBC),glibc)
+  ifeq ($(ARCH),arm)
+    DYNLINKER=ld-linux.so.3
+  endif
+  ifeq ($(ARCH),i386)
+    DYNLINKER=ld-linux.so.2
+  endif
+  ifeq ($(ARCH),x86_64)
+    DYNLINKER=ld-linux-x86-64.so.2
+  endif
+  ifeq ($(ARCH),mipsel)
+    DYNLINKER=ld.so.1
+  endif
+  ifeq ($(ARCH),mips)
+    DYNLINKER=ld.so.1
+  endif
+endif
+TARGET_LDFLAGS+= -Wl,--dynamic-linker=/usr/lib/$(DYNLINKER)
+TARGET_GCCGOFLAGS+= -Wl,--dynamic-linker=/usr/lib/$(DYNLINKER) -Wl,-rpath=/usr/lib
 LIBRPC=-lrpc
 LIBRPC_DEPENDS=+librpc
 
@@ -226,8 +257,10 @@ ifeq ($(CONFIG_SOFT_FLOAT),y)
   SOFT_FLOAT_CONFIG_OPTION:=--with-float=soft
   ifeq ($(CONFIG_arm),y)
     TARGET_CFLAGS+= -mfloat-abi=soft
+    TARGET_GCCGOFLAGS+= -mfloat-abi=soft
   else
     TARGET_CFLAGS+= -msoft-float
+    TARGET_GCCGOFLAGS+= -msoft-float
   endif
 else
   SOFT_FLOAT_CONFIG_OPTION:=
