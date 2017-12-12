@@ -8,7 +8,6 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=toolchain
-
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
@@ -525,8 +524,9 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   endef
 
   define Package/glibc/install
-	$(INSTALL_DIR) $(1)/etc
-	$(CP) ./glibc-files/etc/* $(1)/etc
+	$(CP) ./glibc-files/* $(1)/
+	rm -f $(1)/etc/localtime
+	$(LN) /tmp/localtime $(1)/etc/localtime
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \

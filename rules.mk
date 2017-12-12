@@ -117,11 +117,9 @@ BIN_DIR:=$(OUTPUT_DIR)/targets/$(BOARD)/$(SUBTARGET)
 INCLUDE_DIR:=$(TOPDIR)/include
 SCRIPT_DIR:=$(TOPDIR)/scripts
 BUILD_DIR_BASE:=$(TOPDIR)/build_dir
-# Entware keeps LIBCV (LIBC version) as a suffix in directory names! Lede has removed it....
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   GCCV:=$(call qstrip,$(CONFIG_GCC_VERSION))
   LIBC:=$(call qstrip,$(CONFIG_LIBC))
-  LIBCV:=$(call qstrip,$(CONFIG_LIBC_VERSION))
   REAL_GNU_TARGET_NAME=$(OPTIMIZE_FOR_CPU)-openwrt-linux$(if $(TARGET_SUFFIX),-$(TARGET_SUFFIX))
   GNU_TARGET_NAME=$(OPTIMIZE_FOR_CPU)-openwrt-linux
   DIR_SUFFIX:=_$(LIBC)$(if $(CONFIG_arm),_eabi)
@@ -140,9 +138,9 @@ else
   TOOLCHAIN_DIR_NAME:=toolchain-$(GNU_TARGET_NAME)
 endif
 
-#ifeq ($(or $(CONFIG_EXTERNAL_TOOLCHAIN),$(CONFIG_GCC_VERSION_4_8),$(CONFIG_TARGET_uml)),)
-#  iremap = -iremap$(1):$(2)
-#endif
+ifeq ($(or $(CONFIG_EXTERNAL_TOOLCHAIN),$(CONFIG_GCC_VERSION_4_8),$(CONFIG_TARGET_uml)),)
+  iremap = -iremap$(1):$(2)
+endif
 
 PACKAGE_DIR:=$(BIN_DIR)/packages
 BUILD_DIR:=$(BUILD_DIR_BASE)/$(TARGET_DIR_NAME)
@@ -180,37 +178,6 @@ else
 LIBGCC_A=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/gcc/*/*/libgcc.a))
 LIBGCC_S=$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so),-L$(TOOLCHAIN_DIR)/lib -lgcc_s,$(LIBGCC_A))
 endif
-#
-# glibc does not have librpc, so we set it only for uclibc
-# dynamic linker depends on libc and arch. it is set for the targets we compile
-# may be it is better to patch gcc & glibc to set the path of dynamic linker ????
-#
-#LIBRPC=-lrpc
-#LIBRPC_DEPENDS=+librpc
-
-ifeq ($(LIBC),uClibc)
-DYNLINKER=ld-uClibc.so.0
-endif
-
-ifeq  ($(LIBC),glibc)
-  ifeq ($(ARCH),arm)
-    DYNLINKER=ld-linux.so.3
-  endif
-  ifeq ($(ARCH),i386)
-    DYNLINKER=ld-linux.so.2
-  endif
-  ifeq ($(ARCH),x86_64)
-    DYNLINKER=ld-linux-x86-64.so.2
-  endif
-  ifeq ($(ARCH),mipsel)
-    DYNLINKER=ld.so.1
-  endif
-  ifeq ($(ARCH),mips)
-    DYNLINKER=ld.so.1
-  endif
-endif
-TARGET_LDFLAGS+= -Wl,--dynamic-linker=/usr/lib/$(DYNLINKER)
-TARGET_GCCGOFLAGS+= -Wl,--dynamic-linker=/usr/lib/$(DYNLINKER) -Wl,-rpath=/usr/lib
 LIBRPC=-lrpc
 LIBRPC_DEPENDS=+librpc
 
@@ -257,10 +224,8 @@ ifeq ($(CONFIG_SOFT_FLOAT),y)
   SOFT_FLOAT_CONFIG_OPTION:=--with-float=soft
   ifeq ($(CONFIG_arm),y)
     TARGET_CFLAGS+= -mfloat-abi=soft
-    TARGET_GCCGOFLAGS+= -mfloat-abi=soft
   else
     TARGET_CFLAGS+= -msoft-float
-    TARGET_GCCGOFLAGS+= -msoft-float
   endif
 else
   SOFT_FLOAT_CONFIG_OPTION:=
@@ -276,29 +241,6 @@ export SH_FUNC:=. $(INCLUDE_DIR)/shell.sh;
 PKG_CONFIG:=$(STAGING_DIR_HOST)/bin/pkg-config
 
 export PKG_CONFIG
-
-export GOROOT:=$(STAGING_DIR_HOST)/go
-
-ifeq ($(ARCH),mips)
-    GOARCH=mips
-endif
-ifeq ($(ARCH),mipsel)
-    GOARCH=mipsle
-endif
-ifeq ($(ARCH),arm)
-    GOARCH=arm
-   ifeq ($(ARCH_SUFFIX),_cortex-a9)
-	GOARM=GOARM=7
-   else
-	GOARM=GOARM=5
-   endif
-endif
-ifeq ($(ARCH),x86_64)
-    GOARCH=amd64
-endif
-ifeq ($(ARCH),i386)
-    GOARCH=386
-endif
 
 HOSTCC:=gcc
 HOSTCXX:=g++

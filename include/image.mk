@@ -444,6 +444,7 @@ define Device/Build/dtb
 
   image_prepare: $(KDIR)/image-$(1).dtb
   endif
+
 endef
 endif
 

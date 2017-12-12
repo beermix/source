@@ -94,16 +94,12 @@ diffconfig: FORCE
 	mkdir -p $(BIN_DIR)
 	$(SCRIPT_DIR)/diffconfig.sh > $(BIN_DIR)/config.seed
 
-headers: FORCE
-	tar -czf $(BIN_DIR)/include.tar.gz -C $(STAGING_DIR)/usr/include .
-
 prepare: .config $(tools/stamp-compile) $(toolchain/stamp-compile)
 	$(_SINGLE)$(SUBMAKE) -r diffconfig
 
 world: prepare $(target/stamp-compile) $(package/stamp-compile) $(package/stamp-install) $(target/stamp-install) FORCE
 	$(_SINGLE)$(SUBMAKE) -r package/index
 	$(_SINGLE)$(SUBMAKE) -r checksum
-	$(_SINGLE)$(SUBMAKE) -r headers
 
 .PHONY: clean dirclean prereq prepare world package/symlinks package/symlinks-install package/symlinks-clean
 

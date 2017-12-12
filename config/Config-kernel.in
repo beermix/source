@@ -240,6 +240,7 @@ config KERNEL_CRASH_DUMP
 	select KERNEL_PROC_VMCORE
 	bool "Enable support for kexec crashdump"
 	default y
+
 config USE_RFKILL
 	bool "Enable rfkill support"
 	default RFKILL_SUPPORT
