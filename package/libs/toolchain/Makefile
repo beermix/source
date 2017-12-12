@@ -643,9 +643,8 @@ endif
 	$(CP) $(TOOLCHAIN_DIR)/sbin/ldconfig $(1)/sbin/
   endef
 
-ilocales=de_DE en_US en_GB fr_FR it_IT ru_RU i18n iso14651_t1 iso14651_t1_common translit_circle translit_combining translit_font translit_narrow translit_small translit_cjk_compat translit_compat translit_fraction translit_neutral translit_wide
+ilocales=en_US ru_RU i18n iso14651_t1 iso14651_t1_common translit_circle translit_combining translit_font translit_narrow translit_small translit_cjk_compat translit_compat translit_fraction translit_neutral translit_wide
 icharmaps=ANSI_X3.4-1968.gz UTF-8.gz
-
 
 
   define Package/locales/install
