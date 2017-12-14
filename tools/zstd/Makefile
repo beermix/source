@@ -17,6 +17,9 @@ PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
-include $(INCLUDE_DIR)/package.mk
+
+define Host/Compile
+	$(MAKE) -C $(HOST_BUILD_DIR)/lib lib-release
+endef
 
 $(eval $(call HostBuild))

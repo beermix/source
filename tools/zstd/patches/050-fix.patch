@@ -1,0 +1,60 @@
+diff --git a/Makefile b/Makefile
+old mode 100644
+new mode 100755
+index c8f0ed4d..5c81b590
+--- a/Makefile
++++ b/Makefile
+@@ -24,10 +24,10 @@ EXT =
+ endif
+ 
+ .PHONY: default
+-default: lib-release zstd-release
++default: lib-release
+ 
+ .PHONY: all
+-all: | allmost examples manual
++all: | allmost
+ 
+ .PHONY: allmost
+ allmost: allzstd
+diff --git a/lib/Makefile b/lib/Makefile
+old mode 100644
+new mode 100755
+index cdfdc5cd..54e8532c
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -126,7 +126,7 @@ DESTDIR     ?=
+ # directory variables : GNU conventions prefer lowercase
+ # see https://www.gnu.org/prep/standards/html_node/Makefile-Conventions.html
+ # support both lower and uppercase (BSD), use uppercase in script
+-prefix      ?= /usr/local
++prefix      ?= $(STAGING_DIR_HOST)
+ PREFIX      ?= $(prefix)
+ exec_prefix ?= $(PREFIX)
+ libdir      ?= $(exec_prefix)/lib
+diff --git a/programs/Makefile b/programs/Makefile
+old mode 100644
+new mode 100755
+index 37788db3..858cab61
+--- a/programs/Makefile
++++ b/programs/Makefile
+@@ -254,13 +254,13 @@ DESTDIR     ?=
+ # see https://www.gnu.org/prep/standards/html_node/Makefile-Conventions.html
+ # support both lower and uppercase (BSD), use uppercase in script
+ prefix      ?= /usr/local
+-PREFIX      ?= $(prefix)
+-exec_prefix ?= $(PREFIX)
+-bindir      ?= $(exec_prefix)/bin
++PREFIX      ?= $(STAGING_DIR_HOST)
++exec_prefix ?= $(STAGING_DIR_HOST)
++bindir      ?= $(STAGING_DIR_HOST)/bin
+ BINDIR      ?= $(bindir)
+-datarootdir ?= $(PREFIX)/share
+-mandir      ?= $(datarootdir)/man
+-man1dir     ?= $(mandir)/man1
++datarootdir ?= $(STAGING_DIR_HOST)/share
++mandir      ?= $(STAGING_DIR_HOST)/man
++man1dir     ?= $(STAGING_DIR_HOST)/man1
+ 
+ ifneq (,$(filter $(shell uname),OpenBSD FreeBSD NetBSD DragonFly SunOS))
+ MANDIR  ?= $(PREFIX)/man
