@@ -44,7 +44,6 @@ endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
     TARGET_LDFLAGS += -Wl,-O1,-z,relro,-z,now
-    TARGET_CFLAGS += -znow -zrelro
   endif
 endif
 
