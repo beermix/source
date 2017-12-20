@@ -9,6 +9,8 @@ GCC_CONFIGURE += \
 	--enable-languages=c \
 	--disable-shared \
 	--disable-threads \
+	
+  GCC_MAKE += gcc_cv_libc_provides_ssp=yes
 
 define Host/Compile
 	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) \
