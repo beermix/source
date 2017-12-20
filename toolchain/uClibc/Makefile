@@ -5,7 +5,7 @@ include ./common.mk
 HOST_STAMP_BUILT:=$(HOST_BUILD_DIR)/.built
 HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.uclibc_installed
 
-HOST_BUILD_PARALLEL:=1
+HOST_BUILD_PARALLEL:=0
 
 define Host/SetToolchainInfo
 	$(SED) 's,^\(LIBC_TYPE\)=.*,\1=$(PKG_NAME),' $(TOOLCHAIN_DIR)/info.mk
@@ -23,15 +23,19 @@ define Host/Install
 	$(call Host/SetToolchainInfo)
 	$(UCLIBC_MAKE) PREFIX="$(TOOLCHAIN_DIR)/" install_runtime install_dev
 	$(CP) $(HOST_BUILD_DIR)/libc/libc_so.a $(TOOLCHAIN_DIR)/lib/
+	$(CP) $(HOST_BUILD_DIR)/libpthread/*/libpthread_so.a $(TOOLCHAIN_DIR)/lib/
 	( cd $(TOOLCHAIN_DIR) ; \
 		for d in lib usr/lib ; do \
-		  for f in libc.so libgcc_s.so ; do \
+		  for f in libc.so libpthread.so libgcc_s.so ; do \
 		    if [ -f $$$$d/$$$$f -a ! -L $$$$d/$$$$f ] ; then \
 		      $(SED) 's,/usr/lib/,,g;s,/lib/,,g' $$$$d/$$$$f ; \
 		    fi \
 		  done \
 		done \
 	)
+#	rm -f \
+#		$(TOOLCHAIN_DIR)/lib/libresolv*.so* \
+#		$(TOOLCHAIN_DIR)/lib/libnsl*.so*
 endef
 
 $(eval $(call HostBuild))

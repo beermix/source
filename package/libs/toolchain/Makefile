@@ -768,8 +768,8 @@ else
   define Package/ldd/install
 	for file in $(call qstrip,$(CONFIG_LDD_FILE_SPEC)); do \
 		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/bin ; \
-		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/bin/ ; \
+		$(INSTALL_DIR) $(1)/$$$$dir ; \
+		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
 	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/bin/ldd ; \
 	$(SED) 's!/lib/ld-linux.so.3!/lib/ld-linux.so.3!g' $(1)/bin/ldd ; \
