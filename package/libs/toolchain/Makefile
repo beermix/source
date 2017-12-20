@@ -8,12 +8,7 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=toolchain
-
-ifeq ($(CONFIG_USE_UCLIBC),y)
-  PKG_RELEASE:=1
-else
-  PKG_RELEASE:=6
-endif
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=GPL-3.0-with-GCC-exception
@@ -528,6 +523,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   define Package/glibc/install
 	$(INSTALL_DIR) $(1)/etc
 	$(CP) ./glibc-files/etc/* $(1)/etc
+	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
@@ -558,17 +554,9 @@ endif
 		$(TOOLCHAIN_DIR)/lib/libc.so.* \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-$(LIBC_SO_VERSION).so \
 		$(1)/lib/
-	for file in libuargp libcrypt libdl libm libutil libnsl libresolv; do \
-		$(CP) \
-			$(TOOLCHAIN_DIR)/lib/$$$$file.so* \
-			$(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so \
-			$(1)/lib/; \
-	done
 
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
-		$(PKG_BUILD_DIR)/libm-* \
-		$(PKG_BUILD_DIR)/libcrypt-* \
 		$(1)/lib/
   endef
 
@@ -636,7 +624,6 @@ endif
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
   endef
 
   define Package/ldconfig/install
@@ -708,7 +695,6 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	rm -f $(1)/$$$$dir/*.py ; \
 	exit 0
   endef
 
@@ -768,9 +754,6 @@ else
 		$(INSTALL_DIR) $(1)/$$$$dir ; \
 		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
-	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/bin/ldd ; \
-	$(SED) 's!/lib/ld-linux.so.3!/lib/ld-linux.so.3!g' $(1)/bin/ldd ; \
-	$(SED) 's!/lib/ld-linux.so.2!/lib/ld-linux.so.2!g' $(1)/bin/ldd ; \
 	exit 0
   endef
 
