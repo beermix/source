@@ -23,7 +23,6 @@ define Host/Install
 	$(call Host/SetToolchainInfo)
 	$(UCLIBC_MAKE) PREFIX="$(TOOLCHAIN_DIR)/" install_runtime install_dev
 	$(CP) $(HOST_BUILD_DIR)/libc/libc_so.a $(TOOLCHAIN_DIR)/lib/
-	$(CP) $(HOST_BUILD_DIR)/libpthread/*/libpthread_so.a $(TOOLCHAIN_DIR)/lib/
 	( cd $(TOOLCHAIN_DIR) ; \
 		for d in lib usr/lib ; do \
 		  for f in libc.so libpthread.so libgcc_s.so ; do \
