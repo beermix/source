@@ -279,7 +279,11 @@ config USE_GLIBC
 	bool
 
 config USE_UCLIBC
-	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && (arc || mips64 || mips64el)
+	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && (arc)
+	bool
+
+config USE_MUSL
+	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && !(arc || powerpc64)
 	bool
 
 config USE_EXTERNAL_LIBC
@@ -289,18 +293,12 @@ config USE_EXTERNAL_LIBC
 source "toolchain/binutils/Config.version"
 source "toolchain/gcc/Config.version"
 
-source "toolchain/glibc/Config.version"
-source "toolchain/uClibc/Config.version"
-
 config LIBC
 	string
 	default "glibc"   if USE_GLIBC
 	default "uClibc"  if USE_UCLIBC
 
-config LIBC_VERSION
-	string
-	default GLIBC_VERSION   if USE_GLIBC
-	default UCLIBC_VERSION  if USE_UCLIBC
+	default "musl"	  if USE_MUSL
 
 config TARGET_SUFFIX
 	string
