@@ -8,7 +8,12 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=toolchain
-PKG_RELEASE:=1
+
+ifeq ($(CONFIG_USE_UCLIBC),y)
+  PKG_RELEASE:=1
+else
+  PKG_RELEASE:=6
+endif
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=GPL-3.0-with-GCC-exception

@@ -4,6 +4,7 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
+# Stripped charset are added back
 
 include $(TOPDIR)/rules.mk
 
@@ -51,7 +52,7 @@ define Package/iconv
   TITLE+= utility
 endef
 
-TARGET_CFLAGS += $(FPIC) -DUSE_DOS -std=gnu89
+TARGET_CFLAGS += $(FPIC) -DUSE_DOS
 
 CONFIGURE_ARGS += \
 	--enable-shared \

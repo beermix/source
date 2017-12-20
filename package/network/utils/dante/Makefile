@@ -23,6 +23,8 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
+TARGET_CFLAGS += -D_GNU_SOURCE -std=gnu89
+
 CONFIGURE_ARGS += \
 	--without-upnp \
 	--without-pam \
