@@ -62,7 +62,7 @@ menuconfig EXTERNAL_TOOLCHAIN
 		default "aarch64_be-unknown-linux-gnu"  if aarch64_be
 		default "arm-unknown-linux-gnu"      if arm
 		default "armeb-unknown-linux-gnu"    if armeb
-		default "i486-unknown-linux-gnu"     if i386
+		default "i686-unknown-linux-gnu"     if i386
 		default "mips-unknown-linux-gnu"     if mips
 		default "mipsel-unknown-linux-gnu"   if mipsel
 		default "powerpc-unknown-linux-gnu"  if powerpc
@@ -76,7 +76,7 @@ menuconfig EXTERNAL_TOOLCHAIN
 		default "aarch64_be-unknown-linux-gnu"  if aarch64_be
 		default "arm-unknown-linux-gnu-"      if arm
 		default "armeb-unknown-linux-gnu-"    if armeb
-		default "i486-unknown-linux-gnu-"     if i386
+		default "i686-unknown-linux-gnu-"     if i386
 		default "mips-unknown-linux-gnu-"     if mips
 		default "mipsel-unknown-linux-gnu-"   if mipsel
 		default "powerpc-unknown-linux-gnu-"  if powerpc
@@ -90,7 +90,7 @@ menuconfig EXTERNAL_TOOLCHAIN
 		default "/opt/cross/aarch64_be-unknown-linux-gnu"  if aarch64_be
 		default "/opt/cross/arm-unknown-linux-gnu"      if arm
 		default "/opt/cross/armeb-unknown-linux-gnu"    if armeb
-		default "/opt/cross/i486-unknown-linux-gnu"     if i386
+		default "/opt/cross/i686-unknown-linux-gnu"     if i386
 		default "/opt/cross/mips-unknown-linux-gnu"     if mips
 		default "/opt/cross/mipsel-unknown-linux-gnu"   if mipsel
 		default "/opt/cross/powerpc-unknown-linux-gnu"  if powerpc
