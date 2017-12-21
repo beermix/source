@@ -4,6 +4,7 @@
 /env
 /dl
 /bin*
+/.config.old
 /build_dir
 /staging_dir
 /tmp
