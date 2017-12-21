@@ -170,7 +170,7 @@ TARGET_ASFLAGS_DEFAULT = $(TARGET_CFLAGS)
 TARGET_ASFLAGS = $(TARGET_ASFLAGS_DEFAULT)
 TARGET_GCCGOFLAGS = -O2 -pipe -s
 TARGET_CPPFLAGS:=-I$(STAGING_DIR)/usr/include -I$(STAGING_DIR)/include
-TARGET_LDFLAGS:=-L$(STAGING_DIR)/us/lib -L$(STAGING_DIR)/lib -Wl,-rpath,/us/lib -Wl,-rpath-link=$(STAGING_DIR)/us/lib
+TARGET_LDFLAGS:=-L$(STAGING_DIR)/usr/lib -L$(STAGING_DIR)/lib
 ifneq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 LIBGCC_S_PATH=$(realpath $(wildcard $(call qstrip,$(CONFIG_LIBGCC_ROOT_DIR))/$(call qstrip,$(CONFIG_LIBGCC_FILE_SPEC))))
 LIBGCC_S=$(if $(LIBGCC_S_PATH),-L$(dir $(LIBGCC_S_PATH)) -lgcc_s)
@@ -184,8 +184,8 @@ endif
 # dynamic linker depends on libc and arch. it is set for the targets we compile
 # may be it is better to patch gcc & glibc to set the path of dynamic linker ????
 #
-#LIBRPC=-lrpc
-#LIBRPC_DEPENDS=+librpc
+LIBRPC=-lrpc
+LIBRPC_DEPENDS=+librpc
 
 ifeq ($(LIBC),uClibc)
 DYNLINKER=ld-uClibc.so.0
@@ -300,8 +300,8 @@ endif
 HOSTCC:=gcc
 HOSTCXX:=g++
 HOST_CPPFLAGS:=-I$(STAGING_DIR_HOST)/include -I$(STAGING_DIR_HOST)/usr/include $(if $(IS_PACKAGE_BUILD),-I$(STAGING_DIR_HOSTPKG)/include -I$(STAGING_DIR)/host/include)
-HOST_CFLAGS:=-O2 -pipe $(HOST_CPPFLAGS)
-HOST_LDFLAGS:=-L$(STAGING_DIR_HOST)/lib -L$(STAGING_DIR_HOST)/usr/lib $(if $(IS_PACKAGE_BUILD),-L$(STAGING_DIR_HOSTPKG)/lib -L$(STAGING_DIR)/host/lib)
+HOST_CFLAGS:=-march=haswell -O2 -pipe $(HOST_CPPFLAGS)
+HOST_LDFLAGS:=-L$(STAGING_DIR_HOST)/lib -L$(STAGING_DIR_HOST)/usr/lib $(if $(IS_PACKAGE_BUILD),-L$(STAGING_DIR_HOSTPKG)/lib -L$(STAGING_DIR)/host/lib) -s
 
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   TARGET_AR:=$(TARGET_CROSS)gcc-ar
