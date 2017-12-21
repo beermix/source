@@ -59,6 +59,7 @@ BINUTILS_CONFIGURE:= \
 		--with-pic \
 		--enable-relro \
 		--enable-poison-system-directories \
+		--with-system-zlib \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 
