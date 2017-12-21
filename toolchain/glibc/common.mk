@@ -10,15 +10,13 @@ PKG_NAME:=glibc
 PKG_VERSION:=2.26
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=633e2f7
+PKG_SOURCE_VERSION:=10e93d9
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
-
-PATCH_DIR:=$(PATH_PREFIX)/patches
 
 include $(INCLUDE_DIR)/toolchain-build.mk
 
@@ -89,9 +87,6 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
-	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
-		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
-	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 
