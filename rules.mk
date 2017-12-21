@@ -168,9 +168,9 @@ TARGET_CFLAGS:=$(TARGET_OPTIMIZATION)$(if $(CONFIG_DEBUG), -g3) $(call qstrip,$(
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_ASFLAGS_DEFAULT = $(TARGET_CFLAGS)
 TARGET_ASFLAGS = $(TARGET_ASFLAGS_DEFAULT)
-TARGET_GCCGOFLAGS = -g1 -O2
+TARGET_GCCGOFLAGS = -O2 -pipe -s
 TARGET_CPPFLAGS:=-I$(STAGING_DIR)/usr/include -I$(STAGING_DIR)/include
-TARGET_LDFLAGS:=-L$(STAGING_DIR)/opt/lib -L$(STAGING_DIR)/lib -Wl,-rpath,/usr/lib -Wl,-rpath-link=$(STAGING_DIR)/usr/lib
+TARGET_LDFLAGS:=-L$(STAGING_DIR)/us/lib -L$(STAGING_DIR)/lib -Wl,-rpath,/us/lib -Wl,-rpath-link=$(STAGING_DIR)/us/lib
 ifneq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 LIBGCC_S_PATH=$(realpath $(wildcard $(call qstrip,$(CONFIG_LIBGCC_ROOT_DIR))/$(call qstrip,$(CONFIG_LIBGCC_FILE_SPEC))))
 LIBGCC_S=$(if $(LIBGCC_S_PATH),-L$(dir $(LIBGCC_S_PATH)) -lgcc_s)
