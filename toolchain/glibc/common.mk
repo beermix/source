@@ -18,6 +18,8 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
 
+PATCH_DIR:=$(PATH_PREFIX)/patches
+
 include $(INCLUDE_DIR)/toolchain-build.mk
 
 HOST_STAMP_PREPARED:=$(HOST_BUILD_DIR)/.prepared
@@ -44,7 +46,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 $(filter-out -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -g" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -87,6 +89,9 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
+	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
+		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
+	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 
