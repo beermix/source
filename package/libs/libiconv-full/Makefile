@@ -4,19 +4,18 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
-# Stripped charset are added back
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libiconv-full
-PKG_VERSION:=1.11.1
-PKG_RELEASE:=3
+PKG_VERSION:=1.15
+PKG_RELEASE:=4
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 
 PKG_SOURCE:=libiconv-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/libiconv
-PKG_HASH:=e78c347a1a0cb15f2648519e9799151f4b4a934b61ad9ee7424478efe2b8257f
+PKG_HASH:=CCF536620A45458D26BA83887A983B96827001E92A13847B45E4925CC8913178
 PKG_BUILD_DIR:=$(BUILD_DIR)/libiconv-$(PKG_VERSION)
 PKG_LICENSE:=LGPL-2.0
 PKG_LICENSE_FILES:=COPYING.LIB
