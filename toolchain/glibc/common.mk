@@ -5,7 +5,6 @@
 # See /LICENSE for more information.
 #
 include $(TOPDIR)/rules.mk
-include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=glibc
 PKG_VERSION:=2.26
@@ -40,10 +39,6 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-
-# -Os miscompiles w. 2.24 gcc5/gcc6
-# only -O2 tested by upstream changeset
-# "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
@@ -91,7 +86,7 @@ endef
 
 define Host/Configure
 	[ -f $(HOST_BUILD_DIR)/.autoconf ] || { \
-		cd $(HOST_BUILD_DIR)/$(GLIBC_PATH); \
+		cd $(HOST_BUILD_DIR)/; \
 		autoconf --force && \
 		touch $(HOST_BUILD_DIR)/.autoconf; \
 	}
