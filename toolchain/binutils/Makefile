@@ -54,17 +54,14 @@ BINUTILS_CONFIGURE:= \
 		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
+		--enable-libssp \
+		--enable-threads \
+		--with-pic \
+		--enable-relro \
+		--enable-poison-system-directories \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 
-
-ifneq ($(CONFIG_SSP_SUPPORT),)
-  BINUTILS_CONFIGURE+= \
-		--enable-libssp
-else
-  BINUTILS_CONFIGURE+= \
-		--disable-libssp
-endif
 
 ifneq ($(CONFIG_EXTRA_TARGET_ARCH),)
   BINUTILS_CONFIGURE+= \
