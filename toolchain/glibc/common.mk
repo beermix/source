@@ -46,7 +46,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-march=bonnell -O2 -pipe -g" \
+	CFLAGS="-march=bonnell -O2 -g" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -66,8 +66,6 @@ GLIBC_CONFIGURE:= \
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export libc_cv_c_cleanup=yes
-export libc_cv_forced_unwind=yes
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
