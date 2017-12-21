@@ -39,27 +39,27 @@ endif
 
 ifeq ($(PKG_VERSION),7.2.1)
   PKG_VERSION:=7.2.1
-  PKG_REV:=7-20171214
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
+  PKG_REV:=ddc276644272d8beda88c0daa17624f6675448ad
+  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc/archive
+  PKG_SOURCE:=$(PKG_REV).tar.gz
+  GCC_BUILD_DIR:=gcc-$(PKG_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_6_3_ARC),)
-  PKG_VERSION:=6.3.0
-  PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
-  PKG_SOURCE:=$(PKG_NAME)-$(GCC_VERSION).tar.gz
-  PKG_HASH:=b7223e134199b1a6f71de629da6aa845790e55d28e9892143dde09b1bc878110
-  PKG_REV:=2017.03-release
-  GCC_DIR:=gcc-arc-$(PKG_REV)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
+    PKG_VERSION:=6.3.0
+    PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
+    PKG_SOURCE:=$(PKG_NAME)-$(GCC_VERSION).tar.gz
+    PKG_HASH:=b7223e134199b1a6f71de629da6aa845790e55d28e9892143dde09b1bc878110
+    PKG_REV:=2017.03-release
+    GCC_DIR:=gcc-arc-$(PKG_REV)
+    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
 endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
 
 BUGURL=http://www.lede-project.org/bugs/
-PKGVERSION=OpenWrt GCC $(PKG_VERSION) $(PKG_REV)
+PKGVERSION=OpenWrt GCC $(PKG_VERSION) $(REVISION)
 
 HOST_BUILD_PARALLEL:=1
 

@@ -7,11 +7,16 @@ GCC_CONFIGURE += \
 	--disable-libsanitizer \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
-	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
 	--enable-c99 \
-	--enable-long-long \3:41 21.12.2017
+	--enable-long-long \
+	--enable-threads=posix \
+	--disable-libstdcxx-pch \
+	--enable-libstdcxx-time \
+	--enable-clocale=gnu \
+	--enable-__cxa_atexit \
+	--enable-decimal-float \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL
