@@ -46,7 +46,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2" \
+	CFLAGS="-O2 -g" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
