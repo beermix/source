@@ -28,7 +28,8 @@ include $(INCLUDE_DIR)/hardening.mk
 
 MUSL_CONFIGURE:= \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="$(TARGET_CFLAGS)" \
+	CCFLAGS="$(filter-out -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64,$(TARGET_CFLAGS)) $(MUSL_EXTRA_CFLAGS)" \
+	CPPFLAGS="$(filter-out -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64,$(TARGET_CPPFLAGS))" \
 	CROSS_COMPILE="$(TARGET_CROSS)" \
 	$(HOST_BUILD_DIR)/configure \
 		--prefix=/ \
@@ -36,7 +37,8 @@ MUSL_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
 		--enable-optimize=yes \
-		--enable-static
+		--enable-static \
+		--enable-shared
 
 define Host/Prepare
 	$(call Host/Prepare/Default)

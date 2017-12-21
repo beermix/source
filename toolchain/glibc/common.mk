@@ -46,7 +46,9 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -g $(filter-out -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 $(filter-out -Os -pipe -fno-caller-saves -fno-plt -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CPPFLAGS="" \
+	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -61,6 +63,7 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-kernel=3.2.0 \
+		--enable-obsolete-rpc \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 

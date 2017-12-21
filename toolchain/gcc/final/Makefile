@@ -12,9 +12,6 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--enable-c99 \
 	--enable-long-long \
-	--disable-libstdcxx-pch \
-	--enable-libstdcxx-time \
-	--enable-clocale=gnu \
 	--enable-__cxa_atexit \
 	--enable-decimal-float \
 	--with-libelf=$(TOPDIR)/staging_dir/host
