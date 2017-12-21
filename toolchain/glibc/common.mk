@@ -43,9 +43,9 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2" \
+	CFLAGS="-O2 $(filter-out -Os -fno-caller-saves -fno-plt --param=l1-cache-line-size=64 --param=l1-cache-size=24 --param=l2-cache-size=512,$(call qstrip,$(TARGET_CFLAGS)))" \
 	CPPFLAGS="" \
-	CXXFLAGS="-O2" \
+	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -76,6 +76,10 @@ GLIBC_CONFIGURE:= \
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
+export libc_cv_gnu99_inline=yes
+export libc_cv_initfini_array=yes
+export libc_cv_forced_unwind=yes
+export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
