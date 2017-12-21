@@ -7,6 +7,8 @@ GCC_CONFIGURE += \
 	--with-newlib \
 	--without-headers \
 	--enable-languages=c \
+	--disable-__cxa_atexit \
+	--disable-decimal-float \
 	--disable-libsanitizer \
 	--disable-libssp \
 	--disable-shared \
