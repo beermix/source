@@ -25,7 +25,7 @@ define Host/Install
 	$(CP) $(HOST_BUILD_DIR)/libc/libc_so.a $(TOOLCHAIN_DIR)/lib/
 	( cd $(TOOLCHAIN_DIR) ; \
 		for d in lib usr/lib ; do \
-		  for f in libc.so libpthread.so libgcc_s.so ; do \
+		  for f in libc.so libgcc_s.so ; do \
 		    if [ -f $$$$d/$$$$f -a ! -L $$$$d/$$$$f ] ; then \
 		      $(SED) 's,/usr/lib/,,g;s,/lib/,,g' $$$$d/$$$$f ; \
 		    fi \
