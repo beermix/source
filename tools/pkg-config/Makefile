@@ -19,7 +19,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 unexport PKG_CONFIG
 
-HOST_CONFIGURE_ARGS += --with-internal-glib
+HOST_CONFIGURE_ARGS += --with-internal-glib --disable-silent-rules
 
 ifeq ($(HOST_OS),Darwin)
 HOST_LDFLAGS += -framework CoreFoundation -framework Carbon

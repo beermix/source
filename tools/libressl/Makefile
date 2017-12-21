@@ -1,4 +1,4 @@
-aaa#
+#
 # Copyright (C) 2016-2017 LEDE project
 #
 # This is free software, licensed under the GNU General Public License v2.

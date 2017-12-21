@@ -75,13 +75,14 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-export libc_cv_ssp=no
-export libc_cv_ssp_strong=no
-export ac_cv_header_cpuid_h=yes
-export libc_cv_gnu99_inline=yes
-export libc_cv_initfini_array=yes
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
+libc_cv_forced_unwind=yes
+libc_cv_c_cleanup=yes
+libc_cv_ssp=no
+libc_cv_ssp_strong=no
+ac_cv_header_cpuid_h=yes
+libc_cv_gnu99_inline=yes
+libc_cv_initfini_array=yes
+libc_cv_slibdir=/usr/lib
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo

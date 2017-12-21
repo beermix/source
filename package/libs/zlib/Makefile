@@ -49,7 +49,7 @@ endef
 CONFIGURE_VARS := \
 	$(TARGET_CONFIGURE_OPTS) \
 	LDSHARED="$(TARGET_CC) -shared -Wl,-soname,libz.so.1" \
-	CFLAGS="$(TARGET_CFLAGS) $(FPIC)" \
+	CFLAGS="$(TARGET_CFLAGS) -O3 $(FPIC)" \
 
 CONFIGURE_ARGS := \
 	--prefix=/usr \
