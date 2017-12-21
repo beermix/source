@@ -5,6 +5,7 @@
 # See /LICENSE for more information.
 #
 include $(TOPDIR)/rules.mk
+include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=glibc
 PKG_VERSION:=2.26
@@ -64,7 +65,6 @@ GLIBC_CONFIGURE:= \
 		--with-elf \
 		--with-tls \
 		--with-__thread \
-		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--enable-kernel=3.2.0 \
 		--without-cvs \
 		--without-gd \
@@ -91,7 +91,7 @@ endef
 
 define Host/Configure
 	[ -f $(HOST_BUILD_DIR)/.autoconf ] || { \
-		cd $(HOST_BUILD_DIR)/; \
+		cd $(HOST_BUILD_DIR)/$(GLIBC_PATH); \
 		autoconf --force && \
 		touch $(HOST_BUILD_DIR)/.autoconf; \
 	}
