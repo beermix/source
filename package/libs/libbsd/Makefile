@@ -4,14 +4,13 @@ include $(TOPDIR)/rules.mk
 PKG_BUILD_DEPENDS:=dtach
 
 PKG_NAME:=libbsd
-PKG_VERSION:=0.8.3
+PKG_VERSION:=0.8.6
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://libbsd.freedesktop.org/releases
-#PKG_MD5SUM:=d0870f2de55d59c1c8419f36e8fac150
 
-PKG_LICENSE:=BSD-3c,MIT
+PKG_LICENSE:=BSD-4-Clause
 PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
@@ -35,7 +34,7 @@ define Build/InstallDev
 		$(1)/usr/include
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)/lib/libbsd.so* \
+		$(PKG_INSTALL_DIR)/usr/lib/libbsd.so* \
 		$(1)/lib/
 
 	$(CP) \
@@ -50,7 +49,7 @@ define Package/libbsd/install
 		$(1)/lib
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)/lib/libbsd.so* \
+		$(PKG_INSTALL_DIR)/usr/lib/libbsd.so* \
 		$(1)/lib/
 
 	( cd $(1)/lib ; $(LN) libbsd.so.$(PKG_VERSION) libbsd.so )
