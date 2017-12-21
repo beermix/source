@@ -71,7 +71,8 @@ CONFIGURE_ARGS += \
 	--enable-const \
 	--enable-overwrite \
 	--enable-pc-files \
-	--disable-rpath \
+	--enable-rpath \
+	--disable-rpath-hack \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
