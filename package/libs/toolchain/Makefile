@@ -623,6 +623,7 @@ endif
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
   endef
 
   define Package/ldconfig/install
@@ -752,7 +753,6 @@ else
 		dir=`dirname $$$$file` ; \
 		$(INSTALL_DIR) $(1)/$$$$dir ; \
 		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
-		$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
 	done ; \
 	exit 0
   endef

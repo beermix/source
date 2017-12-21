@@ -46,7 +46,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 $(filter-out -Os -pipe -fno-caller-saves -fno-plt -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
@@ -59,11 +59,21 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/bash \
 		--disable-profile \
 		--disable-werror \
-		--without-gd \
-		--without-cvs \
 		--enable-add-ons \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
+		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--enable-kernel=3.2.0 \
+		--without-cvs \
+		--without-gd \
 		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-lock-elision \
+		--disable-timezone-tools \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
