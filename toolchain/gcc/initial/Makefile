@@ -8,6 +8,8 @@ GCC_CONFIGURE += \
 	--with-sysroot=$(TOOLCHAIN_DIR) \
 	--enable-languages=c \
 	--disable-shared \
+	--disable-__cxa_atexit \
+	--disable-decimal-float \
 	--disable-threads \
 
 define Host/Compile
