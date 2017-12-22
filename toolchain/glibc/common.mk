@@ -45,7 +45,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -g1 $(filter-out -pipe -fomit-frame-pointer -fno-caller-saves -fno-plt,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-march=i686 -mtune=generic -O2 -mno-tls-direct-seg-refs -fno-asynchronous-unwind-tables" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
@@ -63,6 +63,14 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--enable-bind-now \
+		--enable-tunables \
+		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
+		--enable-systemtap \
+		--disable-multi-arch \
+		--without-selinux \
+		--disable-nss-crypt \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 libc_cv_ssp=no
