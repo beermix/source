@@ -10,7 +10,7 @@ PKG_NAME:=glibc
 PKG_VERSION:=2.26
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=41d11b1
+PKG_SOURCE_VERSION:=6cb86fd
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -33,7 +33,7 @@ HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-march=i686 -mtune=generic -O3 $* $(filter-out -O2 -pipe -fno-caller-saves -fomit-frame-pointer -march=bonnell -mtune=bonnell,$(call qstrip,$(TARGET_CFLAGS))) -mno-tls-direct-seg-refs -fno-asynchronous-unwind-tables" \
+	CFLAGS="-march=i686 -mtune=generic -O2 $* $(filter-out -O2 -pipe -fno-caller-saves -fomit-frame-pointer -march=bonnell -mtune=bonnell,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
@@ -43,18 +43,15 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
-		BASH_SHELL=/bin/bash \
+		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
 		--enable-kernel=3.2.0 \
+		--enable-stack-protector=strong \
 		--without-cvs \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-bind-now \
-		--enable-tunables \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
 		--without-selinux \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
