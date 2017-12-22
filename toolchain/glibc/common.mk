@@ -21,12 +21,24 @@ CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
 PATCH_DIR:=$(PATH_PREFIX)/patches
 
 include $(INCLUDE_DIR)/toolchain-build.mk
-include $(INCLUDE_DIR)/target.mk
 
 HOST_STAMP_PREPARED:=$(HOST_BUILD_DIR)/.prepared
 HOST_STAMP_CONFIGURED:=$(CUR_BUILD_DIR)/.configured
 HOST_STAMP_BUILT:=$(CUR_BUILD_DIR)/.built
 HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
+
+ifeq ($(ARCH),mips64)
+  ifdef CONFIG_MIPS64_ABI_N64
+    TARGET_CFLAGS += -mabi=64
+  endif
+  ifdef CONFIG_MIPS64_ABI_N32
+    TARGET_CFLAGS += -mabi=n32
+  endif
+  ifdef CONFIG_MIPS64_ABI_O32
+    TARGET_CFLAGS += -mabi=32
+  endif
+endif
+
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
@@ -34,7 +46,7 @@ HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-march=bonnell -mtune=bonnell -g -O2 -fno-asynchronous-unwind-tables" \
+	CFLAGS="-g $(filter-out -pipe -fno-caller-saves -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
@@ -53,6 +65,17 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--without-selinux \
+		--without-cvs \
+		--disable-sanity-checks \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
+		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
+		--enable-lock-elision \
+		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
