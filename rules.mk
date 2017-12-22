@@ -118,9 +118,11 @@ BIN_DIR:=$(OUTPUT_DIR)/targets/$(BOARD)/$(SUBTARGET)
 INCLUDE_DIR:=$(TOPDIR)/include
 SCRIPT_DIR:=$(TOPDIR)/scripts
 BUILD_DIR_BASE:=$(TOPDIR)/build_dir
+# Entware keeps LIBCV (LIBC version) as a suffix in directory names! Lede has removed it....
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   GCCV:=$(call qstrip,$(CONFIG_GCC_VERSION))
   LIBC:=$(call qstrip,$(CONFIG_LIBC))
+  LIBCV:=$(call qstrip,$(CONFIG_LIBC_VERSION))
   REAL_GNU_TARGET_NAME=$(OPTIMIZE_FOR_CPU)-openwrt-linux$(if $(TARGET_SUFFIX),-$(TARGET_SUFFIX))
   GNU_TARGET_NAME=$(OPTIMIZE_FOR_CPU)-openwrt-linux
   DIR_SUFFIX:=_$(LIBC)$(if $(CONFIG_arm),_eabi)
@@ -168,9 +170,9 @@ TARGET_CFLAGS:=$(TARGET_OPTIMIZATION)$(if $(CONFIG_DEBUG), -g3) $(call qstrip,$(
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_ASFLAGS_DEFAULT = $(TARGET_CFLAGS)
 TARGET_ASFLAGS = $(TARGET_ASFLAGS_DEFAULT)
-TARGET_GCCGOFLAGS = -O2 -pipe -s
+TARGET_GCCGOFLAGS = -g1 -O2
 TARGET_CPPFLAGS:=-I$(STAGING_DIR)/usr/include -I$(STAGING_DIR)/include
-TARGET_LDFLAGS:=-L$(STAGING_DIR)/usr/lib -L$(STAGING_DIR)/lib
+TARGET_LDFLAGS:=-L$(STAGING_DIR)/usr/lib -L$(STAGING_DIR)/lib -Wl,-rpath,/usr/lib -Wl,-rpath-link=$(STAGING_DIR)/usr/lib
 ifneq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 LIBGCC_S_PATH=$(realpath $(wildcard $(call qstrip,$(CONFIG_LIBGCC_ROOT_DIR))/$(call qstrip,$(CONFIG_LIBGCC_FILE_SPEC))))
 LIBGCC_S=$(if $(LIBGCC_S_PATH),-L$(dir $(LIBGCC_S_PATH)) -lgcc_s)
@@ -179,8 +181,37 @@ else
 LIBGCC_A=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/gcc/*/*/libgcc.a))
 LIBGCC_S=$(if $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so),-L$(TOOLCHAIN_DIR)/lib -lgcc_s,$(LIBGCC_A))
 endif
-LIBRPC=-lrpc
-LIBRPC_DEPENDS=+librpc
+#
+# glibc does not have librpc, so we set it only for uclibc
+# dynamic linker depends on libc and arch. it is set for the targets we compile
+# may be it is better to patch gcc & glibc to set the path of dynamic linker ????
+#
+#LIBRPC=-lrpc
+#LIBRPC_DEPENDS=+librpc
+
+ifeq ($(LIBC),uClibc)
+DYNLINKER=ld-uClibc.so.0
+endif
+
+ifeq  ($(LIBC),glibc)
+  ifeq ($(ARCH),arm)
+    DYNLINKER=ld-linux.so.3
+  endif
+  ifeq ($(ARCH),i386)
+    DYNLINKER=ld-linux.so.2
+  endif
+  ifeq ($(ARCH),x86_64)
+    DYNLINKER=ld-linux-x86-64.so.2
+  endif
+  ifeq ($(ARCH),mipsel)
+    DYNLINKER=ld.so.1
+  endif
+  ifeq ($(ARCH),mips)
+    DYNLINKER=ld.so.1
+  endif
+endif
+TARGET_LDFLAGS+= -Wl,--dynamic-linker=/opt/lib/$(DYNLINKER)
+TARGET_GCCGOFLAGS+= -Wl,--dynamic-linker=/opt/lib/$(DYNLINKER) -Wl,-rpath=/opt/lib
 
 ifeq ($(CONFIG_ARCH_64BIT),y)
   LIB_SUFFIX:=64
@@ -225,8 +256,10 @@ ifeq ($(CONFIG_SOFT_FLOAT),y)
   SOFT_FLOAT_CONFIG_OPTION:=--with-float=soft
   ifeq ($(CONFIG_arm),y)
     TARGET_CFLAGS+= -mfloat-abi=soft
+    TARGET_GCCGOFLAGS+= -mfloat-abi=soft
   else
     TARGET_CFLAGS+= -msoft-float
+    TARGET_GCCGOFLAGS+= -msoft-float
   endif
 else
   SOFT_FLOAT_CONFIG_OPTION:=

@@ -125,7 +125,7 @@ CONFIG_EXTERNAL_CPIO=""
 # CONFIG_TARGET_ROOTFS_EXT4FS is not set
 # CONFIG_TARGET_ROOTFS_ISO is not set
 CONFIG_TARGET_ROOTFS_SQUASHFS=y
-CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
+CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=256
 CONFIG_TARGET_UBIFS_FREE_SPACE_FIXUP=y
 CONFIG_TARGET_UBIFS_JOURNAL_SIZE=""
 CONFIG_GRUB_IMAGES=y
@@ -3155,11 +3155,18 @@ CONFIG_PACKAGE_kmod-sched-core=y
 #
 # Go
 #
-# CONFIG_PACKAGE_gotty is not set
+CONFIG_PACKAGE_dnsbench=y
+# CONFIG_PACKAGE_go-shadowsocks2 is not set
+# CONFIG_PACKAGE_gopeerflix is not set
+CONFIG_PACKAGE_gotty=y
+# CONFIG_PACKAGE_grimd is not set
 # CONFIG_PACKAGE_rclone is not set
+# CONFIG_PACKAGE_shadowsocks-local is not set
+# CONFIG_PACKAGE_shadowsocks-server is not set
 # CONFIG_PACKAGE_shell2http is not set
-# CONFIG_PACKAGE_speedtest-go is not set
-# CONFIG_PACKAGE_syncthing is not set
+CONFIG_PACKAGE_speedtest=y
+CONFIG_PACKAGE_speedtest-go=y
+CONFIG_PACKAGE_syncthing=y
 
 #
 # Java
@@ -5301,6 +5308,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_ulogd is not set
 # CONFIG_PACKAGE_umbim is not set
 # CONFIG_PACKAGE_umdns is not set
+# CONFIG_PACKAGE_usbip is not set
 # CONFIG_PACKAGE_vallumd is not set
 # CONFIG_PACKAGE_vncrepeater is not set
 # CONFIG_PACKAGE_vnstat is not set
