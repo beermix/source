@@ -44,35 +44,21 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
-		BASH_SHELL=/bin/sh \
+		BASH_SHELL=/bin/bash \
 		--disable-profile \
 		--disable-werror \
 		--enable-kernel=3.2.0 \
 		--enable-stack-protector=strong \
-		--without-cvs \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--without-selinux \
-		--without-cvs \
-		--disable-sanity-checks \
-		--enable-bind-now \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--disable-build-nscd \
-		--disable-nscd \
-		--enable-lock-elision \
-		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-libc_cv_ssp=no
-libc_cv_ssp_strong=no
-ac_cv_header_cpuid_h=yes
-libc_cv_gnu99_inline=yes
-libc_cv_initfini_array=yes
+export libc_cv_ssp=no
+export libc_cv_ssp_strong=no
+export ac_cv_header_cpuid_h=yes
+export libc_cv_gnu99_inline=yes
+export libc_cv_initfini_array=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
