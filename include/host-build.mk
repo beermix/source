@@ -66,8 +66,7 @@ HOST_CONFIGURE_ARGS = \
 	--exec-prefix=$(HOST_BUILD_PREFIX) \
 	--sysconfdir=$(HOST_BUILD_PREFIX)/etc \
 	--localstatedir=$(HOST_BUILD_PREFIX)/var \
-	--sbindir=$(HOST_BUILD_PREFIX)/bin \
-	--enable-silent-rules
+	--sbindir=$(HOST_BUILD_PREFIX)/bin
 
 HOST_MAKE_VARS = \
 	CFLAGS="$(HOST_CFLAGS)" \
