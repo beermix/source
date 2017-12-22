@@ -1,4 +1,0 @@
-extend-diff-ignore=bootstrap.sh
-extend-diff-ignore=release.nix
-extend-diff-ignore=version
-extend-diff-ignore=BUGS
