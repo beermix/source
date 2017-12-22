@@ -33,7 +33,7 @@ HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-march=i686 -mtune=generic -O2 $* $(filter-out -O2 -pipe -fno-caller-saves -fomit-frame-pointer -march=bonnell -mtune=bonnell,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
+	CFLAGS="-march=i686 -mtune=generic -O2 $(filter-out -O2 -pipe -fno-caller-saves -fomit-frame-pointer -march=bonnell -mtune=bonnell,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
