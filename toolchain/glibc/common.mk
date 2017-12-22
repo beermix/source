@@ -21,6 +21,7 @@ CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
 PATCH_DIR:=$(PATH_PREFIX)/patches
 
 include $(INCLUDE_DIR)/toolchain-build.mk
+include $(INCLUDE_DIR)/target.mk
 
 HOST_STAMP_PREPARED:=$(HOST_BUILD_DIR)/.prepared
 HOST_STAMP_CONFIGURED:=$(CUR_BUILD_DIR)/.configured
@@ -33,7 +34,7 @@ HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-march=bonnell -mtune=bonnell -O2 $(filter-out -O2 -pipe -fno-caller-saves -fomit-frame-pointer -march=bonnell -mtune=bonnell,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
+	CFLAGS="-march=bonnell -mtune=bonnell -g -O2 -fno-asynchronous-unwind-tables" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
