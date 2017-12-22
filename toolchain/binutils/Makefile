@@ -56,11 +56,9 @@ BINUTILS_CONFIGURE:= \
 		--disable-sim \
 		--disable-gdb \
 		--enable-libssp \
-		--enable-threads \
 		--with-pic \
 		--enable-relro \
 		--enable-poison-system-directories \
-		--with-system-zlib \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 
@@ -84,15 +82,15 @@ define Host/Configure
 endef
 
 define Host/Compile
-	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
+	+$(MAKE) MAKEINFO=true $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
 endef
 
 define Host/Install
 	mkdir -p $(TOOLCHAIN_DIR)/initial
-	$(MAKE) -C $(HOST_BUILD_DIR) \
+	$(MAKE) MAKEINFO=true -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR)/initial \
 		install
-	$(MAKE) -C $(HOST_BUILD_DIR) \
+	$(MAKE) MAKEINFO=true -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR) \
 		install
 	$(call FixupLibdir,$(TOOLCHAIN_DIR)/initial)
