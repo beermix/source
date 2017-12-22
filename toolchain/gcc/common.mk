@@ -121,6 +121,8 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		$(GRAPHITE_CONFIGURE) \
+		--disable-nls \
+		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
