@@ -61,17 +61,10 @@ GLIBC_CONFIGURE:= \
 		--enable-kernel=3.2.0 \
 		--without-cvs \
 		--without-gd \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--disable-build-nscd \
-		--disable-nscd \
-		--enable-lock-elision \
-		--disable-timezone-tools \
-		--disable-debug \
+		--without-cvs \
+		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-libc_cv_forced_unwind=yes
-libc_cv_c_cleanup=yes
 libc_cv_ssp=no
 libc_cv_ssp_strong=no
 ac_cv_header_cpuid_h=yes
