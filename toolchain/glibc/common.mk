@@ -61,28 +61,14 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--disable-werror \
 		--enable-kernel=3.2.0 \
-		--enable-stack-protector=strong \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--without-selinux \
-		--without-cvs \
-		--disable-sanity-checks \
-		--enable-bind-now \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--enable-lock-elision \
-		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
-export libc_cv_gnu99_inline=yes
-export libc_cv_initfini_array=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
