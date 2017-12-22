@@ -45,7 +45,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 $(filter-out -march=bonnell --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -mtune=bonnell -fomit-frame-pointer -fno-caller-saves -fno-plt,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -g1 $(filter-out -pipe -fomit-frame-pointer -fno-caller-saves -fno-plt,$(call qstrip,$(TARGET_CFLAGS)))" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \

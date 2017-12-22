@@ -1,5 +1,5 @@
 diff --git a/config/acinclude.m4 b/config/acinclude.m4
-index 8242b2c7a8a..f73b4829cc3 100644
+index 8242b2c7a..6ba1c9bd8 100644
 --- a/config/acinclude.m4
 +++ b/config/acinclude.m4
 @@ -24,7 +24,7 @@ dnl normal versions of a library), tasteless as that idea is.
@@ -7,7 +7,7 @@ index 8242b2c7a8a..f73b4829cc3 100644
      CXXFLAGS="$ac_save_CXXFLAGS"
    elif test $ac_cv_prog_cxx_g = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-O2"
    fi
@@ -16,12 +16,12 @@ index 8242b2c7a8a..f73b4829cc3 100644
      CFLAGS="$ac_save_CFLAGS"
    elif test $ac_cv_prog_cc_g = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-O2"
    fi
 diff --git a/configure b/configure
-index 32a38633ad8..ab9c6c3ee8f 100755
+index 32a38633a..2e7425fbf 100755
 --- a/configure
 +++ b/configure
 @@ -4644,7 +4644,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -29,7 +29,7 @@ index 32a38633ad8..ab9c6c3ee8f 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -38,7 +38,7 @@ index 32a38633ad8..ab9c6c3ee8f 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
@@ -47,7 +47,7 @@ index 32a38633ad8..ab9c6c3ee8f 100755
  if test "x$CFLAGS_FOR_TARGET" = x; then
    if test "x${is_cross_compiler}" = xyes; then
 -    CFLAGS_FOR_TARGET="-g -O2"
-+    CFLAGS_FOR_TARGET="-O2 -pipe"
++    CFLAGS_FOR_TARGET="-O2"
    else
      CFLAGS_FOR_TARGET=$CFLAGS
      case " $CFLAGS " in
@@ -56,12 +56,12 @@ index 32a38633ad8..ab9c6c3ee8f 100755
  if test "x$CXXFLAGS_FOR_TARGET" = x; then
    if test "x${is_cross_compiler}" = xyes; then
 -    CXXFLAGS_FOR_TARGET="-g -O2"
-+    CXXFLAGS_FOR_TARGET="-O2 -pipe"
++    CXXFLAGS_FOR_TARGET="-O2"
    else
      CXXFLAGS_FOR_TARGET=$CXXFLAGS
      case " $CXXFLAGS " in
 diff --git a/configure.ac b/configure.ac
-index 12377499295..9ac80b4a680 100644
+index 123774992..f3fe3a879 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -2300,7 +2300,7 @@ AC_SUBST(DEBUG_PREFIX_CFLAGS_FOR_TARGET)
@@ -69,7 +69,7 @@ index 12377499295..9ac80b4a680 100644
  if test "x$CFLAGS_FOR_TARGET" = x; then
    if test "x${is_cross_compiler}" = xyes; then
 -    CFLAGS_FOR_TARGET="-g -O2"
-+    CFLAGS_FOR_TARGET="-O2 -pipe"
++    CFLAGS_FOR_TARGET="-O2"
    else
      CFLAGS_FOR_TARGET=$CFLAGS
      case " $CFLAGS " in
@@ -78,12 +78,12 @@ index 12377499295..9ac80b4a680 100644
  if test "x$CXXFLAGS_FOR_TARGET" = x; then
    if test "x${is_cross_compiler}" = xyes; then
 -    CXXFLAGS_FOR_TARGET="-g -O2"
-+    CXXFLAGS_FOR_TARGET="-O2 -pipe"
++    CXXFLAGS_FOR_TARGET="-O2"
    else
      CXXFLAGS_FOR_TARGET=$CXXFLAGS
      case " $CXXFLAGS " in
 diff --git a/fixincludes/configure b/fixincludes/configure
-index ab97983f327..9318351babd 100755
+index ab97983f3..ef64a505f 100755
 --- a/fixincludes/configure
 +++ b/fixincludes/configure
 @@ -3924,7 +3924,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -91,12 +91,12 @@ index ab97983f327..9318351babd 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/gcc/configure b/gcc/configure
-index 043a62b0de9..4547eacf373 100755
+index 043a62b0d..84c2971aa 100755
 --- a/gcc/configure
 +++ b/gcc/configure
 @@ -4414,7 +4414,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -104,7 +104,7 @@ index 043a62b0de9..4547eacf373 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -113,12 +113,12 @@ index 043a62b0de9..4547eacf373 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/gnattools/configure b/gnattools/configure
-index 8c75cc06eb5..fe458f54bc8 100755
+index 8c75cc06e..2d4eb6d40 100755
 --- a/gnattools/configure
 +++ b/gnattools/configure
 @@ -2755,7 +2755,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -126,12 +126,12 @@ index 8c75cc06eb5..fe458f54bc8 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/gotools/config/go.m4 b/gotools/config/go.m4
-index 2718276a39a..6beca87652e 100644
+index 2718276a3..1122b43c5 100644
 --- a/gotools/config/go.m4
 +++ b/gotools/config/go.m4
 @@ -87,6 +87,6 @@ ac_compiler=$[2]
@@ -139,11 +139,11 @@ index 2718276a39a..6beca87652e 100644
  m4_expand_once([_AC_COMPILER_EXEEXT])[]dnl
  m4_expand_once([_AC_COMPILER_OBJEXT])[]dnl
 -GOCFLAGS="-g -O2"
-+GOCFLAGS="-O2 -pipe"
++GOCFLAGS="-O2"
  AC_LANG_POP(Go)dnl
  ])# AC_PROG_GO
 diff --git a/gotools/configure b/gotools/configure
-index d144125c040..c74bab40fd0 100755
+index d144125c0..254cbf1a1 100755
 --- a/gotools/configure
 +++ b/gotools/configure
 @@ -3259,7 +3259,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -151,7 +151,7 @@ index d144125c040..c74bab40fd0 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -160,12 +160,12 @@ index d144125c040..c74bab40fd0 100755
    $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
    test $ac_status = 0; }
 -GOCFLAGS="-g -O2"
-+GOCFLAGS="-O2 -pipe"
++GOCFLAGS="-O2"
  ac_ext=c
  ac_cpp='$CPP $CPPFLAGS'
  ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 diff --git a/intl/configure b/intl/configure
-index d7af03fc71d..d0fec7d0fc1 100755
+index d7af03fc7..705b7e05b 100755
 --- a/intl/configure
 +++ b/intl/configure
 @@ -3288,7 +3288,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -173,12 +173,12 @@ index d7af03fc71d..d0fec7d0fc1 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libada/configure b/libada/configure
-index 17a52c81db2..2eef0b8449d 100755
+index 17a52c81d..a1009f836 100755
 --- a/libada/configure
 +++ b/libada/configure
 @@ -2685,7 +2685,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -186,12 +186,12 @@ index 17a52c81db2..2eef0b8449d 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libatomic/configure b/libatomic/configure
-index c05fc9d1141..7ca82cd5239 100755
+index c05fc9d11..17090cf18 100755
 --- a/libatomic/configure
 +++ b/libatomic/configure
 @@ -3880,7 +3880,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -199,12 +199,12 @@ index c05fc9d1141..7ca82cd5239 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libbacktrace/configure b/libbacktrace/configure
-index ee90bc6dea0..fbbeeba7fef 100755
+index ee90bc6de..13d806242 100755
 --- a/libbacktrace/configure
 +++ b/libbacktrace/configure
 @@ -3287,7 +3287,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -212,7 +212,7 @@ index ee90bc6dea0..fbbeeba7fef 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -221,12 +221,12 @@ index ee90bc6dea0..fbbeeba7fef 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libcc1/configure b/libcc1/configure
-index d6f480fe930..ffdd5498ff1 100755
+index d6f480fe9..03c8353ee 100755
 --- a/libcc1/configure
 +++ b/libcc1/configure
 @@ -3164,7 +3164,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -234,7 +234,7 @@ index d6f480fe930..ffdd5498ff1 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -243,12 +243,12 @@ index d6f480fe930..ffdd5498ff1 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libcilkrts/configure b/libcilkrts/configure
-index 3cc8c999733..5df6ac4876c 100644
+index 3cc8c9997..b967de08e 100644
 --- a/libcilkrts/configure
 +++ b/libcilkrts/configure
 @@ -3733,7 +3733,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -256,7 +256,7 @@ index 3cc8c999733..5df6ac4876c 100644
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -265,7 +265,7 @@ index 3cc8c999733..5df6ac4876c 100644
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -274,12 +274,12 @@ index 3cc8c999733..5df6ac4876c 100644
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libcpp/configure b/libcpp/configure
-index 12c1907ed40..68715010668 100755
+index 12c1907ed..3f8f0a53a 100755
 --- a/libcpp/configure
 +++ b/libcpp/configure
 @@ -3485,7 +3485,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -287,7 +287,7 @@ index 12c1907ed40..68715010668 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -296,12 +296,12 @@ index 12c1907ed40..68715010668 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libdecnumber/configure b/libdecnumber/configure
-index 4cb732e80d4..f54b8fa60a0 100755
+index 4cb732e80..6ce413c1f 100755
 --- a/libdecnumber/configure
 +++ b/libdecnumber/configure
 @@ -2937,7 +2937,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -309,12 +309,12 @@ index 4cb732e80d4..f54b8fa60a0 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libffi/configure b/libffi/configure
-index 74b747b3b7e..24786766228 100755
+index 74b747b3b..453f87ed7 100755
 --- a/libffi/configure
 +++ b/libffi/configure
 @@ -3967,7 +3967,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -322,7 +322,7 @@ index 74b747b3b7e..24786766228 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -331,12 +331,12 @@ index 74b747b3b7e..24786766228 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libgcc/configure b/libgcc/configure
-index 9a7eb8446bb..b375d06746b 100644
+index 9a7eb8446..1ffcd5180 100644
 --- a/libgcc/configure
 +++ b/libgcc/configure
 @@ -3814,7 +3814,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -344,12 +344,12 @@ index 9a7eb8446bb..b375d06746b 100644
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libgfortran/configure b/libgfortran/configure
-index 81238fcb79c..630b0c613a1 100755
+index 81238fcb7..7772c6177 100755
 --- a/libgfortran/configure
 +++ b/libgfortran/configure
 @@ -4230,7 +4230,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -357,7 +357,7 @@ index 81238fcb79c..630b0c613a1 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -366,7 +366,7 @@ index 81238fcb79c..630b0c613a1 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -375,12 +375,12 @@ index 81238fcb79c..630b0c613a1 100755
  elif test $ac_cv_prog_fc_g = yes; then
    if test "x$ac_cv_fc_compiler_gnu" = xyes; then
 -    FCFLAGS="-g -O2"
-+    FCFLAGS="-O2 -pipe"
++    FCFLAGS="-O2"
    else
      FCFLAGS="-g"
    fi
 diff --git a/libgo/config/go.m4 b/libgo/config/go.m4
-index 65a27cbdf00..9dbc1cc61f9 100644
+index 65a27cbdf..5a8ae2a17 100644
 --- a/libgo/config/go.m4
 +++ b/libgo/config/go.m4
 @@ -87,6 +87,6 @@ ac_compiler=$[2]
@@ -388,11 +388,11 @@ index 65a27cbdf00..9dbc1cc61f9 100644
  m4_expand_once([_AC_COMPILER_EXEEXT])[]dnl
  m4_expand_once([_AC_COMPILER_OBJEXT])[]dnl
 -GOCFLAGS="-g -O2"
-+GOCFLAGS="-O2 -pipe"
++GOCFLAGS="-O2"
  AC_LANG_POP(Go)dnl
  ])# AC_PROG_GO
 diff --git a/libgo/config/libtool.m4 b/libgo/config/libtool.m4
-index f7005947454..d3043ea8b57 100644
+index f70059474..db6093589 100644
 --- a/libgo/config/libtool.m4
 +++ b/libgo/config/libtool.m4
 @@ -7126,7 +7126,7 @@ AC_DEFUN([LT_PROG_GCJ],
@@ -400,12 +400,12 @@ index f7005947454..d3043ea8b57 100644
    [m4_ifdef([A][M_PROG_GCJ], [A][M_PROG_GCJ],
      [AC_CHECK_TOOL(GCJ, gcj,)
 -      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-g -O2"
-+      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-O2 -pipe"
++      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-O2"
        AC_SUBST(GCJFLAGS)])])[]dnl
  ])
  
 diff --git a/libgo/configure b/libgo/configure
-index 1d3d714fc05..0d6e6a71fa0 100755
+index 1d3d714fc..bec1ce457 100755
 --- a/libgo/configure
 +++ b/libgo/configure
 @@ -3800,7 +3800,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -413,7 +413,7 @@ index 1d3d714fc05..0d6e6a71fa0 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -422,12 +422,12 @@ index 1d3d714fc05..0d6e6a71fa0 100755
    $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
    test $ac_status = 0; }
 -GOCFLAGS="-g -O2"
-+GOCFLAGS="-O2 -pipe"
++GOCFLAGS="-O2"
  ac_ext=c
  ac_cpp='$CPP $CPPFLAGS'
  ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 diff --git a/libgomp/configure b/libgomp/configure
-index b7e9f40b852..22f05eab961 100755
+index b7e9f40b8..f481f2bb8 100755
 --- a/libgomp/configure
 +++ b/libgomp/configure
 @@ -4033,7 +4033,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -435,7 +435,7 @@ index b7e9f40b852..22f05eab961 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -444,12 +444,12 @@ index b7e9f40b852..22f05eab961 100755
  elif test $ac_cv_prog_fc_g = yes; then
    if test "x$ac_cv_fc_compiler_gnu" = xyes; then
 -    FCFLAGS="-g -O2"
-+    FCFLAGS="-O2 -pipe"
++    FCFLAGS="-O2"
    else
      FCFLAGS="-g"
    fi
 diff --git a/libhsail-rt/configure b/libhsail-rt/configure
-index a490125f5b3..42b0cb0cf2d 100755
+index a490125f5..962e0e3d0 100755
 --- a/libhsail-rt/configure
 +++ b/libhsail-rt/configure
 @@ -3707,7 +3707,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -457,7 +457,7 @@ index a490125f5b3..42b0cb0cf2d 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -466,12 +466,12 @@ index a490125f5b3..42b0cb0cf2d 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libiberty/configure b/libiberty/configure
-index 868793558f0..2ee9d989fae 100755
+index 868793558..3dfc31ce4 100755
 --- a/libiberty/configure
 +++ b/libiberty/configure
 @@ -3619,7 +3619,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -479,12 +479,12 @@ index 868793558f0..2ee9d989fae 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libitm/configure b/libitm/configure
-index 775f370fbb5..6658b389e3e 100644
+index 775f370fb..ba0aa5af2 100644
 --- a/libitm/configure
 +++ b/libitm/configure
 @@ -4066,7 +4066,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -492,7 +492,7 @@ index 775f370fbb5..6658b389e3e 100644
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -501,12 +501,12 @@ index 775f370fbb5..6658b389e3e 100644
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libmpx/configure b/libmpx/configure
-index 853993a522f..443cc17b5ee 100644
+index 853993a52..9d7be3185 100644
 --- a/libmpx/configure
 +++ b/libmpx/configure
 @@ -3565,7 +3565,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -514,7 +514,7 @@ index 853993a522f..443cc17b5ee 100644
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -523,12 +523,12 @@ index 853993a522f..443cc17b5ee 100644
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libobjc/configure b/libobjc/configure
-index abf5aed71cf..5603f288298 100755
+index abf5aed71..8579f4155 100755
 --- a/libobjc/configure
 +++ b/libobjc/configure
 @@ -3205,7 +3205,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -536,12 +536,12 @@ index abf5aed71cf..5603f288298 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/liboffloadmic/configure b/liboffloadmic/configure
-index e22b214ddbc..e6caa043443 100644
+index e22b214dd..d1a5bd997 100644
 --- a/liboffloadmic/configure
 +++ b/liboffloadmic/configure
 @@ -3615,7 +3615,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -549,7 +549,7 @@ index e22b214ddbc..e6caa043443 100644
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -558,12 +558,12 @@ index e22b214ddbc..e6caa043443 100644
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/liboffloadmic/plugin/configure b/liboffloadmic/plugin/configure
-index 8b8c041d2bf..40b48fd76aa 100644
+index 8b8c041d2..e4cf7f12c 100644
 --- a/liboffloadmic/plugin/configure
 +++ b/liboffloadmic/plugin/configure
 @@ -3527,7 +3527,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -571,7 +571,7 @@ index 8b8c041d2bf..40b48fd76aa 100644
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -580,12 +580,12 @@ index 8b8c041d2bf..40b48fd76aa 100644
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libquadmath/configure b/libquadmath/configure
-index d2f13bf7751..f3550418394 100755
+index d2f13bf77..7de310ea1 100755
 --- a/libquadmath/configure
 +++ b/libquadmath/configure
 @@ -3662,7 +3662,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -593,7 +593,7 @@ index d2f13bf7751..f3550418394 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -602,12 +602,12 @@ index d2f13bf7751..f3550418394 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libsanitizer/configure b/libsanitizer/configure
-index 8e0c47ea838..38de2177843 100755
+index 8e0c47ea8..8e6cfd55b 100755
 --- a/libsanitizer/configure
 +++ b/libsanitizer/configure
 @@ -3344,7 +3344,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -615,7 +615,7 @@ index 8e0c47ea838..38de2177843 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -624,7 +624,7 @@ index 8e0c47ea838..38de2177843 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -633,12 +633,12 @@ index 8e0c47ea838..38de2177843 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libssp/configure b/libssp/configure
-index b14e922e6f1..74f26b7f1df 100755
+index b14e922e6..9eea8dcbd 100755
 --- a/libssp/configure
 +++ b/libssp/configure
 @@ -3603,7 +3603,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -646,12 +646,12 @@ index b14e922e6f1..74f26b7f1df 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/libstdc++-v3/configure b/libstdc++-v3/configure
-index e70fdd6421f..4237459fe40 100755
+index e70fdd642..b1fe2f43f 100755
 --- a/libstdc++-v3/configure
 +++ b/libstdc++-v3/configure
 @@ -4316,7 +4316,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -659,7 +659,7 @@ index e70fdd6421f..4237459fe40 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -668,12 +668,12 @@ index e70fdd6421f..4237459fe40 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/libtool.m4 b/libtool.m4
-index 24d13f34409..1f5e79e52a8 100644
+index 24d13f344..ebae02ced 100644
 --- a/libtool.m4
 +++ b/libtool.m4
 @@ -7052,7 +7052,7 @@ AC_DEFUN([LT_PROG_GCJ],
@@ -681,12 +681,12 @@ index 24d13f34409..1f5e79e52a8 100644
    [m4_ifdef([A][M_PROG_GCJ], [A][M_PROG_GCJ],
      [AC_CHECK_TOOL(GCJ, gcj,)
 -      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-g -O2"
-+      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-O2 -pipe"
++      test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-O2"
        AC_SUBST(GCJFLAGS)])])[]dnl
  ])
  
 diff --git a/libvtv/configure b/libvtv/configure
-index c3bed2dfc70..4d09e6a9856 100755
+index c3bed2dfc..0aaeda47f 100755
 --- a/libvtv/configure
 +++ b/libvtv/configure
 @@ -3215,7 +3215,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -694,7 +694,7 @@ index c3bed2dfc70..4d09e6a9856 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -703,7 +703,7 @@ index c3bed2dfc70..4d09e6a9856 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -712,12 +712,12 @@ index c3bed2dfc70..4d09e6a9856 100755
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
 -    CXXFLAGS="-g -O2"
-+    CXXFLAGS="-O2 -pipe"
++    CXXFLAGS="-O2"
    else
      CXXFLAGS="-g"
    fi
 diff --git a/lto-plugin/configure b/lto-plugin/configure
-index cdea9eac3ee..cf8f4caff64 100755
+index cdea9eac3..0f031e9ce 100755
 --- a/lto-plugin/configure
 +++ b/lto-plugin/configure
 @@ -3717,7 +3717,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -725,7 +725,7 @@ index cdea9eac3ee..cf8f4caff64 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
@@ -734,12 +734,12 @@ index cdea9eac3ee..cf8f4caff64 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
 diff --git a/zlib/configure b/zlib/configure
-index ee5527c4a40..a2459062e62 100755
+index ee5527c4a..055b96d9f 100755
 --- a/zlib/configure
 +++ b/zlib/configure
 @@ -3597,7 +3597,7 @@ if test "$ac_test_CFLAGS" = set; then
@@ -747,7 +747,7 @@ index ee5527c4a40..a2459062e62 100755
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
 -    CFLAGS="-g -O2"
-+    CFLAGS="-O2 -pipe"
++    CFLAGS="-O2"
    else
      CFLAGS="-g"
    fi
