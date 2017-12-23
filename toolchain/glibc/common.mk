@@ -47,11 +47,14 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/bash \
 		--disable-profile \
+		--disable-werror \
 		--disable-sanity-checks \
 		--enable-add-ons \
 		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--enable-kernel=3.2.0 \
-		--enable-tunables \
 		--without-cvs \
 		--without-gd \
 		--enable-obsolete-rpc \
@@ -59,19 +62,13 @@ GLIBC_CONFIGURE:= \
 		--disable-build-nscd \
 		--disable-nscd \
 		--enable-lock-elision \
-		--disable-werror \
-		--without-selinux \
-		--disable-nss-crypt \
 		--disable-timezone-tools \
+		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export libc_cv_forced_unwind=yes
-export libc_cv_cc_with_libunwind=yes
-export libc_cv_c_cleanup=yes
-export libc_cv_gnu99_inline=yes
-export libc_cv_initfini_array=yes
+export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo

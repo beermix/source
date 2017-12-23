@@ -81,15 +81,15 @@ define Host/Configure
 endef
 
 define Host/Compile
-	+$(MAKE) MAKEINFO=true $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
+	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
 endef
 
 define Host/Install
 	mkdir -p $(TOOLCHAIN_DIR)/initial
-	$(MAKE) MAKEINFO=true -C $(HOST_BUILD_DIR) \
+	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR)/initial \
 		install
-	$(MAKE) MAKEINFO=true -C $(HOST_BUILD_DIR) \
+	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR) \
 		install
 	$(call FixupLibdir,$(TOOLCHAIN_DIR)/initial)

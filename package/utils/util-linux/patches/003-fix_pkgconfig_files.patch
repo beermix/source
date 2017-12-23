@@ -1,76 +1,75 @@
---- a/libuuid/Makemodule.am
-+++ b/libuuid/Makemodule.am
-@@ -4,7 +4,6 @@ include libuuid/man/Makemodule.am
- include libuuid/src/Makemodule.am
+From 4856beb5186760419bafd1f5686d6492d2d36907 Mon Sep 17 00:00:00 2001
+From: Stefan Saraev <stefan@saraev.ca>
+Date: Sat, 16 Aug 2014 13:40:57 +0300
+Subject: [PATCH] fix pkgconf
+
+---
+ libblkid/blkid.pc.in         |    6 +++---
+ libmount/mount.pc.in         |    6 +++---
+ libsmartcols/smartcols.pc.in |    6 +++---
+ libuuid/uuid.pc.in           |    6 +++---
+ 4 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/libblkid/blkid.pc.in b/libblkid/blkid.pc.in
+index 40ec8a9..056ae64 100644
+--- a/libblkid/blkid.pc.in
++++ b/libblkid/blkid.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@usrlib_execdir@
+-includedir=@includedir@
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
  
- pkgconfig_DATA += libuuid/uuid.pc
--PATHFILES      += libuuid/uuid.pc
- EXTRA_DIST     += libuuid/COPYING
+ Name: blkid
+ Description: Block device id library
+diff --git a/libmount/mount.pc.in b/libmount/mount.pc.in
+index 2c32797..c8112c6 100644
+--- a/libmount/mount.pc.in
++++ b/libmount/mount.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@usrlib_execdir@
+-includedir=@includedir@
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
  
- endif # BUILD_LIBUUID
---- a/configure.ac
-+++ b/configure.ac
-@@ -2255,18 +2255,23 @@ AC_CONFIG_HEADERS([config.h])
- #
- AC_CONFIG_FILES([
- Makefile
-+libblkid/blkid.pc
- libblkid/docs/Makefile
- libblkid/docs/version.xml
- libblkid/src/blkid.h
-+libfdisk/fdisk.pc
- libfdisk/docs/Makefile
- libfdisk/docs/version.xml
- libfdisk/src/libfdisk.h
-+libmount/mount.pc
- libmount/docs/Makefile
- libmount/docs/version.xml
- libmount/src/libmount.h
-+libsmartcols/smartcols.pc
- libsmartcols/docs/Makefile
- libsmartcols/docs/version.xml
- libsmartcols/src/libsmartcols.h
-+libuuid/uuid.pc
- po/Makefile.in
- ])
+ Name: mount
+ Description: mount library
+diff --git a/libsmartcols/smartcols.pc.in b/libsmartcols/smartcols.pc.in
+index 0b16739..8f474ef 100644
+--- a/libsmartcols/smartcols.pc.in
++++ b/libsmartcols/smartcols.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@usrlib_execdir@
+-includedir=@includedir@
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
  
---- a/libblkid/Makemodule.am
-+++ b/libblkid/Makemodule.am
-@@ -9,7 +9,6 @@ SUBDIRS += libblkid/docs
- endif
+ Name: smartcols
+ Description: table or tree library
+diff --git a/libuuid/uuid.pc.in b/libuuid/uuid.pc.in
+index 875de19..ef1009e 100644
+--- a/libuuid/uuid.pc.in
++++ b/libuuid/uuid.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@usrlib_execdir@
+-includedir=@includedir@
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
  
- pkgconfig_DATA += libblkid/blkid.pc
--PATHFILES      += libblkid/blkid.pc
- dist_man_MANS  += libblkid/libblkid.3
- EXTRA_DIST     += libblkid/libblkid.3 libblkid/COPYING
- 
---- a/libmount/Makemodule.am
-+++ b/libmount/Makemodule.am
-@@ -9,7 +9,6 @@ SUBDIRS += libmount/docs
- endif
- 
- pkgconfig_DATA += libmount/mount.pc
--PATHFILES      += libmount/mount.pc
- EXTRA_DIST     += libmount/COPYING
- 
- endif # BUILD_LIBMOUNT
---- a/libsmartcols/Makemodule.am
-+++ b/libsmartcols/Makemodule.am
-@@ -9,7 +9,6 @@ SUBDIRS += libsmartcols/docs
- endif
- 
- pkgconfig_DATA += libsmartcols/smartcols.pc
--PATHFILES      += libsmartcols/smartcols.pc
- EXTRA_DIST     += libsmartcols/COPYING
- 
- endif # BUILD_LIBSMARTCOLS
---- a/libfdisk/Makemodule.am
-+++ b/libfdisk/Makemodule.am
-@@ -9,7 +9,6 @@ SUBDIRS += libfdisk/docs
- endif
- 
- pkgconfig_DATA += libfdisk/fdisk.pc
--PATHFILES      += libfdisk/fdisk.pc
- EXTRA_DIST     += libfdisk/COPYING
- 
- endif # BUILD_LIBFDISK
+ Name: uuid
+ Description: Universally unique id library
+-- 
+1.7.2.5
+
