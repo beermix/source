@@ -21,10 +21,7 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += \
-	--disable-shared \
-	--disable-hardening \
-	--enable-silent-rules
+HOST_CONFIGURE_ARGS += --disable-shared --disable-hardening 
 
 HOST_CFLAGS += $(FPIC)
 

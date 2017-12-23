@@ -244,20 +244,6 @@ export PKG_CONFIG
 
 export GOROOT:=$(STAGING_DIR_HOST)/go
 
-ifeq ($(ARCH),mips)
-    GOARCH=mips
-endif
-ifeq ($(ARCH),mipsel)
-    GOARCH=mipsle
-endif
-ifeq ($(ARCH),arm)
-    GOARCH=arm
-   ifeq ($(ARCH_SUFFIX),_cortex-a9)
-	GOARM=GOARM=7
-   else
-	GOARM=GOARM=5
-   endif
-endif
 ifeq ($(ARCH),x86_64)
     GOARCH=amd64
 endif
