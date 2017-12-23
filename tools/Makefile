@@ -6,8 +6,6 @@
 #
 # Main makefile for the host tools
 #
-# Entware note: some tools (image and kernel related) that we do not need are removed
-#               other tools go and wl500 kernel sources are added
 curdir:=tools
 
 # subdirectories to descend into
