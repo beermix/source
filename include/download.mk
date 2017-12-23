@@ -41,7 +41,7 @@ endef
 # code for creating tarballs from cvs/svn/git/bzr/hg/darcs checkouts - useful for mirror support
 dl_pack/bz2=bzip2 -c > $(1)
 dl_pack/gz=gzip -nc > $(1)
-dl_pack/xz=/usr/bin/xz --threads=8 -zcv -8e > $(1)
+dl_pack/xz=/home/user/.bin/xz --threads=0 -zcvv -9e > $(1)
 dl_pack/unknown=$(error ERROR: Unknown pack format for file $(1))
 define dl_pack
 	$(if $(dl_pack/$(call ext,$(1))),$(dl_pack/$(call ext,$(1))),$(dl_pack/unknown))
