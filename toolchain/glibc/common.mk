@@ -45,7 +45,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-g $(filter-out --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -pipe -fno-caller-saves -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
+	CFLAGS="-O2 -g $(filter-out --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -pipe -fno-caller-saves -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
 	CPPFLAGS="" \
 	CXXFLAGS="$(CFLAGS)" \
 	libc_cv_slibdir="/lib" \
@@ -60,19 +60,9 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--disable-werror \
 		--enable-add-ons \
-		--enable-bind-now \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
 		--enable-kernel=3.2.0 \
 		--without-cvs \
 		--without-gd \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--disable-build-nscd \
-		--disable-nscd \
-		--enable-lock-elision \
-		--disable-timezone-tools \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
