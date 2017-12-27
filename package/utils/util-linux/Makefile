@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/linux/utils/$(PKG_NAME)/v2.31
-
+#PKG_HASH:=7b5be5489e9b5b7177832836467aba1c87bf0e9bcbcb5a6f35d76cd4782589dc
 PKG_CPE_ID:=cpe:/a:kernel:util-linux
 
 PKG_LICENSE:=GPL-2.0
@@ -59,7 +59,7 @@ endef
 
 define Package/libfdisk
 $(call Package/util-linux/Default)
-  DEPENDS:=+libuuid +libblkid
+  DEPENDS:=+libuuid +libblkid +librt
   TITLE:=partition manipulating library
   SECTION:=libs
   CATEGORY:=Libraries
@@ -71,7 +71,7 @@ endef
 
 define Package/libmount
 $(call Package/util-linux/Default)
-  DEPENDS:=+libblkid
+  DEPENDS:=+libblkid +librt
   TITLE:=mount library
   SECTION:=libs
   CATEGORY:=Libraries
@@ -120,6 +120,7 @@ endef
 
 define Package/blkdiscard
 $(call Package/util-linux/Default)
+  DEPENDS:=+librt
   TITLE:=discard sectors on a device
   SUBMENU=Disc
 endef
@@ -157,6 +158,16 @@ $(call Package/util-linux/Default)
   TITLE:=display or manipulate disk partition table
   DEPENDS:= +libblkid +libncurses +libsmartcols +libfdisk +libmount
   SUBMENU:=Disc
+endef
+
+define Package/column
+$(call Package/util-linux/Default)
+  TITLE:=columnate lists
+  DEPENDS:= +libsmartcols
+endef
+
+define Package/column/description
+ The  column  utility  formats  its  input  into  multiple  columns
 endef
 
 define Package/cfdisk/description
@@ -199,6 +210,7 @@ endef
 define Package/flock
 $(call Package/util-linux/Default)
   TITLE:=manage locks from shell scripts
+  DEPENDS:= +librt
 endef
 
 define Package/flock/description
@@ -222,6 +234,25 @@ endef
 
 define Package/hwclock/description
  hwclock is a tool for accessing the Hardware Clock
+endef
+
+define Package/ionice
+$(call Package/util-linux/Default)
+  TITLE:=ionice - get/set program io scheduling class and priority 
+endef
+
+define Package/ionice/description
+ This program sets or gets the io scheduling class and priority for a program. If no arguments or just -p is given, ionice will query the current io scheduling class and priority for that process. 
+endef
+
+define Package/fsfreeze
+$(call Package/util-linux/Default)
+  TITLE:=fsfreeze - suspends and resumes access to an filesystem 
+endef
+
+define Package/fsfreeze/description
+ fsfreeze halts new access to the filesystem and creates a stable image on disk.
+ fsfreeze is intended to be used with hardware RAID devices that support the creation of snapshots.
 endef
 
 define Package/logger
@@ -330,6 +361,7 @@ endef
 define Package/script-utils
 $(call Package/util-linux/Default)
   TITLE:=make and replay typescript of terminal session
+  DEPENDS:= +librt
   SUBMENU=Terminal
 endef
 
@@ -364,18 +396,18 @@ endef
 define Package/swap-utils
 $(call Package/util-linux/Default)
   TITLE:=swap space management utilities
-  DEPENDS+= +libblkid
+  DEPENDS+= +libblkid +libmount +libsmartcols
   SUBMENU:=Filesystem
 endef
 
 define Package/swap-utils/description
- contains: mkswap, swaplabel
+ contains: mkswap, swaplabel, swapon, swapoff
 endef
 
 define Package/uuidd
 $(call Package/util-linux/Default)
   TITLE:=UUID generation daemon
-  DEPENDS:= +libuuid
+  DEPENDS:= +libuuid +librt
 endef
 
 define Package/uuidd/description
@@ -445,6 +477,8 @@ CONFIGURE_ARGS += \
 	--disable-makeinstall-setuid
 
 TARGET_CFLAGS += $(FPIC) -std=gnu99
+
+TARGET_LDFLAGS += $(if $(CONFIG_TARGET_mipselsf),-lm)
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
@@ -535,6 +569,11 @@ define Package/cfdisk/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/cfdisk $(1)/usr/sbin/
 endef
 
+define Package/column/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/column $(1)/usr/bin/
+endef
+
 define Package/dmesg/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/dmesg $(1)/usr/bin/
@@ -555,9 +594,19 @@ define Package/flock/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/flock $(1)/usr/bin/
 endef
 
+define Package/fsfreeze/install
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/fsfreeze $(1)/usr/sbin/
+endef
+
 define Package/getopt/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/getopt $(1)/usr/bin/
+endef
+
+define Package/ionice/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ionice $(1)/usr/bin/
 endef
 
 define Package/hwclock/install
@@ -676,11 +725,14 @@ $(eval $(call BuildPackage,blkdiscard))
 $(eval $(call BuildPackage,blkid))
 $(eval $(call BuildPackage,cal))
 $(eval $(call BuildPackage,cfdisk))
+$(eval $(call BuildPackage,column))
 $(eval $(call BuildPackage,dmesg))
 $(eval $(call BuildPackage,fdisk))
 $(eval $(call BuildPackage,findfs))
 $(eval $(call BuildPackage,flock))
+$(eval $(call BuildPackage,fsfreeze))
 $(eval $(call BuildPackage,getopt))
+$(eval $(call BuildPackage,ionice))
 $(eval $(call BuildPackage,hwclock))
 $(eval $(call BuildPackage,logger))
 $(eval $(call BuildPackage,look))

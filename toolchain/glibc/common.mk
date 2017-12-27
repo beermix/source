@@ -54,10 +54,9 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
-		BASH_SHELL=/bin/bash \
+		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
-		--disable-sanity-checks \
 		--enable-add-ons \
 		--enable-bind-now \
 		--with-elf \
@@ -68,10 +67,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
-		--disable-build-nscd \
-		--disable-nscd \
 		--enable-lock-elision \
-		--disable-timezone-tools \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
