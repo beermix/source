@@ -58,6 +58,7 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--disable-werror \
 		--enable-kernel=3.2.0 \
+		--enable-stack-protector=strong \
 		--without-gd \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
