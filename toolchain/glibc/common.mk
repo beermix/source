@@ -45,7 +45,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -g $(filter-out --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -pipe -fno-caller-saves -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
+	CFLAGS="-O3 -g $(filter-out -O2 --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -pipe -fno-caller-saves -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -53,13 +53,25 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
-		BASH_SHELL=/bin/sh \
+		--with-binutils=$(TOOLCHAIN_DIR)/bin \
+		BASH_SHELL=/bin/bash \
 		--disable-profile \
 		--disable-werror \
+		--disable-sanity-checks \
 		--enable-add-ons \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--enable-kernel=3.2.0 \
 		--without-cvs \
 		--without-gd \
+		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-lock-elision \
+		--disable-timezone-tools \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
