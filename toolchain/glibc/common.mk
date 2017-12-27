@@ -57,18 +57,8 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
-		--enable-add-ons \
-		--enable-bind-now \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
 		--enable-kernel=3.2.0 \
-		--without-cvs \
 		--without-gd \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--enable-lock-elision \
-		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
