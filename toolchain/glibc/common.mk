@@ -45,7 +45,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -g $(filter-out -O2 --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -pipe -fno-caller-saves -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
+	CFLAGS="-O2 -g $(filter-out -O2 --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -pipe -fno-caller-saves -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -fno-asynchronous-unwind-tables" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
