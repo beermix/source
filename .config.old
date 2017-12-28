@@ -3367,7 +3367,7 @@ CONFIG_PACKAGE_python-pydoc=y
 # CONFIG_PACKAGE_python-pyptlib is not set
 # CONFIG_PACKAGE_python-pyserial is not set
 # CONFIG_PACKAGE_python-regex is not set
-CONFIG_PACKAGE_python-requests=y
+# CONFIG_PACKAGE_python-requests is not set
 # CONFIG_PACKAGE_python-service-identity is not set
 CONFIG_PACKAGE_python-setuptools=y
 # CONFIG_PACKAGE_python-setuptools-src is not set
