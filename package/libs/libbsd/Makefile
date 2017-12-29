@@ -1,13 +1,11 @@
 include $(TOPDIR)/rules.mk
 
-# Cannot build detach with libbsd installed
-PKG_BUILD_DEPENDS:=dtach
-
 PKG_NAME:=libbsd
-PKG_VERSION:=0.8.6
+PKG_VERSION:=0.3.0
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_HASH:=fbf36ed40443e1d0d795adbae8d461952509e610c3ccf0866ae160b723f7fe38
 PKG_SOURCE_URL:=http://libbsd.freedesktop.org/releases
 
 PKG_LICENSE:=BSD-4-Clause
@@ -34,7 +32,7 @@ define Build/InstallDev
 		$(1)/usr/include
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libbsd.so* \
+		$(PKG_INSTALL_DIR)/lib/libbsd.so* \
 		$(1)/lib/
 
 	$(CP) \
@@ -49,7 +47,7 @@ define Package/libbsd/install
 		$(1)/lib
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libbsd.so* \
+		$(PKG_INSTALL_DIR)/lib/libbsd.so* \
 		$(1)/lib/
 
 	( cd $(1)/lib ; $(LN) libbsd.so.$(PKG_VERSION) libbsd.so )

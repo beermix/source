@@ -49,7 +49,6 @@ BINUTILS_CONFIGURE:= \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
 		--enable-plugins \
-		--enable-gold \
 		--enable-ld=default \
 		--enable-lto \
 		--disable-multilib \
@@ -58,7 +57,6 @@ BINUTILS_CONFIGURE:= \
 		--disable-sim \
 		--disable-gdb \
 		--enable-libssp \
-		--with-pic \
 		--enable-relro \
 		--enable-poison-system-directories \
 		$(GRAPHITE_CONFIGURE) \

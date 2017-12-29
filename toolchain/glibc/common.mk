@@ -57,9 +57,10 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
-		--enable-kernel=3.2.0 \
-		--enable-stack-protector=strong \
+		--enable-kernel=3.10 \
 		--without-gd \
+		--without-cvs \
+		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no

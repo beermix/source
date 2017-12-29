@@ -121,7 +121,6 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		$(GRAPHITE_CONFIGURE) \
 		--disable-nls \
-		--enable-gold \
 		--enable-ld=default \
 		--enable-lto \
 		--with-default-libstdcxx-abi=gcc4-compatible \
