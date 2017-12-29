@@ -114,14 +114,16 @@ GCC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
+		--with-gnu-as \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--disable-libgomp \
-		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		$(GRAPHITE_CONFIGURE) \
 		--disable-nls \
+		--enable-gold \
+		--enable-ld=default \
+		--enable-lto \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
