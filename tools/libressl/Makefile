@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libressl
-PKG_VERSION:=2.5.5
+PKG_VERSION:=2.5.4
 PKG_HASH:=107a5b522fbb8318d4c3be668075e5e607296f0a9255d71674caa94571336efa
 PKG_RELEASE:=1
 
@@ -21,7 +21,7 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --disable-shared --disable-hardening 
+HOST_CONFIGURE_ARGS += --disable-shared
 
 HOST_CFLAGS += $(FPIC)
 

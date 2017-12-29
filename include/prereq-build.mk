@@ -64,7 +64,7 @@ $(eval $(call TestHostCommand,working-g++, \
 $(eval $(call TestHostCommand,ncurses, \
 	Please install ncurses. (Missing libncurses.so or ncurses.h), \
 	echo 'int main(int argc, char **argv) { initscr(); return 0; }' | \
-		gcc -include ncurses.h -x c -o $(TMP_DIR)/a.out - -lncurses))
+		gcc -include ncurses.h -x c -o $(TMP_DIR)/a.out - -lmenu -lpanel -lncurses))
 
 ifeq ($(HOST_OS),Linux)
   zlib_link_flags := -Wl,-Bstatic -lz -Wl,-Bdynamic
