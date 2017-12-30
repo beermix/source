@@ -40,8 +40,8 @@ endif
 ifeq ($(PKG_VERSION),7.2.1)
   PKG_VERSION:=7.2.1
   PKG_SOURCE_PROTO:=git
-  PKG_SOURCE_VERSION:=ddc2766
-  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
+  PKG_SOURCE_VERSION:=864d012acf4
+  PKG_SOURCE_URL:=git://gcc.gnu.org/git/gcc.git
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
   GCC_DIR:=gcc-$(PKG_REV)
