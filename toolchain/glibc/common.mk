@@ -71,6 +71,7 @@ export libc_cv_ssp_strong=no
 export libc_cv_forced_unwind=yes
 export libc_cv_c_cleanup=yes
 export libc_cv_gnu99_inline=yes
+export libc_cv_initfini_array=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
