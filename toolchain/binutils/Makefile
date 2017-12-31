@@ -41,8 +41,8 @@ PATCH_DIR:=./patches/$(PKG_VERSION)
 include $(INCLUDE_DIR)/toolchain-build.mk
 
 BINUTILS_CONFIGURE:= \
-	CFLAGS="-g -O2" \
-	CXXFLAGS="-g -O2" \
+	CFLAGS="-O2" \
+	CXXFLAGS="-O2" \
 	LDFLAGS="" \
 	./configure \
 		--prefix=$(TOOLCHAIN_DIR) \
