@@ -123,6 +123,8 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--enable-ld=default \
 		--enable-lto \
+		--with-tune=haswell \
+		--with-arch=bonnell \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
