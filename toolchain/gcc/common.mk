@@ -39,11 +39,9 @@ endif
 
 ifeq ($(PKG_VERSION),7.2.1)
   PKG_VERSION:=7.2.1
-  PKG_SOURCE_PROTO:=git
-  PKG_SOURCE_VERSION:=864d012acf4
-  PKG_SOURCE_URL:=git://gcc.gnu.org/git/gcc.git
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+  PKG_SOURCE_VERSION:=20171224
+  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
+  PKG_SOURCE:=gcc-$(PKG_VERSION)+$(PKG_SOURCE_VERSION).tar.xz
   GCC_DIR:=gcc-$(PKG_REV)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
 endif
