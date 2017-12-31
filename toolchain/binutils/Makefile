@@ -51,6 +51,9 @@ BINUTILS_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
+		--without-ppl \
+		--without-cloog \
+		--disable-libada \
 		--enable-plugins \
 		--enable-ld=default \
 		--enable-lto \
