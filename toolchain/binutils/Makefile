@@ -41,8 +41,8 @@ PATCH_DIR:=./patches/$(PKG_VERSION)
 include $(INCLUDE_DIR)/toolchain-build.mk
 
 BINUTILS_CONFIGURE:= \
-	CFLAGS="-O2" \
-	CXXFLAGS="-O2" \
+	CFLAGS="-g1 -O2" \
+	CXXFLAGS="-g1 -O2" \
 	LDFLAGS="" \
 	./configure \
 		--prefix=$(TOOLCHAIN_DIR) \
@@ -60,7 +60,6 @@ BINUTILS_CONFIGURE:= \
 		--disable-sim \
 		--disable-gdb \
 		--enable-libssp \
-		--enable-relro \
 		--enable-poison-system-directories \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
