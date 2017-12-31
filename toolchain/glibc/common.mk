@@ -64,6 +64,7 @@ GLIBC_CONFIGURE:= \
 		--disable-sanity-checks \
 		--with-__thread \
 		--with-tls \
+		--enable-stackguard-randomization \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
