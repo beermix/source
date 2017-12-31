@@ -41,6 +41,8 @@ PATCH_DIR:=./patches/$(PKG_VERSION)
 include $(INCLUDE_DIR)/toolchain-build.mk
 
 BINUTILS_CONFIGURE:= \
+	CFLAGS="-g1 -O2" \
+	CXXFLAGS="-g1 -O2" \
 	./configure \
 		--prefix=$(TOOLCHAIN_DIR) \
 		--build=$(GNU_HOST_NAME) \
