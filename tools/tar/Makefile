@@ -26,7 +26,6 @@ HOST_CONFIGURE_ARGS += \
 	--without-selinux \
 	--without-xattrs \
 	--disable-acl \
-	--disable-nls \
-	FORCE_UNSAFE_CONFIGURE=1
+	--disable-nls
 
 $(eval $(call HostBuild))
