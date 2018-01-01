@@ -2,5 +2,5 @@ src-git packages https://git.lede-project.org/feed/packages.git
 src-git luci https://git.lede-project.org/project/luci.git
 src-git routing https://git.lede-project.org/feed/routing.git
 src-git telephony https://git.lede-project.org/feed/telephony.git
-src-git owrtfeeds https://github.com/shadowsocks/openwrt-feeds.git
 src-link mypkgs /home/user/-f2fs/pkg-ledex
+src-git owrtfeeds https://github.com/shadowsocks/openwrt-feeds.git
