@@ -120,13 +120,12 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		$(GRAPHITE_CONFIGURE) \
-		--disable-nls \
 		--enable-ld=default \
 		--enable-lto \
 		--with-tune=haswell \
 		--enable-gnu-indirect-function \
 		--with-arch=bonnell \
-		--with-default-libstdcxx-abi=gcc4-compatible \
+		--with-default-libstdcxx-abi=new \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
