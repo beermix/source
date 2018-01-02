@@ -41,8 +41,8 @@ PATCH_DIR:=./patches/$(PKG_VERSION)
 include $(INCLUDE_DIR)/toolchain-build.mk
 
 BINUTILS_CONFIGURE:= \
-	CFLAGS="-O2" \
-	CXXFLAGS="-O2" \
+	CFLAGS="-g -O2" \
+	CXXFLAGS="-g -O2" \
 	LDFLAGS="" \
 	./configure \
 		--prefix=$(TOOLCHAIN_DIR) \
@@ -59,7 +59,6 @@ BINUTILS_CONFIGURE:= \
 		--enable-lto \
 		--disable-multilib \
 		--disable-werror \
-		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
 		--enable-libssp \
