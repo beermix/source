@@ -2434,6 +2434,7 @@ CONFIG_PACKAGE_grub2=y
 # CONFIG_PACKAGE_brcmfmac-firmware-43430-sdio is not set
 # CONFIG_PACKAGE_brcmfmac-firmware-43602a1-pcie is not set
 # CONFIG_PACKAGE_brcmfmac-firmware-4366b1-pcie is not set
+# CONFIG_PACKAGE_brcmfmac-firmware-4366c0-pcie is not set
 # CONFIG_PACKAGE_brcmfmac-firmware-usb is not set
 # CONFIG_PACKAGE_brcmsmac-firmware is not set
 # CONFIG_PACKAGE_carl9170-firmware is not set
@@ -2747,6 +2748,7 @@ CONFIG_PACKAGE_kmod-nls-utf8=y
 #
 # Netfilter Extensions
 #
+# CONFIG_PACKAGE_kmod-adkill is not set
 CONFIG_PACKAGE_kmod-arptables=y
 CONFIG_PACKAGE_kmod-br-netfilter=y
 CONFIG_PACKAGE_kmod-ebtables=y
@@ -2788,6 +2790,7 @@ CONFIG_PACKAGE_kmod-ipt-lua=y
 CONFIG_PACKAGE_kmod-ipt-nat=y
 CONFIG_PACKAGE_kmod-ipt-nat-extra=y
 CONFIG_PACKAGE_kmod-ipt-nathelper-rtsp=y
+# CONFIG_PACKAGE_kmod-ipt-ndpi is not set
 CONFIG_PACKAGE_kmod-ipt-nflog=y
 CONFIG_PACKAGE_kmod-ipt-nfqueue=y
 CONFIG_PACKAGE_kmod-ipt-psd=y
@@ -3774,7 +3777,10 @@ CONFIG_LIBCURL_UNIX_SOCKETS=y
 # CONFIG_LIBCURL_VERBOSE is not set
 # CONFIG_PACKAGE_libdaemon is not set
 # CONFIG_PACKAGE_libdaq is not set
+# CONFIG_PACKAGE_libdb47 is not set
+# CONFIG_PACKAGE_libdb47xx is not set
 # CONFIG_PACKAGE_libdbi is not set
+# CONFIG_PACKAGE_libdbus is not set
 # CONFIG_PACKAGE_libdevmapper is not set
 # CONFIG_PACKAGE_libdmapsharing is not set
 # CONFIG_PACKAGE_libdnet is not set
@@ -3782,10 +3788,8 @@ CONFIG_LIBCURL_UNIX_SOCKETS=y
 # CONFIG_PACKAGE_libdrm is not set
 # CONFIG_PACKAGE_libedit is not set
 # CONFIG_PACKAGE_libelf1 is not set
-# CONFIG_PACKAGE_libdb47 is not set
-# CONFIG_PACKAGE_libdb47xx is not set
-# CONFIG_PACKAGE_libdbus is not set
 # CONFIG_PACKAGE_libecdsautil is not set
+# CONFIG_PACKAGE_libericstools is not set
 # CONFIG_PACKAGE_libesmtp is not set
 # CONFIG_PACKAGE_libestr is not set
 CONFIG_PACKAGE_libev=y
@@ -3984,7 +3988,6 @@ CONFIG_PACKAGE_libuci=y
 CONFIG_PACKAGE_libuci-lua=y
 CONFIG_PACKAGE_libuclient=y
 # CONFIG_PACKAGE_libudev-fbsd is not set
-# CONFIG_PACKAGE_libudns is not set
 # CONFIG_PACKAGE_libuecc is not set
 # CONFIG_PACKAGE_libugpio is not set
 # CONFIG_PACKAGE_libunbound is not set
@@ -4097,28 +4100,40 @@ CONFIG_PACKAGE_luci-mod-admin-full=y
 # CONFIG_PACKAGE_luci-mod-freifunk is not set
 # CONFIG_PACKAGE_luci-mod-freifunk-community is not set
 # CONFIG_PACKAGE_luci-mod-rpc is not set
+# CONFIG_PACKAGE_luci-mod-wifidogauth is not set
 
 #
 # 3. Applications
 #
 CONFIG_PACKAGE_luci-app-adblock=y
+# CONFIG_PACKAGE_luci-app-adbyby is not set
+# CONFIG_PACKAGE_luci-app-adkill is not set
 # CONFIG_PACKAGE_luci-app-advanced-reboot is not set
+# CONFIG_PACKAGE_luci-app-apfree_wifidog is not set
 # CONFIG_PACKAGE_luci-app-aria2 is not set
+# CONFIG_PACKAGE_luci-app-arpbind is not set
 # CONFIG_PACKAGE_luci-app-asterisk is not set
 # CONFIG_PACKAGE_luci-app-attendedsysupgrade is not set
 # CONFIG_PACKAGE_luci-app-bcp38 is not set
 # CONFIG_PACKAGE_luci-app-bird4 is not set
 # CONFIG_PACKAGE_luci-app-bird6 is not set
 # CONFIG_PACKAGE_luci-app-bmx7 is not set
+# CONFIG_PACKAGE_luci-app-cdns is not set
+# CONFIG_PACKAGE_luci-app-chinadns is not set
 # CONFIG_PACKAGE_luci-app-clamav is not set
 # CONFIG_PACKAGE_luci-app-commands is not set
+# CONFIG_PACKAGE_luci-app-cpulimit is not set
 # CONFIG_PACKAGE_luci-app-cshark is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-diag-core is not set
+# CONFIG_PACKAGE_luci-app-dns2socks is not set
 # CONFIG_PACKAGE_luci-app-dnscrypt-proxy is not set
+# CONFIG_PACKAGE_luci-app-dnspod is not set
+# CONFIG_PACKAGE_luci-app-drcom is not set
 # CONFIG_PACKAGE_luci-app-dump1090 is not set
 # CONFIG_PACKAGE_luci-app-dynapoint is not set
 # CONFIG_PACKAGE_luci-app-e2guardian is not set
+# CONFIG_PACKAGE_luci-app-epg-oscam is not set
 CONFIG_PACKAGE_luci-app-firewall=y
 # CONFIG_PACKAGE_luci-app-freifunk-diagnostics is not set
 # CONFIG_PACKAGE_luci-app-freifunk-policyrouting is not set
@@ -4126,23 +4141,31 @@ CONFIG_PACKAGE_luci-app-firewall=y
 # CONFIG_PACKAGE_luci-app-fwknopd is not set
 # CONFIG_PACKAGE_luci-app-hd-idle is not set
 # CONFIG_PACKAGE_luci-app-hnet is not set
+# CONFIG_PACKAGE_luci-app-mentohust is not set
 # CONFIG_PACKAGE_luci-app-meshwizard is not set
 # CONFIG_PACKAGE_luci-app-minidlna is not set
 # CONFIG_PACKAGE_luci-app-mjpg-streamer is not set
 # CONFIG_PACKAGE_luci-app-mmc-over-gpio is not set
 # CONFIG_PACKAGE_luci-app-mwan3 is not set
+# CONFIG_PACKAGE_luci-app-n2n is not set
+# CONFIG_PACKAGE_luci-app-n2n_v2 is not set
+# CONFIG_PACKAGE_luci-app-ngrokc is not set
 # CONFIG_PACKAGE_luci-app-nlbwmon is not set
 # CONFIG_PACKAGE_luci-app-noddos is not set
 # CONFIG_PACKAGE_luci-app-ntpc is not set
+# CONFIG_PACKAGE_luci-app-nwan is not set
 # CONFIG_PACKAGE_luci-app-ocserv is not set
 # CONFIG_PACKAGE_luci-app-olsr is not set
 # CONFIG_PACKAGE_luci-app-olsr-services is not set
 # CONFIG_PACKAGE_luci-app-olsr-viz is not set
 # CONFIG_PACKAGE_luci-app-openvpn is not set
 # CONFIG_PACKAGE_luci-app-p910nd is not set
+# CONFIG_PACKAGE_luci-app-pdnsd is not set
+# CONFIG_PACKAGE_luci-app-phddns is not set
 CONFIG_PACKAGE_luci-app-polipo=y
 # CONFIG_PACKAGE_luci-app-privoxy is not set
 # CONFIG_PACKAGE_luci-app-qos is not set
+# CONFIG_PACKAGE_luci-app-qosv4 is not set
 # CONFIG_PACKAGE_luci-app-radicale is not set
 # CONFIG_PACKAGE_luci-app-rp-pppoe-server is not set
 # CONFIG_PACKAGE_luci-app-samba is not set
@@ -4155,6 +4178,7 @@ CONFIG_PACKAGE_luci-app-shadowsocks-libev=y
 # CONFIG_PACKAGE_luci-app-sqm is not set
 # CONFIG_PACKAGE_luci-app-squid is not set
 # CONFIG_PACKAGE_luci-app-statistics is not set
+# CONFIG_PACKAGE_luci-app-syncdial is not set
 # CONFIG_PACKAGE_luci-app-tinyproxy is not set
 # CONFIG_PACKAGE_luci-app-transmission is not set
 # CONFIG_PACKAGE_luci-app-travelmate is not set
@@ -4165,13 +4189,20 @@ CONFIG_PACKAGE_luci-app-upnp=y
 # CONFIG_PACKAGE_luci-app-vnstat is not set
 # CONFIG_PACKAGE_luci-app-vpnbypass is not set
 # CONFIG_PACKAGE_luci-app-watchcat is not set
+# CONFIG_PACKAGE_luci-app-webshell is not set
+# CONFIG_PACKAGE_luci-app-wifidog is not set
 # CONFIG_PACKAGE_luci-app-wifischedule is not set
 # CONFIG_PACKAGE_luci-app-wireguard is not set
 # CONFIG_PACKAGE_luci-app-wol is not set
+# CONFIG_PACKAGE_luci-app-xkcptun is not set
+# CONFIG_PACKAGE_luci-app-xunlei is not set
+# CONFIG_PACKAGE_luci-app-xware3 is not set
+# CONFIG_PACKAGE_luci-app-youku is not set
 
 #
 # 4. Themes
 #
+# CONFIG_PACKAGE_luci-theme-amazeui is not set
 CONFIG_PACKAGE_luci-theme-bootstrap=y
 # CONFIG_PACKAGE_luci-theme-freifunk-generic is not set
 # CONFIG_PACKAGE_luci-theme-material is not set
@@ -4188,6 +4219,8 @@ CONFIG_PACKAGE_luci-theme-bootstrap=y
 CONFIG_PACKAGE_luci-proto-ppp=y
 # CONFIG_PACKAGE_luci-proto-qmi is not set
 # CONFIG_PACKAGE_luci-proto-relay is not set
+# CONFIG_PACKAGE_luci-proto-shadowvpn is not set
+# CONFIG_PACKAGE_luci-proto-tun2socks is not set
 # CONFIG_PACKAGE_luci-proto-vpnc is not set
 # CONFIG_PACKAGE_luci-proto-wireguard is not set
 
@@ -4385,6 +4418,7 @@ CONFIG_POSTFIX_SQLITE=y
 # CONFIG_PACKAGE_minidlna is not set
 # CONFIG_PACKAGE_mjpg-streamer is not set
 # CONFIG_PACKAGE_motion is not set
+# CONFIG_PACKAGE_oscam is not set
 # CONFIG_PACKAGE_tvheadend is not set
 # CONFIG_PACKAGE_vips is not set
 # CONFIG_PACKAGE_xupnpd is not set
@@ -4408,10 +4442,20 @@ CONFIG_POSTFIX_SQLITE=y
 # CONFIG_PACKAGE_transmission-daemon-openssl is not set
 # CONFIG_PACKAGE_transmission-remote-mbedtls is not set
 # CONFIG_PACKAGE_transmission-remote-openssl is not set
+# CONFIG_PACKAGE_transmission-svn-daemon is not set
+
+#
+# CERNET
+#
+# CONFIG_PACKAGE_drcom is not set
+# CONFIG_PACKAGE_h3clite is not set
+# CONFIG_PACKAGE_mentohust is not set
+# CONFIG_PACKAGE_yixun is not set
 
 #
 # Captive Portals
 #
+# CONFIG_PACKAGE_apfree_wifidog is not set
 # CONFIG_PACKAGE_coova-chilli is not set
 # CONFIG_PACKAGE_nodogsplash is not set
 # CONFIG_PACKAGE_nodogsplash2 is not set
@@ -4492,6 +4536,7 @@ CONFIG_PACKAGE_iptables-mod-logmark=y
 CONFIG_PACKAGE_iptables-mod-lscan=y
 CONFIG_PACKAGE_iptables-mod-lua=y
 CONFIG_PACKAGE_iptables-mod-nat-extra=y
+# CONFIG_PACKAGE_iptables-mod-ndpi is not set
 CONFIG_PACKAGE_iptables-mod-nflog=y
 CONFIG_PACKAGE_iptables-mod-nfqueue=y
 CONFIG_PACKAGE_iptables-mod-psd=y
@@ -4549,7 +4594,9 @@ CONFIG_PACKAGE_miniupnpd=y
 CONFIG_PACKAGE_bind-tools=y
 # CONFIG_PACKAGE_danish is not set
 # CONFIG_PACKAGE_ddns-scripts is not set
+# CONFIG_PACKAGE_deadwood is not set
 # CONFIG_PACKAGE_dhcp-forwarder is not set
+# CONFIG_PACKAGE_dns2socks is not set
 CONFIG_PACKAGE_dnscrypt-proxy=y
 
 #
@@ -4576,6 +4623,7 @@ CONFIG_PACKAGE_drill=y
 # CONFIG_PACKAGE_knot-nsupdate is not set
 # CONFIG_PACKAGE_knot-tests is not set
 # CONFIG_PACKAGE_knot-zonecheck is not set
+# CONFIG_PACKAGE_libudns is not set
 # CONFIG_PACKAGE_mdns-utils is not set
 # CONFIG_PACKAGE_mdnsd is not set
 # CONFIG_PACKAGE_mdnsresponder is not set
@@ -4584,6 +4632,7 @@ CONFIG_PACKAGE_drill=y
 # CONFIG_PACKAGE_nsd-control-setup is not set
 # CONFIG_PACKAGE_nsd-nossl is not set
 # CONFIG_PACKAGE_ohybridproxy is not set
+# CONFIG_PACKAGE_udns-utils is not set
 # CONFIG_PACKAGE_unbound is not set
 # CONFIG_PACKAGE_unbound-anchor is not set
 # CONFIG_PACKAGE_unbound-control is not set
@@ -4686,6 +4735,7 @@ CONFIG_PACKAGE_nmap=y
 # CONFIG_PACKAGE_bmx7 is not set
 # CONFIG_PACKAGE_cjdns-tests is not set
 # CONFIG_PACKAGE_devlink is not set
+# CONFIG_PACKAGE_dnsforwarder-5 is not set
 # CONFIG_PACKAGE_genl is not set
 # CONFIG_PACKAGE_igmpproxy is not set
 CONFIG_PACKAGE_ip-bridge=y
@@ -4813,7 +4863,9 @@ CONFIG_PACKAGE_openssh-sftp-server=y
 # CONFIG_PACKAGE_badvpn is not set
 # CONFIG_PACKAGE_chaosvpn is not set
 # CONFIG_PACKAGE_fastd is not set
+# CONFIG_PACKAGE_glorytun is not set
 # CONFIG_PACKAGE_ipsec-tools is not set
+# CONFIG_PACKAGE_n2n_v2 is not set
 # CONFIG_PACKAGE_ocserv is not set
 # CONFIG_PACKAGE_openconnect is not set
 # CONFIG_PACKAGE_opennhrp is not set
@@ -4911,12 +4963,14 @@ CONFIG_PACKAGE_openssh-sftp-server=y
 # CONFIG_PACKAGE_strongswan-scepclient is not set
 # CONFIG_PACKAGE_strongswan-swanctl is not set
 # CONFIG_PACKAGE_tinc is not set
+# CONFIG_PACKAGE_tun2socks is not set
 # CONFIG_PACKAGE_uanytun is not set
 # CONFIG_PACKAGE_uanytun-nettle is not set
 # CONFIG_PACKAGE_uanytun-nocrypt is not set
 # CONFIG_PACKAGE_uanytun-sslcrypt is not set
 # CONFIG_PACKAGE_vpnc is not set
 # CONFIG_PACKAGE_vpnc-scripts is not set
+# CONFIG_PACKAGE_vtun-sodium is not set
 # CONFIG_PACKAGE_wireguard is not set
 # CONFIG_PACKAGE_wireguard-tools is not set
 # CONFIG_PACKAGE_zerotier is not set
@@ -4942,6 +4996,11 @@ CONFIG_PACKAGE_git-http=y
 # CONFIG_PACKAGE_uqmi is not set
 
 #
+# Web
+#
+# CONFIG_PACKAGE_webmon-gargoyle is not set
+
+#
 # Web Servers/Proxies
 #
 # CONFIG_PACKAGE_apache is not set
@@ -4953,6 +5012,11 @@ CONFIG_PACKAGE_git-http=y
 # CONFIG_PACKAGE_haproxy-nossl is not set
 # CONFIG_PACKAGE_lighttpd is not set
 # CONFIG_PACKAGE_nginx is not set
+# CONFIG_PACKAGE_ngrokc is not set
+CONFIG_NGROKC_POLARSSL=y
+# CONFIG_NGROKC_OPENSSL is not set
+# CONFIG_PACKAGE_pdnsd is not set
+# CONFIG_PACKAGE_pdnsd_miniconf is not set
 CONFIG_PACKAGE_polipo=y
 # CONFIG_PACKAGE_privoxy is not set
 # CONFIG_PACKAGE_radicale-py2 is not set
@@ -4968,6 +5032,7 @@ CONFIG_PACKAGE_shadowsocks-libev-ss-tunnel=y
 # CONFIG_PACKAGE_socksify is not set
 # CONFIG_PACKAGE_spawn-fcgi is not set
 # CONFIG_PACKAGE_squid is not set
+# CONFIG_PACKAGE_tengine is not set
 # CONFIG_PACKAGE_tinyproxy is not set
 CONFIG_PACKAGE_uhttpd=y
 # CONFIG_PACKAGE_uhttpd-mod-lua is not set
@@ -5014,8 +5079,12 @@ CONFIG_PACKAGE_tpws=y
 # CONFIG_PACKAGE_reaver-wps-fork-t6x is not set
 # CONFIG_PACKAGE_wavemon is not set
 # CONFIG_PACKAGE_wifischedule is not set
+# CONFIG_PACKAGE_ChinaDNS is not set
+# CONFIG_PACKAGE_DNSPing is not set
+# CONFIG_PACKAGE_ShadowVPN is not set
 # CONFIG_PACKAGE_acme is not set
 CONFIG_PACKAGE_adblock=y
+# CONFIG_PACKAGE_adbyby is not set
 # CONFIG_PACKAGE_addrwatch is not set
 # CONFIG_PACKAGE_apcupsd is not set
 # CONFIG_PACKAGE_apcupsd-cgi is not set
@@ -5037,6 +5106,7 @@ CONFIG_BWMNG_EXTENDEDSTATS=y
 CONFIG_BWMNG_LIBNCURSES=y
 # CONFIG_BWMNG_TIME is not set
 CONFIG_BWMNG_GETOPT_LONG=y
+# CONFIG_PACKAGE_cdns is not set
 # CONFIG_PACKAGE_chat is not set
 # CONFIG_PACKAGE_cifsmount is not set
 # CONFIG_PACKAGE_coap-server is not set
@@ -5101,6 +5171,7 @@ CONFIG_PACKAGE_iptraf-ng=y
 # CONFIG_PACKAGE_krb5-libs is not set
 # CONFIG_PACKAGE_krb5-server is not set
 CONFIG_PACKAGE_libipset=y
+# CONFIG_PACKAGE_libiptbwctl is not set
 # CONFIG_PACKAGE_linknx is not set
 # CONFIG_PACKAGE_lnav is not set
 # CONFIG_PACKAGE_mac-telnet-client is not set
@@ -5115,6 +5186,7 @@ CONFIG_PACKAGE_libipset=y
 # CONFIG_PACKAGE_mosquitto-client-ssl is not set
 # CONFIG_PACKAGE_mosquitto-nossl is not set
 # CONFIG_PACKAGE_mosquitto-ssl is not set
+# CONFIG_PACKAGE_mptcp is not set
 # CONFIG_PACKAGE_mtr is not set
 # CONFIG_PACKAGE_nbd is not set
 # CONFIG_PACKAGE_nbd-server is not set
@@ -5147,21 +5219,25 @@ CONFIG_PCAP_DNSPROXY_LISTENPORT=1053
 CONFIG_PACKAGE_pcap-dnsproxy_procdinit=y
 # CONFIG_PACKAGE_pcap-dnsproxy_advancedoptions is not set
 # CONFIG_PACKAGE_pen is not set
+# CONFIG_PACKAGE_phddns is not set
 # CONFIG_PACKAGE_pingcheck is not set
 # CONFIG_PACKAGE_port-mirroring is not set
 # CONFIG_PACKAGE_portmap is not set
 # CONFIG_PACKAGE_ppp is not set
 # CONFIG_PACKAGE_ppp-multilink is not set
 # CONFIG_PACKAGE_pppossh is not set
+# CONFIG_PACKAGE_qos-gargoyle is not set
 # CONFIG_PACKAGE_radsecproxy is not set
 # CONFIG_PACKAGE_redsocks is not set
 # CONFIG_PACKAGE_redsocks2 is not set
 # CONFIG_PACKAGE_remserial is not set
 # CONFIG_PACKAGE_rssileds is not set
 # CONFIG_PACKAGE_rsyslog is not set
+# CONFIG_PACKAGE_samba-hotplug is not set
 # CONFIG_PACKAGE_samba36-client is not set
 # CONFIG_PACKAGE_samba36-net is not set
 # CONFIG_PACKAGE_samba36-server is not set
+# CONFIG_PACKAGE_sans is not set
 # CONFIG_PACKAGE_scapy is not set
 # CONFIG_PACKAGE_sctp is not set
 # CONFIG_PACKAGE_sctp-tools is not set
@@ -5182,6 +5258,8 @@ CONFIG_PACKAGE_pcap-dnsproxy_procdinit=y
 # CONFIG_PACKAGE_softflowd is not set
 # CONFIG_PACKAGE_soloscli is not set
 # CONFIG_PACKAGE_stunnel is not set
+# CONFIG_PACKAGE_sxplugin is not set
+# CONFIG_PACKAGE_sxpluginSigned is not set
 # CONFIG_PACKAGE_tcpdump is not set
 # CONFIG_PACKAGE_tcpdump-mini is not set
 CONFIG_PACKAGE_tor=y
@@ -5197,6 +5275,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_umdns is not set
 # CONFIG_PACKAGE_usbip is not set
 # CONFIG_PACKAGE_vallumd is not set
+# CONFIG_PACKAGE_vlmcsd is not set
 # CONFIG_PACKAGE_vncrepeater is not set
 # CONFIG_PACKAGE_vnstat is not set
 # CONFIG_PACKAGE_vpnbypass is not set
@@ -5214,7 +5293,11 @@ CONFIG_WPA_MSG_MIN_PRIORITY=3
 # CONFIG_PACKAGE_wpad-mini is not set
 # CONFIG_PACKAGE_wpan-tools is not set
 # CONFIG_PACKAGE_wwan is not set
+# CONFIG_PACKAGE_xSocks is not set
+# CONFIG_PACKAGE_xTun is not set
 # CONFIG_PACKAGE_xinetd is not set
+# CONFIG_PACKAGE_xkcptun is not set
+# CONFIG_PACKAGE_xkcptun-server is not set
 
 #
 # Sound
@@ -5335,6 +5418,8 @@ CONFIG_PACKAGE_nano=y
 # CONFIG_PACKAGE_dumpe2fs is not set
 # CONFIG_PACKAGE_e2freefrag is not set
 CONFIG_PACKAGE_e2fsprogs=y
+# CONFIG_PACKAGE_exfat is not set
+# CONFIG_PACKAGE_exfat-utils is not set
 # CONFIG_PACKAGE_f2fs-tools is not set
 # CONFIG_PACKAGE_f2fsck is not set
 # CONFIG_PACKAGE_filefrag is not set
@@ -5471,6 +5556,7 @@ CONFIG_PACKAGE_zoneinfo-europe=y
 # CONFIG_PACKAGE_collectd is not set
 # CONFIG_PACKAGE_column is not set
 # CONFIG_PACKAGE_coreutils is not set
+# CONFIG_PACKAGE_cpulimit is not set
 # CONFIG_PACKAGE_crconf is not set
 # CONFIG_PACKAGE_crelay is not set
 # CONFIG_PACKAGE_ct-bugcheck is not set
@@ -5615,6 +5701,7 @@ CONFIG_PACKAGE_openssl-util=y
 # CONFIG_PACKAGE_sane-frontends is not set
 # CONFIG_PACKAGE_setserial is not set
 # CONFIG_PACKAGE_shadow-utils is not set
+# CONFIG_PACKAGE_shellsync is not set
 # CONFIG_PACKAGE_sispmctl is not set
 # CONFIG_PACKAGE_slide-switch is not set
 # CONFIG_PACKAGE_smartd is not set
@@ -5638,9 +5725,6 @@ CONFIG_PACKAGE_openssl-util=y
 # CONFIG_PACKAGE_tracertools is not set
 # CONFIG_PACKAGE_tree is not set
 # CONFIG_PACKAGE_triggerhappy is not set
-# CONFIG_PACKAGE_udns-dnsget is not set
-# CONFIG_PACKAGE_udns-ex-rdns is not set
-# CONFIG_PACKAGE_udns-rblcheck is not set
 # CONFIG_PACKAGE_ugps is not set
 # CONFIG_PACKAGE_uledd is not set
 # CONFIG_PACKAGE_usb-modeswitch is not set

@@ -33,7 +33,6 @@ define Package/libwolfssl
   MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
   MENU:=1
   PROVIDES:=libcyassl
-  DEPENDS:=+libpthread
 endef
 
 define Package/libwolfssl/description
