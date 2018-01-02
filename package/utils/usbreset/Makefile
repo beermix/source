@@ -27,7 +27,7 @@ define Package/usbreset/description
 endef
 
 define Build/Compile
-	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -Wall \
+	$(TARGET_CC) $(TARGET_CFLAGS) -Wall \
 		-o $(PKG_BUILD_DIR)/usbreset $(PKG_BUILD_DIR)/usbreset.c
 endef
 
