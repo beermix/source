@@ -124,6 +124,7 @@ GCC_CONFIGURE:= \
 		--enable-ld=default \
 		--enable-lto \
 		--with-tune=haswell \
+		--enable-gnu-indirect-function \
 		--with-arch=bonnell \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-host-libstdcxx=-lstdc++ \
