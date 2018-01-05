@@ -3728,7 +3728,7 @@ CONFIG_PACKAGE_libblkid=y
 CONFIG_PACKAGE_libblobmsg-json=y
 # CONFIG_PACKAGE_libbsd is not set
 # CONFIG_PACKAGE_libcanfestival is not set
-# CONFIG_PACKAGE_libcap is not set
+CONFIG_PACKAGE_libcap=y
 CONFIG_PACKAGE_libcares=y
 # CONFIG_PACKAGE_libcharset is not set
 # CONFIG_PACKAGE_libcoap is not set
@@ -3855,7 +3855,7 @@ CONFIG_PACKAGE_liblua=y
 # CONFIG_PACKAGE_liblz4 is not set
 # CONFIG_PACKAGE_liblzo is not set
 # CONFIG_PACKAGE_libmad is not set
-# CONFIG_PACKAGE_libmagic is not set
+CONFIG_PACKAGE_libmagic=y
 # CONFIG_PACKAGE_libmariadb is not set
 # CONFIG_PACKAGE_libmcrypt is not set
 # CONFIG_PACKAGE_libmicrohttpd is not set
@@ -4192,7 +4192,7 @@ CONFIG_PACKAGE_luci-app-shadowsocks-libev=y
 # CONFIG_PACKAGE_luci-app-udpxy is not set
 # CONFIG_PACKAGE_luci-app-uhttpd is not set
 # CONFIG_PACKAGE_luci-app-unbound is not set
-# CONFIG_PACKAGE_luci-app-upnp is not set
+CONFIG_PACKAGE_luci-app-upnp=y
 # CONFIG_PACKAGE_luci-app-vnstat is not set
 # CONFIG_PACKAGE_luci-app-vpnbypass is not set
 # CONFIG_PACKAGE_luci-app-watchcat is not set
@@ -4338,6 +4338,31 @@ CONFIG_PACKAGE_luci-i18n-firewall-ru=y
 # CONFIG_PACKAGE_luci-i18n-firewall-zh-tw is not set
 CONFIG_PACKAGE_luci-i18n-tun2socks-en=y
 # CONFIG_PACKAGE_luci-i18n-tun2socks-zh_CN is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-ca is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-cs is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-de is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-el is not set
+CONFIG_PACKAGE_luci-i18n-upnp-en=y
+# CONFIG_PACKAGE_luci-i18n-upnp-es is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-fr is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-he is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-hu is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-it is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-ja is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-ms is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-no is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-pl is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-pt is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-pt-br is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-ro is not set
+CONFIG_PACKAGE_luci-i18n-upnp-ru=y
+# CONFIG_PACKAGE_luci-i18n-upnp-sk is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-sv is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-tr is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-uk is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-vi is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-zh-cn is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-zh-tw is not set
 
 #
 # Mail
@@ -4536,7 +4561,7 @@ CONFIG_PACKAGE_iptables-mod-u32=y
 CONFIG_PACKAGE_iptables-mod-ulog=y
 # CONFIG_PACKAGE_iptaccount is not set
 # CONFIG_PACKAGE_miniupnpc is not set
-# CONFIG_PACKAGE_miniupnpd is not set
+CONFIG_PACKAGE_miniupnpd=y
 # CONFIG_MINIUPNPD_IGDv2 is not set
 # CONFIG_PACKAGE_natpmpc is not set
 # CONFIG_PACKAGE_shorewall is not set
@@ -4958,7 +4983,6 @@ CONFIG_PACKAGE_tun2socks=y
 #
 # CONFIG_PACKAGE_fossil is not set
 CONFIG_PACKAGE_git=y
-# CONFIG_PACKAGE_git-gitweb is not set
 CONFIG_PACKAGE_git-http=y
 # CONFIG_PACKAGE_subversion-client is not set
 # CONFIG_PACKAGE_subversion-libs is not set
@@ -5625,18 +5649,6 @@ CONFIG_PACKAGE_lm-sensors=y
 # CONFIG_PACKAGE_maccalc is not set
 # CONFIG_PACKAGE_macchanger is not set
 # CONFIG_PACKAGE_mbtools is not set
-CONFIG_PACKAGE_mc=y
-
-#
-# Configuration
-#
-# CONFIG_MC_DIFFVIEWER is not set
-# CONFIG_MC_EDITOR is not set
-CONFIG_MC_SUBSHELL=y
-CONFIG_MC_LARGEFILE=y
-CONFIG_MC_BACKGROUND=y
-CONFIG_MC_CHARSET=y
-# CONFIG_MC_VFS is not set
 # CONFIG_PACKAGE_mcookie is not set
 # CONFIG_PACKAGE_mmc-utils is not set
 # CONFIG_PACKAGE_moreutils is not set
