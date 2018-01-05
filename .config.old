@@ -5081,7 +5081,8 @@ CONFIG_PACKAGE_tpws=y
 # CONFIG_PACKAGE_wavemon is not set
 # CONFIG_PACKAGE_wifischedule is not set
 # CONFIG_PACKAGE_ChinaDNS is not set
-# CONFIG_PACKAGE_DNSPing is not set
+CONFIG_PACKAGE_DNSPing=y
+# CONFIG_PACKAGE_DNSPing_advancedoptions is not set
 # CONFIG_PACKAGE_ShadowVPN is not set
 # CONFIG_PACKAGE_acme is not set
 CONFIG_PACKAGE_adblock=y
@@ -5212,7 +5213,7 @@ CONFIG_PACKAGE_odhcpd_full_ext_cer_id=0
 # CONFIG_PACKAGE_omcproxy is not set
 # CONFIG_PACKAGE_openldap-server is not set
 # CONFIG_PACKAGE_oping is not set
-# CONFIG_PACKAGE_pcap-dnsproxy is not set
+CONFIG_PACKAGE_pcap-dnsproxy=y
 CONFIG_PACKAGE_pcap-dnsproxy_libpcap=y
 CONFIG_PACKAGE_pcap-dnsproxy_libsodium=y
 CONFIG_PCAP_DNSPROXY_LISTENPORT=1053
@@ -5220,8 +5221,8 @@ CONFIG_PCAP_DNSPROXY_LISTENPORT=1053
 #
 # Tools and miscellaneous
 #
-# CONFIG_PACKAGE_pcap-dnsproxy_KeyPairGenerator is not set
-# CONFIG_PACKAGE_pcap-dnsproxy_FileHash is not set
+CONFIG_PACKAGE_pcap-dnsproxy_KeyPairGenerator=y
+CONFIG_PACKAGE_pcap-dnsproxy_FileHash=y
 # CONFIG_PACKAGE_pcap-dnsproxy_advancedoptions is not set
 # CONFIG_PACKAGE_pen is not set
 # CONFIG_PACKAGE_phddns is not set
@@ -5234,7 +5235,7 @@ CONFIG_PCAP_DNSPROXY_LISTENPORT=1053
 # CONFIG_PACKAGE_qos-gargoyle is not set
 # CONFIG_PACKAGE_radsecproxy is not set
 # CONFIG_PACKAGE_redsocks is not set
-# CONFIG_PACKAGE_redsocks2 is not set
+CONFIG_PACKAGE_redsocks2=y
 # CONFIG_PACKAGE_remserial is not set
 # CONFIG_PACKAGE_rssileds is not set
 # CONFIG_PACKAGE_rsyslog is not set
