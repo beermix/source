@@ -125,7 +125,7 @@ GCC_CONFIGURE:= \
 		--with-tune=haswell \
 		--enable-gnu-indirect-function \
 		--with-arch=bonnell \
-		--with-default-libstdcxx-abi=new \
+		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
