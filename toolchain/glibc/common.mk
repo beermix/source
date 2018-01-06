@@ -61,21 +61,12 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--with-__thread \
-		--with-tls \
-		--enable-bind-now \
-		--enable-lock-elision \
-		--disable-multi-arch \
-		--enable-obsolete-nsl \
-		--enable-obsolete-rpc \
 		--enable-stack-protector=strong \
 		--enable-stackguard-randomization \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo

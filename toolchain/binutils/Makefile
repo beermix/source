@@ -41,9 +41,6 @@ PATCH_DIR:=./patches/$(PKG_VERSION)
 include $(INCLUDE_DIR)/toolchain-build.mk
 
 BINUTILS_CONFIGURE:= \
-	CFLAGS="-g -O2" \
-	CXXFLAGS="-g -O2" \
-	LDFLAGS="" \
 	./configure \
 		--prefix=$(TOOLCHAIN_DIR) \
 		--build=$(GNU_HOST_NAME) \
@@ -51,14 +48,10 @@ BINUTILS_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
-		--without-ppl \
-		--without-cloog \
-		--disable-libada \
 		--enable-plugins \
-		--enable-ld=default \
-		--enable-lto \
 		--disable-multilib \
 		--disable-werror \
+		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
 		--enable-libssp \
