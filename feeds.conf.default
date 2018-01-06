@@ -6,3 +6,4 @@ src-git telephony https://git.lede-project.org/feed/telephony.git
 src-git openwrtextra https://github.com/shangjiyu/openwrt-extra
 src-git owrtfeeds https://github.com/shadowsocks/openwrt-feeds.git
 src-link mypkgs /home/user/-f2fs/pkg-ledex
+#src-git PcapDNSProxy https://github.com/wongsyrone/openwrt-Pcap_DNSProxy.git
