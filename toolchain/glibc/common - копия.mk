@@ -9,9 +9,10 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=glibc
 PKG_VERSION:=2.26
 
-PKG_SOURCE_URL:=@GNU/libc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=54489d7367ea56c789b277fd44c21d864296e0e2da1910c9c4e7baa3cabd0066
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_VERSION:=bfda785
+PKG_SOURCE_URL:=https://github.com/bminor/glibc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
@@ -76,7 +77,6 @@ GLIBC_CONFIGURE:= \
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
