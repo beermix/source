@@ -57,23 +57,20 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
-		--disable-sanity-checks \
-		--enable-add-ons \
-		--enable-bind-now \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
-		--enable-stack-protector=strong \
 		--enable-kernel=3.10 \
-		--without-cvs \
 		--without-gd \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--disable-build-nscd \
-		--disable-nscd \
-		--enable-lock-elision \
-		--disable-timezone-tools \
+		--without-cvs \
+		--enable-add-ons \
+		--enable-stack-protector=strong \
+		--disable-silent-rules \
+		--enable-multi-arch=no \
 		--disable-debug \
+		--enable-clocale=gnu \
+		--without-selinux \
+		--enable-obsolete-rpc \
+		--enable-lock-elision=yes \
+		--enable-bind-now \
+		--enable-tunables \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
