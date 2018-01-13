@@ -59,7 +59,7 @@ endif
 PATCH_DIR=../patches/$(GCC_VERSION)
 
 BUGURL=http://www.lede-project.org/bugs/
-PKGVERSION=OpenWrt GCC $(PKG_VERSION) $(PKG_REV)
+PKGVERSION=OpenWrt GCC $(PKG_VERSION) $(REVISION)
 
 HOST_BUILD_PARALLEL:=1
 
