@@ -47,13 +47,13 @@ ifeq ($(PKG_VERSION),7.2.1)
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_6_3_ARC),)
-  PKG_VERSION:=6.3.0
-  PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
-  PKG_SOURCE:=$(PKG_NAME)-$(GCC_VERSION).tar.gz
-  PKG_HASH:=b7223e134199b1a6f71de629da6aa845790e55d28e9892143dde09b1bc878110
-  PKG_REV:=2017.03-release
-  GCC_DIR:=gcc-arc-$(PKG_REV)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
+    PKG_VERSION:=6.3.0
+    PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
+    PKG_SOURCE:=$(PKG_NAME)-$(GCC_VERSION).tar.gz
+    PKG_HASH:=b7223e134199b1a6f71de629da6aa845790e55d28e9892143dde09b1bc878110
+    PKG_REV:=2017.03-release
+    GCC_DIR:=gcc-arc-$(PKG_REV)
+    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
 endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
@@ -114,6 +114,8 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
+		--disable-libgomp \
+		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
