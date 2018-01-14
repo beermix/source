@@ -10,7 +10,7 @@ PKG_NAME:=glibc
 PKG_VERSION:=2.26
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=fabef2e
+PKG_SOURCE_VERSION:=af1e6be
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -57,22 +57,10 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
-		--disable-sanity-checks \
-		--enable-add-ons \
-		--enable-bind-now \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
 		--enable-stack-protector=strong \
-		--enable-kernel=3.10 \
-		--without-cvs \
 		--without-gd \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--disable-build-nscd \
-		--disable-nscd \
-		--enable-lock-elision \
-		--disable-timezone-tools \
+		--without-cvs \
+		--enable-add-ons \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
