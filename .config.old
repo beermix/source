@@ -5095,12 +5095,7 @@ CONFIG_PACKAGE_odhcpd=y
 # Configuration
 #
 CONFIG_PACKAGE_odhcpd_full_ext_cer_id=0
-CONFIG_PACKAGE_odhcpd-ipv6only=y
-
-#
-# Configuration
-#
-CONFIG_PACKAGE_odhcpd_ipv6only_ext_cer_id=0
+# CONFIG_PACKAGE_odhcpd-ipv6only is not set
 # CONFIG_PACKAGE_ola is not set
 # CONFIG_PACKAGE_omcproxy is not set
 # CONFIG_PACKAGE_openldap-server is not set
@@ -5144,10 +5139,10 @@ CONFIG_PACKAGE_odhcpd_ipv6only_ext_cer_id=0
 # CONFIG_PACKAGE_stunnel is not set
 # CONFIG_PACKAGE_tcpdump is not set
 # CONFIG_PACKAGE_tcpdump-mini is not set
-CONFIG_PACKAGE_tor=y
-CONFIG_PACKAGE_tor-gencert=y
-CONFIG_PACKAGE_tor-geoip=y
-CONFIG_PACKAGE_tor-resolve=y
+# CONFIG_PACKAGE_tor is not set
+# CONFIG_PACKAGE_tor-gencert is not set
+# CONFIG_PACKAGE_tor-geoip is not set
+# CONFIG_PACKAGE_tor-resolve is not set
 # CONFIG_PACKAGE_travelmate is not set
 # CONFIG_PACKAGE_u2pnpd is not set
 CONFIG_PACKAGE_uclient-fetch=y
