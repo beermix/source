@@ -104,12 +104,6 @@ check_md5 = \
 hash_var = $(if $(filter-out x,$(1)),MD5SUM,HASH)
 endif
 
-ifdef SKIPHASH
-DOWNLOAD_CMD = $(SCRIPT_DIR)/download.pl --skip-hash
-else
-DOWNLOAD_CMD = $(SCRIPT_DIR)/download.pl
-endif
-
 define DownloadMethod/unknown
 	echo "ERROR: No download method available"; false
 endef
