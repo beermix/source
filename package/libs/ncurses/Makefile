@@ -52,6 +52,15 @@ define Package/libncurses-dev
   TITLE:=Development files for the ncurses library
 endef
 
+define Package/ncurses-bin
+  SECTION:=utils
+  CATEGORY:=Utilities
+  SUBMENU:=Terminal
+  DEPENDS:=+libncursesw
+  TITLE:=Terminal-related programs
+  URL:=http://www.gnu.org/software/ncurses/
+endef
+
 TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
