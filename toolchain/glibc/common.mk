@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=glibc
 PKG_VERSION:=2.26
 
-aPKG_SOURCE_PROTO:=git
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=6311c54
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
