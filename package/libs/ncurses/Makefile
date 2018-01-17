@@ -64,7 +64,6 @@ CONFIGURE_ARGS += \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
-	--without-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
@@ -97,13 +96,20 @@ MAKE_FLAGS += \
 	HOSTCC="$(HOSTCC)" \
 	HOSTCCFLAGS="" \
 	PKG_CONFIG_LIBDIR=/usr/lib/pkgconfig \
-	libs
+	libs \
+	progs
 
 define Build/Install/Default
 	$(MAKE_VARS) \
 	$(MAKE) -C $(PKG_BUILD_DIR)/$(MAKE_PATH) \
 		$(MAKE_INSTALL_FLAGS) \
-		$(1) install.libs install.data;
+		$(1) install.libs install.data install.progs;
+endef
+
+define Package/ncurses-bin/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+	rm $(1)/usr/bin/ncursesw6-config
 endef
 
 define Package/terminfo/install
@@ -116,7 +122,7 @@ ifneq ($(HOST_OS),FreeBSD)
 			mv $$$$dir $$$$(echo -ne "\x$$$$dir"); \
 		done \
 	)
-	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color; do \
+	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen s/screen-256color v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color x/xterm-utf8; do \
 		$(INSTALL_DIR) $(1)/usr/share/terminfo/`dirname $$$$file`; \
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/terminfo/$$$$file \
 			$(1)/usr/share/terminfo/$$$$file; \
@@ -169,4 +175,5 @@ endef
 $(eval $(call HostBuild))
 $(eval $(call BuildPackage,terminfo))
 $(eval $(call BuildPackage,libncurses))
+$(eval $(call BuildPackage,ncurses-bin))
 $(eval $(call BuildPackage,libncurses-dev))
