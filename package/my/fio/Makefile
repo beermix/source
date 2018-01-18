@@ -33,13 +33,19 @@ endef
 
 define Build/Configure
 	(cd $(PKG_BUILD_DIR); \
-		./configure --cc="$(TARGET_CC)"
+		$(TARGET_CONFIGURE_OPTS) \
+		./configure \
+			--prefix=/usr \
+			--cc=$(TARGET_CC) \
+			--enable-lex \
+			--cpu=i686 \
+			--extra-cflags="$(TARGET_CFLAGS) -Wall" \
 	);
 endef
 
 define Package/fio/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/fio $(1)/usr/bin/
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/fio $(1)/usr/bin/fio
 endef
 
 $(eval $(call BuildPackage,fio))
