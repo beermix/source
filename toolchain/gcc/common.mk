@@ -120,20 +120,12 @@ GCC_CONFIGURE:= \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		--enable-__cxa_atexit \
-		--disable-libunwind-exceptions \
 		--enable-clocale=gnu \
 		--disable-libstdcxx-pch \
-		--enable-gnu-unique-object \
-		--enable-linker-build-id \
 		--enable-lto \
 		--enable-plugin \
 		--enable-install-libiberty \
-		--with-linker-hash-style=gnu \
-		--enable-gnu-indirect-function \
-		--disable-werror \
 		--enable-checking=release \
-		--enable-default-pie \
-		--enable-default-ssp \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
 		$(if $(CONFIG_mips64)$(CONFIG_mips64el),--with-arch=mips64 \
