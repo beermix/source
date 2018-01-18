@@ -31,9 +31,10 @@ define Package/fio/description
  fioent, but without its limitations and bugs.
 endef
 
-define Package/fio/Compile
-	./configure --cc="$(TARGET_CC)"
-	make
+define Build/Configure
+	(cd $(PKG_BUILD_DIR); \
+		./configure --cc="$(TARGET_CC)"
+	);
 endef
 
 define Package/fio/install
