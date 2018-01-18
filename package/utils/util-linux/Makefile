@@ -59,7 +59,7 @@ endef
 
 define Package/libfdisk
 $(call Package/util-linux/Default)
-  DEPENDS:=+libuuid +libblkid
+  DEPENDS:=+libuuid +libblkid +librt
   TITLE:=partition manipulating library
   SECTION:=libs
   CATEGORY:=Libraries
@@ -71,7 +71,7 @@ endef
 
 define Package/libmount
 $(call Package/util-linux/Default)
-  DEPENDS:=+libblkid
+  DEPENDS:=+libblkid +librt
   TITLE:=mount library
   SECTION:=libs
   CATEGORY:=Libraries
@@ -120,6 +120,7 @@ endef
 
 define Package/blkdiscard
 $(call Package/util-linux/Default)
+  DEPENDS:=+librt
   TITLE:=discard sectors on a device
   SUBMENU=Disc
 endef
@@ -157,6 +158,16 @@ $(call Package/util-linux/Default)
   TITLE:=display or manipulate disk partition table
   DEPENDS:= +libblkid +libncurses +libsmartcols +libfdisk +libmount
   SUBMENU:=Disc
+endef
+
+define Package/column
+$(call Package/util-linux/Default)
+  TITLE:=columnate lists
+  DEPENDS:= +libsmartcols
+endef
+
+define Package/column/description
+ The  column  utility  formats  its  input  into  multiple  columns
 endef
 
 define Package/cfdisk/description
@@ -199,6 +210,7 @@ endef
 define Package/flock
 $(call Package/util-linux/Default)
   TITLE:=manage locks from shell scripts
+  DEPENDS:= +librt
 endef
 
 define Package/flock/description
@@ -383,18 +395,18 @@ endef
 define Package/swap-utils
 $(call Package/util-linux/Default)
   TITLE:=swap space management utilities
-  DEPENDS+= +libblkid
+  DEPENDS+= +libblkid +libmount +libsmartcols
   SUBMENU:=Filesystem
 endef
 
 define Package/swap-utils/description
- contains: mkswap, swaplabel
+ contains: mkswap, swaplabel, swapon, swapoff
 endef
 
 define Package/uuidd
 $(call Package/util-linux/Default)
   TITLE:=UUID generation daemon
-  DEPENDS:= +libuuid
+  DEPENDS:= +libuuid +librt
 endef
 
 define Package/uuidd/description
