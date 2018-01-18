@@ -39,11 +39,13 @@ endif
 
 ifeq ($(PKG_VERSION),7.2.1)
   PKG_VERSION:=7.2.1
-  PKG_REV:=20180116
-  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
-  PKG_SOURCE:=gcc-$(PKG_VERSION)-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(PKG_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_VERSION)-$(PKG_REV)
+  PKG_SOURCE_PROTO:=git
+  PKG_SOURCE_VERSION:=5965ce9
+  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+  GCC_DIR:=gcc-$(PKG_REV)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_6_3_ARC),)
@@ -115,13 +117,12 @@ GCC_CONFIGURE:= \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--disable-libgomp \
-		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
-		--with-host-libstdcxx=-lstdc++ \
 		--with-default-libstdcxx-abi=gcc4-compatible \
+		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
 		$(if $(CONFIG_mips64)$(CONFIG_mips64el),--with-arch=mips64 \
