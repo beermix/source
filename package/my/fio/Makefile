@@ -24,6 +24,7 @@ define Package/fio
   CATEGORY:=Libraries
   TITLE:=High-performance event loop
   URL:=http://software.schmorp.de/pkg/fio.html
+  DEPENDS:=+libpthread +librt +zlib
 endef
 
 define Package/fio/description
@@ -38,8 +39,8 @@ define Build/Configure
 			--prefix=/usr \
 			--cc=$(TARGET_CC) \
 			--enable-lex \
-			--cpu=i686 \
-			--extra-cflags="$(TARGET_CFLAGS) -Wall" \
+			--cpu=i486 \
+			--extra-cflags="$(TARGET_CFLAGS)" \
 	);
 endef
 
