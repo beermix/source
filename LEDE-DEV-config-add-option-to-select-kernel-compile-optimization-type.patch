@@ -1,0 +1,63 @@
+From patchwork Thu Jan 18 09:50:45 2018
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [LEDE-DEV] config: add option to select kernel compile optimization
+ type
+X-Patchwork-Submitter: Koen Vandeputte <koen.vandeputte@ncentric.com>
+X-Patchwork-Id: 862808
+Message-Id: <1516269045-10217-1-git-send-email-koen.vandeputte@ncentric.com>
+To: lede-dev@lists.infradead.org
+Cc: Koen Vandeputte <koen.vandeputte@ncentric.com>, john@phrozen.org
+Date: Thu, 18 Jan 2018 10:50:45 +0100
+From: Koen Vandeputte <koen.vandeputte@ncentric.com>
+List-Id: <lede-dev.lists.infradead.org>
+
+A lot of targets have more than sufficient space to allow
+building the kernel for speed iso size.
+
+Export this performance option to the main config:
+
+- Making it easy accessable for users
+- Discarding the need to adjust it in the kernel config each time
+when building from scratch and only using "make oldconfig"
+
+Compiling for size is still the default.
+
+Purely informational:
+
+On my cns3xxx board, kernel size increases by ~100kB
+but boot time decreased by ~8%.
+
+Signed-off-by: Koen Vandeputte <koen.vandeputte@ncentric.com>
+---
+ config/Config-kernel.in | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/config/Config-kernel.in b/config/Config-kernel.in
+index fa06b5044219..b98c5dd04591 100644
+--- a/config/Config-kernel.in
++++ b/config/Config-kernel.in
+@@ -194,6 +194,22 @@ config KERNEL_DEBUG_GPIO
+ 	bool "Compile the kernel with gpio debugging"
+ 	select KERNEL_DEBUG_KERNEL
+ 
++config KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE
++        bool
++        default y if COMPILE_KERNEL_FOR_SPEED
++        default n
++
++config KERNEL_CC_OPTIMIZE_FOR_SIZE
++        bool
++        default n if COMPILE_KERNEL_FOR_SPEED
++        default y
++
++config COMPILE_KERNEL_FOR_SPEED
++        bool "Optimize the kernel for speed instead of size"
++        default n
++        help
++          This will compile your kernel for maximum speed (-O2) instead of smaller size (-Os)
++
+ config KERNEL_COREDUMP
+ 	bool
+ 

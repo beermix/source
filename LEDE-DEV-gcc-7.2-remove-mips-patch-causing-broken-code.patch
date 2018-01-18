@@ -1,0 +1,65 @@
+From patchwork Sun Dec 17 21:21:47 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [LEDE-DEV] gcc: 7.2: remove mips patch causing broken code
+X-Patchwork-Submitter: Hauke Mehrtens <hauke@hauke-m.de>
+X-Patchwork-Id: 849689
+X-Patchwork-Delegate: hauke@hauke-m.de
+Message-Id: <20171217212147.14310-1-hauke@hauke-m.de>
+To: lede-dev@lists.infradead.org,
+	nbd@nbd.name
+Cc: Hauke Mehrtens <hauke@hauke-m.de>
+Date: Sun, 17 Dec 2017 22:21:47 +0100
+From: Hauke Mehrtens <hauke@hauke-m.de>
+List-Id: <lede-dev.lists.infradead.org>
+
+This patch made GCC produce broken code, remove it.
+In mp_cmp_d() function in th libtommath shipped with dropbear the
+following code was compiled wrong:
+
+/* compare based on magnitude */
+if (a->used > 1) {
+  return 1;
+}
+
+In the broken ASM this part returned -1 like the previous return
+statement did instead of 1 like it should.
+
+This did not happen when the -funroll-loops option was given to GCC.
+
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Tested-by: <ldir@darbyshire-bryant.me.uk>
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ .../7.2.0/300-mips_Os_cpu_rtx_cost_model.patch      | 21 ---------------------
+ 1 file changed, 21 deletions(-)
+ delete mode 100644 toolchain/gcc/patches/7.2.0/300-mips_Os_cpu_rtx_cost_model.patch
+
+diff --git a/toolchain/gcc/patches/7.2.0/300-mips_Os_cpu_rtx_cost_model.patch b/toolchain/gcc/patches/7.2.0/300-mips_Os_cpu_rtx_cost_model.patch
+deleted file mode 100644
+index 84c0fdab66..0000000000
+--- a/toolchain/gcc/patches/7.2.0/300-mips_Os_cpu_rtx_cost_model.patch
++++ /dev/null
+@@ -1,21 +0,0 @@
+-commit ecf7671b769fe96f7b5134be442089f8bdba55d2
+-Author: Felix Fietkau <nbd@nbd.name>
+-Date:   Thu Aug 4 20:29:45 2016 +0200
+-
+-gcc: add a patch to generate better code with Os on mips
+-
+-Also happens to reduce compressed code size a bit
+-
+-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+-
+---- a/gcc/config/mips/mips.c
+-+++ b/gcc/config/mips/mips.c
+-@@ -19784,7 +19784,7 @@ mips_option_override (void)
+-     flag_pcc_struct_return = 0;
+- 
+-   /* Decide which rtx_costs structure to use.  */
+--  if (optimize_size)
+-+  if (0 && optimize_size)
+-     mips_cost = &mips_rtx_cost_optimize_size;
+-   else
+-     mips_cost = &mips_rtx_cost_data[mips_tune];

@@ -1,0 +1,35 @@
+From patchwork Mon Jul 10 00:19:51 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [LEDE-DEV,
+ 4/4] scripts/getver.sh: only consider version override file when no
+ argument is given
+X-Patchwork-Submitter: Matthias Schiffer <mschiffer@universe-factory.net>
+X-Patchwork-Id: 785976
+X-Patchwork-Delegate: mschiffer+lede@universe-factory.net
+Message-Id: <10b597800d72ea2198428a6675e84ef752705c6f.1499645991.git.mschiffer@universe-factory.net>
+To: lede-dev@lists.infradead.org,
+	zajec5@gmail.com
+Date: Mon, 10 Jul 2017 02:19:51 +0200
+From: Matthias Schiffer <mschiffer@universe-factory.net>
+List-Id: <lede-dev.lists.infradead.org>
+
+Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+---
+ scripts/getver.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/getver.sh b/scripts/getver.sh
+index f6d18bb3a3..30cf32ed14 100755
+--- a/scripts/getver.sh
++++ b/scripts/getver.sh
+@@ -10,7 +10,7 @@ get_branch() {
+ }
+ 
+ try_version() {
+-	[ -f version ] || return 1
++	[ -z "$GET_REV" -a -f version ] || return 1
+ 	REV="$(cat version)"
+ 	[ -n "$REV" ]
+ }

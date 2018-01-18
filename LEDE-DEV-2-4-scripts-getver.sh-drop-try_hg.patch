@@ -1,0 +1,41 @@
+From patchwork Mon Jul 10 00:19:49 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [LEDE-DEV,2/4] scripts/getver.sh: drop try_hg
+X-Patchwork-Submitter: Matthias Schiffer <mschiffer@universe-factory.net>
+X-Patchwork-Id: 785977
+X-Patchwork-Delegate: mschiffer+lede@universe-factory.net
+Message-Id: <b61c50c4f3df7024037540e2facc92b5bd165eb2.1499645991.git.mschiffer@universe-factory.net>
+To: lede-dev@lists.infradead.org,
+	zajec5@gmail.com
+Date: Mon, 10 Jul 2017 02:19:49 +0200
+From: Matthias Schiffer <mschiffer@universe-factory.net>
+List-Id: <lede-dev.lists.infradead.org>
+
+We don't use Mercurial, try_hg didn't understand GET_REV, and its output
+didn't have anything to do with the way LEDE counts revisions.
+
+Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+---
+ scripts/getver.sh | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/scripts/getver.sh b/scripts/getver.sh
+index 1032fa324e..215bb036a5 100755
+--- a/scripts/getver.sh
++++ b/scripts/getver.sh
+@@ -50,12 +50,5 @@ try_git() {
+ 	[ -n "$REV" ]
+ }
+ 
+-try_hg() {
+-	[ -d .hg ] || return 1
+-	REV="$(hg log -r-1 --template '{desc}' | awk '{print $2}' | sed 's/\].*//')"
+-	REV="${REV:+r$REV}"
+-	[ -n "$REV" ]
+-}
+-
+-try_version || try_git || try_hg || REV="unknown"
++try_version || try_git || REV="unknown"
+ echo "$REV"

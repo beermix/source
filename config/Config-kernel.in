@@ -194,6 +194,22 @@ config KERNEL_DEBUG_GPIO
 	bool "Compile the kernel with gpio debugging"
 	select KERNEL_DEBUG_KERNEL
 
+config KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE
+        bool
+        default y if COMPILE_KERNEL_FOR_SPEED
+        default n
+
+config KERNEL_CC_OPTIMIZE_FOR_SIZE
+        bool
+        default n if COMPILE_KERNEL_FOR_SPEED
+        default y
+
+config COMPILE_KERNEL_FOR_SPEED
+        bool "Optimize the kernel for speed instead of size"
+        default n
+        help
+          This will compile your kernel for maximum speed (-O2) instead of smaller size (-Os)
+
 config KERNEL_COREDUMP
 	bool
 

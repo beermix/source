@@ -5,8 +5,12 @@ export LC_ALL=C
 
 GET_REV=$1
 
+get_branch() {
+	git show "$1:branch" 2>/dev/null || echo 'master'
+}
+
 try_version() {
-	[ -f version ] || return 1
+	[ -z "$GET_REV" -a -f version ] || return 1
 	REV="$(cat version)"
 	[ -n "$REV" ]
 }
@@ -40,7 +44,7 @@ try_git() {
 			REV="${UPSTREAM_REV}+$((REV - UPSTREAM_REV))"
 		fi
 
-		REV="${REV:+r$REV-$(git log -n 1 --format="%h" $UPSTREAM_BASE)}"
+		REV="$(get_branch "$GET_REV")-${REV:+r$REV-$(git log -n 1 --format="%h" $UPSTREAM_BASE)}"
 
 		;;
 	esac
@@ -48,12 +52,5 @@ try_git() {
 	[ -n "$REV" ]
 }
 
-try_hg() {
-	[ -d .hg ] || return 1
-	REV="$(hg log -r-1 --template '{desc}' | awk '{print $2}' | sed 's/\].*//')"
-	REV="${REV:+r$REV}"
-	[ -n "$REV" ]
-}
-
-try_version || try_git || try_hg || REV="unknown"
+try_version || try_git || REV="unknown"
 echo "$REV"
