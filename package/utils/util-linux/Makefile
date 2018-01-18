@@ -59,7 +59,7 @@ endef
 
 define Package/libfdisk
 $(call Package/util-linux/Default)
-  DEPENDS:=+libuuid +libblkid +librt
+  DEPENDS:=+libuuid +libblkid
   TITLE:=partition manipulating library
   SECTION:=libs
   CATEGORY:=Libraries
@@ -71,7 +71,7 @@ endef
 
 define Package/libmount
 $(call Package/util-linux/Default)
-  DEPENDS:=+libblkid +librt
+  DEPENDS:=+libblkid
   TITLE:=mount library
   SECTION:=libs
   CATEGORY:=Libraries
@@ -120,7 +120,6 @@ endef
 
 define Package/blkdiscard
 $(call Package/util-linux/Default)
-  DEPENDS:=+librt
   TITLE:=discard sectors on a device
   SUBMENU=Disc
 endef
@@ -160,16 +159,6 @@ $(call Package/util-linux/Default)
   SUBMENU:=Disc
 endef
 
-define Package/column
-$(call Package/util-linux/Default)
-  TITLE:=columnate lists
-  DEPENDS:= +libsmartcols
-endef
-
-define Package/column/description
- The  column  utility  formats  its  input  into  multiple  columns
-endef
-
 define Package/cfdisk/description
  cfdisk is a curses-based program for partitioning any hard disk drive
 endef
@@ -177,7 +166,7 @@ endef
 define Package/dmesg
 $(call Package/util-linux/Default)
   TITLE:=print or control the kernel ring buffer
-  DEPENDS:= +libncursesw +USE_UCLIBC:librt
+  DEPENDS:= +libncursesw
 endef
 
 define Package/dmesg/description
@@ -210,7 +199,6 @@ endef
 define Package/flock
 $(call Package/util-linux/Default)
   TITLE:=manage locks from shell scripts
-  DEPENDS:= +librt
 endef
 
 define Package/flock/description
@@ -361,7 +349,6 @@ endef
 define Package/script-utils
 $(call Package/util-linux/Default)
   TITLE:=make and replay typescript of terminal session
-  DEPENDS:= +librt
   SUBMENU=Terminal
 endef
 
@@ -396,18 +383,18 @@ endef
 define Package/swap-utils
 $(call Package/util-linux/Default)
   TITLE:=swap space management utilities
-  DEPENDS+= +libblkid +libmount +libsmartcols
+  DEPENDS+= +libblkid
   SUBMENU:=Filesystem
 endef
 
 define Package/swap-utils/description
- contains: mkswap, swaplabel, swapon, swapoff
+ contains: mkswap, swaplabel
 endef
 
 define Package/uuidd
 $(call Package/util-linux/Default)
   TITLE:=UUID generation daemon
-  DEPENDS:= +libuuid +librt
+  DEPENDS:= +libuuid
 endef
 
 define Package/uuidd/description
@@ -477,8 +464,6 @@ CONFIGURE_ARGS += \
 	--disable-makeinstall-setuid
 
 TARGET_CFLAGS += $(FPIC) -std=gnu99
-
-TARGET_LDFLAGS += $(if $(CONFIG_TARGET_mipselsf),-lm)
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig

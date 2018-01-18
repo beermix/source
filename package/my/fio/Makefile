@@ -1,0 +1,46 @@
+#
+# Copyright (C) 2014-2015 OpenWrt.org
+#
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+#
+
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=fio
+PKG_VERSION:=3.3
+PKG_RELEASE:=1
+
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://fossies.org/linux/misc
+#PKG_HASH:=736079e8ac543c74d59af73f9c52737b3bfec9601f020bf25a87a4f4d0f01bd6
+PKG_LICENSE:=BSD-2-Clause
+PKG_MAINTAINER:=Karl Palsson <karlp@tweak.net.au>
+
+PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
+
+include $(INCLUDE_DIR)/package.mk
+
+define Package/fio
+  SECTION:=libs
+  CATEGORY:=Libraries
+  TITLE:=High-performance event loop
+  URL:=http://software.schmorp.de/pkg/fio.html
+endef
+
+define Package/fio/description
+ A full-featured and high-performance event loop that is loosely modelled after
+ fioent, but without its limitations and bugs.
+endef
+
+CONFIGURE_ARGS += \
+	--cpu=i686 \
+	--esx \
+
+define Package/fio/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/fio $(1)/usr/bin/
+endef
+
+$(eval $(call BuildPackage,fio))
