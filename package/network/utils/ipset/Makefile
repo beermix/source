@@ -9,12 +9,12 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=ipset
-PKG_VERSION:=6.34
+PKG_VERSION:=6.35
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://ipset.netfilter.org
-PKG_HASH:=d70e831b670b7aa25dde81fd994d3a7ce0c0e801559a557105576df66cd8d680
+PKG_HASH:=37071013e1f92e0ca2f5deac86e657db87290fe651f64f44ce662f3aa40bf4dc
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0
