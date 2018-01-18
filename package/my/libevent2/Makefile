@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2015 OpenWrt.org
+# Copyright (C) 2011-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,21 +9,18 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libevent2
 PKG_VERSION:=2.1.8
-PKG_RELEASE:=3
+PKG_RELEASE:=2
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-release-$(PKG_VERSION)-stable
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-stable.tar.gz
-PKG_SOURCE_URL:=https://github.com/$(PKG_NAME)/$(PKG_NAME)/releases/download/release-$(PKG_VERSION)-stable
+PKG_BUILD_DIR:=$(BUILD_DIR)/libevent-$(PKG_VERSION)-stable
+PKG_SOURCE:=libevent-$(PKG_VERSION)-stable.tar.gz
+PKG_SOURCE_URL:=@SF/levent
+PKG_HASH:=71c2c49f0adadacfdbe6332a372c38cf9c8b7895bb73dabeaa53cdcc1d4e1fa3
+PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
+PKG_LICENSE:=BSD-3-Clause
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
-
-PKG_BUILD_DEPENDS:=libopenssl 
-PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
-PKG_FIXUP:=autoreconf
-DEPENDS:=+libopenssl +libpthread
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -49,6 +46,7 @@ endef
 define Package/libevent2
   $(call Package/libevent2/Default)
   TITLE+= library (version 2.1)
+  DEPENDS+=+libopenssl
 endef
 
 define Package/libevent2/description
@@ -85,6 +83,7 @@ endef
 define Package/libevent2-openssl
   $(call Package/libevent2/Default)
   TITLE+= OpenSSL library (version 2.1)
+  DEPENDS+=+libopenssl
 endef
 
 define Package/libevent2-openssl/description
@@ -97,6 +96,7 @@ endef
 define Package/libevent2-pthreads
   $(call Package/libevent2/Default)
   TITLE+= Pthreads library (version 2.1)
+  DEPENDS+=+libpthread
 endef
 
 define Package/libevent2-pthreads/description
@@ -111,8 +111,8 @@ TARGET_CFLAGS += $(FPIC)
 CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
-	--enable-openssl="$(STAGING_DIR)/usr" \
-	--disable-debug-mode
+	--disable-debug-mode \
+	--disable-libevent-regress
 
 MAKE_FLAGS += \
 	CFLAGS="$(TARGET_CFLAGS)"
@@ -144,7 +144,7 @@ endef
 
 define Package/libevent2-openssl/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libevent-2.1.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libevent_openssl-2.1.so.* $(1)/usr/lib/
 endef
 
 define Package/libevent2-pthreads/install
