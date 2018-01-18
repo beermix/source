@@ -131,10 +131,10 @@ CONFIG_TARGET_UBIFS_JOURNAL_SIZE=""
 CONFIG_GRUB_IMAGES=y
 CONFIG_GRUB_CONSOLE=y
 CONFIG_GRUB_SERIAL="ttyS0"
-CONFIG_GRUB_BAUDRATE=38400
-# CONFIG_GRUB_FLOWCONTROL is not set
+CONFIG_GRUB_BAUDRATE=115200
+CONFIG_GRUB_FLOWCONTROL=y
 CONFIG_GRUB_BOOTOPTS=""
-CONFIG_GRUB_TIMEOUT="5"
+CONFIG_GRUB_TIMEOUT="1"
 # CONFIG_VDI_IMAGES is not set
 # CONFIG_VMDK_IMAGES is not set
 # CONFIG_TARGET_IMAGES_PAD is not set
@@ -143,8 +143,8 @@ CONFIG_TARGET_IMAGES_GZIP=y
 #
 # Image Options
 #
-CONFIG_TARGET_KERNEL_PARTSIZE=16
-CONFIG_TARGET_ROOTFS_PARTSIZE=256
+CONFIG_TARGET_KERNEL_PARTSIZE=50
+CONFIG_TARGET_ROOTFS_PARTSIZE=700
 CONFIG_TARGET_ROOTFS_PARTNAME=""
 
 #
@@ -154,14 +154,14 @@ CONFIG_TARGET_ROOTFS_PARTNAME=""
 # CONFIG_ALL_KMODS is not set
 # CONFIG_ALL is not set
 # CONFIG_BUILDBOT is not set
-# CONFIG_SIGNED_PACKAGES is not set
+CONFIG_SIGNED_PACKAGES=y
 
 #
 # General build options
 #
 CONFIG_DISPLAY_SUPPORT=y
 CONFIG_BUILD_PATENTED=y
-CONFIG_BUILD_NLS=y
+# CONFIG_BUILD_NLS is not set
 CONFIG_SHADOW_PASSWORDS=y
 # CONFIG_CLEAN_IPKG is not set
 CONFIG_INCLUDE_CONFIG=y
@@ -2280,7 +2280,7 @@ CONFIG_PACKAGE_firewall=y
 CONFIG_PACKAGE_fstools=y
 CONFIG_PACKAGE_fwtool=y
 CONFIG_PACKAGE_gconv-modules=y
-# CONFIG_PACKAGE_iucode-tool is not set
+CONFIG_PACKAGE_iucode-tool=y
 CONFIG_PACKAGE_jsonfilter=y
 # CONFIG_PACKAGE_lede-keyring is not set
 CONFIG_PACKAGE_libatomic=y
@@ -2295,7 +2295,7 @@ CONFIG_PACKAGE_libstdcpp=y
 # CONFIG_PACKAGE_locales is not set
 CONFIG_PACKAGE_logd=y
 # CONFIG_PACKAGE_mksh is not set
-# CONFIG_PACKAGE_mtd is not set
+CONFIG_PACKAGE_mtd=y
 CONFIG_PACKAGE_netifd=y
 # CONFIG_PACKAGE_om-watchdog is not set
 CONFIG_PACKAGE_opkg=y
@@ -2427,10 +2427,10 @@ CONFIG_PACKAGE_grub2=y
 # CONFIG_PACKAGE_brcmfmac-firmware-usb is not set
 # CONFIG_PACKAGE_brcmsmac-firmware is not set
 # CONFIG_PACKAGE_carl9170-firmware is not set
-CONFIG_PACKAGE_e100-firmware=y
+# CONFIG_PACKAGE_e100-firmware is not set
 # CONFIG_PACKAGE_edgeport-firmware is not set
 # CONFIG_PACKAGE_ibt-firmware is not set
-# CONFIG_PACKAGE_intel-microcode is not set
+CONFIG_PACKAGE_intel-microcode=y
 # CONFIG_PACKAGE_iwl3945-firmware is not set
 # CONFIG_PACKAGE_iwl4965-firmware is not set
 # CONFIG_PACKAGE_iwlwifi-firmware-iwl100 is not set
@@ -2743,12 +2743,12 @@ CONFIG_PACKAGE_kmod-ebtables=y
 CONFIG_PACKAGE_kmod-ebtables-ipv4=y
 # CONFIG_PACKAGE_kmod-ebtables-ipv6 is not set
 CONFIG_PACKAGE_kmod-ebtables-watchers=y
-CONFIG_PACKAGE_kmod-ipt-account=y
+# CONFIG_PACKAGE_kmod-ipt-account is not set
 # CONFIG_PACKAGE_kmod-ipt-chaos is not set
 CONFIG_PACKAGE_kmod-ipt-checksum=y
 CONFIG_PACKAGE_kmod-ipt-cluster=y
 CONFIG_PACKAGE_kmod-ipt-clusterip=y
-CONFIG_PACKAGE_kmod-ipt-compat-xtables=y
+# CONFIG_PACKAGE_kmod-ipt-compat-xtables is not set
 # CONFIG_PACKAGE_kmod-ipt-condition is not set
 CONFIG_PACKAGE_kmod-ipt-conntrack=y
 CONFIG_PACKAGE_kmod-ipt-conntrack-extra=y
@@ -2765,7 +2765,7 @@ CONFIG_PACKAGE_kmod-ipt-hashlimit=y
 CONFIG_PACKAGE_kmod-ipt-iface=y
 CONFIG_PACKAGE_kmod-ipt-ipmark=y
 CONFIG_PACKAGE_kmod-ipt-ipopt=y
-CONFIG_PACKAGE_kmod-ipt-ipp2p=y
+# CONFIG_PACKAGE_kmod-ipt-ipp2p is not set
 CONFIG_PACKAGE_kmod-ipt-iprange=y
 CONFIG_PACKAGE_kmod-ipt-ipsec=y
 CONFIG_PACKAGE_kmod-ipt-ipset=y
@@ -2803,9 +2803,9 @@ CONFIG_PACKAGE_kmod-nfnetlink-queue=y
 #
 # Network Devices
 #
-CONFIG_PACKAGE_kmod-3c59x=y
+# CONFIG_PACKAGE_kmod-3c59x is not set
 # CONFIG_PACKAGE_kmod-8139cp is not set
-CONFIG_PACKAGE_kmod-8139too=y
+# CONFIG_PACKAGE_kmod-8139too is not set
 # CONFIG_PACKAGE_kmod-atl1 is not set
 # CONFIG_PACKAGE_kmod-atl1c is not set
 # CONFIG_PACKAGE_kmod-atl1e is not set
@@ -2814,8 +2814,8 @@ CONFIG_PACKAGE_kmod-8139too=y
 # CONFIG_PACKAGE_kmod-bnx2 is not set
 # CONFIG_PACKAGE_kmod-dm9000 is not set
 # CONFIG_PACKAGE_kmod-dummy is not set
-CONFIG_PACKAGE_kmod-e100=y
-CONFIG_PACKAGE_kmod-e1000=y
+# CONFIG_PACKAGE_kmod-e100 is not set
+# CONFIG_PACKAGE_kmod-e1000 is not set
 # CONFIG_PACKAGE_kmod-e1000e is not set
 # CONFIG_PACKAGE_kmod-et131x is not set
 # CONFIG_PACKAGE_kmod-ethoc is not set
@@ -2831,17 +2831,17 @@ CONFIG_PACKAGE_kmod-ifb=y
 CONFIG_PACKAGE_kmod-libphy=y
 # CONFIG_PACKAGE_kmod-macvlan is not set
 CONFIG_PACKAGE_kmod-mii=y
-CONFIG_PACKAGE_kmod-natsemi=y
-CONFIG_PACKAGE_kmod-ne2k-pci=y
+# CONFIG_PACKAGE_kmod-natsemi is not set
+# CONFIG_PACKAGE_kmod-ne2k-pci is not set
 # CONFIG_PACKAGE_kmod-niu is not set
 # CONFIG_PACKAGE_kmod-of-mdio is not set
-CONFIG_PACKAGE_kmod-pcnet32=y
+# CONFIG_PACKAGE_kmod-pcnet32 is not set
 # CONFIG_PACKAGE_kmod-phy-broadcom is not set
 # CONFIG_PACKAGE_kmod-r6040 is not set
 CONFIG_PACKAGE_kmod-r8169=y
 # CONFIG_PACKAGE_kmod-siit is not set
 # CONFIG_PACKAGE_kmod-sis190 is not set
-CONFIG_PACKAGE_kmod-sis900=y
+# CONFIG_PACKAGE_kmod-sis900 is not set
 # CONFIG_PACKAGE_kmod-skge is not set
 # CONFIG_PACKAGE_kmod-sky2 is not set
 # CONFIG_PACKAGE_kmod-solos-pci is not set
@@ -2855,8 +2855,8 @@ CONFIG_PACKAGE_kmod-sis900=y
 # CONFIG_PACKAGE_kmod-switch-rtl8367b is not set
 # CONFIG_PACKAGE_kmod-tg3 is not set
 # CONFIG_PACKAGE_kmod-tulip is not set
-CONFIG_PACKAGE_kmod-via-rhine=y
-CONFIG_PACKAGE_kmod-via-velocity=y
+# CONFIG_PACKAGE_kmod-via-rhine is not set
+# CONFIG_PACKAGE_kmod-via-velocity is not set
 # CONFIG_PACKAGE_kmod-vmxnet3 is not set
 
 #
@@ -3481,7 +3481,7 @@ CONFIG_PACKAGE_lua=y
 # Filesystem
 #
 # CONFIG_PACKAGE_libacl is not set
-# CONFIG_PACKAGE_libattr is not set
+CONFIG_PACKAGE_libattr=y
 CONFIG_PACKAGE_libext2fs=y
 # CONFIG_PACKAGE_libfuse is not set
 # CONFIG_PACKAGE_libow is not set
@@ -3826,7 +3826,7 @@ CONFIG_PACKAGE_libevent2=y
 # CONFIG_PACKAGE_libeventlog is not set
 # CONFIG_PACKAGE_libevhtp is not set
 # CONFIG_PACKAGE_libexif is not set
-CONFIG_PACKAGE_libexpat=y
+# CONFIG_PACKAGE_libexpat is not set
 # CONFIG_PACKAGE_libexslt is not set
 # CONFIG_PACKAGE_libextractor is not set
 CONFIG_PACKAGE_libf2fs=y
@@ -3959,7 +3959,7 @@ CONFIG_PACKAGE_libpcre=y
 # CONFIG_PACKAGE_libreadline is not set
 # CONFIG_PACKAGE_libredblack is not set
 # CONFIG_PACKAGE_libroxml is not set
-# CONFIG_PACKAGE_librpc is not set
+CONFIG_PACKAGE_librpc=y
 # CONFIG_PACKAGE_librrd1 is not set
 # CONFIG_PACKAGE_librtlsdr is not set
 # CONFIG_PACKAGE_libruby is not set
@@ -4009,7 +4009,7 @@ CONFIG_PACKAGE_libuclient=y
 # CONFIG_PACKAGE_libudns is not set
 # CONFIG_PACKAGE_libuecc is not set
 # CONFIG_PACKAGE_libugpio is not set
-CONFIG_PACKAGE_libunbound=y
+# CONFIG_PACKAGE_libunbound is not set
 # CONFIG_PACKAGE_libunistring is not set
 # CONFIG_PACKAGE_libunwind is not set
 # CONFIG_PACKAGE_libupnp is not set
@@ -4166,8 +4166,8 @@ CONFIG_PACKAGE_luci-app-firewall=y
 # CONFIG_PACKAGE_luci-app-olsr-viz is not set
 # CONFIG_PACKAGE_luci-app-openvpn is not set
 # CONFIG_PACKAGE_luci-app-p910nd is not set
-CONFIG_PACKAGE_luci-app-polipo=y
-CONFIG_PACKAGE_luci-app-privoxy=y
+# CONFIG_PACKAGE_luci-app-polipo is not set
+# CONFIG_PACKAGE_luci-app-privoxy is not set
 # CONFIG_PACKAGE_luci-app-qos is not set
 # CONFIG_PACKAGE_luci-app-radicale is not set
 # CONFIG_PACKAGE_luci-app-rp-pppoe-server is not set
@@ -4185,7 +4185,7 @@ CONFIG_PACKAGE_luci-app-shadowsocks-libev=y
 # CONFIG_PACKAGE_luci-app-travelmate is not set
 # CONFIG_PACKAGE_luci-app-udpxy is not set
 # CONFIG_PACKAGE_luci-app-uhttpd is not set
-CONFIG_PACKAGE_luci-app-unbound=y
+# CONFIG_PACKAGE_luci-app-unbound is not set
 CONFIG_PACKAGE_luci-app-upnp=y
 # CONFIG_PACKAGE_luci-app-vnstat is not set
 # CONFIG_PACKAGE_luci-app-vpnbypass is not set
@@ -4521,7 +4521,7 @@ CONFIG_PACKAGE_ebtables-utils=y
 CONFIG_PACKAGE_iptables=y
 CONFIG_IPTABLES_CONNLABEL=y
 CONFIG_IPTABLES_NFTABLES=y
-CONFIG_PACKAGE_iptables-mod-account=y
+# CONFIG_PACKAGE_iptables-mod-account is not set
 # CONFIG_PACKAGE_iptables-mod-chaos is not set
 CONFIG_PACKAGE_iptables-mod-checksum=y
 CONFIG_PACKAGE_iptables-mod-cluster=y
@@ -4539,7 +4539,7 @@ CONFIG_PACKAGE_iptables-mod-hashlimit=y
 CONFIG_PACKAGE_iptables-mod-iface=y
 CONFIG_PACKAGE_iptables-mod-ipmark=y
 CONFIG_PACKAGE_iptables-mod-ipopt=y
-CONFIG_PACKAGE_iptables-mod-ipp2p=y
+# CONFIG_PACKAGE_iptables-mod-ipp2p is not set
 CONFIG_PACKAGE_iptables-mod-iprange=y
 CONFIG_PACKAGE_iptables-mod-ipsec=y
 CONFIG_PACKAGE_iptables-mod-ipv4options=y
@@ -4637,9 +4637,9 @@ CONFIG_PACKAGE_bind-tools=y
 # CONFIG_PACKAGE_nsd-control-setup is not set
 # CONFIG_PACKAGE_nsd-nossl is not set
 # CONFIG_PACKAGE_ohybridproxy is not set
-CONFIG_PACKAGE_unbound=y
-CONFIG_PACKAGE_unbound-anchor=y
-CONFIG_PACKAGE_unbound-control=y
+# CONFIG_PACKAGE_unbound is not set
+# CONFIG_PACKAGE_unbound-anchor is not set
+# CONFIG_PACKAGE_unbound-control is not set
 # CONFIG_PACKAGE_unbound-control-setup is not set
 # CONFIG_PACKAGE_unbound-host is not set
 # CONFIG_PACKAGE_zonestitcher is not set
@@ -4756,7 +4756,7 @@ CONFIG_PACKAGE_ip-full=y
 # CONFIG_PACKAGE_smcroute is not set
 # CONFIG_PACKAGE_ss is not set
 # CONFIG_PACKAGE_sslh is not set
-# CONFIG_PACKAGE_tc is not set
+CONFIG_PACKAGE_tc=y
 # CONFIG_PACKAGE_tcpproxy is not set
 # CONFIG_PACKAGE_vis is not set
 
@@ -5005,42 +5005,15 @@ CONFIG_PACKAGE_git-http=y
 # CONFIG_PACKAGE_haproxy-nossl is not set
 # CONFIG_PACKAGE_lighttpd is not set
 # CONFIG_PACKAGE_nginx is not set
-CONFIG_PACKAGE_polipo=y
-CONFIG_PACKAGE_privoxy=y
-
-#
-# Shared libraries settings
-#
-# CONFIG_PRIVOXY_disable-pthread is not set
-# CONFIG_PRIVOXY_disable-dynamic-pcre is not set
-# CONFIG_PRIVOXY_disable-zlib is not set
-
-#
-# Config options. Overwrites/ignore configuration file settings
-#
-# CONFIG_PRIVOXY_disable-toggle is not set
-# CONFIG_PRIVOXY_disable-force is not set
-# CONFIG_PRIVOXY_disable-fast-redirects is not set
-# CONFIG_PRIVOXY_disable-stats is not set
-# CONFIG_PRIVOXY_enable-ie-images is not set
-# CONFIG_PRIVOXY_disable-image-blocking is not set
-# CONFIG_PRIVOXY_disable-acl-support is not set
-# CONFIG_PRIVOXY_disable-trust-files is not set
-# CONFIG_PRIVOXY_disable-editor is not set
-# CONFIG_PRIVOXY_enable-no-gifs is not set
-# CONFIG_PRIVOXY_enable-graceful-termination is not set
-# CONFIG_PRIVOXY_enable-extended-host-patterns is not set
-# CONFIG_PRIVOXY_enable-external-filters is not set
-# CONFIG_PRIVOXY_enable-accept-filter is not set
-# CONFIG_PRIVOXY_enable-strptime-sanity-checks is not set
-# CONFIG_PRIVOXY_enable-compression is not set
+# CONFIG_PACKAGE_polipo is not set
+# CONFIG_PACKAGE_privoxy is not set
 # CONFIG_PACKAGE_radicale-py2 is not set
 # CONFIG_PACKAGE_radicale-py3 is not set
 # CONFIG_PACKAGE_shadowsocks-client is not set
 CONFIG_PACKAGE_shadowsocks-libev-config=y
 CONFIG_PACKAGE_shadowsocks-libev-ss-local=y
 CONFIG_PACKAGE_shadowsocks-libev-ss-redir=y
-# CONFIG_PACKAGE_shadowsocks-libev-ss-rules is not set
+CONFIG_PACKAGE_shadowsocks-libev-ss-rules=y
 CONFIG_PACKAGE_shadowsocks-libev-ss-server=y
 CONFIG_PACKAGE_shadowsocks-libev-ss-tunnel=y
 # CONFIG_PACKAGE_sockd is not set
