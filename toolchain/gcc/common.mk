@@ -117,8 +117,10 @@ GCC_CONFIGURE:= \
 		--disable-libgomp \
 		--disable-multilib \
 		--disable-libmpx \
+		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
+		--with-default-libstdcxx-abi=gcc4-compatible \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
 		$(if $(CONFIG_mips64)$(CONFIG_mips64el),--with-arch=mips64 \

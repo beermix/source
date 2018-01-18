@@ -10,12 +10,6 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--enable-__cxa_atexit \
-	--enable-clocale=gnu \
-	--disable-libstdcxx-pch \
-	--enable-plugin \
-	--enable-checking=release \
-	--enable-threads=posix \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 #ifdef CONFIG_USE_MUSL
