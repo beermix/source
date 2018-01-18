@@ -100,7 +100,7 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-largefile \
-	--disable-lzma \
+	--with-lzma="$(STAGING_DIR)/usr" \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
