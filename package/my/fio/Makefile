@@ -14,11 +14,8 @@ PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://fossies.org/linux/misc
 #PKG_HASH:=736079e8ac543c74d59af73f9c52737b3bfec9601f020bf25a87a4f4d0f01bd6
-PKG_LICENSE:=BSD-2-Clause
-PKG_MAINTAINER:=Karl Palsson <karlp@tweak.net.au>
 
 PKG_INSTALL:=1
-PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -34,9 +31,10 @@ define Package/fio/description
  fioent, but without its limitations and bugs.
 endef
 
-CONFIGURE_ARGS += \
-	--cpu=i686 \
-	--esx \
+define Package/fio/Compile
+	./configure --cc="$(TARGET_CC)"
+	make
+endef
 
 define Package/fio/install
 	$(INSTALL_DIR) $(1)/usr/bin
