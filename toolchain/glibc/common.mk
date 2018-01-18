@@ -39,9 +39,6 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-# -Os miscompiles w. 2.24 gcc5/gcc6
-# only -O2 tested by upstream changeset
-# "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
@@ -61,6 +58,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--enable-obsolete-rpc \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
