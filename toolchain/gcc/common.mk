@@ -115,6 +115,7 @@ GCC_CONFIGURE:= \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--disable-libgomp \
+		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
