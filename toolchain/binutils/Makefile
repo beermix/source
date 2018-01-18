@@ -55,6 +55,7 @@ BINUTILS_CONFIGURE:= \
 		--disable-sim \
 		--disable-gdb \
 		--enable-libssp \
+		--enable-relro \
 		--enable-poison-system-directories \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
