@@ -57,7 +57,7 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
-		--enable-stack-protector=strong \
+		--enable-stack-protector=yes \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
