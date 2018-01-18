@@ -19,7 +19,7 @@ PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de>
 PKG_LICENSE_FILES:=LICENSE
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=0
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -43,7 +43,7 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +liblzma
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
 endef
 
 define Package/tor/description
@@ -100,7 +100,7 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-largefile \
-	--with-lzma="$(STAGING_DIR)/usr" \
+	--with-lzma=no \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
