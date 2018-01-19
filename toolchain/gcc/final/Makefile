@@ -12,9 +12,9 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
-#ifdef CONFIG_USE_MUSL
-#  GCC_MAKE += gcc_cv_libc_provides_ssp=yes
-#endif
+ifdef CONFIG_USE_MUSL
+  GCC_MAKE += gcc_cv_libc_provides_ssp=yes
+endif
 
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
   GCC_CONFIGURE += \
@@ -46,6 +46,7 @@ define FixGogccCrt
 	$(foreach crt, i 1 n, ln -sf ../../glibc-dev/lib/crt$(crt).o $(GCC_BUILD_DIR)/gotools/ ; )
 endef
 endif
+
 define Host/Compile
 	$(FixGogccCrt)
 	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) all
