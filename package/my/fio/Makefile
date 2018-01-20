@@ -39,7 +39,7 @@ define Build/Configure
 			--prefix=/usr \
 			--cc=$(TARGET_CC) \
 			--enable-lex \
-			--cpu=i486 \
+			--cpu=i686 \
 			--extra-cflags="$(TARGET_CFLAGS)" \
 	);
 endef
