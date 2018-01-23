@@ -58,7 +58,7 @@ dirclean: clean
 	rm -rf $(STAGING_DIR_HOST) $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/host $(BUILD_DIR_BASE)/hostpkg $(BUILD_DIR_TOOLCHAIN)
 	rm -rf $(TMP_DIR)
 	
-crr: clean
+clr: clean
 	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg $(BUILD_DIR_TOOLCHAIN)
 	rm -rf $(TMP_DIR)
 

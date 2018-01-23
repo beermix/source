@@ -37,13 +37,15 @@ ifeq ($(PKG_VERSION),6.3.0)
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 endif
 
-ifeq ($(PKG_VERSION),7.3.0)
-  PKG_VERSION:=7.3.0
-  PKG_REV:=RC-20180122
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/7.3.0-RC-20180122
-  PKG_SOURCE:=gcc-$(PKG_VERSION)-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_REV)
+ifeq ($(PKG_VERSION),7.2.1)
+  PKG_VERSION:=7.2.1
+  PKG_SOURCE_PROTO:=git
+  PKG_SOURCE_VERSION:=2443174
+  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+  GCC_DIR:=gcc-$(PKG_REV)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_6_3_ARC),)
