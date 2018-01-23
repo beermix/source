@@ -37,7 +37,7 @@ ifeq ($(PKG_VERSION),6.3.0)
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 endif
 
-ifeq ($(PKG_VERSION),7.3.0)
+ifeq ($(PKG_VERSION),7.2.1)
   PKG_VERSION:=7.3.0
   PKG_REV:=RC-20180122
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/7.3.0-RC-20180122
