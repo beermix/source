@@ -24,7 +24,7 @@ unexport CFLAGS
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-shared \
-	--enable-fft \
+	--disable-assembly \
 	--enable-cxx \
 	--enable-mpbsd
 
