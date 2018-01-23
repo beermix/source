@@ -473,6 +473,9 @@ LIBGCC_SO=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so.*))
 define Build/Compile/uClibc
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-*.so \
+		$(TOOLCHAIN_DIR)/lib/libcrypt-*.so \
+		$(TOOLCHAIN_DIR)/lib/libm-*.so \
+		$(TOOLCHAIN_DIR)/lib/libpthread-*.so \
 		$(PKG_BUILD_DIR)/
 endef
 ifneq ($(LIBGCC_SO),)
@@ -556,6 +559,8 @@ endif
 
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
+		$(PKG_BUILD_DIR)/libm-* \
+		$(PKG_BUILD_DIR)/libcrypt-* \
 		$(1)/lib/
   endef
 
@@ -695,6 +700,7 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
+	rm -f $(1)/opt/$$$$dir/*.py ; \
 	exit 0
   endef
 
