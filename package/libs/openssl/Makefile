@@ -208,6 +208,9 @@ TARGET_CFLAGS += $(FPIC) -I$(CURDIR)/include -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 define Build/Compile
+	# Remove demo certificates to avoid execution of openssl on host triggering buildbot failures:
+	# ERROR: ld.so: object <...> libcrypto.so.1.0.0 from LD_PRELOAD cannot be preloaded (wrong ELF class: ELFCLASS32)
+	-rm $(PKG_BUILD_DIR)/certs/demo/*.pem
 	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		CC="$(TARGET_CC)" \
 		ASFLAGS="$(TARGET_ASFLAGS) -I$(PKG_BUILD_DIR)/crypto -c" \
