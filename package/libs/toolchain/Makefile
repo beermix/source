@@ -162,7 +162,7 @@ endef
 
 define Package/libssp
 $(call Package/gcc/Default)
-  DEPENDS+=@SSP_SUPPORT
+  DEPENDS+=@GCC_LIBSSP
   TITLE:=GCC support library
 endef
 

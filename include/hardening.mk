@@ -6,6 +6,7 @@
 #
 
 PKG_CHECK_FORMAT_SECURITY ?= 1
+PKG_ASLR_PIE ?= 1
 PKG_SSP ?= 1
 PKG_FORTIFY_SOURCE ?= 1
 PKG_RELRO ?= 1
@@ -15,9 +16,15 @@ ifdef CONFIG_PKG_CHECK_FORMAT_SECURITY
     TARGET_CFLAGS += -Wformat -Werror=format-security
   endif
 endif
+ifdef CONFIG_PKG_ASLR_PIE
+  ifeq ($(strip $(PKG_ASLR_PIE)),1)
+    TARGET_CFLAGS += -fPIC
+    TARGET_LDFLAGS += -specs=$(INCLUDE_DIR)/hardened-ld-pie.specs
+  endif
+endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fstack-protector --param=ssp-buffer-size=32 -Wl,--copy-dt-needed-entries
+    TARGET_CFLAGS += -fstack-protector
   endif
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG
@@ -43,7 +50,7 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-sort-common
+    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro
     TARGET_LDFLAGS += -znow -zrelro
   endif
 endif

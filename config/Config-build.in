@@ -41,7 +41,7 @@ menu "Global build settings"
 		default n
 
 	config BUILD_PATENTED
-		default y
+		default n
 		bool "Compile with support for patented functionality"
 		help
 		  When this option is disabled, software which provides patented functionality
@@ -182,6 +182,22 @@ menu "Global build settings"
 		help
 		  Add -Wformat -Werror=format-security to the CFLAGS.  You can disable
 		  this per package by adding PKG_CHECK_FORMAT_SECURITY:=0 in the package
+		  Makefile.
+
+	config PKG_ASLR_PIE
+		bool
+		prompt "User space ASLR PIE compilation"
+		select BUSYBOX_DEFAULT_PIE
+		default n
+		help
+		  Add -fPIC to CFLAGS and -specs=hardened-build-ld to LDFLAGS.
+		  This enables package build as Position Independent Executables (PIE)
+		  to protect against "return-to-text" attacks. This belongs to the
+		  feature of Address Space Layout Randomisation (ASLR), which is
+		  implemented by the kernel and the ELF loader by randomising the
+		  location of memory allocations. This makes memory addresses harder
+		  to predict when an attacker is attempting a memory-corruption exploit.
+		  You can disable this per package by adding PKG_ASLR_PIE:=0 in the package
 		  Makefile.
 
 	choice
