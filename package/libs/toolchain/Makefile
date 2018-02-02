@@ -79,7 +79,7 @@ echo "Entware uses separate locale-archive file independent from main system"
 if [ -f '/usr/lib/locale/locale-archive' ]
 then
 	echo "locale-archive file found, checking format"
-	/usr/bin/locale.new -a 2>&1 >/dev/null | grep 'LC_COLLATE' > /dev/null
+	/bin/locale.new -a 2>&1 >/dev/null | grep 'LC_COLLATE' > /dev/null
 	if [ $$? -eq 0 ] ; then
 		echo "Old format locale archive found. Deleting!"
 		rm -f /usr/lib/locale/locale-archive
@@ -97,7 +97,7 @@ fi
 if [ -f '/usr/lib/locale/locale-archive' ]
 then
 	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
-	echo "You can add new locales to Entware using /bin/localedef.new"
+	echo "You can add new locales to Entware using /bin/localedef"
 fi
 if ! [ -f '/usr/lib/locale/locale-archive' ]
 then
