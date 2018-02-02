@@ -65,7 +65,6 @@ GLIBC_CONFIGURE:= \
 		--disable-multi-arch \
 		--enable-obsolete-nsl \
 		--enable-obsolete-rpc \
-		--enable-stack-protector=strong \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
