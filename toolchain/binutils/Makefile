@@ -11,7 +11,7 @@ PKG_VERSION:=$(call qstrip,$(CONFIG_BINUTILS_VERSION))
 BIN_VERSION:=$(PKG_VERSION)
 
 PKG_SOURCE_URL:=@GNU/binutils/
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 
 ifeq ($(PKG_VERSION),2.27)
   PKG_HASH:=369737ce51587f92466041a97ab7d2358c6d9e1b6490b3940eb09fb0a9a6ac88
@@ -22,7 +22,7 @@ ifeq ($(PKG_VERSION),2.29)
 endif
 
 ifeq ($(PKG_VERSION),2.30)
-  PKG_HASH:=081e190cf8024ca27fc0448d07d040d675e838faaea1c15c8d89aa294593c006
+  PKG_HASH:=4f9ed09cc610f50fd2f30543b233a20c37bd604749153f835f710a8d735c9d11
 endif
 
 ifneq ($(CONFIG_BINUTILS_VERSION_2_29_ARC),)
@@ -56,6 +56,8 @@ BINUTILS_CONFIGURE:= \
 		--disable-gdb \
 		--enable-libssp \
 		--enable-relro \
+		--enable-secureplt \
+		--enable-lto \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 
