@@ -13,6 +13,7 @@ GCC_CONFIGURE += \
 	--enable-__cxa_atexit \
 	--disable-libunwind-exceptions \
 	--enable-clocale=gnu \
+	--enable-linker-build-id \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL
