@@ -7,13 +7,19 @@ GCC_CONFIGURE += \
 	--disable-libsanitizer \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
-	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
 	--enable-__cxa_atexit \
 	--disable-libunwind-exceptions \
 	--enable-clocale=gnu \
 	--enable-linker-build-id \
+	--enable-decimal-float \
+	--enable-tls \
+	--enable-c99 \
+	--enable-long-long \
+	--enable-threads=posix \
+	--disable-libstdcxx-pch \
+	--enable-libstdcxx-time \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL

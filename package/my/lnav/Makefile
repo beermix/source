@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=4b40b3f
+PKG_VERSION:=7d7060a
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav
@@ -19,6 +19,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -27,13 +28,17 @@ define Package/lnav/Default
 	CATEGORY:=Network
 	TITLE:=Lightweight Secured Socks5 Proxy
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libsqlite3 +libssh2 +libpcre +libbz2 +libcurl +libopenssl +libevent2 +libpthread +libncursesw +libreadline +libstdcpp +zlib +librt
+	DEPENDS:=+libsqlite3 +libpcre +libbz2 +libcurl +libopenssl +libevent2 +libpthread +libncursesw +libreadline +libstdcpp +zlib +librt
 endef
 
 CONFIGURE_ARGS += \
 	--with-readline="$(STAGING_DIR)/usr" \
 	--with-pcre="$(STAGING_DIR)/usr" \
+	--with-libbz2="$(STAGING_DIR)/usr" \
 	--with-libcurl=="$(STAGING_DIR)/usr"
+	
+TARGET_CFLAGS := -D_DEFAULT_SOURCE
+TARGET_CXXFLAGS := -D_DEFAULT_SOURCE -std=gnu++14
 
 Package/lnav = $(Package/lnav/Default)
 
