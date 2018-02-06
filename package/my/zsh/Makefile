@@ -26,7 +26,7 @@ define Package/zsh
   CATEGORY:=Utilities
   SUBMENU:=Shells
   TITLE:=The Z shell
-  DEPENDS:=+libncurses +libncursesw +libpcre +librt +libpcap
+  DEPENDS:=+libncurses +libncursesw +libpcre +librt +libcap
   URL:=http://www.zsh.org/
 endef
 
@@ -46,7 +46,7 @@ define Build/Configure
 		--enable-dynamic \
 		--enable-libc-musl \
 		--enable-pcre \
-		--enable-cap=no \
+		--enable-cap \
 		--enable-multibyte \
 		--enable-unicode9 \
 		--enable-runhelpdir=$(CONFIGURE_PREFIX)/share/zsh/$(PKG_VERSION)/help \
