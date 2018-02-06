@@ -115,7 +115,6 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--with-default-libstdcxx-abi=gcc4-compatible \
-		--with-diagnostics-color=always \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
