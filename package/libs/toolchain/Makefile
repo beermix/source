@@ -642,17 +642,17 @@ icharmaps=ANSI_X3.4-1968.gz UTF-8.gz
 
 
   define Package/locales/install
-	$(INSTALL_DIR) $(1)/usr/lib/locale
-	$(INSTALL_DIR) $(1)/usr/share/i18n/locales
-	$(INSTALL_DIR) $(1)/usr/share/i18n/charmaps
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/usr/bin/locale.new
-	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/localedef.new
+	$(INSTALL_DIR) $(1)/lib/locale
+	$(INSTALL_DIR) $(1)/share/i18n/locales
+	$(INSTALL_DIR) $(1)/share/i18n/charmaps
+	$(INSTALL_DIR) $(1)/bin
+	$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/bin/locale
+	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/bin/localedef
 	for file in $(ilocales); do \
-		$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/$$$$file $(1)/usr/share/i18n/locales ; \
+		$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/$$$$file $(1)/share/i18n/locales ; \
 	done ; \
 	for file in $(icharmaps); do \
-		$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/$$$$file $(1)/usr/share/i18n/charmaps ; \
+		$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/$$$$file $(1)/share/i18n/charmaps ; \
 	done ; \
 	exit 0
   endef
