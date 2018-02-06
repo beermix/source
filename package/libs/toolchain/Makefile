@@ -646,8 +646,8 @@ icharmaps=ANSI_X3.4-1968.gz UTF-8.gz KOI-8.gz KOI8-R.gz KOI8-RU.gz KOI8-T.gz KOI
 	$(INSTALL_DIR) $(1)/share/i18n/locales
 	$(INSTALL_DIR) $(1)/share/i18n/charmaps
 	$(INSTALL_DIR) $(1)/bin
-	$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/bin/locale
-	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/bin/localedef
+	$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/bin/locale.new
+	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/bin/localedef.new
 	for file in $(ilocales); do \
 		$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/$$$$file $(1)/share/i18n/locales ; \
 	done ; \

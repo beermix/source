@@ -51,6 +51,7 @@ GLIBC_CONFIGURE:= \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		--prefix= \
+		--localedir=/usr/lib/locale \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
