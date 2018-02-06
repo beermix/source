@@ -12,6 +12,7 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--enable-__cxa_atexit \
 	--disable-libunwind-exceptions \
+	--enable-clocale=gnu \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL
