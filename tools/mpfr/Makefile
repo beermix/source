@@ -10,10 +10,9 @@ PKG_NAME:=mpfr
 PKG_VERSION:=4.0.1
 PKG_CPE_ID:=cpe:/a:mpfr:gnu_mpfr
 
-PKG_SOURCE_URL:=http://www.mpfr.org/mpfr-$(PKG_VERSION) \
-		@GNU/mpfr
+PKG_SOURCE_URL:=http://www.mpfr.org/mpfr-current
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=28aad98f3290d25aa8425eb51776bb45b147254ba3d88e82d168745d09053edd
+PKG_HASH:=67874a60826303ee2fb6affc6dc0ddd3e749e9bfcb4c8655e3953d0458a6e16e
 
 HOST_BUILD_PARALLEL:=1
 HOST_FIXUP:=autoreconf
