@@ -3,14 +3,14 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/bminor/glibc/tree/release/2.27/master
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
 PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=0d40d0e
+PKG_SOURCE_VERSION:=00c5a2d
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
