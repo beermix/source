@@ -116,7 +116,6 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--enable-checking=release \
 		--with-default-libstdcxx-abi=gcc4-compatible \
-		--disable-libunwind-exceptions \
 		--with-tune=haswell \
 		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
