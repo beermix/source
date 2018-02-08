@@ -38,10 +38,10 @@ ifeq ($(PKG_VERSION),6.3.0)
 endif
 
 ifeq ($(PKG_VERSION),7.3.0)
-  #PKG_HASH:=832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c
-    PKG_SOURCE:=gcc-7.3.0-92.tar.xz
-    GCC_DIR:=gcc-7.3.0-92
-    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-7.3.0
+  PKG_HASH:=caf07f2bf96c45915954677c2d7ae0f4d3c4d3168b85b5a0277805186beb31d6
+  PKG_SOURCE:=gcc-7.3.0-92.tar.xz
+  GCC_DIR:=gcc-7.3.0-92
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-7.3.0-92
 endif
 
 ifeq ($(PKG_VERSION),8.0.1)
