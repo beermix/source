@@ -39,17 +39,17 @@ endif
 
 ifeq ($(PKG_VERSION),7.3.0)
   #PKG_HASH:=832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c
-  PKG_SOURCE:=gcc-8-20180204.tar.xz
-  GCC_DIR:=gcc-8-20180204
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-8.0.1
+    PKG_SOURCE:=gcc-7.3.0-92.tar.xz
+    GCC_DIR:=gcc-7.3.0-92
+    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-7.3.0
 endif
 
 ifeq ($(PKG_VERSION),8.0.1)
     PKG_VERSION:=8.0.1
     PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-8
-    PKG_SOURCE:=gcc-8-20180204.tar.xz
-    GCC_DIR:=gcc-8-20180204
-    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-8.0.1
+    PKG_SOURCE:=gcc-7.3.0-92.tar.xz
+    GCC_DIR:=gcc-7.3.0-92
+    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-7.3.0
 endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
