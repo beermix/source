@@ -17,7 +17,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
-#PKG_MIRROR_HASH:=d389615366e603468c6d213e6545dfea99090d4a83aac121b6e2e4e5d0aac925
 PKG_LICENSE:=BSD-3-clause
 
 include $(INCLUDE_DIR)/package.mk
@@ -46,7 +45,7 @@ define Package/i2pd/conffiles
 endef
 
 TARGET_LDFLAGS+=-latomic
-MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
+MAKE_FLAGS+=USE_AESNI=no USE_AVX=no USE_UPNP=yes
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin

@@ -10,7 +10,7 @@ PKG_NAME:=glibc
 PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=00c5a2d
+PKG_SOURCE_VERSION:=56170e0
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -26,18 +26,6 @@ HOST_STAMP_PREPARED:=$(HOST_BUILD_DIR)/.prepared
 HOST_STAMP_CONFIGURED:=$(CUR_BUILD_DIR)/.configured
 HOST_STAMP_BUILT:=$(CUR_BUILD_DIR)/.built
 HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
-
-ifeq ($(ARCH),mips64)
-  ifdef CONFIG_MIPS64_ABI_N64
-    TARGET_CFLAGS += -mabi=64
-  endif
-  ifdef CONFIG_MIPS64_ABI_N32
-    TARGET_CFLAGS += -mabi=n32
-  endif
-  ifdef CONFIG_MIPS64_ABI_O32
-    TARGET_CFLAGS += -mabi=32
-  endif
-endif
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
@@ -74,8 +62,6 @@ GLIBC_CONFIGURE:= \
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export ac_cv_header_cpuid_h=yes
-export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
