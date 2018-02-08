@@ -2698,7 +2698,7 @@ CONFIG_PACKAGE_kmod-input-core=y
 # Libraries
 #
 # CONFIG_PACKAGE_kmod-lib-cordic is not set
-CONFIG_PACKAGE_kmod-lib-crc-ccitt=y
+# CONFIG_PACKAGE_kmod-lib-crc-ccitt is not set
 # CONFIG_PACKAGE_kmod-lib-crc-itu-t is not set
 CONFIG_PACKAGE_kmod-lib-crc16=y
 # CONFIG_PACKAGE_kmod-lib-crc32c is not set
@@ -2718,7 +2718,7 @@ CONFIG_PACKAGE_kmod-nls-cp1251=y
 # CONFIG_PACKAGE_kmod-nls-cp852 is not set
 # CONFIG_PACKAGE_kmod-nls-cp862 is not set
 # CONFIG_PACKAGE_kmod-nls-cp864 is not set
-CONFIG_PACKAGE_kmod-nls-cp866=y
+# CONFIG_PACKAGE_kmod-nls-cp866 is not set
 # CONFIG_PACKAGE_kmod-nls-cp932 is not set
 # CONFIG_PACKAGE_kmod-nls-cp936 is not set
 # CONFIG_PACKAGE_kmod-nls-cp950 is not set
@@ -2739,7 +2739,7 @@ CONFIG_PACKAGE_kmod-br-netfilter=y
 # CONFIG_PACKAGE_kmod-ebtables is not set
 # CONFIG_PACKAGE_kmod-ipt-account is not set
 # CONFIG_PACKAGE_kmod-ipt-chaos is not set
-CONFIG_PACKAGE_kmod-ipt-checksum=y
+# CONFIG_PACKAGE_kmod-ipt-checksum is not set
 # CONFIG_PACKAGE_kmod-ipt-cluster is not set
 # CONFIG_PACKAGE_kmod-ipt-clusterip is not set
 CONFIG_PACKAGE_kmod-ipt-compat-xtables=y
@@ -2755,7 +2755,7 @@ CONFIG_PACKAGE_kmod-ipt-extra=y
 CONFIG_PACKAGE_kmod-ipt-filter=y
 # CONFIG_PACKAGE_kmod-ipt-fuzzy is not set
 # CONFIG_PACKAGE_kmod-ipt-geoip is not set
-CONFIG_PACKAGE_kmod-ipt-hashlimit=y
+# CONFIG_PACKAGE_kmod-ipt-hashlimit is not set
 CONFIG_PACKAGE_kmod-ipt-iface=y
 CONFIG_PACKAGE_kmod-ipt-ipmark=y
 CONFIG_PACKAGE_kmod-ipt-ipopt=y
@@ -2767,7 +2767,7 @@ CONFIG_PACKAGE_kmod-ipt-ipv4options=y
 # CONFIG_PACKAGE_kmod-ipt-led is not set
 CONFIG_PACKAGE_kmod-ipt-length2=y
 CONFIG_PACKAGE_kmod-ipt-logmark=y
-CONFIG_PACKAGE_kmod-ipt-lscan=y
+# CONFIG_PACKAGE_kmod-ipt-lscan is not set
 # CONFIG_PACKAGE_kmod-ipt-lua is not set
 CONFIG_PACKAGE_kmod-ipt-nat=y
 CONFIG_PACKAGE_kmod-ipt-nat-extra=y
@@ -2819,12 +2819,12 @@ CONFIG_PACKAGE_kmod-nfnetlink-queue=y
 # CONFIG_PACKAGE_kmod-gigaset is not set
 # CONFIG_PACKAGE_kmod-hfcmulti is not set
 # CONFIG_PACKAGE_kmod-hfcpci is not set
-CONFIG_PACKAGE_kmod-ifb=y
+# CONFIG_PACKAGE_kmod-ifb is not set
 # CONFIG_PACKAGE_kmod-igb is not set
 # CONFIG_PACKAGE_kmod-igbvf is not set
 # CONFIG_PACKAGE_kmod-ixgbe is not set
 # CONFIG_PACKAGE_kmod-ixgbevf is not set
-CONFIG_PACKAGE_kmod-libphy=y
+# CONFIG_PACKAGE_kmod-libphy is not set
 # CONFIG_PACKAGE_kmod-macvlan is not set
 CONFIG_PACKAGE_kmod-mii=y
 # CONFIG_PACKAGE_kmod-natsemi is not set
@@ -3018,9 +3018,10 @@ CONFIG_PACKAGE_kmod-button-hotplug=y
 #
 # Virtualization
 #
+CONFIG_PACKAGE_kmod-irqbypass=y
 # CONFIG_PACKAGE_kmod-kvm-amd is not set
-# CONFIG_PACKAGE_kmod-kvm-intel is not set
-# CONFIG_PACKAGE_kmod-kvm-x86 is not set
+CONFIG_PACKAGE_kmod-kvm-intel=y
+CONFIG_PACKAGE_kmod-kvm-x86=y
 
 #
 # Voice over IP
@@ -3136,7 +3137,7 @@ CONFIG_PACKAGE_kmod-button-hotplug=y
 #
 # Go
 #
-# CONFIG_PACKAGE_gotty is not set
+CONFIG_PACKAGE_gotty=m
 # CONFIG_PACKAGE_rclone is not set
 # CONFIG_PACKAGE_shell2http is not set
 # CONFIG_PACKAGE_speedtest-go is not set
@@ -3488,8 +3489,8 @@ CONFIG_PACKAGE_lua=y
 #
 # Compression
 #
-CONFIG_PACKAGE_libbz2=y
-CONFIG_PACKAGE_liblzma=y
+# CONFIG_PACKAGE_libbz2 is not set
+# CONFIG_PACKAGE_liblzma is not set
 # CONFIG_PACKAGE_libunrar is not set
 
 #
@@ -3712,7 +3713,63 @@ CONFIG_SQLITE_RTREE=y
 # CONFIG_PACKAGE_avro-c is not set
 CONFIG_PACKAGE_bind-libs=y
 # CONFIG_PACKAGE_bluez-libs is not set
-# CONFIG_PACKAGE_boost is not set
+CONFIG_PACKAGE_boost=y
+
+#
+# Select Boost Options
+#
+
+#
+# Boost compilation options.
+#
+# CONFIG_boost-shared-libs is not set
+CONFIG_boost-static-libs=y
+# CONFIG_boost-static-and-shared-libs is not set
+# CONFIG_boost-runtime-shared is not set
+CONFIG_boost-runtime-static=y
+# CONFIG_boost-runtime-static-and-shared is not set
+CONFIG_boost-variant-release=y
+# CONFIG_boost-variant-debug is not set
+# CONFIG_boost-variant-profile is not set
+CONFIG_boost-use-name-tags=y
+# CONFIG_boost-single-thread is not set
+# CONFIG_boost-build-type-complete is not set
+
+#
+# Select Boost libraries
+#
+
+#
+# Libraries
+#
+# CONFIG_boost-libs-all is not set
+# CONFIG_boost-test-pkg is not set
+# CONFIG_boost-coroutine2 is not set
+# CONFIG_boost-graph-parallel is not set
+# CONFIG_PACKAGE_boost-atomic is not set
+# CONFIG_PACKAGE_boost-chrono is not set
+# CONFIG_PACKAGE_boost-container is not set
+# CONFIG_PACKAGE_boost-context is not set
+# CONFIG_PACKAGE_boost-coroutine is not set
+CONFIG_PACKAGE_boost-date_time=y
+# CONFIG_PACKAGE_boost-fiber is not set
+CONFIG_PACKAGE_boost-filesystem=y
+# CONFIG_PACKAGE_boost-graph is not set
+# CONFIG_PACKAGE_boost-iostreams is not set
+# CONFIG_PACKAGE_boost-log is not set
+# CONFIG_PACKAGE_boost-math is not set
+CONFIG_PACKAGE_boost-program_options=y
+# CONFIG_PACKAGE_boost-random is not set
+# CONFIG_PACKAGE_boost-regex is not set
+# CONFIG_PACKAGE_boost-serialization is not set
+# CONFIG_PACKAGE_boost-wserialization is not set
+# CONFIG_PACKAGE_boost-signals is not set
+# CONFIG_PACKAGE_boost-stacktrace is not set
+CONFIG_PACKAGE_boost-system=y
+# CONFIG_PACKAGE_boost-thread is not set
+# CONFIG_PACKAGE_boost-timer is not set
+# CONFIG_PACKAGE_boost-type_erasure is not set
+# CONFIG_PACKAGE_boost-wave is not set
 # CONFIG_PACKAGE_ccid is not set
 # CONFIG_PACKAGE_check is not set
 # CONFIG_PACKAGE_classpath is not set
@@ -4483,7 +4540,7 @@ CONFIG_PACKAGE_iptables=y
 # CONFIG_IPTABLES_NFTABLES is not set
 # CONFIG_PACKAGE_iptables-mod-account is not set
 # CONFIG_PACKAGE_iptables-mod-chaos is not set
-CONFIG_PACKAGE_iptables-mod-checksum=y
+# CONFIG_PACKAGE_iptables-mod-checksum is not set
 # CONFIG_PACKAGE_iptables-mod-cluster is not set
 # CONFIG_PACKAGE_iptables-mod-clusterip is not set
 # CONFIG_PACKAGE_iptables-mod-condition is not set
@@ -4495,7 +4552,7 @@ CONFIG_PACKAGE_iptables-mod-extra=y
 CONFIG_PACKAGE_iptables-mod-filter=y
 # CONFIG_PACKAGE_iptables-mod-fuzzy is not set
 # CONFIG_PACKAGE_iptables-mod-geoip is not set
-CONFIG_PACKAGE_iptables-mod-hashlimit=y
+# CONFIG_PACKAGE_iptables-mod-hashlimit is not set
 CONFIG_PACKAGE_iptables-mod-iface=y
 CONFIG_PACKAGE_iptables-mod-ipmark=y
 CONFIG_PACKAGE_iptables-mod-ipopt=y
@@ -4506,7 +4563,7 @@ CONFIG_PACKAGE_iptables-mod-ipv4options=y
 # CONFIG_PACKAGE_iptables-mod-led is not set
 CONFIG_PACKAGE_iptables-mod-length2=y
 CONFIG_PACKAGE_iptables-mod-logmark=y
-CONFIG_PACKAGE_iptables-mod-lscan=y
+# CONFIG_PACKAGE_iptables-mod-lscan is not set
 # CONFIG_PACKAGE_iptables-mod-lua is not set
 CONFIG_PACKAGE_iptables-mod-nat-extra=y
 CONFIG_PACKAGE_iptables-mod-nflog=y
@@ -5050,7 +5107,7 @@ CONFIG_ETHTOOL_PRETTY_DUMP=y
 # CONFIG_PACKAGE_httping is not set
 # CONFIG_PACKAGE_httping-nossl is not set
 # CONFIG_PACKAGE_https_dns_proxy is not set
-# CONFIG_PACKAGE_i2pd is not set
+CONFIG_PACKAGE_i2pd=y
 # CONFIG_PACKAGE_ibrdtn-tools is not set
 # CONFIG_PACKAGE_ibrdtnd is not set
 # CONFIG_PACKAGE_ifstat is not set
