@@ -22,8 +22,6 @@ GCC_CONFIGURE += \
 	--enable-libstdcxx-time \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
-TARGET_CXXFLAGS+=-std=gnu++98
-
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
   GCC_CONFIGURE += \
 	--enable-sjlj-exceptions
