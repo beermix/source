@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=iucode-tool
-PKG_VERSION:=2.2
+PKG_VERSION:=2.3.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=iucode-tool_$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://gitlab.com/iucode-tool/releases/raw/latest
-PKG_HASH:=9810daf925b8a9ca244adc4e1916bcab65601c9ebe87e91c2281f78055982971
+PKG_HASH:=12b88efa4d0d95af08db05a50b3dcb217c0eb2bfc67b483779e33d498ddb2f95
 
 PKG_BUILD_DEPENDS:=USE_UCLIBC:argp-standalone USE_MUSL:argp-standalone
 

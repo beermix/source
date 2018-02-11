@@ -53,7 +53,7 @@ define Build/InstallDev
 		$(1)/usr/include/miniupnpc/
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/*.{so*,a} \
+		$(PKG_INSTALL_DIR)/usr/lib/libminiupnpc.a \
 		$(1)/usr/lib/
 endef
 

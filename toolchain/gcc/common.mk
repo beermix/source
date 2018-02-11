@@ -115,7 +115,6 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--enable-checking=release \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-tune=haswell \
 		--with-arch=bonnell \
