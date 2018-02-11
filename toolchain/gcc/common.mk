@@ -38,18 +38,17 @@ ifeq ($(PKG_VERSION),6.3.0)
 endif
 
 ifeq ($(PKG_VERSION),7.3.0)
-  PKG_HASH:=caf07f2bf96c45915954677c2d7ae0f4d3c4d3168b85b5a0277805186beb31d6
-  PKG_SOURCE:=gcc-7.3.0-92.tar.xz
-  GCC_DIR:=gcc-7.3.0-92
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-7.3.0-92
+  PKG_HASH:=832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c
 endif
 
-ifeq ($(PKG_VERSION),8.0.1)
-    PKG_VERSION:=8.0.1
-    PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-8
-    PKG_SOURCE:=gcc-7.3.0-92.tar.xz
-    GCC_DIR:=gcc-7.3.0-92
-    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-7.3.0
+ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
+    PKG_VERSION:=7.1.1
+    PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
+    PKG_SOURCE:=$(PKG_NAME)-$(GCC_VERSION).tar.gz
+    PKG_HASH:=90596af8b9c26a434cec0a3b3d37d0c7c755ab6a65496af6ca32529fab5a6cfe
+    PKG_REV:=2017.09-release
+    GCC_DIR:=gcc-arc-$(PKG_REV)
+    HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
 endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
@@ -111,13 +110,10 @@ GCC_CONFIGURE:= \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--disable-libgomp \
-		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
 		--with-default-libstdcxx-abi=gcc4-compatible \
-		--with-tune=haswell \
-		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
