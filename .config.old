@@ -4623,10 +4623,7 @@ CONFIG_PACKAGE_bind-dig=y
 CONFIG_PACKAGE_bind-dnssec=y
 # CONFIG_PACKAGE_bind-host is not set
 CONFIG_PACKAGE_bind-rndc=y
-CONFIG_PACKAGE_bind-server=y
-CONFIG_BIND_ENABLE_FILTER_AAAA=y
-# CONFIG_BIND_LIBJSON is not set
-# CONFIG_BIND_LIBXML2 is not set
+# CONFIG_PACKAGE_bind-server is not set
 # CONFIG_PACKAGE_bind-tools is not set
 # CONFIG_PACKAGE_danish is not set
 # CONFIG_PACKAGE_ddns-scripts is not set
@@ -4667,7 +4664,7 @@ CONFIG_PACKAGE_drill=y
 # CONFIG_PACKAGE_unbound-control is not set
 # CONFIG_PACKAGE_unbound-control-setup is not set
 # CONFIG_PACKAGE_unbound-host is not set
-CONFIG_PACKAGE_zonestitcher=y
+# CONFIG_PACKAGE_zonestitcher is not set
 
 #
 # Instant Messaging
