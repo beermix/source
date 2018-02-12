@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/bminor/glibc/tree/release/2.27/master
+# https://github.com/bminor/glibc/tree/release/2.26/master
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
