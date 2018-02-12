@@ -25,7 +25,7 @@ define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
 	DEPENDS:=+libopenssl +boost +boost-system +boost-filesystem \
-	         +boost-program_options +boost-date_time +libatomic +zlib +miniupnpc
+	         +boost-program_options +boost-date_time +libatomic +zlib
 	TITLE:=full-featured C++ implementation of I2P client
 	URL:=https://github.com/PurpleI2P/i2pd
 	USERID:=i2pd:i2pd
@@ -45,7 +45,7 @@ define Package/i2pd/conffiles
 endef
 
 TARGET_LDFLAGS+=-latomic
-MAKE_FLAGS+=USE_AESNI=no USE_AVX=no USE_UPNP=yes
+MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
