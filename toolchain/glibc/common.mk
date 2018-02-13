@@ -7,10 +7,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.26
+PKG_VERSION:=2.27.9000
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=d300041
+PKG_SOURCE_VERSION:=glibc-2.27.9000
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -58,7 +58,7 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
-		--enable-clocale=gnu \
+		--enable-static-pie \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-bind-now \
