@@ -58,7 +58,7 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
-		--enable-static-pie \
+		--enable-clocale=gnu \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-bind-now \
