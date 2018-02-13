@@ -9,9 +9,10 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=glibc
 PKG_VERSION:=2.26
 
-PKG_SOURCE_URL:=@GNU/libc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-#PKG_HASH:=e54e0a934cd2bc94429be79da5e9385898d2306b9eaf3c92d5a77af96190f6bd
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_VERSION:=d300041
+PKG_SOURCE_URL:=https://github.com/bminor/glibc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
@@ -25,18 +26,6 @@ HOST_STAMP_PREPARED:=$(HOST_BUILD_DIR)/.prepared
 HOST_STAMP_CONFIGURED:=$(CUR_BUILD_DIR)/.configured
 HOST_STAMP_BUILT:=$(CUR_BUILD_DIR)/.built
 HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
-
-ifeq ($(ARCH),mips64)
-  ifdef CONFIG_MIPS64_ABI_N64
-    TARGET_CFLAGS += -mabi=64
-  endif
-  ifdef CONFIG_MIPS64_ABI_N32
-    TARGET_CFLAGS += -mabi=n32
-  endif
-  ifdef CONFIG_MIPS64_ABI_O32
-    TARGET_CFLAGS += -mabi=32
-  endif
-endif
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
