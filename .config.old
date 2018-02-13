@@ -3525,7 +3525,7 @@ CONFIG_PACKAGE_liblzma=y
 # Filesystem
 #
 # CONFIG_PACKAGE_libacl is not set
-CONFIG_PACKAGE_libattr=y
+# CONFIG_PACKAGE_libattr is not set
 CONFIG_PACKAGE_libext2fs=y
 # CONFIG_PACKAGE_libfuse is not set
 # CONFIG_PACKAGE_libow is not set
@@ -3704,13 +3704,7 @@ CONFIG_OPENSSL_ENGINE_CRYPTO=y
 # database
 #
 # CONFIG_PACKAGE_libpq is not set
-CONFIG_PACKAGE_libsqlite3=y
-
-#
-# Configuration
-#
-CONFIG_SQLITE_FTS3=y
-CONFIG_SQLITE_RTREE=y
+# CONFIG_PACKAGE_libsqlite3 is not set
 # CONFIG_PACKAGE_pgsqlodbc is not set
 # CONFIG_PACKAGE_psqlodbca is not set
 # CONFIG_PACKAGE_psqlodbcw is not set
@@ -3754,7 +3748,7 @@ CONFIG_PACKAGE_bind-libs=y
 CONFIG_PACKAGE_fio=y
 # CONFIG_PACKAGE_getdns is not set
 # CONFIG_PACKAGE_giflib is not set
-CONFIG_PACKAGE_glib2=y
+# CONFIG_PACKAGE_glib2 is not set
 # CONFIG_PACKAGE_glog is not set
 # CONFIG_PACKAGE_hidapi is not set
 # CONFIG_PACKAGE_ibrcommon is not set
@@ -3864,7 +3858,7 @@ CONFIG_PACKAGE_libf2fs=y
 # CONFIG_PACKAGE_libfastjson is not set
 # CONFIG_PACKAGE_libfdisk is not set
 # CONFIG_PACKAGE_libfdt is not set
-CONFIG_PACKAGE_libffi=y
+# CONFIG_PACKAGE_libffi is not set
 # CONFIG_PACKAGE_libffmpeg-custom is not set
 # CONFIG_PACKAGE_libflac is not set
 # CONFIG_PACKAGE_libfreetype is not set
@@ -3985,7 +3979,7 @@ CONFIG_PACKAGE_libpcre=y
 CONFIG_PACKAGE_libreadline=y
 # CONFIG_PACKAGE_libredblack is not set
 # CONFIG_PACKAGE_libroxml is not set
-CONFIG_PACKAGE_librpc=y
+# CONFIG_PACKAGE_librpc is not set
 # CONFIG_PACKAGE_librrd1 is not set
 # CONFIG_PACKAGE_librtlsdr is not set
 # CONFIG_PACKAGE_libruby is not set
@@ -5597,18 +5591,7 @@ CONFIG_PACKAGE_lm-sensors=y
 # CONFIG_PACKAGE_maccalc is not set
 # CONFIG_PACKAGE_macchanger is not set
 # CONFIG_PACKAGE_mbtools is not set
-CONFIG_PACKAGE_mc=y
-
-#
-# Configuration
-#
-# CONFIG_MC_DIFFVIEWER is not set
-# CONFIG_MC_EDITOR is not set
-# CONFIG_MC_SUBSHELL is not set
-CONFIG_MC_LARGEFILE=y
-CONFIG_MC_BACKGROUND=y
-CONFIG_MC_CHARSET=y
-# CONFIG_MC_VFS is not set
+# CONFIG_PACKAGE_mc is not set
 # CONFIG_PACKAGE_mcookie is not set
 # CONFIG_PACKAGE_mmc-utils is not set
 # CONFIG_PACKAGE_moreutils is not set
