@@ -11,7 +11,6 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--enable-__cxa_atexit \
 	--enable-clocale=gnu \
-	--disable-libunwind-exceptions \
 	--enable-linker-build-id \
 	--enable-decimal-float \
 	--enable-tls \
