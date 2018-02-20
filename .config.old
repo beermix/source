@@ -393,8 +393,8 @@ CONFIG_PER_FEED_REPO_ADD_COMMENTED=y
 #
 # Base system
 #
-CONFIG_PACKAGE_attendedsysupgrade-common=y
-CONFIG_PACKAGE_auc=y
+# CONFIG_PACKAGE_attendedsysupgrade-common is not set
+# CONFIG_PACKAGE_auc is not set
 CONFIG_PACKAGE_base-files=y
 # CONFIG_PACKAGE_block-mount is not set
 # CONFIG_PACKAGE_blockd is not set
