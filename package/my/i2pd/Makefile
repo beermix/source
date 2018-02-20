@@ -10,7 +10,6 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
 PKG_VERSION:=2.18.0
-PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -25,7 +24,7 @@ define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
 	DEPENDS:=+libopenssl +boost +boost-system +boost-filesystem \
-	         +boost-program_options +boost-date_time +libatomic +zlib
+	         +boost-program_options +boost-date_time +libatomic +zlib +libpthread +libstdcpp +libpthread +librt
 	TITLE:=full-featured C++ implementation of I2P client
 	URL:=https://github.com/PurpleI2P/i2pd
 	USERID:=i2pd:i2pd
@@ -44,7 +43,8 @@ define Package/i2pd/conffiles
 	/etc/i2pd/tunnels.conf
 endef
 
-TARGET_LDFLAGS+=-latomic
+TARGET_LDFLAGS+=-lpthread -lz -lm -lrt -latomic -ldl
+#TARGET_CXXFLAGS+=-O3 -Wall
 MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install

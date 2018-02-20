@@ -33,7 +33,7 @@ HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -march=bonnell $(filter-out "-march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -m32 -g" \
+	CFLAGS="-O2 -m32 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -march=bonnell $(filter-out "-Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=1 -Wl,--copy-dt-needed-entries -m32  -fasynchronous-unwind-tables -Wp,-D_REENTRANT -ftree-loop-distribute-patterns -Wl,-z -Wl,now -Wl,-z -Wl,relro -malign-data=abi -fno-semantic-interposition -ftree-vectorize  -ftree-loop-vectorize  -Wl,-sort-common -march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -m32 -g" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -58,7 +58,6 @@ GLIBC_CONFIGURE:= \
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
-export libc_cv_forced_unwind=yes
 export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 

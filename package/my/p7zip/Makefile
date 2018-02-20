@@ -9,7 +9,6 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=p7zip
 PKG_VERSION:=16.02
-PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION)_src_all.tar.bz2
 PKG_SOURCE_URL:=@SF/p7zip/p7zip/$(PKG_VERSION)
@@ -17,10 +16,12 @@ PKG_MD5SUM:=a0128d661cfe7cc8c121e73519c54fbf
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)_$(PKG_VERSION)
 
+PKG_BUILD_PARALLEL:=1
+
 include $(INCLUDE_DIR)/package.mk
 
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" ALLFLAGS_C="$(TARGET_CFLAGS) -ffast-math" CXX="$(TARGET_CXX)" ALLFLAGS_CPP="$(TARGET_CXXFLAGS) -ffast-math" LDFLAGS="$(TARGET_LDFLAGS)" 7za
+	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" ALLFLAGS_C="$(TARGET_CFLAGS) -O3 -ffast-math" CXX="$(TARGET_CXX)" ALLFLAGS_CPP="$(TARGET_CXXFLAGS) -O3 -ffast-math" LDFLAGS="$(TARGET_LDFLAGS)" 7za
 endef
 
 define Package/p7zip

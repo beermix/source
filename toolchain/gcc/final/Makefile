@@ -10,6 +10,8 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
+	--disable-vtable-verify \
+	--disable-libunwind-exceptions \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL
