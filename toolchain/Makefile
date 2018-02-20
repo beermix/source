@@ -33,26 +33,25 @@ $(curdir)/builddirs := $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_EXTERNAL_TOOLCHAIN)
 ifdef CONFIG_USE_UCLIBC
   $(curdir)/builddirs += $(LIBC)/utils
 endif
-
 # builddir dependencies
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
+  ifdef CONFIG_USE_MUSL
+    $(curdir)/kernel-headers/compile:=$(curdir)/gcc/initial/compile
+    $(curdir)/$(LIBC)/compile:=$(curdir)/kernel-headers/compile
+  else
     $(curdir)/builddirs += $(LIBC)/headers gcc/minimal
     $(curdir)/gcc/minimal/compile:=$(curdir)/binutils/compile
     $(curdir)/kernel-headers/compile:=$(curdir)/gcc/minimal/compile
-    $(curdir)/gcc/initial/prepare:=$(curdir)/gcc/minimal/prepare
-    $(curdir)/$(LIBC)/prepare:=$(curdir)/$(LIBC)/headers/prepare
     $(curdir)/$(LIBC)/headers/compile:=$(curdir)/kernel-headers/compile
     $(curdir)/gcc/initial/compile:=$(curdir)/$(LIBC)/headers/compile
+  endif
 
   $(curdir)/gcc/initial/compile+=$(curdir)/binutils/compile
-  $(curdir)/gcc/final/prepare:=$(curdir)/gcc/initial/prepare
   $(curdir)/$(LIBC)/compile:=$(curdir)/gcc/initial/compile
   $(curdir)/gcc/final/compile:=$(curdir)/$(LIBC)/compile
   $(curdir)/$(LIBC)/utils/compile:=$(curdir)/gcc/final/compile
-  $(curdir)/$(LIBC)/utils/prepare:=$(curdir)/$(LIBC)/headers/prepare
 endif
 
-$(curdir)/builddirs-compile:=$($(curdir)/builddirs-prepare)
 ifndef DUMP_TARGET_DB
 ifneq ($(ARCH),)
   $(TOOLCHAIN_DIR)/info.mk: .config
@@ -83,9 +82,7 @@ endif
 
 # prerequisites for the individual targets
 $(curdir)/ := .config prereq
-$(curdir)//prepare = $(STAGING_DIR)/.prepared $(TOOLCHAIN_DIR)/info.mk $(tools/stamp-compile)
-$(curdir)//compile = $(1)/prepare
-$(curdir)//compile = $(1)/compile
+$(curdir)//compile = $(STAGING_DIR)/.prepared $(TOOLCHAIN_DIR)/info.mk $(tools/stamp-compile)
 
 ifndef DUMP_TARGET_DB
 $(TOOLCHAIN_DIR)/stamp/.gcc-initial_installed:
