@@ -19,13 +19,15 @@ define Build/Prepare
 	$(CP) ./tpws/* $(PKG_BUILD_DIR)/
 endef
 
+TARGET_CFLAGS += -O3
+
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) $(TARGET_CONFIGURE_OPTS)
 endef
 
 define Package/tpws/install
-	$(INSTALL_DIR) $(1)/opt/zapret/tpws
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tpws $(1)/opt/zapret/tpws
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tpws $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,tpws))

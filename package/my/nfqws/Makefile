@@ -15,6 +15,8 @@ define Package/nfqws
  	DEPENDS:=+libnetfilter-queue
 endef
 
+TARGET_CFLAGS += -O3
+
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 	$(CP) ./nfq/* $(PKG_BUILD_DIR)/
@@ -25,8 +27,8 @@ define Build/Compile
 endef
 
 define Package/nfqws/install
-	$(INSTALL_DIR) $(1)/opt/zapret/nfq
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nfqws $(1)/opt/zapret/nfq
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nfqws $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,nfqws))

@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/host-build.mk
 define Package/sysbench
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:= +luajit
+  DEPENDS:= +luajit +libaio
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
