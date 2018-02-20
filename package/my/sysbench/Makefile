@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysbench
-PKG_VERSION:=1.0.13
+PKG_VERSION:=1.0.10
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/akopytov/sysbench.git
@@ -16,8 +16,6 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_FIXUP:=libtool
-PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
@@ -26,38 +24,14 @@ include $(INCLUDE_DIR)/package.mk
 define Package/sysbench
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpthread +librt +libatomic
+  DEPENDS:=+libpthread +librt +libatomic +luajit
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
-endef
-
-TARGET_LDFLAGS+=-latomic
-TARGET_CFLAGS += $(FPIC) -std=gnu99
-HOST_CFLAGS += $(FPIC) -std=gnu99
-
-ifeq ($(HOST_ARCH),x86_64)
-  ifeq ($(CONFIG_x86_64),)
-    HOST_BITS := -m32
-  endif
-endif
-
-define Build/Compile
-	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
-		HOST_CC="$(HOSTCC) $(HOST_CFLAGS) -m32" \
-		CROSS="$(TARGET_CROSS)" \
-		DPREFIX=$(PKG_INSTALL_DIR)/usr \
-		PREFIX=/usr \
-		CFLAGS="-m32 -march=bonnell --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -O2 -pipe -fomit-frame-pointer"
-	rm -rf $(PKG_INSTALL_DIR)
-	mkdir -p $(PKG_INSTALL_DIR)
-	$(MAKE) -C $(PKG_BUILD_DIR) \
-		DPREFIX=$(PKG_INSTALL_DIR)/usr \
-		PREFIX=/usr \
-		install
 endef
 
 CONFIGURE_ARGS += \
 	--without-mysql \
-	--with-gcc-arch=i586 \
+	--with-system-luajit \
+	--with-gcc-arch=i486 \
 	
 define Package/sysbench/description
  Redsocks is a daemon running on the local system, that will transparently
