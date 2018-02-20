@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/torproject/tor/tree/release-0.3.3
+# https://github.com/torproject/tor/branches/active
 
 include $(TOPDIR)/rules.mk
 
@@ -28,8 +28,6 @@ define Package/tor/Default
   URL:=https://www.torproject.org/
   USERID:=tor=52:tor=52
 endef
-
-
 
 define Package/tor/Default/description
  Tor is a toolset for a wide range of organizations and people that want to
