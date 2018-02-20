@@ -24,7 +24,7 @@ ifdef CONFIG_PKG_ASLR_PIE
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fstack-protector --param=ssp-buffer-size=4 -Wl,--copy-dt-needed-entries -fasynchronous-unwind-tables -Wp,-D_REENTRANT -ftree-loop-distribute-patterns -Wl,-z -Wl,now -Wl,-z -Wl,relro -malign-data=abi -fno-semantic-interposition -ftree-vectorize  -ftree-loop-vectorize  -Wl,-sort-common
+    TARGET_CFLAGS += -fstack-protector --param=ssp-buffer-size=4 -Wl,--copy-dt-needed-entries -fasynchronous-unwind-tables -Wp,-D_REENTRANT -ftree-loop-distribute-patterns -malign-data=abi -fno-semantic-interposition -ftree-vectorize -ftree-loop-vectorize
   endif
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG
