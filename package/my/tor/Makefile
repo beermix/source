@@ -3,12 +3,12 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/torproject/tor/tree/release-0.3.2
+# https://github.com/torproject/tor/tree/release-0.3.3
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=434942e
+PKG_VERSION:=6384d31
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
