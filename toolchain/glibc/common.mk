@@ -7,10 +7,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.27
+PKG_VERSION:=2.27.9000
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=b4108a3
+PKG_SOURCE_VERSION:=ec481ad
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -53,13 +53,15 @@ GLIBC_CONFIGURE:= \
 		--disable-nscd \
 		--disable-timezone-tools \
 		--disable-debug \
+		--enable-obsolete-rpc \
+		--enable-stack-protector=strong \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
+#export libc_cv_forced_unwind=yes
+#export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
@@ -83,6 +85,9 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
+	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
+		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
+	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 

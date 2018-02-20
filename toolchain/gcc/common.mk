@@ -28,8 +28,13 @@ GCC_DIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=@GNU/gcc/gcc-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
-ifeq ($(PKG_VERSION),5.5.0)
-  PKG_HASH:=530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87
+ifeq ($(PKG_VERSION),8.0.1)
+  PKG_VERSION:=8.0.1
+  PKG_REV:=8-20180218
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-8
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
 ifeq ($(PKG_VERSION),6.3.0)
@@ -37,14 +42,18 @@ ifeq ($(PKG_VERSION),6.3.0)
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 endif
 
-ifeq ($(PKG_VERSION),7.3.1)
-  PKG_VERSION:=7.3.1
-  PKG_REV:=7-20180215
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+ifeq ($(PKG_VERSION),7.3.0)
+  PKG_HASH:=832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c
 endif
+
+#ifeq ($(PKG_VERSION),7.3.1)
+#  PKG_VERSION:=7.3.1
+#  PKG_REV:=7-20180215
+#  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
+#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+#endif
 
 ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
     PKG_VERSION:=7.1.1
@@ -115,10 +124,12 @@ GCC_CONFIGURE:= \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--disable-libgomp \
+		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
 		--with-tune=haswell \
+		--with-diagnostics-color=always \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -135,7 +146,7 @@ ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
 endif
 
 ifndef GCC_VERSION_4_8
-  GCC_CONFIGURE += --with-diagnostics-color=auto-if-env
+  GCC_CONFIGURE += --with-diagnostics-color=always
 endif
 
 ifneq ($(CONFIG_GCC_DEFAULT_PIE),)
@@ -203,25 +214,6 @@ define Host/SetToolchainInfo
 	$(SED) 's,TARGET_CROSS=.*,TARGET_CROSS=$(REAL_GNU_TARGET_NAME)-,' $(TOOLCHAIN_DIR)/info.mk
 	$(SED) 's,GCC_VERSION=.*,GCC_VERSION=$(GCC_VERSION),' $(TOOLCHAIN_DIR)/info.mk
 endef
-
-ifneq ($(GCC_PREPARE),)
-  define Host/Prepare
-	$(call Host/SetToolchainInfo)
-	$(call Host/Prepare/Default)
-	ln -snf $(GCC_DIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
-	$(CP) $(SCRIPT_DIR)/config.{guess,sub} $(HOST_SOURCE_DIR)/
-	$(SED) 's,^MULTILIB_OSDIRNAMES,# MULTILIB_OSDIRNAMES,' $(HOST_SOURCE_DIR)/gcc/config/*/t-*
-	$(SED) 'd' $(HOST_SOURCE_DIR)/gcc/DEV-PHASE
-	$(SED) 's, DATESTAMP,,' $(HOST_SOURCE_DIR)/gcc/version.c
-	#(cd $(HOST_SOURCE_DIR)/libstdc++-v3; autoconf;);
-	$(SED) 's,gcc_no_link=yes,gcc_no_link=no,' $(HOST_SOURCE_DIR)/libstdc++-v3/configure
-	mkdir -p $(GCC_BUILD_DIR)
-  endef
-else
-  define Host/Prepare
-	mkdir -p $(GCC_BUILD_DIR)
-  endef
-endif
 
 define Host/Configure
 	(cd $(GCC_BUILD_DIR) && rm -f config.cache; \

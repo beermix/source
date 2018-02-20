@@ -10,8 +10,6 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--disable-vtable-verify \
-	--disable-libunwind-exceptions \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
@@ -65,7 +63,7 @@ endef
 
 define Host/Install
 	$(CleanupToolchain)
-	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) install
+	$(_SINGLE)$(GCC_MAKE) -C $(GCC_BUILD_DIR) install
 	# Set up the symlinks to enable lying about target name.
 	set -e; \
 	(cd $(TOOLCHAIN_DIR); \
@@ -76,6 +74,11 @@ define Host/Install
 		   	$(GNU_TARGET_NAME)$$$${app##$(REAL_GNU_TARGET_NAME)}; \
 		done; \
 	);
+ifeq ($(CONFIG_INSTALL_GCCGO),y)
+	(cd $(TOOLCHAIN_DIR)/bin; \
+	ln -sf $(REAL_GNU_TARGET_NAME)-gccgo gccgo; \
+	);
+endif
 	$(if $(CONFIG_EXTRA_TARGET_ARCH),$(call SetupExtraArch))
 	$(RM) $(TOOLCHAIN_DIR)/lib/libiberty.a
 	$(SCRIPT_DIR)/patch-specs.sh "$(TOOLCHAIN_DIR)"
