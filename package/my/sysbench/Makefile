@@ -16,11 +16,7 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_MAINTAINER:=Johannes Morgenroth <jm@m-network.de>
-PKG_LICENSE:=Apache-2.0
-
 PKG_FIXUP:=autoreconf
-PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -28,12 +24,25 @@ include $(INCLUDE_DIR)/package.mk
 define Package/sysbench
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=
+  DEPENDS:=+luajit
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
 CONFIGURE_ARGS += \
 	--without-mysql \
+	--disable-fail \
+	--with-gcc-arch=i686 \
+	--disable-option-checking \
+	--disable-option-checking \
+	
+define Build/Compile
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		HOST_CC="$(HOSTCC) $(HOST_CFLAGS) $(HOST_BITS)" \
+		CROSS="$(TARGET_CROSS)" \
+		DPREFIX=$(PKG_INSTALL_DIR)/usr \
+		PREFIX=/usr \
+		TARGET_CFLAGS="$(TARGET_CFLAGS)"
+endef
 
 define Package/sysbench/description
  Redsocks is a daemon running on the local system, that will transparently
