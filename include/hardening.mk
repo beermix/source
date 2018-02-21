@@ -24,13 +24,13 @@ ifdef CONFIG_PKG_ASLR_PIE
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Wl,--copy-dt-needed-entries -fasynchronous-unwind-tables -Wp,-D_REENTRANT -ftree-loop-distribute-patterns  -malign-data=abi -fno-semantic-interposition -ftree-vectorize  -ftree-loop-vectorize
-    TARGET_LDFLAGS += -Wl,-O1,--sort-common,-z,relro,-z,now
+    TARGET_CFLAGS += -fstack-protector --param=ssp-buffer-size=4 
   endif
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fstack-protector-strong
+    TARGET_CFLAGS += -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Wl,--copy-dt-needed-entries -fasynchronous-unwind-tables -Wp,-D_REENTRANT -ftree-loop-distribute-patterns  -malign-data=abi -fno-semantic-interposition -ftree-vectorize  -ftree-loop-vectorize
+    TARGET_LDFLAGS += -Wl,-O1,--sort-common,-z,relro,-z,now
   endif
 endif
 ifdef CONFIG_PKG_FORTIFY_SOURCE_1
@@ -56,4 +56,3 @@ ifdef CONFIG_PKG_RELRO_FULL
   endif
 endif
 
-LD_OPTIM="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now"

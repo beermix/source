@@ -7,17 +7,14 @@ GCC_CONFIGURE += \
 	--disable-libsanitizer \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
+	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
-	--enable-__cxa_atexit \
-	--enable-decimal-float \
-	--enable-tls \
-	--enable-c99 \
-	--enable-long-long \
-	--enable-threads=posix \
-	--disable-libstdcxx-pch \
-	--enable-libstdcxx-time \
-	--enable-clocale=gnu \
+	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
+
+ifdef CONFIG_USE_MUSL
+  GCC_MAKE += gcc_cv_libc_provides_ssp=yes
+endif
 
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
   GCC_CONFIGURE += \

@@ -50,6 +50,11 @@ GLIBC_CONFIGURE:= \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
+		--enable-lock-elision=yes \
+		--enable-bind-now  \
+		--enable-tunables \
+		--enable-stack-protector=strong \
+		--enable-obsolete-nsl \
 		--enable-add-ons \
 		--without-selinux \
 		--enable-tunables \
