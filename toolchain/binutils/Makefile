@@ -22,8 +22,8 @@ ifeq ($(PKG_VERSION),2.29)
 endif
 
 ifeq ($(PKG_VERSION),2.30)
-  PKG_HASH:=e2814fd232856ea97c37566b53e0d0894032b589b6add1ab0dfef051bfa9f4b7
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-mod.tar.xz
+  PKG_HASH:=93c3e616dd58c570dc25fa51affd297a202c0960961c92bca58ecdf8926fa0f5
+  PKG_SOURCE:=binutils-2.30-mod.tar.bz2
 endif
 
 ifneq ($(CONFIG_BINUTILS_VERSION_2_29_ARC),)
