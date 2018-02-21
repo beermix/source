@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/bminor/glibc/tree/release/2.26/master
+# https://github.com/bminor/glibc/tree/release/2.27/master
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
@@ -34,9 +34,9 @@ GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O2 -m32 -march=westmere -g2  -Wl,-z,max-page-size=0x1000 -m32 $(filter-out "-march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
+	LDFLAGS="-Wl,-z,max-page-size=0x1000 " \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
-	LDFLAGS="-Wl,-z,max-page-size=0x1000 " \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
@@ -58,7 +58,6 @@ GLIBC_CONFIGURE:= \
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export ac_cv_header_cpuid_h=yes
 export libc_cv_forced_unwind=yes
 export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include

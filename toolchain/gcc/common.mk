@@ -113,17 +113,13 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
-		--enable-plugin \
-		--enable-lto \
-		--enable-ld=default \
 		--enable-target-optspace \
 		--disable-libgomp \
-		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
 		--with-tune=haswell \
-		--with-diagnostics-color=auto-if-env \
+		--with-diagnostics-color=always \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \

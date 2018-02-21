@@ -9,6 +9,8 @@ GCC_CONFIGURE += \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
+	--enable-plugin \
+	--enable-lto \
 	--enable-__cxa_atexit \
 	--enable-decimal-float \
 	--enable-tls \
