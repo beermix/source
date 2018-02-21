@@ -8,13 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=coreutils
-PKG_VERSION:=8.29
+PKG_VERSION:=8.23
 PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/coreutils
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 
+PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
