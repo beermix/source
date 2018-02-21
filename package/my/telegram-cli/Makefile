@@ -20,6 +20,7 @@ PKG_SOURCE_VERSION:=$(PKG_REV)
 
 PKG_REMOVE_FILES:=ax_lua.m4
 PKG_FIXUP:=autoreconf
+PKG_BUILD_PARALLEL:=1
 
 PKG_BUILD_DEPENDS:=telegram-cli/host
 
