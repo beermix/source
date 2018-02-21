@@ -280,11 +280,11 @@ CONFIG_TARGET_ROOTFS_DIR=""
 # CONFIG_CCACHE is not set
 CONFIG_EXTERNAL_KERNEL_TREE=""
 CONFIG_KERNEL_GIT_CLONE_URI=""
-CONFIG_BUILD_LOG=y
+# CONFIG_BUILD_LOG is not set
 # CONFIG_SRC_TREE_OVERRIDE is not set
 CONFIG_EXTRA_OPTIMIZATION=""
 CONFIG_TARGET_OPTIONS=y
-CONFIG_TARGET_OPTIMIZATION="-march=bonnell -O2 -pipe"
+CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -O2 -pipe -fomit-frame-pointer"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
 CONFIG_NEED_TOOLCHAIN=y
 CONFIG_TOOLCHAINOPTS=y
@@ -326,7 +326,7 @@ CONFIG_LIBC_USE_GLIBC=y
 CONFIG_USE_GLIBC=y
 CONFIG_BINUTILS_VERSION_2_30=y
 CONFIG_BINUTILS_VERSION="2.30"
-CONFIG_GCC_VERSION="7.3.0"
+CONFIG_GCC_VERSION="7.3.1"
 CONFIG_LIBC="glibc"
 CONFIG_TARGET_SUFFIX="gnu"
 # CONFIG_IB is not set
@@ -2319,7 +2319,7 @@ CONFIG_PACKAGE_ubox=y
 CONFIG_PACKAGE_ubus=y
 CONFIG_PACKAGE_ubusd=y
 CONFIG_PACKAGE_uci=y
-CONFIG_PACKAGE_usign=y
+# CONFIG_PACKAGE_usign is not set
 # CONFIG_PACKAGE_wireless-tools is not set
 # CONFIG_PACKAGE_zram-swap is not set
 
@@ -2760,8 +2760,8 @@ CONFIG_PACKAGE_kmod-ipt-filter=y
 # CONFIG_PACKAGE_kmod-ipt-fuzzy is not set
 # CONFIG_PACKAGE_kmod-ipt-geoip is not set
 # CONFIG_PACKAGE_kmod-ipt-hashlimit is not set
-CONFIG_PACKAGE_kmod-ipt-iface=y
-CONFIG_PACKAGE_kmod-ipt-ipmark=y
+# CONFIG_PACKAGE_kmod-ipt-iface is not set
+# CONFIG_PACKAGE_kmod-ipt-ipmark is not set
 CONFIG_PACKAGE_kmod-ipt-ipopt=y
 # CONFIG_PACKAGE_kmod-ipt-ipp2p is not set
 CONFIG_PACKAGE_kmod-ipt-iprange=y
@@ -2789,7 +2789,7 @@ CONFIG_PACKAGE_kmod-ipt-tproxy=y
 # CONFIG_PACKAGE_kmod-ipt-u32 is not set
 # CONFIG_PACKAGE_kmod-ipt-ulog is not set
 CONFIG_PACKAGE_kmod-nf-conntrack=y
-CONFIG_PACKAGE_kmod-nf-conntrack-netlink=y
+# CONFIG_PACKAGE_kmod-nf-conntrack-netlink is not set
 CONFIG_PACKAGE_kmod-nf-ipt=y
 # CONFIG_PACKAGE_kmod-nf-ipt6 is not set
 CONFIG_PACKAGE_kmod-nf-nat=y
@@ -3503,7 +3503,7 @@ CONFIG_PACKAGE_liblzma=y
 # Filesystem
 #
 # CONFIG_PACKAGE_libacl is not set
-CONFIG_PACKAGE_libattr=y
+# CONFIG_PACKAGE_libattr is not set
 CONFIG_PACKAGE_libext2fs=y
 # CONFIG_PACKAGE_libfuse is not set
 # CONFIG_PACKAGE_libow is not set
@@ -3808,7 +3808,7 @@ CONFIG_PACKAGE_libblobmsg-json=y
 # CONFIG_PACKAGE_libbsd is not set
 # CONFIG_PACKAGE_libcanfestival is not set
 CONFIG_PACKAGE_libcap=y
-CONFIG_PACKAGE_libcares=y
+# CONFIG_PACKAGE_libcares is not set
 # CONFIG_PACKAGE_libcharset is not set
 # CONFIG_PACKAGE_libcoap is not set
 CONFIG_PACKAGE_libconfig=y
@@ -3889,7 +3889,7 @@ CONFIG_PACKAGE_libf2fs=y
 # CONFIG_PACKAGE_libfastjson is not set
 # CONFIG_PACKAGE_libfdisk is not set
 # CONFIG_PACKAGE_libfdt is not set
-CONFIG_PACKAGE_libffi=y
+# CONFIG_PACKAGE_libffi is not set
 # CONFIG_PACKAGE_libffmpeg-custom is not set
 # CONFIG_PACKAGE_libflac is not set
 # CONFIG_PACKAGE_libfreetype is not set
@@ -3925,13 +3925,13 @@ CONFIG_PACKAGE_libiwinfo=y
 # CONFIG_PACKAGE_libjpeg is not set
 CONFIG_PACKAGE_libjson-c=y
 # CONFIG_PACKAGE_libkmod is not set
-CONFIG_PACKAGE_libldns=y
+# CONFIG_PACKAGE_libldns is not set
 # CONFIG_PACKAGE_libltdl is not set
 CONFIG_PACKAGE_liblua=y
 # CONFIG_PACKAGE_liblz4 is not set
 # CONFIG_PACKAGE_liblzo is not set
 # CONFIG_PACKAGE_libmad is not set
-CONFIG_PACKAGE_libmagic=y
+# CONFIG_PACKAGE_libmagic is not set
 # CONFIG_PACKAGE_libmcrypt is not set
 # CONFIG_PACKAGE_libmicrohttpd is not set
 # CONFIG_PACKAGE_libmicrohttpd-no-ssl is not set
@@ -3961,7 +3961,7 @@ CONFIG_PACKAGE_libncurses=y
 # CONFIG_PACKAGE_libnetfilter-cttimeout is not set
 # CONFIG_PACKAGE_libnetfilter-log is not set
 CONFIG_PACKAGE_libnetfilter-queue=y
-CONFIG_PACKAGE_libnetsnmp=y
+# CONFIG_PACKAGE_libnetsnmp is not set
 # CONFIG_PACKAGE_libnettle is not set
 CONFIG_PACKAGE_libnfnetlink=y
 # CONFIG_PACKAGE_libnftnl is not set
@@ -4108,7 +4108,7 @@ CONFIG_PACKAGE_libuuid=y
 # CONFIG_PACKAGE_poco is not set
 # CONFIG_PACKAGE_protobuf is not set
 # CONFIG_PACKAGE_pthsem is not set
-CONFIG_PACKAGE_rpcd-mod-rrdns=y
+# CONFIG_PACKAGE_rpcd-mod-rrdns is not set
 # CONFIG_PACKAGE_rxtx is not set
 # CONFIG_PACKAGE_sbc is not set
 CONFIG_PACKAGE_terminfo=y

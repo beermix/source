@@ -7,10 +7,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.26
+PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=d300041
+PKG_SOURCE_VERSION:=b4108a3
 PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -33,9 +33,12 @@ HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -march=bonnell $(filter-out "-march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -m32" \
+	CFLAGS="-O2 -m32 -march=bonnell -g2  -Wl,-z,max-page-size=0x1000 -m32 $(filter-out "-march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
+	LDFLAGS="-Wl,-z,max-page-size=0x1000 " \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
+	ac_cv_path_PERL=no \
+	ac_cv_prog_MAKEINFO= \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
