@@ -50,8 +50,8 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-sort-common
-    TARGET_LDFLAGS += -znow -zrelro
+    TARGET_CFLAGS += -fno-plt
+    TARGET_LDFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-sort-common
   endif
 endif
 
