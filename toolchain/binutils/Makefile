@@ -22,7 +22,8 @@ ifeq ($(PKG_VERSION),2.29)
 endif
 
 ifeq ($(PKG_VERSION),2.30)
-  PKG_HASH:=ef2741bafa2d5181a71fdcb73c8f1f827c8bc4cd37212fd796bb7d9d43bf9f2a
+  PKG_HASH:=e2814fd232856ea97c37566b53e0d0894032b589b6add1ab0dfef051bfa9f4b7
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-mod.tar.xz
 endif
 
 ifneq ($(CONFIG_BINUTILS_VERSION_2_29_ARC),)
@@ -54,10 +55,17 @@ BINUTILS_CONFIGURE:= \
 		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
-		--enable-libssp \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 
+
+ifneq ($(CONFIG_SSP_SUPPORT),)
+  BINUTILS_CONFIGURE+= \
+		--enable-libssp
+else
+  BINUTILS_CONFIGURE+= \
+		--disable-libssp
+endif
 
 ifneq ($(CONFIG_EXTRA_TARGET_ARCH),)
   BINUTILS_CONFIGURE+= \
