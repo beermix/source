@@ -76,33 +76,33 @@ define Package/locales/postinst
 #!/bin/sh
 
 echo "Entware uses separate locale-archive file independent from main system"
-if [ -f '/usr/lib/locale/locale-archive' ]
+if [ -f '/lib/locale/locale-archive' ]
 then
 	echo "locale-archive file found, checking format"
 	/bin/locale.new -a 2>&1 >/dev/null | grep 'LC_COLLATE' > /dev/null
 	if [ $$? -eq 0 ] ; then
 		echo "Old format locale archive found. Deleting!"
-		rm -f /usr/lib/locale/locale-archive
+		rm -f /lib/locale/locale-archive
 	fi
 fi
-if ! [ -f '/usr/lib/locale/locale-archive' ]
+if ! [ -f '/lib/locale/locale-archive' ]
 then
-	mkdir -p /usr/lib/locale
-	echo "Creating locale archive - /usr/lib/locale/locale-archive"
+	mkdir -p /lib/locale
+	echo "Creating locale archive - /lib/locale/locale-archive"
 	echo "Adding en_EN.UTF-8"
 	/bin/localedef.new -c -f UTF-8 -i en_US en_US.UTF-8
 	echo "Adding ru_RU.UTF-8"
 	/bin/localedef.new -c -f UTF-8 -i ru_RU ru_RU.UTF-8
 fi
-if [ -f '/usr/lib/locale/locale-archive' ]
+if [ -f '/lib/locale/locale-archive' ]
 then
 	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
-	echo "You can add new locales to Entware using /bin/localedef"
+	echo "You can add new locales to Entware using /bin/localedef.new"
 fi
-if ! [ -f '/usr/lib/locale/locale-archive' ]
+if ! [ -f '/lib/locale/locale-archive' ]
 then
 	echo "locale-archive file was not created, not enough memory? Downloading..."
-	wget http://pkg.entware.net/binaries/other/locale-archive.2.23 -O /usr/lib/locale/locale-archive
+	wget http://pkg.entware.net/binaries/other/locale-archive.2.23 -O /lib/locale/locale-archive
 	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
 	echo "You can add new locales to Entware using /bin/localedef.new"
 fi
@@ -636,7 +636,7 @@ endif
 	$(CP) $(TOOLCHAIN_DIR)/sbin/ldconfig $(1)/sbin/
   endef
 
-ilocales=de_DE en_US en_GB fr_FR it_IT ru_RU i18n iso14651_t1 iso14651_t1_common translit_circle translit_combining translit_font translit_narrow translit_small translit_cjk_compat translit_compat translit_fraction translit_neutral translit_wide
+ilocales=de_DE en_US en_GB fr_FR it_IT ru_RU i18n iso14651_t1 iso14651_t1_common translit_circle translit_combining translit_font translit_narrow translit_small translit_cjk_compat translit_compat translit_fraction translit_neutral translit_wide i18n_ctype
 icharmaps=ANSI_X3.4-1968.gz UTF-8.gz KOI-8.gz KOI8-R.gz KOI8-RU.gz KOI8-T.gz KOI8-U.gz CP1251.gz
 
 
