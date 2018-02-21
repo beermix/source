@@ -30,7 +30,7 @@ define Package/speedtest-cli
 	SECTION:=utils
 	CATEGORY:=Utilities
 	TITLE:=Speedtest Utility
-	DEPENDS:=+python
+	DEPENDS:=+i2pd 
 endef
 
 define Build/Compile
