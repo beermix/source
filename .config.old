@@ -126,7 +126,7 @@ CONFIG_EXTERNAL_CPIO=""
 # CONFIG_TARGET_ROOTFS_EXT4FS is not set
 # CONFIG_TARGET_ROOTFS_ISO is not set
 CONFIG_TARGET_ROOTFS_SQUASHFS=y
-CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
+CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=256
 CONFIG_TARGET_UBIFS_FREE_SPACE_FIXUP=y
 CONFIG_TARGET_UBIFS_JOURNAL_SIZE=""
 CONFIG_GRUB_IMAGES=y
@@ -144,8 +144,8 @@ CONFIG_TARGET_IMAGES_GZIP=y
 #
 # Image Options
 #
-CONFIG_TARGET_KERNEL_PARTSIZE=80
-CONFIG_TARGET_ROOTFS_PARTSIZE=550
+CONFIG_TARGET_KERNEL_PARTSIZE=50
+CONFIG_TARGET_ROOTFS_PARTSIZE=450
 CONFIG_TARGET_ROOTFS_PARTNAME=""
 
 #
@@ -175,18 +175,18 @@ CONFIG_KERNEL_BUILD_USER=""
 CONFIG_KERNEL_BUILD_DOMAIN=""
 CONFIG_KERNEL_PRINTK=y
 CONFIG_KERNEL_SWAP=y
-# CONFIG_KERNEL_DEBUG_FS is not set
+CONFIG_KERNEL_DEBUG_FS=y
 CONFIG_KERNEL_PERF_EVENTS=y
 # CONFIG_KERNEL_PROFILING is not set
 CONFIG_KERNEL_KALLSYMS=y
 # CONFIG_KERNEL_FTRACE is not set
-# CONFIG_KERNEL_DEBUG_KERNEL is not set
-# CONFIG_KERNEL_DEBUG_INFO is not set
+CONFIG_KERNEL_DEBUG_KERNEL=y
+CONFIG_KERNEL_DEBUG_INFO=y
 # CONFIG_KERNEL_DYNAMIC_DEBUG is not set
 # CONFIG_KERNEL_KPROBES is not set
-CONFIG_KERNEL_AIO=y
-CONFIG_KERNEL_FHANDLE=y
-CONFIG_KERNEL_FANOTIFY=y
+# CONFIG_KERNEL_AIO is not set
+# CONFIG_KERNEL_FHANDLE is not set
+# CONFIG_KERNEL_FANOTIFY is not set
 # CONFIG_KERNEL_BLK_DEV_BSG is not set
 CONFIG_KERNEL_MAGIC_SYSRQ=y
 # CONFIG_KERNEL_DEBUG_PINCTRL is not set
@@ -197,18 +197,14 @@ CONFIG_KERNEL_PRINTK_TIME=y
 # CONFIG_KERNEL_SLABINFO is not set
 # CONFIG_KERNEL_PROC_PAGE_MONITOR is not set
 CONFIG_KERNEL_KEXEC=y
-# CONFIG_KERNEL_CRASH_DUMP is not set
+CONFIG_KERNEL_PROC_VMCORE=y
+CONFIG_KERNEL_CRASH_DUMP=y
 # CONFIG_USE_RFKILL is not set
 # CONFIG_USE_SPARSE is not set
 # CONFIG_KERNEL_DEVTMPFS is not set
 # CONFIG_KERNEL_KEYS is not set
 # CONFIG_KERNEL_CGROUPS is not set
-CONFIG_KERNEL_NAMESPACES=y
-CONFIG_KERNEL_UTS_NS=y
-CONFIG_KERNEL_IPC_NS=y
-CONFIG_KERNEL_USER_NS=y
-CONFIG_KERNEL_PID_NS=y
-CONFIG_KERNEL_NET_NS=y
+# CONFIG_KERNEL_NAMESPACES is not set
 # CONFIG_KERNEL_LXC_MISC is not set
 # CONFIG_KERNEL_SECCOMP_FILTER is not set
 # CONFIG_KERNEL_SECCOMP is not set
@@ -263,15 +259,16 @@ CONFIG_USE_LIBSTDCXX=y
 # CONFIG_PKG_ASLR_PIE is not set
 # CONFIG_PKG_CC_STACKPROTECTOR_NONE is not set
 CONFIG_PKG_CC_STACKPROTECTOR_REGULAR=y
+# CONFIG_PKG_CC_STACKPROTECTOR_STRONG is not set
 # CONFIG_KERNEL_CC_STACKPROTECTOR_NONE is not set
 CONFIG_KERNEL_CC_STACKPROTECTOR_REGULAR=y
 # CONFIG_KERNEL_CC_STACKPROTECTOR_STRONG is not set
-CONFIG_PKG_FORTIFY_SOURCE_NONE=y
+# CONFIG_PKG_FORTIFY_SOURCE_NONE is not set
 # CONFIG_PKG_FORTIFY_SOURCE_1 is not set
-# CONFIG_PKG_FORTIFY_SOURCE_2 is not set
-CONFIG_PKG_RELRO_NONE=y
+CONFIG_PKG_FORTIFY_SOURCE_2=y
+# CONFIG_PKG_RELRO_NONE is not set
 # CONFIG_PKG_RELRO_PARTIAL is not set
-# CONFIG_PKG_RELRO_FULL is not set
+CONFIG_PKG_RELRO_FULL=y
 CONFIG_DEVEL=y
 # CONFIG_BROKEN is not set
 CONFIG_BINARY_FOLDER=""
@@ -284,11 +281,11 @@ CONFIG_TARGET_ROOTFS_DIR=""
 # CONFIG_CCACHE is not set
 CONFIG_EXTERNAL_KERNEL_TREE=""
 CONFIG_KERNEL_GIT_CLONE_URI=""
-# CONFIG_BUILD_LOG is not set
+CONFIG_BUILD_LOG=y
 # CONFIG_SRC_TREE_OVERRIDE is not set
-CONFIG_EXTRA_OPTIMIZATION="-fdiagnostics-color=always"
+CONFIG_EXTRA_OPTIMIZATION="-fno-caller-saves -fno-plt"
 CONFIG_TARGET_OPTIONS=y
-CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -O2 -pipe -fomit-frame-pointer"
+CONFIG_TARGET_OPTIMIZATION="-O2 -pipe -march=bonnell --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -fomit-frame-pointer -m32 -fdiagnostics-color=always"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
 CONFIG_NEED_TOOLCHAIN=y
 CONFIG_TOOLCHAINOPTS=y
@@ -368,9 +365,9 @@ CONFIG_VERSION_CODE_FILENAMES=y
 CONFIG_PER_FEED_REPO=y
 CONFIG_PER_FEED_REPO_ADD_DISABLED=y
 CONFIG_PER_FEED_REPO_ADD_COMMENTED=y
-CONFIG_FEED_packages=y
-CONFIG_FEED_luci=y
-CONFIG_FEED_routing=y
+# CONFIG_FEED_packages is not set
+# CONFIG_FEED_luci is not set
+# CONFIG_FEED_routing is not set
 
 #
 # Base system
@@ -2310,13 +2307,12 @@ CONFIG_PACKAGE_procd=y
 #
 # CONFIG_PROCD_SHOW_BOOT is not set
 # CONFIG_PROCD_ZRAM_TMPFS is not set
-# CONFIG_PACKAGE_procd-ujail is not set
 # CONFIG_PACKAGE_qos-scripts is not set
 CONFIG_PACKAGE_resolveip=y
 CONFIG_PACKAGE_rpcd=y
 # CONFIG_PACKAGE_rpcd-mod-file is not set
 # CONFIG_PACKAGE_rpcd-mod-iwinfo is not set
-CONFIG_PACKAGE_rpcd-mod-rpcsys=y
+# CONFIG_PACKAGE_rpcd-mod-rpcsys is not set
 # CONFIG_PACKAGE_snapshot-tool is not set
 # CONFIG_PACKAGE_sqm-scripts is not set
 # CONFIG_PACKAGE_sqm-scripts-extra is not set
@@ -2356,7 +2352,7 @@ CONFIG_PACKAGE_htop=y
 # CONFIG_PACKAGE_monit is not set
 # CONFIG_PACKAGE_monit-nossl is not set
 # CONFIG_PACKAGE_muninlite is not set
-CONFIG_PACKAGE_netdata=y
+# CONFIG_PACKAGE_netdata is not set
 # CONFIG_PACKAGE_sudo is not set
 # CONFIG_PACKAGE_syslog-ng is not set
 
@@ -2795,7 +2791,7 @@ CONFIG_PACKAGE_kmod-ipt-tproxy=y
 # CONFIG_PACKAGE_kmod-ipt-u32 is not set
 # CONFIG_PACKAGE_kmod-ipt-ulog is not set
 CONFIG_PACKAGE_kmod-nf-conntrack=y
-# CONFIG_PACKAGE_kmod-nf-conntrack-netlink is not set
+CONFIG_PACKAGE_kmod-nf-conntrack-netlink=y
 CONFIG_PACKAGE_kmod-nf-ipt=y
 # CONFIG_PACKAGE_kmod-nf-ipt6 is not set
 CONFIG_PACKAGE_kmod-nf-nat=y
@@ -3725,7 +3721,60 @@ CONFIG_SQLITE_RTREE=y
 # CONFIG_PACKAGE_avro-c is not set
 CONFIG_PACKAGE_bind-libs=y
 # CONFIG_PACKAGE_bluez-libs is not set
-# CONFIG_PACKAGE_boost is not set
+CONFIG_PACKAGE_boost=y
+
+#
+# Select Boost Options
+#
+
+#
+# Boost compilation options.
+#
+# CONFIG_boost-shared-libs is not set
+CONFIG_boost-static-libs=y
+# CONFIG_boost-static-and-shared-libs is not set
+# CONFIG_boost-runtime-shared is not set
+CONFIG_boost-runtime-static=y
+CONFIG_boost-variant-release=y
+# CONFIG_boost-variant-debug is not set
+# CONFIG_boost-variant-profile is not set
+# CONFIG_boost-use-name-tags is not set
+
+#
+# Select Boost libraries
+#
+
+#
+# Libraries
+#
+# CONFIG_boost-libs-all is not set
+# CONFIG_boost-test-pkg is not set
+# CONFIG_boost-coroutine2 is not set
+# CONFIG_boost-graph-parallel is not set
+# CONFIG_PACKAGE_boost-atomic is not set
+# CONFIG_PACKAGE_boost-chrono is not set
+# CONFIG_PACKAGE_boost-container is not set
+# CONFIG_PACKAGE_boost-context is not set
+# CONFIG_PACKAGE_boost-coroutine is not set
+CONFIG_PACKAGE_boost-date_time=y
+# CONFIG_PACKAGE_boost-fiber is not set
+CONFIG_PACKAGE_boost-filesystem=y
+# CONFIG_PACKAGE_boost-graph is not set
+# CONFIG_PACKAGE_boost-iostreams is not set
+# CONFIG_PACKAGE_boost-log is not set
+# CONFIG_PACKAGE_boost-math is not set
+CONFIG_PACKAGE_boost-program_options=y
+# CONFIG_PACKAGE_boost-random is not set
+# CONFIG_PACKAGE_boost-regex is not set
+# CONFIG_PACKAGE_boost-serialization is not set
+# CONFIG_PACKAGE_boost-wserialization is not set
+# CONFIG_PACKAGE_boost-signals is not set
+# CONFIG_PACKAGE_boost-stacktrace is not set
+CONFIG_PACKAGE_boost-system=y
+# CONFIG_PACKAGE_boost-thread is not set
+# CONFIG_PACKAGE_boost-timer is not set
+# CONFIG_PACKAGE_boost-type_erasure is not set
+# CONFIG_PACKAGE_boost-wave is not set
 # CONFIG_PACKAGE_ccid is not set
 # CONFIG_PACKAGE_check is not set
 # CONFIG_PACKAGE_classpath is not set
@@ -3999,8 +4048,8 @@ CONFIG_LIBSODIUM_MINIMAL=y
 # CONFIG_PACKAGE_libspeexdsp is not set
 # CONFIG_PACKAGE_libssh is not set
 CONFIG_PACKAGE_libssh2=y
-# CONFIG_LIBSSH2_MBEDTLS is not set
-CONFIG_LIBSSH2_OPENSSL=y
+CONFIG_LIBSSH2_MBEDTLS=y
+# CONFIG_LIBSSH2_OPENSSL is not set
 # CONFIG_PACKAGE_libstoken is not set
 # CONFIG_PACKAGE_libstrophe is not set
 # CONFIG_PACKAGE_libtalloc is not set
@@ -5161,7 +5210,7 @@ CONFIG_PACKAGE_fping=y
 # CONFIG_PACKAGE_httping is not set
 # CONFIG_PACKAGE_httping-nossl is not set
 # CONFIG_PACKAGE_https_dns_proxy is not set
-# CONFIG_PACKAGE_i2pd is not set
+CONFIG_PACKAGE_i2pd=y
 # CONFIG_PACKAGE_ibrdtn-tools is not set
 # CONFIG_PACKAGE_ibrdtnd is not set
 CONFIG_PACKAGE_ifstat=y
@@ -5273,7 +5322,6 @@ CONFIG_PACKAGE_redsocks2=y
 # CONFIG_PACKAGE_sysbench is not set
 # CONFIG_PACKAGE_tcpdump is not set
 # CONFIG_PACKAGE_tcpdump-mini is not set
-# CONFIG_PACKAGE_tgt is not set
 CONFIG_PACKAGE_tor=y
 CONFIG_PACKAGE_tor-gencert=y
 CONFIG_PACKAGE_tor-geoip=y
@@ -5705,6 +5753,7 @@ CONFIG_PACKAGE_grep=y
 # CONFIG_PACKAGE_iwinfo is not set
 # CONFIG_PACKAGE_jq is not set
 CONFIG_PACKAGE_jshn=y
+# CONFIG_PACKAGE_kdump is not set
 # CONFIG_PACKAGE_kexec is not set
 # CONFIG_PACKAGE_kexec-tools is not set
 # CONFIG_PACKAGE_kmod is not set
