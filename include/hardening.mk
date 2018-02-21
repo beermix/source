@@ -24,7 +24,7 @@ ifdef CONFIG_PKG_ASLR_PIE
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fstack-protector --param=ssp-buffer-size=4 -Wl,--copy-dt-needed-entries -fasynchronous-unwind-tables -Wp,-D_REENTRANT -ftree-loop-distribute-patterns -malign-data=abi -fno-semantic-interposition -ftree-vectorize -ftree-loop-vectorize
+    TARGET_CFLAGS += -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=1 -Wl,--copy-dt-needed-entries -fasynchronous-unwind-tables -Wp,-D_REENTRANT -ftree-loop-distribute-patterns -Wl,-z -Wl,now -Wl,-z -Wl,relro -malign-data=abi -fno-semantic-interposition -ftree-vectorize  -ftree-loop-vectorize  -Wl,-sort-common
   endif
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG
@@ -50,8 +50,8 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -fno-plt
-    TARGET_LDFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-sort-common
+    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-sort-common
+    TARGET_LDFLAGS += -znow -zrelro
   endif
 endif
 

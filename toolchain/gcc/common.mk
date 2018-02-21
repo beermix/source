@@ -28,13 +28,8 @@ GCC_DIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=@GNU/gcc/gcc-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
-ifeq ($(PKG_VERSION),8.0.1)
-  PKG_VERSION:=8.0.1
-  PKG_REV:=8-20180218
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-8
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+ifeq ($(PKG_VERSION),5.5.0)
+  PKG_HASH:=530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87
 endif
 
 ifeq ($(PKG_VERSION),6.3.0)
@@ -42,18 +37,14 @@ ifeq ($(PKG_VERSION),6.3.0)
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 endif
 
-ifeq ($(PKG_VERSION),7.3.0)
-  PKG_HASH:=832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c
+ifeq ($(PKG_VERSION),7.3.1)
+  PKG_VERSION:=7.3.1
+  PKG_REV:=7-20180215
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
-
-#ifeq ($(PKG_VERSION),7.3.1)
-#  PKG_VERSION:=7.3.1
-#  PKG_REV:=7-20180215
-#  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
-#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#endif
 
 ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
     PKG_VERSION:=7.1.1
@@ -129,7 +120,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--with-tune=haswell \
-		--with-diagnostics-color=always \
+		--with-diagnostics-color=auto-if-env \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \

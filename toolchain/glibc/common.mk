@@ -33,15 +33,16 @@ HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
+	CFLAGS="-O2 -m32 -march=westmere -g2  -Wl,-z,max-page-size=0x1000 -m32 $(filter-out "-march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
-	CFLAGS="$(filter-out "-march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS))) -O2 -m32 -march=westmere -g2  -Wl,-z,max-page-size=0x1000 -m32" \
-	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
+	LDFLAGS="-Wl,-z,max-page-size=0x1000 " \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
+		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
@@ -53,18 +54,12 @@ GLIBC_CONFIGURE:= \
 		--disable-nscd \
 		--disable-timezone-tools \
 		--disable-debug \
-		--enable-obsolete-rpc \
-		--enable-stack-protector=strong \
-		--enable-lock-elision=yes \
-		--enable-bind-now  \
-		--enable-tunables \
-		--enable-obsolete-nsl \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
-export libc_cv_forced_unwind=yes 
+export libc_cv_forced_unwind=yes
 export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
@@ -89,9 +84,6 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
-	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
-		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
-	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 
