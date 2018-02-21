@@ -103,7 +103,7 @@ endef
 
 OPENSSL_NO_CIPHERS:= no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-camellia no-krb5 \
  no-whrlpool no-whirlpool no-seed no-jpake
-OPENSSL_OPTIONS:= shared no-err no-ssl2 no-ssl2-method no-heartbeats
+OPENSSL_OPTIONS:= shared no-err no-sse2 no-ssl2 no-ssl2-method no-heartbeats
 
 ifdef CONFIG_OPENSSL_ENGINE_CRYPTO
   OPENSSL_OPTIONS += -DHAVE_CRYPTODEV
@@ -164,7 +164,7 @@ ifeq ($(CONFIG_x86_64),y)
   OPENSSL_TARGET:=linux-x86_64-openwrt
   OPENSSL_MAKEFLAGS += LIBDIR=lib
 else
-  OPENSSL_OPTIONS+=
+  OPENSSL_OPTIONS+=no-sse2
   ifeq ($(CONFIG_mips)$(CONFIG_mipsel),y)
     OPENSSL_TARGET:=linux-mips-openwrt
   else ifeq ($(CONFIG_aarch64),y)

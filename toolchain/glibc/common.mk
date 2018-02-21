@@ -49,19 +49,14 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
-		--enable-clocale=gnu \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-bind-now \
-		--enable-lock-elision \
-		--disable-multi-arch \
-		--enable-obsolete-nsl \
-		--enable-obsolete-rpc \
 		--without-selinux \
 		--enable-tunables \
 		--disable-build-nscd \
 		--disable-nscd \
 		--disable-timezone-tools \
+		--enable-static-pie \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
