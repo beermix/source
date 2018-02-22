@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=isl
-PKG_VERSION:=0.16.1
+PKG_VERSION:=0.18
 
 PKG_SOURCE_URL:=http://isl.gforge.inria.fr
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -22,7 +22,6 @@ unexport CFLAGS
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-shared \
-	--disable-silent-rules \
-	--with-gmp-prefix=$(STAGING_DIR_HOST) 
+	--with-gmp-prefix=$(STAGING_DIR_HOST)
 
 $(eval $(call HostBuild))
