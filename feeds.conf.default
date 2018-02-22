@@ -13,4 +13,4 @@ src-git routing https://git.openwrt.org/feed/routing.git
 #src-git PcapDNSProxy https://github.com/wongsyrone/openwrt-Pcap_DNSProxy.git
 #src-git golang https://github.com/Entware-ng/entware-go.git
 #src-git epackages https://github.com/Entware-ng/entware-packages.git
-src-git rtndev https://github.com/Entware-ng/rtndev.git
+#src-git rtndev https://github.com/Entware-ng/rtndev.git
