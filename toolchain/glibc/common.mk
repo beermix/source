@@ -3,7 +3,8 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/bminor/glibc/tree/release/2.26/master
+# https://github.com/bminor/glibc/tree/release/2.27/master
+# -ftree-loop-distribute-patterns -malign-data=abi -fno-semantic-interposition -ftree-vectorize -ftree-loop-vectorize)
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
@@ -51,7 +52,6 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-lock-elision=yes \
-		--enable-stack-protector=strong \
 		--enable-obsolete-nsl \
 		--enable-add-ons \
 		--without-selinux \
