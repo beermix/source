@@ -7,14 +7,22 @@ GCC_CONFIGURE += \
 	--disable-libsanitizer \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
-	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
+	--enable-plugin \
 	--enable-lto \
+	--enable-c99 \
+	--enable-long-long \
+	--enable-threads=posix \
+	--disable-libstdcxx-pch \
+	--enable-libstdcxx-time \
+	--enable-clocale=gnu \
+	--disable-libunwind-exceptions \
+	--enable-gnu-unique-object \
+	--enable-linker-build-id \
+	--enable-install-libiberty \
+	--with-linker-hash-style=gnu \
+	--enable-gnu-indirect-function \
 	--with-libelf=$(TOPDIR)/staging_dir/host
-
-ifdef CONFIG_USE_MUSL
-  GCC_MAKE += gcc_cv_libc_provides_ssp=yes
-endif
 
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
   GCC_CONFIGURE += \

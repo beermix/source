@@ -370,6 +370,7 @@ CONFIG_PER_FEED_REPO_ADD_COMMENTED=y
 # CONFIG_FEED_packages is not set
 # CONFIG_FEED_luci is not set
 # CONFIG_FEED_routing is not set
+CONFIG_FEED_rtndev=y
 
 #
 # Base system
@@ -2248,15 +2249,8 @@ CONFIG_BUSYBOX_CONFIG_LOGGER=y
 # CONFIG_BUSYBOX_CONFIG_SYSLOGD is not set
 CONFIG_PACKAGE_ca-bundle=y
 CONFIG_PACKAGE_ca-certificates=y
-# CONFIG_PACKAGE_dnsmasq is not set
-CONFIG_PACKAGE_dnsmasq-full=y
-CONFIG_PACKAGE_dnsmasq_full_dhcp=y
-CONFIG_PACKAGE_dnsmasq_full_dnssec=y
-CONFIG_PACKAGE_dnsmasq_full_auth=y
-CONFIG_PACKAGE_dnsmasq_full_ipset=y
-CONFIG_PACKAGE_dnsmasq_full_conntrack=y
-CONFIG_PACKAGE_dnsmasq_full_noid=y
-# CONFIG_PACKAGE_dnsmasq_full_broken_rtc is not set
+CONFIG_PACKAGE_dnsmasq=y
+# CONFIG_PACKAGE_dnsmasq-full is not set
 CONFIG_PACKAGE_dropbear=y
 
 #
@@ -5026,6 +5020,7 @@ CONFIG_PACKAGE_shadowsocks-libev-ss-tunnel=y
 # CONFIG_PACKAGE_squid is not set
 CONFIG_PACKAGE_tinyproxy=y
 CONFIG_PACKAGE_uhttpd=y
+# CONFIG_PACKAGE_uhttpd_debug is not set
 # CONFIG_PACKAGE_uhttpd-mod-lua is not set
 CONFIG_PACKAGE_uhttpd-mod-ubus=y
 
@@ -5203,7 +5198,6 @@ CONFIG_PACKAGE_odhcpd_full_ext_cer_id=0
 # CONFIG_PACKAGE_ppp-multilink is not set
 # CONFIG_PACKAGE_pppossh is not set
 # CONFIG_PACKAGE_radsecproxy is not set
-# CONFIG_PACKAGE_redsocks is not set
 CONFIG_PACKAGE_redsocks2=y
 # CONFIG_PACKAGE_remserial is not set
 # CONFIG_PACKAGE_rssileds is not set
@@ -5232,6 +5226,7 @@ CONFIG_PACKAGE_redsocks2=y
 # CONFIG_PACKAGE_sysbench is not set
 # CONFIG_PACKAGE_tcpdump is not set
 # CONFIG_PACKAGE_tcpdump-mini is not set
+CONFIG_PACKAGE_tinymembench=y
 CONFIG_PACKAGE_tor=y
 CONFIG_PACKAGE_tor-gencert=y
 CONFIG_PACKAGE_tor-geoip=y
