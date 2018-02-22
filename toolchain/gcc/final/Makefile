@@ -8,6 +8,7 @@ GCC_CONFIGURE += \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
+	--enable-plugin \
 	--enable-lto \
 	--enable-c99 \
 	--enable-long-long \

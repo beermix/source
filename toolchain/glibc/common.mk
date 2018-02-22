@@ -51,8 +51,6 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-lock-elision=yes \
-		--enable-bind-now  \
-		--enable-tunables \
 		--enable-stack-protector=strong \
 		--enable-obsolete-nsl \
 		--enable-add-ons \
@@ -61,13 +59,11 @@ GLIBC_CONFIGURE:= \
 		--disable-build-nscd \
 		--disable-nscd \
 		--disable-timezone-tools \
-		--enable-static-pie \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export ac_cv_header_cpuid_h=yes
 export libc_cv_forced_unwind=yes
 export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
