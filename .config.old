@@ -3739,7 +3739,7 @@ CONFIG_PACKAGE_bind-libs=y
 # CONFIG_PACKAGE_fftw3 is not set
 # CONFIG_PACKAGE_fftw3f is not set
 # CONFIG_PACKAGE_fftw3l is not set
-CONFIG_PACKAGE_fio=y
+# CONFIG_PACKAGE_fio is not set
 # CONFIG_PACKAGE_getdns is not set
 # CONFIG_PACKAGE_giflib is not set
 # CONFIG_PACKAGE_glib2 is not set
@@ -3899,13 +3899,13 @@ CONFIG_PACKAGE_libmagic=y
 # CONFIG_PACKAGE_libmicrohttpd is not set
 # CONFIG_PACKAGE_libmicrohttpd-no-ssl is not set
 # CONFIG_PACKAGE_libmilter-sendmail is not set
-CONFIG_PACKAGE_libminiupnpc=y
+# CONFIG_PACKAGE_libminiupnpc is not set
 # CONFIG_PACKAGE_libmms is not set
 CONFIG_PACKAGE_libmnl=y
 # CONFIG_PACKAGE_libmodbus is not set
 # CONFIG_PACKAGE_libmosquitto-nossl is not set
 # CONFIG_PACKAGE_libmosquitto-ssl is not set
-CONFIG_PACKAGE_libmount=y
+# CONFIG_PACKAGE_libmount is not set
 # CONFIG_PACKAGE_libmpdclient is not set
 # CONFIG_PACKAGE_libmpeg2 is not set
 # CONFIG_PACKAGE_libmpg123 is not set
@@ -5106,18 +5106,7 @@ CONFIG_PACKAGE_adblock=y
 # CONFIG_PACKAGE_batctl is not set
 # CONFIG_PACKAGE_beanstalkd is not set
 # CONFIG_PACKAGE_bmon is not set
-CONFIG_PACKAGE_bwm-ng=y
-
-#
-# Configuration
-#
-CONFIG_BWMNG_CONFIGFILE=y
-CONFIG_BWMNG_HTML=y
-CONFIG_BWMNG_CSV=y
-CONFIG_BWMNG_EXTENDEDSTATS=y
-CONFIG_BWMNG_LIBNCURSES=y
-CONFIG_BWMNG_TIME=y
-CONFIG_BWMNG_GETOPT_LONG=y
+# CONFIG_PACKAGE_bwm-ng is not set
 # CONFIG_PACKAGE_chat is not set
 # CONFIG_PACKAGE_cifsmount is not set
 # CONFIG_PACKAGE_coap-server is not set
@@ -5150,7 +5139,7 @@ CONFIG_PACKAGE_fping=y
 # CONFIG_PACKAGE_ibrdtn-tools is not set
 # CONFIG_PACKAGE_ibrdtnd is not set
 # CONFIG_PACKAGE_ifstat is not set
-CONFIG_PACKAGE_iftop=y
+# CONFIG_PACKAGE_iftop is not set
 # CONFIG_PACKAGE_iiod is not set
 # CONFIG_PACKAGE_iotivity is not set
 # CONFIG_PACKAGE_iotivity-cpp is not set
@@ -5167,7 +5156,7 @@ CONFIG_PACKAGE_iperf3=y
 # CONFIG_PACKAGE_ipip is not set
 CONFIG_PACKAGE_ipset=y
 # CONFIG_PACKAGE_ipset-dns is not set
-CONFIG_PACKAGE_iptraf-ng=y
+# CONFIG_PACKAGE_iptraf-ng is not set
 # CONFIG_PACKAGE_iputils-arping is not set
 # CONFIG_PACKAGE_iputils-clockdiff is not set
 CONFIG_PACKAGE_iputils-ping=y
@@ -5230,7 +5219,7 @@ CONFIG_PACKAGE_odhcpd_full_ext_cer_id=0
 # CONFIG_PACKAGE_pppossh is not set
 # CONFIG_PACKAGE_radsecproxy is not set
 # CONFIG_PACKAGE_redsocks is not set
-CONFIG_PACKAGE_redsocks2=y
+# CONFIG_PACKAGE_redsocks2 is not set
 # CONFIG_PACKAGE_remserial is not set
 # CONFIG_PACKAGE_rssileds is not set
 # CONFIG_PACKAGE_rsyslog is not set
@@ -5341,7 +5330,7 @@ CONFIG_WPA_MSG_MIN_PRIORITY=3
 # CONFIG_PACKAGE_bsdtar is not set
 # CONFIG_PACKAGE_bzip2 is not set
 # CONFIG_PACKAGE_gzip is not set
-CONFIG_PACKAGE_p7zip=y
+# CONFIG_PACKAGE_p7zip is not set
 # CONFIG_PACKAGE_unrar is not set
 # CONFIG_PACKAGE_unzip is not set
 # CONFIG_PACKAGE_xz-utils is not set
@@ -5491,8 +5480,8 @@ CONFIG_PACKAGE_ncurses-bin=y
 # CONFIG_PACKAGE_zoneinfo-asia is not set
 # CONFIG_PACKAGE_zoneinfo-atlantic is not set
 # CONFIG_PACKAGE_zoneinfo-australia-nz is not set
-CONFIG_PACKAGE_zoneinfo-core=y
-CONFIG_PACKAGE_zoneinfo-europe=y
+# CONFIG_PACKAGE_zoneinfo-core is not set
+# CONFIG_PACKAGE_zoneinfo-europe is not set
 # CONFIG_PACKAGE_zoneinfo-india is not set
 # CONFIG_PACKAGE_zoneinfo-northamerica is not set
 # CONFIG_PACKAGE_zoneinfo-pacific is not set
@@ -5538,7 +5527,7 @@ CONFIG_PACKAGE_zoneinfo-europe=y
 # CONFIG_PACKAGE_crconf is not set
 # CONFIG_PACKAGE_crelay is not set
 # CONFIG_PACKAGE_ct-bugcheck is not set
-CONFIG_PACKAGE_daemonize=y
+# CONFIG_PACKAGE_daemonize is not set
 # CONFIG_PACKAGE_dbus is not set
 # CONFIG_PACKAGE_dfu-util is not set
 # CONFIG_PACKAGE_digitemp is not set
