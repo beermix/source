@@ -474,6 +474,8 @@ endef
 
 CONFIGURE_ARGS += \
 	--disable-use-tty-group \
+	--disable-makeinstall-chown \
+	--disable-makeinstall-setuid \
 	--disable-rpath \
 	--disable-tls		\
 	--disable-sulogin	\
