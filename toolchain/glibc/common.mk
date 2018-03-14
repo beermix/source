@@ -28,6 +28,18 @@ HOST_STAMP_CONFIGURED:=$(CUR_BUILD_DIR)/.configured
 HOST_STAMP_BUILT:=$(CUR_BUILD_DIR)/.built
 HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 
+ifeq ($(ARCH),mips64)
+  ifdef CONFIG_MIPS64_ABI_N64
+    TARGET_CFLAGS += -mabi=64
+  endif
+  ifdef CONFIG_MIPS64_ABI_N32
+    TARGET_CFLAGS += -mabi=n32
+  endif
+  ifdef CONFIG_MIPS64_ABI_O32
+    TARGET_CFLAGS += -mabi=32
+  endif
+endif
+
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
 # "Optimize i386 syscall inlining for GCC 5"
@@ -48,13 +60,11 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-obsolete-rpc \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
+export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo

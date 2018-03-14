@@ -59,7 +59,7 @@ endef
 
 define Package/libfdisk
 $(call Package/util-linux/Default)
-  DEPENDS:=+libuuid +libblkid +librt
+  DEPENDS:=+libuuid +libblkid
   TITLE:=partition manipulating library
   SECTION:=libs
   CATEGORY:=Libraries
@@ -71,7 +71,7 @@ endef
 
 define Package/libmount
 $(call Package/util-linux/Default)
-  DEPENDS:=+libblkid +librt
+  DEPENDS:=+libblkid
   TITLE:=mount library
   SECTION:=libs
   CATEGORY:=Libraries
@@ -120,7 +120,6 @@ endef
 
 define Package/blkdiscard
 $(call Package/util-linux/Default)
-  DEPENDS:=+librt
   TITLE:=discard sectors on a device
   SUBMENU=Disc
 endef
@@ -158,16 +157,6 @@ $(call Package/util-linux/Default)
   TITLE:=display or manipulate disk partition table
   DEPENDS:= +libblkid +libncurses +libsmartcols +libfdisk +libmount
   SUBMENU:=Disc
-endef
-
-define Package/column
-$(call Package/util-linux/Default)
-  TITLE:=columnate lists
-  DEPENDS:= +libsmartcols
-endef
-
-define Package/column/description
- The  column  utility  formats  its  input  into  multiple  columns
 endef
 
 define Package/cfdisk/description
@@ -210,7 +199,6 @@ endef
 define Package/flock
 $(call Package/util-linux/Default)
   TITLE:=manage locks from shell scripts
-  DEPENDS:= +librt
 endef
 
 define Package/flock/description
@@ -247,25 +235,6 @@ endef
 
 define Package/hwclock/description
  hwclock is a tool for accessing the Hardware Clock
-endef
-
-define Package/ionice
-$(call Package/util-linux/Default)
-  TITLE:=ionice - get/set program io scheduling class and priority 
-endef
-
-define Package/ionice/description
- This program sets or gets the io scheduling class and priority for a program. If no arguments or just -p is given, ionice will query the current io scheduling class and priority for that process. 
-endef
-
-define Package/fsfreeze
-$(call Package/util-linux/Default)
-  TITLE:=fsfreeze - suspends and resumes access to an filesystem 
-endef
-
-define Package/fsfreeze/description
- fsfreeze halts new access to the filesystem and creates a stable image on disk.
- fsfreeze is intended to be used with hardware RAID devices that support the creation of snapshots.
 endef
 
 define Package/logger
@@ -309,6 +278,16 @@ define Package/lsblk/description
  lsblk lists information about all or the specified block devices
 endef
 
+define Package/lscpu
+$(call Package/util-linux/Default)
+  TITLE:=display information about the CPU architecture
+  DEPENDS:= +libsmartcols
+endef
+
+define Package/lscpu/description
+ lscpu displays information about the CPU architecture
+endef
+
 define Package/mcookie
 $(call Package/util-linux/Default)
   TITLE:=generate magic cookies for xauth
@@ -337,6 +316,15 @@ endef
 define Package/namei/description
  namei uses its arguments as pathnames to any type of Unix file (symlinks,
  files, directories, and so forth)
+endef
+
+define Package/nsenter
+$(call Package/util-linux/Default)
+  TITLE:=enter a namespace
+endef
+
+define Package/nsenter/description
+  run program with namespaces of other processes
 endef
 
 define Package/prlimit
@@ -408,18 +396,27 @@ endef
 define Package/swap-utils
 $(call Package/util-linux/Default)
   TITLE:=swap space management utilities
-  DEPENDS+= +libblkid +libmount +libsmartcols
+  DEPENDS+= +libblkid
   SUBMENU:=Filesystem
 endef
 
 define Package/swap-utils/description
- contains: mkswap, swaplabel, swapon, swapoff
+ contains: mkswap, swaplabel
+endef
+
+define Package/unshare
+$(call Package/util-linux/Default)
+  TITLE:=unshare userspace tool
+endef
+
+define Package/unshare/description
+  run programs with some namespaces unshared from parent
 endef
 
 define Package/uuidd
 $(call Package/util-linux/Default)
   TITLE:=UUID generation daemon
-  DEPENDS:= +libuuid +librt
+  DEPENDS:= +libuuid
 endef
 
 define Package/uuidd/description
@@ -484,9 +481,7 @@ CONFIGURE_ARGS += \
 	--without-udev		\
 	--without-readline	\
 	--disable-more		\
-	--with-ncursesw \
-	--disable-makeinstall-chown \
-	--disable-makeinstall-setuid
+	--with-ncursesw
 
 TARGET_CFLAGS += $(FPIC) -std=gnu99
 
@@ -579,11 +574,6 @@ define Package/cfdisk/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/cfdisk $(1)/usr/sbin/
 endef
 
-define Package/column/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/column $(1)/usr/bin/
-endef
-
 define Package/dmesg/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/dmesg $(1)/usr/bin/
@@ -614,11 +604,6 @@ define Package/getopt/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/getopt $(1)/usr/bin/
 endef
 
-define Package/ionice/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ionice $(1)/usr/bin/
-endef
-
 define Package/hwclock/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/hwclock $(1)/usr/sbin/
@@ -644,6 +629,11 @@ define Package/lsblk/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/lsblk $(1)/usr/bin/
 endef
 
+define Package/lscpu/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/lscpu $(1)/usr/bin/
+endef
+
 define Package/mcookie/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/mcookie $(1)/usr/bin/
@@ -659,6 +649,11 @@ endef
 define Package/namei/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/namei $(1)/usr/bin/
+endef
+
+define Package/nsenter/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/nsenter $(1)/usr/bin/
 endef
 
 define Package/prlimit/install
@@ -700,6 +695,11 @@ define Package/swap-utils/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/swaplabel $(1)/usr/sbin/
 endef
 
+define Package/unshare/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/unshare $(1)/usr/bin/
+endef
+
 define Package/uuidd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin//uuidd $(1)/usr/sbin/
@@ -735,22 +735,22 @@ $(eval $(call BuildPackage,blkdiscard))
 $(eval $(call BuildPackage,blkid))
 $(eval $(call BuildPackage,cal))
 $(eval $(call BuildPackage,cfdisk))
-$(eval $(call BuildPackage,column))
 $(eval $(call BuildPackage,dmesg))
 $(eval $(call BuildPackage,fdisk))
 $(eval $(call BuildPackage,findfs))
 $(eval $(call BuildPackage,flock))
 $(eval $(call BuildPackage,fstrim))
 $(eval $(call BuildPackage,getopt))
-$(eval $(call BuildPackage,ionice))
 $(eval $(call BuildPackage,hwclock))
 $(eval $(call BuildPackage,logger))
 $(eval $(call BuildPackage,look))
 $(eval $(call BuildPackage,losetup))
 $(eval $(call BuildPackage,lsblk))
+$(eval $(call BuildPackage,lscpu))
 $(eval $(call BuildPackage,mcookie))
 $(eval $(call BuildPackage,mount-utils))
 $(eval $(call BuildPackage,namei))
+$(eval $(call BuildPackage,nsenter))
 $(eval $(call BuildPackage,prlimit))
 $(eval $(call BuildPackage,rename))
 $(eval $(call BuildPackage,partx-utils))
@@ -758,6 +758,7 @@ $(eval $(call BuildPackage,script-utils))
 $(eval $(call BuildPackage,setterm))
 $(eval $(call BuildPackage,sfdisk))
 $(eval $(call BuildPackage,swap-utils))
+$(eval $(call BuildPackage,unshare))
 $(eval $(call BuildPackage,uuidd))
 $(eval $(call BuildPackage,uuidgen))
 $(eval $(call BuildPackage,wall))
