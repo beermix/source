@@ -110,8 +110,6 @@ CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
 	--disable-debug-mode \
-	--disable-malloc-replacement \
-	--enable-gcc-hardening \
 	--disable-libevent-regress \
 	--disable-silent-rules \
 
