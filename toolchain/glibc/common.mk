@@ -4,6 +4,7 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://github.com/bminor/glibc/tree/release/2.27/master
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.27/master
 # -ftree-loop-distribute-patterns -malign-data=abi -fno-semantic-interposition -ftree-vectorize -ftree-loop-vectorize)
 include $(TOPDIR)/rules.mk
 
@@ -11,8 +12,8 @@ PKG_NAME:=glibc
 PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=b63daad
-PKG_SOURCE_URL:=https://github.com/bminor/glibc
+PKG_SOURCE_VERSION:=b63daad97ec1a9adccf028cfdebedff2b3660097
+PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
