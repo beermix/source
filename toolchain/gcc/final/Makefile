@@ -8,14 +8,13 @@ GCC_CONFIGURE += \
 	--disable-libunwind-exceptions \
 	--enable-gnu-unique-object \
 	--enable-linker-build-id \
-	--enable-install-libiberty \
-	--with-linker-hash-style=gnu \
 	--enable-gnu-indirect-function \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
+	--enable-plugins \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL

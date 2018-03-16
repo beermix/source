@@ -47,7 +47,7 @@ endif
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 -march=bonnell -g2 $(filter-out "-march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mfpmath=sse -msse -falign-functions=32 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -m32 -march=bonnell -g $(filter-out "-march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mfpmath=sse -msse -falign-functions=32 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -55,20 +55,25 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
+		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
-		--disable-werror \
+		--without-selinux \
 		--enable-kernel=4.4 \
 		--disable-build-nscd \
+		--enable-stack-protector=yes \
 		--disable-nscd \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
+export libc_cv_forced_unwind=yes
+export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
