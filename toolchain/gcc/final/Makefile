@@ -5,6 +5,12 @@ include ../common.mk
 GCC_CONFIGURE += \
 	--with-headers=$(TOOLCHAIN_DIR)/include \
 	--disable-libsanitizer \
+	--disable-libunwind-exceptions \
+	--enable-gnu-unique-object \
+	--enable-linker-build-id \
+	--enable-install-libiberty \
+	--with-linker-hash-style=gnu \
+	--enable-gnu-indirect-function \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
 	--enable-threads \

@@ -58,6 +58,9 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
+		--enable-kernel=4.4 \
+		--disable-build-nscd \
+		--disable-nscd \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
