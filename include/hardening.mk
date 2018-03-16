@@ -44,12 +44,13 @@ ifdef CONFIG_PKG_FORTIFY_SOURCE_2
 endif
 ifdef CONFIG_PKG_RELRO_PARTIAL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_LDFLAGS += -Wl,-O1 -Wl,-sort-common
+    TARGET_LDFLAGS += -Wl,-O1,--sort-common,-z,relro,-z,now
+    TARGET_CFLAGS += -fno-plt
   endif
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-sort-common
+    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-O1 -Wl,--sort-common
     TARGET_LDFLAGS += -znow -zrelro
   endif
 endif
