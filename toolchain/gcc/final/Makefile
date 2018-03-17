@@ -7,7 +7,6 @@ GCC_CONFIGURE += \
 	--disable-libsanitizer \
 	--disable-libunwind-exceptions \
 	--enable-gnu-unique-object \
-	--enable-linker-build-id \
 	--enable-gnu-indirect-function \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \

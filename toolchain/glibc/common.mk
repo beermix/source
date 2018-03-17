@@ -12,7 +12,7 @@ PKG_NAME:=glibc
 PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=b63daad97ec1a9adccf028cfdebedff2b3660097
+PKG_SOURCE_VERSION:=3b922526415d1af93fe5a0e3caf7e6a790cb1619
 PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -61,7 +61,6 @@ GLIBC_CONFIGURE:= \
 		--without-selinux \
 		--enable-kernel=4.4 \
 		--disable-build-nscd \
-		--enable-stack-protector=yes \
 		--disable-nscd \
 		--without-gd \
 		--without-cvs \
