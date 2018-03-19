@@ -5,15 +5,12 @@ include ../common.mk
 GCC_CONFIGURE += \
 	--with-headers=$(TOOLCHAIN_DIR)/include \
 	--disable-libsanitizer \
-	--disable-libunwind-exceptions \
-	--enable-gnu-unique-object \
-	--enable-gnu-indirect-function \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
-	--enable-lto \
 	--enable-plugins \
+	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL
