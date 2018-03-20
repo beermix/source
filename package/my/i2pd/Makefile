@@ -45,8 +45,8 @@ define Package/i2pd/conffiles
 	/etc/i2pd/tunnels.conf
 endef
 
-TARGET_LDFLAGS+= -latomic
-TARGET_CXXFLAGS+= -lpthread -lrt -ldl
+TARGET_LDFLAGS+= -latomic -lm -ldl -lz
+TARGET_CXXFLAGS+= -lpthread
 
 # TARGET_LDFLAGS+= -latomic -Wl,--gc-sections
 # TARGET_CXXFLAGS+= -lpthread -fno-omit-frame-pointer -ffunction-sections -fdata-sections
