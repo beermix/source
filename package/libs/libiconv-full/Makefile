@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libiconv-full
-PKG_VERSION:=1.11.1
-PKG_RELEASE:=3
+PKG_VERSION:=1.15
+PKG_RELEASE:=4
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 

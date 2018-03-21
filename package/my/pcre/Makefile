@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pcre
-PKG_VERSION:=8.41
+PKG_VERSION:=8.42
 PKG_RELEASE:=2
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=https://ftp.pcre.org/pub/pcre/
-PKG_MD5SUM:=c160d22723b1670447341b08c58981c1
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://fossies.org/linux/misc/
+#PKG_MD5SUM:=c160d22723b1670447341b08c58981c1
 PKG_MAINTAINER:=Thomas Heil <heil@terminal-consulting.de>
 
 PKG_LICENSE:=BSD-3-Clause
@@ -41,6 +41,7 @@ TARGET_CFLAGS += $(FPIC)
 CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
+	--enable-jit \
 	--enable-pcre16 \
 	--with-match-limit-recursion=16000 \
 

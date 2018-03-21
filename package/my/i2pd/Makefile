@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_VERSION:=2.18.0
+PKG_VERSION:=b1a6c5d
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -45,11 +45,9 @@ define Package/i2pd/conffiles
 	/etc/i2pd/tunnels.conf
 endef
 
-TARGET_LDFLAGS+= -latomic -lm -ldl -lz
-TARGET_CXXFLAGS+= -lpthread
 
-# TARGET_LDFLAGS+= -latomic -Wl,--gc-sections
-# TARGET_CXXFLAGS+= -lpthread -fno-omit-frame-pointer -ffunction-sections -fdata-sections
+TARGET_LDFLAGS+= -latomic -lm -ldl -lz -Wl,--gc-sections
+TARGET_CXXFLAGS+= -lpthread -fno-omit-frame-pointer -ffunction-sections -fdata-sections
 
 MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 

@@ -13,13 +13,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nmap
-PKG_VERSION:=7.60
+PKG_VERSION:=7.70
 PKG_RELEASE:=1
 PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=https://nmap.org/dist/
-PKG_HASH:=a8796ecc4fa6c38aad6139d9515dc8113023a82e9d787e5a5fb5fa1b05516f21
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://fossies.org/linux/misc/
+#PKG_HASH:=a8796ecc4fa6c38aad6139d9515dc8113023a82e9d787e5a5fb5fa1b05516f21
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
 

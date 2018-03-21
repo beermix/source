@@ -37,7 +37,7 @@ define Package/netdata/description
 endef
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS))
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -O3
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -O3 -Wall
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 CONFIGURE_ARGS += --with-zlib --with-math --enable-x86-sse --enable-lto
