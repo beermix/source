@@ -1,0 +1,211 @@
+From cd598e3bd215a60a5cbf98b6af967157dfa52a49 Mon Sep 17 00:00:00 2001
+From: Rosen Penev <rosenp@gmail.com>
+Date: Mon, 19 Mar 2018 16:08:56 -0700
+Subject: [PATCH 07/11] ipv6: Move dst->from into struct rt6_info.
+
+Any time we clone or copy a core ipv6 route in the ipv6 routing
+tables, we have the copy/clone's ->from point to the base route.
+
+This is used to handle route expiration properly.
+
+Only ipv6 uses this mechanism, and only ipv6 code references
+it.  So it is safe to move it into rt6_info.
+
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+---
+ include/net/dst.h     |  3 +--
+ include/net/ip6_fib.h |  8 ++++----
+ net/core/dst.c        |  1 -
+ net/ipv6/route.c      | 35 +++++++++++++++++------------------
+ 4 files changed, 22 insertions(+), 25 deletions(-)
+
+diff --git a/include/net/dst.h b/include/net/dst.h
+index fdd99f90d3c5..a43f37837c36 100644
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -39,7 +39,6 @@ struct dst_entry {
+ 	unsigned long		_metrics;
+ 	unsigned long           expires;
+ 	struct dst_entry	*path;
+-	struct dst_entry	*from;
+ #ifdef CONFIG_XFRM
+ 	struct xfrm_state	*xfrm;
+ #else
+@@ -88,7 +87,7 @@ struct dst_entry {
+ 	 * Align __refcnt to a 64 bytes alignment
+ 	 * (L1_CACHE_SIZE would be too much)
+ 	 */
+-	long			__pad_to_align_refcnt[3];
++	long			__pad_to_align_refcnt[4];
+ #endif
+ 	/*
+ 	 * __refcnt wants to be on a different cache line from
+diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
+index f35a71ea4c82..cdf3e1f1ca65 100644
+--- a/include/net/ip6_fib.h
++++ b/include/net/ip6_fib.h
+@@ -101,6 +101,7 @@ struct fib6_table;
+ struct rt6_info {
+ 	struct dst_entry		dst;
+ 	struct rt6_info			*rt6_next;
++	struct rt6_info			*from;
+ 
+ 	/*
+ 	 * Tail elements of dst_entry (__refcnt etc.)
+@@ -164,8 +165,7 @@ static inline void rt6_update_expires(struct rt6_info *rt0, int timeout)
+ {
+ 	struct rt6_info *rt;
+ 
+-	for (rt = rt0; rt && !(rt->rt6i_flags & RTF_EXPIRES);
+-	     rt = (struct rt6_info *)rt->dst.from);
++	for (rt = rt0; rt && !(rt->rt6i_flags & RTF_EXPIRES); rt = rt->from);
+ 	if (rt && rt != rt0)
+ 		rt0->dst.expires = rt->dst.expires;
+ 
+@@ -201,8 +201,8 @@ static inline u32 rt6_get_cookie(const struct rt6_info *rt)
+ 	u32 cookie = 0;
+ 
+ 	if (rt->rt6i_flags & RTF_PCPU ||
+-	    (unlikely(!list_empty(&rt->rt6i_uncached)) && rt->dst.from))
+-		rt = (struct rt6_info *)(rt->dst.from);
++	    (unlikely(!list_empty(&rt->rt6i_uncached)) && rt->from))
++		rt = rt->from;
+ 
+ 	rt6_get_cookie_safe(rt, &cookie);
+ 
+diff --git a/net/core/dst.c b/net/core/dst.c
+index 1de656b77ed2..d17d51b9ac9a 100644
+--- a/net/core/dst.c
++++ b/net/core/dst.c
+@@ -70,7 +70,6 @@ void dst_init(struct dst_entry *dst, struct dst_ops *ops,
+ 	dst_init_metrics(dst, dst_default_metrics.metrics, true);
+ 	dst->expires = 0UL;
+ 	dst->path = dst;
+-	dst->from = NULL;
+ #ifdef CONFIG_XFRM
+ 	dst->xfrm = NULL;
+ #endif
+diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+index c1b6148ebba1..4e8b24d5f9c6 100644
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -180,7 +180,7 @@ static void rt6_uncached_list_flush_dev(struct net *net, struct net_device *dev)
+ 
+ static u32 *rt6_pcpu_cow_metrics(struct rt6_info *rt)
+ {
+-	return dst_metrics_write_ptr(rt->dst.from);
++	return dst_metrics_write_ptr(&rt->from->dst);
+ }
+ 
+ static u32 *ipv6_cow_metrics(struct dst_entry *dst, unsigned long old)
+@@ -392,7 +392,7 @@ EXPORT_SYMBOL(ip6_dst_alloc);
+ static void ip6_dst_destroy(struct dst_entry *dst)
+ {
+ 	struct rt6_info *rt = (struct rt6_info *)dst;
+-	struct dst_entry *from = dst->from;
++	struct rt6_info *from = rt->from;
+ 	struct inet6_dev *idev;
+ 
+ 	dst_destroy_metrics_generic(dst);
+@@ -405,8 +405,8 @@ static void ip6_dst_destroy(struct dst_entry *dst)
+ 		in6_dev_put(idev);
+ 	}
+ 
+-	dst->from = NULL;
+-	dst_release(from);
++	rt->from = NULL;
++	dst_release(&from->dst);
+ }
+ 
+ static void ip6_dst_ifdown(struct dst_entry *dst, struct net_device *dev,
+@@ -439,9 +439,9 @@ static bool rt6_check_expired(const struct rt6_info *rt)
+ 	if (rt->rt6i_flags & RTF_EXPIRES) {
+ 		if (time_after(jiffies, rt->dst.expires))
+ 			return true;
+-	} else if (rt->dst.from) {
++	} else if (rt->from) {
+ 		return rt->dst.obsolete != DST_OBSOLETE_FORCE_CHK ||
+-		       rt6_check_expired((struct rt6_info *)rt->dst.from);
++		       rt6_check_expired(rt->from);
+ 	}
+ 	return false;
+ }
+@@ -990,7 +990,7 @@ static struct rt6_info *ip6_rt_cache_alloc(struct rt6_info *ort,
+ 	 */
+ 
+ 	if (ort->rt6i_flags & (RTF_CACHE | RTF_PCPU))
+-		ort = (struct rt6_info *)ort->dst.from;
++		ort = ort->from;
+ 
+ 	rcu_read_lock();
+ 	dev = ip6_rt_get_dev_rcu(ort);
+@@ -1357,9 +1357,9 @@ struct dst_entry *ip6_blackhole_route(struct net *net, struct dst_entry *dst_ori
+ 
+ static void rt6_dst_from_metrics_check(struct rt6_info *rt)
+ {
+-	if (rt->dst.from &&
+-	    dst_metrics_ptr(&rt->dst) != dst_metrics_ptr(rt->dst.from))
+-		dst_init_metrics(&rt->dst, dst_metrics_ptr(rt->dst.from), true);
++	if (rt->from &&
++	    dst_metrics_ptr(&rt->dst) != dst_metrics_ptr(&rt->from->dst))
++		dst_init_metrics(&rt->dst, dst_metrics_ptr(&rt->from->dst), true);;
+ }
+ 
+ static struct dst_entry *rt6_check(struct rt6_info *rt, u32 cookie)
+@@ -1379,7 +1379,7 @@ static struct dst_entry *rt6_dst_from_check(struct rt6_info *rt, u32 cookie)
+ {
+ 	if (!__rt6_check_expired(rt) &&
+ 	    rt->dst.obsolete == DST_OBSOLETE_FORCE_CHK &&
+-	    rt6_check((struct rt6_info *)(rt->dst.from), cookie))
++	    rt6_check(rt->from, cookie))
+ 		return &rt->dst;
+ 	else
+ 		return NULL;
+@@ -1399,7 +1399,7 @@ static struct dst_entry *ip6_dst_check(struct dst_entry *dst, u32 cookie)
+ 	rt6_dst_from_metrics_check(rt);
+ 
+ 	if (rt->rt6i_flags & RTF_PCPU ||
+-	    (unlikely(!list_empty(&rt->rt6i_uncached)) && rt->dst.from))
++	    (unlikely(!list_empty(&rt->rt6i_uncached)) && rt->from))
+ 		return rt6_dst_from_check(rt, cookie);
+ 	else
+ 		return rt6_check(rt, cookie);
+@@ -2466,11 +2466,11 @@ static void rt6_do_redirect(struct dst_entry *dst, struct sock *sk, struct sk_bu
+ 
+ static void rt6_set_from(struct rt6_info *rt, struct rt6_info *from)
+ {
+-	BUG_ON(from->dst.from);
++	BUG_ON(from->from);
+ 
+ 	rt->rt6i_flags &= ~RTF_EXPIRES;
+ 	dst_hold(&from->dst);
+-	rt->dst.from = &from->dst;
++	rt->from = from;
+ 	dst_init_metrics(&rt->dst, dst_metrics_ptr(&from->dst), true);
+ }
+ 
+@@ -2930,7 +2930,7 @@ static int rt6_mtu_change_route(struct rt6_info *rt, void *p_arg)
+ 		if (rt->rt6i_flags & RTF_CACHE) {
+ 			/* For RTF_CACHE with rt6i_pmtu == 0
+ 			 * (i.e. a redirected route),
+-			 * the metrics of its rt->dst.from has already
++			 * the metrics of its rt->from has already
+ 			 * been updated.
+ 			 */
+ 			if (rt->rt6i_pmtu && rt->rt6i_pmtu > arg->mtu)
+@@ -3724,9 +3724,8 @@ static int inet6_rtm_getroute(struct sk_buff *in_skb, struct nlmsghdr *nlh,
+ 		goto errout;
+ 	}
+ 
+-	if (fibmatch && rt->dst.from) {
+-		struct rt6_info *ort = container_of(rt->dst.from,
+-						    struct rt6_info, dst);
++	if (fibmatch && rt->from) {
++		struct rt6_info *ort = container_of(&rt->from->dst, struct rt6_info, dst);
+ 
+ 		dst_hold(&ort->dst);
+ 		ip6_rt_put(rt);
+-- 
+2.16.2
+

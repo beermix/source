@@ -1,0 +1,28 @@
+From bf1b3d8dada83c08d7bb101665a30404bcc855c9 Mon Sep 17 00:00:00 2001
+From: David Miller <davem@davemloft.net>
+Date: Tue, 28 Nov 2017 15:39:59 -0500
+Subject: [PATCH 01/11] net: dst->rt_next is unused.
+
+Delete it.
+
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+---
+ include/net/dst.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/net/dst.h b/include/net/dst.h
+index 694c2e6ae618..fe67595b0846 100644
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -101,7 +101,6 @@ struct dst_entry {
+ 	struct lwtunnel_state   *lwtstate;
+ 	union {
+ 		struct dst_entry	*next;
+-		struct rtable __rcu	*rt_next;
+ 		struct rt6_info		*rt6_next;
+ 		struct dn_route __rcu	*dn_next;
+ 	};
+-- 
+2.16.2
+
