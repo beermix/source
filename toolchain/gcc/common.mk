@@ -123,8 +123,8 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--disable-vtable-verify \
-		--disable-libunwind-exceptions \
+		--enable-checking=release \
+		--with-default-libstdcxx-abi=gcc4-compatible \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
