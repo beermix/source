@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.0
+PKG_VERSION:=6.1
 PKG_RELEASE:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@GNU/ncurses
-PKG_HASH:=f551c24b30ce8bfb6e96d9f59b42fbea30fa3a6123384172f9e7284bcf647260
+PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
+PKG_HASH:=aa057eeeb4a14d470101eff4597d5833dcef5965331be3528c08d99cebaa0d17
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
@@ -73,6 +73,7 @@ CONFIGURE_ARGS += \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
+	--with-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \

@@ -9,7 +9,8 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=e2fsprogs
 PKG_VERSION:=1.44.1
-PKG_RELEASE:=2
+PKG_HASH:=0ca164c1c87724df904c918b2d7051ef989b51de725db66c67514dbe6dd2b9ef
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/linux/kernel/people/tytso/e2fsprogs/v$(PKG_VERSION)/
@@ -201,7 +202,7 @@ define Host/Install
 	$(CP) $(HOST_BUILD_DIR)/lib/et/et_[ch].awk $(1)/share/et/
 	$(INSTALL_DIR) $(1)/share/ss
 	$(CP) $(HOST_BUILD_DIR)/lib/ss/ct_c.{sed,awk} $(1)/share/ss/
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin
+	$(INSTALL_DIR) $(1)/bin
 	$(CP) \
 		$(HOST_BUILD_DIR)/lib/et/compile_et \
 		$(HOST_BUILD_DIR)/lib/ss/mk_cmds \

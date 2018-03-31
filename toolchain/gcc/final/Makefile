@@ -11,9 +11,6 @@ GCC_CONFIGURE += \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-plugins \
 	--enable-lto \
-	--disable-libunwind-exceptions \
-	--enable-gnu-unique-object \
-	--enable-gnu-indirect-function \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL
