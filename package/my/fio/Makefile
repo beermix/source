@@ -19,8 +19,8 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/fio
-  SECTION:=libs
-  CATEGORY:=Libraries
+  SECTION:=utils
+  CATEGORY:=Utilities
   TITLE:=Flexible I/O Tester
   URL:=http://software.schmorp.de/pkg/fio.html
   DEPENDS:=+libpthread +librt +zlib
