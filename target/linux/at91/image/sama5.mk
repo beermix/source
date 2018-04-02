@@ -4,6 +4,7 @@ FAT32_BLOCKS:=$(shell echo \
   $$(($(AT91_SD_BOOT_PARTSIZE)*1024*1024/$(FAT32_BLOCK_SIZE))))
 
 define Build/at91-sdcard
+  $(if $(findstring ext4,$@), \
   rm -f $@.boot
   mkfs.fat -C $@.boot $(FAT32_BLOCKS)
 
@@ -76,16 +77,28 @@ define Device/at91-sama5d4_xplained
 endef
 TARGET_DEVICES += at91-sama5d4_xplained
 
-define Device/wb50n
-  $(Device/evaluation-fit)
-  DEVICE_TITLE := Laird WB50N
-  DEVICE_PACKAGES := \
+define Device/at91-sama5d27_som1_ek
+  $(Device/evaluation-dtb)
+  DEVICE_TITLE := Microchip(Atmel AT91) SAMA5D27 SOM1 Ek
+  KERNEL_SIZE := 6144k
+  $(Device/evaluation-sdimage)
+endef
+TARGET_DEVICES += at91-sama5d27_som1_ek
+
+ifeq ($(strip $(CONFIG_EXTERNAL_KERNEL_TREE)),"")
+ ifeq ($(strip $(CONFIG_KERNEL_GIT_CLONE_URI)),"")
+  define Device/wb50n
+    $(Device/evaluation-fit)
+    DEVICE_TITLE := Laird WB50N
+    DEVICE_PACKAGES := \
 	  kmod-mmc-at91 kmod-ath6kl-sdio ath6k-firmware \
 	  kmod-usb-storage kmod-fs-vfat kmod-fs-msdos \
 	  kmod-leds-gpio
-  BLOCKSIZE := 128k
-  PAGESIZE := 2048
-  SUBPAGESIZE := 2048
-  MKUBIFS_OPTS := -m $$(PAGESIZE) -e 124KiB -c 955
-endef
-TARGET_DEVICES += wb50n
+    BLOCKSIZE := 128k
+    PAGESIZE := 2048
+    SUBPAGESIZE := 2048
+    MKUBIFS_OPTS := -m $$(PAGESIZE) -e 124KiB -c 955
+  endef
+  TARGET_DEVICES += wb50n
+ endif
+endif
