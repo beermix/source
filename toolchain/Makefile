@@ -33,6 +33,7 @@ $(curdir)/builddirs := $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_EXTERNAL_TOOLCHAIN)
 ifdef CONFIG_USE_UCLIBC
   $(curdir)/builddirs += $(LIBC)/utils
 endif
+
 # builddir dependencies
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   ifdef CONFIG_USE_MUSL
