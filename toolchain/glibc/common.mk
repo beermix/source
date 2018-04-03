@@ -61,6 +61,7 @@ GLIBC_CONFIGURE:= \
 		--without-selinux \
 		--enable-kernel=4.4 \
 		--enable-stack-protector=strong \
+		--enable-stackguard-randomization \
 		--disable-build-nscd \
 		--disable-nscd \
 		--without-gd \
