@@ -123,6 +123,7 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--disable-werror \
 		--enable-checking=release \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		$(GRAPHITE_CONFIGURE) \
