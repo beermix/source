@@ -3354,8 +3354,8 @@ CONFIG_PACKAGE_python-openssl=y
 # CONFIG_PACKAGE_python-parsley is not set
 # CONFIG_PACKAGE_python-parsley-src is not set
 # CONFIG_PACKAGE_python-pcapy is not set
-CONFIG_PACKAGE_python-pip=y
-CONFIG_PACKAGE_python-pip-conf=y
+# CONFIG_PACKAGE_python-pip is not set
+# CONFIG_PACKAGE_python-pip-conf is not set
 # CONFIG_PACKAGE_python-pip-src is not set
 # CONFIG_PACKAGE_python-ply is not set
 # CONFIG_PACKAGE_python-ply-src is not set
@@ -3376,9 +3376,9 @@ CONFIG_PACKAGE_python-pydoc=y
 # CONFIG_PACKAGE_python-pyserial is not set
 # CONFIG_PACKAGE_python-service-identity is not set
 # CONFIG_PACKAGE_python-service-identity-src is not set
-CONFIG_PACKAGE_python-setuptools=y
+# CONFIG_PACKAGE_python-setuptools is not set
 # CONFIG_PACKAGE_python-setuptools-src is not set
-CONFIG_PACKAGE_python-six=y
+# CONFIG_PACKAGE_python-six is not set
 # CONFIG_PACKAGE_python-six-src is not set
 # CONFIG_PACKAGE_python-smbus is not set
 CONFIG_PACKAGE_python-sqlite3=y
