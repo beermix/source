@@ -8,15 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-PKG_VERSION:=2.1.0
-PKG_RELEASE:=1
+PKG_VERSION:=42c3a1f
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://hisham.hm/htop/releases/$(PKG_VERSION)/
-#PKG_HASH:=179be9dccb80cee0c5e1a1f58c8f72ce7b2328ede30fb71dcdf336539be2f487
-
-PKG_LICENSE:=GPL-2.0
-PKG_LICENSE_FILES:=COPYING
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/hishamhm/htop
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -39,7 +37,7 @@ define Package/htop/description
 endef
 
 CONFIGURE_ARGS += \
-	--disable-unicode \
+	--enable-unicode \
 	--disable-hwloc
 
 CONFIGURE_VARS += \
