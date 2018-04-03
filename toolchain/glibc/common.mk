@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 # https://github.com/bminor/glibc/tree/release/2.27/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.27/master
-# -ftree-loop-distribute-patterns -malign-data=abi -fno-semantic-interposition -ftree-vectorize -ftree-loop-vectorize)
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/google/grte/v5-2.27/master
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
@@ -60,6 +60,7 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--without-selinux \
 		--enable-kernel=4.4 \
+		--enable-stack-protector=strong \
 		--disable-build-nscd \
 		--disable-nscd \
 		--without-gd \
