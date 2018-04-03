@@ -45,6 +45,7 @@ define Build/Configure
 		--enable-history \
 		--enable-job-control \
 		--enable-readline \
+		--with-installed-readline \
 		--enable-extended-glob \
 		--enable-progcomp \
 		--enable-arith-for-command \
