@@ -5782,4 +5782,4 @@ CONFIG_PACKAGE_openssl-util=y
 # font-utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="liblz4"
+CONFIG_OVERRIDE_PKGS="liblz4 netdata"
