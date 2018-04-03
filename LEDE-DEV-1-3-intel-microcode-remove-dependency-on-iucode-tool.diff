@@ -1,0 +1,13 @@
+diff --git a/package/firmware/intel-microcode/Makefile b/package/firmware/intel-microcode/Makefile
+index 1b7288fc14..d2663bb901 100644
+--- a/package/firmware/intel-microcode/Makefile
++++ b/package/firmware/intel-microcode/Makefile
+@@ -30,7 +30,7 @@ define Package/intel-microcode
+   SECTION:=firmware
+   CATEGORY:=Firmware
+   URL:=$(PKG_SOURCE_URL)
+-  DEPENDS:=@TARGET_x86 +iucode-tool
++  DEPENDS:=@TARGET_x86
+   TITLE:=Intel x86 CPU microcode
+ endef
+ 

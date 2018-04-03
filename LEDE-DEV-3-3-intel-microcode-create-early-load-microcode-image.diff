@@ -1,0 +1,70 @@
+diff --git a/package/firmware/intel-microcode/Makefile b/package/firmware/intel-microcode/Makefile
+index d2663bb901..9970f8f072 100644
+--- a/package/firmware/intel-microcode/Makefile
++++ b/package/firmware/intel-microcode/Makefile
+@@ -35,15 +35,35 @@ define Package/intel-microcode
+ endef
+ 
+ define Build/Compile
+-	IUCODE_TOOL=$(STAGING_DIR)/../host/bin/iucode_tool $(MAKE) -C $(PKG_BUILD_DIR)
+-	mkdir $(PKG_BUILD_DIR)/intel-ucode
+-	$(STAGING_DIR)/../host/bin/iucode_tool -q \
+-		--write-firmware=$(PKG_BUILD_DIR)/intel-ucode $(PKG_BUILD_DIR)/$(MICROCODE).bin
++	IUCODE_TOOL=$(STAGING_DIR)/../host/bin/iucode_tool \
++		$(MAKE) -C $(PKG_BUILD_DIR)
++	$(STAGING_DIR)/../host/bin/iucode_tool -q --mini-earlyfw \
++		--write-earlyfw=$(PKG_BUILD_DIR)/intel-ucode.cpio \
++		$(PKG_BUILD_DIR)/$(MICROCODE).bin
+ endef
+ 
+ define Package/intel-microcode/install
+-	$(INSTALL_DIR) $(1)/lib/firmware/intel-ucode
+-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/intel-ucode/* $(1)/lib/firmware/intel-ucode
++	$(INSTALL_DIR) $(1)/lib/firmware
++	$(INSTALL_DATA) $(PKG_BUILD_DIR)/intel-ucode.cpio \
++		$(1)/lib/firmware/intel-ucode.img
++endef
++
++ifeq ($(CONFIG_PACKAGE_intel-microcode),m)
++define Package/intel-microcode/postinst
++#!/bin/sh
++
++mount /boot -o remount,rw,noatime
++cp -f /lib/firmware/intel-ucode.img /boot/
++mount /boot -o remount,ro,noatime
++endef
++endif
++
++define Package/intel-microcode/prerm
++#!/bin/sh
++
++mount /boot -o remount,rw,noatime
++rm /boot/intel-ucode.img
++mount /boot -o remount,ro,noatime
+ endef
+ 
+ $(eval $(call BuildPackage,intel-microcode))
+diff --git a/target/linux/x86/image/Makefile b/target/linux/x86/image/Makefile
+index a05f4babd9..4d6a3016d2 100644
+--- a/target/linux/x86/image/Makefile
++++ b/target/linux/x86/image/Makefile
+@@ -83,6 +83,9 @@ ifneq ($(CONFIG_GRUB_IMAGES),)
+ 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
+ 		-e 's#@ROOT@#$(GRUB_ROOT)#g' \
+ 		./grub.cfg > $(KDIR)/root.grub/boot/grub/grub.cfg
++    ifeq ($(CONFIG_PACKAGE_intel-microcode),y)
++	$(CP) $(STAGING_DIR)/root-x86/lib/firmware/intel-ucode.img $(KDIR)/root.grub/boot/
++    endif
+ 	PADDING="$(CONFIG_TARGET_IMAGES_PAD)" SIGNATURE="$(SIGNATURE)" PATH="$(TARGET_PATH)" $(SCRIPT_DIR)/gen_image_generic.sh \
+ 		$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img \
+ 		$(CONFIG_TARGET_KERNEL_PARTSIZE) $(KDIR)/root.grub \
+@@ -120,6 +123,9 @@ define Image/Build/iso
+ 		-e 's#@CMDLINE@#root=/dev/sr0 rootfstype=iso9660 rootwait $(strip $(call Image/cmdline/$(1)) $(BOOTOPTS) $(GRUB_CONSOLE_CMDLINE))#g' \
+ 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
+ 		./grub-iso.cfg > $(KDIR)/root.grub/boot/grub/grub.cfg
++  ifeq ($(CONFIG_PACKAGE_intel-microcode),y)
++	$(CP) $(STAGING_DIR)/root-x86/lib/firmware/intel-ucode.img $(KDIR)/root.grub/boot/
++  endif
+ 	mkisofs -R -b boot/grub/eltorito.img -no-emul-boot -boot-info-table \
+ 		-o $(KDIR)/root.iso $(KDIR)/root.grub $(TARGET_DIR)
+ endef

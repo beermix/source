@@ -1,0 +1,58 @@
+diff --git a/target/linux/x86/base-files/lib/preinit/02_load_x86_ucode b/target/linux/x86/base-files/lib/preinit/02_load_x86_ucode
+index fb309c75c1..68ebdf8651 100644
+--- a/target/linux/x86/base-files/lib/preinit/02_load_x86_ucode
++++ b/target/linux/x86/base-files/lib/preinit/02_load_x86_ucode
+@@ -2,8 +2,10 @@
+ # Copyright (C) 2018 OpenWrt.org
+ 
+ do_load_x86_ucode() {
+-	if [ -e "/sys/devices/system/cpu/microcode/reload" ]; then
+-		echo 1 > /sys/devices/system/cpu/microcode/reload
++	if [ "$(grep -c AuthenticAMD /proc/cpuinfo)" -gt "0" ]; then
++		if [ -e "/sys/devices/system/cpu/microcode/reload" ]; then
++			echo 1 > /sys/devices/system/cpu/microcode/reload
++		fi
+ 	fi
+ }
+ 
+diff --git a/target/linux/x86/image/Makefile b/target/linux/x86/image/Makefile
+index 8a3cb327e3..a05f4babd9 100644
+--- a/target/linux/x86/image/Makefile
++++ b/target/linux/x86/image/Makefile
+@@ -9,8 +9,8 @@ include $(INCLUDE_DIR)/image.mk
+ 
+ export PATH=$(TARGET_PATH):/sbin
+ 
+-GRUB2_MODULES = biosdisk boot chain configfile ext2 linux ls part_msdos reboot serial vga
+-GRUB2_MODULES_ISO = biosdisk boot chain configfile iso9660 linux ls part_msdos reboot serial vga
++GRUB2_MODULES = biosdisk boot chain configfile ext2 linux ls part_msdos reboot serial test vga
++GRUB2_MODULES_ISO = biosdisk boot chain configfile iso9660 linux ls part_msdos reboot serial test vga
+ GRUB_TERMINALS =
+ GRUB_SERIAL_CONFIG =
+ GRUB_TERMINAL_CONFIG =
+diff --git a/target/linux/x86/image/grub-iso.cfg b/target/linux/x86/image/grub-iso.cfg
+index 3d47a95a4b..30b587bd1c 100644
+--- a/target/linux/x86/image/grub-iso.cfg
++++ b/target/linux/x86/image/grub-iso.cfg
+@@ -7,4 +7,7 @@ set root='(cd)'
+ 
+ menuentry "OpenWrt" {
+ 	linux /boot/vmlinuz @CMDLINE@ noinitrd
++	if [ -e /boot/intel-ucode.img ]; then
++		initrd /boot/intel-ucode.img
++	fi
+ }
+diff --git a/target/linux/x86/image/grub.cfg b/target/linux/x86/image/grub.cfg
+index 9ec6b2d39c..dde24b95ce 100644
+--- a/target/linux/x86/image/grub.cfg
++++ b/target/linux/x86/image/grub.cfg
+@@ -7,6 +7,9 @@ set root='(@ROOT@)'
+ 
+ menuentry "OpenWrt" {
+ 	linux /boot/vmlinuz @CMDLINE@ noinitrd
++	if [ -e /boot/intel-ucode.img ]; then
++		initrd /boot/intel-ucode.img
++	fi
+ }
+ menuentry "OpenWrt (failsafe)" {
+ 	linux /boot/vmlinuz failsafe=true @CMDLINE@ noinitrd
