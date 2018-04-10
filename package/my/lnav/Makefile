@@ -34,7 +34,7 @@ define Package/lnav/Default
 	DEPENDS:=+libsqlite3 +libpcre +libpcrecpp +bzip2 +libcurl +libopenssl +libevent2 +libpthread +libncursesw +libreadline +libstdcpp +zlib +librt
 endef
 
-CONFIGURE_ARGS += --disable-static
+CONFIGURE_ARGS += --disable-dependency-tracking --disable-silent-rules --disable-static --with-pcre=$(STAGING_DIR)/usr --with-libbz2=$(STAGING_DIR)/usr
 
 Package/lnav = $(Package/lnav/Default)
 
