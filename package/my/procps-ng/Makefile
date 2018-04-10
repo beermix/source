@@ -9,14 +9,16 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=procps-ng
 PKG_VERSION:=3.3.14
-PKG_RELEASE:=5
+PKG_RELEASE:=4
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING COPYING.LIB
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.com/procps-ng/procps.git
-#PKG_SOURCE_VERSION:=e0784ddaed30d095bb1d9a8ad6b5a23d10a212c4
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=8a198e3eafbde0b627e9992b41d26e6762e4f8c7
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
+PKG_MIRROR_HASH:=
 
 PKG_MAINTAINER:=Gergely Kiss <mail.gery@gmail.com>
 
@@ -41,6 +43,7 @@ PROCPS_APPLETS := \
 # are doing
 PROCPS_APPLETS_DIR_bin:=kill ps watch
 procps-applets-dir=$(if $(findstring $(1),$(PROCPS_APPLETS_DIR_bin)),/bin,/usr/bin)
+
 define Package/procps-ng/Default
   SECTION:=utils
   CATEGORY:=Utilities
@@ -90,15 +93,14 @@ MAKE_FLAGS += \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 
 define Package/procps-ng/install
-	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/libprocps.so* $(1)/usr/lib/
 endef
 
 define BuildPlugin
   define Package/$(1)/install
-	$(INSTALL_DIR) $$(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/$(2) $$(1)/usr/bin/
+	$(INSTALL_DIR) $$(1)$(3)
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/$(2) $$(1)$(3)/$(1)
   endef
 
   $$(eval $$(call BuildPackage,$(1)))
