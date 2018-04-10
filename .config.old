@@ -300,7 +300,7 @@ CONFIG_TOOLCHAINOPTS=y
 #
 # CONFIG_BINUTILS_USE_VERSION_2_27 is not set
 # CONFIG_BINUTILS_USE_VERSION_2_28 is not set
-# CONFIG_BINUTILS_USE_VERSION_2_29 is not set
+# CONFIG_BINUTILS_USE_VERSION_2_29_1 is not set
 CONFIG_BINUTILS_USE_VERSION_2_30=y
 CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
 
@@ -2807,6 +2807,7 @@ CONFIG_PACKAGE_kmod-ipt-nat=y
 CONFIG_PACKAGE_kmod-ipt-nflog=y
 CONFIG_PACKAGE_kmod-ipt-nfqueue=y
 CONFIG_PACKAGE_kmod-ipt-offload=y
+# CONFIG_PACKAGE_kmod-ipt-physdev is not set
 # CONFIG_PACKAGE_kmod-ipt-psd is not set
 # CONFIG_PACKAGE_kmod-ipt-quota2 is not set
 CONFIG_PACKAGE_kmod-ipt-raw=y
@@ -4614,6 +4615,7 @@ CONFIG_PACKAGE_iptables-mod-logmark=y
 # CONFIG_PACKAGE_iptables-mod-nat-extra is not set
 CONFIG_PACKAGE_iptables-mod-nflog=y
 CONFIG_PACKAGE_iptables-mod-nfqueue=y
+# CONFIG_PACKAGE_iptables-mod-physdev is not set
 # CONFIG_PACKAGE_iptables-mod-psd is not set
 # CONFIG_PACKAGE_iptables-mod-quota2 is not set
 CONFIG_PACKAGE_iptables-mod-rpfilter=y
