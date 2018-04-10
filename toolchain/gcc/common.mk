@@ -124,6 +124,9 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--disable-werror \
+		--disable-libada \
+		--disable-libitm \
+		--disable-libquadmath \
 		--enable-checking=release \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		$(GRAPHITE_CONFIGURE) \

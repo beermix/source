@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014-2015 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,43 +7,119 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=spi-tools
-PKG_VERSION:=1
+PKG_NAME:=sqlite
+PKG_VERSION:=3230000
+PKG_RELEASE:=3
 
-PKG_RELEASE=$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-autoconf-$(PKG_VERSION).tar.gz
+PKG_HASH:=
+PKG_SOURCE_URL:=http://www.sqlite.org/2018/
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/cpb-/spi-tools.git
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=cc6a41fdcec60610703ba6db488c621c64952898
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_MIRROR_HASH:=3c37fde79ab09e9a590f4cdb55751083017197d0037a7c0dce56fceef5e05a21
-
-PKG_MAINTAINER:=John Crispin <blogic@openwrt.org>
-
-PKG_LICENSE:=GPL-2.0
+PKG_LICENSE:=PUBLICDOMAIN
 PKG_LICENSE_FILES:=
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-autoconf-$(PKG_VERSION)
+
+PKG_FIXUP:=autoreconf
+
+PKG_INSTALL:=1
+
+PKG_CONFIG_DEPENDS := \
+	CONFIG_SQLITE_FTS3 \
+	CONFIG_SQLITE_RTREE
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/spi-tools
+define Package/sqlite3/Default
+  SUBMENU:=database
+  TITLE:=SQLite (v3.x) database engine
+  URL:=http://www.sqlite.org/
+  MAINTAINER:=Etienne CHAMPETIER <champetier.etienne@gmail.com>
+endef
+
+define Package/sqlite3/Default/description
+ SQLite is a small C library that implements a self-contained, embeddable,
+ zero-configuration SQL database engine.
+endef
+
+define Package/libsqlite3
+  $(call Package/sqlite3/Default)
+  SECTION:=libs
+  CATEGORY:=Libraries
+  DEPENDS:=+libpthread +zlib
+  TITLE+= (library)
+endef
+
+define Package/libsqlite3/description
+$(call Package/sqlite3/Default/description)
+ This package contains the SQLite (v3.x) shared library, used by other
+ programs.
+endef
+
+define Package/libsqlite3/config
+  source "$(SOURCE)/Config.in"
+endef
+
+define Package/sqlite3-cli
+  $(call Package/sqlite3/Default)
   SECTION:=utils
   CATEGORY:=Utilities
-  TITLE:=Command line SPI tools
+  DEPENDS:=+libsqlite3 +libncurses +libreadline +zlib
+  TITLE+= (cli)
 endef
 
-EXTRA_CFLAGS+=-DVERSION=\"$(PKG_SOURCE_VERSION)\"
-
-define Build/Compile
-	cd $(PKG_BUILD_DIR) ; \
-        $(TARGET_CC) $(TARGET_CFLAGS) $(EXTRA_CFLAGS) -Wall -Werror -o spi-config src/spi-config.c ; \
-        $(TARGET_CC) $(TARGET_CFLAGS) $(EXTRA_CFLAGS) -Wall -Werror -o spi-pipe src/spi-pipe.c
+define Package/sqlite3-cli/description
+$(call Package/sqlite3/Default/description)
+ This package contains a terminal-based front-end to the SQLite (v3.x) library
+ that can evaluate queries interactively and display the results in multiple
+ formats.
 endef
 
-define Package/spi-tools/install
+TARGET_CFLAGS += $(FPIC) \
+	-DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
+	-DHAVE_ISNAN=1 \
+	-DHAVE_MALLOC_USABLE_SIZE=1
+
+ifneq ($(CONFIG_SQLITE_FTS3),y)
+TARGET_CFLAGS += -USQLITE_ENABLE_FTS3
+endif
+
+ifneq ($(CONFIG_SQLITE_RTREE),y)
+TARGET_CFLAGS += -USQLITE_ENABLE_RTREE
+endif
+
+CONFIGURE_ARGS += \
+	--enable-shared \
+	--enable-static \
+	--disable-editline \
+	--disable-static-shell
+
+CONFIGURE_VARS += \
+	config_BUILD_CC="$(HOSTCC)" \
+	config_BUILD_CFLAGS="-O2" \
+	config_TARGET_CC="$(TARGET_CC)" \
+	config_TARGET_CFLAGS="$(TARGET_CFLAGS)" \
+	config_TARGET_READLINE_INC="$(TARGET_CPPFLAGS)" \
+	config_TARGET_READLINE_LIBS="$(TARGET_LDFLAGS) -lreadline -lncurses" \
+
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/sqlite3{,ext}.h $(1)/usr/include/
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libsqlite3.{a,so*} $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/sqlite3.pc $(1)/usr/lib/pkgconfig/
+endef
+
+define Package/libsqlite3/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libsqlite3.so.* $(1)/usr/lib/
+endef
+
+define Package/sqlite3-cli/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/spi-config $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/spi-pipe $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sqlite3 $(1)/usr/bin/
 endef
 
-$(eval $(call BuildPackage,spi-tools))
+$(eval $(call BuildPackage,libsqlite3))
+$(eval $(call BuildPackage,sqlite3-cli))
