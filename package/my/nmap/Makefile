@@ -32,7 +32,7 @@ include $(INCLUDE_DIR)/package.mk
 NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre
 NCAT_DEPENDS:=+libpcap
 NPING_DEPENDS:=+libpcap +libpthread +libstdcpp
-NDIFF_DEPENDS:=+python
+NDIFF_DEPENDS:=
 
 define Package/nmap/default
   SUBMENU:=NMAP Suite
