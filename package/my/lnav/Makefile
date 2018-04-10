@@ -34,8 +34,6 @@ define Package/lnav/Default
 	DEPENDS:=+libsqlite3 +libpcre +bzip2 +libcurl +libopenssl +libevent2 +libpthread +libncursesw +libreadline +libstdcpp +zlib +librt
 endef
 
-CONFIGURE_ARGS += --disable-static
-
 Package/lnav = $(Package/lnav/Default)
 
 define Package/lnav/install
