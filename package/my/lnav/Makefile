@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=2ed9969
+PKG_VERSION:=8091591
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav
@@ -38,7 +38,8 @@ CONFIGURE_ARGS += \
         --with-readline="$(STAGING_DIR)/usr" \
         --with-pcre="$(STAGING_DIR)/usr" \
         --with-libbz2="$(STAGING_DIR)/usr" \
-        --with-libcurl=="$(STAGING_DIR)/usr"
+        --with-libcurl=="$(STAGING_DIR)/usr" \
+        --disable-static
 
 Package/lnav = $(Package/lnav/Default)
 

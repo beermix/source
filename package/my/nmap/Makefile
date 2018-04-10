@@ -84,6 +84,9 @@ endef
 
 CONFIGURE_ARGS += \
 	--with-libdnet=included \
+	--with-pcap=linux \
+	--with-liblua=included \
+	--with-liblinear=included \
 	--with-libpcre="$(STAGING_DIR)/usr" \
 	--with-libpcap="$(STAGING_DIR)/usr" \
 	--without-liblua \
