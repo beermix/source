@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=v0.8.3
+PKG_VERSION:=v0.8.3a
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav
@@ -34,7 +34,7 @@ define Package/lnav/Default
 	DEPENDS:=+libsqlite3 +libpcre +libpcrecpp +bzip2 +libcurl +libopenssl +libevent2 +libpthread +libncursesw +libreadline +libstdcpp +zlib +librt
 endef
 
-CONFIGURE_ARGS += --with-pcre="$(STAGING_DIR)/usr" --disable-static
+CONFIGURE_ARGS += --disable-static
 
 Package/lnav = $(Package/lnav/Default)
 
