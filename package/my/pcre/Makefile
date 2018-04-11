@@ -23,6 +23,7 @@ PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -30,6 +31,7 @@ define Package/libpcre/default
   SECTION:=libs
   CATEGORY:=Libraries
   URL:=http://www.pcre.org/
+  DEPENDS:=+libstdcpp +zlib
 endef
 
 define Package/libpcre
@@ -68,7 +70,7 @@ endef
 
 define Package/libpcre/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre{,posix}.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre{,posix,16,cpp}.so.* $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre.so $(1)/usr/lib/
 endef
 
