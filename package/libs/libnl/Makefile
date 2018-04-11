@@ -12,7 +12,7 @@ PKG_VERSION:=3.4.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/thom311/libnl/releases/download/libnl3_3_0
+PKG_SOURCE_URL:=https://github.com/thom311/libnl/releases/download/libnl3_4_0
 PKG_HASH:=b7287637ae71c6db6f89e1422c995f0407ff2fe50cecd61a312b6a9b0921f5bf
 PKG_LICENSE:=LGPL-2.1
 
@@ -80,8 +80,8 @@ endef
 
 TARGET_CFLAGS += -ffunction-sections $(FPIC)
 
-CONFIGURE_ARGS += \
-	--disable-debug
+#CONFIGURE_ARGS += \
+#	--disable-debug
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/libnl3 $(1)/usr/lib/pkgconfig
