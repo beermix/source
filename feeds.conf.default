@@ -1,6 +1,7 @@
 src-git packages https://git.openwrt.org/feed/packages.git
 src-git luci https://git.openwrt.org/project/luci.git
 src-git routing https://git.openwrt.org/feed/routing.git
+#src-git OnionIoT https://github.com/OnionIoT/OpenWRT-Packages.git
 #src-git openwrtshadowsocks https://github.com/shadowsocks/openwrt-shadowsocks
 #src-git telephony https://git.openwrt.org/feed/telephony.git
 #src-git video https://github.com/openwrt/video.git
