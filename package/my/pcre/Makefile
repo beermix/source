@@ -49,7 +49,6 @@ CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
 	--enable-pcre16 \
-	--with-match-limit-recursion=16000 \
 
 ifneq ($(CONFIG_PACKAGE_libpcrecpp),)
   CONFIGURE_ARGS+= --enable-cpp
