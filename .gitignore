@@ -3,7 +3,8 @@
 .*.swp
 /env
 /dl
-/bin*
+/.config.old
+/bin
 /build_dir
 /staging_dir
 /tmp
@@ -25,4 +26,3 @@ TAGS*~
 git-src
 .project
 .cproject
-.config.old
