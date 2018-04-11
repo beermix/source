@@ -59,6 +59,9 @@ BINUTILS_CONFIGURE:= \
 		--enable-relro \
 		--enable-lto \
 		--enable-ld=default \
+		--without-ppl \
+		--without-cloog \
+		--disable-libada \
 		$(GRAPHITE_CONFIGURE) \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS)) 

@@ -124,6 +124,9 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--without-ppl \
+		--without-cloog \
+		--disable-libada \
 		--disable-werror \
 		--disable-libquadmath \
 		--enable-checking=release \
