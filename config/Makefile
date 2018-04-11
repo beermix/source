@@ -50,7 +50,7 @@ CONFIGURE_ARGS:= \
 	--build=$(GNU_HOST_NAME) \
 	--disable-debug \
 	--enable-release \
-	--disable-shared \
+	--enable-shared \
 	--enable-static \
 	--enable-draft \
 	--enable-renaming \
@@ -69,7 +69,7 @@ HOST_CONFIGURE_ARGS:= \
 	Linux/gcc \
 	--disable-debug \
 	--enable-release \
-	--disable-shared \
+	--enable-shared \
 	--enable-static \
 	--enable-draft \
 	--enable-renaming \
@@ -97,13 +97,13 @@ define Host/Install
 	$(INSTALL_DATA) $(HOST_BUILD_DIR)/config/icucross.* $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/config/
 	$(INSTALL_BIN)  $(HOST_BUILD_DIR)/bin/icupkg $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/bin/
 	$(INSTALL_BIN)  $(HOST_BUILD_DIR)/bin/pkgdata $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/bin/
-	$(CP)           $(HOST_BUILD_DIR)/lib/*.a $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/lib/
+	$(CP)           $(HOST_BUILD_DIR)/lib/*.so* $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/lib/
 endef
 
-#define Package/icu/install
-#	$(INSTALL_DIR) $(1)/usr/lib
-#	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
-#endef
+define Package/icu/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
+endef
 
 $(eval $(call BuildPackage,icu))
 $(eval $(call HostBuild))
