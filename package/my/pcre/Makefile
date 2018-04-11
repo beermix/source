@@ -43,13 +43,8 @@ CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
 	--enable-pcre16 \
+	--enable-cpp \
 	--with-match-limit-recursion=16000 \
-
-ifneq ($(CONFIG_PACKAGE_libpcrecpp),)
-  CONFIGURE_ARGS+= --enable-cpp
-else
-  CONFIGURE_ARGS+= --disable-cpp
-endif
 
 MAKE_FLAGS += \
 	CFLAGS="$(TARGET_CFLAGS)"
@@ -77,9 +72,4 @@ define Package/libpcre/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre.so $(1)/usr/lib/
 endef
 
-define Package/libpcrecpp/install
-	$(INSTALL_DIR) $(1)/usr/lib
-endef
-
 $(eval $(call BuildPackage,libpcre))
-$(eval $(call BuildPackage,libpcrecpp))
