@@ -288,7 +288,7 @@ CONFIG_EXTERNAL_KERNEL_TREE=""
 CONFIG_KERNEL_GIT_CLONE_URI=""
 # CONFIG_BUILD_LOG is not set
 # CONFIG_SRC_TREE_OVERRIDE is not set
-CONFIG_EXTRA_OPTIMIZATION="-mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512"
+CONFIG_EXTRA_OPTIMIZATION="-mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -fno-caller-saves -fno-plt"
 CONFIG_TARGET_OPTIONS=y
 CONFIG_TARGET_OPTIMIZATION="-O2 -m32 -march=bonnell -fomit-frame-pointer"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
