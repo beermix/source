@@ -12,7 +12,7 @@ PKG_NAME:=glibc
 PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=017d97cd2ec0f626f8afb8c73ea3d612d8e844c3
+PKG_SOURCE_VERSION:=39071a55392d2d2e0b75fb19f2b48d661c4cc682
 PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -39,7 +39,6 @@ ifeq ($(ARCH),mips64)
     TARGET_CFLAGS += -mabi=32
   endif
 endif
-
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset

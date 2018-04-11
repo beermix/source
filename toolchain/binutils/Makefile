@@ -57,8 +57,6 @@ BINUTILS_CONFIGURE:= \
 		--disable-sim \
 		--disable-gdb \
 		--enable-relro \
-		--enable-lto \
-		--enable-ld=default \
 		--without-ppl \
 		--without-cloog \
 		--disable-libada \
