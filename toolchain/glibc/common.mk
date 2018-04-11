@@ -61,6 +61,8 @@ GLIBC_CONFIGURE:= \
 		--without-selinux \
 		--enable-stack-protector=strong \
 		--disable-build-nscd \
+		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
 		--disable-nscd \
 		--without-gd \
 		--without-cvs \
