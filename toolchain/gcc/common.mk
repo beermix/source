@@ -124,12 +124,9 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--disable-werror \
-		--disable-libada \
-		--disable-libitm \
 		--disable-libquadmath \
 		--enable-checking=release \
 		--with-default-libstdcxx-abi=gcc4-compatible \
-		--disable-libunwind-exceptions \
 		--with-tune=haswell \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
