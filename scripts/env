@@ -104,7 +104,11 @@ env_list() {
 env_diff() {
 	env_init
 	env_sync_data
-	git diff --cached --color
+	if [ -t 1 ]; then
+		git diff --cached --color
+	else
+		git diff --cached
+	fi
 	env_link_config
 }
 
