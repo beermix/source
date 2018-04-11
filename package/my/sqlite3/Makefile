@@ -20,7 +20,7 @@ PKG_LICENSE_FILES:=
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-autoconf-$(PKG_VERSION)
 
-PKG_FIXUP:=autoreconf
+#PKG_FIXUP:=autoreconf
 
 PKG_INSTALL:=1
 
@@ -92,6 +92,7 @@ CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
 	--disable-editline \
+	--with-pic \
 	--disable-static-shell
 
 CONFIGURE_VARS += \
