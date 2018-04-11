@@ -129,6 +129,7 @@ GCC_CONFIGURE:= \
 		--disable-libquadmath \
 		--enable-checking=release \
 		--with-default-libstdcxx-abi=gcc4-compatible \
+		--with-tune=haswell \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
