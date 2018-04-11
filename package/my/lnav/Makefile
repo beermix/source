@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=8091591
+PKG_VERSION:=87cbab1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav
@@ -23,8 +23,8 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := -D_DEFAULT_SOURCE
-TARGET_CXXFLAGS := -D_DEFAULT_SOURCE
+TARGET_CFLAGS := -D_DEFAULT_SOURCE -std=c11
+TARGET_CXXFLAGS := -D_DEFAULT_SOURCE -std=c++14
 
 define Package/lnav/Default
 	SECTION:=net
@@ -34,7 +34,7 @@ define Package/lnav/Default
 	DEPENDS:=+libsqlite3 +libpcre +bzip2 +libcurl +libopenssl +libevent2 +libpthread +libncursesw +libreadline +libstdcpp +zlib +librt
 endef
 
-CONFIGURE_ARGS += --disable-dependency-tracking --disable-silent-rules --disable-static --with-pcre=$(STAGING_DIR)/usr --with-libbz2=$(STAGING_DIR)/usr
+CONFIGURE_ARGS += --disable-dependency-tracking --disable-silent-rules --disable-static
 
 Package/lnav = $(Package/lnav/Default)
 

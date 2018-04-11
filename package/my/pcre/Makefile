@@ -19,7 +19,7 @@ PKG_MAINTAINER:=Thomas Heil <heil@terminal-consulting.de>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENCE
 
-PKG_FIXUP:=autoreconf
+#PKG_FIXUP:=autoreconf
 
 PKG_INSTALL:=1
 
@@ -34,7 +34,7 @@ endef
 define Package/libpcre
   $(call Package/libpcre/default)
   TITLE:=A Perl Compatible Regular Expression library
-    DEPENDS:=+libstdcpp
+  DEPENDS:=+libstdcpp
 endef
 
 TARGET_CFLAGS += $(FPIC)
@@ -44,6 +44,7 @@ CONFIGURE_ARGS += \
 	--enable-unicode-properties \
 	--enable-pcre16 \
 	--enable-cpp \
+	--enable-jit \
 	--with-match-limit-recursion=16000 \
 
 MAKE_FLAGS += \
