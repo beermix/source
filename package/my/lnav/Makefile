@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=v0.8.3a
+PKG_VERSION:=8091591
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav
