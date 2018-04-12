@@ -43,7 +43,7 @@ endif
 
 ifeq ($(PKG_VERSION),7.3.1)
   PKG_VERSION:=7.3.1
-  PKG_REV:=7-20180329
+  PKG_REV:=7-201800405
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -123,8 +123,8 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-tune=haswell \
+		--with-arch=atom \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
