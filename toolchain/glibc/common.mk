@@ -63,13 +63,10 @@ GLIBC_CONFIGURE:= \
 		--enable-kernel=3.10 \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
-		--disable-build-nscd \
 		--enable-lock-elision \
-		--disable-nscd \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
