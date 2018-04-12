@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_VERSION:=82534ee
+PKG_VERSION:=2.18.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -26,7 +26,7 @@ define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
 	DEPENDS:=+libopenssl +boost +boost-system +boost-filesystem \
-	         +boost-program_options +boost-date_time +libatomic +zlib +libpthread +lrt
+	         +boost-program_options +boost-date_time +libatomic +zlib +libpthread
 	TITLE:=full-featured C++ implementation of I2P client
 	URL:=https://github.com/PurpleI2P/i2pd
 	USERID:=i2pd:i2pd
@@ -46,7 +46,7 @@ define Package/i2pd/conffiles
 endef
 
 
-TARGET_LDFLAGS+= -latomic -lm -ldl -lz -Wl,--gc-sections
+TARGET_LDFLAGS+= -latomic -lm -ldl -lz -Wl,--gc-sections -lpthread -static-libstdc++ -static-libgcc -lrt
 TARGET_CXXFLAGS+= -lpthread -fno-omit-frame-pointer -ffunction-sections -fdata-sections
 
 MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
