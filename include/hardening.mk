@@ -29,7 +29,7 @@ ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fstack-protector-strong
+    TARGET_CFLAGS += -fstack-protector-strong --param=ssp-buffer-size=4
   endif
 endif
 ifdef CONFIG_PKG_FORTIFY_SOURCE_1
