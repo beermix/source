@@ -10,15 +10,16 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
 PKG_VERSION:=2.18.0
+PKG_RELEASE:=1
+PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_MIRROR_HASH:=1a04826b54e649ebb341d3feacdd05c0415335679d1aa787a74ea5995d419378
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_LICENSE:=BSD-3-clause
-
-PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -26,7 +27,7 @@ define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
 	DEPENDS:=+libopenssl +boost +boost-system +boost-filesystem \
-	         +boost-program_options +boost-date_time +libatomic +zlib +libpthread
+	         +boost-program_options +boost-date_time +libatomic +zlib
 	TITLE:=full-featured C++ implementation of I2P client
 	URL:=https://github.com/PurpleI2P/i2pd
 	USERID:=i2pd:i2pd
@@ -45,10 +46,7 @@ define Package/i2pd/conffiles
 	/etc/i2pd/tunnels.conf
 endef
 
-
-TARGET_LDFLAGS+= -latomic -lm -ldl -lz -Wl,--gc-sections -lpthread -static-libstdc++ -static-libgcc -lrt
-TARGET_CXXFLAGS+= -lpthread -fno-omit-frame-pointer -ffunction-sections -fdata-sections
-
+TARGET_LDFLAGS+=-latomic
 MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
