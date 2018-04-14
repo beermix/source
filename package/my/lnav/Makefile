@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=873fc4d
+PKG_VERSION:=v0.8.3a
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav
@@ -22,8 +22,8 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-#TARGET_CFLAGS := -D_DEFAULT_SOURCE
-#TARGET_CXXFLAGS := -D_DEFAULT_SOURCE
+TARGET_CFLAGS := -D_DEFAULT_SOURCE
+TARGET_CXXFLAGS := -D_DEFAULT_SOURCE
 
 define Package/lnav/Default
 	SECTION:=net
