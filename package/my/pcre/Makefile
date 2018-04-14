@@ -30,6 +30,7 @@ define Package/libpcre/default
   SECTION:=libs
   CATEGORY:=Libraries
   URL:=http://www.pcre.org/
+  DEPENDS:=+libstdcpp
 endef
 
 define Package/libpcre
