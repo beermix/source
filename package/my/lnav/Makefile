@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=8091591
+PKG_VERSION:=873fc4d
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav
@@ -30,10 +30,10 @@ define Package/lnav/Default
 	CATEGORY:=Network
 	TITLE:=Lightweight Secured Socks5 Proxy
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libsqlite3 +libpcre +libpcrecpp +bzip2 +libcurl +libopenssl +libevent2 +libpthread +libncurses +libreadline +libstdcpp +zlib
+	DEPENDS:=+libsqlite3 +libpcre +bzip2 +libcurl +libopenssl +libevent2 +libpthread +libncurses +libreadline +libstdcpp +zlib
 endef
 
-CONFIGURE_ARGS += --disable-static --disable-silent-rules --with-gnu-ld
+CONFIGURE_ARGS += --disable-static --disable-silent-rules
 #	--with-pcre="$(STAGING_DIR)/usr" \
 #	--with-libbz2="$(STAGING_DIR)/usr" \
 #	--with-libcurl="$(STAGING_DIR)/usr" \

@@ -37,24 +37,13 @@ define Package/libpcre
   TITLE:=A Perl Compatible Regular Expression library
 endef
 
-define Package/libpcrecpp
-  $(call Package/libpcre/default)
-  TITLE:=C++ wrapper for Perl Compatible Regular Expression library
-  DEPENDS:=+libpcre +libstdcpp
-endef
-
 TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
 	--enable-pcre16 \
-
-ifneq ($(CONFIG_PACKAGE_libpcrecpp),)
-  CONFIGURE_ARGS+= --enable-cpp
-else
-  CONFIGURE_ARGS+= --disable-cpp
-endif
+	--enable-cpp \
 
 MAKE_FLAGS += \
 	CFLAGS="$(TARGET_CFLAGS)"
@@ -81,12 +70,7 @@ define Package/libpcre/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre{,posix}.so.* $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre.so $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre16.so* $(1)/usr/lib/
-endef
-
-define Package/libpcrecpp/install
-	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcrecpp.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libpcre))
-$(eval $(call BuildPackage,libpcrecpp))
