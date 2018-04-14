@@ -22,7 +22,7 @@ PKG_LICENSE_FILES:=README
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
-PKG_BUILD_DEPENDS:=ncurses/host
+PKG_BUILD_DEPENDS:=ncurses/host autoconf-archive/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
