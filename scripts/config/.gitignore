@@ -13,6 +13,3 @@ qconf*.moc
 !qconf*.h
 !images*.c
 .tmp_qtcheck
-nconf*
-!nconf*.c
-!nconf*.h
