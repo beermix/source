@@ -1,6 +1,7 @@
---- a/ccache.c
-+++ b/ccache.c
-@@ -1803,6 +1803,7 @@ calculate_object_hash(struct args *args,
+diff -Naur ccache-3.4.2-orig/src/ccache.c ccache-3.4.2/src/ccache.c
+--- ccache-3.4.2-orig/src/ccache.c	2018-04-14 22:12:27.065738131 +0300
++++ ccache-3.4.2/src/ccache.c	2018-03-25 23:24:05.000000000 +0300
+@@ -1859,6 +1859,7 @@
  			"CPLUS_INCLUDE_PATH",
  			"OBJC_INCLUDE_PATH",
  			"OBJCPLUS_INCLUDE_PATH", // clang
