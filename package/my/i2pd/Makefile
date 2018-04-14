@@ -45,7 +45,7 @@ define Package/i2pd/conffiles
 	/etc/i2pd/tunnels.conf
 endef
 
-TARGET_LDFLAGS+=-lpthread -lm -lrt -latomic -ldl
+TARGET_LDFLAGS+=-latomic
 MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
