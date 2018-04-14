@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ethtool
-PKG_VERSION:=4.15
+PKG_VERSION:=4.16
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Matthias Schiffer <mschiffer@universe-factory.net>
