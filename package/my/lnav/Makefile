@@ -22,8 +22,8 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := -D_DEFAULT_SOURCE
-TARGET_CXXFLAGS := -D_DEFAULT_SOURCE
+#TARGET_CFLAGS := -D_DEFAULT_SOURCE
+#TARGET_CXXFLAGS := -D_DEFAULT_SOURCE
 
 define Package/lnav/Default
 	SECTION:=net
@@ -32,14 +32,6 @@ define Package/lnav/Default
 	URL:=https://github.com/tstack/lnav
 	DEPENDS:=+libsqlite3 +libpcre +bzip2 +libcurl +libopenssl +libevent2 +libpthread +libncurses +libreadline +libstdcpp +zlib
 endef
-
-CONFIGURE_ARGS += \
-	--with-pcre="$(STAGING_DIR)/usr" \
-	--with-libbz2="$(STAGING_DIR)/usr" \
-	--with-libcurl="$(STAGING_DIR)/usr" \
-	--with-zlib="$(STAGING_DIR)/usr" \
-	--disable-silent-rules \
-	--enable-static
 
 Package/lnav = $(Package/lnav/Default)
 
