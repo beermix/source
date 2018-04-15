@@ -131,7 +131,8 @@ define Host/Exports/Default
   $(1) : export STAGING_PREFIX=$$(HOST_BUILD_PREFIX)
   $(1) : export PKG_CONFIG_PATH=$$(STAGING_DIR_HOST)/lib/pkgconfig:$$(HOST_BUILD_PREFIX)/lib/pkgconfig
   $(1) : export PKG_CONFIG_LIBDIR=$$(HOST_BUILD_PREFIX)/lib/pkgconfig
-  $(1) : export CCACHE_DIR:=$(STAGING_DIR_HOST)/ccache
+  $(1) : export CCACHE_DIR:=/home/user/.ccache-ledex_host
+  $(1) : export CCACHE_SLOPPINESS=file_macro,time_macros,include_file_mtime,include_file_ctime
   $(if $(HOST_CONFIG_SITE),$(1) : export CONFIG_SITE:=$(HOST_CONFIG_SITE))
   $(if $(IS_PACKAGE_BUILD),$(1) : export PATH=$$(TARGET_PATH_PKG))
 endef
