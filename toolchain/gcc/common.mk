@@ -125,7 +125,6 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-tune=haswell \
-		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
