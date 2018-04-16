@@ -125,7 +125,6 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--disable-libunwind-exceptions \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-tune=haswell \
 		$(GRAPHITE_CONFIGURE) \
