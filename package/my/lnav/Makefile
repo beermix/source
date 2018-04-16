@@ -22,8 +22,8 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-#TARGET_CFLAGS := -D_DEFAULT_SOURCE
-#TARGET_CXXFLAGS := -D_DEFAULT_SOURCE
+TARGET_CFLAGS := -fno-unwind-tables -fno-asynchronous-unwind-tables
+TARGET_CXXFLAGS := -fno-unwind-tables -fno-asynchronous-unwind-tables
 
 define Package/lnav/Default
 	SECTION:=net
