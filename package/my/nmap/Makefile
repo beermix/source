@@ -82,15 +82,15 @@ $(call Package/nmap/default)
   TITLE:=Utility to compare the results of Nmap scans
 endef
 
+#TARGET_CPPFLAGS += -Iliblua
+
 CONFIGURE_ARGS += \
-	--with-libdnet=included \
 	--with-pcap=linux \
-	--with-liblua=included \
+	--with-liblua=no \
 	--with-liblinear=included \
 	--with-libpcre="$(STAGING_DIR)/usr" \
-	--with-libpcap="$(STAGING_DIR)/usr" \
-	--without-liblua \
-	--without-zenmap
+	--without-zenmap \
+	--enable-static
 
 CONFIGURE_VARS += \
 	ac_cv_dnet_bsd_bpf=no \
