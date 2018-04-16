@@ -24,6 +24,10 @@ include $(INCLUDE_DIR)/package.mk
 
 TARGET_CFLAGS := -fno-unwind-tables -fno-asynchronous-unwind-tables
 TARGET_CXXFLAGS := -fno-unwind-tables -fno-asynchronous-unwind-tables
+#TARGET_LDFLAGS := 
+
+CONFIGURE_ARGS += \
+	--enable-shared
 
 define Package/lnav/Default
 	SECTION:=net
