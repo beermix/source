@@ -22,12 +22,17 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := -fno-unwind-tables -fno-asynchronous-unwind-tables
-TARGET_CXXFLAGS := -fno-unwind-tables -fno-asynchronous-unwind-tables
-#TARGET_LDFLAGS := 
+TARGET_CFLAGS := -Wl,--as-needed	
+TARGET_CXXFLAGS := -Wl,--as-needed
+TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lgcc_s -lc)
 
 CONFIGURE_ARGS += \
-	--enable-shared
+       --with-pcre="$(STAGING_DIR)/usr" \
+       --with-libbz2="$(STAGING_DIR)/usr" \
+       --with-libcurl="$(STAGING_DIR)/usr" \
+       --with-zlib="$(STAGING_DIR)/usr" \
+       --disable-silent-rules \
+       --disable-static
 
 define Package/lnav/Default
 	SECTION:=net
