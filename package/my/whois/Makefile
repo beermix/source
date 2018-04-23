@@ -13,15 +13,12 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_FIXUP:=autoreconf
-PKG_INSTALL:=1
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/whois
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libncurses +libidn2
+  DEPENDS:=+libidn2
   TITLE:=whois
   URL:=https://github.com/rfc1036/whois
   MENU:=1
@@ -31,24 +28,9 @@ define Package/whois/description
   intelligent WHOIS client
 endef
 
-define Build/Configure
-	$(call Build/Configure/Default, \
-	$(if $(CONFIG_BWMNG_CONFIGFILE),--enable,--disable)-configfile \
-	$(if $(CONFIG_BWMNG_HTML),--enable,--disable)-html \
-	$(if $(CONFIG_BWMNG_CSV),--enable,--disable)-csv \
-	$(if $(CONFIG_BWMNG_EXTENDEDSTATS),--enable,--disable)-extendedstats \
-	$(if $(CONFIG_BWMNG_LIBNCURSES),--with,--without)-ncurses \
-	$(if $(CONFIG_BWMNG_TIME),--with,--without)-time \
-	$(if $(CONFIG_BWMNG_GETOPT_LONG),--with,--without)-getopt_long \
-	--with-strip \
-	--with-procnetdev \
-	--with-diskstats \
-	)
-endef
-
 define Package/whois/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/whois $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/whois $(1)/usr/bin/whois
 endef
 
 $(eval $(call BuildPackage,whois))
