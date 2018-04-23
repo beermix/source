@@ -18,7 +18,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 define Host/Compile
 	(cd $(STAGING_DIR_HOST)/go/src ; \
-		GOROOT_BOOTSTRAP=$(STAGING_DIR_HOST)/go1.4 GOOS=linux GOARCH=386 ./make.bash --no-clean ; \
+		GOROOT_BOOTSTRAP=$(STAGING_DIR_HOST)/go1.4 GOOS=linux GOARCH=386 ./make.bash --no-clean -v ; \
 	)
 endef
 
