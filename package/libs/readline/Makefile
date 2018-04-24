@@ -29,6 +29,7 @@ define Package/libreadline
   TITLE:=Command lines edition library
   URL:=http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
   ABI_VERSION:=$(PKG_VERSION)
+  DEPENDS:=+libncurses +libncursesw
 endef
 
 define Package/libreadline/description
