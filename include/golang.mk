@@ -15,7 +15,7 @@ ifeq ($(PKG_SOURCE),)
  ifeq ($(PKG_COMMIT),)
   define Build/Prepare
 		$(INSTALL_DIR) $(PKG_BUILD_DIR)
-		GOPATH=$(PKG_BUILD_DIR) $(GOROOT)/bin/go get -d -v $(PKG_GOGET)
+		GOPATH=$(PKG_BUILD_DIR) $(GOROOT)/bin/go get -d -v -x $(PKG_GOGET)
 		$(Build/Patch)
   endef
   else
@@ -72,6 +72,6 @@ define Build/Compile
 		cd $(PKG_BUILD_DIR); \
 		mkdir -p bin; \
 		cd bin; \
-		GOOS=linux GOARCH=$(GOARCH) $(GOARM) GOPATH=$(PKG_BUILD_DIR) $(GOROOT)/bin/go build -v $(PKG_GOGET) ; \
+		GOOS=linux GOARCH=$(GOARCH) $(GOARM) GOPATH=$(PKG_BUILD_DIR) $(GOROOT)/bin/go build -x -v -compiler gccgo $(PKG_GOGET) ; \
 	)
 endef
