@@ -11,7 +11,6 @@ PKG_NAME:=speedtest-go
 PKG_VERSION:=90af466
 PKG_RELEASE:=1
 PKG_GOGET:=github.com/showwin/speedtest-go 
-PKG_GOGET:=gopkg.in/alecthomas/kingpin.v2
 
 GOPKG_SOURCE=GO_speedtest-go-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
