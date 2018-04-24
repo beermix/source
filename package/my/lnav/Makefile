@@ -39,7 +39,7 @@ define Package/lnav/Default
 	CATEGORY:=Network
 	TITLE:=Lightweight Secured Socks5 Proxy
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libsqlite3 +libpcre +bzip2 +libcurl +libopenssl +libevent2 +libpthread +libncurses +libreadline +libstdcpp +zlib +libgmp
+	DEPENDS:=+libsqlite3 +libpcre +libbz2 +libcurl +libopenssl +libevent2 +libpthread +libncurses +libreadline +libstdcpp +zlib +libgmp
 endef
 
 Package/lnav = $(Package/lnav/Default)
