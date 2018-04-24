@@ -127,7 +127,7 @@ CONFIGURE_ARGS += \
 	--with-gssapi=no \
 	--with-ecdsa=$(if $(CONFIG_OPENSSL_WITH_EC),yes,no) \
 	--with-readline=no \
-	--with-eddsa=yes \
+	--with-eddsa=no \
 	--sysconfdir=/etc/bind
 
 ifdef CONFIG_BIND_ENABLE_FILTER_AAAA
