@@ -58,10 +58,8 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
-		--without-selinux \
 		--enable-stack-protector=strong \
 		--enable-kernel=4.4 \
-		--enable-lock-elision \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
@@ -76,7 +74,7 @@ GLIBC_CONFIGURE:= \
 		--disable-build-nscd \
 		--disable-nscd \
 		--enable-lock-elision \
-		--disable-timezone-tools
+		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
