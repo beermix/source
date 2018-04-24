@@ -8,11 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atop
-PKG_VERSION:=2.3.0
-PKG_RELEASE:=1
+PKG_VERSION:=4516bd3
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://fossies.org/linux/misc
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/Atoptool/atop
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
 
@@ -23,10 +25,6 @@ define Package/atop
   CATEGORY:=Utilities
   TITLE:=atop
   DEPENDS:=+libncurses +zlib
-endef
-
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS)"
 endef
 
 define Package/atop/install
