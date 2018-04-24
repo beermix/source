@@ -8,27 +8,32 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=speedtest-go
-PKG_VERSION:=git
+PKG_VERSION:=90af466
 PKG_RELEASE:=1
-PKG_GOGET:=github.com/showwin/speedtest-go
+PKG_GOGET:=github.com/showwin/speedtest-go 
+PKG_GOGET:=gopkg.in/alecthomas/kingpin.v2
 
-GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
+GOPKG_SOURCE=GO_speedtest-go-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 #PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=90af4664aafc4d9f31647eac4a878625862a12fd
+PKG_COMMIT=$(PKG_VERSION)
+
+#do not build both packages in parallel
+PKG_BUILD_DEPENDS:=speedtest-go
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/golang.mk
 
 define Package/speedtest-go
 	$(call Package/gopackage/Default)
-	TITLE:=CLI to Test Internet Speed using speedtest.net
+	TITLE:=speedtest-go is a command line program to sync files and directories to and from cloud storages
 	URL:=https://github.com/showwin/speedtest-go
+	DEPENDS:=+libgo
 endef
 
 define Package/speedtest-go/description
- GoTTY - Share your terminal as a web application.
+ speedtest-go is a command line program to sync files and directories to and from:
 endef
 
 define Package/speedtest-go/install

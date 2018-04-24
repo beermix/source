@@ -8,42 +8,28 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rclone
-PKG_VERSION:=1.40
+PKG_VERSION:=v1.40
 PKG_RELEASE:=1
 PKG_GOGET:=github.com/ncw/rclone
 
-GOPKG_SOURCE=GO_rclone-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
+GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.xz
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)
-PKG_COMMIT=v$(PKG_VERSION)
-
-#do not build both packages in parallel
-PKG_BUILD_DEPENDS:=rclone
+PKG_COMMIT=$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/golang.mk
 
 define Package/rclone
 	$(call Package/gopackage/Default)
-	TITLE:=Rclone is a command line program to sync files and directories to and from cloud storages
+	TITLE:=rclone is a simple command line tool that turns your CLI tools into web applications.
 	URL:=https://github.com/ncw/rclone
 	DEPENDS:=+libgo
 endef
 
 define Package/rclone/description
- Rclone is a command line program to sync files and directories to and from:
-    Google Drive
-    Amazon S3
-    Openstack Swift / Rackspace cloud files / Memset Memstore
-    Dropbox
-    Google Cloud Storage
-    Amazon Cloud Drive
-    Microsoft One Drive
-    Hubic
-    Backblaze B2
-    Yandex Disk
-    The local filesystem
+ rclone - Share your terminal as a web application.
 endef
 
 define Package/rclone/install

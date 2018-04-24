@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gotty
-PKG_VERSION:=v2.0.0-alpha.3
+PKG_VERSION:=v1.0.1
 PKG_RELEASE:=1
 PKG_GOGET:=github.com/yudai/gotty
 
-GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
+GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.xz
 
 #!!! uncomment PKG_SOURCE to download fixed version
-PKG_SOURCE=$(GOPKG_SOURCE)
+#PKG_SOURCE=$(GOPKG_SOURCE)
 PKG_COMMIT=$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
