@@ -18,7 +18,7 @@ PKG_MAINTAINER:=Thomas Heil <heil@terminal-consulting.de>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENCE
 
-PKG_FIXUP:=autoreconf
+#PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 
 PKG_INSTALL:=1
@@ -43,10 +43,13 @@ TARGET_CFLAGS += $(FPIC)
 CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
+	--enable-pcre8 \
 	--enable-pcre16 \
 	--with-match-limit-recursion=16000 \
 	--enable-cpp \
 	--enable-jit \
+	--enable-pcretest-libreadline \
+	--disable-silent-rules \	
 
 MAKE_FLAGS += \
 	CFLAGS="$(TARGET_CFLAGS)"
