@@ -69,6 +69,7 @@ define Package/git-gitweb/conffiles
 endef
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -Os
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
