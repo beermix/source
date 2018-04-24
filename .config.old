@@ -5406,7 +5406,7 @@ CONFIG_WPA_MSG_MIN_PRIORITY=3
 # Compression
 #
 # CONFIG_PACKAGE_bsdtar is not set
-CONFIG_PACKAGE_bzip2=y
+# CONFIG_PACKAGE_bzip2 is not set
 # CONFIG_PACKAGE_gzip is not set
 CONFIG_PACKAGE_p7zip=y
 # CONFIG_PACKAGE_unrar is not set
