@@ -83,9 +83,7 @@ ifneq ($(CONFIG_GRUB_IMAGES),)
 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
 		-e 's#@ROOT@#$(GRUB_ROOT)#g' \
 		./grub.cfg > $(KDIR)/root.grub/boot/grub/grub.cfg
-    ifeq ($(CONFIG_PACKAGE_intel-microcode),y)
-	$(CP) $(STAGING_DIR)/root-x86/lib/firmware/intel-ucode.img $(KDIR)/root.grub/boot/
-    endif
+	-$(CP) $(STAGING_DIR)/boot/* $(KDIR)/root.grub/boot/
 	PADDING="$(CONFIG_TARGET_IMAGES_PAD)" SIGNATURE="$(SIGNATURE)" PATH="$(TARGET_PATH)" $(SCRIPT_DIR)/gen_image_generic.sh \
 		$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img \
 		$(CONFIG_TARGET_KERNEL_PARTSIZE) $(KDIR)/root.grub \
@@ -123,9 +121,7 @@ define Image/Build/iso
 		-e 's#@CMDLINE@#root=/dev/sr0 rootfstype=iso9660 rootwait $(strip $(call Image/cmdline/$(1)) $(BOOTOPTS) $(GRUB_CONSOLE_CMDLINE))#g' \
 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
 		./grub-iso.cfg > $(KDIR)/root.grub/boot/grub/grub.cfg
-  ifeq ($(CONFIG_PACKAGE_intel-microcode),y)
-	$(CP) $(STAGING_DIR)/root-x86/lib/firmware/intel-ucode.img $(KDIR)/root.grub/boot/
-  endif
+	-$(CP) $(STAGING_DIR)/boot/* $(KDIR)/root.grub/boot/
 	mkisofs -R -b boot/grub/eltorito.img -no-emul-boot -boot-info-table \
 		-o $(KDIR)/root.iso $(KDIR)/root.grub $(TARGET_DIR)
 endef

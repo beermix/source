@@ -43,27 +43,9 @@ define Build/Compile
 endef
 
 define Package/intel-microcode/install
-	$(INSTALL_DIR) $(1)/lib/firmware
+	$(INSTALL_DIR) $(1)/boot
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/intel-ucode.cpio \
-		$(1)/lib/firmware/intel-ucode.img
-endef
-
-ifeq ($(CONFIG_PACKAGE_intel-microcode),m)
-define Package/intel-microcode/postinst
-#!/bin/sh
-
-mount /boot -o remount,rw,noatime
-cp -f /lib/firmware/intel-ucode.img /boot/
-mount /boot -o remount,ro,noatime
-endef
-endif
-
-define Package/intel-microcode/prerm
-#!/bin/sh
-
-mount /boot -o remount,rw,noatime
-rm /boot/intel-ucode.img
-mount /boot -o remount,ro,noatime
+		$(1)/boot/intel-ucode.img
 endef
 
 $(eval $(call BuildPackage,intel-microcode))

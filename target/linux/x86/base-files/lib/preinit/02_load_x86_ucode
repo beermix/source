@@ -2,7 +2,7 @@
 # Copyright (C) 2018 OpenWrt.org
 
 do_load_x86_ucode() {
-	if [ "$(grep -c AuthenticAMD /proc/cpuinfo)" -gt "0" ]; then
+	if grep -q AuthenticAMD /proc/cpuinfo; then
 		if [ -e "/sys/devices/system/cpu/microcode/reload" ]; then
 			echo 1 > /sys/devices/system/cpu/microcode/reload
 		fi
