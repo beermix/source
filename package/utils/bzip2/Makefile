@@ -82,9 +82,9 @@ endef
 
 define Package/bzip2/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-#	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bzip2-shared $(1)/usr/bin/bzip2
-#	$(INSTALL_DIR) $(1)/bin/
-#	$(LN) ../usr/bin/bzip2 $(1)/bin/bzip2
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bzip2-shared $(1)/usr/bin/bzip2
+	$(INSTALL_DIR) $(1)/bin/
+	$(LN) ../usr/bin/bzip2 $(1)/bin/bzip2
 endef
 
 HOST_CFLAGS += \
