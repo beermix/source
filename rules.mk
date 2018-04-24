@@ -183,29 +183,29 @@ endif
 LIBRPC=-lrpc
 LIBRPC_DEPENDS=+librpc
 
-ifeq ($(LIBC),uClibc)
-DYNLINKER=ld-uClibc.so.0
-endif
-
-ifeq  ($(LIBC),glibc)
-  ifeq ($(ARCH),arm)
-    DYNLINKER=ld-linux.so.3
-  endif
-  ifeq ($(ARCH),i386)
-    DYNLINKER=ld-linux.so.2
-  endif
-  ifeq ($(ARCH),x86_64)
-    DYNLINKER=ld-linux-x86-64.so.2
-  endif
-  ifeq ($(ARCH),mipsel)
-    DYNLINKER=ld.so.1
-  endif
-  ifeq ($(ARCH),mips)
-    DYNLINKER=ld.so.1
-  endif
-endif
-TARGET_LDFLAGS+= -Wl,--dynamic-linker=/usr/lib/$(DYNLINKER)
-TARGET_GCCGOFLAGS+= -Wl,--dynamic-linker=/usr/lib/$(DYNLINKER) -Wl,-rpath=/usr/lib
+#ifeq ($(LIBC),uClibc)
+#DYNLINKER=ld-uClibc.so.0
+#endif
+#
+#ifeq  ($(LIBC),glibc)
+#  ifeq ($(ARCH),arm)
+#    DYNLINKER=ld-linux.so.3
+#  endif
+#  ifeq ($(ARCH),i386)
+#    DYNLINKER=ld-linux.so.2
+#  endif
+#  ifeq ($(ARCH),x86_64)
+#    DYNLINKER=ld-linux-x86-64.so.2
+#  endif
+#  ifeq ($(ARCH),mipsel)
+#    DYNLINKER=ld.so.1
+#  endif
+#  ifeq ($(ARCH),mips)
+#    DYNLINKER=ld.so.1
+#  endif
+#endif
+#TARGET_LDFLAGS+= -Wl,--dynamic-linker=/usr/lib/$(DYNLINKER)
+#TARGET_GCCGOFLAGS+= -Wl,--dynamic-linker=/usr/lib/$(DYNLINKER) -Wl,-rpath=/usr/lib
 
 ifeq ($(CONFIG_ARCH_64BIT),y)
   LIB_SUFFIX:=64
@@ -406,10 +406,6 @@ endef
 
 define shexport
 export $(call shvar,$(1))=$$(call $(1))
-endef
-
-define include_mk
-$(eval -include $(if $(DUMP),,$(STAGING_DIR)/mk/$(strip $(1))))
 endef
 
 # Execute commands under flock
