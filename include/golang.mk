@@ -72,6 +72,6 @@ define Build/Compile
 		cd $(PKG_BUILD_DIR); \
 		mkdir -p bin; \
 		cd bin; \
-		GOOS=linux GOARCH=$(GOARCH) $(GOARM) GOPATH=$(PKG_BUILD_DIR) $(GOROOT)/bin/go build -x -v -compiler gccgo -gccgoflags "-march=bonnell -m32 -O2 -s" $(PKG_GOGET) ; \
+		GOOS=linux GOARCH=$(GOARCH) $(GOARM) GOPATH=$(PKG_BUILD_DIR) $(GOROOT)/bin/go build -x -v -compiler gccgo -gccgoflags "-s" $(PKG_GOGET) ; \
 	)
 endef
