@@ -26,7 +26,7 @@ include $(INCLUDE_DIR)/package.mk
 #TARGET_CXXFLAGS += -Wl,--as-needed
 #TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC), -lc)
 
-CONFIGURE_ARGS += --disable-silent-rules --disable-static
+#CONFIGURE_ARGS += --disable-silent-rules --disable-static
 
 define Package/lnav/Default
 	SECTION:=net
