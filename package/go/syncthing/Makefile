@@ -25,6 +25,7 @@ define Package/syncthing
 	$(call Package/gopackage/Default)
 	TITLE:=Utility for synchronization of a folder between a number of collaborating devices.
 	URL:=https://syncthing.net/
+	DEPENDS:=+libgo
 endef
 
 define Package/syncthing/description

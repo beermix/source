@@ -30,6 +30,7 @@ define Package/shell2http_nohf
 	DEPENDS:=@TARGET_armv7soft
 	TITLE:=Execute shell commands via simple http server (arm version with no hard float)
 	URL:=https://github.com/msoap/shell2http
+	DEPENDS:=+libgo
 endef
 
 define Package/shell2http_nohf/description

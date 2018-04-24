@@ -31,6 +31,7 @@ define Package/rclone_nohf
 	DEPENDS:=@TARGET_armv7soft
 	TITLE:=Rclone is a command line program to sync files and directories to and from cloud storages (arm version with no hard float)
 	URL:=https://github.com/ncw/rclone
+	DEPENDS:=+libgo
 endef
 
 define Package/rclone_nohf/description
