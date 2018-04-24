@@ -24,14 +24,15 @@ PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
-NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre
-NCAT_DEPENDS:=+libpcap
-NPING_DEPENDS:=+libpcap +libpthread +libstdcpp
+NMAP_DEPENDS:=+libstdcpp +zlib +libpcre
+NPING_DEPENDS:=+libpthread +libstdcpp
+#NDIFF_DEPENDS:=+python
 
 define Package/nmap/default
   SUBMENU:=NMAP Suite
@@ -56,14 +57,13 @@ endef
 
 define Package/ncat
 $(call Package/nmap/default)
-  DEPENDS:=$(NCAT_DEPENDS)
   VARIANT:=nossl
   TITLE:=Much-improved reimplementation of Netcat
 endef
 
 define Package/ncat-ssl
 $(call Package/nmap/default)
-  DEPENDS:=$(NCAT_DEPENDS) +libopenssl
+  DEPENDS:=+libopenssl
   VARIANT:=ssl
   TITLE:=Ncat (with OpenSSL support)
 endef
@@ -77,20 +77,18 @@ endef
 
 define Package/ndiff
 $(call Package/nmap/default)
-  DEPENDS:=$(NDIFF_DEPENDS)
+#  DEPENDS:=$(NDIFF_DEPENDS)
   VARIANT:=nossl
   TITLE:=Utility to compare the results of Nmap scans
 endef
 
-#TARGET_CPPFLAGS += -Iliblua
-
 CONFIGURE_ARGS += \
-	--with-pcap=linux \
-	--with-liblua=no \
-	--with-liblinear=included \
+	--with-libdnet=included \
 	--with-libpcre="$(STAGING_DIR)/usr" \
-	--without-zenmap \
-	--enable-static
+	--with-libpcap=included \
+	--with-pcap=linux \
+	--without-liblua \
+	--without-zenmap
 
 CONFIGURE_VARS += \
 	ac_cv_dnet_bsd_bpf=no \
