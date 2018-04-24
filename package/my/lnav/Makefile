@@ -22,8 +22,8 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := -Wl,--as-needed	
-TARGET_CXXFLAGS := -Wl,--as-needed
+TARGET_CFLAGS := -Wl,--as-needed -D_DEFAULT_SOURCE
+TARGET_CXXFLAGS := -Wl,--as-needed -D_DEFAULT_SOURCE
 TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lgcc_s -lc)
 
 CONFIGURE_ARGS += \
@@ -31,8 +31,7 @@ CONFIGURE_ARGS += \
        --with-libbz2="$(STAGING_DIR)/usr" \
        --with-libcurl="$(STAGING_DIR)/usr" \
        --with-zlib="$(STAGING_DIR)/usr" \
-       --disable-silent-rules \
-       --disable-static
+       --disable-silent-rules --disable-static
 
 define Package/lnav/Default
 	SECTION:=net

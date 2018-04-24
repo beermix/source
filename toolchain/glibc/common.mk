@@ -60,13 +60,23 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--without-selinux \
 		--enable-stack-protector=strong \
-		--enable-kernel=3.10 \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
+		--enable-kernel=4.4 \
 		--enable-lock-elision \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--disable-sanity-checks \
+		--enable-add-ons \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
+		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-lock-elision \
+		--disable-timezone-tools
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
