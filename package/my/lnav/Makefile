@@ -18,13 +18,13 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=0	
+#PKG_BUILD_PARALLEL:=1	
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := -Wl,--as-needed -D_DEFAULT_SOURCE
-TARGET_CXXFLAGS := -Wl,--as-needed -D_DEFAULT_SOURCE
-TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lgcc_s -lc)
+#TARGET_CFLAGS := -O2 -pipe -Wl,--as-needed -D_DEFAULT_SOURCE
+#TARGET_CXXFLAGS := -O2 -pipe -Wl,--as-needed -D_DEFAULT_SOURCE
+#TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lc -lm -ldl)
 
 CONFIGURE_ARGS += \
        --with-pcre="$(STAGING_DIR)/usr" \
@@ -38,7 +38,7 @@ define Package/lnav/Default
 	CATEGORY:=Network
 	TITLE:=Lightweight Secured Socks5 Proxy
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libsqlite3 +libpcre +libbz2 +libcurl +libopenssl +libevent2 +libpthread +libncurses +libreadline +libstdcpp +zlib +libgmp
+	DEPENDS:=+libsqlite3 +libpcre +libbz2 +libcurl +libopenssl +libpthread +libncurses +libreadline +libstdcpp +zlib
 endef
 
 Package/lnav = $(Package/lnav/Default)
