@@ -11,12 +11,9 @@ PKG_NAME:=file
 PKG_VERSION:=5.33
 PKG_RELEASE:=3
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://sources.lede-project.org/ \
-	http://pkgs.fedoraproject.org/lookaside/pkgs/file/ \
-	http://download.openpkg.org/components/cache/file/ \
-	ftp://ftp.astron.com/pub/file/
-#PKG_HASH:=3735381563f69fb4239470b8c51b876a80425348b8285a7cded8b61d6b890eca
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://fossies.org/linux/misc/
+PKG_HASH:=
 
 PKG_LICENSE:=BSD-2c
 PKG_LICENSE_FILES:=COPYING
