@@ -43,7 +43,32 @@ validate_section_dropbear()
 		'IdleTimeout:uinteger:0' \
 		'MaxAuthTries:uinteger:3' \
 		'RecvWindowSize:uinteger:0' \
+		'AllowedClientIPs:list(ipaddr)' \
 		'mdns:bool:1'
+}
+
+add_fw_rules()
+{
+	local intf="$1"
+	local port="$2"
+	local client="$3"
+
+	[ -z "${intf}" ] && return
+	local zone=$(fw3 -q network "${intf}")
+	[ -z "${zone}" ] && return
+
+	json_add_array firewall
+
+	json_add_object ""
+	json_add_string type rule
+	json_add_string src "${zone}"
+	json_add_string proto tcp
+	json_add_string dest_port "${port}"
+	[ -n "${client}" ] && json_add_string src_ip "${client}"
+	json_add_string target ACCEPT
+	json_close_object
+
+	json_close_array
 }
 
 dropbear_instance()
@@ -51,7 +76,8 @@ dropbear_instance()
 	local PasswordAuth enable Interface GatewayPorts \
 		RootPasswordAuth RootLogin rsakeyfile \
 		BannerFile Port SSHKeepAlive IdleTimeout \
-		MaxAuthTries RecvWindowSize mdns ipaddrs
+		MaxAuthTries RecvWindowSize AllowedClientIPs \
+		mdns ipaddrs
 
 	validate_section_dropbear "${1}" || {
 		echo "validation failed"
@@ -69,7 +95,8 @@ dropbear_instance()
 	PIDCOUNT="$(( ${PIDCOUNT} + 1))"
 	local pid_file="/var/run/${NAME}.${PIDCOUNT}.pid"
 
-	procd_open_instance
+	procd_open_instance "${1}"
+
 	procd_set_param command "$PROG" -F -P "$pid_file"
 	[ "${PasswordAuth}" -eq 0 ] && procd_append_param command -s
 	[ "${GatewayPorts}" -eq 1 ] && procd_append_param command -a
@@ -83,8 +110,20 @@ dropbear_instance()
 	[ "${MaxAuthTries}" -ne 0 ] && procd_append_param command -T "${MaxAuthTries}"
 	[ "${RecvWindowSize}" -gt 0 -a "${RecvWindowSize}" -le 1048576 ] && \
 		procd_append_param command -W "${RecvWindowSize}"
-	[ "${mdns}" -ne 0 ] && procd_add_mdns "ssh" "tcp" "$Port" "daemon=dropbear"
 	procd_set_param respawn
+
+	procd_open_data
+
+	[ "${mdns}" -ne 0 ] && {
+		json_add_object "mdns"
+		procd_add_mdns_service "ssh" "tcp" "$Port" "daemon=dropbear"
+		json_close_object
+	}
+
+	add_fw_rules "${Interface}" "${Port}" "${AllowedClientIPs}"
+
+	procd_close_data
+
 	procd_close_instance
 }
 
@@ -128,6 +167,10 @@ start_service()
 
 	config_load "${NAME}"
 	config_foreach dropbear_instance dropbear
+}
+
+service_started() {
+	procd_set_config_changed firewall
 }
 
 service_triggers()
