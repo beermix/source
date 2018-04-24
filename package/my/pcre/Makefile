@@ -38,14 +38,15 @@ define Package/libpcre
   TITLE:=A Perl Compatible Regular Expression library
 endef
 
-#TARGET_CFLAGS += $(FPIC)
+TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
 	--enable-pcre16 \
 	--enable-cpp \
-	--with-pic \
+	--enable-jit \
+	--enable-static \
 
 MAKE_FLAGS += \
 	CFLAGS="$(TARGET_CFLAGS)"

@@ -18,20 +18,15 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_FIXUP:=autoreconf
-#PKG_BUILD_PARALLEL:=1	
+PKG_BUILD_PARALLEL:=1	
 
 include $(INCLUDE_DIR)/package.mk
 
-#TARGET_CFLAGS := -O2 -pipe -Wl,--as-needed -D_DEFAULT_SOURCE
-#TARGET_CXXFLAGS := -O2 -pipe -Wl,--as-needed -D_DEFAULT_SOURCE
-#TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lc -lm -ldl)
+TARGET_CFLAGS += -Wl,--as-needed
+TARGET_CXXFLAGS += -Wl,--as-needed
+TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC), -lc)
 
-CONFIGURE_ARGS += \
-       --with-pcre="$(STAGING_DIR)/usr" \
-       --with-libbz2="$(STAGING_DIR)/usr" \
-       --with-libcurl="$(STAGING_DIR)/usr" \
-       --with-zlib="$(STAGING_DIR)/usr" \
-       --disable-silent-rules --disable-static
+CONFIGURE_ARGS += --disable-silent-rules --disable-static
 
 define Package/lnav/Default
 	SECTION:=net
