@@ -18,11 +18,11 @@ PKG_MAINTAINER:=Thomas Heil <heil@terminal-consulting.de>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENCE
 
-#PKG_FIXUP:=autoreconf
+PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
+#PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -49,7 +49,6 @@ CONFIGURE_ARGS += \
 	--enable-cpp \
 	--enable-jit \
 	--enable-pcretest-libreadline \
-	--disable-silent-rules \	
 
 MAKE_FLAGS += \
 	CFLAGS="$(TARGET_CFLAGS)"
