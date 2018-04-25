@@ -60,7 +60,6 @@ endef
 CONFIGURE_ARGS += \
 	--with-drill \
 	--disable-rpath \
-	--with-drill \
 	--disable-dane-ta-usage \
 	--with-ssl="$(STAGING_DIR)/usr"
 
@@ -69,6 +68,8 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/ldns $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libldns.{a,so*} $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/ldns.pc $(1)/usr/lib/pkgconfig/
 endef
 
 define Package/libldns/install
