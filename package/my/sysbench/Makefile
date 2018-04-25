@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysbench
-PKG_VERSION:=1.0.8
+PKG_VERSION:=1.0.14
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/akopytov/sysbench.git
@@ -25,18 +25,16 @@ include $(INCLUDE_DIR)/host-build.mk
 define Package/sysbench
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:= +luajit +libaio
+  DEPENDS:= +luajit
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
-TARGET_CFLAGS += $(FPIC) -std=gnu99
-HOST_CFLAGS += $(FPIC) -std=gnu99
+#TARGET_CFLAGS += $(FPIC) -std=gnu99
+#HOST_CFLAGS += $(FPIC) -std=gnu99
 
 CONFIGURE_ARGS += \
-	--without-mysql \
-	--with-system-luajit \
-	--with-gcc-arch=i686 \
-	
+	--without-mysql
+
 define Build/Compile
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		HOST_CC="$(HOSTCC) $(HOST_CFLAGS) -m32" \
