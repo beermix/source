@@ -43,7 +43,6 @@ TARGET_CFLAGS += $(FPIC)
 CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
-	--enable-pcre8 \
 	--enable-pcre16 \
 	--with-match-limit-recursion=16000 \
 	--enable-cpp \
