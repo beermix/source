@@ -58,8 +58,8 @@ define Package/drill/description
 endef
 
 CONFIGURE_ARGS += \
-	--disable-ecdsa \
-	--disable-gost \
+	--with-drill \
+	--disable-rpath \
 	--with-drill \
 	--disable-dane-ta-usage \
 	--with-ssl="$(STAGING_DIR)/usr"
