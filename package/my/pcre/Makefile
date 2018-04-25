@@ -48,7 +48,6 @@ CONFIGURE_ARGS += \
 	--with-match-limit-recursion=16000 \
 	--enable-cpp \
 	--enable-jit \
-	--enable-pcretest-libreadline \
 
 MAKE_FLAGS += \
 	CFLAGS="$(TARGET_CFLAGS)"
