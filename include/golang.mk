@@ -72,6 +72,6 @@ define Build/Compile
 		cd $(PKG_BUILD_DIR); \
 		mkdir -p bin; \
 		cd bin; \
-		GOOS=linux GOARCH=$(GOARCH) $(GOARM) GOPATH=$(PKG_BUILD_DIR) $(GOROOT)/bin/go build -x -v -compiler gccgo -gccgoflags '$(TARGET_CFLAGS) -fmessage-length=0 -gno-record-gcc-switches -s' $(PKG_GOGET) ; \
+		GOOS=linux GOARCH=$(GOARCH) $(GOARM) GOPATH=$(PKG_BUILD_DIR) $(GOROOT)/bin/go build -x -v -compiler gccgo -gccgoflags '-static-libgo -s' $(PKG_GOGET) ; \
 	)
 endef
