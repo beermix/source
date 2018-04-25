@@ -47,11 +47,7 @@ define Package/airmon-ng/description
   Bash script designed to turn wireless cards into monitor mode.
 endef
 
-MAKE_FLAGS += prefix=/usr \
-	libnl=true \
-	sqlite=false \
-	unstable=false \
-	OSNAME=Linux
+CONFIGURE_ARGS += --disable-silent-rules --enable-libnl --with-gcrypt=no --with-experimental=yes --with-ext-scripts --with-sqlite3=yes
 
 define Package/aircrack-ng/install
 	$(INSTALL_DIR) $(1)/usr/bin
