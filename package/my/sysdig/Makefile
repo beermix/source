@@ -1,0 +1,81 @@
+#
+# Copyright (C) 2014-2015 OpenWrt.org
+#
+
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=sysdig
+PKG_VERSION:=0.21.0
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/draios/sysdig
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+
+PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
+
+include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
+
+CMAKE_BINARY_DIR=bin
+
+define Build/Configure/Default
+	mkdir -p $(CMAKE_BINARY_DIR)
+	(cd $(CMAKE_BINARY_DIR); \
+		CFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS)" \
+		CXXFLAGS="$(TARGET_CXXFLAGS) $(EXTRA_CXXFLAGS)" \
+		LDFLAGS="$(TARGET_LDFLAGS) $(EXTRA_LDFLAGS)" \
+		cmake \
+			-DCMAKE_SYSTEM_NAME=Linux \
+			-DCMAKE_SYSTEM_VERSION=1 \
+			-DCMAKE_SYSTEM_PROCESSOR=$(ARCH) \
+			-DCMAKE_BUILD_TYPE=Release \
+			-DCMAKE_C_FLAGS_RELEASE="-DNDEBUG" \
+			-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG" \
+			-DCMAKE_C_COMPILER="$(CMAKE_C_COMPILER)" \
+			-DCMAKE_C_COMPILER_ARG1="$(CMAKE_C_COMPILER_ARG1)" \
+			-DCMAKE_CXX_COMPILER="$(CMAKE_CXX_COMPILER)" \
+			-DCMAKE_CXX_COMPILER_ARG1="$(CMAKE_CXX_COMPILER_ARG1)" \
+			-DCMAKE_ASM_COMPILER="$(CMAKE_C_COMPILER)" \
+			-DCMAKE_ASM_COMPILER_ARG1="$(CMAKE_C_COMPILER_ARG1)" \
+			-DCMAKE_EXE_LINKER_FLAGS:STRING="$(TARGET_LDFLAGS)" \
+			-DCMAKE_MODULE_LINKER_FLAGS:STRING="$(TARGET_LDFLAGS) $(CMAKE_SHARED_LDFLAGS)" \
+			-DCMAKE_SHARED_LINKER_FLAGS:STRING="$(TARGET_LDFLAGS) $(CMAKE_SHARED_LDFLAGS)" \
+			-DCMAKE_AR="$(CMAKE_AR)" \
+			-DCMAKE_NM="$(CMAKE_NM)" \
+			-DCMAKE_RANLIB="$(CMAKE_RANLIB)" \
+			-DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
+			-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=BOTH \
+			-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+			-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+			-DCMAKE_STRIP=: \
+			-DCMAKE_INSTALL_PREFIX=/usr \
+			-DDL_LIBRARY=$(STAGING_DIR) \
+			-DCMAKE_PREFIX_PATH=$(STAGING_DIR) \
+			-DCMAKE_SKIP_RPATH=TRUE  \
+			$(CMAKE_OPTIONS) \
+		$(CMAKE_SOURCE_DIR) \
+	)
+endef
+
+define Package/sysdig
+  SECTION:=utils
+  CATEGORY:=Utilities
+  TITLE+= (utilities)
+  URL:=http://www.gropp.org/?id=projects&sub=sysdig
+  MENU:=1
+endef
+
+define Package/sysdig/description
+  Bandwidth Monitor NG is a small and simple console-based live
+  network and disk io bandwidth monitor.
+endef
+
+define Package/sysdig/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sysdig $(1)/usr/bin/
+endef
+
+$(eval $(call BuildPackage,sysdig))
