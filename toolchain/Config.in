@@ -206,6 +206,7 @@ menuconfig EXTRA_TARGET_ARCH
 			bool "n64"
 
 		config MIPS64_ABI_N32
+			depends on !LIBC_USE_MUSL
 			bool "n32"
 
 		config MIPS64_ABI_O32
@@ -249,6 +250,13 @@ choice
 	config LIBC_USE_UCLIBC
 		select USE_UCLIBC
 		bool "Use uClibc"
+		depends on !(aarch64 || aarch64_be || powerpc64)
+		depends on BROKEN || !(arm || armeb || i386 || x86_64 || mips || mipsel || mips64 || mips64el || powerpc)
+
+	config LIBC_USE_MUSL
+		select USE_MUSL
+		bool "Use musl"
+		depends on !(arc || powerpc64)
 
 endchoice
 
@@ -307,6 +315,8 @@ config TARGET_SUFFIX
 	default "gnu"             if USE_GLIBC && !(arm || armeb)
 	default "uclibcgnueabi"   if USE_UCLIBC && (arm || armeb)
 	default "uclibc"          if USE_UCLIBC && !(arm || armeb)
+	default "muslgnueabi"     if USE_MUSL && (arm || armeb)
+	default "musl"            if USE_MUSL && !(arm || armeb)
 
 config MIPS64_ABI
 	depends on mips64 || mips64el
