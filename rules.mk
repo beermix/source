@@ -269,6 +269,8 @@ ifeq ($(ARCH),i386)
     GOARCH=386
 endif
 
+
+
 HOSTCC:=gcc
 HOSTCXX:=g++
 HOST_CPPFLAGS:=-I$(STAGING_DIR_HOST)/include $(if $(IS_PACKAGE_BUILD),-I$(STAGING_DIR_HOSTPKG)/include -I$(STAGING_DIR)/host/include)
@@ -380,6 +382,10 @@ endef
 
 define shexport
 export $(call shvar,$(1))=$$(call $(1))
+endef
+
+define include_mk
+$(eval -include $(if $(DUMP),,$(STAGING_DIR)/mk/$(strip $(1))))
 endef
 
 # Execute commands under flock

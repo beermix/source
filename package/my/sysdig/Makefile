@@ -60,12 +60,25 @@ define Build/Configure/Default
 	)
 endef
 
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE:String="Release" \
+	-DBUILD_DRIVER:Bool=ON \
+	-DBUILD_LIBSCAP_EXAMPLES:Bool=OFF \
+	-DENABLE_DKMS:Bool=ON \
+	-DUSE_BUNDLED_CURL:Bool=ON \
+	-DUSE_BUNDLED_DEPS:Bool=ON \
+	-DUSE_BUNDLED_NCURSES:Bool=OFF \
+	-DUSE_BUNDLED_OPENSSL:Bool=OFF \
+	-DUSE_BUNDLED_NCURSES:Bool=OFF \
+	-DUSE_BUNDLED_ZLIB:Bool=OFF
+
 define Package/sysdig
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE+= (utilities)
   URL:=http://www.gropp.org/?id=projects&sub=sysdig
   MENU:=1
+  DEPENDS:=+libcurl +libopenssl +libpthread +libncurses +zlib
 endef
 
 define Package/sysdig/description

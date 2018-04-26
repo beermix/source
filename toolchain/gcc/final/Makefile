@@ -40,16 +40,7 @@ define Host/Configure
 	);
 endef
 
-ifeq ($(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yy)
-define FixGogccCrt
-	# link crtX.o for gotools
-	mkdir -p $(GCC_BUILD_DIR)/gotools
-	$(foreach crt, i 1 n, ln -sf ../../glibc-dev/lib/crt$(crt).o $(GCC_BUILD_DIR)/gotools/ ; )
-endef
-endif
-
 define Host/Compile
-	$(FixGogccCrt)
 	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) all
 endef
 
@@ -68,7 +59,7 @@ endef
 
 define Host/Install
 	$(CleanupToolchain)
-	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) install
+	$(_SINGLE)$(GCC_MAKE) -C $(GCC_BUILD_DIR) install
 	# Set up the symlinks to enable lying about target name.
 	set -e; \
 	(cd $(TOOLCHAIN_DIR); \

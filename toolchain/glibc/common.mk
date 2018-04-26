@@ -59,18 +59,15 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
 		--enable-stack-protector=strong \
 		--enable-kernel=4.4 \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-bind-now \
+		--enable-tunables \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
-		--enable-lock-elision \
+		--enable-systemtap \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no

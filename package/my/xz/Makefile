@@ -72,10 +72,7 @@ endef
 
 
 CONFIGURE_ARGS += \
-	--enable-small \
 	--enable-assume-ram=4 \
-	--disable-assembler \
-	--disable-werror \
 
 # API uses "restrict" keyword introduced in C99 standard
 TARGET_CFLAGS += \

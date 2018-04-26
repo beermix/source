@@ -16,15 +16,18 @@ define Package/zstd
 	CATEGORY:=Libraries
 	TITLE:=Zstandard is a real-time compression algorithm
 	URL:=http://facebook.github.io/zstd/
+	DEPENDS:=+liblz4 +zlib +liblzma +libpthread
 endef
-
-TARGET_CFLAGS += $(FPIC)
 
 define Build/Compile
 	$(MAKE) -C "$(PKG_BUILD_DIR)/lib" $(MAKE_INSTALL_FLAGS) \
 	  CC="$(TARGET_CC)" \
 	  CFLAGS="$(TARGET_CFLAGS)" \
 	  PREFIX="$(CONFIGURE_PREFIX)" \
+	  HAVE_LZ4=1 \
+	  HAVE_ZLIB=1
+	  HAVE_LZMA=1 \
+	  HAVE_THREAD=1 \
 	  install
 endef
 
