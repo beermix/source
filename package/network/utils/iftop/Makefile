@@ -23,7 +23,7 @@ PKG_FIXUP:=autoreconf
 include $(INCLUDE_DIR)/package.mk
 
 CONFIGURE_ARGS += \
-	--with-resolver=ares \
+	--with-resolver=netdb_1thread \
 	--with-libpcap="$(STAGING_DIR)/usr"
 
 define Package/iftop
