@@ -38,8 +38,9 @@ ifeq ($(PKG_VERSION),6.3.0)
 endif
 
 ifeq ($(PKG_VERSION),7.3.0)
-  PKG_HASH:=51a1c83ff608d307962bbf9f09a3dca77060d861c93ee0a535fb8a57500ac3b0
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)_isl.tar.xz
+  PKG_HASH:=832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c
+#  PKG_HASH:=51a1c83ff608d307962bbf9f09a3dca77060d861c93ee0a535fb8a57500ac3b0
+#  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)_isl.tar.xz
 endif
 
 ifeq ($(PKG_VERSION),7.3.1)
@@ -108,7 +109,6 @@ GCC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
-		--with-isl \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--disable-libgomp \

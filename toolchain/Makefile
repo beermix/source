@@ -24,6 +24,7 @@
 # 8) toolchain/libc/utils/compile
 #    build & install libc utilities
 #
+# For musl, steps 2 and 4 are skipped, and step 3 is done after 5
 
 curdir:=toolchain
 
