@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=3abd57f
+PKG_VERSION:=fb4307b
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -17,7 +17,6 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
@@ -94,9 +93,6 @@ CONFIGURE_ARGS += \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc \
 	--disable-seccomp \
-	--disable-libscrypt \
-	--disable-unittests \
-	--disable-largefile \
 	--enable-lzma \
 	--enable-zstd \
 	--with-tor-user=tor \
