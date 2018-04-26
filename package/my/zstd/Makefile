@@ -11,6 +11,9 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 include $(INCLUDE_DIR)/package.mk
 
+PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
+
 define Package/zstd
 	SECTION:=libs
 	CATEGORY:=Libraries
@@ -24,8 +27,8 @@ define Build/Compile
 	  CC="$(TARGET_CC)" \
 	  CFLAGS="$(TARGET_CFLAGS)" \
 	  PREFIX="$(CONFIGURE_PREFIX)" \
-	  HAVE_THREAD=1 \
-	  install
+	  PREFIX=/usr \
+	  HAVE_THREAD=1
 endef
 
 define Build/InstallDev
@@ -34,7 +37,7 @@ endef
 
 define Package/zstd/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libzstd.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/local/lib/libzstd.so* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,zstd))
