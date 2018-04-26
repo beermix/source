@@ -1,4 +1,5 @@
 GCC_VARIANT:=initial
+GCC_PREPARE=$(CONFIG_USE_MUSL)
 
 include ../common.mk
 

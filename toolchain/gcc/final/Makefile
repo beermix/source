@@ -59,7 +59,7 @@ endef
 
 define Host/Install
 	$(CleanupToolchain)
-	$(_SINGLE)$(GCC_MAKE) -C $(GCC_BUILD_DIR) install
+	$(GCC_MAKE) -C $(GCC_BUILD_DIR) install
 	# Set up the symlinks to enable lying about target name.
 	set -e; \
 	(cd $(TOOLCHAIN_DIR); \
