@@ -22,7 +22,6 @@ PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 
 PKG_INSTALL:=1
-#PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -43,7 +42,9 @@ TARGET_CFLAGS += $(FPIC)
 CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
+	--enable-pcre8 \
 	--enable-pcre16 \
+	--enable-pcre32 \
 	--with-match-limit-recursion=16000 \
 	--enable-cpp \
 	--enable-jit \
@@ -70,8 +71,7 @@ endef
 
 define Package/libpcre/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre{,posix,cpp,16}.so.* $(1)/usr/lib/
-#	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre{,posix,cpp,16}.so $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcre{,posix,cpp,8,16,32}.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libpcre))
