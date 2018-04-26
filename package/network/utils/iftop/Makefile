@@ -22,10 +22,14 @@ PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
+CONFIGURE_ARGS += \
+	--with-resolver=ares \
+	--with-libpcap="$(STAGING_DIR)/usr"
+
 define Package/iftop
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpcap +libncurses +libpthread
+  DEPENDS:=+libpcap +libncurses +libpthread +libcares
   TITLE:=display bandwith usage on an interface
   URL:=http://www.ex-parrot.com/~pdw/iftop/
 endef

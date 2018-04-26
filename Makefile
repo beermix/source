@@ -63,7 +63,7 @@ clrt: clean
 	rm -rf $(TMP_DIR)
 
 clr: clean
-	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_TOOLCHAIN)
+	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub* $(BUILD_DIR_TOOLCHAIN)
 
 ifndef DUMP_TARGET_DB
 $(BUILD_DIR)/.prepared: Makefile

@@ -113,7 +113,6 @@ menuconfig EXTERNAL_TOOLCHAIN
 			bool "uClibc"
 			select USE_UCLIBC
 
-
 	endchoice
 
 	config TOOLCHAIN_LIBC

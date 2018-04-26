@@ -203,8 +203,6 @@ define Build/Configure
 endef
 
 TARGET_CFLAGS += $(FPIC) -I$(CURDIR)/include
-#-ffunction-sections -fdata-sections
-#TARGET_LDFLAGS += -Wl,--gc-sections
 
 define Build/Compile
 	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
