@@ -67,7 +67,6 @@ GLIBC_CONFIGURE:= \
 		--enable-tunables \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
-		--enable-systemtap \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
