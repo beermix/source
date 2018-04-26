@@ -99,7 +99,6 @@ menuconfig EXTERNAL_TOOLCHAIN
 	choice TOOLCHAIN_LIBC_TYPE
 		prompt "Toolchain libc"  if DEVEL
 		depends on EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN
-		default EXTERNAL_TOOLCHAIN_LIBC_USE_MUSL
 		help
 		  Specify the libc type used by the external toolchain. The given value
 		  is passed as -m flag to all gcc and g++ invocations. This is mainly
@@ -113,11 +112,7 @@ menuconfig EXTERNAL_TOOLCHAIN
 		config EXTERNAL_TOOLCHAIN_LIBC_USE_UCLIBC
 			bool "uClibc"
 			select USE_UCLIBC
-			depends on !(aarch64 || aarch64_be)
 
-		config EXTERNAL_TOOLCHAIN_LIBC_USE_MUSL
-			bool "musl"
-			select USE_MUSL
 
 	endchoice
 
@@ -206,7 +201,6 @@ menuconfig EXTRA_TARGET_ARCH
 			bool "n64"
 
 		config MIPS64_ABI_N32
-			depends on !LIBC_USE_MUSL
 			bool "n32"
 
 		config MIPS64_ABI_O32
@@ -251,13 +245,6 @@ choice
 	config LIBC_USE_UCLIBC
 		select USE_UCLIBC
 		bool "Use uClibc"
-		depends on !(aarch64 || aarch64_be || powerpc64)
-		depends on BROKEN || !(arm || armeb || i386 || x86_64 || mips || mipsel || mips64 || mips64el || powerpc)
-
-	config LIBC_USE_MUSL
-		select USE_MUSL
-		bool "Use musl"
-		depends on !(arc || powerpc64)
 
 endchoice
 
@@ -308,7 +295,6 @@ config LIBC
 	string
 	default "glibc"   if USE_GLIBC
 	default "uClibc"  if USE_UCLIBC
-	default "musl"	  if USE_MUSL
 
 config TARGET_SUFFIX
 	string
@@ -316,8 +302,6 @@ config TARGET_SUFFIX
 	default "gnu"             if USE_GLIBC && !(arm || armeb)
 	default "uclibcgnueabi"   if USE_UCLIBC && (arm || armeb)
 	default "uclibc"          if USE_UCLIBC && !(arm || armeb)
-	default "muslgnueabi"     if USE_MUSL && (arm || armeb)
-	default "musl"            if USE_MUSL && !(arm || armeb)
 
 config MIPS64_ABI
 	depends on mips64 || mips64el

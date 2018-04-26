@@ -95,6 +95,11 @@ export libgcc_cv_fixed_point=no
 ifdef CONFIG_USE_UCLIBC
   export glibcxx_cv_c99_math_tr1=no
 endif
+ifdef CONFIG_GCC_USE_GRAPHITE
+  GRAPHITE_CONFIGURE:= --with-isl=$(TOPDIR)/staging_dir/host
+else
+  GRAPHITE_CONFIGURE:= --without-isl --without-cloog
+endif
 
 GCC_CONFIGURE:= \
 	SHELL="$(BASH)" \
@@ -183,10 +188,6 @@ ifneq ($(CONFIG_SOFT_FLOAT),y)
     GCC_CONFIGURE+= \
 		--with-float=hard
   endif
-endif
-
-ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
-  TARGET_CFLAGS+=-fno-split-stack
 endif
 
 GCC_MAKE:= \
