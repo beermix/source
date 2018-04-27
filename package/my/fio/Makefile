@@ -14,8 +14,6 @@ PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://fossies.org/linux/misc
 
-PKG_INSTALL:=1
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/fio
@@ -37,10 +35,8 @@ define Build/Configure
 		./configure \
 			--prefix=/usr \
 			--cc=$(TARGET_CC) \
-			--enable-lex \
 			--cpu=$(ARCH) \
-			--esx \
-			--extra-cflags="$(TARGET_CFLAGS)" \
+			--extra-cflags="$(TARGET_CFLAGS)"
 	);
 endef
 
