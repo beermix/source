@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysdig
-PKG_VERSION:=0.21.0
+PKG_VERSION:=9abce17
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/draios/sysdig
@@ -22,6 +22,8 @@ include $(INCLUDE_DIR)/cmake.mk
 
 CMAKE_BINARY_DIR=$(PKG_BUILD_DIR)/build
 
+TARGET_CFLAGS += $(FPIC)
+
 CMAKE_OPTIONS += \
 	-DBUILD_DRIVER=0 \
 	-DBUILD_LIBSCAP_EXAMPLES=0 \
@@ -30,8 +32,7 @@ CMAKE_OPTIONS += \
 	-DUSE_BUNDLED_NCURSES=1 \
 	-DUSE_BUNDLED_OPENSSL=1 \
 	-DUSE_BUNDLED_ZLIB=1 \
-	-DDCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_SHARED_LDFLAGS:=-Wl,-Bsymbolic-functions
+	-DCMAKE_VERBOSE_MAKEFILE=0
 	
 define Package/sysdig
   SECTION:=utils
