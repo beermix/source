@@ -96,7 +96,8 @@ CONFIGURE_ARGS += \
 	--enable-lzma \
 	--enable-zstd \
 	--with-tor-user=tor \
-	--with-tor-group=tor
+	--with-tor-group=tor \
+	--disable-silent-rules
 
 EXTRA_CFLAGS += -std=gnu99
 

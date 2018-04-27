@@ -21,6 +21,9 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_LICENSE:=BSD-3-clause
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
+
+export CMAKE_BINARY_DIR=$(PKG_BUILD_DIR)/build
 
 define Package/i2pd
 	SECTION:=net
