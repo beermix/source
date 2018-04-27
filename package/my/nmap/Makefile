@@ -30,7 +30,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSI
 
 include $(INCLUDE_DIR)/package.mk
 
-NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre +libdnet
+NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre
 NPING_DEPENDS:=+libpcap +libpthread +libstdcpp
 
 define Package/nmap/default
@@ -81,11 +81,11 @@ $(call Package/nmap/default)
 endef
 
 CONFIGURE_ARGS += \
-	--with-libdnet="$(STAGING_DIR)/usr" \
+	--with-libdnet=included \
 	--with-libpcre="$(STAGING_DIR)/usr" \
 	--with-libpcap="$(STAGING_DIR)/usr" \
-	--with-liblinear=included \
 	--with-pcap=linux \
+	--with-liblinear=included \
 	--without-liblua \
 	--without-zenmap
 
