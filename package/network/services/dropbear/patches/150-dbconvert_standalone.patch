@@ -1,14 +1,11 @@
---- a/options.h
-+++ b/options.h
-@@ -5,6 +5,11 @@
- #ifndef DROPBEAR_OPTIONS_H_
- #define DROPBEAR_OPTIONS_H_
- 
-+#if !defined(DROPBEAR_CLIENT) && !defined(DROPBEAR_SERVER)
-+#define DROPBEAR_SERVER
-+#define DROPBEAR_CLIENT
-+#endif
+--- a/localoptions.h
++++ b/localoptions.h
+@@ -7,3 +7,8 @@
+ #define DROPBEAR_SHA1_96_HMAC 0
+ #define DROPBEAR_DSS 0
+ #define DROPBEAR_USE_PASSWORD_ENV 0
 +
- /* Define compile-time options below - the "#ifndef DROPBEAR_XXX .... #endif"
-  * parts are to allow for commandline -DDROPBEAR_XXX options etc. */
- 
++#if !defined(DROPBEAR_CLIENT) && !defined(DROPBEAR_SERVER)
++	#define DROPBEAR_SERVER 1
++	#define DROPBEAR_CLIENT 1
++#endif

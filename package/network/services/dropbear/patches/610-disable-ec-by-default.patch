@@ -1,0 +1,10 @@
+--- a/localoptions.h
++++ b/localoptions.h
+@@ -12,3 +12,7 @@
+ 	#define DROPBEAR_SERVER 1
+ 	#define DROPBEAR_CLIENT 1
+ #endif
++
++#define DROPBEAR_CURVE25519 0
++#define DROPBEAR_ECDSA 0
++#define DROPBEAR_ECDH 0
