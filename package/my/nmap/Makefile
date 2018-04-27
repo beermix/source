@@ -30,9 +30,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSI
 
 include $(INCLUDE_DIR)/package.mk
 
-NMAP_DEPENDS:=+libstdcpp +zlib +libpcre
-NPING_DEPENDS:=+libpthread +libstdcpp
-#NDIFF_DEPENDS:=+python
+NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre +libdnet
+NPING_DEPENDS:=+libpcap +libpthread +libstdcpp
 
 define Package/nmap/default
   SUBMENU:=NMAP Suite
@@ -77,15 +76,15 @@ endef
 
 define Package/ndiff
 $(call Package/nmap/default)
-#  DEPENDS:=$(NDIFF_DEPENDS)
   VARIANT:=nossl
   TITLE:=Utility to compare the results of Nmap scans
 endef
 
 CONFIGURE_ARGS += \
-	--with-libdnet=included \
+	--with-libdnet="$(STAGING_DIR)/usr" \
 	--with-libpcre="$(STAGING_DIR)/usr" \
-	--with-libpcap=included \
+	--with-libpcap="$(STAGING_DIR)/usr" \
+	--with-liblinear=included \
 	--with-pcap=linux \
 	--without-liblua \
 	--without-zenmap
