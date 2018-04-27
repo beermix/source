@@ -35,14 +35,16 @@ define Build/Configure
 		./configure \
 			--prefix=/usr \
 			--cc=$(TARGET_CC) \
-			--cpu=$(ARCH) \
-			--extra-cflags="$(TARGET_CFLAGS)"
+			--cpu=i686 \
+			--extra-cflags="$(TARGET_CFLAGS)" \
+			--disable-native \
+			--disable-optimizations \
 	);
 endef
 
 define Package/fio/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/fio $(1)/usr/bin/fio
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/fio $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,fio))

@@ -21,12 +21,10 @@ PKG_BUILD_PARALLEL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" ALLFLAGS_C="$(TARGET_CFLAGS)" CXX="$(TARGET_CXX) -fvisibility=hidden -fvisibility-inlines-hidden" ALLFLAGS_CPP="$(TARGET_CXXFLAGS) -fvisibility=hidden -fvisibility-inlines-hidden" LDFLAGS="$(TARGET_LDFLAGS)" 7za
+	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LDFLAGS="$(TARGET_LDFLAGS)" 7za
 endef
 
-MAKE_FLAGS += \
-	OPTFLAGS="-Ofast -flto -march=westmere -funroll-loops"
-	
+
 define Package/p7zip
 	SECTION:=utils
 	CATEGORY:=Utilities
