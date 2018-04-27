@@ -104,8 +104,8 @@ endif
 GCC_CONFIGURE:= \
 	SHELL="$(BASH)" \
 	$(if $(shell gcc --version 2>&1 | grep LLVM), \
-		CFLAGS="-O2 -fbracket-depth=512 -pipe -Wno-format-security" \
-		CXXFLAGS="-O2 -fbracket-depth=512 -pipe -Wno-format-security" \
+		CFLAGS="-O2 -fbracket-depth=512" \
+		CXXFLAGS="-O2 -fbracket-depth=512" \
 	) \
 	$(HOST_SOURCE_DIR)/configure \
 		--with-bugurl=$(BUGURL) \
@@ -115,13 +115,13 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
-		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
 		--with-tune=haswell \
+		--enable-__cxa_atexit \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -171,13 +171,13 @@ ifdef CONFIG_sparc
 		--with-long-double-128
 endif
 
-ifeq ($(LIBC),uClibc)
-  GCC_CONFIGURE+= \
-		--disable-__cxa_atexit
-else
-  GCC_CONFIGURE+= \
-		--enable-__cxa_atexit
-endif
+#ifeq ($(LIBC),uClibc)
+#  GCC_CONFIGURE+= \
+#		--disable-__cxa_atexit
+#else
+#  GCC_CONFIGURE+= \
+#		--enable-__cxa_atexit
+#endif
 
 ifneq ($(GCC_ARCH),)
   GCC_CONFIGURE+= --with-arch=$(GCC_ARCH)
