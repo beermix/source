@@ -269,12 +269,12 @@ ifeq ($(ARCH),i386)
     GOARCH=386
 endif
 
-
+# -fdiagnostics-color=always -U_FORTIFY_SOURCE -fno-stack-protector -Wno-format-security
 
 HOSTCC:=gcc
 HOSTCXX:=g++
-HOST_CPPFLAGS:=-I$(STAGING_DIR_HOST)/include $(if $(IS_PACKAGE_BUILD),-I$(STAGING_DIR_HOSTPKG)/include -I$(STAGING_DIR)/host/include) -fno-stack-protector -Wno-format-security
-HOST_CFLAGS:=-O2 -fdiagnostics-color=always -U_FORTIFY_SOURCE $(HOST_CPPFLAGS)
+HOST_CPPFLAGS:=-I$(STAGING_DIR_HOST)/include $(if $(IS_PACKAGE_BUILD),-I$(STAGING_DIR_HOSTPKG)/include -I$(STAGING_DIR)/host/include)
+HOST_CFLAGS:=-O2 -fdiagnostics-color=always $(HOST_CPPFLAGS)
 HOST_LDFLAGS:=-L$(STAGING_DIR_HOST)/lib $(if $(IS_PACKAGE_BUILD),-L$(STAGING_DIR_HOSTPKG)/lib -L$(STAGING_DIR)/host/lib)
 
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)

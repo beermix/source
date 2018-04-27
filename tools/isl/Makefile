@@ -22,7 +22,6 @@ unexport CFLAGS
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-shared \
-	--disable-silent-rules \
 	--with-gmp-prefix=$(STAGING_DIR_HOST)
 
 $(eval $(call HostBuild))

@@ -13,13 +13,11 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/gmp/
 PKG_HASH:=87b565e89a9a684fe4ebeeddb8399dce2599f9c9049854ca8c0dfbdea0e21912
 
-HOST_FIXUP:=autoreconf
-
 HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-unexport CFLAGS
+HOST_CPPFLAGS += -fexceptions
 
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
