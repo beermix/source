@@ -48,8 +48,6 @@ ifeq ($(PKG_VERSION),7.3.1)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_HASH:=51a1c83ff608d307962bbf9f09a3dca77060d861c93ee0a535fb8a57500ac3b0
-#  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)_isl.tar.xz
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
@@ -170,13 +168,13 @@ ifdef CONFIG_sparc
 		--with-long-double-128
 endif
 
-#ifeq ($(LIBC),uClibc)
-#  GCC_CONFIGURE+= \
-#		--disable-__cxa_atexit
-#else
-#  GCC_CONFIGURE+= \
-#		--enable-__cxa_atexit
-#endif
+ifeq ($(LIBC),uClibc)
+  GCC_CONFIGURE+= \
+		--disable-__cxa_atexit
+else
+  GCC_CONFIGURE+= \
+		--enable-__cxa_atexit
+endif
 
 ifneq ($(GCC_ARCH),)
   GCC_CONFIGURE+= --with-arch=$(GCC_ARCH)

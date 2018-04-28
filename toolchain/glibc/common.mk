@@ -60,6 +60,9 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--enable-stack-protector=strong \
 		--enable-kernel=4.4 \
 		--without-gd \
@@ -69,7 +72,6 @@ GLIBC_CONFIGURE:= \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--without-selinux \
-		--disable-nss-crypt  \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
