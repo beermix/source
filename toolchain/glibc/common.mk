@@ -60,9 +60,6 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
 		--enable-stack-protector=strong \
 		--enable-kernel=4.4 \
 		--without-gd \

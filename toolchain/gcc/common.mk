@@ -93,6 +93,10 @@ export libgcc_cv_fixed_point=no
 ifdef CONFIG_USE_UCLIBC
   export glibcxx_cv_c99_math_tr1=no
 endif
+ifdef CONFIG_INSTALL_GCCGO
+  export libgo_cv_c_split_stack_supported=no
+endif
+
 ifdef CONFIG_GCC_USE_GRAPHITE
   GRAPHITE_CONFIGURE:= --with-isl=$(TOPDIR)/staging_dir/host
 else
@@ -102,8 +106,8 @@ endif
 GCC_CONFIGURE:= \
 	SHELL="$(BASH)" \
 	$(if $(shell gcc --version 2>&1 | grep LLVM), \
-		CFLAGS="-O2 -fbracket-depth=512" \
-		CXXFLAGS="-O2 -fbracket-depth=512" \
+		CFLAGS="-O2 -fbracket-depth=512 -pipe" \
+		CXXFLAGS="-O2 -fbracket-depth=512 -pipe" \
 	) \
 	$(HOST_SOURCE_DIR)/configure \
 		--with-bugurl=$(BUGURL) \
@@ -185,6 +189,10 @@ ifneq ($(CONFIG_SOFT_FLOAT),y)
     GCC_CONFIGURE+= \
 		--with-float=hard
   endif
+endif
+
+ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
+  TARGET_CFLAGS+=-fno-split-stack
 endif
 
 GCC_MAKE:= \
