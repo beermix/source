@@ -8,11 +8,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=flex
 PKG_CPE_ID:=cpe:/a:flex_project:flex
-PKG_VERSION:=2.6.4
+PKG_VERSION:=2.6.1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/westes/flex/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995
+PKG_HASH:=3c43f9e658e45e8aae3cf69fa11803d60550865f023852830d557c5f0623c13b
 
 HOST_FIXUP:=autoreconf
 HOST_BUILD_PARALLEL:=1
