@@ -30,22 +30,20 @@ define Package/intel-microcode
   SECTION:=firmware
   CATEGORY:=Firmware
   URL:=$(PKG_SOURCE_URL)
-  DEPENDS:=@TARGET_x86
+  DEPENDS:=@TARGET_x86 +iucode-tool
   TITLE:=Intel x86 CPU microcode
 endef
 
 define Build/Compile
-	IUCODE_TOOL=$(STAGING_DIR)/../host/bin/iucode_tool \
-		$(MAKE) -C $(PKG_BUILD_DIR)
-	$(STAGING_DIR)/../host/bin/iucode_tool -q --mini-earlyfw \
-		--write-earlyfw=$(PKG_BUILD_DIR)/intel-ucode.cpio \
-		$(PKG_BUILD_DIR)/$(MICROCODE).bin
+	IUCODE_TOOL=$(STAGING_DIR)/../host/bin/iucode_tool $(MAKE) -C $(PKG_BUILD_DIR)
+	mkdir $(PKG_BUILD_DIR)/intel-ucode
+	$(STAGING_DIR)/../host/bin/iucode_tool -q \
+		--write-firmware=$(PKG_BUILD_DIR)/intel-ucode $(PKG_BUILD_DIR)/$(MICROCODE).bin
 endef
 
 define Package/intel-microcode/install
-	$(INSTALL_DIR) $(1)/boot
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/intel-ucode.cpio \
-		$(1)/boot/intel-ucode.img
+	$(INSTALL_DIR) $(1)/lib/firmware/intel-ucode
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/intel-ucode/* $(1)/lib/firmware/intel-ucode
 endef
 
 $(eval $(call BuildPackage,intel-microcode))

@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dropbear
-PKG_VERSION:=2018.76
-PKG_RELEASE:=1
+PKG_VERSION:=2017.75
+PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:= \
 	http://matt.ucc.asn.au/dropbear/releases/ \
 	https://dropbear.nl/mirror/releases/
-PKG_HASH:=f2fb9167eca8cf93456a5fc1d4faf709902a3ab70dd44e352f3acbc3ffdaea65
+PKG_HASH:=6cbc1dcb1c9709d226dff669e5604172a18cf5dbf9a201474d5618ae4465098c
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE libtomcrypt/LICENSE libtommath/LICENSE
@@ -57,7 +57,7 @@ endef
 
 define Package/dropbear/conffiles
 /etc/dropbear/dropbear_rsa_host_key
-/etc/config/dropbear
+/etc/config/dropbear 
 endef
 
 define Package/dropbearconvert
@@ -89,24 +89,24 @@ define Build/Configure
 	$(Build/Configure/Default)
 
 	$(SED) 's,^#define DEFAULT_PATH .*$$$$,#define DEFAULT_PATH "$(TARGET_INIT_PATH)",g' \
-		$(PKG_BUILD_DIR)/default_options.h
+		$(PKG_BUILD_DIR)/options.h
 
 	awk 'BEGIN { rc = 1 } \
-	     /'DROPBEAR_CURVE25519'/ { $$$$0 = "$(if $(CONFIG_DROPBEAR_CURVE25519),#define 'DROPBEAR_CURVE25519' 1,#define 'DROPBEAR_CURVE25519' 0)"; rc = 0 } \
+	     /'DROPBEAR_CURVE25519'/ { $$$$0 = "$(if $(CONFIG_DROPBEAR_CURVE25519),,// )#define 'DROPBEAR_CURVE25519'"; rc = 0 } \
 	     { print } \
-	     END { exit(rc) }' $(PKG_BUILD_DIR)/localoptions.h \
-	     >$(PKG_BUILD_DIR)/localoptions.h.new && \
-	mv $(PKG_BUILD_DIR)/localoptions.h.new $(PKG_BUILD_DIR)/localoptions.h
+	     END { exit(rc) }' $(PKG_BUILD_DIR)/options.h \
+	     >$(PKG_BUILD_DIR)/options.h.new && \
+	mv $(PKG_BUILD_DIR)/options.h.new $(PKG_BUILD_DIR)/options.h
 
-	# Enforce that all replacements are made, otherwise localoptions.h has changed
+	# Enforce that all replacements are made, otherwise options.h has changed
 	# format and this logic is broken.
 	for OPTION in DROPBEAR_ECDSA DROPBEAR_ECDH; do \
 	  awk 'BEGIN { rc = 1 } \
-	       /'$$$$OPTION'/ { $$$$0 = "$(if $(CONFIG_DROPBEAR_ECC),#define '$$$$OPTION' 1,#define '$$$$OPTION' 0)"; rc = 0 } \
+	       /'$$$$OPTION'/ { $$$$0 = "$(if $(CONFIG_DROPBEAR_ECC),,// )#define '$$$$OPTION'"; rc = 0 } \
 	       { print } \
-	       END { exit(rc) }' $(PKG_BUILD_DIR)/localoptions.h \
-	       >$(PKG_BUILD_DIR)/localoptions.h.new && \
-	  mv $(PKG_BUILD_DIR)/localoptions.h.new $(PKG_BUILD_DIR)/localoptions.h || exit 1; \
+	       END { exit(rc) }' $(PKG_BUILD_DIR)/options.h \
+	       >$(PKG_BUILD_DIR)/options.h.new && \
+	  mv $(PKG_BUILD_DIR)/options.h.new $(PKG_BUILD_DIR)/options.h || exit 1; \
 	done
 
 	# remove protocol idented software version number

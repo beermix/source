@@ -90,7 +90,6 @@ define prepare_rootfs
 	rm -f $(1)/usr/lib/opkg/lists/*
 	rm -f $(1)/usr/lib/opkg/info/*.postinst*
 	rm -f $(1)/var/lock/*.lock
-	-mv -f $(1)/boot $(STAGING_DIR)/
 	$(call clean_ipkg,$(1))
 	$(call mklibs,$(1))
 endef

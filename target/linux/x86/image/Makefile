@@ -9,8 +9,8 @@ include $(INCLUDE_DIR)/image.mk
 
 export PATH=$(TARGET_PATH):/sbin
 
-GRUB2_MODULES = biosdisk boot chain configfile ext2 linux ls part_msdos reboot serial test vga
-GRUB2_MODULES_ISO = biosdisk boot chain configfile iso9660 linux ls part_msdos reboot serial test vga
+GRUB2_MODULES = biosdisk boot chain configfile ext2 linux ls part_msdos reboot serial vga
+GRUB2_MODULES_ISO = biosdisk boot chain configfile iso9660 linux ls part_msdos reboot serial vga
 GRUB_TERMINALS =
 GRUB_SERIAL_CONFIG =
 GRUB_TERMINAL_CONFIG =
@@ -83,7 +83,6 @@ ifneq ($(CONFIG_GRUB_IMAGES),)
 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
 		-e 's#@ROOT@#$(GRUB_ROOT)#g' \
 		./grub.cfg > $(KDIR)/root.grub/boot/grub/grub.cfg
-	-$(CP) $(STAGING_DIR)/boot/* $(KDIR)/root.grub/boot/
 	PADDING="$(CONFIG_TARGET_IMAGES_PAD)" SIGNATURE="$(SIGNATURE)" PATH="$(TARGET_PATH)" $(SCRIPT_DIR)/gen_image_generic.sh \
 		$(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img \
 		$(CONFIG_TARGET_KERNEL_PARTSIZE) $(KDIR)/root.grub \
@@ -121,7 +120,6 @@ define Image/Build/iso
 		-e 's#@CMDLINE@#root=/dev/sr0 rootfstype=iso9660 rootwait $(strip $(call Image/cmdline/$(1)) $(BOOTOPTS) $(GRUB_CONSOLE_CMDLINE))#g' \
 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
 		./grub-iso.cfg > $(KDIR)/root.grub/boot/grub/grub.cfg
-	-$(CP) $(STAGING_DIR)/boot/* $(KDIR)/root.grub/boot/
 	mkisofs -R -b boot/grub/eltorito.img -no-emul-boot -boot-info-table \
 		-o $(KDIR)/root.iso $(KDIR)/root.grub $(TARGET_DIR)
 endef
