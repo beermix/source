@@ -121,7 +121,6 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--with-tune=haswell \
-		--enable-__cxa_atexit \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -193,7 +192,7 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
-		CFLAGS="-march=bonnell -g1 -O2 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro  -Wl,-z,max-page-size=0x1000 -mtune=haswell $(HOST_CPPFLAGS)" \
+		CFLAGS="$(HOST_CFLAGS)" \
 		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
 		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"

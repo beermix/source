@@ -10,8 +10,7 @@ GCC_CONFIGURE += \
 	--enable-threads=posix \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--enable-long-long \
-	--disable-libstdcxx-pch \
+	--enable-c99 \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 #ifdef CONFIG_USE_MUSL
