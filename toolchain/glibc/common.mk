@@ -66,8 +66,11 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-tunables \
+		--enable-systemtap \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
+		--without-selinux \
+		--disable-nss-crypt  \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
