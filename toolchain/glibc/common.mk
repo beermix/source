@@ -66,7 +66,6 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-tunables \
-		--enable-systemtap \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--without-selinux \
