@@ -6,20 +6,21 @@
 #
 
 include $(TOPDIR)/rules.mk
+
 PKG_NAME:=bash
 PKG_VERSION:=4.4.18
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://ftp.gnu.org/gnu/bash
-#PKG_HASH:=57d8432be54541531a496fd4904fdc08c12542f43605a9202594fa5d5f9f2331
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_URL:=@GNU/bash
+PKG_HASH:=604d9eec5e4ed5fd2180ee44dd756ddca92e0b6aa4217bbab2b6227380317f23
 
 PKG_LICENSE:=GPL-3.0+
 PKG_LICENSE_FILES:=COPYING
 PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 
-PKG_CHECK_FORMAT_SECURITY:=0
+PKG_INSTALL:=1
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/bash
@@ -37,32 +38,42 @@ define Package/bash/description
   incorporates useful features from the Korn and C shells (ksh and csh).
 endef
 
+# Bash detects and enables certain features by runtest simple piece of code
+# which is not viable when doing cross compilation and default to no in many
+# cases.  Grep for 'cross.compil' in aclocal.m4 and config-bot.h for details
+#
+# bash_cv_job_control_missing: Job control is needed for bash to be used as the
+# default shell
+#
+# bash_cv_getcwd_malloc: The replacement by bash does not work well with
+# overlayfs.  See "bash getcwd errors when running under OverlayFS"
+# http://permalink.gmane.org/gmane.linux.embedded.yocto.general/25204
+#
+# bash_cv_dev_fd: The test is done on build system but OpenWrt currently does
+# not have /dev/fd, it provides /proc/self/fd/ instead
+#
+# bash_cv_sys_named_pipes: Required for process substituion
+CONFIGURE_VARS += \
+	ac_cv_rl_prefix="$(STAGING_DIR)/usr" \
+	ac_cv_rl_version="7.0" \
+	bash_cv_getcwd_malloc=yes \
+	bash_cv_job_control_missing=present \
+	bash_cv_dev_fd=whacky \
+	bash_cv_sys_named_pipes=present \
 
-define Build/Configure
-	$(call Build/Configure/Default, \
-		--disable-static \
-		--enable-cond-command \
-		--enable-history \
-		--enable-job-control \
-		--enable-readline \
-		--with-installed-readline \
-		--enable-extended-glob \
-		--enable-progcomp \
-		--enable-arith-for-command \
-		--enable-directory-stack \
-		--with-bash-malloc=no  \
-		--bindir=/bin \
-	)
-endef
+# The following are some other tests that cannot run when cross-compiling
+CONFIGURE_VARS += \
+	bash_cv_func_sigsetjmp=present \
+	bash_cv_printf_a_format=yes \
 
-
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR)/builtins LDFLAGS_FOR_BUILD= mkbuiltins
-	$(MAKE) -C $(PKG_BUILD_DIR) \
-		DESTDIR="$(PKG_INSTALL_DIR)" \
-		SHELL="/bin/bash" \
-		all install
-endef
+CONFIGURE_ARGS+= \
+	--with-installed-readline="$(STAGING_DIR)/usr" \
+	--with-curses \
+	--without-bash-malloc \
+	--bindir=/bin \
+	--disable-rpath \
+	--enable-readline \
+	--with-installed-readline \
 
 define Package/bash/postinst
 #!/bin/sh
