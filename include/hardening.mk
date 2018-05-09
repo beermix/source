@@ -24,12 +24,12 @@ ifdef CONFIG_PKG_ASLR_PIE
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fexceptions -fstack-protector --param=ssp-buffer-size=4
+    TARGET_CFLAGS += -fstack-protector --param=ssp-buffer-size=4
   endif
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fexceptions -fstack-protector-strong
+    TARGET_CFLAGS += -fstack-protector-strong
   endif
 endif
 ifdef CONFIG_PKG_FORTIFY_SOURCE_1
@@ -39,7 +39,7 @@ ifdef CONFIG_PKG_FORTIFY_SOURCE_1
 endif
 ifdef CONFIG_PKG_FORTIFY_SOURCE_2
   ifeq ($(strip $(PKG_FORTIFY_SOURCE)),1)
-    TARGET_CFLAGS += -Wp,-D_FORTIFY_SOURCE=2
+    TARGET_CFLAGS += -D_FORTIFY_SOURCE=2
   endif
 endif
 ifdef CONFIG_PKG_RELRO_PARTIAL
