@@ -26,7 +26,7 @@ include $(INCLUDE_DIR)/cmake.mk
 export CMAKE_SOURCE_DIR=$(PKG_INSTALL_DIR)/../build
 
 CMAKE_OPTIONS += \
-	-DCMAKE_BUILD_TYPE:String="" \
+	-DCMAKE_BUILD_TYPE:String="Release" \
 	-DWITH_AESNI:BOOL=OFF \
 	-DWITH_AVX:BOOL=OFF \
 	-DWITH_BINARY:BOOL=ON \
