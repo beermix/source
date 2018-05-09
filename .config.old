@@ -5815,4 +5815,4 @@ CONFIG_PACKAGE_openssl-util=y
 # font-utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng bash coreutils gdbm libev liblz4 libsodium miniupnpc procps-ng"
+CONFIG_OVERRIDE_PKGS="aircrack-ng coreutils gdbm libev liblz4 libsodium miniupnpc procps-ng"
