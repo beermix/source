@@ -51,6 +51,7 @@ BINUTILS_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
+		--enable-compressed-debug-sections=all \
 		--enable-plugins \
 		--enable-lto \
 		--enable-relro \
