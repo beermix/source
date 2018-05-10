@@ -14,14 +14,13 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 #PKG_HASH:=6d6c1aa00e2a6dfc509fa46d9a9dbe93af0c451e196a670577a148feecf6b8a5
 
 HOST_BUILD_PARALLEL:=1
+HOST_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/host-build.mk
 
 unexport CFLAGS
 
 HOST_CONFIGURE_ARGS += \
-	--enable-static \
-	--disable-shared \
 	--with-gmp-prefix=$(STAGING_DIR_HOST)
 
 $(eval $(call HostBuild))

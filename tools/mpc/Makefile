@@ -20,8 +20,6 @@ include $(INCLUDE_DIR)/host-build.mk
 unexport CFLAGS
 
 HOST_CONFIGURE_ARGS += \
-	--enable-static \
-	--disable-shared \
 	--with-mpfr=$(TOPDIR)/staging_dir/host \
 	--with-gmp=$(TOPDIR)/staging_dir/host
 
