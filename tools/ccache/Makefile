@@ -17,7 +17,7 @@ PKG_HASH:=18a8b14367d63d3d37fb6c33cba60e1b7fcd7a63d608df97c9771ae0d234fee2
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --with-bundled-zlib CC="$(HOSTCC_NOCACHE)"
+HOST_CONFIGURE_VARS += CC="$(HOSTCC_NOCACHE)"
 
 define Host/Install/ccache
 	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin/

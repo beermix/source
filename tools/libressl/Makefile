@@ -21,7 +21,7 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --disable-shared
+HOST_CONFIGURE_ARGS += --disable-shared --enable-silent-rules
 HOST_CFLAGS += $(FPIC)
 
 $(eval $(call HostBuild))

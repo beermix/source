@@ -21,6 +21,8 @@ include $(INCLUDE_DIR)/host-build.mk
 unexport CFLAGS
 
 HOST_CONFIGURE_ARGS += \
+	--enable-static \
+	--disable-shared \
 	--with-gmp-prefix=$(STAGING_DIR_HOST)
 
 $(eval $(call HostBuild))
