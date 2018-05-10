@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=697d227
+PKG_VERSION:=b8fc956
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav
@@ -22,9 +22,9 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS += -Wl,--as-needed
-TARGET_CXXFLAGS += -Wl,--as-needed
-TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC), -lc)
+#TARGET_CFLAGS += -Wl,--as-needed
+#TARGET_CXXFLAGS += -Wl,--as-needed
+TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC), -lc -lgcc_s)
 
 #CONFIGURE_ARGS += --disable-silent-rules --disable-static
 
