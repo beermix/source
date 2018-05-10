@@ -122,8 +122,12 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--enable-lto \
+		--enable-plugin \
+		--enable-checking=release \
 		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-tune=haswell \
+		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -140,7 +144,7 @@ ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
 endif
 
 ifndef GCC_VERSION_4_8
-  GCC_CONFIGURE += --with-diagnostics-color=auto-if-env
+  GCC_CONFIGURE += --with-diagnostics-color=always
 endif
 
 ifneq ($(CONFIG_GCC_DEFAULT_PIE),)
