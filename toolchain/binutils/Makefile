@@ -56,7 +56,6 @@ BINUTILS_CONFIGURE:= \
 		--enable-relro \
 		--disable-multilib \
 		--disable-werror \
-		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
 		$(GRAPHITE_CONFIGURE) \

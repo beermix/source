@@ -50,6 +50,10 @@ ifeq ($(PKG_VERSION),7.3.1)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
+ifeq ($(PKG_VERSION),8.1.0)
+  PKG_HASH:=1d1866f992626e61349a1ccd0b8d5253816222cdc13390dcfaa74b093aa2b153
+endif
+
 ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
     PKG_VERSION:=7.1.1
     PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
@@ -118,14 +122,11 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--disable-libgomp \
-		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
-		--disable-nls \
 		--enable-lto \
 		--enable-plugin \
 		--enable-checking=release \
-		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-tune=haswell \
 		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
