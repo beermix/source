@@ -22,8 +22,8 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-#TARGET_CFLAGS += -Wl,--as-needed
-#TARGET_CXXFLAGS += -Wl,--as-needed
+TARGET_CFLAGS += -D_DEFAULT_SOURCE
+TARGET_CXXFLAGS += -D_DEFAULT_SOURCE
 TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC), -lc -lgcc_s)
 
 #CONFIGURE_ARGS += --disable-silent-rules --disable-static
