@@ -38,7 +38,6 @@ define Build/Configure
 			--cpu=i686 \
 			--extra-cflags="$(TARGET_CFLAGS)" \
 			--disable-native \
-			--disable-optimizations \
 	);
 endef
 
