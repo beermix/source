@@ -163,10 +163,10 @@ Forward ported from attachment to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=4
  	uchar *buf;
  	
  	if (node->value.builtin == BT_FILE)
-@@ -301,6 +360,7 @@ _cpp_builtin_macro_text (cpp_reader *pfi
- 	    if (!name)
- 	      abort ();
+@@ -454,6 +454,7 @@ _cpp_builtin_macro_text (cpp_reader *pfile, cpp_hashnode *node,
  	  }
+ 	if (pfile->cb.remap_filename)
+ 	  name = pfile->cb.remap_filename (name);
 +	name = cpp_remap_file (name, &tmp_name);
  	len = strlen (name);
  	buf = _cpp_unaligned_alloc (pfile, len * 2 + 3);
