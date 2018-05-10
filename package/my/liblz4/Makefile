@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 # incremented for new releases. Check the NEWS file and instead use a
 # release tag when appropriate. (eg: PKG_VERSION:=r131)
 PKG_NAME:=liblz4
-PKG_VERSION:=v1.8.1.2
+PKG_VERSION:=v1.8.2
 PKG_RELEASE:=1
 
 PKG_LICENSE:=BSD-2-Clause

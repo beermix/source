@@ -11,19 +11,21 @@ PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/w/whois
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.xz
 
+PKG_BUILD_DEPENDS:=gettext-full/host
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/whois
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+gettext-full/host +libidn2
+  DEPENDS:=+libidn2
   TITLE:=whois
   URL:=https://github.com/rfc1036/whois
   MENU:=1
 endef
 
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) CONFIG_FILE="/etc/whois.conf" HAVE_ICONV=1
+	+$(MAKE_FLAGS) $(MAKE) -C $(PKG_BUILD_DIR) HAVE_ICONV=1
 endef
 
 define Package/whois/description

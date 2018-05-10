@@ -8,17 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=squid
-PKG_VERSION:=3.5.27
+PKG_VERSION:=3.5.27-20180318-r1330042
 PKG_RELEASE:=1
 
 PKG_LICENSE:=GPL-2.0
 PKG_MAINTAINER:=Marko Ratkaj <marko.ratkaj@sartura.hr>
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www3.us.squid-cache.org/Versions/v3/3.5/ \
 	http://www2.pl.squid-cache.org/Versions/v3/3.5/ \
 	http://www.squid-cache.org/Versions/v3/3.5/
-PKG_HASH:=5ddb4367f2dc635921f9ca7a59d8b87edb0412fa203d1543393ac3c7f9fef0ec
+PKG_HASH:=
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
@@ -35,7 +35,7 @@ endef
 
 define Package/squid
   $(call Package/squid/Default)
-  DEPENDS:=+libopenssl +libpthread +librt +libltdl +libstdcpp
+  DEPENDS:=+libexpat +libopenssl +libpthread +librt +libltdl +libstdcpp +libevent2 +libgnutls +libnettle +libnetfilter-conntrack +libcap
   TITLE:=full-featured Web proxy cache
 endef
 
@@ -75,23 +75,15 @@ CONFIGURE_ARGS += \
 	--disable-auto-locale \
 	--with-dl \
 	--with-pthreads \
-	--without-expat \
+	--disable-external-acl-helpers \
+	--with-expat=$(STAGING_DIR)/usr \
 	--without-libxml2 \
-	--without-gnutls \
-	--without-nettle \
+	--with-gnutls=$(STAGING_DIR)/usr \
+	--with-nettle=$(STAGING_DIR)/usr \
 	--with-openssl=$(STAGING_DIR)/usr \
 	--enable-epoll \
 	--with-maxfd=4096 \
-	--disable-external-acl-helpers \
-	--disable-auth-negotiate \
-	--disable-auth-ntlm \
-	--disable-auth-digest \
-	--disable-auth-basic \
-	--disable-arch-native \
-	--with-krb5-config=no \
-	--without-mit-krb5 \
-	--without-libcap \
-	--without-netfilter-conntrack
+	--with-netfilter-conntrack
 
 CONFIGURE_VARS += \
 	ac_cv_header_linux_netfilter_ipv4_h=yes \

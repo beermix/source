@@ -13,10 +13,6 @@ define Package/nuttcp
 	TITLE:=nuttcp
 endef
 
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS) -Wall"
-endef
-
 define Package/nuttcp/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nuttcp $(1)/usr/bin/nuttcp
