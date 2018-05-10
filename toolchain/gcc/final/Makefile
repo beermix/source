@@ -9,13 +9,8 @@ GCC_CONFIGURE += \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
-	--disable-libunwind-exceptions \
 	--enable-clocale=gnu \
 	--disable-libstdcxx-pch \
-	--enable-gnu-unique-object \
-	--enable-linker-build-id \
-	--with-linker-hash-style=gnu \
-	--enable-gnu-indirect-function \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifdef CONFIG_USE_MUSL

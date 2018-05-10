@@ -131,6 +131,7 @@ GCC_CONFIGURE:= \
 		--enable-gnu-unique-object \
 		--enable-linker-build-id \
 		--with-linker-hash-style=gnu \
+		--enable-gnu-indirect-function \
 		--with-tune=haswell \
 		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
