@@ -24,7 +24,6 @@ define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LDFLAGS="$(TARGET_LDFLAGS)" 7za
 endef
 
-
 define Package/p7zip
 	SECTION:=utils
 	CATEGORY:=Utilities
