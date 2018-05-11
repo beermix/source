@@ -52,7 +52,10 @@ BINUTILS_CONFIGURE:= \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
 		--enable-compressed-debug-sections=all \
+		--enable-version-specific-runtime-libs \
 		--enable-plugins \
+		--enable-gold \
+		--enable-ld=default \
 		--enable-lto \
 		--enable-relro \
 		--disable-multilib \

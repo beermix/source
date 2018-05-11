@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysbench
-PKG_VERSION:=1.0.14
+PKG_VERSION:=2e6b7d5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/akopytov/sysbench.git
@@ -21,6 +21,7 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
+export GCC_HONOUR_COPTS=0
 
 define Package/sysbench
   SECTION:=net
@@ -29,37 +30,15 @@ define Package/sysbench
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
+CONFIGURE_ARGS += \
+	--without-mysql \
+	--with-system-luajit
+
 #TARGET_CFLAGS += $(FPIC) -std=gnu99
 #HOST_CFLAGS += $(FPIC) -std=gnu99
 
-CONFIGURE_ARGS += \
-	--without-mysql
-
-define Build/Compile
-	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
-		HOST_CC="$(HOSTCC) $(HOST_CFLAGS) -m32" \
-		CROSS="$(TARGET_CROSS)" \
-		DPREFIX=$(PKG_INSTALL_DIR)/usr \
-		DYNAMIC_CC="$(TARGET_CC) -fPIC" \
-		TARGET_LD="$(TARGET_CC)" \
-		TARGET_AR="$(TARGET_AR) rcus" \
-		TARGET_STRIP=true \
-		PREFIX=/usr \
-		CFLAGS=
-	rm -rf $(PKG_INSTALL_DIR)
-	mkdir -p $(PKG_INSTALL_DIR)
-	$(MAKE) -C $(PKG_BUILD_DIR) \
-		DPREFIX=$(PKG_INSTALL_DIR)/usr \
-		PREFIX=/usr \
-		install
-endef
-
 define Package/sysbench/description
- Redsocks is a daemon running on the local system, that will transparently
- tunnel any TCP connection via a remote SOCKS4, SOCKS5 or HTTP proxy server. It
- uses the system firewall's redirection facility to intercept TCP connections,
- thus the redirection is system-wide, with fine-grained control, and does
- not depend on LD_PRELOAD libraries.
+ sysbench is tests.
  
  Redsocks supports tunneling TCP connections and UDP packets. It has
  authentication support for both, SOCKS and HTTP proxies.
@@ -72,7 +51,6 @@ define Package/sysbench/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sysbench $(1)/usr/bin/
 endef
-
 
 $(eval $(call HostBuild,sysbench))
 $(eval $(call BuildPackage,sysbench))
