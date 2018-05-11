@@ -17,7 +17,7 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --enable-static --disable-shared --disable-rpath
+HOST_CONFIGURE_ARGS += --disable-shared
 
 define Host/Clean
 	-$(MAKE) -C $(HOST_BUILD_DIR) uninstall
