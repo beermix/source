@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysdig
-PKG_VERSION:=9abce17
+PKG_VERSION:=e259ae0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/draios/sysdig
@@ -15,7 +15,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
-PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -32,6 +31,7 @@ CMAKE_OPTIONS += \
 	-DUSE_BUNDLED_NCURSES=1 \
 	-DUSE_BUNDLED_OPENSSL=1 \
 	-DUSE_BUNDLED_ZLIB=1 \
+	-DDCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_VERBOSE_MAKEFILE=0
 	
 define Package/sysdig
