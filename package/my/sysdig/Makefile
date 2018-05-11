@@ -18,8 +18,6 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
-CMAKE_BINARY_DIR=$(PKG_BUILD_DIR)/build
-
 CMAKE_OPTIONS += -DCMAKE_BUILD_TYPE=Release -DBUILD_DRIVER=0 -DBUILD_LIBSCAP_EXAMPLES=0 -DENABLE_DKMS=0
 	
 define Package/sysdig
@@ -31,8 +29,10 @@ define Package/sysdig
   DEPENDS:=+libpthread
 endef
 
+CMAKE_BINARY_DIR=$(PKG_BUILD_DIR)/build
+
 define Build/Compile
-	+$(MAKE) -C $(PKG_BUILD_DIR)/build $(PKG_JOBS)
+  +$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR)/build
 endef
 
 define Package/sysdig/description

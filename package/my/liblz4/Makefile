@@ -42,6 +42,9 @@ CMAKE_OPTIONS += \
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/
 	$(CP) -r -i $(PKG_INSTALL_DIR)/usr/* $(1)/usr/
+	
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/*.pc $(1)/usr/lib/pkgconfig/
 endef
 
 define Package/liblz4/install
