@@ -60,7 +60,7 @@ version_abbrev = $(if $(if $(CHECK),,$(DUMP)),$(1),$(shell printf '%.8s' $(1)))
 
 _SINGLE=export MAKEFLAGS=$(space);
 CFLAGS:=
-ARCH:=$(subst i486,i386,$(subst i586,i386,$(subst i686,i386,$(call qstrip,$(CONFIG_ARCH)))))
+ARCH:=i686
 ARCH_PACKAGES:=$(call qstrip,$(CONFIG_TARGET_ARCH_PACKAGES))
 BOARD:=$(call qstrip,$(CONFIG_TARGET_BOARD))
 SUBTARGET:=$(call qstrip,$(CONFIG_TARGET_SUBTARGET))
@@ -74,7 +74,7 @@ export SHELL:=/usr/bin/env bash
 
 IS_PACKAGE_BUILD := $(if $(filter package/%,$(BUILD_SUBDIR)),1)
 
-OPTIMIZE_FOR_CPU=$(subst i386,i486,$(ARCH))
+OPTIMIZE_FOR_CPU=i686
 
 ifeq ($(ARCH),powerpc)
   FPIC:=-fPIC
@@ -266,7 +266,7 @@ ifeq ($(ARCH),x86_64)
     GOARCH=amd64
 endif
 ifeq ($(ARCH),i386)
-    GOARCH=386
+    GOARCH=686
 endif
 
 # -fdiagnostics-color=always -U_FORTIFY_SOURCE -fno-stack-protector -Wno-format-security
