@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysbench
-PKG_VERSION:=2e6b7d5
+PKG_VERSION:=1.0.9
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/akopytov/sysbench.git
+PKG_SOURCE_URL:=https://github.com/beermix/sysbench
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -21,21 +21,20 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
-export GCC_HONOUR_COPTS=0
 
 define Package/sysbench
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:= +luajit
+  DEPENDS:= +luajit +ck
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
 CONFIGURE_ARGS += \
 	--without-mysql \
-	--with-system-luajit
-
-#TARGET_CFLAGS += $(FPIC) -std=gnu99
-#HOST_CFLAGS += $(FPIC) -std=gnu99
+	--without-pgsql \
+	--without-gcc-arch \
+	--with-system-luajit \
+	--with-system-ck
 
 define Package/sysbench/description
  sysbench is tests.

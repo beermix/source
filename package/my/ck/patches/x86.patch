@@ -1,0 +1,11 @@
+diff --git a/build/ck.build.x86_64 b/build/ck.build.x86_64
+old mode 100644
+new mode 100755
+index 81b378a..6e12783
+--- a/build/ck.build.x86_64
++++ b/build/ck.build.x86_64
+@@ -1,2 +1,2 @@
+-CFLAGS+=-m64 -D__x86_64__
+-LDFLAGS+=-m64
++CFLAGS+=-m32 -D__x86__ -msse -msse2
++LDFLAGS+=-m32

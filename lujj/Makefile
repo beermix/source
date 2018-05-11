@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luajit
-PKG_VERSION:=a90e779
+PKG_VERSION:=fddef92
 PKG_RELEASE:=1
 PKG_MAINTAINER:=Morteza Milani <milani@pichak.co>
 PKG_LICENSE:=MIT
@@ -9,13 +9,12 @@ PKG_LICENSE_FILES:=COPYRIGHT
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/LuaJIT/LuaJIT.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_VERSION:=fddef924097f28c46a0a5b45483a6086b33cab81
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_BUILD_DIR=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_USE_MIPS16:=0
-GCC_HONOUR_COPTS:=0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -61,7 +60,7 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/luajit-2.1
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/luajit-2.1/*.h $(1)/usr/include/luajit-2.1
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libluajit-5.1.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.a $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/luajit.pc $(1)/usr/lib/pkgconfig/
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/luajit-2.1.0-beta3 $(PKG_INSTALL_DIR)/usr/bin/$(PKG_NAME)
@@ -70,8 +69,6 @@ endef
 define Package/luajit/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/luajit-2.1.0-beta3 $(1)/usr/bin/$(PKG_NAME)
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libluajit-5.1.so.* $(1)/usr/lib/
 endef
 
 define Host/Compile
