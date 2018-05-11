@@ -67,8 +67,6 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-tunables \
-		--disable-build-nscd \
-		--disable-nscd \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--without-selinux \
