@@ -10,7 +10,6 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
 PKG_VERSION:=a22e9a2
-PKG_RELEASE:=1
 PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE_PROTO:=git
@@ -30,17 +29,16 @@ CMAKE_OPTIONS += \
 	-DWITH_AESNI=OFF \
 	-DWITH_AVX=OFF \
 	-DWITH_BINARY=ON \
-	-DWITH_HARDENING=ON \
+	-DWITH_HARDENING=OFF \
 	-DWITH_LIBRARY=OFF \
-	-DWITH_STATIC=OFF \
-	-DWITH_UPNP=OFF \
-	-DCMAKE_VERBOSE_MAKEFILE=1
+	-DWITH_STATIC=ON \
+	-DWITH_UPNP=OFF
 
 define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
 	DEPENDS:=+libopenssl +boost +boost-system +boost-filesystem \
-	         +boost-program_options +boost-date_time +libatomic +zlib
+	         +boost-program_options +boost-date_time +libatomic +zlib +
 	TITLE:=full-featured C++ implementation of I2P client
 	URL:=https://github.com/PurpleI2P/i2pd
 	USERID:=i2pd:i2pd
