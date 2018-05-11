@@ -7,11 +7,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=isl
-PKG_VERSION:=0.19
+PKG_VERSION:=0.16.1
 
 PKG_SOURCE_URL:=http://isl.gforge.inria.fr
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-#PKG_HASH:=6d6c1aa00e2a6dfc509fa46d9a9dbe93af0c451e196a670577a148feecf6b8a5
 
 HOST_BUILD_PARALLEL:=1
 HOST_FIXUP:=autoreconf
