@@ -37,13 +37,15 @@ define Package/libgmp/description
 	signed integers, rational numbers, and floating point numbers.
 endef
 
+TARGET_CFLAGS += -O3  -g -fno-semantic-interposition
+
 TARGET_CFLAGS += $(FPIC)
 CONFIGURE_VARS += CC="$(TARGET_CROSS)gcc"
 CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
 	--without-readline \
-	--disable-fft \
+	--enable-cxx=detect \
 
 define Build/Compile
 	$(call Build/Compile/Default, \
