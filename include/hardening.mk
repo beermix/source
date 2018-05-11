@@ -39,7 +39,7 @@ ifdef CONFIG_PKG_FORTIFY_SOURCE_1
 endif
 ifdef CONFIG_PKG_FORTIFY_SOURCE_2
   ifeq ($(strip $(PKG_FORTIFY_SOURCE)),1)
-    TARGET_CFLAGS += -D_FORTIFY_SOURCE=2
+    TARGET_CFLAGS += -Wdate-time -D_FORTIFY_SOURCE=2
   endif
 endif
 ifdef CONFIG_PKG_RELRO_PARTIAL
@@ -50,7 +50,7 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -Wl,-z -Wl,now -Wl,-z -Wl,relro -Wl,-sort-common
+    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-sort-common
     TARGET_LDFLAGS += -znow -zrelro
   endif
 endif
