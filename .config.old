@@ -314,8 +314,8 @@ CONFIG_EXTRA_GCC_CONFIG_OPTIONS=""
 # CONFIG_GCC_DEFAULT_SSP is not set
 # CONFIG_GCC_LIBSSP is not set
 # CONFIG_SJLJ_EXCEPTIONS is not set
-CONFIG_INSTALL_GFORTRAN=y
-CONFIG_INSTALL_GCCGO=y
+# CONFIG_INSTALL_GFORTRAN is not set
+# CONFIG_INSTALL_GCCGO is not set
 CONFIG_YASM=y
 
 #
@@ -2312,8 +2312,6 @@ CONFIG_PACKAGE_jsonfilter=y
 CONFIG_PACKAGE_libatomic=y
 CONFIG_PACKAGE_libc=y
 CONFIG_PACKAGE_libgcc=y
-# CONFIG_PACKAGE_libgfortran is not set
-# CONFIG_PACKAGE_libgo is not set
 # CONFIG_PACKAGE_libgomp is not set
 CONFIG_PACKAGE_libpthread=y
 CONFIG_PACKAGE_librt=y
@@ -3214,12 +3212,7 @@ CONFIG_PACKAGE_kmod-pcmcia-core=y
 #
 # Go
 #
-# CONFIG_PACKAGE_dnscrypt-proxy is not set
-# CONFIG_PACKAGE_gotty is not set
-# CONFIG_PACKAGE_rclone is not set
 # CONFIG_PACKAGE_shell2http is not set
-# CONFIG_PACKAGE_speedtest-go is not set
-# CONFIG_PACKAGE_syncthing is not set
 
 #
 # Java
@@ -4238,7 +4231,6 @@ CONFIG_PACKAGE_luci-app-adblock=y
 # CONFIG_PACKAGE_luci-app-cshark is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-diag-core is not set
-# CONFIG_PACKAGE_luci-app-dnscrypt-proxy is not set
 # CONFIG_PACKAGE_luci-app-dump1090 is not set
 # CONFIG_PACKAGE_luci-app-dynapoint is not set
 # CONFIG_PACKAGE_luci-app-e2guardian is not set
