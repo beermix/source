@@ -25,10 +25,10 @@ endef
 define Build/Compile
 	$(MAKE) -C "$(PKG_BUILD_DIR)/lib" $(MAKE_INSTALL_FLAGS) \
 	  CC="$(TARGET_CC)" \
-	  CFLAGS="$(TARGET_CFLAGS)" \
+	  CFLAGS="$(TARGET_CFLAGS) -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math" \
 	  PREFIX="$(CONFIGURE_PREFIX)" \
 	  PREFIX=/usr \
-	  HAVE_THREAD=1
+	  lib-release
 endef
 
 define Build/InstallDev

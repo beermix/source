@@ -17,12 +17,12 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CFLAGS += -fexceptions
+HOST_CFLAGS += -O3  -g -fno-semantic-interposition
 
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-shared \
-	--enable-cxx \
+	--enable-cxx=detect \
 	--disable-silent-rules
 
 ifeq ($(GNU_HOST_NAME),x86_64-linux-gnux32)

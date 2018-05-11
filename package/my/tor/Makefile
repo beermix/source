@@ -99,6 +99,7 @@ CONFIGURE_ARGS += \
 	--disable-largefile \
 	--enable-lzma \
 	--enable-zstd \
+	--disable-silent-rules \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 

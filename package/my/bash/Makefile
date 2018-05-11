@@ -53,6 +53,9 @@ endef
 # not have /dev/fd, it provides /proc/self/fd/ instead
 #
 # bash_cv_sys_named_pipes: Required for process substituion
+
+TARGET_CFLAGS += -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition -fstack-protector-strong -mzero-caller-saved-regs
+
 CONFIGURE_VARS += \
 	ac_cv_rl_prefix="$(STAGING_DIR)/usr" \
 	ac_cv_rl_version="7.0" \

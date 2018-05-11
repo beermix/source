@@ -39,6 +39,8 @@ define Package/zsh/description
         mechanism, and a host of other features.
 endef
 
+TARGET_CFLAGS += -fstack-protector-strong -mzero-caller-saved-regs
+
 define Build/Configure
 	$(call Build/Configure/Default, \
 		--disable-etcdir \
