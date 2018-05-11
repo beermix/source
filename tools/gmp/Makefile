@@ -21,13 +21,10 @@ include $(INCLUDE_DIR)/host-build.mk
 
 unexport CFLAGS
 
-HOST_CFLAGS += -O3  -g -fno-semantic-interposition
-
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-shared \
-	--enable-cxx=detect \
-	--disable-silent-rules
+	--enable-cxx=detect
 
 ifeq ($(GNU_HOST_NAME),x86_64-linux-gnux32)
 HOST_CONFIGURE_ARGS += ABI=x32
