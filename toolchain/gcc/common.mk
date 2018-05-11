@@ -124,8 +124,6 @@ GCC_CONFIGURE:= \
 		--disable-libgomp \
 		--disable-multilib \
 		--disable-libmpx \
-		--enable-lto \
-		--enable-plugin \
 		--enable-checking=release \
 		--with-tune=haswell \
 		--with-arch=bonnell \
