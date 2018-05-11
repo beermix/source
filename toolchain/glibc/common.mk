@@ -61,7 +61,7 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--enable-stack-protector=yes \
-		--enable-all-warnings \
+		--enable-all-warnings=no \
 		--enable-kernel=4.4 \
 		--without-gd \
 		--without-cvs \
