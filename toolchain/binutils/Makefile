@@ -52,12 +52,10 @@ BINUTILS_CONFIGURE:= \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
 		--enable-compressed-debug-sections=all \
-		--enable-poison-system-directories \
 		--enable-plugins \
-		--enable-relro \
-		--with-pic \
 		--disable-multilib \
 		--disable-werror \
+		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
 		$(GRAPHITE_CONFIGURE) \

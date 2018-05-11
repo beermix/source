@@ -124,9 +124,7 @@ GCC_CONFIGURE:= \
 		--disable-libgomp \
 		--disable-multilib \
 		--disable-libmpx \
-		--enable-checking=release \
-		--with-tune=haswell \
-		--with-arch=bonnell \
+		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \

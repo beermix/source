@@ -13,7 +13,6 @@ PKG_SOURCE_URL:=http://isl.gforge.inria.fr
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
 HOST_BUILD_PARALLEL:=1
-HOST_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/host-build.mk
 
