@@ -13,7 +13,7 @@ PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=623f4ae
+PKG_SOURCE_VERSION:=8af3185d3e0c4293fdd7251b0db4e4eefe92d08a
 PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -49,7 +49,7 @@ GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O2 -march=bonnell -m32 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -g2 -Wl,-z,max-page-size=0x1000  $(filter-out -march=bonnell -march=i686 -O2 -fomit-frame-pointer -m32 -O2 -mfpmath=sse -msse -falign-functions=32 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -fno-caller-saves -fno-plt --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -pipe -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
-	LDFLAGS="-Wl,-z,max-page-size=0x1000 " \
+	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -60,8 +60,11 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--enable-stack-protector=yes \
-		--enable-all-warnings=no \
 		--enable-kernel=4.4 \
 		--without-gd \
 		--without-cvs \
@@ -69,12 +72,16 @@ GLIBC_CONFIGURE:= \
 		--enable-tunables \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
+		--enable-lock-elision \
+		--disable-timezone-tools \
 		--without-selinux \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
+export libc_cv_forced_unwind=yes
+export libc_cv_c_cleanup=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
