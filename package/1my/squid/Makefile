@@ -51,7 +51,7 @@ define Package/squid-mod-cachemgr
   TITLE:=Web based proxy manager and reporting tool
 endef
 
-#TARGET_CXXFLAGS += -Wno-format-truncation
+TARGET_CXXFLAGS += -Wno-format-truncation
 
 CONFIGURE_ARGS += \
 	--config-cache \
