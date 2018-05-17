@@ -26,7 +26,7 @@ define Package/zsh
   CATEGORY:=Utilities
   SUBMENU:=Shells
   TITLE:=The Z shell
-  DEPENDS:=+libncurses +libncursesw +libpcre +librt +libcap
+  DEPENDS:=+libcap +libncurses +libncursesw +libpcre +librt
   URL:=http://www.zsh.org/
 endef
 
@@ -38,8 +38,6 @@ define Package/zsh/description
         command completion, shell functions (with autoloading), a history
         mechanism, and a host of other features.
 endef
-
-TARGET_CFLAGS += -fstack-protector-strong -mzero-caller-saved-regs
 
 define Build/Configure
 	$(call Build/Configure/Default, \
