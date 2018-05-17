@@ -35,7 +35,7 @@ endef
 
 define Package/squid
   $(call Package/squid/Default)
-  DEPENDS:=+libopenssl +libpthread +librt +libltdl +libstdcpp +libgnutls +libcap
+  DEPENDS:=+libopenssl +libpthread +librt +libltdl +libstdcpp
   TITLE:=full-featured Web proxy cache
 endef
 
@@ -51,7 +51,7 @@ define Package/squid-mod-cachemgr
   TITLE:=Web based proxy manager and reporting tool
 endef
 
-TARGET_CXXFLAGS += -Wno-format-truncation
+#TARGET_CXXFLAGS += -Wno-format-truncation
 
 CONFIGURE_ARGS += \
 	--config-cache \
@@ -77,7 +77,7 @@ CONFIGURE_ARGS += \
 	--with-pthreads \
 	--without-expat \
 	--without-libxml2 \
-	--with-gnutls=$(STAGING_DIR)/usr \
+	--without-gnutls \
 	--without-nettle \
 	--with-openssl=$(STAGING_DIR)/usr \
 	--enable-epoll \
