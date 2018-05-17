@@ -13,21 +13,21 @@ index 61ac757..9820227 100644
 +ATMEL_PIO_DRVSTR_LO, ATMEL_PIO_DRVSTR_ME, ATMEL_PIO_DRVSTR_HI. The current
 +depends on VDDIOP. You can find the details in the DC Characteristics table
 +from the datasheet.
- 
+
  Example:
- 
+
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
 index 1218005..c88e426 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
 @@ -49,6 +49,7 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
- 	wb45n.dtb
+	wb45n.dtb
  dtb-$(CONFIG_SOC_SAM_V7) += \
- 	at91-kizbox2.dtb \
+	at91-kizbox2.dtb \
 +	at91-sama5d27_som1_ek.dtb \
- 	at91-sama5d2_xplained.dtb \
- 	at91-sama5d3_xplained.dtb \
- 	sama5d31ek.dtb \
+	at91-sama5d2_xplained.dtb \
+	at91-sama5d3_xplained.dtb \
+	sama5d31ek.dtb \
 diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
 new file mode 100644
 index 0000000..7d7575f
@@ -900,7 +900,7 @@ index bbca3d0..88eb7d0 100644
 @@ -37,4 +37,8 @@
  #define AT91_PERIPH_C		3
  #define AT91_PERIPH_D		4
- 
+
 +#define ATMEL_PIO_DRVSTR_LO	1
 +#define ATMEL_PIO_DRVSTR_ME	2
 +#define ATMEL_PIO_DRVSTR_HI	3

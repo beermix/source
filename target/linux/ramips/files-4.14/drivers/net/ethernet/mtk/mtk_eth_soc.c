@@ -477,9 +477,9 @@ static void fe_get_stats64(struct net_device *dev,
 	}
 
 	if (netif_running(dev) && netif_device_present(dev)) {
-		if (spin_trylock(&hwstats->stats_lock)) {
+		if (spin_trylock_bh(&hwstats->stats_lock)) {
 			fe_stats_update(priv);
-			spin_unlock(&hwstats->stats_lock);
+			spin_unlock_bh(&hwstats->stats_lock);
 		}
 	}
 
@@ -1513,7 +1513,7 @@ static int fe_probe(struct platform_device *pdev)
 		soc->reg_table = fe_reg_table;
 
 	fe_base = devm_ioremap_resource(&pdev->dev, res);
-	if (!fe_base) {
+	if (IS_ERR(fe_base)) {
 		err = -EADDRNOTAVAIL;
 		goto err_out;
 	}
@@ -1581,6 +1581,7 @@ static int fe_probe(struct platform_device *pdev)
 	priv->tx_ring.tx_ring_size = NUM_DMA_DESC;
 	priv->rx_ring.rx_ring_size = NUM_DMA_DESC;
 	INIT_WORK(&priv->pending_work, fe_pending_work);
+	u64_stats_init(&priv->hw_stats->syncp);
 
 	napi_weight = 16;
 	if (priv->flags & FE_FLAG_NAPI_WEIGHT) {
