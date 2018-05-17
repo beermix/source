@@ -1,0 +1,49 @@
+#
+# Copyright (C) 2014-2015 OpenWrt.org
+#
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+#
+
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=fio
+PKG_VERSION:=3.6
+PKG_RELEASE:=1
+
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://fossies.org/linux/misc
+
+include $(INCLUDE_DIR)/package.mk
+
+define Package/fio
+  SECTION:=utils
+  CATEGORY:=Utilities
+  TITLE:=Flexible I/O Tester
+  URL:=http://software.schmorp.de/pkg/fio.html
+  DEPENDS:=+libpthread +librt +zlib
+endef
+
+define Package/fio/description
+ A full-featured and high-performance event loop that is loosely modelled after
+ fioent, but without its limitations and bugs.
+endef
+
+define Build/Configure
+	(cd $(PKG_BUILD_DIR); \
+		$(TARGET_CONFIGURE_OPTS) \
+		./configure \
+			--prefix=/usr \
+			--cc=$(TARGET_CC) \
+			--cpu=i686 \
+			--extra-cflags="$(TARGET_CFLAGS)" \
+			--disable-native \
+	);
+endef
+
+define Package/fio/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/fio $(1)/usr/bin/
+endef
+
+$(eval $(call BuildPackage,fio))

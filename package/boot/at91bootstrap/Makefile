@@ -94,7 +94,7 @@ define AT91Bootstrap/sama5d27_som1_ekqspi_uboot
   BUILD_DEVICES:=at91-sama5d27_som1_ek
 endef
 
-define AT91Bootstrap/sama5d2_ptc_eknf_uboot  
+define AT91Bootstrap/sama5d2_ptc_eknf_uboot
   TITLE:=AT91Bootstrap for SAMA5D2 PTC EK (Nand Flash)
   BUILD_SUBTARGET:=sama5d2
   BUILD_DEVICES:=at91-sama5d2_ptc_ek
