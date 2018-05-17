@@ -152,7 +152,7 @@ ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
 endif
 
 ifndef GCC_VERSION_4_8
-  GCC_CONFIGURE += --with-diagnostics-color=auto-if-env
+  GCC_CONFIGURE += --with-diagnostics-color=always
 endif
 
 ifneq ($(CONFIG_GCC_DEFAULT_PIE),)
