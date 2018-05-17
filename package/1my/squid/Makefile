@@ -35,7 +35,7 @@ endef
 
 define Package/squid
   $(call Package/squid/Default)
-  DEPENDS:=+libexpat +libopenssl +libpthread +librt +libltdl +libstdcpp +libevent2 +libgnutls +libnettle +libnetfilter-conntrack +libcap
+  DEPENDS:=+libopenssl +libpthread +librt +libltdl +libstdcpp +libgnutls +libcap
   TITLE:=full-featured Web proxy cache
 endef
 
@@ -75,15 +75,23 @@ CONFIGURE_ARGS += \
 	--disable-auto-locale \
 	--with-dl \
 	--with-pthreads \
-	--disable-external-acl-helpers \
-	--with-expat=$(STAGING_DIR)/usr \
+	--without-expat \
 	--without-libxml2 \
 	--with-gnutls=$(STAGING_DIR)/usr \
-	--with-nettle=$(STAGING_DIR)/usr \
+	--without-nettle \
 	--with-openssl=$(STAGING_DIR)/usr \
 	--enable-epoll \
 	--with-maxfd=4096 \
-	--with-netfilter-conntrack
+	--disable-external-acl-helpers \
+	--disable-auth-negotiate \
+	--disable-auth-ntlm \
+	--disable-auth-digest \
+	--disable-auth-basic \
+	--disable-arch-native \
+	--with-krb5-config=no \
+	--without-mit-krb5 \
+	--without-libcap \
+	--without-netfilter-conntrack
 
 CONFIGURE_VARS += \
 	ac_cv_header_linux_netfilter_ipv4_h=yes \
