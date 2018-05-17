@@ -1,0 +1,46 @@
+From 2b22f53b43dce0bb7901d8c6439820e0daba1198 Mon Sep 17 00:00:00 2001
+From: badzz <mbadaire@gmail.com>
+Date: Wed, 16 May 2018 00:07:37 +0200
+Subject: [PATCH] fstools: media change detection (eg:sdcard) using kernel
+ polling
+
+Linux kernel has a polling mechanism that can be activated by changing the parameter /sys/module/block/parameters/events_dfl_poll_msecs which is deactivated by default or the /sys/block/[device]/events_poll_msecs for one device.
+This patch set the events_poll_msecs when a disk is inserted.
+Once the media disk change event is sent by the kernel then we force a re-read of the devices using /sbin/block info
+
+With this patch, insertion and ejection of sd card will automatically generate partition devices in /dev
+
+Signed-off-by: Matthias Badaire <mbadaire@gmail.com>
+---
+ package/system/fstools/Makefile                   | 1 +
+ package/system/fstools/files/media-change.hotplug | 9 +++++++++
+ 2 files changed, 10 insertions(+)
+ create mode 100644 package/system/fstools/files/media-change.hotplug
+
+diff --git a/package/system/fstools/Makefile b/package/system/fstools/Makefile
+index 494f90d2e68..ecb43fba195 100644
+--- a/package/system/fstools/Makefile
++++ b/package/system/fstools/Makefile
+@@ -94,6 +94,7 @@ define Package/block-mount/install
+ 	$(INSTALL_BIN) ./files/fstab.init $(1)/etc/init.d/fstab
+ 	$(INSTALL_DATA) ./files/fstab.default $(1)/etc/uci-defaults/10-fstab
+ 	$(INSTALL_DATA) ./files/mount.hotplug $(1)/etc/hotplug.d/block/10-mount
++	$(INSTALL_DATA)	./files/media-change.hotplug  $(1)/etc/hotplug.d/block/00-media-change
+ 
+ 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/block $(1)/sbin/
+ 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libblkid-tiny.so $(1)/lib/
+diff --git a/package/system/fstools/files/media-change.hotplug b/package/system/fstools/files/media-change.hotplug
+new file mode 100644
+index 00000000000..e242fb129ac
+--- /dev/null
++++ b/package/system/fstools/files/media-change.hotplug
+@@ -0,0 +1,9 @@
++if [ -n "$DISK_MEDIA_CHANGE" ]
++then
++        /sbin/block info
++fi
++
++if [ $ACTION == "add" ] && [ $DEVTYPE == "disk" ] && [ $DEVICENAME != mtd* ]
++then
++        echo 2000 > /sys/block/$DEVNAME/events_poll_msecs
++fi
