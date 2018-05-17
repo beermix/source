@@ -13,7 +13,7 @@ PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=0cd4a5e
+PKG_SOURCE_VERSION:=0cd4a5e87f6885a2f15fe8e7eb7378d010cdb606
 PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -59,10 +59,6 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
-		--enable-bind-now \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
 		--enable-stack-protector=yes \
 		--enable-kernel=4.4 \
 		--without-gd \
@@ -72,7 +68,6 @@ GLIBC_CONFIGURE:= \
 		--enable-obsolete-rpc \
 		--enable-obsolete-nsl \
 		--enable-lock-elision \
-		--disable-timezone-tools \
 		--without-selinux \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
