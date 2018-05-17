@@ -53,7 +53,6 @@ endef
 # not have /dev/fd, it provides /proc/self/fd/ instead
 #
 # bash_cv_sys_named_pipes: Required for process substituion
-
 CONFIGURE_VARS += \
 	ac_cv_rl_prefix="$(STAGING_DIR)/usr" \
 	ac_cv_rl_version="7.0" \
@@ -76,19 +75,18 @@ CONFIGURE_ARGS+= \
 	--enable-readline \
 	--with-installed-readline \
 
-TARGET_CFLAGS=-O2 -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition -fstack-protector-strong -mzero-caller-saved-regs
-
 define Package/bash/postinst
 #!/bin/sh
-grep bash $${IPKG_INSTROOT}/etc/shells || \
-	echo "/bin/bash" >> $${IPKG_INSTROOT}/etc/shells
-	echo "/bin/rbash" >> $${IPKG_INSTROOT}/etc/shells
+grep -q bash "$${IPKG_INSTROOT}/etc/shells" || {
+	echo /bin/bash >> "$${IPKG_INSTROOT}/etc/shells"
+	echo /bin/rbash >> "$${IPKG_INSTROOT}/etc/shells"
+}
 endef
 
 define Package/bash/install
 	$(INSTALL_DIR) $(1)/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/bash $(1)/bin/
-	ln -sf bash $(1)/bin/rbash
+	$(LN) bash $(1)/bin/rbash
 endef
 
 
