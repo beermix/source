@@ -24,7 +24,7 @@ ifdef CONFIG_PKG_ASLR_PIE
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fstack-protector --param=ssp-buffer-size=4
+    TARGET_CFLAGS += -fstack-protector
   endif
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG
@@ -50,7 +50,7 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,-sort-common
+    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro
     TARGET_LDFLAGS += -znow -zrelro
   endif
 endif
