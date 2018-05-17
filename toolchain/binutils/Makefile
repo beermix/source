@@ -20,8 +20,8 @@ ifeq ($(PKG_VERSION),2.27)
   PKG_HASH:=369737ce51587f92466041a97ab7d2358c6d9e1b6490b3940eb09fb0a9a6ac88
 endif
 
-ifeq ($(PKG_VERSION),2.29)
-  PKG_HASH:=
+ifeq ($(PKG_VERSION),2.29.1)
+  PKG_HASH:=e7010a46969f9d3e53b650a518663f98a5dde3c3ae21b7d71e5e6803bc36b577
 endif
 
 ifeq ($(PKG_VERSION),2.30)
@@ -51,7 +51,6 @@ BINUTILS_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--enable-deterministic-archives \
-		--enable-compressed-debug-sections=all \
 		--enable-plugins \
 		--disable-multilib \
 		--disable-werror \
