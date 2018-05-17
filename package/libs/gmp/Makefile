@@ -30,6 +30,7 @@ define Package/libgmp
   CATEGORY:=Libraries
   TITLE:=GNU multiprecision arithmetic library
   URL:=http://gmplib.org/
+  DEPENDS:=+libstdcpp
 endef
 
 define Package/libgmp/description
@@ -57,12 +58,12 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/gmp* $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgmp.{a,so*} $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgmp*.{a,so*} $(1)/usr/lib/
 endef
 
 define Package/libgmp/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgmp.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgmp*.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libgmp))
