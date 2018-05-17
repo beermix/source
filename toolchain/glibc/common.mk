@@ -64,11 +64,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-tunables \
 		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--enable-lock-elision \
-		--without-selinux \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
