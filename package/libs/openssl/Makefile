@@ -103,7 +103,7 @@ endef
 
 OPENSSL_NO_CIPHERS:= no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-camellia no-krb5 \
  no-whrlpool no-whirlpool no-seed no-jpake
-OPENSSL_OPTIONS:= shared no-err no-ssl2 no-ssl2-method no-rc4 no-asm threads enable-camellia enable-mdc2 enable-unit-test
+OPENSSL_OPTIONS:= shared no-err no-sse2 no-ssl2 no-ssl2-method no-heartbeats
 
 ifdef CONFIG_OPENSSL_ENGINE_CRYPTO
   OPENSSL_OPTIONS += -DHAVE_CRYPTODEV
@@ -161,7 +161,7 @@ ifeq ($(CONFIG_OPENSSL_OPTIMIZE_SPEED),y)
 endif
 
 ifeq ($(CONFIG_x86_64),y)
-  OPENSSL_TARGET:=linux-elf
+  OPENSSL_TARGET:=linux-x86_64-openwrt
   OPENSSL_MAKEFLAGS += LIBDIR=lib
 else
   OPENSSL_OPTIONS+=
@@ -202,8 +202,8 @@ define Build/Configure
 		depend
 endef
 
-TARGET_CFLAGS += -Wa,--noexecstack $(FPIC) -I$(CURDIR)/include -ffunction-sections -fsemantic-interposition -falign-functions=32 -falign-loops=32
-TARGET_LDFLAGS += -m32 -fno-lto -Wl,--gc-sections
+TARGET_CFLAGS += $(FPIC) -I$(CURDIR)/include -ffunction-sections -fdata-sections
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 define Build/Compile
 	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
@@ -237,7 +237,7 @@ define Build/Compile
 		CC="$(TARGET_CC)" \
 		INSTALL_PREFIX="$(PKG_INSTALL_DIR)" \
 		$(OPENSSL_MAKEFLAGS) \
-		install_sw -j1
+		install
 endef
 
 define Build/InstallDev
