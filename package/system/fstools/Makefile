@@ -94,7 +94,6 @@ define Package/block-mount/install
 	$(INSTALL_BIN) ./files/fstab.init $(1)/etc/init.d/fstab
 	$(INSTALL_DATA) ./files/fstab.default $(1)/etc/uci-defaults/10-fstab
 	$(INSTALL_DATA) ./files/mount.hotplug $(1)/etc/hotplug.d/block/10-mount
-	$(INSTALL_DATA)	./files/media-change.hotplug  $(1)/etc/hotplug.d/block/00-media-change
 
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/block $(1)/sbin/
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libblkid-tiny.so $(1)/lib/

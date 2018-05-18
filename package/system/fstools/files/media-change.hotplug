@@ -1,9 +1,0 @@
-if [ -n "$DISK_MEDIA_CHANGE" ]
-then
-        /sbin/block info
-fi
-
-if [ $ACTION == "add" ] && [ $DEVTYPE == "disk" ] && [ $DEVICENAME != mtd* ]
-then
-        echo 2000 > /sys/block/$DEVNAME/events_poll_msecs
-fi
