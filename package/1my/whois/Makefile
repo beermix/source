@@ -18,7 +18,6 @@ include $(INCLUDE_DIR)/package.mk
 define Package/whois
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libidn2
   TITLE:=whois
   URL:=https://github.com/rfc1036/whois
   MENU:=1
