@@ -42,10 +42,10 @@ ifeq ($(PKG_VERSION),7.3.0)
 endif
 
 ifeq ($(PKG_VERSION),7.3.1)
-#  PKG_REV:=7.3.1-20180406
-#  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
-  PKG_VERSION:=7.3.1
-  PKG_REV:=7-20180517
+  PKG_REV:=7.3.1-20180406
+  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
+#  PKG_VERSION:=7.3.1
+#  PKG_REV:=7-20180517
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -138,7 +138,6 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-tune=haswell \
 		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
