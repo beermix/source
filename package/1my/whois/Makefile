@@ -11,7 +11,7 @@ PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/w/whois
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.xz
 
-PKG_BUILD_DEPENDS:=gettext-full/host
+#PKG_BUILD_DEPENDS:=gettext-full/host
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -25,7 +25,7 @@ define Package/whois
 endef
 
 define Build/Compile
-	+$(MAKE_FLAGS) $(MAKE) -C $(PKG_BUILD_DIR) HAVE_ICONV=1
+	$(MAKE) -C $(PKG_BUILD_DIR) HAVE_ICONV=1
 endef
 
 define Package/whois/description
