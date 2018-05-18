@@ -28,10 +28,6 @@ GCC_DIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=@GNU/gcc/gcc-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
-ifeq ($(PKG_VERSION),5.5.0)
-  PKG_HASH:=530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87
-endif
-
 ifeq ($(PKG_VERSION),6.3.0)
   PKG_HASH:=f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
@@ -42,10 +38,10 @@ ifeq ($(PKG_VERSION),7.3.0)
 endif
 
 ifeq ($(PKG_VERSION),7.3.1)
-  PKG_REV:=7.3.1-20180406
-  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
-#  PKG_VERSION:=7.3.1
-#  PKG_REV:=7-20180517
+#  PKG_REV:=7.3.1-20180417
+#  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
+  PKG_VERSION:=7.3.1
+  PKG_REV:=7-20180517
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -100,10 +96,6 @@ HOST_STAMP_INSTALLED:=$(HOST_BUILD_PREFIX)/stamp/.gcc_$(GCC_VARIANT)_installed
 SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
-TAR_OPTIONS += \
-	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
-	--exclude=libjava
-
 export libgcc_cv_fixed_point=no
 ifdef CONFIG_USE_UCLIBC
   export glibcxx_cv_c99_math_tr1=no
@@ -132,12 +124,14 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
-		--enable-target-optspace \
 		--disable-libgomp \
-		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--disable-werror \
+		--enable-linker-build-id \
+		--enable-checking=release \
+		--enable-gnu-indirect-function \
 		--with-tune=haswell \
 		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \

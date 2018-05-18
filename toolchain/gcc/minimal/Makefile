@@ -10,7 +10,9 @@ GCC_CONFIGURE += \
 	--disable-libsanitizer \
 	--disable-libssp \
 	--disable-shared \
-	--disable-threads
+	--disable-threads \
+	--disable-__cxa_atexit \
+	--disable-decimal-float
 
 define Host/Compile
 	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) all-gcc all-target-libgcc
