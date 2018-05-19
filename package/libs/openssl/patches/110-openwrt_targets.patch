@@ -19,7 +19,7 @@
 +	cflags		=> add("\$(OPENWRT_OPTIMIZATION_FLAGS)"),
 +    },
 +    "linux-generic-openwrt" => {
-+        inherit_from    => [ "linux-generic" ],
++        inherit_from    => [ "linux-elf" ],
 +	cflags		=> add("\$(OPENWRT_OPTIMIZATION_FLAGS)"),
 +    },
 +);
