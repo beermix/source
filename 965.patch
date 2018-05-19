@@ -1,0 +1,761 @@
+From 71ed1fd83654b8e8702b991401b1fd08c1b17200 Mon Sep 17 00:00:00 2001
+From: Eneas U de Queiroz <cote2004-github@yahoo.com>
+Date: Fri, 18 May 2018 16:30:04 -0300
+Subject: [PATCH] openssl: Upgrade to 1.1.0h
+
+This version brings major changes to the API, so many packages will need
+adjustments or version bumps.
+
+Signed-off-by: Eneas U de Queiroz <cote2004-github@yahoo.com>
+---
+ package/libs/openssl/Config.in                     |  10 --
+ package/libs/openssl/Makefile                      |  51 ++----
+ .../libs/openssl/patches/110-openwrt_targets.patch |  26 +++
+ .../openssl/patches/110-optimize-for-size.patch    |  16 --
+ package/libs/openssl/patches/130-perl-path.patch   |  64 -------
+ .../libs/openssl/patches/140-makefile-dirs.patch   |  11 --
+ package/libs/openssl/patches/150-no_engines.patch  |  81 ---------
+ .../openssl/patches/160-disable_doc_tests.patch    |  58 -------
+ package/libs/openssl/patches/170-bash_path.patch   |   8 -
+ .../openssl/patches/180-fix_link_segfault.patch    |  16 +-
+ .../patches/190-remove_timestamp_check.patch       |  23 ---
+ .../libs/openssl/patches/200-parallel_build.patch  | 184 ---------------------
+ 12 files changed, 50 insertions(+), 498 deletions(-)
+ create mode 100644 package/libs/openssl/patches/110-openwrt_targets.patch
+ delete mode 100644 package/libs/openssl/patches/110-optimize-for-size.patch
+ delete mode 100644 package/libs/openssl/patches/130-perl-path.patch
+ delete mode 100644 package/libs/openssl/patches/140-makefile-dirs.patch
+ delete mode 100644 package/libs/openssl/patches/150-no_engines.patch
+ delete mode 100644 package/libs/openssl/patches/160-disable_doc_tests.patch
+ delete mode 100644 package/libs/openssl/patches/170-bash_path.patch
+ delete mode 100644 package/libs/openssl/patches/190-remove_timestamp_check.patch
+ delete mode 100644 package/libs/openssl/patches/200-parallel_build.patch
+
+diff --git a/package/libs/openssl/Config.in b/package/libs/openssl/Config.in
+index 96d3ba3e9d6..fdad98fdf6c 100644
+--- a/package/libs/openssl/Config.in
++++ b/package/libs/openssl/Config.in
+@@ -10,11 +10,6 @@ config OPENSSL_WITH_EC2M
+         depends on OPENSSL_WITH_EC
+         prompt "Enable ec2m support"
+ 
+-config OPENSSL_WITH_SSL3
+-	bool
+-	default n
+-	prompt "Enable sslv3 support"
+-
+ config OPENSSL_WITH_DEPRECATED
+ 	bool
+ 	default y
+@@ -30,11 +25,6 @@ config OPENSSL_WITH_COMPRESSION
+ 	default n
+ 	prompt "Enable compression support"
+ 
+-config OPENSSL_WITH_NPN
+-	bool
+-	default y
+-	prompt "Enable NPN support"
+-
+ config OPENSSL_WITH_PSK
+ 	bool
+ 	default y
+diff --git a/package/libs/openssl/Makefile b/package/libs/openssl/Makefile
+index 8409730d706..ba6577d9151 100644
+--- a/package/libs/openssl/Makefile
++++ b/package/libs/openssl/Makefile
+@@ -8,8 +8,8 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=openssl
+-PKG_BASE:=1.0.2
+-PKG_BUGFIX:=o
++PKG_BASE:=1.1.0
++PKG_BUGFIX:=h
+ PKG_VERSION:=$(PKG_BASE)$(PKG_BUGFIX)
+ PKG_RELEASE:=1
+ PKG_USE_MIPS16:=0
+@@ -24,7 +24,7 @@ PKG_SOURCE_URL:= \
+ 	http://gd.tuwien.ac.at/infosys/security/openssl/source/ \
+ 	http://www.openssl.org/source/ \
+ 	http://www.openssl.org/source/old/$(PKG_BASE)/
+-PKG_HASH:=ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d
++PKG_HASH:=5835626cde9e99656585fc7aaa2302a73a7e1340bf8c14fd635a62c66802a517
+ 
+ PKG_LICENSE:=OpenSSL
+ PKG_LICENSE_FILES:=LICENSE
+@@ -34,12 +34,10 @@ PKG_CONFIG_DEPENDS:= \
+ 	CONFIG_OPENSSL_ENGINE_DIGEST \
+ 	CONFIG_OPENSSL_WITH_EC \
+ 	CONFIG_OPENSSL_WITH_EC2M \
+-	CONFIG_OPENSSL_WITH_SSL3 \
+ 	CONFIG_OPENSSL_HARDWARE_SUPPORT \
+ 	CONFIG_OPENSSL_WITH_DEPRECATED \
+ 	CONFIG_OPENSSL_WITH_DTLS \
+ 	CONFIG_OPENSSL_WITH_COMPRESSION \
+-	CONFIG_OPENSSL_WITH_NPN \
+ 	CONFIG_OPENSSL_WITH_PSK \
+ 	CONFIG_OPENSSL_WITH_SRP \
+ 	CONFIG_OPENSSL_OPTIMIZE_SPEED
+@@ -101,9 +99,8 @@ This package contains the OpenSSL command-line utility.
+ endef
+ 
+ 
+-OPENSSL_NO_CIPHERS:= no-idea no-md2 no-mdc2 no-rc5 no-sha0 no-camellia no-krb5 \
+- no-whrlpool no-whirlpool no-seed no-jpake
+-OPENSSL_OPTIONS:= shared no-err no-sse2 no-ssl2 no-ssl2-method no-heartbeats
++OPENSSL_NO_CIPHERS:= no-idea no-mdc2 no-camellia no-whirlpool no-seed
++OPENSSL_OPTIONS:= shared no-err no-heartbeats
+ 
+ ifdef CONFIG_OPENSSL_ENGINE_CRYPTO
+   OPENSSL_OPTIONS += -DHAVE_CRYPTODEV
+@@ -111,7 +108,7 @@ ifdef CONFIG_OPENSSL_ENGINE_CRYPTO
+     OPENSSL_OPTIONS += -DUSE_CRYPTODEV_DIGESTS
+   endif
+ else
+-  OPENSSL_OPTIONS += no-engines
++  OPENSSL_OPTIONS += no-engine
+ endif
+ 
+ ifndef CONFIG_OPENSSL_WITH_EC
+@@ -122,10 +119,6 @@ ifndef CONFIG_OPENSSL_WITH_EC2M
+   OPENSSL_OPTIONS += no-ec2m
+ endif
+ 
+-ifndef CONFIG_OPENSSL_WITH_SSL3
+-  OPENSSL_OPTIONS += no-ssl3 no-ssl3-method
+-endif
+-
+ ifndef CONFIG_OPENSSL_HARDWARE_SUPPORT
+   OPENSSL_OPTIONS += no-hw
+ endif
+@@ -144,10 +137,6 @@ else
+   OPENSSL_OPTIONS += no-comp
+ endif
+ 
+-ifndef CONFIG_OPENSSL_WITH_NPN
+-  OPENSSL_OPTIONS += no-nextprotoneg
+-endif
+-
+ ifndef CONFIG_OPENSSL_WITH_PSK
+   OPENSSL_OPTIONS += no-psk
+ endif
+@@ -164,16 +153,16 @@ ifeq ($(CONFIG_x86_64),y)
+   OPENSSL_TARGET:=linux-x86_64-openwrt
+   OPENSSL_MAKEFLAGS += LIBDIR=lib
+ else
+-  OPENSSL_OPTIONS+=no-sse2
++  OPENSSL_OPTIONS+= no-sse2
+   ifeq ($(CONFIG_mips)$(CONFIG_mipsel),y)
+-    OPENSSL_TARGET:=linux-mips-openwrt
++    OPENSSL_TARGET:=linux-mips32-openwrt
+   else ifeq ($(CONFIG_aarch64),y)
+     OPENSSL_TARGET:=linux-aarch64-openwrt
+   else ifeq ($(CONFIG_arm)$(CONFIG_armeb),y)
+     OPENSSL_TARGET:=linux-armv4-openwrt
+   else
+     OPENSSL_TARGET:=linux-generic-openwrt
+-    OPENSSL_OPTIONS+=no-perlasm
++    OPENSSL_OPTIONS+= no-perlasm
+   endif
+ endif
+ 
+@@ -191,6 +180,7 @@ define Build/Configure
+ 			$(TARGET_CPPFLAGS) \
+ 			$(TARGET_LDFLAGS) -ldl \
+ 			$(if $(CONFIG_OPENSSL_OPTIMIZE_SPEED),,-DOPENSSL_SMALL_FOOTPRINT) \
++			-DOPENSSL_NO_ASYNC \
+ 			$(OPENSSL_NO_CIPHERS) \
+ 			$(OPENSSL_OPTIONS) \
+ 	)
+@@ -215,29 +205,12 @@ define Build/Compile
+ 		OPENWRT_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
+ 		$(OPENSSL_MAKEFLAGS) \
+ 		all
+-	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+-		CROSS_COMPILE="$(TARGET_CROSS)" \
+-		CC="$(TARGET_CC)" \
+-		ASFLAGS="$(TARGET_ASFLAGS) -I$(PKG_BUILD_DIR)/crypto -c" \
+-		AR="$(TARGET_CROSS)ar r" \
+-		RANLIB="$(TARGET_CROSS)ranlib" \
+-		OPENWRT_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
+-		$(OPENSSL_MAKEFLAGS) \
+-		build-shared
+-	# Work around openssl build bug to link libssl.so with libcrypto.so.
+-	-rm $(PKG_BUILD_DIR)/libssl.so.*.*.*
+-	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+-		CROSS_COMPILE="$(TARGET_CROSS)" \
+-		CC="$(TARGET_CC)" \
+-		OPENWRT_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
+-		$(OPENSSL_MAKEFLAGS) \
+-		do_linux-shared
+ 	$(MAKE) -C $(PKG_BUILD_DIR) \
+ 		CROSS_COMPILE="$(TARGET_CROSS)" \
+ 		CC="$(TARGET_CC)" \
+-		INSTALL_PREFIX="$(PKG_INSTALL_DIR)" \
++		DESTDIR="$(PKG_INSTALL_DIR)" \
+ 		$(OPENSSL_MAKEFLAGS) \
+-		install
++		install_sw install_ssldirs
+ endef
+ 
+ define Build/InstallDev
+diff --git a/package/libs/openssl/patches/110-openwrt_targets.patch b/package/libs/openssl/patches/110-openwrt_targets.patch
+new file mode 100644
+index 00000000000..bc74c8819f3
+--- /dev/null
++++ b/package/libs/openssl/patches/110-openwrt_targets.patch
+@@ -0,0 +1,26 @@
++--- /dev/null
+++++ b/Configurations/25-openwrt.conf
++@@ -0,0 +1,23 @@
+++%targets = (
+++    "linux-x86_64-openwrt" => {
+++        inherit_from    => [ "linux-x86_64" ],
+++	cflags		=> add("\$(OPENWRT_OPTIMIZATION_FLAGS)"),
+++    },
+++    "linux-aarch64-openwrt" => {
+++        inherit_from    => [ "linux-aarch64" ],
+++	cflags		=> add("\$(OPENWRT_OPTIMIZATION_FLAGS)"),
+++    },
+++    "linux-armv4-openwrt" => {
+++        inherit_from    => [ "linux-armv4" ],
+++	cflags		=> add("\$(OPENWRT_OPTIMIZATION_FLAGS)"),
+++    },
+++    "linux-mips32-openwrt" => {
+++        inherit_from    => [ "linux-mips32" ],
+++	cflags		=> add("\$(OPENWRT_OPTIMIZATION_FLAGS)"),
+++    },
+++    "linux-generic-openwrt" => {
+++        inherit_from    => [ "linux-generic" ],
+++	cflags		=> add("\$(OPENWRT_OPTIMIZATION_FLAGS)"),
+++    },
+++);
+++
+diff --git a/package/libs/openssl/patches/110-optimize-for-size.patch b/package/libs/openssl/patches/110-optimize-for-size.patch
+deleted file mode 100644
+index d6d4a211110..00000000000
+--- a/package/libs/openssl/patches/110-optimize-for-size.patch
++++ /dev/null
+@@ -1,16 +0,0 @@
+---- a/Configure
+-+++ b/Configure
+-@@ -470,6 +470,13 @@ my %table=(
+- "linux-alpha-ccc","ccc:-fast -readonly_strings -DL_ENDIAN::-D_REENTRANT:::SIXTY_FOUR_BIT_LONG RC4_CHUNK DES_INT DES_PTR DES_RISC1 DES_UNROLL:${alpha_asm}",
+- "linux-alpha+bwx-ccc","ccc:-fast -readonly_strings -DL_ENDIAN::-D_REENTRANT:::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_PTR DES_RISC1 DES_UNROLL:${alpha_asm}",
+- 
+-+# OpenWrt targets
+-+"linux-armv4-openwrt","gcc:-DTERMIOS \$(OPENWRT_OPTIMIZATION_FLAGS) -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${armv4_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
+-+"linux-aarch64-openwrt","gcc:-DTERMIOS \$(OPENWRT_OPTIMIZATION_FLAGS) -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${aarch64_asm}:linux64:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
+-+"linux-x86_64-openwrt",	"gcc:-m64 -DL_ENDIAN -DTERMIOS \$(OPENWRT_OPTIMIZATION_FLAGS) -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:SIXTY_FOUR_BIT_LONG RC4_CHUNK DES_INT DES_UNROLL:${x86_64_asm}:elf:dlfcn:linux-shared:-fPIC:-m64:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):::64",
+-+"linux-mips-openwrt","gcc:-DTERMIOS \$(OPENWRT_OPTIMIZATION_FLAGS) -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${mips32_asm}:o32:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
+-+"linux-generic-openwrt","gcc:-DTERMIOS \$(OPENWRT_OPTIMIZATION_FLAGS) -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
+-+
+- # Android: linux-* but without pointers to headers and libs.
+- "android","gcc:-mandroid -I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
+- "android-x86","gcc:-mandroid -I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:".eval{my $asm=${x86_elf_asm};$asm=~s/:elf/:android/;$asm}.":dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
+diff --git a/package/libs/openssl/patches/130-perl-path.patch b/package/libs/openssl/patches/130-perl-path.patch
+deleted file mode 100644
+index 2dbdc760102..00000000000
+--- a/package/libs/openssl/patches/130-perl-path.patch
++++ /dev/null
+@@ -1,64 +0,0 @@
+---- a/Configure
+-+++ b/Configure
+-@@ -1,4 +1,4 @@
+--:
+-+#!/usr/bin/perl
+- eval 'exec perl -S $0 ${1+"$@"}'
+-     if $running_under_some_shell;
+- ##
+---- a/tools/c_rehash.in
+-+++ b/tools/c_rehash.in
+-@@ -1,4 +1,4 @@
+--#!/usr/local/bin/perl
+-+#!/usr/bin/perl
+- 
+- # Perl c_rehash script, scan all files in a directory
+- # and add symbolic links to their hash values.
+---- a/util/clean-depend.pl
+-+++ b/util/clean-depend.pl
+-@@ -1,4 +1,4 @@
+--#!/usr/local/bin/perl -w
+-+#!/usr/bin/perl
+- # Clean the dependency list in a makefile of standard includes...
+- # Written by Ben Laurie <ben@algroup.co.uk> 19 Jan 1999
+- 
+---- a/util/mkdef.pl
+-+++ b/util/mkdef.pl
+-@@ -1,4 +1,4 @@
+--#!/usr/local/bin/perl -w
+-+#!/usr/bin/perl
+- #
+- # generate a .def file
+- #
+---- a/util/mkerr.pl
+-+++ b/util/mkerr.pl
+-@@ -1,4 +1,4 @@
+--#!/usr/local/bin/perl -w
+-+#!/usr/bin/perl
+- 
+- my $config = "crypto/err/openssl.ec";
+- my $hprefix = "openssl/";
+---- a/util/mkstack.pl
+-+++ b/util/mkstack.pl
+-@@ -1,4 +1,4 @@
+--#!/usr/local/bin/perl -w
+-+#!/usr/bin/perl
+- 
+- # This is a utility that searches out "DECLARE_STACK_OF()"
+- # declarations in .h and .c files, and updates/creates/replaces
+---- a/util/pod2man.pl
+-+++ b/util/pod2man.pl
+-@@ -1,4 +1,4 @@
+--: #!/usr/bin/perl-5.005
+-+#!/usr/bin/perl
+-     eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+- 	if $running_under_some_shell;
+- 
+---- a/util/selftest.pl
+-+++ b/util/selftest.pl
+-@@ -1,4 +1,4 @@
+--#!/usr/local/bin/perl -w
+-+#!/usr/bin/perl
+- #
+- # Run the test suite and generate a report
+- #
+diff --git a/package/libs/openssl/patches/140-makefile-dirs.patch b/package/libs/openssl/patches/140-makefile-dirs.patch
+deleted file mode 100644
+index 83c412f4443..00000000000
+--- a/package/libs/openssl/patches/140-makefile-dirs.patch
++++ /dev/null
+@@ -1,11 +0,0 @@
+---- a/Makefile.org
+-+++ b/Makefile.org
+-@@ -137,7 +137,7 @@ FIPSCANLIB=
+- 
+- BASEADDR=
+- 
+--DIRS=   crypto ssl engines apps test tools
+-+DIRS=   crypto ssl apps
+- ENGDIRS= ccgost
+- SHLIBDIRS= crypto ssl
+- 
+diff --git a/package/libs/openssl/patches/150-no_engines.patch b/package/libs/openssl/patches/150-no_engines.patch
+deleted file mode 100644
+index 102e7a32729..00000000000
+--- a/package/libs/openssl/patches/150-no_engines.patch
++++ /dev/null
+@@ -1,81 +0,0 @@
+---- a/Configure
+-+++ b/Configure
+-@@ -2136,6 +2136,11 @@ EOF
+- 	close(OUT);
+-   }
+-   
+-+# ugly hack to disable engines
+-+if($target eq "mingwx") {
+-+	system("sed -e s/^LIB/XLIB/g -i engines/Makefile");
+-+}
+-+
+- print <<EOF;
+- 
+- Configured for $target.
+---- a/util/libeay.num
+-+++ b/util/libeay.num
+-@@ -2075,7 +2075,6 @@ PKCS7_ATTR_SIGN_it
+- UI_add_error_string                     2633	EXIST::FUNCTION:
+- KRB5_CHECKSUM_free                      2634	EXIST::FUNCTION:
+- OCSP_REQUEST_get_ext                    2635	EXIST::FUNCTION:
+--ENGINE_load_ubsec                       2636	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+- ENGINE_register_all_digests             2637	EXIST::FUNCTION:ENGINE
+- PKEY_USAGE_PERIOD_it                    2638	EXIST:!EXPORT_VAR_AS_FUNCTION:VARIABLE:
+- PKEY_USAGE_PERIOD_it                    2638	EXIST:EXPORT_VAR_AS_FUNCTION:FUNCTION:
+-@@ -2549,7 +2548,6 @@ OCSP_RESPONSE_new
+- AES_set_encrypt_key                     3024	EXIST::FUNCTION:AES
+- OCSP_resp_count                         3025	EXIST::FUNCTION:
+- KRB5_CHECKSUM_new                       3026	EXIST::FUNCTION:
+--ENGINE_load_cswift                      3027	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+- OCSP_onereq_get0_id                     3028	EXIST::FUNCTION:
+- ENGINE_set_default_ciphers              3029	EXIST::FUNCTION:ENGINE
+- NOTICEREF_it                            3030	EXIST:!EXPORT_VAR_AS_FUNCTION:VARIABLE:
+-@@ -2580,7 +2578,6 @@ ASN1_primitive_free
+- i2d_EXTENDED_KEY_USAGE                  3052	EXIST::FUNCTION:
+- i2d_OCSP_SIGNATURE                      3053	EXIST::FUNCTION:
+- asn1_enc_save                           3054	EXIST::FUNCTION:
+--ENGINE_load_nuron                       3055	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+- _ossl_old_des_pcbc_encrypt              3056	EXIST::FUNCTION:DES
+- PKCS12_MAC_DATA_it                      3057	EXIST:!EXPORT_VAR_AS_FUNCTION:VARIABLE:
+- PKCS12_MAC_DATA_it                      3057	EXIST:EXPORT_VAR_AS_FUNCTION:FUNCTION:
+-@@ -2604,7 +2601,6 @@ asn1_get_choice_selector
+- i2d_KRB5_CHECKSUM                       3072	EXIST::FUNCTION:
+- ENGINE_set_table_flags                  3073	EXIST::FUNCTION:ENGINE
+- AES_options                             3074	EXIST::FUNCTION:AES
+--ENGINE_load_chil                        3075	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+- OCSP_id_cmp                             3076	EXIST::FUNCTION:
+- OCSP_BASICRESP_new                      3077	EXIST::FUNCTION:
+- OCSP_REQUEST_get_ext_by_NID             3078	EXIST::FUNCTION:
+-@@ -2671,7 +2667,6 @@ OCSP_CRLID_it
+- OCSP_CRLID_it                           3127	EXIST:EXPORT_VAR_AS_FUNCTION:FUNCTION:
+- i2d_KRB5_AUTHENTBODY                    3128	EXIST::FUNCTION:
+- OCSP_REQUEST_get_ext_count              3129	EXIST::FUNCTION:
+--ENGINE_load_atalla                      3130	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+- X509_NAME_it                            3131	EXIST:!EXPORT_VAR_AS_FUNCTION:VARIABLE:
+- X509_NAME_it                            3131	EXIST:EXPORT_VAR_AS_FUNCTION:FUNCTION:
+- USERNOTICE_it                           3132	EXIST:!EXPORT_VAR_AS_FUNCTION:VARIABLE:
+-@@ -2766,8 +2761,6 @@ DES_read_2passwords
+- DES_read_password                       3207	EXIST::FUNCTION:DES
+- UI_UTIL_read_pw                         3208	EXIST::FUNCTION:
+- UI_UTIL_read_pw_string                  3209	EXIST::FUNCTION:
+--ENGINE_load_aep                         3210	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+--ENGINE_load_sureware                    3211	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+- OPENSSL_add_all_algorithms_noconf       3212	EXIST:!VMS:FUNCTION:
+- OPENSSL_add_all_algo_noconf             3212	EXIST:VMS:FUNCTION:
+- OPENSSL_add_all_algorithms_conf         3213	EXIST:!VMS:FUNCTION:
+-@@ -2776,7 +2769,6 @@ OPENSSL_load_builtin_modules
+- AES_ofb128_encrypt                      3215	EXIST::FUNCTION:AES
+- AES_ctr128_encrypt                      3216	EXIST::FUNCTION:AES
+- AES_cfb128_encrypt                      3217	EXIST::FUNCTION:AES
+--ENGINE_load_4758cca                     3218	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+- _ossl_096_des_random_seed               3219	EXIST::FUNCTION:DES
+- EVP_aes_256_ofb                         3220	EXIST::FUNCTION:AES
+- EVP_aes_192_ofb                         3221	EXIST::FUNCTION:AES
+-@@ -3111,7 +3103,6 @@ EC_GFp_nist_method
+- STORE_meth_set_modify_fn                3530	NOEXIST::FUNCTION:
+- STORE_method_set_modify_function        3530	NOEXIST::FUNCTION:
+- STORE_parse_attrs_next                  3531	NOEXIST::FUNCTION:
+--ENGINE_load_padlock                     3532	EXIST::FUNCTION:ENGINE,STATIC_ENGINE
+- EC_GROUP_set_curve_name                 3533	EXIST::FUNCTION:EC
+- X509_CERT_PAIR_it                       3534	EXIST:!EXPORT_VAR_AS_FUNCTION:VARIABLE:
+- X509_CERT_PAIR_it                       3534	EXIST:EXPORT_VAR_AS_FUNCTION:FUNCTION:
+diff --git a/package/libs/openssl/patches/160-disable_doc_tests.patch b/package/libs/openssl/patches/160-disable_doc_tests.patch
+deleted file mode 100644
+index e38d44a768c..00000000000
+--- a/package/libs/openssl/patches/160-disable_doc_tests.patch
++++ /dev/null
+@@ -1,58 +0,0 @@
+---- a/Makefile
+-+++ b/Makefile
+-@@ -139,7 +139,7 @@ FIPSCANLIB=
+- 
+- BASEADDR=0xFB00000
+- 
+--DIRS=   crypto ssl engines apps test tools
+-+DIRS=   crypto ssl engines apps tools
+- ENGDIRS= ccgost
+- SHLIBDIRS= crypto ssl
+- 
+-@@ -157,7 +157,7 @@ SDIRS=  \
+- 
+- # tests to perform.  "alltests" is a special word indicating that all tests
+- # should be performed.
+--TESTS = alltests
+-+TESTS =
+- 
+- MAKEFILE= Makefile
+- 
+-@@ -171,7 +171,7 @@ SHELL=/bin/sh
+- 
+- TOP=    .
+- ONEDIRS=out tmp
+--EDIRS=  times doc bugs util include certs ms shlib mt demos perl sf dep VMS
+-+EDIRS=  times bugs util include certs ms shlib mt demos perl sf dep VMS
+- WDIRS=  windows
+- LIBS=   libcrypto.a libssl.a
+- SHARED_CRYPTO=libcrypto$(SHLIB_EXT)
+-@@ -276,7 +276,7 @@ reflect:
+- 
+- sub_all: build_all
+- 
+--build_all: build_libs build_apps build_tests build_tools
+-+build_all: build_libs build_apps build_tools
+- 
+- build_libs: build_libcrypto build_libssl openssl.pc
+- 
+-@@ -542,7 +542,7 @@ dist:
+- 	@$(MAKE) SDIRS='$(SDIRS)' clean
+- 	@$(MAKE) TAR='$(TAR)' TARFLAGS='$(TARFLAGS)' $(DISTTARVARS) tar
+- 
+--install: all install_docs install_sw
+-+install: all install_sw
+- 
+- install_sw:
+- 	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
+---- a/Makefile.org
+-+++ b/Makefile.org
+-@@ -540,7 +540,7 @@ dist:
+- 	@$(MAKE) SDIRS='$(SDIRS)' clean
+- 	@$(MAKE) TAR='$(TAR)' TARFLAGS='$(TARFLAGS)' $(DISTTARVARS) tar
+- 
+--install: all install_docs install_sw
+-+install: all install_sw
+- 
+- install_sw:
+- 	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
+diff --git a/package/libs/openssl/patches/170-bash_path.patch b/package/libs/openssl/patches/170-bash_path.patch
+deleted file mode 100644
+index c29b59afdd9..00000000000
+--- a/package/libs/openssl/patches/170-bash_path.patch
++++ /dev/null
+@@ -1,8 +0,0 @@
+---- a/util/domd
+-+++ b/util/domd
+-@@ -1,4 +1,4 @@
+--#!/bin/sh
+-+#!/usr/bin/env bash
+- # Do a makedepend, only leave out the standard headers
+- # Written by Ben Laurie <ben@algroup.co.uk> 19 Jan 1999
+- 
+diff --git a/package/libs/openssl/patches/180-fix_link_segfault.patch b/package/libs/openssl/patches/180-fix_link_segfault.patch
+index 3e36beb49c8..703ab041084 100644
+--- a/package/libs/openssl/patches/180-fix_link_segfault.patch
++++ b/package/libs/openssl/patches/180-fix_link_segfault.patch
+@@ -1,18 +1,26 @@
+ --- a/Makefile.shared
+ +++ b/Makefile.shared
+-@@ -95,7 +95,6 @@ LINK_APP=	\
+-     LDCMD="$${LDCMD:-$(CC)}"; LDFLAGS="$${LDFLAGS:-$(CFLAGS)}"; \
++@@ -102,9 +102,7 @@ LINK_APP=	\
++     LDCMD="$${LDCMD:-$(CC)}"; LDFLAGS="$${LDFLAGS:-$(CFLAGS) $(LDFLAGS)}"; \
+      LIBPATH=`for x in $$LIBDEPS; do echo $$x; done | sed -e 's/^ *-L//;t' -e d | uniq`; \
+      LIBPATH=`echo $$LIBPATH | sed -e 's/ /:/g'`; \
++-    echo LD_LIBRARY_PATH=$$LIBPATH:$$LD_LIBRARY_PATH \
++-        $${LDCMD} $${LDFLAGS} -o $${APPNAME:=$(APPNAME)} $(OBJECTS) $${LIBDEPS}; \
+ -    LD_LIBRARY_PATH=$$LIBPATH:$$LD_LIBRARY_PATH \
+++    echo $${LDCMD} $${LDFLAGS} -o $${APPNAME:=$(APPNAME)} $(OBJECTS) $${LIBDEPS}; \
+      $${LDCMD} $${LDFLAGS} -o $${APPNAME:=$(APPNAME)} $(OBJECTS) $${LIBDEPS} )
+  
+  LINK_SO=	\
+-@@ -105,7 +104,6 @@ LINK_SO=	\
++@@ -114,11 +112,9 @@ LINK_SO=	\
+      SHAREDFLAGS="$${SHAREDFLAGS:-$(CFLAGS) $(SHARED_LDFLAGS)}"; \
+      LIBPATH=`for x in $$LIBDEPS; do echo $$x; done | sed -e 's/^ *-L//;t' -e d | uniq`; \
+      LIBPATH=`echo $$LIBPATH | sed -e 's/ /:/g'`; \
++-    echo LD_LIBRARY_PATH=$$LIBPATH:$$LD_LIBRARY_PATH \
++-         $${SHAREDCMD} $${SHAREDFLAGS} \
+++    echo $${SHAREDCMD} $${SHAREDFLAGS} \
++ 	     -o $(SHLIBNAME_FULL) \
++ 	     $$ALLSYMSFLAGS $$SHOBJECTS $$NOALLSYMSFLAGS $$LIBDEPS; \
+ -    LD_LIBRARY_PATH=$$LIBPATH:$$LD_LIBRARY_PATH \
+      $${SHAREDCMD} $${SHAREDFLAGS} \
+- 	-o $$SHLIB$$SHLIB_SOVER$$SHLIB_SUFFIX \
++ 	-o $(SHLIBNAME_FULL) \
+  	$$ALLSYMSFLAGS $$SHOBJECTS $$NOALLSYMSFLAGS $$LIBDEPS \
+diff --git a/package/libs/openssl/patches/190-remove_timestamp_check.patch b/package/libs/openssl/patches/190-remove_timestamp_check.patch
+deleted file mode 100644
+index 424e66063ca..00000000000
+--- a/package/libs/openssl/patches/190-remove_timestamp_check.patch
++++ /dev/null
+@@ -1,23 +0,0 @@
+---- a/Makefile.org
+-+++ b/Makefile.org
+-@@ -185,7 +185,7 @@ TARFILE=        ../$(NAME).tar
+- EXHEADER=       e_os2.h
+- HEADER=         e_os.h
+- 
+--all: Makefile build_all
+-+all: build_all
+- 
+- # as we stick to -e, CLEARENV ensures that local variables in lower
+- # Makefiles remain local and variable. $${VAR+VAR} is tribute to Korn
+-@@ -404,11 +404,6 @@ openssl.pc: Makefile
+- 	    echo 'Version: '$(VERSION); \
+- 	    echo 'Requires: libssl libcrypto' ) > openssl.pc
+- 
+--Makefile: Makefile.org Configure config
+--	@echo "Makefile is older than Makefile.org, Configure or config."
+--	@echo "Reconfigure the source tree (via './config' or 'perl Configure'), please."
+--	@false
+--
+- libclean:
+- 	rm -f *.map *.so *.so.* *.dylib *.dll engines/*.so engines/*.dll engines/*.dylib *.a engines/*.a */lib */*/lib
+- 
+diff --git a/package/libs/openssl/patches/200-parallel_build.patch b/package/libs/openssl/patches/200-parallel_build.patch
+deleted file mode 100644
+index 0616551b6e7..00000000000
+--- a/package/libs/openssl/patches/200-parallel_build.patch
++++ /dev/null
+@@ -1,184 +0,0 @@
+---- a/Makefile.org
+-+++ b/Makefile.org
+-@@ -282,17 +282,17 @@ build_libcrypto: build_crypto build_engi
+- build_libssl: build_ssl libssl.pc
+- 
+- build_crypto:
+--	@dir=crypto; target=all; $(BUILD_ONE_CMD)
+-+	+@dir=crypto; target=all; $(BUILD_ONE_CMD)
+- build_ssl: build_crypto
+--	@dir=ssl; target=all; $(BUILD_ONE_CMD)
+-+	+@dir=ssl; target=all; $(BUILD_ONE_CMD)
+- build_engines: build_crypto
+--	@dir=engines; target=all; $(BUILD_ONE_CMD)
+-+	+@dir=engines; target=all; $(BUILD_ONE_CMD)
+- build_apps: build_libs
+--	@dir=apps; target=all; $(BUILD_ONE_CMD)
+-+	+@dir=apps; target=all; $(BUILD_ONE_CMD)
+- build_tests: build_libs
+--	@dir=test; target=all; $(BUILD_ONE_CMD)
+-+	+@dir=test; target=all; $(BUILD_ONE_CMD)
+- build_tools: build_libs
+--	@dir=tools; target=all; $(BUILD_ONE_CMD)
+-+	+@dir=tools; target=all; $(BUILD_ONE_CMD)
+- 
+- all_testapps: build_libs build_testapps
+- build_testapps:
+-@@ -473,7 +473,7 @@ update: errors stacks util/libeay.num ut
+- 	@set -e; target=update; $(RECURSIVE_BUILD_CMD)
+- 
+- depend:
+--	@set -e; target=depend; $(RECURSIVE_BUILD_CMD)
+-+	+@set -e; target=depend; $(RECURSIVE_BUILD_CMD)
+- 
+- lint:
+- 	@set -e; target=lint; $(RECURSIVE_BUILD_CMD)
+-@@ -535,9 +535,9 @@ dist:
+- 	@$(MAKE) SDIRS='$(SDIRS)' clean
+- 	@$(MAKE) TAR='$(TAR)' TARFLAGS='$(TARFLAGS)' $(DISTTARVARS) tar
+- 
+--install: all install_sw
+-+install: install_sw
+- 
+--install_sw:
+-+install_dirs:
+- 	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
+- 		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR) \
+- 		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines \
+-@@ -546,12 +546,19 @@ install_sw:
+- 		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
+- 		$(INSTALL_PREFIX)$(OPENSSLDIR)/certs \
+- 		$(INSTALL_PREFIX)$(OPENSSLDIR)/private
+-+	@$(PERL) $(TOP)/util/mkdir-p.pl \
+-+		$(INSTALL_PREFIX)$(MANDIR)/man1 \
+-+		$(INSTALL_PREFIX)$(MANDIR)/man3 \
+-+		$(INSTALL_PREFIX)$(MANDIR)/man5 \
+-+		$(INSTALL_PREFIX)$(MANDIR)/man7
+-+
+-+install_sw: install_dirs
+- 	@set -e; headerlist="$(EXHEADER)"; for i in $$headerlist;\
+- 	do \
+- 	(cp $$i $(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl/$$i; \
+- 	chmod 644 $(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl/$$i ); \
+- 	done;
+--	@set -e; target=install; $(RECURSIVE_BUILD_CMD)
+-+	+@set -e; target=install; $(RECURSIVE_BUILD_CMD)
+- 	@set -e; liblist="$(LIBS)"; for i in $$liblist ;\
+- 	do \
+- 		if [ -f "$$i" ]; then \
+-@@ -635,12 +642,7 @@ install_html_docs:
+- 		done; \
+- 	done
+- 
+--install_docs:
+--	@$(PERL) $(TOP)/util/mkdir-p.pl \
+--		$(INSTALL_PREFIX)$(MANDIR)/man1 \
+--		$(INSTALL_PREFIX)$(MANDIR)/man3 \
+--		$(INSTALL_PREFIX)$(MANDIR)/man5 \
+--		$(INSTALL_PREFIX)$(MANDIR)/man7
+-+install_docs: install_dirs
+- 	@pod2man="`cd ./util; ./pod2mantest $(PERL)`"; \
+- 	here="`pwd`"; \
+- 	filecase=; \
+---- a/Makefile.shared
+-+++ b/Makefile.shared
+-@@ -120,6 +120,7 @@ SYMLINK_SO=	\
+- 			done; \
+- 		fi; \
+- 		if [ -n "$$SHLIB_SOVER" ]; then \
+-+			[ -e "$$SHLIB$$SHLIB_SUFFIX" ] || \
+- 			( $(SET_X); rm -f $$SHLIB$$SHLIB_SUFFIX; \
+- 			  ln -s $$prev $$SHLIB$$SHLIB_SUFFIX ); \
+- 		fi; \
+---- a/crypto/Makefile
+-+++ b/crypto/Makefile
+-@@ -85,11 +85,11 @@ testapps:
+- 	@if [ -z "$(THIS)" ]; then $(MAKE) -f $(TOP)/Makefile reflect THIS=$@; fi
+- 
+- subdirs:
+--	@target=all; $(RECURSIVE_MAKE)
+-+	+@target=all; $(RECURSIVE_MAKE)
+- 
+- files:
+- 	$(PERL) $(TOP)/util/files.pl "CPUID_OBJ=$(CPUID_OBJ)" Makefile >> $(TOP)/MINFO
+--	@target=files; $(RECURSIVE_MAKE)
+-+	+@target=files; $(RECURSIVE_MAKE)
+- 
+- links:
+- 	@$(PERL) $(TOP)/util/mklink.pl ../include/openssl $(EXHEADER)
+-@@ -100,7 +100,7 @@ links:
+- # lib: $(LIB): are splitted to avoid end-less loop
+- lib:	$(LIB)
+- 	@touch lib
+--$(LIB):	$(LIBOBJ)
+-+$(LIB):	$(LIBOBJ) | subdirs
+- 	$(AR) $(LIB) $(LIBOBJ)
+- 	test -z "$(FIPSLIBDIR)" || $(AR) $(LIB) $(FIPSLIBDIR)fipscanister.o
+- 	$(RANLIB) $(LIB) || echo Never mind.
+-@@ -111,7 +111,7 @@ shared: buildinf.h lib subdirs
+- 	fi
+- 
+- libs:
+--	@target=lib; $(RECURSIVE_MAKE)
+-+	+@target=lib; $(RECURSIVE_MAKE)
+- 
+- install:
+- 	@[ -n "$(INSTALLTOP)" ] # should be set by top Makefile...
+-@@ -120,7 +120,7 @@ install:
+- 	(cp $$i $(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl/$$i; \
+- 	chmod 644 $(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl/$$i ); \
+- 	done;
+--	@target=install; $(RECURSIVE_MAKE)
+-+	+@target=install; $(RECURSIVE_MAKE)
+- 
+- lint:
+- 	@target=lint; $(RECURSIVE_MAKE)
+---- a/engines/Makefile
+-+++ b/engines/Makefile
+-@@ -72,7 +72,7 @@ top:
+- 
+- all:	lib subdirs
+- 
+--lib:	$(LIBOBJ)
+-+lib:	$(LIBOBJ) | subdirs
+- 	@if [ -n "$(SHARED_LIBS)" ]; then \
+- 		set -e; \
+- 		for l in $(LIBNAMES); do \
+-@@ -89,7 +89,7 @@ lib:	$(LIBOBJ)
+- 
+- subdirs:
+- 	echo $(EDIRS)
+--	@target=all; $(RECURSIVE_MAKE)
+-+	+@target=all; $(RECURSIVE_MAKE)
+- 
+- files:
+- 	$(PERL) $(TOP)/util/files.pl Makefile >> $(TOP)/MINFO
+-@@ -128,7 +128,7 @@ install:
+- 			  mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx ); \
+- 		done; \
+- 	fi
+--	@target=install; $(RECURSIVE_MAKE)
+-+	+@target=install; $(RECURSIVE_MAKE)
+- 
+- tags:
+- 	ctags $(SRC)
+---- a/test/Makefile
+-+++ b/test/Makefile
+-@@ -145,7 +145,7 @@ install:
+- tags:
+- 	ctags $(SRC)
+- 
+--tests:	exe apps $(TESTS)
+-+tests:	exe $(TESTS)
+- 
+- apps:
+- 	@(cd ..; $(MAKE) DIRS=apps all)
+-@@ -586,7 +586,7 @@ $(DTLSTEST)$(EXE_EXT): $(DTLSTEST).o ssl
+- #	fi
+- 
+- dummytest$(EXE_EXT): dummytest.o $(DLIBCRYPTO)
+--	@target=dummytest; $(BUILD_CMD)
+-+	+@target=dummytest; $(BUILD_CMD)
+- 
+- # DO NOT DELETE THIS LINE -- make depend depends on it.
+- 
