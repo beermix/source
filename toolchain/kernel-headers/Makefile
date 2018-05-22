@@ -42,13 +42,9 @@ HOST_EXTRACFLAGS=
 LINUX_HAS_HEADERS_INSTALL:=y
 
 KMAKE := $(MAKE) -C $(HOST_BUILD_DIR) \
-	HOSTCFLAGS="$(HOST_CFLAGS) -Wall -Wmissing-prototypes -Wstrict-prototypes" \
-	ARCH=$(LINUX_KARCH) \
+	$(KERNEL_MAKE_FLAGS) \
 	CC="$(KERNEL_CC)" \
-	CFLAGS="$(TARGET_CFLAGS)" \
-	CROSS_COMPILE=$(TARGET_CROSS) \
-	KBUILD_HAVE_NLS=no \
-	CONFIG_SHELL=$(BASH)
+	CFLAGS="$(TARGET_CFLAGS)"
 
 define Host/Configure/all
 	mkdir -p $(BUILD_DIR_TOOLCHAIN)/linux-dev
@@ -58,15 +54,15 @@ define Host/Configure/all
 endef
 
 # XXX: the following is needed to build lzma-loader
-#ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
-#  define Host/Configure/lzma
-#	$(CP) \
-#		$(HOST_BUILD_DIR)/arch/mips/include/asm/asm.h \
-#		$(HOST_BUILD_DIR)/arch/mips/include/asm/regdef.h \
-#		$(if $(call kernel_patchver_ge,3.15.0),$(HOST_BUILD_DIR)/arch/mips/include/asm/asm-eva.h) \
-#		$(BUILD_DIR_TOOLCHAIN)/linux-dev/include/asm/
-# endef
-#endif
+ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
+  define Host/Configure/lzma
+	$(CP) \
+		$(HOST_BUILD_DIR)/arch/mips/include/asm/asm.h \
+		$(HOST_BUILD_DIR)/arch/mips/include/asm/regdef.h \
+		$(HOST_BUILD_DIR)/arch/mips/include/asm/asm-eva.h \
+		$(BUILD_DIR_TOOLCHAIN)/linux-dev/include/asm/
+  endef
+endif
 
 define Host/Configure/post/mips
 	$(call Host/Configure/lzma)
