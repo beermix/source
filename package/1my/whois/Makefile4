@@ -5,13 +5,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=whois
-PKG_VERSION:=7735818
+PKG_VERSION:=5.3.0
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/rfc1036/whois
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/w/whois
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.xz
+
+#PKG_BUILD_DEPENDS:=gettext-full/host
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -24,7 +24,7 @@ define Package/whois
 endef
 
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR)
+	$(MAKE) -C $(PKG_BUILD_DIR) HAVE_ICONV=1
 endef
 
 define Package/whois/description
