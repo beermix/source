@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=whois
-PKG_VERSION:=7735818
+PKG_VERSION:=4bf6620
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rfc1036/whois
@@ -21,10 +21,6 @@ define Package/whois
   TITLE:=whois
   URL:=https://github.com/rfc1036/whois
   MENU:=1
-endef
-
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR)
 endef
 
 define Package/whois/description
