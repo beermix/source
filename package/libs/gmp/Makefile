@@ -44,7 +44,7 @@ CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
 	--without-readline \
-	--enable-cxx=detect \
+	--enable-cxx \
 
 define Build/Compile
 	$(call Build/Compile/Default, \
