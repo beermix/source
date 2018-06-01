@@ -13,6 +13,8 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
+PKG_BUILD_DEPENDS:=gettext-full/host
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/whois

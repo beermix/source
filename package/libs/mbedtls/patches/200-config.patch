@@ -1,6 +1,6 @@
 --- a/include/mbedtls/config.h
 +++ b/include/mbedtls/config.h
-@@ -599,17 +599,17 @@
+@@ -599,19 +599,19 @@
   *
   * Comment macros to disable the curve and functions for it
   */
@@ -24,8 +24,11 @@
 +//#define MBEDTLS_ECP_DP_BP384R1_ENABLED
 +//#define MBEDTLS_ECP_DP_BP512R1_ENABLED
  #define MBEDTLS_ECP_DP_CURVE25519_ENABLED
- #define MBEDTLS_ECP_DP_CURVE448_ENABLED
+-#define MBEDTLS_ECP_DP_CURVE448_ENABLED
++//#define MBEDTLS_ECP_DP_CURVE448_ENABLED
  
+ /**
+  * \def MBEDTLS_ECP_NIST_OPTIM
 @@ -635,8 +635,8 @@
   * Requires: MBEDTLS_HMAC_DRBG_C
   *
@@ -210,6 +213,15 @@
  
  /**
   * \def MBEDTLS_MD_C
+@@ -2388,7 +2388,7 @@
+  *
+  * This module enables abstraction of common (libc) functions.
+  */
+-#define MBEDTLS_PLATFORM_C
++//#define MBEDTLS_PLATFORM_C
+ 
+ /**
+  * \def MBEDTLS_RIPEMD160_C
 @@ -2399,7 +2399,7 @@
   * Caller:  library/md.c
   *
@@ -219,16 +231,6 @@
  
  /**
   * \def MBEDTLS_RSA_C
-@@ -2483,8 +2483,8 @@
-  * Caller:
-  *
-  * Requires: MBEDTLS_SSL_CACHE_C
-- */
- #define MBEDTLS_SSL_CACHE_C
-+ */
- 
- /**
-  * \def MBEDTLS_SSL_COOKIE_C
 @@ -2505,8 +2505,8 @@
   * Caller:
   *
