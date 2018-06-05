@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_VERSION:=d289aa7
+PKG_VERSION:=cd0f751
 PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE_PROTO:=git
