@@ -4814,23 +4814,9 @@ CONFIG_PACKAGE_nmap-ssl=y
 # Open vSwitch
 #
 # CONFIG_PACKAGE_openvswitch is not set
-# CONFIG_PACKAGE_openvswitch-base is not set
-# CONFIG_PACKAGE_openvswitch-ovn is not set
-# CONFIG_PACKAGE_openvswitch-ovn-base is not set
-# CONFIG_PACKAGE_openvswitch-ovn-controller is not set
-# CONFIG_PACKAGE_openvswitch-ovn-controller-vtep is not set
-# CONFIG_PACKAGE_openvswitch-ovn-detrace is not set
-# CONFIG_PACKAGE_openvswitch-ovn-nbctl is not set
-# CONFIG_PACKAGE_openvswitch-ovn-sbctl is not set
-# CONFIG_PACKAGE_openvswitch-ovn-trace is not set
-# CONFIG_PACKAGE_openvswitch-ovs-dpctl-top is not set
-# CONFIG_PACKAGE_openvswitch-ovs-l3ping is not set
-# CONFIG_PACKAGE_openvswitch-ovs-pcap is not set
-# CONFIG_PACKAGE_openvswitch-ovs-tcpdump is not set
-# CONFIG_PACKAGE_openvswitch-ovs-tcpundump is not set
-# CONFIG_PACKAGE_openvswitch-ovsdb-client is not set
+# CONFIG_PACKAGE_openvswitch-ovn-host is not set
+# CONFIG_PACKAGE_openvswitch-ovn-north is not set
 # CONFIG_PACKAGE_openvswitch-python is not set
-# CONFIG_PACKAGE_openvswitch-vtep is not set
 
 #
 # Printing

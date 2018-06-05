@@ -32,11 +32,6 @@ ifeq ($(PKG_VERSION),5.5.0)
   PKG_HASH:=530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87
 endif
 
-ifeq ($(PKG_VERSION),6.3.0)
-  PKG_HASH:=f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-endif
-
 ifeq ($(PKG_VERSION),7.3.0)
   PKG_HASH:=832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c
 endif
@@ -138,8 +133,6 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--with-tune=haswell \
-		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -215,7 +208,10 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
-		CFLAGS="$(HOST_CFLAGS)"
+		CFLAGS="$(HOST_CFLAGS)" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
 	$(SED) 's,TARGET_CROSS=.*,TARGET_CROSS=$(REAL_GNU_TARGET_NAME)-,' $(TOOLCHAIN_DIR)/info.mk
