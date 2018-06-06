@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ldns
 PKG_VERSION:=1.7.0
-PKG_RELEASE:=3
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.nlnetlabs.nl/downloads/ldns
@@ -58,9 +58,10 @@ define Package/drill/description
 endef
 
 CONFIGURE_ARGS += \
-	--with-drill \
-	--disable-rpath \
 	--disable-dane-ta-usage \
+	--disable-ecdsa \
+	--disable-gost \
+	--with-drill \
 	--with-ssl="$(STAGING_DIR)/usr"
 
 define Build/InstallDev
@@ -68,8 +69,6 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/ldns $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libldns.{a,so*} $(1)/usr/lib/
-	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/ldns.pc $(1)/usr/lib/pkgconfig/
 endef
 
 define Package/libldns/install
