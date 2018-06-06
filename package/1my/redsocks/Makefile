@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/redsocks
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libevent2
+  DEPENDS:=+libevent2 +libevent2-core
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
