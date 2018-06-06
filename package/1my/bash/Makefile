@@ -70,7 +70,6 @@ CONFIGURE_ARGS+= \
 	--bindir=/bin \
 	--disable-rpath \
 	--enable-readline \
-	--with-installed-readline \
 
 define Package/bash/postinst
 #!/bin/sh
