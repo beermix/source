@@ -17,7 +17,7 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-unexport CFLAGS
+HOST_CFLAGS += -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math
 
 HOST_CONFIGURE_ARGS += \
 	--enable-static \

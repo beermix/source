@@ -20,6 +20,7 @@ HOST_BUILD_PARALLEL:=1
 include $(INCLUDE_DIR)/host-build.mk
 
 unexport CFLAGS
+HOST_CPPFLAGS += -fexceptions
 
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
