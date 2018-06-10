@@ -23,6 +23,7 @@ include $(INCLUDE_DIR)/host-build.mk
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-shared \
+	--enable-thread-safe \
 	--with-gmp=$(STAGING_DIR_HOST)
 
 $(eval $(call HostBuild))
