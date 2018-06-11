@@ -60,7 +60,7 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--enable-stack-protector=strong \
-		--enable-kernel=4.14.0 \
+		--enable-kernel=4.9 \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
