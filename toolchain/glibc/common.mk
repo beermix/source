@@ -65,6 +65,7 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-obsolete-rpc \
+		--enable-obsolete-nsl \
 		--enable-bind-now \
 		--enable-lock-elision \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
