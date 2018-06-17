@@ -192,7 +192,40 @@ config_cb() {
 		return 0
 	}
 
+	# Section end
+	[ -n "$cur_sec" ] && {
+		config_get TYPE "$cur_sec" TYPE
+		case "$TYPE" in
+			interface)
+				config_get_bool enabled "$cur_sec" enabled 1
+				[ 1 -eq "$enabled" ] || return 0
+				config_get classgroup "$cur_sec" classgroup
+				config_set "$cur_sec" ifbdev "$C"
+				C=$(($C+1))
+				append INTERFACES "$cur_sec"
+				config_set "$classgroup" enabled 1
+				config_get device "$cur_sec" device
+				[ -z "$device" ] && {
+					device="$(find_ifname ${cur_sec})"
+					config_set "$cur_sec" device "$device"
+				}
+			;;
+			classgroup) append CG "$cur_sec";;
+			classify|default|reclassify)
+				case "$TYPE" in
+					classify) var="ctrules";;
+					*) var="rules";;
+				esac
+				config_get target "$cur_sec" target
+				config_set "$cur_sec" options "$options"
+				append "$var" "$cur_sec"
+				unset options
+			;;
+		esac
+	}
+
 	# Section start
+	cur_sec="$2"
 	case "$1" in
 		interface)
 			config_set "$2" "classgroup" "Default"
@@ -202,36 +235,6 @@ config_cb() {
 			option_cb() {
 				append options "$1"
 			}
-		;;
-	esac
-
-    # Section end
-	config_get TYPE "$CONFIG_SECTION" TYPE
-	case "$TYPE" in
-		interface)
-			config_get_bool enabled "$CONFIG_SECTION" enabled 1
-			[ 1 -eq "$enabled" ] || return 0
-			config_get classgroup "$CONFIG_SECTION" classgroup
-			config_set "$CONFIG_SECTION" ifbdev "$C"
-			C=$(($C+1))
-			append INTERFACES "$CONFIG_SECTION"
-			config_set "$classgroup" enabled 1
-			config_get device "$CONFIG_SECTION" device
-			[ -z "$device" ] && {
-				device="$(find_ifname ${CONFIG_SECTION})"
-				config_set "$CONFIG_SECTION" device "$device"
-			}
-		;;
-		classgroup) append CG "$CONFIG_SECTION";;
-		classify|default|reclassify)
-			case "$TYPE" in
-				classify) var="ctrules";;
-				*) var="rules";;
-			esac
-			config_get target "$CONFIG_SECTION" target
-			config_set "$CONFIG_SECTION" options "$options"
-			append "$var" "$CONFIG_SECTION"
-			unset options
 		;;
 	esac
 }
