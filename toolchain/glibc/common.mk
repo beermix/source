@@ -59,8 +59,8 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
-		--enable-stack-protector=strong \
-		--enable-kernel=4.9 \
+		--enable-kernel=4.14 \
+		--disable-experimental-malloc \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
@@ -68,6 +68,11 @@ GLIBC_CONFIGURE:= \
 		--enable-obsolete-nsl \
 		--enable-bind-now \
 		--enable-lock-elision \
+		--disable-build-nscd \
+		--disable-nscd \
+		--disable-debug \
+		--without-selinux \
+		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
