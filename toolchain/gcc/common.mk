@@ -128,6 +128,7 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--enable-checking=release \
 		--with-tune=haswell \
 		--with-arch=bonnell \
 		$(GRAPHITE_CONFIGURE) \
