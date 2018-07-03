@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=788c443
+PKG_VERSION:=4c09443
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -93,8 +93,6 @@ CONFIGURE_ARGS += \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc \
 	--disable-seccomp \
-	--disable-libscrypt \
-	--disable-unittests \
 	--disable-largefile \
 	--enable-lzma \
 	--enable-zstd \
