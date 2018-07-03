@@ -13,7 +13,7 @@ PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=ffc5623
+PKG_SOURCE_VERSION:=4476d16b033341be5b0a884425cff19b0358ea25
 PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -60,7 +60,6 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--enable-kernel=4.14 \
-		--disable-experimental-malloc \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
