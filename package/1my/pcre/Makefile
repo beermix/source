@@ -44,7 +44,6 @@ CONFIGURE_ARGS += \
 	--enable-unicode-properties \
 	--enable-pcre8 \
 	--enable-pcre16 \
-	--enable-pcre32 \
 	--with-match-limit-recursion=16000 \
 	--enable-cpp \
 	--enable-jit \
