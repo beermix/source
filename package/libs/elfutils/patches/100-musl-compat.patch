@@ -511,7 +511,7 @@ https://sourceware.org/bugzilla/show_bug.cgi?id=21002
  #include <stdlib.h>
 --- a/libcpu/i386_lex.c
 +++ b/libcpu/i386_lex.c
-@@ -571,7 +571,6 @@ char *i386_text;
+@@ -808,7 +808,6 @@ char *yytext;
  #endif
  
  #include <ctype.h>
