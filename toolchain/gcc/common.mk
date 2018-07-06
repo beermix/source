@@ -40,7 +40,7 @@ ifeq ($(PKG_VERSION),7.3.1)
 #  PKG_REV:=7.3.1-20180406
 #  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
   PKG_VERSION:=7.3.1
-  PKG_REV:=7-20180628
+  PKG_REV:=7-2018075
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-7
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
