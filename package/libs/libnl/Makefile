@@ -78,12 +78,8 @@ define Package/libnl/description
  message construction and parsing, object caching system, etc.
 endef
 
-TARGET_CFLAGS += -ffunction-sections $(FPIC)
+TARGET_CFLAGS += -ffunction-sections -fdata-sections $(FPIC)
 
-CONFIGURE_ARGS += \
-	--disable-debug
-
-# comment out two lines below to start debugging libnl itself
 CONFIGURE_ARGS += \
 	--disable-debug
 
