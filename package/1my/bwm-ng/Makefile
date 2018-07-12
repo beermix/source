@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bwm-ng
-PKG_VERSION:=d9d7f7c
+PKG_VERSION:=36382a8
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/virtualboots/bwm-ng.git
