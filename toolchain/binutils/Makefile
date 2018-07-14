@@ -59,6 +59,7 @@ BINUTILS_CONFIGURE:= \
 		--enable-plugins \
 		--disable-multilib \
 		--disable-werror \
+		--enable-lto \
 		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
