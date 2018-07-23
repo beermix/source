@@ -5,15 +5,14 @@
 # See /LICENSE for more information.
 # https://github.com/bminor/glibc/tree/release/2.27/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.27/master
-# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/google/grte/v5-2.27/master
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.27
+PKG_VERSION:=2.27.9000
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=8623cfe300b4fe88e8b7343bb15829bfe4317609
+PKG_SOURCE_VERSION:=b99f1c957d37e6c5dfce2fee7bff17e5a09ce400
 PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
