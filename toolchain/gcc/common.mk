@@ -42,8 +42,8 @@ endif
 
 ifeq ($(PKG_VERSION),8.1.1)
   PKG_VERSION:=8.1.1
-  PKG_REV:=8-20180713
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/LATEST-8
+  PKG_REV:=8.2.0-RC-20180719
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
