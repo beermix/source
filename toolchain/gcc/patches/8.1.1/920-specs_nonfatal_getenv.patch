@@ -1,14 +1,16 @@
-diff --git a/gcc/gcc.c b/gcc/gcc.c
-old mode 100644
-new mode 100755
-index a716f7082..fa1514c4b
+Author: Jo-Philipp Wich <jow@openwrt.org>
+Date:   Sat Apr 21 03:02:39 2012 +0000
+
+    gcc: add patch to make the getenv() spec function nonfatal if requested environment variable is unset
+    
+    SVN-Revision: 31390
+
 --- a/gcc/gcc.c
 +++ b/gcc/gcc.c
-@@ -9344,9 +9344,10 @@ getenv_spec_function (int argc, const char **argv)
-   if (!value && spec_undefvar_allowed)
+@@ -9347,8 +9347,10 @@ getenv_spec_function (int argc, const ch
      value = varname;
  
--  if (!value)
+   if (!value)
 -    fatal_error (input_location,
 -		 "environment variable %qs not defined", varname);
 +    {
