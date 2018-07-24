@@ -1075,6 +1075,7 @@ rda               630/tcp
 rda               630/udp
 ipp               631/tcp
 ipp               631/udp
+ipps              631/tcp
 bmpp              632/tcp
 bmpp              632/udp
 servstat          633/tcp
@@ -8142,6 +8143,8 @@ hivestor         4884/tcp
 hivestor         4884/udp
 abbs             4885/tcp
 abbs             4885/udp
+xcap-portal      4888/tcp
+xcap-control     4889/tcp
 lyskom           4894/tcp
 lyskom           4894/udp
 radmin-port      4899/tcp
@@ -9762,6 +9765,8 @@ intu-ec-client   8021/tcp
 intu-ec-client   8021/udp
 oa-system        8022/tcp
 oa-system        8022/udp
+arca-api         8023/tcp
+arca-api         8023/udp
 ca-audit-da      8025/tcp
 ca-audit-da      8025/udp
 ca-audit-ds      8026/tcp
