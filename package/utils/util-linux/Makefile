@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=util-linux
 PKG_VERSION:=2.32
-PKG_RELEASE:=3
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/linux/utils/$(PKG_NAME)/v2.32
@@ -143,13 +143,12 @@ endef
 
 define Package/blockdev
 $(call Package/util-linux/Default)
- TITLE:=call block device ioctls from the command line
- SUBMENU=Disc
+  TITLE:=call block device ioctls from the command line
+  SUBMENU=Disc
 endef
 
 define Package/blockdev/description
- The utility blockdev allows one to call block device ioctls from the
-command line
+ The blockdev program is the command-line interface to call block device ioctls.
 endef
 
 define Package/cal
@@ -577,8 +576,8 @@ define Package/blkid/install
 endef
 
 define Package/blockdev/install
-	 $(INSTALL_DIR) $(1)/usr/sbin
-	 $(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/blockdev $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/blockdev $(1)/usr/sbin/
 endef
 
 define Package/cal/install
