@@ -66,8 +66,6 @@ GLIBC_CONFIGURE:= \
 		--enable-obsolete-nsl \
 		--enable-bind-now \
 		--enable-lock-elision \
-		--disable-build-nscd \
-		--disable-nscd \
 		--disable-debug \
 		--without-selinux \
 		--disable-timezone-tools \
