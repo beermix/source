@@ -113,7 +113,7 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--with-default-libstdcxx-abi=gcc4-compatible \
+		--with-linker-hash-style=gnu \
 		--with-tune=haswell \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
