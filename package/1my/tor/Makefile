@@ -93,6 +93,8 @@ CONFIGURE_ARGS += \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc \
 	--disable-seccomp \
+	--disable-libscrypt \
+	--disable-unittests \
 	--disable-largefile \
 	--enable-lzma \
 	--enable-zstd \
