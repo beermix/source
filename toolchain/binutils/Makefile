@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/bminor/binutils-gdb/tree/binutils-2_30-branch
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=binutils
@@ -53,6 +53,7 @@ BINUTILS_CONFIGURE:= \
 		--enable-plugins \
 		--disable-multilib \
 		--disable-werror \
+		--enable-lto \
 		--disable-nls \
 		--disable-sim \
 		--disable-gdb \
