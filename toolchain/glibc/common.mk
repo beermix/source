@@ -62,13 +62,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-obsolete-rpc \
-		--enable-obsolete-nsl \
-		--enable-bind-now \
-		--enable-lock-elision \
 		--disable-debug \
-		--without-selinux \
-		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
