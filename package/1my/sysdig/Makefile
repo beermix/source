@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysdig
-PKG_VERSION:=0.21.0
+PKG_VERSION:=0.22.1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/draios/sysdig
