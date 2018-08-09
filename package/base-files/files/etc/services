@@ -10159,6 +10159,8 @@ xadmin           9105/udp
 astergate        9106/tcp
 astergate-disc   9106/udp
 astergatefax     9107/tcp
+hexxorecore      9111/tcp
+hexxorecore      9111/udp
 mxit             9119/tcp
 mxit             9119/udp
 grcmp            9122/tcp
