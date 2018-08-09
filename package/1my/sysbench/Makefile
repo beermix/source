@@ -11,7 +11,7 @@ PKG_NAME:=sysbench
 PKG_VERSION:=1.0.15
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/beermix/sysbench
+PKG_SOURCE_URL:=https://github.com/akopytov/sysbench
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -25,8 +25,7 @@ include $(INCLUDE_DIR)/host-build.mk
 define Package/sysbench
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:= +luajit
-  DEPENDS:=+libpthread
+  DEPENDS:=+libpthread +luajit
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
