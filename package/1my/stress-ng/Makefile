@@ -7,31 +7,30 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=atop
-PKG_VERSION:=8d2d68c
+PKG_NAME:=stress-ng
+PKG_VERSION:=0.09.36
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/Atoptool/atop
+PKG_SOURCE_URL:=http://kernel.ubuntu.com/~cking/tarballs/stress-ng
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_INSTALL:=1
+PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/atop
+define Package/stress-ng
   SECTION:=utils
   CATEGORY:=Utilities
-  TITLE:=atop
-  DEPENDS:=+libncurses +zlib
+  TITLE:=stress-ng
+  DEPENDS:=+libattr
 endef
 
-define Package/atop/install
+define Package/stress-ng/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/atop $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/stress-ng $(1)/usr/bin/
 endef
 
-$(eval $(call BuildPackage,atop))
+$(eval $(call BuildPackage,stress-ng))
 
 
