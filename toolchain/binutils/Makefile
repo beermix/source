@@ -57,7 +57,6 @@ BINUTILS_CONFIGURE:= \
 		--enable-plugins \
 		--disable-multilib \
 		--enable-lto \
-		--enable-targets=i386-linux \
 		--disable-werror \
 		--disable-nls \
 		--disable-sim \
