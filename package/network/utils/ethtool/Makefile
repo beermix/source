@@ -8,12 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ethtool
-PKG_VERSION:=4.17
+PKG_VERSION:=4.18
 PKG_RELEASE:=1
 
-PKG_MAINTAINER:=Matthias Schiffer <mschiffer@universe-factory.net>
+PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/software/network/ethtool
+PKG_HASH:=90948555d4c017561d0d8795f2dc61893a4932c0f3b85e6d422afd7031b7c110
 
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
@@ -39,7 +40,9 @@ define Package/ethtool/description
 endef
 
 define Package/ethtool/config
-	source "$(SOURCE)/Config.in"
+	config ETHTOOL_PRETTY_DUMP
+		depends on PACKAGE_ethtool
+		bool "Enable pretty printing"
 endef
 
 ifeq ($(CONFIG_ETHTOOL_PRETTY_DUMP),y)
