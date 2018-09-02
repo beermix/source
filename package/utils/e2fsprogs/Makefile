@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=e2fsprogs
-PKG_VERSION:=1.44.4
+PKG_VERSION:=1.44.3
 PKG_HASH:=
 PKG_RELEASE:=1
 
