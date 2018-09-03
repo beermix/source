@@ -114,6 +114,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--with-linker-hash-style=gnu \
+		--disable-vtable-verify \
 		--with-tune=haswell \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
