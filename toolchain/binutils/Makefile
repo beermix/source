@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/bminor/binutils-gdb/tree/binutils-2_31-branch
+#
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=binutils
@@ -21,10 +21,6 @@ endif
 
 ifeq ($(PKG_VERSION),2.30)
   PKG_HASH:=6e46b8aeae2f727a36f0bd9505e405768a72218f1796f0d09757d45209871ae6
-endif
-
-ifeq ($(PKG_VERSION),2.31)
-  PKG_HASH:=231036df7ef02049cdbff0681f4575e571f26ea8086cf70c2dcd3b6c0f4216bf
 endif
 
 ifeq ($(PKG_VERSION),2.31.1)

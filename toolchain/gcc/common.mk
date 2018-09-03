@@ -42,11 +42,11 @@ endif
 
 ifeq ($(PKG_VERSION),8.2.1)
   PKG_VERSION:=8.2.1
-  PKG_REV:=$(PKG_VERSION)-20180831
+  PKG_REV:=8.2.1-20180831
   PKG_HASH:=725ec907fd7463568ec0c097802824b978a679523a2e3374bdc2e3d265cd2b6c
   PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  GCC_DIR:=$(PKG_NAME)-$(PKG_REV)
 endif
 
 ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
