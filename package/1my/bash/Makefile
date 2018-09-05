@@ -51,24 +51,17 @@ endef
 #
 # bash_cv_sys_named_pipes: Required for process substituion
 CONFIGURE_VARS += \
-	ac_cv_rl_prefix="$(STAGING_DIR)/usr" \
-	ac_cv_rl_version="7.0" \
-	bash_cv_getcwd_malloc=yes \
-	bash_cv_job_control_missing=present \
-	bash_cv_dev_fd=whacky \
-	bash_cv_sys_named_pipes=present \
-
-# The following are some other tests that cannot run when cross-compiling
-CONFIGURE_VARS += \
-	bash_cv_func_sigsetjmp=present \
-	bash_cv_printf_a_format=yes \
-
-CONFIGURE_ARGS+= \
-	--with-installed-readline="$(STAGING_DIR)/usr" \
-	--with-curses \
-	--without-bash-malloc \
-	--bindir=/bin \
-	--disable-rpath \
+	--disable-static \
+	--enable-cond-command \
+	--enable-history \
+	--enable-job-control \
+	--enable-readline \
+	--with-installed-readline \
+	--enable-extended-glob \
+	--enable-progcomp \
+	--enable-arith-for-command \
+	--enable-directory-stack \
+	--with-bash-malloc=no
 
 define Package/bash/postinst
 #!/bin/sh
