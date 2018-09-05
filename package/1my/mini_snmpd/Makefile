@@ -17,7 +17,7 @@ PKG_LICENSE_FILES:=COPYING
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/troglobit/mini-snmpd.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=3f0f4d93560a86358548c4f48459e9e9a8a4a6ca
+PKG_SOURCE_VERSION:=f72008b1c5d1ac11e30fa718d2ecd79b029afd21
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_MIRROR_HASH:=
 
@@ -41,7 +41,7 @@ define Package/mini_snmpd
 # uncomment if you just want the binary, not the init script
 # openwrt requires init script runtime dependencies be defined for make menuconfig 
 # (e.g busybox sysntpd)
-  DEPENDS:=+jsonfilter +ubus +procd +ubox +confuse
+  DEPENDS:=+jsonfilter +ubus +procd +ubox
 endef
 
 CONFIGURE_ARGS+= \
