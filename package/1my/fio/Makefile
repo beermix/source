@@ -35,8 +35,7 @@ define Build/Configure
 		./configure \
 			--prefix=/usr \
 			--cc=$(TARGET_CC) \
-			--cpu=i686 \
-			--enable-lex \
+			--extra-cflags=$(TARGET_CFLAGS) \
 			--disable-native \
 	);
 endef
