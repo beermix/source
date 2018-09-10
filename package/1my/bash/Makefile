@@ -65,16 +65,10 @@ CONFIGURE_VARS += \
 
 CONFIGURE_ARGS+= \
 	--with-installed-readline="$(STAGING_DIR)/usr" \
-	--enable-cond-command \
-	--enable-history \
-	--enable-job-control \
-	--enable-readline \
-	--with-installed-readline \
-	--enable-extended-glob \
-	--enable-progcomp \
-	--enable-arith-for-command \
-	--enable-directory-stack \
-	--with-bash-malloc=no
+	--with-curses \
+	--without-bash-malloc \
+	--bindir=/bin \
+	--disable-rpath \
 
 define Package/bash/postinst
 #!/bin/sh
