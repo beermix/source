@@ -3,21 +3,23 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/torproject/tor/branches/active
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=3384638
+PKG_VERSION:=0.3.4.8
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/torproject/tor.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://dist.torproject.org/ \
+	https://archive.torproject.org/tor-package-archive
+PKG_HASH:=826a4cb2c099a29c7cf91516ffffcfcb5aace7533b8853a8c8bddcfe2bfb1023
+PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
+		Peter Wagner <tripolar@gmx.at>
+PKG_LICENSE_FILES:=LICENSE
 
 PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -39,7 +41,7 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +liblzma +zstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
 endef
 
 define Package/tor/description
@@ -96,8 +98,7 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-largefile \
-	--enable-lzma \
-	--enable-zstd \
+	--disable-lzma \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
