@@ -99,6 +99,7 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-largefile \
 	--disable-lzma \
+	--disable-silent-rules \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
