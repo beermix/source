@@ -52,7 +52,6 @@ BINUTILS_CONFIGURE:= \
 		--enable-deterministic-archives \
 		--enable-plugins \
 		--disable-multilib \
-		--enable-lto \
 		--disable-werror \
 		--disable-nls \
 		--disable-sim \
