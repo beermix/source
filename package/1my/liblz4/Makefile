@@ -3,7 +3,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=liblz4
-PKG_VERSION:=v1.8.2
+PKG_VERSION:=v1.8.3
 PKG_RELEASE:=2
 
 PKG_LICENSE:=BSD-2-Clause
