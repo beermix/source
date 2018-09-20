@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-PKG_VERSION:=67e3689
+PKG_VERSION:=2.2.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/hishamhm/htop
@@ -37,7 +37,7 @@ define Package/htop/description
 endef
 
 CONFIGURE_ARGS += \
-	--enable-unicode \
+	--disable-unicode \
 	--disable-hwloc
 
 CONFIGURE_VARS += \
