@@ -234,6 +234,7 @@ foreach my $mirror (@ARGV) {
 		foreach my $dir (@extra) {
 			push @mirrors, "https://cdn.kernel.org/pub/$dir";
 			push @mirrors, "https://mirror.rackspace.com/kernel.org/$dir";
+			push @mirrors, "https://git.kernel.org/torvalds/t/$dir";
 			push @mirrors, "http://download.xs4all.nl/ftp.kernel.org/pub/$dir";
 			push @mirrors, "http://mirrors.mit.edu/kernel/$dir";
 			push @mirrors, "http://ftp.nara.wide.ad.jp/pub/kernel.org/$dir";
