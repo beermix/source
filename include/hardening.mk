@@ -5,20 +5,6 @@
 # See /LICENSE for more information.
 #
 
-# Graphite Options
-
-GCC_USE_GRAPHITE ?= 1
-
-
-ifdef CONFIG_GCC_USE_GRAPHITE
-  ifeq ($(strip $(GCC_USE_GRAPHITE)),1)
-    TARGET_CFLAGS += -fgraphite-identity -floop-nest-optimize -ftree-loop-distribution
-  endif
-endif
-
-
-# Hardening Options
-
 PKG_CHECK_FORMAT_SECURITY ?= 1
 PKG_ASLR_PIE ?= 1
 PKG_SSP ?= 1
@@ -38,7 +24,7 @@ ifdef CONFIG_PKG_ASLR_PIE
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += -fstack-protector --param=ssp-buffer-size=4
+    TARGET_CFLAGS += -fstack-protector
   endif
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG
