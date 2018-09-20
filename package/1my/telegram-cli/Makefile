@@ -8,13 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=telegram-cli
-PKG_VERSION:=3957609
+PKG_VERSION:=1.3.1-20160323
+PKG_REV:=6547c0b21b977b327b3c5e8142963f4bc246187a
+PKG_RELEASE:=2
 
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_URL:=https://github.com/vysheng/tg
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/a-x-/tg
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE_VERSION:=$(PKG_REV)
 
 PKG_REMOVE_FILES:=ax_lua.m4
 PKG_FIXUP:=autoreconf
@@ -46,6 +48,7 @@ HOST_CONFIGURE_ARGS += \
 CONFIGURE_ARGS += \
 	--disable-python \
 	--disable-valgrind \
+	CFLAGS="-w" \
 	--with-zlib=$(STAGING_DIR)/usr
 
 CONFIGURE_VARS += \
@@ -55,12 +58,9 @@ CONFIGURE_VARS += \
 
 define Host/Configure
 	(cd $(HOST_BUILD_DIR)/tgl; \
-	./configure; \
+	./configure CFLAGS="-w"; \
 	)
 endef
-
-HOST_CXXFLAGS += -Wno-error=cast-function-type
-HOST_CFLAGS += -Wno-error=cast-function-type
 
 define Host/Compile
 	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR)/tgl $(HOST_MAKE_FLAGS)
