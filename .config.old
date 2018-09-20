@@ -3891,7 +3891,7 @@ CONFIG_PACKAGE_bind-libs=y
 # CONFIG_PACKAGE_ck is not set
 # CONFIG_PACKAGE_classpath is not set
 # CONFIG_PACKAGE_classpath-tools is not set
-# CONFIG_PACKAGE_confuse is not set
+CONFIG_PACKAGE_confuse=y
 # CONFIG_PACKAGE_dtndht is not set
 # CONFIG_PACKAGE_fcgi is not set
 # CONFIG_PACKAGE_fftw3 is not set
