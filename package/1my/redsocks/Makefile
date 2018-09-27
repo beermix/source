@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=redsocks
 PKG_VERSION:=df6394c
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/darkk/redsocks.git
@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/redsocks
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libevent2 +libevent2-core
+  DEPENDS:=+libevent2-core
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
@@ -39,10 +39,10 @@ define Package/redsocks/description
  uses the system firewall's redirection facility to intercept TCP connections,
  thus the redirection is system-wide, with fine-grained control, and does
  not depend on LD_PRELOAD libraries.
- 
+
  Redsocks supports tunneling TCP connections and UDP packets. It has
  authentication support for both, SOCKS and HTTP proxies.
- 
+
  Also included is a small DNS server returning answers with the "truncated" flag
  set for any UDP query, forcing the resolver to use TCP.
 endef
