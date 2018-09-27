@@ -1,0 +1,114 @@
+From 365456aef03bd148199ac4ee667ae7579eebc3eb Mon Sep 17 00:00:00 2001
+From: Peter Wagner <tripolar@gmx.at>
+Date: Mon, 13 Aug 2018 01:04:17 +0200
+Subject: [PATCH] conntrack-tools: update to 1.4.5 and link against libtirpc
+ libnetfilter-conntrack: update to 1.0.7
+
+Signed-off-by: Peter Wagner <tripolar@gmx.at>
+---
+ package/libs/libnetfilter-conntrack/Makefile  |  6 +--
+ .../network/utils/conntrack-tools/Makefile    | 11 +++--
+ .../patches/conntrack-tools-1.4.5-rpc.patch   | 41 +++++++++++++++++++
+ 3 files changed, 51 insertions(+), 7 deletions(-)
+ create mode 100644 package/network/utils/conntrack-tools/patches/conntrack-tools-1.4.5-rpc.patch
+
+diff --git a/package/libs/libnetfilter-conntrack/Makefile b/package/libs/libnetfilter-conntrack/Makefile
+index be82285317f..fa91f7746d5 100644
+--- a/package/libs/libnetfilter-conntrack/Makefile
++++ b/package/libs/libnetfilter-conntrack/Makefile
+@@ -12,9 +12,9 @@ PKG_RELEASE:=1
+ 
+ PKG_SOURCE_PROTO:=git
+ PKG_SOURCE_URL:=https://git.netfilter.org/libnetfilter_conntrack
+-PKG_SOURCE_DATE:=2017-07-25
+-PKG_SOURCE_VERSION:=e870432649955d377a73ee5a72cb23f0f6b5e4c5
+-PKG_MIRROR_HASH:=6891e6bea956d5d3514524918f439dfe8b5806397d8d40d1afc69b9bfebc1d57
++PKG_SOURCE_DATE:=2018-05-01
++PKG_SOURCE_VERSION:=3ccae9f5b2a9564cd63699ba60e54a46bc0d73b6
++PKG_MIRROR_HASH:=c978ef0fa5b7379de2909ca5d9c599ac63b4f8166f5971d58f6e074a922d996f
+ 
+ PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
+ 
+diff --git a/package/network/utils/conntrack-tools/Makefile b/package/network/utils/conntrack-tools/Makefile
+index f04ac69d2eb..0945263a2a5 100644
+--- a/package/network/utils/conntrack-tools/Makefile
++++ b/package/network/utils/conntrack-tools/Makefile
+@@ -12,9 +12,9 @@ PKG_RELEASE:=1
+ 
+ PKG_SOURCE_PROTO:=git
+ PKG_SOURCE_URL:=https://git.netfilter.org/conntrack-tools
+-PKG_SOURCE_DATE:=2017-09-27
+-PKG_SOURCE_VERSION:=eefe649ca51ed0cbb995454cdc366f5072f6443c
+-PKG_MIRROR_HASH:=1c207c3e423d741fbb31e3c29486a811e6dad493f26ec47a2df75b6262a1b4bd
++PKG_SOURCE_DATE:=2018-05-01
++PKG_SOURCE_VERSION:=88610abee7e58f4da7ec6f198e00ff70a92c870f
++PKG_MIRROR_HASH:=cccc5e25e3cb159385b170f63f9b7fd2186f68d32239718080f605c060ea1cb8
+ 
+ PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
+ PKG_LICENSE:=GPL-2.0
+@@ -23,7 +23,7 @@ PKG_CPE_ID:=cpe:/a:conntrack-tools_project:conntrack-tools
+ PKG_FIXUP:=autoreconf
+ PKG_INSTALL:=1
+ 
+-PKG_BUILD_DEPENDS:=librpc
++PKG_BUILD_DEPENDS:=libtirpc
+ 
+ include $(INCLUDE_DIR)/package.mk
+ 
+@@ -46,6 +46,9 @@ define Package/conntrack/description
+  connection tracking state table.
+ endef
+ 
++CONFIGURE_ARGS += \
++	--with-libtirpc
++
+ define Package/conntrack/install
+ 	$(INSTALL_DIR) $(1)/usr/sbin
+ 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/conntrack $(1)/usr/sbin/
+diff --git a/package/network/utils/conntrack-tools/patches/conntrack-tools-1.4.5-rpc.patch b/package/network/utils/conntrack-tools/patches/conntrack-tools-1.4.5-rpc.patch
+new file mode 100644
+index 00000000000..1f7fc44f44a
+--- /dev/null
++++ b/package/network/utils/conntrack-tools/patches/conntrack-tools-1.4.5-rpc.patch
+@@ -0,0 +1,41 @@
++--- a/configure.ac
+++++ b/configure.ac
++@@ -50,6 +50,25 @@
++         AS_HELP_STRING([--enable-systemd], [Build systemd support]),
++         [enable_systemd="$enableval"], [enable_systemd="no"])
++ 
+++AC_ARG_WITH([libtirpc],
+++           AS_HELP_STRING([--with-libtirpc], [Use libtirpc as RPC implementation (instead of sunrpc)]),
+++           [], [ with_libtirpc=no ])
+++
+++AS_IF([test "x$with_libtirpc" != xno],
+++      [PKG_CHECK_MODULES([TIRPC],
+++                         [libtirpc],
+++                         [RPC_CFLAGS=$TIRPC_CFLAGS; RPC_LIBS=$TIRPC_LIBS;],
+++                        [AC_MSG_ERROR([libtirpc requested, but library not found.])]
+++                       )],
+++      [AC_CHECK_HEADER(rpc/rpc.h,
+++                      [RPC_CFLAGS=""; RPC_LIBS="";],
+++                      [AC_MSG_ERROR([sunrpc requested, but headers are not present.])]
+++                     )]
+++)
+++
+++AC_SUBST(RPC_CFLAGS)
+++AC_SUBST(RPC_LIBS)
+++
++ PKG_CHECK_MODULES([LIBNFNETLINK], [libnfnetlink >= 1.0.1])
++ PKG_CHECK_MODULES([LIBMNL], [libmnl >= 1.0.3])
++ PKG_CHECK_MODULES([LIBNETFILTER_CONNTRACK], [libnetfilter_conntrack >= 1.0.7])
++--- a/src/helpers/Makefile.am
+++++ b/src/helpers/Makefile.am
++@@ -30,8 +30,8 @@
++ ct_helper_mdns_la_CFLAGS = $(HELPER_CFLAGS)
++ 
++ ct_helper_rpc_la_SOURCES = rpc.c
++-ct_helper_rpc_la_LDFLAGS = $(HELPER_LDFLAGS)
++-ct_helper_rpc_la_CFLAGS = $(HELPER_CFLAGS)
+++ct_helper_rpc_la_LDFLAGS = $(HELPER_LDFLAGS) $(RPC_LIBS)
+++ct_helper_rpc_la_CFLAGS = $(HELPER_CFLAGS) $(RPC_CFLAGS)
++ 
++ ct_helper_tftp_la_SOURCES = tftp.c
++ ct_helper_tftp_la_LDFLAGS = $(HELPER_LDFLAGS)
