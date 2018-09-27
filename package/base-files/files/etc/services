@@ -10033,6 +10033,7 @@ sunwebadmin      8800/udp
 truecm           8804/tcp
 truecm           8804/udp
 pfcp             8805/udp
+hes-clip         8807/udp
 ssports-bcast    8808/udp
 dxspider         8873/tcp
 dxspider         8873/udp
@@ -11021,6 +11022,7 @@ vista-4gl       24249/udp
 ild             24321/tcp
 ild             24321/udp
 hid             24322/udp
+vrmg-ip         24323/tcp
 intel-rci       24386/tcp
 intel-rci       24386/udp
 tonidods        24465/tcp
@@ -11098,6 +11100,7 @@ exoconfig       26487/tcp
 exoconfig       26487/udp
 exonet          26489/tcp
 exonet          26489/udp
+flex-lmadmin    27010/tcp
 imagepump       27345/tcp
 imagepump       27345/udp
 jesmsjc         27442/tcp
