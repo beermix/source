@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=redsocks
-PKG_VERSION:=5df6a30
+PKG_VERSION:=df6394c
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
