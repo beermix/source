@@ -3800,8 +3800,8 @@ CONFIG_PACKAGE_libxtables=y
 CONFIG_PACKAGE_libmbedtls=y
 CONFIG_PACKAGE_libopenssl=y
 # CONFIG_OPENSSL_USE_VERSION_1_0_2 is not set
-CONFIG_OPENSSL_USE_VERSION_1_1_0=y
-# CONFIG_OPENSSL_USE_VERSION_1_1_1 is not set
+# CONFIG_OPENSSL_USE_VERSION_1_1_0 is not set
+CONFIG_OPENSSL_USE_VERSION_1_1_1=y
 
 #
 # Build Options
@@ -3814,6 +3814,7 @@ CONFIG_OPENSSL_WITH_DEPRECATED=y
 #
 # Protocol Support
 #
+CONFIG_OPENSSL_WITH_TLS13=y
 CONFIG_OPENSSL_WITH_DTLS=y
 CONFIG_OPENSSL_WITH_NPN=y
 CONFIG_OPENSSL_WITH_SRP=y
@@ -3823,7 +3824,7 @@ CONFIG_OPENSSL_WITH_CMS=y
 # Algorithm Selection
 #
 CONFIG_OPENSSL_WITH_EC=y
-CONFIG_OPENSSL_WITH_EC2M=y
+# CONFIG_OPENSSL_WITH_EC2M is not set
 CONFIG_OPENSSL_WITH_CHACHA_POLY1305=y
 CONFIG_OPENSSL_PREFER_CHACHA_OVER_GCM=y
 CONFIG_OPENSSL_WITH_PSK=y
@@ -3831,9 +3832,11 @@ CONFIG_OPENSSL_WITH_PSK=y
 #
 # Less commonly used build options
 #
+# CONFIG_OPENSSL_WITH_ARIA is not set
 # CONFIG_OPENSSL_WITH_CAMELLIA is not set
 # CONFIG_OPENSSL_WITH_IDEA is not set
 # CONFIG_OPENSSL_WITH_SEED is not set
+# CONFIG_OPENSSL_WITH_SM234 is not set
 # CONFIG_OPENSSL_WITH_BLAKE2 is not set
 # CONFIG_OPENSSL_WITH_MDC2 is not set
 # CONFIG_OPENSSL_WITH_WHIRLPOOL is not set
@@ -5957,4 +5960,4 @@ CONFIG_PACKAGE_openssl-util=y
 # font-utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng bind boost coreutils dnscrypt-proxy icu libaio libsodium miniupnpc netdata openssh redsocks"
+CONFIG_OVERRIDE_PKGS="aircrack-ng bind boost coreutils dnscrypt-proxy icu libaio libsodium miniupnpc netdata openssh"
