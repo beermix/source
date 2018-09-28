@@ -6018,4 +6018,4 @@ CONFIG_PACKAGE_openssl-util=y
 # font-utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng bind boost coreutils dnscrypt-proxy icu libaio libsodium miniupnpc netdata openssh"
+CONFIG_OVERRIDE_PKGS="aircrack-ng bind coreutils dnscrypt-proxy icu libaio libsodium miniupnpc netdata openssh"
