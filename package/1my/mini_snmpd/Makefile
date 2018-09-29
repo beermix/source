@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mini_snmpd
-PKG_VERSION:=1.5
+PKG_VERSION:=3f0f4d9
 PKG_RELEASE:=5
 PKG_MAINTAINER:=Marcin Jurkowski <marcin1j@gmail.com>
 PKG_LICENSE:=GPL-2.0
