@@ -230,10 +230,8 @@ ifeq ($(CONFIG_SOFT_FLOAT),y)
   SOFT_FLOAT_CONFIG_OPTION:=--with-float=soft
   ifeq ($(CONFIG_arm),y)
     TARGET_CFLAGS+= -mfloat-abi=soft
-    TARGET_GCCGOFLAGS+= -mfloat-abi=soft
   else
     TARGET_CFLAGS+= -msoft-float
-    TARGET_GCCGOFLAGS+= -msoft-float
   endif
 else
   SOFT_FLOAT_CONFIG_OPTION:=
@@ -297,6 +295,7 @@ TARGET_CC:=$(TARGET_CROSS)gcc
 TARGET_CXX:=$(TARGET_CROSS)g++
 KPATCH:=$(SCRIPT_DIR)/patch-kernel.sh
 SED:=$(STAGING_DIR_HOST)/bin/sed -i -e
+ESED:=$(STAGING_DIR_HOST)/bin/sed -E -i -e
 CP:=cp -fpR
 LN:=ln -sf
 XARGS:=xargs -r
