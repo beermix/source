@@ -1,7 +1,7 @@
 ﻿include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zstd
-PKG_VERSION:=v1.3.5
+PKG_VERSION:=v1.3.6
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/facebook/zstd
@@ -17,14 +17,10 @@ include $(INCLUDE_DIR)/cmake.mk
 export CMAKE_SOURCE_DIR=$(PKG_INSTALL_DIR)/../build/cmake
 
 CMAKE_OPTIONS += \
-	-DCMAKE_BUILD_TYPE=Release \
 	-DZSTD_BUILD_PROGRAMS=0 \
 	-DZSTD_BUILD_SHARED=1 \
 	-DZSTD_BUILD_STATIC=0 \
-	-DZSTD_BUILD_TESTS=0 \
-	-DZSTD_LZMA_SUPPORT=0 \
 	-DZSTD_MULTITHREAD_SUPPORT=1 \
-	-DZSTD_ZLIB_SUPPORT=0 \
 
 define Package/zstd
 	SECTION:=libs
