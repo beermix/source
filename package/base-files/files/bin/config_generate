@@ -4,7 +4,7 @@ CFG=/etc/board.json
 
 . /usr/share/libubox/jshn.sh
 
-[ -s $CFG ] || /bin/board_detect || exit 1
+[ -s $CFG ]  /bin/board_detect  exit 1
 [ -s /etc/config/network -a -s /etc/config/system ] && exit 0
 
 generate_static_network() {
@@ -70,11 +70,11 @@ generate_network() {
 		json_select ..
 	json_select ..
 
-	[ -n "$ifname" ] || return
+	[ -n "$ifname" ]  return
 
 	# force bridge for multi-interface devices (and lan)
 	case "$1:$ifname" in
-		*\ * | lan:*) type="bridge" ;;
+		*\ *  lan:*) type="bridge" ;;
 	esac
 
 	uci -q batch <<-EOF
@@ -95,6 +95,11 @@ generate_network() {
 	case "$protocol" in
 		static)
 			local ipad
+			# Use preseted ip (except from 192.168.1.1) if it exist,
+			# The priority of ipaddr follows below list :
+			# /lib/preinit/00_preinit.conf -> /etc/config/network -> 192.168.1.1
+			. /lib/preinit/00_preinit.conf
+			[ -n "$pi_ip" -a ! "$pi_ip" = "192.168.1.1" ] && ipaddr=$pi_ip
 			case "$1" in
 				lan) ipad=${ipaddr:-"192.168.1.1"} ;;
 				*) ipad=${ipaddr:-"192.168.$((addr_offset++)).1"} ;;
@@ -366,12 +371,11 @@ generate_led() {
 		;;
 
 		switch)
-			local port_mask speed_mask mode
-			json_get_vars port_mask speed_mask mode
+			local port_mask speed_mask
+			json_get_vars port_mask speed_mask
 			uci -q batch <<-EOF
 				set system.$cfg.port_mask='$port_mask'
 				set system.$cfg.speed_mask='$speed_mask'
-				set system.$cfg.mode='$mode'
 			EOF
 		;;
 
@@ -383,7 +387,7 @@ generate_led() {
 			EOF
 		;;
 
-		timer|oneshot)
+		timeroneshot)
 			local delayon delayoff
 			json_get_vars delayon delayoff
 			uci -q batch <<-EOF
