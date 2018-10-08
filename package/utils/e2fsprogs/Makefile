@@ -132,6 +132,8 @@ $(call Package/e2fsprogs)
 endef
 
 TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
+
+TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lrt)
 TARGET_LDFLAGS += -flto
 
 CONFIGURE_ARGS += \
@@ -143,7 +145,6 @@ CONFIGURE_ARGS += \
 	--disable-tls		\
 	--disable-nls		\
 	--disable-rpath		\
-	--disable-threads	\
 	--disable-fuse2fs
 
 define Build/Prepare
