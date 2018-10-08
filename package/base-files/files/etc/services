@@ -9892,6 +9892,7 @@ lm-sserver       8207/tcp
 lm-sserver       8207/udp
 lm-webwatcher    8208/tcp
 lm-webwatcher    8208/udp
+aruba-papi       8211/udp
 rexecj           8230/tcp
 rexecj           8230/udp
 hncp-udp-port    8231/udp
