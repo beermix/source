@@ -4,12 +4,12 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/PurpleI2P/i2pd
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_VERSION:=8f41776
+PKG_VERSION:=ecdf1f4
 PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE_PROTO:=git
