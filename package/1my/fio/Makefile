@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014-2015 OpenWrt.org
+# Copyright (C) 2018 Daniel Engberg <daniel.engberg.lists@pyret.net>
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,34 +11,46 @@ PKG_NAME:=fio
 PKG_VERSION:=3.11
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://fossies.org/linux/misc
+PKG_SOURCE_URL:=http://brick.kernel.dk/snaps
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+#PKG_HASH:=21150f1ac0b8d70f1b435a090221305b4e89ea17db3a313274d96b90b40dafcf
+
+PKG_MAINTAINER:=Dragan Stancevic <ds@codeminutia.com>
+PKG_LICENSE:=GPL-2.0+
+PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/fio
   SECTION:=utils
   CATEGORY:=Utilities
-  TITLE:=Flexible I/O Tester
-  URL:=http://software.schmorp.de/pkg/fio.html
-  DEPENDS:=+libpthread +librt +zlib
+  SUBMENU:=Disc
+  DEPENDS:=+libaio +zlib
+  TITLE:=I/O testing and benchmarking tool
+  URL:=https://github.com/axboe/fio
 endef
 
 define Package/fio/description
- A full-featured and high-performance event loop that is loosely modelled after
- fioent, but without its limitations and bugs.
+  Fio is an I/O testing tool that will spawn a number of threads or
+  processes doing a particular type of I/O action as specified by
+  the user. Fio can be driven by a 'job file' describing the I/O
+  load one wants to simulate.
 endef
 
-define Build/Configure
-	(cd $(PKG_BUILD_DIR); \
-		$(TARGET_CONFIGURE_OPTS) \
-		./configure \
-			--prefix=/usr \
-			--cc=$(TARGET_CC) \
-			--extra-cflags=$(TARGET_CFLAGS) \
-			--disable-native \
-	);
-endef
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS))
+
+CONFIGURE_ARGS = \
+	--disable-numa \
+	--disable-rdma \
+	--disable-rados \
+	--disable-http \
+	--disable-rbd \
+	--disable-gfapi \
+	--disable-lex \
+	--disable-pmem \
+	--disable-native \
+	--cc="$(TARGET_CC)" \
+	--extra-cflags="$(TARGET_CFLAGS)"
 
 define Package/fio/install
 	$(INSTALL_DIR) $(1)/usr/bin
