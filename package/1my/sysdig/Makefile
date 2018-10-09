@@ -1,16 +1,14 @@
 #
 # Copyright (C) 2014-2015 OpenWrt.org
-#
+#PKG_URL="https://fossies.org/linux/misc/$PKG_NAME-$PKG_VERSION.tar.xz"
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysdig
-PKG_VERSION:=0.22.1
+PKG_VERSION:=0.24.1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/draios/sysdig
+PKG_SOURCE_URL:=https://fossies.org/linux/misc
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
