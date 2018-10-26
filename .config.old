@@ -2434,6 +2434,12 @@ CONFIG_ZABBIX_NOSSL=y
 # CONFIG_PACKAGE_zabbix-proxy is not set
 # CONFIG_PACKAGE_zabbix-sender is not set
 # CONFIG_PACKAGE_zabbix-server is not set
+
+#
+# Database Software
+#
+# CONFIG_ZABBIX_MYSQL is not set
+CONFIG_ZABBIX_POSTGRESQL=y
 CONFIG_PACKAGE_htop=y
 # CONFIG_PACKAGE_ipmitool is not set
 # CONFIG_PACKAGE_monit is not set
@@ -3667,6 +3673,7 @@ CONFIG_PACKAGE_python-xml=y
 #
 # Tcl
 #
+# CONFIG_PACKAGE_tcl is not set
 # CONFIG_PACKAGE_vala is not set
 
 #
@@ -4149,7 +4156,6 @@ CONFIG_PACKAGE_libncurses=y
 # CONFIG_PACKAGE_libndpi is not set
 # CONFIG_PACKAGE_libneon is not set
 # CONFIG_PACKAGE_libnet-1.2.x is not set
-# CONFIG_PACKAGE_libnetconf2 is not set
 # CONFIG_PACKAGE_libnetfilter-acct is not set
 # CONFIG_PACKAGE_libnetfilter-conntrack is not set
 # CONFIG_PACKAGE_libnetfilter-cthelper is not set
@@ -4239,7 +4245,6 @@ CONFIG_LIBSODIUM_MINIMAL=y
 # CONFIG_PACKAGE_libspeex is not set
 # CONFIG_PACKAGE_libspeexdsp is not set
 CONFIG_PACKAGE_libss=y
-# CONFIG_PACKAGE_libssh is not set
 CONFIG_PACKAGE_libssh2=y
 CONFIG_LIBSSH2_MBEDTLS=y
 # CONFIG_LIBSSH2_OPENSSL is not set
@@ -5487,6 +5492,7 @@ CONFIG_PACKAGE_redsocks=y
 # CONFIG_PACKAGE_rpcbind is not set
 # CONFIG_PACKAGE_rssileds is not set
 # CONFIG_PACKAGE_rsyslog is not set
+# CONFIG_PACKAGE_safe-search is not set
 # CONFIG_PACKAGE_samba36-client is not set
 # CONFIG_PACKAGE_samba36-hotplug is not set
 # CONFIG_PACKAGE_samba36-net is not set
@@ -5940,6 +5946,7 @@ CONFIG_MC_VFS=y
 # CONFIG_PACKAGE_mpack is not set
 # CONFIG_PACKAGE_mt-st is not set
 # CONFIG_PACKAGE_namei is not set
+# CONFIG_PACKAGE_netopeer2-keystored is not set
 # CONFIG_PACKAGE_netwhere is not set
 # CONFIG_PACKAGE_nsenter is not set
 # CONFIG_PACKAGE_oath-toolkit is not set
