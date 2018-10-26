@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=ec638e2
+PKG_VERSION:=a7cd5ce
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
