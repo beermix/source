@@ -54,18 +54,18 @@ printdb:
 prepare: $(target/stamp-compile)
 
 clean: FORCE
-	rm -rf $(BUILD_DIR) $(STAGING_DIR) $(BIN_DIR)/targets/x86/generic-glibc/packages $(OUTPUT_DIR)/packages/$(ARCH_PACKAGES) $(BUILD_LOG_DIR) $(TOPDIR)/staging_dir/packages
+	rm -rf $(BUILD_DIR) $(STAGING_DIR) $(TOPDIR)/bin/targets/x86/generic-glibc/packages $(OUTPUT_DIR)/packages/$(ARCH_PACKAGES) $(BUILD_LOG_DIR) $(TOPDIR)/staging_dir/packages
 
 dirclean: clean
 	rm -rf $(STAGING_DIR_HOST) $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/host $(BUILD_DIR_BASE)/hostpkg $(BUILD_DIR_TOOLCHAIN)
 	rm -rf $(TMP_DIR)
 
 clr: clean
-	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg $(BUILD_DIR_TOOLCHAIN)
+	rm -rf $(STAGING_DIR_HOSTPKG)  $(TOPDIR)/bin/targets/x86/generic-glibc/packages$(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg $(BUILD_DIR_TOOLCHAIN)
 	rm -rf $(TMP_DIR)
 
 clr2: clean
-	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_TOOLCHAIN)
+	rm -rf $(STAGING_DIR_HOSTPKG)  $(TOPDIR)/bin/targets/x86/generic-glibc/packages $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_TOOLCHAIN)
 
 ifndef DUMP_TARGET_DB
 $(BUILD_DIR)/.prepared: Makefile
