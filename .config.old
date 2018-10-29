@@ -4156,6 +4156,7 @@ CONFIG_PACKAGE_libncurses=y
 # CONFIG_PACKAGE_libndpi is not set
 # CONFIG_PACKAGE_libneon is not set
 # CONFIG_PACKAGE_libnet-1.2.x is not set
+# CONFIG_PACKAGE_libnetconf2 is not set
 # CONFIG_PACKAGE_libnetfilter-acct is not set
 # CONFIG_PACKAGE_libnetfilter-conntrack is not set
 # CONFIG_PACKAGE_libnetfilter-cthelper is not set
@@ -4245,6 +4246,7 @@ CONFIG_LIBSODIUM_MINIMAL=y
 # CONFIG_PACKAGE_libspeex is not set
 # CONFIG_PACKAGE_libspeexdsp is not set
 CONFIG_PACKAGE_libss=y
+# CONFIG_PACKAGE_libssh is not set
 CONFIG_PACKAGE_libssh2=y
 CONFIG_LIBSSH2_MBEDTLS=y
 # CONFIG_LIBSSH2_OPENSSL is not set
@@ -5972,7 +5974,9 @@ CONFIG_MC_VFS=y
 # CONFIG_PACKAGE_mpack is not set
 # CONFIG_PACKAGE_mt-st is not set
 # CONFIG_PACKAGE_namei is not set
+# CONFIG_PACKAGE_netopeer2-cli is not set
 # CONFIG_PACKAGE_netopeer2-keystored is not set
+# CONFIG_PACKAGE_netopeer2-server is not set
 # CONFIG_PACKAGE_netwhere is not set
 # CONFIG_PACKAGE_nsenter is not set
 # CONFIG_PACKAGE_oath-toolkit is not set
