@@ -5,15 +5,17 @@
 # See /LICENSE for more information.
 # https://github.com/bminor/glibc/tree/release/2.28/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.28/master
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=HEAD
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.28
+PKG_VERSION:=2.28.9000
 
-PKG_SOURCE_URL:=@GNU/glibc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_HASH:=b1900051afad76f7a4f73e71413df4826dce085ef8ddb785a945b66d7d513082
+PKG_SOURCE_VERSION:=5c81be53407434ce22b849722a3d691295480016
+PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
