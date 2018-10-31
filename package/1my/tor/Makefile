@@ -103,7 +103,7 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-EXTRA_CFLAGS += -std=gnu99 -fomit-frame-pointer -funroll-loops -Wall
+EXTRA_CFLAGS += -std=gnu99 -O3 -Wall
 #EXTRA_CFLAGS += -std=gnu99 -O3 -fomit-frame-pointer -funroll-loops -Wall
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
