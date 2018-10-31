@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.3.5.2-alpha
+PKG_VERSION:=0.3.4.8
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://dist.torproject.org/ \
 	https://archive.torproject.org/tor-package-archive
-#PKG_HASH:=826a4cb2c099a29c7cf91516ffffcfcb5aace7533b8853a8c8bddcfe2bfb1023
+PKG_HASH:=826a4cb2c099a29c7cf91516ffffcfcb5aace7533b8853a8c8bddcfe2bfb1023
 PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
 		Peter Wagner <tripolar@gmx.at>
 PKG_LICENSE_FILES:=LICENSE
@@ -41,7 +41,7 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +liblzma +zstd
 endef
 
 define Package/tor/description
@@ -97,14 +97,12 @@ CONFIGURE_ARGS += \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-unittests \
-	--disable-largefile \
-	--disable-lzma \
-	--enable-zstd=no \
+	--enable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-EXTRA_CFLAGS += -std=gnu99
-#EXTRA_CFLAGS += -std=gnu99 -O3 -fomit-frame-pointer -funroll-loops -Wall
+EXTRA_CFLAGS += -std=gnu99 -Wall
+#EXTRA_CFLAGS += -std=gnu99 -O3 -fomit-frame-pointer -funroll-loops 
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
 
