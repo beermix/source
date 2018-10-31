@@ -30,9 +30,6 @@ PKG_RELEASE:=1
 PKG_USE_MIPS16:=0
 PATCH_DIR=./patches/$(PKG_BASE)
 
-PKG_BUILD_PARALLEL:=0
-
-
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
 	http://ftp.fi.muni.cz/pub/openssl/source/ \
