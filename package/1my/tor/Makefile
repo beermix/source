@@ -41,7 +41,7 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +zstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
 endef
 
 define Package/tor/description
@@ -99,10 +99,11 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-largefile \
 	--disable-lzma \
+	--enable-zstd=no \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-EXTRA_CFLAGS += -std=gnu99 -Wall
+EXTRA_CFLAGS += -std=gnu99 -fomit-frame-pointer -funroll-loops -Wall
 #EXTRA_CFLAGS += -std=gnu99 -O3 -fomit-frame-pointer -funroll-loops -Wall
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
