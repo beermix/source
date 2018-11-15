@@ -4074,7 +4074,7 @@ opentable        2368/tcp
 opentable        2368/udp
 l3-hbmon         2370/tcp
 l3-hbmon         2370/udp
-hp-rda           2371/tcp
+rda              2371/tcp
 lanmessenger     2372/tcp
 lanmessenger     2372/udp
 remographlm      2373/tcp
@@ -11278,6 +11278,7 @@ agpolicy        38203/tcp
 agpolicy        38203/udp
 ng-control      38412/sctp
 xn-control      38422/sctp
+e1-interface    38462/sctp
 f1-control      38472/sctp
 sruth           38800/tcp
 secrmmsafecopya 38865/tcp
