@@ -2,7 +2,7 @@ if PACKAGE_libopenssl
 
 choice
 	prompt "OpenSSL Version"
-	default OPENSSL_USE_VERSION_1_1_0
+	default OPENSSL_USE_VERSION_1_1_1
 	help
 		Select the version of OpenSSL you wish to use.
 
@@ -10,13 +10,15 @@ choice
 		bool "OpenSSL v. 1.0.2 (old LTS) series"
 		help
 		   1.0.2 is a Long Term Support (LTS) series, supported by
-		   upstream until 31st December 2009.
+		   upstream until 31st December 2019.
 
 	config OPENSSL_USE_VERSION_1_1_0
-		bool "OpenSSL v. 1.1.0 (stable) series"
+		bool "OpenSSL v. 1.1.0 series (EOL at openwrt)"
 		help
 		   1.1.0 is the previous stable series, supported by upstream
 		   (security fixes only) until 11th September 2019.
+		   This version is not currently supported by openwrt, and
+		   could be dropped before its upstream EOL.
 
 	config OPENSSL_USE_VERSION_1_1_1
 		bool "OpenSSL v. 1.1.1 (new LTS) series"
@@ -41,7 +43,7 @@ config OPENSSL_OPTIMIZE_SPEED
 
 config OPENSSL_WITH_ASM
 	bool
-	default y
+	default y if !SMALL_FLASH || !arm
 	prompt "Compile with optimized assembly code"
 	depends on !arc
 	help
@@ -65,6 +67,7 @@ config OPENSSL_WITH_SSE2
 	bool
 	default y if !TARGET_x86_legacy && !TARGET_x86_geode
 	prompt "Enable use of x86 SSE2 instructions"
+	depends on OPENSSL_WITH_ASM && i386
 	help
 		Use of SSE2 instructions greatly increase performance (up to
 		3x faster) with a minimum (~0.2%, or 23KB) increase in package
@@ -72,13 +75,11 @@ config OPENSSL_WITH_SSE2
 		support them, such as Geode GX and LX.  In this case you may
 		save 23KB by saying yes here.  AMD Geode NX, and Intel
 		Pentium 4 and above support SSE2.
-	depends on OPENSSL_WITH_ASM && i386
 
 config OPENSSL_WITH_DEPRECATED
 	bool
 	default y
 	prompt "Include deprecated APIs (See help for a list of packages that need this)"
-
 	help
 		Since openssl 1.1.x is still new to openwrt, some packages
 		requiring this option do not list it as a requirement yet.
@@ -87,6 +88,18 @@ config OPENSSL_WITH_DEPRECATED
 		 * freeswitch-stable, freeswitch, python, python3, squid.
 
 		For openssl 1.0.2, squid currently requires this.
+
+config OPENSSL_NO_DEPRECATED
+	bool
+	default !OPENSSL_WITH_DEPRECATED
+
+config OPENSSL_WITH_ERROR_MESSAGES
+	bool
+	default y if !SMALL_FLASH && !LOW_MEMORY_FOOTPRINT
+	prompt "Include error messages"
+	help
+		This option aids debugging, but increases package size and
+		memory usage.
 
 comment "Protocol Support"
 
@@ -152,9 +165,9 @@ config OPENSSL_WITH_EC
 		cryptography to provide equivalent security.
 
 config OPENSSL_WITH_EC2M
-        bool
-        depends on OPENSSL_WITH_EC
-        prompt "Enable ec2m support"
+	bool
+	depends on OPENSSL_WITH_EC
+	prompt "Enable ec2m support"
 	help
 		This option enables the more efficient, yet less common, binary
 		field elliptic curves.
@@ -172,8 +185,7 @@ config OPENSSL_WITH_CHACHA_POLY1305
 
 config OPENSSL_PREFER_CHACHA_OVER_GCM
 	bool
-#	default y if !ARCH_64BIT
-	default n
+	default y if !x86_64 && !aarch64
 	prompt "Prefer ChaCha20-Poly1305 over AES-GCM by default"
 	depends on OPENSSL_WITH_CHACHA_POLY1305
 	help
@@ -193,9 +205,9 @@ config OPENSSL_WITH_PSK
 comment "Less commonly used build options"
 
 config OPENSSL_WITH_ARIA
-        bool
-        default n
-        prompt "Enable ARIA support"
+	bool
+	default n
+	prompt "Enable ARIA support"
 	depends on OPENSSL_USE_VERSION_1_1_1
 	help
 		ARIA is a block cipher developed in South Korea, based on AES.
@@ -293,11 +305,23 @@ config OPENSSL_ENGINE_CRYPTO
 	help
 		This enables use of hardware acceleration through OpenBSD
 		Cryptodev API (/dev/crypto) interface.
+		You must install kmod-cryptodev from the packages feed 
+		(under Kernel modules, Cryptographic API modules) for
+		/dev/crypto to show up and use hardware acceleration; otherwise 
+		it falls back to software.
 
 config OPENSSL_ENGINE_DIGEST
 	bool
-	depends on OPENSSL_ENGINE_CRYPTO
-	prompt "/dev/crypto digest (md5/sha1) acceleration support"
+	depends on OPENSSL_ENGINE_CRYPTO && !OPENSSL_USE_VERSION_1_1_1
+	prompt "/dev/crypto digest acceleration support"
+	help
+		Digests are computed fairily fast in software, and
+		the many context switches needed to use /dev/crypto
+		may actually slow it down.  So enable this if you have
+		a fast hardware crypto, and a slow or loaded CPU.
+		Beware that the whole message needs to fit in RAM before
+		the digest is calculated.  For TLS, it's fine. Don't try
+		to run: openssl dgst <large-file>
 
 config OPENSSL_WITH_ASYNC
 	bool
