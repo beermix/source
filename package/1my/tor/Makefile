@@ -104,7 +104,7 @@ CONFIGURE_ARGS += \
 EXTRA_CFLAGS += -std=gnu99 -Wall
 #EXTRA_CFLAGS += -std=gnu99 -O3 -fomit-frame-pointer -funroll-loops 
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
+#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
