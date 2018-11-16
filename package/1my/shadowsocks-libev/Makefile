@@ -13,7 +13,7 @@ PKG_RELEASE:=8
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev.git
-PKG_SOURCE_VERSION:=519776cee499ec66525e3063f0e97d4300c0f509
+PKG_SOURCE_VERSION:=cbd39852a3688c2f723f0e56ed9ea83519434ac5
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -39,7 +39,7 @@ define Package/shadowsocks-libev/Default
 	DEPENDS:=$(2)
 endef
 
-Package/shadowsocks-libev = $(call Package/shadowsocks-libev/Default,shared,+zlib +libpthread +libev +libcares +libpcre +libsodium +libmbedtls)
+Package/shadowsocks-libev = $(call Package/shadowsocks-libev/Default,shared,+zlib +libpthread +libev +libcares +libpcre +libsodium +libmbedtls +libnetfilter-conntrack)
 Package/shadowsocks-libev-server = $(call Package/shadowsocks-libev/Default,shared,+zlib +libpthread +libev +libcares +libpcre +libsodium +libmbedtls)
 
 Package/shadowsocks-libev-static = $(call Package/shadowsocks-libev/Default,static,+zlib +libpthread)
@@ -57,7 +57,9 @@ Package/shadowsocks-libev-server-static/description = $(Package/shadowsocks-libe
 CONFIGURE_ARGS += \
 				--disable-ssp \
 				--disable-documentation \
-				--disable-assert
+				--disable-assert \
+				--disable-silent-rules \
+				--enable-connmarktos
 
 ifeq ($(BUILD_VARIANT),static)
 	CONFIGURE_ARGS += \
@@ -67,6 +69,9 @@ ifeq ($(BUILD_VARIANT),static)
 				--with-mbedtls="$(STAGING_DIR)/usr" \
 				--with-sodium="$(STAGING_DIR)/usr" \
 				LDFLAGS="-Wl,-static -static -static-libgcc"
+				
+EXTRA_CFLAGS += -D_REENTRANT
+
 endif
 
 define Package/shadowsocks-libev/install
