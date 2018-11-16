@@ -103,7 +103,7 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-EXTRA_CFLAGS += -std=gnu99 -fomit-frame-pointer -funroll-loops 
+EXTRA_CFLAGS += -std=gnu99 -funroll-loops -Wall
 
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
 
