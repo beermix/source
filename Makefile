@@ -61,11 +61,8 @@ dirclean: clean
 	rm -rf $(TMP_DIR)
 
 clr: clean
-	rm -rf $(STAGING_DIR_HOSTPKG)  $(TOPDIR)/bin/targets/x86/generic-glibc/packages$(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg $(BUILD_DIR_TOOLCHAIN)
-	rm -rf $(TMP_DIR)
-
-clr2: clean
 	rm -rf $(STAGING_DIR_HOSTPKG)  $(TOPDIR)/bin/targets/x86/generic-glibc/packages $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_TOOLCHAIN)
+	rm -rf $(TMP_DIR)
 
 ifndef DUMP_TARGET_DB
 $(BUILD_DIR)/.prepared: Makefile
