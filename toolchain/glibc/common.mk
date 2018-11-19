@@ -60,13 +60,13 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--enable-kernel=4.14 \
+		--enable-stack-protector=strong \
 		--without-gd \
 		--without-cvs \
 		--enable-bind-now \
 		--enable-add-ons \
 		--disable-debug \
 		--enable-tunables \
-		--enable-systemtap \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
