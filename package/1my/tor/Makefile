@@ -108,12 +108,12 @@ EXTRA_CFLAGS += -std=gnu99
 
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall |  -pedantic -Werror --param ssp-buffer-size=1
 
-ifneq ($(CONFIG_SSP_SUPPORT),y)
-	CONFIGURE_ARGS += \
-		--disable-gcc-hardening
-else
-	EXTRA_CFLAGS += -fPIC
-endif
+#ifneq ($(CONFIG_SSP_SUPPORT),y)
+#	CONFIGURE_ARGS += \
+#		--disable-gcc-hardening
+#else
+#	EXTRA_CFLAGS += -fPIC
+#endif
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
