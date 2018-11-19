@@ -13,7 +13,7 @@ PKG_VERSION:=2.28
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=3c03baca37fdcb52c3881e653ca392bba7a99c2b
+PKG_SOURCE_VERSION:=10f1519f6a0acdc1fc45e962fa5c13312cc7b624
 PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -64,6 +64,8 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--disable-debug \
+		--enable-tunables \
+		--enable-systemtap \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
