@@ -133,6 +133,11 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--with-linker-hash-style=gnu \
 		--with-default-libstdcxx-abi=gcc4-compatible \
+		--without-ppl \
+		--without-cloog \
+		--disable-libada \
+		--disable-libitm \
+		--disable-libquadmath \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
