@@ -57,11 +57,12 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
-		BASH_SHELL=/bin/bash \
+		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--enable-kernel=4.14 \
 		--without-gd \
 		--without-cvs \
+		--enable-bind-now \
 		--enable-add-ons \
 		--disable-debug \
 		--enable-tunables \
