@@ -103,9 +103,9 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-EXTRA_CFLAGS += -std=gnu99 -funroll-loops -Wall
+EXTRA_CFLAGS += -std=gnu99
 
-#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
+#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3  -funroll-loops -Wall
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
