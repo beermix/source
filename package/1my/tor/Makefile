@@ -101,11 +101,12 @@ CONFIGURE_ARGS += \
 	--enable-zstd=no \
 	--enable-lzma=no \
 	--with-tor-user=tor \
+	--enable-gcc-hardening \
 	--with-tor-group=tor
 
 EXTRA_CFLAGS += -std=gnu99
 
-#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall
+#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall |  -pedantic -Werror --param ssp-buffer-size=1
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
