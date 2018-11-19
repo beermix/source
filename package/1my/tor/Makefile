@@ -100,7 +100,6 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--enable-zstd=no \
 	--enable-lzma=no \
-	--enable-gcc-hardening \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
@@ -108,12 +107,12 @@ EXTRA_CFLAGS += -std=gnu99
 
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3  -funroll-loops -Wall
 
-#ifneq ($(CONFIG_SSP_SUPPORT),y)
-#	CONFIGURE_ARGS += \
-#		--disable-gcc-hardening
-#else
+ifneq ($(CONFIG_SSP_SUPPORT),y)
+	CONFIGURE_ARGS += \
+		--disable-gcc-hardening
+else
 	EXTRA_CFLAGS += -fPIC
-#endif
+endif
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
