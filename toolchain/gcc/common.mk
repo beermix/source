@@ -139,6 +139,8 @@ GCC_CONFIGURE:= \
 		--disable-libada \
 		--disable-libitm \
 		--disable-libquadmath \
+		--disable-libunwind-exceptions \
+		--enable-clocale=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -214,7 +216,10 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
-		CFLAGS="$(HOST_CFLAGS)"
+		CFLAGS="$(HOST_CFLAGS)" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
 	$(SED) 's,TARGET_CROSS=.*,TARGET_CROSS=$(REAL_GNU_TARGET_NAME)-,' $(TOOLCHAIN_DIR)/info.mk
