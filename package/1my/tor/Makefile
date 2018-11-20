@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.3.4.9
+PKG_VERSION:=0.3.5.5-alpha
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -103,8 +103,9 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-EXTRA_CFLAGS += -std=gnu99 -fasynchronous-unwind-tables -mzero-caller-saved-regs=used
+EXTRA_CFLAGS += -std=gnu99
 
+#-fasynchronous-unwind-tables -mzero-caller-saved-regs=used
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall |  -pedantic -Werror --param ssp-buffer-size=1ssp-buffer-size=1
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
