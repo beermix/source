@@ -103,7 +103,7 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-EXTRA_CFLAGS += -std=gnu99 -fasynchronous-unwind-tables -pedantic -Werror --param ssp-buffer-size=1
+EXTRA_CFLAGS += -std=gnu99 -fasynchronous-unwind-tables -mzero-caller-saved-regs=used
 
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall |  -pedantic -Werror --param ssp-buffer-size=1ssp-buffer-size=1
 
