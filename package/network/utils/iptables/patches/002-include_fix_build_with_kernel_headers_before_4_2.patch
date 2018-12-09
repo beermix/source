@@ -33,11 +33,9 @@ Signed-off-by: Florian Westphal <fw@strlen.de>
  include/linux/netfilter.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/netfilter.h b/include/linux/netfilter.h
-index c3f087ac..bacf8cd9 100644
 --- a/include/linux/netfilter.h
 +++ b/include/linux/netfilter.h
-@@ -3,7 +3,9 @@
+@@ -3,8 +3,10 @@
  
  #include <linux/types.h>
  
@@ -47,6 +45,4 @@ index c3f087ac..bacf8cd9 100644
 +#endif
  #include <limits.h>
  
--- 
-cgit v1.2.1
-
+ /* Responses from hook functions. */

@@ -19,11 +19,9 @@ Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
  extensions/libipt_icmp.c   | 2 +-
  2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/extensions/libip6t_icmp6.c b/extensions/libip6t_icmp6.c
-index 45a71875..cc7bfaeb 100644
 --- a/extensions/libip6t_icmp6.c
 +++ b/extensions/libip6t_icmp6.c
-@@ -230,7 +230,7 @@ static unsigned int type_xlate_print(struct xt_xlate *xl, unsigned int icmptype,
+@@ -230,7 +230,7 @@ static unsigned int type_xlate_print(str
  	type_name = icmp6_type_xlate(icmptype);
  
  	if (type_name) {
@@ -32,7 +30,7 @@ index 45a71875..cc7bfaeb 100644
  	} else {
  		for (i = 0; i < ARRAY_SIZE(icmpv6_codes); ++i)
  			if (icmpv6_codes[i].type == icmptype &&
-@@ -239,7 +239,7 @@ static unsigned int type_xlate_print(struct xt_xlate *xl, unsigned int icmptype,
+@@ -239,7 +239,7 @@ static unsigned int type_xlate_print(str
  				break;
  
  		if (i != ARRAY_SIZE(icmpv6_codes))
@@ -41,11 +39,9 @@ index 45a71875..cc7bfaeb 100644
  		else
  			return 0;
  	}
-diff --git a/extensions/libipt_icmp.c b/extensions/libipt_icmp.c
-index 54189976..e76257c5 100644
 --- a/extensions/libipt_icmp.c
 +++ b/extensions/libipt_icmp.c
-@@ -236,7 +236,7 @@ static unsigned int type_xlate_print(struct xt_xlate *xl, unsigned int icmptype,
+@@ -236,7 +236,7 @@ static unsigned int type_xlate_print(str
  			if (icmp_codes[i].type == icmptype &&
  			    icmp_codes[i].code_min == code_min &&
  			    icmp_codes[i].code_max == code_max) {
@@ -54,6 +50,3 @@ index 54189976..e76257c5 100644
  				return 1;
  			}
  	}
--- 
-cgit v1.2.1
-
