@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=uboot-envtools
 PKG_DISTNAME:=u-boot
 PKG_VERSION:=2018.03
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_DISTNAME)-$(PKG_VERSION).tar.xz
@@ -26,6 +26,8 @@ PKG_LICENSE:=GPL-2.0 GPL-2.0+
 PKG_LICENSE_FILES:=Licenses/README
 
 PKG_FLAGS:=nonshared
+
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 

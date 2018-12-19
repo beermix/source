@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dropbear
 PKG_VERSION:=2017.75
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:= \
@@ -21,6 +21,7 @@ PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE libtomcrypt/LICENSE libtommath/LICENSE
 PKG_CPE_ID:=cpe:/a:matt_johnston:dropbear_ssh_server
 
+PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
 
 PKG_CONFIG_DEPENDS:= \
