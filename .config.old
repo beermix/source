@@ -4741,8 +4741,6 @@ CONFIG_PACKAGE_jansson=y
 # CONFIG_PACKAGE_libavahi-nodbus-support is not set
 # CONFIG_PACKAGE_libavl is not set
 # CONFIG_PACKAGE_libbfd is not set
-CONFIG_PACKAGE_libblkid=y
-CONFIG_PACKAGE_libblobmsg-json=y
 # CONFIG_PACKAGE_libbsd is not set
 # CONFIG_PACKAGE_libcanfestival is not set
 CONFIG_PACKAGE_libcap=y
@@ -4803,7 +4801,6 @@ CONFIG_PACKAGE_libdb47=y
 # CONFIG_PACKAGE_libdb47xx is not set
 # CONFIG_PACKAGE_libdbi is not set
 # CONFIG_PACKAGE_libdbus is not set
-# CONFIG_PACKAGE_libdevmapper is not set
 # CONFIG_PACKAGE_libdmapsharing is not set
 # CONFIG_PACKAGE_libdnet is not set
 # CONFIG_PACKAGE_libdouble-conversion is not set
@@ -4811,6 +4808,9 @@ CONFIG_PACKAGE_libdb47=y
 # CONFIG_PACKAGE_libedit is not set
 CONFIG_PACKAGE_libelf1=y
 # CONFIG_PACKAGE_libasm is not set
+CONFIG_PACKAGE_libblkid=y
+CONFIG_PACKAGE_libblobmsg-json=y
+# CONFIG_PACKAGE_libdevmapper is not set
 # CONFIG_PACKAGE_libdw is not set
 # CONFIG_PACKAGE_libecdsautil is not set
 # CONFIG_PACKAGE_libesmtp is not set
@@ -6046,7 +6046,6 @@ CONFIG_PACKAGE_openssh-sftp-server=y
 #
 # CONFIG_PACKAGE_fossil is not set
 CONFIG_PACKAGE_git=y
-# CONFIG_PACKAGE_git-gitweb is not set
 CONFIG_PACKAGE_git-http=y
 # CONFIG_PACKAGE_subversion-client is not set
 # CONFIG_PACKAGE_subversion-libs is not set
@@ -6850,4 +6849,4 @@ CONFIG_PACKAGE_openssl-util=y
 # font-utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng bind coreutils dnscrypt-proxy icu libaio libsodium mini_snmpd miniupnpc netdata openssh"
+CONFIG_OVERRIDE_PKGS="aircrack-ng bind boost coreutils dnscrypt-proxy git icu libaio libsodium mini_snmpd miniupnpc netdata openssh"
