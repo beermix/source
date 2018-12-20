@@ -63,7 +63,7 @@ ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
     PKG_VERSION:=7.1.1
     PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
     PKG_SOURCE:=$(PKG_NAME)-$(GCC_VERSION).tar.gz
-    PKG_HASH:=
+    #PKG_HASH:=
     PKG_REV:=2017.09-release
     GCC_DIR:=gcc-arc-$(PKG_REV)
     HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
