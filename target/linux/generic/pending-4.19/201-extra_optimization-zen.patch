@@ -1,0 +1,23 @@
+diff -Naur linux-4.19.12-lqx2-orig/Makefile linux-4.19.12-lqx2/Makefile
+--- linux-4.19.12-lqx2-orig/Makefile	2018-12-23 21:32:48.250570543 +0300
++++ linux-4.19.12-lqx2/Makefile	2018-12-23 21:32:38.967237500 +0300
+@@ -659,15 +659,15 @@
+ 
+ ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+ KBUILD_CFLAGS	+= $(call cc-option,-Oz,-Os)
+-KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized,)
++KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
+ else
+ ifdef CONFIG_CC_OPTIMIZE_HARDER
+-KBUILD_CFLAGS	+= -O3 $(call cc-disable-warning,maybe-uninitialized,)
++KBUILD_CFLAGS	+= -O3 $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
+ else
+ ifdef CONFIG_PROFILE_ALL_BRANCHES
+-KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,)
++KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
+ else
+-KBUILD_CFLAGS   += -O2
++KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch -mzero-caller-saved-regs=used $(EXTRA_OPTIMIZATION)
+ endif
+ endif
+ endif

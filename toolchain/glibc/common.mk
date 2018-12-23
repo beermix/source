@@ -66,7 +66,6 @@ GLIBC_CONFIGURE:= \
 		--enable-bind-now \
 		--enable-add-ons \
 		--disable-debug \
-		--enable-tunables \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
