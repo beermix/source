@@ -17,7 +17,7 @@ diff -Naur linux-4.19.12-lqx2-orig/Makefile linux-4.19.12-lqx2/Makefile
 +KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
  else
 -KBUILD_CFLAGS   += -O2
-+KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch -mzero-caller-saved-regs=used $(EXTRA_OPTIMIZATION)
++KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch $(EXTRA_OPTIMIZATION)
  endif
  endif
  endif
