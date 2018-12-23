@@ -40,24 +40,24 @@ ifeq ($(PKG_VERSION),8.2.0)
   PKG_HASH:=196c3c04ba2613f893283977e6011b2345d1cd1af9abeac58e916b1aab3e0080
 endif
 
-ifeq ($(PKG_VERSION),8.2.1)
-  PKG_VERSION:=8.2.1
-  PKG_REV:=8.2.1-20181127
-  #PKG_HASH:=725ec907fd7463568ec0c097802824b978a679523a2e3374bdc2e3d265cd2b6c
-  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-endif
-
 #ifeq ($(PKG_VERSION),8.2.1)
 #  PKG_VERSION:=8.2.1
-#  PKG_REV:=8-20181214
-#  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+#  PKG_REV:=8.2.1-20181127
+#  #PKG_HASH:=725ec907fd7463568ec0c097802824b978a679523a2e3374bdc2e3d265cd2b6c
+#  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
 #  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
 #  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 #endif
+
+ifeq ($(PKG_VERSION),8.2.1)
+  PKG_VERSION:=8.2.1
+  PKG_REV:=8-20181221
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+endif
 
 ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
     PKG_VERSION:=7.1.1
