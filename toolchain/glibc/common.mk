@@ -63,7 +63,6 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--without-gd \
 		--without-cvs \
-		--enable-bind-now \
 		--enable-add-ons \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
