@@ -1339,9 +1339,9 @@ dlep              854/udp
 iscsi             860/tcp
 iscsi             860/udp
 owamp-control     861/tcp
-owamp-control     861/udp
+owamp-test        861/udp
 twamp-control     862/tcp
-twamp-control     862/udp
+twamp-test        862/udp
 rsync             873/tcp
 rsync             873/udp
 iclcnet-locate    886/tcp
@@ -7693,9 +7693,7 @@ netconf-ch-tls   4335/tcp
 restconf-ch-tls  4336/tcp
 gaia             4340/tcp
 gaia             4340/udp
-lisp-data        4341/tcp
 lisp-data        4341/udp
-lisp-cons        4342/tcp
 lisp-control     4342/udp
 unicall          4343/tcp
 unicall          4343/udp
@@ -9899,6 +9897,7 @@ hncp-udp-port    8231/udp
 hncp-dtls-port   8232/udp
 synapse-nhttps   8243/tcp
 synapse-nhttps   8243/udp
+espeasy-p2p      8266/udp
 robot-remote     8270/tcp
 pando-sec        8276/tcp
 pando-sec        8276/udp
