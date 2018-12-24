@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=readline
-PKG_VERSION:=57ea398
+PKG_VERSION:=2ebbb26fda2e37f9eb0a92373c2cdcdc9b1b7b33
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git://git.savannah.gnu.org/readline.git

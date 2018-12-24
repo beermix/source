@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bash
-PKG_VERSION:=6444760
+PKG_VERSION:=f250956
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/bminor/bash
