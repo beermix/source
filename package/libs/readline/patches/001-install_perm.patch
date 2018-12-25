@@ -1,11 +1,10 @@
-diff -Naur readline-8.0-rc1-orig/support/shlib-install readline-8.0-rc1/support/shlib-install
---- readline-8.0-rc1-orig/support/shlib-install	2018-12-25 02:16:29.941291913 +0300
-+++ readline-8.0-rc1/support/shlib-install	2018-05-04 16:45:39.000000000 +0300
-@@ -73,7 +73,7 @@
+--- a/support/shlib-install
++++ b/support/shlib-install
+@@ -73,7 +73,7 @@ fi
  case "$host_os" in
  hpux*|darwin*|macosx*|linux*|solaris2*)
  	if [ -z "$uninstall" ]; then
--		chmod 755 ${INSTALLDIR}/${LIBNAME}
+-		chmod 555 ${INSTALLDIR}/${LIBNAME}
 +		chmod +x ${INSTALLDIR}/${LIBNAME}
  	fi ;;
  cygwin*|mingw*)

@@ -5,19 +5,6 @@
 # See /LICENSE for more information.
 #
 
-include $(TOPDIR)/rules.mk
-
-PKG_NAME:=bash
-PKG_VERSION:=f250956
-
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/bminor/bash
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-
-PKG_INSTALL:=1
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/bash
@@ -69,6 +56,7 @@ CONFIGURE_ARGS+= \
 	--without-bash-malloc \
 	--bindir=/bin \
 	--disable-rpath \
+	--enable-readline \
 
 define Package/bash/postinst
 #!/bin/sh
