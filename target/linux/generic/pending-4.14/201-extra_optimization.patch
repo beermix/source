@@ -26,7 +26,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
 +KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
  else
 -KBUILD_CFLAGS   += -O2
-+KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch $(EXTRA_OPTIMIZATION)
++KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch -mzero-caller-saved-regs=used $(EXTRA_OPTIMIZATION)
  endif
  endif
  
