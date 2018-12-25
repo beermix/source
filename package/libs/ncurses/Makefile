@@ -8,18 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.0
+PKG_VERSION:=6.1
 PKG_RELEASE:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@GNU/ncurses
-PKG_HASH:=f551c24b30ce8bfb6e96d9f59b42fbea30fa3a6123384172f9e7284bcf647260
+PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
+PKG_HASH:=aa057eeeb4a14d470101eff4597d5833dcef5965331be3528c08d99cebaa0d17
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 
 PKG_BUILD_DEPENDS:=ncurses/host
 
@@ -51,15 +52,6 @@ define Package/libncurses-dev
   TITLE:=Development files for the ncurses library
 endef
 
-define Package/ncurses-bin
-  SECTION:=utils
-  CATEGORY:=Utilities
-  SUBMENU:=Terminal
-  DEPENDS:=+libncursesw
-  TITLE:=Terminal-related programs
-  URL:=http://www.gnu.org/software/ncurses/
-endef
-
 TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
@@ -72,7 +64,7 @@ CONFIGURE_ARGS += \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
-	--with-progs \
+	--without-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
@@ -105,20 +97,13 @@ MAKE_FLAGS += \
 	HOSTCC="$(HOSTCC)" \
 	HOSTCCFLAGS="" \
 	PKG_CONFIG_LIBDIR=/usr/lib/pkgconfig \
-	libs \
-	progs
+	libs
 
 define Build/Install/Default
 	$(MAKE_VARS) \
 	$(MAKE) -C $(PKG_BUILD_DIR)/$(MAKE_PATH) \
 		$(MAKE_INSTALL_FLAGS) \
-		$(1) install.libs install.data install.progs;
-endef
-
-define Package/ncurses-bin/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	rm $(1)/usr/bin/ncursesw6-config
+		$(1) install.libs install.data;
 endef
 
 define Package/terminfo/install
@@ -131,7 +116,7 @@ ifneq ($(HOST_OS),FreeBSD)
 			mv $$$$dir $$$$(echo -ne "\x$$$$dir"); \
 		done \
 	)
-	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen s/screen-256color v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color x/xterm-utf8; do \
+	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color; do \
 		$(INSTALL_DIR) $(1)/usr/share/terminfo/`dirname $$$$file`; \
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/terminfo/$$$$file \
 			$(1)/usr/share/terminfo/$$$$file; \
@@ -177,12 +162,7 @@ define Host/Compile
 	$(MAKE) -C $(HOST_BUILD_DIR)/progs tic
 endef
 
-define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/progs/tic $(STAGING_DIR_HOST)/bin/tic
-endef
-
 $(eval $(call HostBuild))
 $(eval $(call BuildPackage,terminfo))
 $(eval $(call BuildPackage,libncurses))
-$(eval $(call BuildPackage,ncurses-bin))
 $(eval $(call BuildPackage,libncurses-dev))
