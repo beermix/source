@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=icu4c
-PKG_VERSION:=61.1
+PKG_VERSION:=63.1
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-61_1-src.tgz
+PKG_SOURCE:=$(PKG_NAME)-63_1-src.tgz
 PKG_SOURCE_URL:=http://download.icu-project.org/files/$(PKG_NAME)/$(PKG_VERSION)
-PKG_HASH:=d007f89ae8a2543a53525c74359b65b36412fa84b3349f1400be6dcf409fafef
+PKG_HASH:=05c490b69454fce5860b7e8e2821231674af0a11d7ef2febea9a32512998cb9d
 
 PKG_LICENSE:=ICU-1.8.1+
 PKG_LICENSE_FILES:=LICENSE
@@ -40,6 +40,37 @@ define Package/icu
   DEPENDS:=+libstdcpp +libpthread
 endef
 
+define Package/icu/description
+  ICU is a mature, widely used set of C/C++ and Java libraries providing Unicode and Globalization support for software applications. ICU is widely portable and gives applications the same results on all platforms and between C/C++ and Java software.
+  This package supports C/C++.
+endef
+
+define Package/icu-full-data
+  SECTION:=libs
+  CATEGORY:=Libraries
+  TITLE:=Full ICU Data
+  URL:=http://icu-project.org
+  DEPENDS:=+icu
+endef
+
+define Package/icu-full-data/description
+  ICU makes use of a wide variety of data tables to provide many of its services. Examples include converter mapping tables, collation rules, transliteration rules, break iterator rules and dictionaries, and other locale data.
+  This package contains the complete data library provided by ICU.
+  A custom data library can be generated at http://apps.icu-project.org/datacustom/
+endef
+
+define Package/icu-data-tools
+  SECTION:=libs
+  CATEGORY:=Libraries
+  TITLE:=ICU Data manipulation tools
+  URL:=http://icu-project.org
+  DEPENDS:=+icu
+endef
+
+define Package/icu-data-tools/description
+ This package provides tools for manipulating ICU data.
+endef
+
 CONFIGURE_CMD:= ./runConfigureICU
 CONFIGURE_ARGS:= \
 	Linux/gcc \
@@ -50,14 +81,14 @@ CONFIGURE_ARGS:= \
 	--build=$(GNU_HOST_NAME) \
 	--disable-debug \
 	--enable-release \
-	--disable-shared \
+	--enable-shared \
 	--enable-static \
 	--enable-draft \
 	--enable-renaming \
 	--disable-tracing \
 	--disable-extras \
 	--enable-dyload \
-	--disable-tools \
+	--with-data-packaging=archive \
 	--disable-tests \
 	--disable-samples \
 	--with-cross-build="$(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)" \
@@ -69,7 +100,7 @@ HOST_CONFIGURE_ARGS:= \
 	Linux/gcc \
 	--disable-debug \
 	--enable-release \
-	--disable-shared \
+	--enable-shared \
 	--enable-static \
 	--enable-draft \
 	--enable-renaming \
@@ -97,13 +128,28 @@ define Host/Install
 	$(INSTALL_DATA) $(HOST_BUILD_DIR)/config/icucross.* $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/config/
 	$(INSTALL_BIN)  $(HOST_BUILD_DIR)/bin/icupkg $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/bin/
 	$(INSTALL_BIN)  $(HOST_BUILD_DIR)/bin/pkgdata $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/bin/
-	$(CP)           $(HOST_BUILD_DIR)/lib/*.a $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/lib/
+	$(CP)           $(HOST_BUILD_DIR)/lib/*.so* $(STAGING_DIR_HOSTPKG)/share/icu/$(PKG_VERSION)/lib/
 endef
 
-#define Package/icu/install
-#	$(INSTALL_DIR) $(1)/usr/lib
-#	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
-#endef
+define Package/icu/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
+endef
 
-$(eval $(call BuildPackage,icu))
+define Package/icu-full-data/install
+	$(INSTALL_DIR)  $(1)/usr/share/icu/$(PKG_VERSION)
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/icu/$(PKG_VERSION)/icudt*.dat \
+		$(1)/usr/share/icu/$(PKG_VERSION)/
+endef
+
+define Package/icu-data-tools/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/* $(1)/usr/sbin/
+endef
+
 $(eval $(call HostBuild))
+$(eval $(call BuildPackage,icu))
+$(eval $(call BuildPackage,icu-full-data))
+$(eval $(call BuildPackage,icu-data-tools))
