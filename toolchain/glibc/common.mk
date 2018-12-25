@@ -1,4 +1,4 @@
-#
+# 		--enable-stack-protector=strong \
 # Copyright (C) 2006-2016 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
@@ -60,7 +60,6 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--enable-kernel=4.14 \
-		--enable-stack-protector=strong \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
