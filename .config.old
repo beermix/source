@@ -4654,7 +4654,6 @@ CONFIG_OPENSSL_OPTIMIZE_SPEED=y
 # CONFIG_PACKAGE_avro-c is not set
 CONFIG_PACKAGE_bind-libs=y
 # CONFIG_PACKAGE_bluez-libs is not set
-# CONFIG_PACKAGE_boost is not set
 # CONFIG_PACKAGE_ccid is not set
 # CONFIG_PACKAGE_check is not set
 # CONFIG_PACKAGE_ck is not set
