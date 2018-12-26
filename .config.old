@@ -2821,7 +2821,7 @@ CONFIG_PACKAGE_kmod-ebtables=y
 CONFIG_PACKAGE_kmod-ipt-checksum=y
 # CONFIG_PACKAGE_kmod-ipt-cluster is not set
 # CONFIG_PACKAGE_kmod-ipt-clusterip is not set
-# CONFIG_PACKAGE_kmod-ipt-compat-xtables is not set
+CONFIG_PACKAGE_kmod-ipt-compat-xtables=y
 # CONFIG_PACKAGE_kmod-ipt-condition is not set
 CONFIG_PACKAGE_kmod-ipt-conntrack=y
 CONFIG_PACKAGE_kmod-ipt-conntrack-extra=y
@@ -2836,8 +2836,8 @@ CONFIG_PACKAGE_kmod-ipt-filter=y
 # CONFIG_PACKAGE_kmod-ipt-fuzzy is not set
 # CONFIG_PACKAGE_kmod-ipt-geoip is not set
 # CONFIG_PACKAGE_kmod-ipt-hashlimit is not set
-# CONFIG_PACKAGE_kmod-ipt-iface is not set
-# CONFIG_PACKAGE_kmod-ipt-ipmark is not set
+CONFIG_PACKAGE_kmod-ipt-iface=y
+CONFIG_PACKAGE_kmod-ipt-ipmark=y
 CONFIG_PACKAGE_kmod-ipt-ipopt=y
 # CONFIG_PACKAGE_kmod-ipt-ipp2p is not set
 CONFIG_PACKAGE_kmod-ipt-iprange=y
@@ -2846,7 +2846,7 @@ CONFIG_PACKAGE_kmod-ipt-ipset=y
 # CONFIG_PACKAGE_kmod-ipt-ipv4options is not set
 # CONFIG_PACKAGE_kmod-ipt-led is not set
 # CONFIG_PACKAGE_kmod-ipt-length2 is not set
-# CONFIG_PACKAGE_kmod-ipt-logmark is not set
+CONFIG_PACKAGE_kmod-ipt-logmark=y
 # CONFIG_PACKAGE_kmod-ipt-lscan is not set
 # CONFIG_PACKAGE_kmod-ipt-lua is not set
 CONFIG_PACKAGE_kmod-ipt-nat=y
