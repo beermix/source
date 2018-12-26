@@ -34,38 +34,38 @@ ifeq ($(PKG_VERSION),5.5.0)
   PKG_HASH:=530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87
 endif
 
-ifeq ($(PKG_VERSION),7.3.0)
-  PKG_HASH:=832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c
+ifeq ($(PKG_VERSION),7.4.0)
+  PKG_HASH:=eddde28d04f334aec1604456e536416549e9b1aa137fc69204e65eb0c009fe51
 endif
 
 ifeq ($(PKG_VERSION),8.2.0)
   PKG_HASH:=196c3c04ba2613f893283977e6011b2345d1cd1af9abeac58e916b1aab3e0080
 endif
 
-#ifeq ($(PKG_VERSION),8.2.1)
-#  PKG_VERSION:=8.2.1
-#  PKG_REV:=8.2.1-20181127
-#  PKG_HASH:=6f64ffda2839e96a8551b767bf4f92be4e7a09377ea40058355b4eeb13bc3800
-#  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
-#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#endif
-
 ifeq ($(PKG_VERSION),8.2.1)
   PKG_VERSION:=8.2.1
-  PKG_REV:=8-20181221
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+  PKG_REV:=8.2.1-20181127
+  PKG_HASH:=6f64ffda2839e96a8551b767bf4f92be4e7a09377ea40058355b4eeb13bc3800
+  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
+#ifeq ($(PKG_VERSION),8.2.1)
+#  PKG_VERSION:=8.2.1
+#  PKG_REV:=8-20181221
+#  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+#endif
+
 ifneq ($(CONFIG_GCC_VERSION_7_1_ARC),)
     PKG_VERSION:=7.1.1
     PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/$(GCC_VERSION)
     PKG_SOURCE:=$(PKG_NAME)-$(GCC_VERSION).tar.gz
-    PKG_HASH:=
+    PKG_HASH:=90596af8b9c26a434cec0a3b3d37d0c7c755ab6a65496af6ca32529fab5a6cfe
     PKG_REV:=2017.09-release
     GCC_DIR:=gcc-arc-$(PKG_REV)
     HOST_BUILD_DIR = $(BUILD_DIR_HOST)/$(PKG_NAME)-$(GCC_VERSION)
@@ -134,6 +134,10 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--with-linker-hash-style=gnu \
+		--enable-gnu-indirect-function \
+		--disable-vtable-verify \
+		--disable-libunwind-exceptions \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
