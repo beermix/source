@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+# 		--with-linker-hash-style=gnu \
+#		--with-default-libstdcxx-abi=gcc4-compatible \
 
 include $(TOPDIR)/rules.mk
 
@@ -132,8 +134,6 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--with-linker-hash-style=gnu \
-		--with-default-libstdcxx-abi=gcc4-compatible \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
