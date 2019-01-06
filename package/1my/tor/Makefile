@@ -8,18 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.3.4.9
-PKG_RELEASE:=2
+PKG_VERSION:=cd446a6
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org/ \
-	https://archive.torproject.org/tor-package-archive
-PKG_HASH:=
-PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
-		Peter Wagner <tripolar@gmx.at>
-PKG_LICENSE_FILES:=LICENSE
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/torproject/tor.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
+PKG_FIXUP:=autoreconf
+PKG_REMOVE_FILES:=autogen.sh aclocal.m4
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -107,7 +106,8 @@ EXTRA_CFLAGS += -std=gnu99
 
 #-fasynchronous-unwind-tables -mzero-caller-saved-regs=used
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall |  -pedantic -Werror --param ssp-buffer-size=1ssp-buffer-size=1
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall -mzero-caller-saved-regs=used
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O3 -funroll-loops -Wall -mzero-caller-saved-regs=used
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
