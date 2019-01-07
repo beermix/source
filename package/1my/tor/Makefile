@@ -3,12 +3,12 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://dist.torproject.org/?C=M;O=D
+# https://dist.torproject.org/?C=M;O=D | https://github.com/torproject/tor/branches/active
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=cd446a6
+PKG_VERSION:=366e9ba
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -18,7 +18,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
-PKG_REMOVE_FILES:=autogen.sh aclocal.m4
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -104,10 +103,9 @@ CONFIGURE_ARGS += \
 
 EXTRA_CFLAGS += -std=gnu99
 
-#-fasynchronous-unwind-tables -mzero-caller-saved-regs=used
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall |  -pedantic -Werror --param ssp-buffer-size=1ssp-buffer-size=1
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall -mzero-caller-saved-regs=used
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O3 -funroll-loops -Wall -mzero-caller-saved-regs=used
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -funroll-loops -mzero-caller-saved-regs=used -fasynchronous-unwind-tables -Wall
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -mzero-caller-saved-regs=used -fasynchronous-unwind-tables -Wall
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
