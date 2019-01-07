@@ -1,4 +1,4 @@
-#
+	#
 # Copyright (C) 2006-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
@@ -23,8 +23,12 @@ ifeq ($(PKG_VERSION),2.30)
   PKG_HASH:=6e46b8aeae2f727a36f0bd9505e405768a72218f1796f0d09757d45209871ae6
 endif
 
-ifeq ($(PKG_VERSION),2.31.1)
-  PKG_HASH:=5d20086ecf5752cc7d9134246e9588fa201740d540f7eb84d795b1f7a93bca86
+ifeq ($(PKG_VERSION),2.31)
+  PKG_SOURCE_PROTO:=git
+  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+  PKG_SOURCE_VERSION:=89e8cd357e6ff436c0b3c3e53bad004ba3ff9f5e
+  PKG_SOURCE_URL:=https://github.com/bminor/binutils-gdb.git
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
 ifneq ($(CONFIG_BINUTILS_VERSION_2_29_ARC),)
