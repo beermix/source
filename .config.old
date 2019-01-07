@@ -6306,7 +6306,7 @@ CONFIG_PACKAGE_shadowsocks-libev=y
 # CONFIG_PACKAGE_stunnel is not set
 # CONFIG_PACKAGE_sysbench is not set
 # CONFIG_PACKAGE_tcpdump is not set
-# CONFIG_PACKAGE_tcpdump-mini is not set
+CONFIG_PACKAGE_tcpdump-mini=y
 # CONFIG_PACKAGE_tgt is not set
 CONFIG_PACKAGE_tinymembench=y
 CONFIG_PACKAGE_tor=y
