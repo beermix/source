@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=366e9ba
+PKG_VERSION:=f9e5266
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -104,8 +104,8 @@ CONFIGURE_ARGS += \
 EXTRA_CFLAGS += -std=gnu99
 
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall |  -pedantic -Werror --param ssp-buffer-size=1ssp-buffer-size=1
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -funroll-loops -mzero-caller-saved-regs=used -fasynchronous-unwind-tables -Wall
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -mzero-caller-saved-regs=used -fasynchronous-unwind-tables -Wall
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables -Wall
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables -Wall
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \

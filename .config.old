@@ -6083,7 +6083,6 @@ CONFIG_PRIVOXY_disable-stats=y
 # CONFIG_PRIVOXY_enable-compression is not set
 # CONFIG_PACKAGE_radicale-py2 is not set
 # CONFIG_PACKAGE_radicale-py3 is not set
-# CONFIG_PACKAGE_shadowsocks-client is not set
 # CONFIG_PACKAGE_sockd is not set
 # CONFIG_PACKAGE_socksify is not set
 # CONFIG_PACKAGE_spawn-fcgi is not set
