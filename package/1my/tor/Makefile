@@ -110,7 +110,7 @@ TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -fasy
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
-		--enable-gcc-hardening
+		--disable-gcc-hardening
 else
 	EXTRA_CFLAGS += -fPIC
 endif
