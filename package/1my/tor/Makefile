@@ -92,6 +92,7 @@ CONFIGURE_ARGS += \
 	--with-ssl-dir="$(STAGING_DIR)/usr" \
 	--with-openssl-dir="$(STAGING_DIR)/usr" \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
+	--disable-silent-rules \
 	--disable-asciidoc \
 	--disable-seccomp \
 	--disable-libscrypt \
@@ -109,7 +110,7 @@ TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -fasy
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
-		--disable-gcc-hardening
+		--enable-gcc-hardening
 else
 	EXTRA_CFLAGS += -fPIC
 endif
