@@ -272,7 +272,7 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
 # CONFIG_GCC_USE_VERSION_9 is not set
 # CONFIG_GCC_USE_VERSION_7 is not set
 CONFIG_GCC_USE_VERSION_8=y
-# CONFIG_GCC_USE_GRAPHITE is not set
+CONFIG_GCC_USE_GRAPHITE=y
 CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-default-libstdcxx-abi=gcc4-compatible --disable-vtable-verify --disable-libunwind-exceptions --with-linker-hash-style=gnu"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
@@ -280,7 +280,7 @@ CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-default-libstdcxx-abi=gcc4-compatible --
 # CONFIG_SJLJ_EXCEPTIONS is not set
 # CONFIG_INSTALL_GFORTRAN is not set
 # CONFIG_INSTALL_GCCGO is not set
-# CONFIG_NASM is not set
+CONFIG_NASM=y
 
 #
 # C Library
@@ -2536,10 +2536,10 @@ CONFIG_PACKAGE_r8169-firmware=y
 # CONFIG_PACKAGE_kmod-aoe is not set
 # CONFIG_PACKAGE_kmod-ata-core is not set
 # CONFIG_PACKAGE_kmod-block2mtd is not set
-CONFIG_PACKAGE_kmod-dax=y
-CONFIG_PACKAGE_kmod-dm=y
+# CONFIG_PACKAGE_kmod-dax is not set
+# CONFIG_PACKAGE_kmod-dm is not set
 # CONFIG_PACKAGE_kmod-libsas is not set
-CONFIG_PACKAGE_kmod-loop=y
+# CONFIG_PACKAGE_kmod-loop is not set
 # CONFIG_PACKAGE_kmod-md-mod is not set
 # CONFIG_PACKAGE_kmod-mvsas is not set
 # CONFIG_PACKAGE_kmod-nbd is not set
@@ -2551,18 +2551,7 @@ CONFIG_PACKAGE_kmod-loop=y
 #
 # CAN Support
 #
-CONFIG_PACKAGE_kmod-can=y
-# CONFIG_PACKAGE_kmod-can-bcm is not set
-# CONFIG_PACKAGE_kmod-can-c-can is not set
-# CONFIG_PACKAGE_kmod-can-gw is not set
-# CONFIG_PACKAGE_kmod-can-raw is not set
-# CONFIG_PACKAGE_kmod-can-slcan is not set
-# CONFIG_PACKAGE_kmod-can-usb-8dev is not set
-# CONFIG_PACKAGE_kmod-can-usb-ems is not set
-# CONFIG_PACKAGE_kmod-can-usb-esd is not set
-# CONFIG_PACKAGE_kmod-can-usb-kvaser is not set
-# CONFIG_PACKAGE_kmod-can-usb-peak is not set
-# CONFIG_PACKAGE_kmod-can-vcan is not set
+# CONFIG_PACKAGE_kmod-can is not set
 
 #
 # Cryptographic API modules
@@ -2591,14 +2580,14 @@ CONFIG_PACKAGE_kmod-crypto-hash=y
 # CONFIG_PACKAGE_kmod-crypto-hw-hifn-795x is not set
 # CONFIG_PACKAGE_kmod-crypto-hw-padlock is not set
 # CONFIG_PACKAGE_kmod-crypto-hw-talitos is not set
-CONFIG_PACKAGE_kmod-crypto-manager=y
+# CONFIG_PACKAGE_kmod-crypto-manager is not set
 # CONFIG_PACKAGE_kmod-crypto-md4 is not set
 # CONFIG_PACKAGE_kmod-crypto-md5 is not set
 # CONFIG_PACKAGE_kmod-crypto-michael-mic is not set
 # CONFIG_PACKAGE_kmod-crypto-misc is not set
 CONFIG_PACKAGE_kmod-crypto-null=y
 # CONFIG_PACKAGE_kmod-crypto-pcbc is not set
-CONFIG_PACKAGE_kmod-crypto-pcompress=y
+# CONFIG_PACKAGE_kmod-crypto-pcompress is not set
 # CONFIG_PACKAGE_kmod-crypto-rng is not set
 # CONFIG_PACKAGE_kmod-crypto-seqiv is not set
 # CONFIG_PACKAGE_kmod-crypto-sha1 is not set
@@ -2621,7 +2610,7 @@ CONFIG_PACKAGE_kmod-crypto-pcompress=y
 # CONFIG_PACKAGE_kmod-fs-configfs is not set
 # CONFIG_PACKAGE_kmod-fs-cramfs is not set
 # CONFIG_PACKAGE_kmod-fs-exportfs is not set
-CONFIG_PACKAGE_kmod-fs-ext4=y
+# CONFIG_PACKAGE_kmod-fs-ext4 is not set
 # CONFIG_PACKAGE_kmod-fs-f2fs is not set
 # CONFIG_PACKAGE_kmod-fs-fscache is not set
 # CONFIG_PACKAGE_kmod-fs-hfs is not set
@@ -2687,17 +2676,8 @@ CONFIG_PACKAGE_kmod-hwmon-core=y
 #
 # I2C support
 #
-CONFIG_PACKAGE_kmod-i2c-core=y
-# CONFIG_PACKAGE_kmod-i2c-algo-bit is not set
-# CONFIG_PACKAGE_kmod-i2c-algo-pca is not set
-# CONFIG_PACKAGE_kmod-i2c-algo-pcf is not set
-# CONFIG_PACKAGE_kmod-i2c-gpio is not set
+# CONFIG_PACKAGE_kmod-i2c-core is not set
 # CONFIG_PACKAGE_kmod-i2c-gpio-custom is not set
-# CONFIG_PACKAGE_kmod-i2c-i801 is not set
-# CONFIG_PACKAGE_kmod-i2c-mux is not set
-# CONFIG_PACKAGE_kmod-i2c-piix4 is not set
-# CONFIG_PACKAGE_kmod-i2c-smbus is not set
-# CONFIG_PACKAGE_kmod-i2c-tiny-usb is not set
 
 #
 # Industrial I/O Modules
@@ -2720,7 +2700,7 @@ CONFIG_PACKAGE_kmod-i2c-core=y
 # CONFIG_PACKAGE_kmod-hid is not set
 # CONFIG_PACKAGE_kmod-hid-generic is not set
 CONFIG_PACKAGE_kmod-input-core=y
-CONFIG_PACKAGE_kmod-input-evdev=y
+# CONFIG_PACKAGE_kmod-input-evdev is not set
 # CONFIG_PACKAGE_kmod-input-gpio-encoder is not set
 # CONFIG_PACKAGE_kmod-input-gpio-keys is not set
 # CONFIG_PACKAGE_kmod-input-gpio-keys-polled is not set
@@ -2749,7 +2729,7 @@ CONFIG_PACKAGE_kmod-input-evdev=y
 # CONFIG_PACKAGE_kmod-lib-cordic is not set
 # CONFIG_PACKAGE_kmod-lib-crc-ccitt is not set
 # CONFIG_PACKAGE_kmod-lib-crc-itu-t is not set
-CONFIG_PACKAGE_kmod-lib-crc16=y
+# CONFIG_PACKAGE_kmod-lib-crc16 is not set
 # CONFIG_PACKAGE_kmod-lib-crc32c is not set
 # CONFIG_PACKAGE_kmod-lib-crc7 is not set
 # CONFIG_PACKAGE_kmod-lib-crc8 is not set
@@ -2767,7 +2747,7 @@ CONFIG_PACKAGE_kmod-nls-cp1251=y
 # CONFIG_PACKAGE_kmod-nls-cp852 is not set
 # CONFIG_PACKAGE_kmod-nls-cp862 is not set
 # CONFIG_PACKAGE_kmod-nls-cp864 is not set
-CONFIG_PACKAGE_kmod-nls-cp866=y
+# CONFIG_PACKAGE_kmod-nls-cp866 is not set
 # CONFIG_PACKAGE_kmod-nls-cp932 is not set
 # CONFIG_PACKAGE_kmod-nls-cp936 is not set
 # CONFIG_PACKAGE_kmod-nls-cp950 is not set
@@ -2777,80 +2757,80 @@ CONFIG_PACKAGE_kmod-nls-cp866=y
 # CONFIG_PACKAGE_kmod-nls-iso8859-2 is not set
 # CONFIG_PACKAGE_kmod-nls-iso8859-6 is not set
 # CONFIG_PACKAGE_kmod-nls-iso8859-8 is not set
-CONFIG_PACKAGE_kmod-nls-koi8r=y
+# CONFIG_PACKAGE_kmod-nls-koi8r is not set
 CONFIG_PACKAGE_kmod-nls-utf8=y
 
 #
 # Netfilter Extensions
 #
 # CONFIG_PACKAGE_kmod-arptables is not set
-# CONFIG_PACKAGE_kmod-br-netfilter is not set
-# CONFIG_PACKAGE_kmod-ebtables is not set
-# CONFIG_PACKAGE_kmod-ebtables-ipv4 is not set
+CONFIG_PACKAGE_kmod-br-netfilter=y
+CONFIG_PACKAGE_kmod-ebtables=y
+CONFIG_PACKAGE_kmod-ebtables-ipv4=y
 # CONFIG_PACKAGE_kmod-ebtables-ipv6 is not set
 # CONFIG_PACKAGE_kmod-ebtables-watchers is not set
-# CONFIG_PACKAGE_kmod-ipt-account is not set
-# CONFIG_PACKAGE_kmod-ipt-chaos is not set
-# CONFIG_PACKAGE_kmod-ipt-checksum is not set
-# CONFIG_PACKAGE_kmod-ipt-cluster is not set
-# CONFIG_PACKAGE_kmod-ipt-clusterip is not set
+CONFIG_PACKAGE_kmod-ipt-account=y
+CONFIG_PACKAGE_kmod-ipt-chaos=y
+CONFIG_PACKAGE_kmod-ipt-checksum=y
+CONFIG_PACKAGE_kmod-ipt-cluster=y
+CONFIG_PACKAGE_kmod-ipt-clusterip=y
 CONFIG_PACKAGE_kmod-ipt-compat-xtables=y
-# CONFIG_PACKAGE_kmod-ipt-condition is not set
+CONFIG_PACKAGE_kmod-ipt-condition=y
 CONFIG_PACKAGE_kmod-ipt-conntrack=y
-# CONFIG_PACKAGE_kmod-ipt-conntrack-extra is not set
-# CONFIG_PACKAGE_kmod-ipt-conntrack-label is not set
+CONFIG_PACKAGE_kmod-ipt-conntrack-extra=y
+CONFIG_PACKAGE_kmod-ipt-conntrack-label=y
 CONFIG_PACKAGE_kmod-ipt-core=y
-# CONFIG_PACKAGE_kmod-ipt-debug is not set
-# CONFIG_PACKAGE_kmod-ipt-delude is not set
-# CONFIG_PACKAGE_kmod-ipt-dhcpmac is not set
+CONFIG_PACKAGE_kmod-ipt-debug=y
+CONFIG_PACKAGE_kmod-ipt-delude=y
+CONFIG_PACKAGE_kmod-ipt-dhcpmac=y
 CONFIG_PACKAGE_kmod-ipt-dnetmap=y
 CONFIG_PACKAGE_kmod-ipt-extra=y
 CONFIG_PACKAGE_kmod-ipt-filter=y
-# CONFIG_PACKAGE_kmod-ipt-fuzzy is not set
-# CONFIG_PACKAGE_kmod-ipt-geoip is not set
-# CONFIG_PACKAGE_kmod-ipt-hashlimit is not set
+CONFIG_PACKAGE_kmod-ipt-fuzzy=y
+CONFIG_PACKAGE_kmod-ipt-geoip=y
+CONFIG_PACKAGE_kmod-ipt-hashlimit=y
 CONFIG_PACKAGE_kmod-ipt-iface=y
 CONFIG_PACKAGE_kmod-ipt-ipmark=y
 CONFIG_PACKAGE_kmod-ipt-ipopt=y
-# CONFIG_PACKAGE_kmod-ipt-ipp2p is not set
+CONFIG_PACKAGE_kmod-ipt-ipp2p=y
 CONFIG_PACKAGE_kmod-ipt-iprange=y
-# CONFIG_PACKAGE_kmod-ipt-ipsec is not set
+CONFIG_PACKAGE_kmod-ipt-ipsec=y
 CONFIG_PACKAGE_kmod-ipt-ipset=y
 CONFIG_PACKAGE_kmod-ipt-ipv4options=y
-# CONFIG_PACKAGE_kmod-ipt-led is not set
+CONFIG_PACKAGE_kmod-ipt-led=y
 CONFIG_PACKAGE_kmod-ipt-length2=y
 CONFIG_PACKAGE_kmod-ipt-logmark=y
-# CONFIG_PACKAGE_kmod-ipt-lscan is not set
-# CONFIG_PACKAGE_kmod-ipt-lua is not set
+CONFIG_PACKAGE_kmod-ipt-lscan=y
+CONFIG_PACKAGE_kmod-ipt-lua=y
 CONFIG_PACKAGE_kmod-ipt-nat=y
 CONFIG_PACKAGE_kmod-ipt-nat-extra=y
 # CONFIG_PACKAGE_kmod-ipt-nathelper-rtsp is not set
-# CONFIG_PACKAGE_kmod-ipt-nflog is not set
+CONFIG_PACKAGE_kmod-ipt-nflog=y
 CONFIG_PACKAGE_kmod-ipt-nfqueue=y
 CONFIG_PACKAGE_kmod-ipt-offload=y
-# CONFIG_PACKAGE_kmod-ipt-physdev is not set
-# CONFIG_PACKAGE_kmod-ipt-psd is not set
-# CONFIG_PACKAGE_kmod-ipt-quota2 is not set
-# CONFIG_PACKAGE_kmod-ipt-raw is not set
+CONFIG_PACKAGE_kmod-ipt-physdev=y
+CONFIG_PACKAGE_kmod-ipt-psd=y
+CONFIG_PACKAGE_kmod-ipt-quota2=y
+CONFIG_PACKAGE_kmod-ipt-raw=y
 CONFIG_PACKAGE_kmod-ipt-rpfilter=y
-# CONFIG_PACKAGE_kmod-ipt-sysrq is not set
-# CONFIG_PACKAGE_kmod-ipt-tarpit is not set
+CONFIG_PACKAGE_kmod-ipt-sysrq=y
+CONFIG_PACKAGE_kmod-ipt-tarpit=y
 CONFIG_PACKAGE_kmod-ipt-tee=y
 CONFIG_PACKAGE_kmod-ipt-tproxy=y
-# CONFIG_PACKAGE_kmod-ipt-u32 is not set
-# CONFIG_PACKAGE_kmod-ipt-ulog is not set
-# CONFIG_PACKAGE_kmod-netatop is not set
+CONFIG_PACKAGE_kmod-ipt-u32=y
+CONFIG_PACKAGE_kmod-ipt-ulog=y
+CONFIG_PACKAGE_kmod-netatop=y
 CONFIG_PACKAGE_kmod-nf-conntrack=y
-# CONFIG_PACKAGE_kmod-nf-conntrack-netlink is not set
+CONFIG_PACKAGE_kmod-nf-conntrack-netlink=y
 CONFIG_PACKAGE_kmod-nf-flow=y
 CONFIG_PACKAGE_kmod-nf-ipt=y
 # CONFIG_PACKAGE_kmod-nf-ipt6 is not set
 CONFIG_PACKAGE_kmod-nf-nat=y
 CONFIG_PACKAGE_kmod-nf-nathelper=y
-# CONFIG_PACKAGE_kmod-nf-nathelper-extra is not set
+CONFIG_PACKAGE_kmod-nf-nathelper-extra=y
 CONFIG_PACKAGE_kmod-nf-reject=y
 CONFIG_PACKAGE_kmod-nfnetlink=y
-# CONFIG_PACKAGE_kmod-nfnetlink-log is not set
+CONFIG_PACKAGE_kmod-nfnetlink-log=y
 CONFIG_PACKAGE_kmod-nfnetlink-queue=y
 
 #
@@ -2889,7 +2869,7 @@ CONFIG_PACKAGE_kmod-natsemi=y
 CONFIG_PACKAGE_kmod-ne2k-pci=y
 # CONFIG_PACKAGE_kmod-niu is not set
 # CONFIG_PACKAGE_kmod-of-mdio is not set
-CONFIG_PACKAGE_kmod-pcnet32=y
+# CONFIG_PACKAGE_kmod-pcnet32 is not set
 # CONFIG_PACKAGE_kmod-phy-broadcom is not set
 CONFIG_PACKAGE_kmod-phy-realtek=y
 # CONFIG_PACKAGE_kmod-r6040 is not set
@@ -2938,7 +2918,7 @@ CONFIG_PACKAGE_kmod-r8169=y
 # CONFIG_PACKAGE_kmod-misdn is not set
 # CONFIG_PACKAGE_kmod-mpls is not set
 # CONFIG_PACKAGE_kmod-ppp is not set
-CONFIG_PACKAGE_kmod-netem=y
+# CONFIG_PACKAGE_kmod-netem is not set
 # CONFIG_PACKAGE_kmod-nlmon is not set
 # CONFIG_PACKAGE_kmod-openvswitch is not set
 # CONFIG_PACKAGE_kmod-openvswitch-geneve is not set
@@ -2953,8 +2933,8 @@ CONFIG_PACKAGE_kmod-netem=y
 # CONFIG_PACKAGE_kmod-pf-ring is not set
 # CONFIG_PACKAGE_kmod-pktgen is not set
 CONFIG_PACKAGE_kmod-sched=y
-# CONFIG_PACKAGE_kmod-sched-cake is not set
-# CONFIG_PACKAGE_kmod-sched-connmark is not set
+CONFIG_PACKAGE_kmod-sched-cake=y
+CONFIG_PACKAGE_kmod-sched-connmark=y
 CONFIG_PACKAGE_kmod-sched-core=y
 # CONFIG_PACKAGE_kmod-sctp is not set
 # CONFIG_PACKAGE_kmod-slip is not set
@@ -2977,7 +2957,7 @@ CONFIG_PACKAGE_kmod-tcp-bbr=y
 # CONFIG_PACKAGE_kmod-bmp085-i2c is not set
 # CONFIG_PACKAGE_kmod-bmp085-spi is not set
 # CONFIG_PACKAGE_kmod-btmrvl is not set
-CONFIG_PACKAGE_kmod-button-hotplug=y
+# CONFIG_PACKAGE_kmod-button-hotplug is not set
 # CONFIG_PACKAGE_kmod-echo is not set
 # CONFIG_PACKAGE_kmod-eeprom-93cx6 is not set
 # CONFIG_PACKAGE_kmod-eeprom-at24 is not set
@@ -3001,10 +2981,10 @@ CONFIG_PACKAGE_kmod-button-hotplug=y
 # CONFIG_PACKAGE_kmod-mtdtests is not set
 # CONFIG_PACKAGE_kmod-parport-pc is not set
 # CONFIG_PACKAGE_kmod-ppdev is not set
-CONFIG_PACKAGE_kmod-pps=y
+# CONFIG_PACKAGE_kmod-pps is not set
 # CONFIG_PACKAGE_kmod-pps-gpio is not set
 # CONFIG_PACKAGE_kmod-pps-ldisc is not set
-CONFIG_PACKAGE_kmod-ptp=y
+# CONFIG_PACKAGE_kmod-ptp is not set
 # CONFIG_PACKAGE_kmod-random-core is not set
 # CONFIG_PACKAGE_kmod-random-tpm is not set
 # CONFIG_PACKAGE_kmod-regmap is not set
@@ -5512,47 +5492,47 @@ CONFIG_PACKAGE_wget=y
 CONFIG_PACKAGE_iptables=y
 # CONFIG_IPTABLES_CONNLABEL is not set
 # CONFIG_IPTABLES_NFTABLES is not set
-# CONFIG_PACKAGE_iptables-mod-account is not set
-# CONFIG_PACKAGE_iptables-mod-chaos is not set
-# CONFIG_PACKAGE_iptables-mod-checksum is not set
-# CONFIG_PACKAGE_iptables-mod-cluster is not set
-# CONFIG_PACKAGE_iptables-mod-clusterip is not set
-# CONFIG_PACKAGE_iptables-mod-condition is not set
-# CONFIG_PACKAGE_iptables-mod-conntrack-extra is not set
-# CONFIG_PACKAGE_iptables-mod-delude is not set
-# CONFIG_PACKAGE_iptables-mod-dhcpmac is not set
-# CONFIG_PACKAGE_iptables-mod-dnetmap is not set
-# CONFIG_PACKAGE_iptables-mod-extra is not set
+CONFIG_PACKAGE_iptables-mod-account=y
+CONFIG_PACKAGE_iptables-mod-chaos=y
+CONFIG_PACKAGE_iptables-mod-checksum=y
+CONFIG_PACKAGE_iptables-mod-cluster=y
+CONFIG_PACKAGE_iptables-mod-clusterip=y
+CONFIG_PACKAGE_iptables-mod-condition=y
+CONFIG_PACKAGE_iptables-mod-conntrack-extra=y
+CONFIG_PACKAGE_iptables-mod-delude=y
+CONFIG_PACKAGE_iptables-mod-dhcpmac=y
+CONFIG_PACKAGE_iptables-mod-dnetmap=y
+CONFIG_PACKAGE_iptables-mod-extra=y
 CONFIG_PACKAGE_iptables-mod-filter=y
-# CONFIG_PACKAGE_iptables-mod-fuzzy is not set
-# CONFIG_PACKAGE_iptables-mod-geoip is not set
-# CONFIG_PACKAGE_iptables-mod-hashlimit is not set
+CONFIG_PACKAGE_iptables-mod-fuzzy=y
+CONFIG_PACKAGE_iptables-mod-geoip=y
+CONFIG_PACKAGE_iptables-mod-hashlimit=y
 CONFIG_PACKAGE_iptables-mod-iface=y
-# CONFIG_PACKAGE_iptables-mod-ipmark is not set
-# CONFIG_PACKAGE_iptables-mod-ipopt is not set
-# CONFIG_PACKAGE_iptables-mod-ipp2p is not set
-# CONFIG_PACKAGE_iptables-mod-iprange is not set
-# CONFIG_PACKAGE_iptables-mod-ipsec is not set
-# CONFIG_PACKAGE_iptables-mod-ipv4options is not set
-# CONFIG_PACKAGE_iptables-mod-led is not set
-# CONFIG_PACKAGE_iptables-mod-length2 is not set
-# CONFIG_PACKAGE_iptables-mod-logmark is not set
-# CONFIG_PACKAGE_iptables-mod-lscan is not set
-# CONFIG_PACKAGE_iptables-mod-lua is not set
+CONFIG_PACKAGE_iptables-mod-ipmark=y
+CONFIG_PACKAGE_iptables-mod-ipopt=y
+CONFIG_PACKAGE_iptables-mod-ipp2p=y
+CONFIG_PACKAGE_iptables-mod-iprange=y
+CONFIG_PACKAGE_iptables-mod-ipsec=y
+CONFIG_PACKAGE_iptables-mod-ipv4options=y
+CONFIG_PACKAGE_iptables-mod-led=y
+CONFIG_PACKAGE_iptables-mod-length2=y
+CONFIG_PACKAGE_iptables-mod-logmark=y
+CONFIG_PACKAGE_iptables-mod-lscan=y
+CONFIG_PACKAGE_iptables-mod-lua=y
 CONFIG_PACKAGE_iptables-mod-nat-extra=y
-# CONFIG_PACKAGE_iptables-mod-nflog is not set
+CONFIG_PACKAGE_iptables-mod-nflog=y
 CONFIG_PACKAGE_iptables-mod-nfqueue=y
-# CONFIG_PACKAGE_iptables-mod-physdev is not set
-# CONFIG_PACKAGE_iptables-mod-psd is not set
-# CONFIG_PACKAGE_iptables-mod-quota2 is not set
-# CONFIG_PACKAGE_iptables-mod-rpfilter is not set
-# CONFIG_PACKAGE_iptables-mod-sysrq is not set
-# CONFIG_PACKAGE_iptables-mod-tarpit is not set
+CONFIG_PACKAGE_iptables-mod-physdev=y
+CONFIG_PACKAGE_iptables-mod-psd=y
+CONFIG_PACKAGE_iptables-mod-quota2=y
+CONFIG_PACKAGE_iptables-mod-rpfilter=y
+CONFIG_PACKAGE_iptables-mod-sysrq=y
+CONFIG_PACKAGE_iptables-mod-tarpit=y
 CONFIG_PACKAGE_iptables-mod-tee=y
 CONFIG_PACKAGE_iptables-mod-tproxy=y
-# CONFIG_PACKAGE_iptables-mod-trace is not set
-# CONFIG_PACKAGE_iptables-mod-u32 is not set
-# CONFIG_PACKAGE_iptables-mod-ulog is not set
+CONFIG_PACKAGE_iptables-mod-trace=y
+CONFIG_PACKAGE_iptables-mod-u32=y
+CONFIG_PACKAGE_iptables-mod-ulog=y
 # CONFIG_PACKAGE_iptaccount is not set
 # CONFIG_PACKAGE_iptgeoip is not set
 # CONFIG_PACKAGE_miniupnpc is not set
@@ -5776,7 +5756,7 @@ CONFIG_PACKAGE_tc=y
 # CONFIG_PACKAGE_autossh is not set
 # CONFIG_PACKAGE_openssh-client is not set
 # CONFIG_PACKAGE_openssh-client-utils is not set
-# CONFIG_PACKAGE_openssh-keygen is not set
+CONFIG_PACKAGE_openssh-keygen=y
 # CONFIG_PACKAGE_openssh-moduli is not set
 # CONFIG_PACKAGE_openssh-server is not set
 # CONFIG_PACKAGE_openssh-server-pam is not set
@@ -6130,7 +6110,7 @@ CONFIG_BWMNG_GETOPT_LONG=y
 # CONFIG_PACKAGE_esniper is not set
 # CONFIG_PACKAGE_etherwake is not set
 CONFIG_PACKAGE_ethtool=y
-CONFIG_ETHTOOL_PRETTY_DUMP=y
+# CONFIG_ETHTOOL_PRETTY_DUMP is not set
 # CONFIG_PACKAGE_fakeidentd is not set
 # CONFIG_PACKAGE_foolsm is not set
 CONFIG_PACKAGE_fping=y
