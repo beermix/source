@@ -66,6 +66,7 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-bind-now \
 		--enable-lock-elision \
+		--enable-obsolete-rpc \
 		--disable-debug \
 		--without-selinux \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
