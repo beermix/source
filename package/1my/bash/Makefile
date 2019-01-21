@@ -8,16 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bash
-PKG_VERSION:=5.0
-PKG_RELEASE:=3
+PKG_VERSION:=ddf3f64
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@GNU/bash
-PKG_HASH:=
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/bminor/bash
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_LICENSE:=GPL-3.0+
-PKG_LICENSE_FILES:=COPYING
-PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 
 PKG_INSTALL:=1
 
@@ -67,12 +65,11 @@ CONFIGURE_VARS += \
 	bash_cv_printf_a_format=yes \
 
 CONFIGURE_ARGS+= \
-	--with-installed-readline="$(STAGING_DIR)/usr" \
 	--with-curses \
 	--without-bash-malloc \
 	--bindir=/bin \
-	--disable-rpath \
 	--enable-readline \
+	--with-installed-readline="$(STAGING_DIR)/usr" \
 
 define Package/bash/postinst
 #!/bin/sh
