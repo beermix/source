@@ -4587,18 +4587,19 @@ CONFIG_PACKAGE_libxtables=y
 CONFIG_PACKAGE_libmbedtls=y
 CONFIG_PACKAGE_libopenssl=y
 CONFIG_OPENSSL_WITH_EC=y
-# CONFIG_OPENSSL_WITH_EC2M is not set
+CONFIG_OPENSSL_WITH_EC2M=y
 # CONFIG_OPENSSL_WITH_SSL3 is not set
 CONFIG_OPENSSL_WITH_DEPRECATED=y
 # CONFIG_OPENSSL_NO_DEPRECATED is not set
-# CONFIG_OPENSSL_WITH_DTLS is not set
+CONFIG_OPENSSL_WITH_DTLS=y
 # CONFIG_OPENSSL_WITH_COMPRESSION is not set
 CONFIG_OPENSSL_WITH_NPN=y
 CONFIG_OPENSSL_WITH_PSK=y
 CONFIG_OPENSSL_WITH_SRP=y
-# CONFIG_OPENSSL_HARDWARE_SUPPORT is not set
+CONFIG_OPENSSL_ENGINE_DIGEST=y
+CONFIG_OPENSSL_HARDWARE_SUPPORT=y
 CONFIG_OPENSSL_OPTIMIZE_SPEED=y
-# CONFIG_OPENSSL_ENGINE_CRYPTO is not set
+CONFIG_OPENSSL_ENGINE_CRYPTO=y
 # CONFIG_PACKAGE_libwolfssl is not set
 
 #
@@ -4655,7 +4656,7 @@ CONFIG_PACKAGE_bind-libs=y
 # CONFIG_PACKAGE_fftw3l is not set
 # CONFIG_PACKAGE_getdns is not set
 # CONFIG_PACKAGE_giflib is not set
-CONFIG_PACKAGE_glib2=y
+# CONFIG_PACKAGE_glib2 is not set
 # CONFIG_PACKAGE_glog is not set
 # CONFIG_PACKAGE_hidapi is not set
 # CONFIG_PACKAGE_ibrcommon is not set
@@ -4773,7 +4774,7 @@ CONFIG_PACKAGE_libf2fs=y
 # CONFIG_PACKAGE_libfastjson is not set
 # CONFIG_PACKAGE_libfdisk is not set
 # CONFIG_PACKAGE_libfdt is not set
-CONFIG_PACKAGE_libffi=y
+# CONFIG_PACKAGE_libffi is not set
 # CONFIG_PACKAGE_libffmpeg-audio-dec is not set
 # CONFIG_PACKAGE_libffmpeg-custom is not set
 # CONFIG_PACKAGE_libffmpeg-full is not set
@@ -4839,7 +4840,7 @@ CONFIG_PACKAGE_libmnl=y
 # CONFIG_PACKAGE_libmodbus is not set
 # CONFIG_PACKAGE_libmosquitto-nossl is not set
 # CONFIG_PACKAGE_libmosquitto-ssl is not set
-CONFIG_PACKAGE_libmount=y
+# CONFIG_PACKAGE_libmount is not set
 # CONFIG_PACKAGE_libmpdclient is not set
 # CONFIG_PACKAGE_libmpeg2 is not set
 # CONFIG_PACKAGE_libmpg123 is not set
@@ -4940,8 +4941,8 @@ CONFIG_LIBSODIUM_MINIMAL=y
 # CONFIG_PACKAGE_libspeexdsp is not set
 CONFIG_PACKAGE_libss=y
 # CONFIG_PACKAGE_libssh is not set
-CONFIG_PACKAGE_libssh2=y
-CONFIG_LIBSSH2_MBEDTLS=y
+# CONFIG_PACKAGE_libssh2 is not set
+# CONFIG_LIBSSH2_MBEDTLS is not set
 # CONFIG_LIBSSH2_OPENSSL is not set
 # CONFIG_PACKAGE_libstoken is not set
 # CONFIG_PACKAGE_libstrophe is not set
@@ -4964,7 +4965,7 @@ CONFIG_PACKAGE_libuclient=y
 # CONFIG_PACKAGE_libudns is not set
 # CONFIG_PACKAGE_libuecc is not set
 # CONFIG_PACKAGE_libugpio is not set
-CONFIG_PACKAGE_libunbound=y
+# CONFIG_PACKAGE_libunbound is not set
 # CONFIG_PACKAGE_libunistring is not set
 # CONFIG_PACKAGE_libunwind is not set
 # CONFIG_PACKAGE_libupnp is not set
@@ -5158,7 +5159,7 @@ CONFIG_PACKAGE_luci-app-shadowsocks-libev=y
 # CONFIG_PACKAGE_luci-app-travelmate is not set
 # CONFIG_PACKAGE_luci-app-udpxy is not set
 # CONFIG_PACKAGE_luci-app-uhttpd is not set
-CONFIG_PACKAGE_luci-app-unbound=y
+# CONFIG_PACKAGE_luci-app-unbound is not set
 CONFIG_PACKAGE_luci-app-upnp=y
 # CONFIG_PACKAGE_luci-app-vnstat is not set
 # CONFIG_PACKAGE_luci-app-vpnbypass is not set
@@ -5336,8 +5337,6 @@ CONFIG_PACKAGE_luci-i18n-privoxy-ru=y
 # CONFIG_PACKAGE_luci-i18n-privoxy-zh-cn is not set
 # CONFIG_PACKAGE_luci-i18n-privoxy-zh-tw is not set
 # CONFIG_PACKAGE_luci-i18n-shadowsocks-libev-zh-cn is not set
-# CONFIG_PACKAGE_luci-i18n-unbound-zh-cn is not set
-# CONFIG_PACKAGE_luci-i18n-unbound-zh-tw is not set
 # CONFIG_PACKAGE_luci-i18n-upnp-ca is not set
 # CONFIG_PACKAGE_luci-i18n-upnp-cs is not set
 # CONFIG_PACKAGE_luci-i18n-upnp-de is not set
@@ -5631,7 +5630,7 @@ CONFIG_PACKAGE_drill=y
 # CONFIG_PACKAGE_nsd-nossl is not set
 # CONFIG_PACKAGE_ohybridproxy is not set
 # CONFIG_PACKAGE_stubby is not set
-CONFIG_PACKAGE_unbound=y
+# CONFIG_PACKAGE_unbound is not set
 # CONFIG_PACKAGE_unbound-anchor is not set
 # CONFIG_PACKAGE_unbound-control is not set
 # CONFIG_PACKAGE_unbound-control-setup is not set
@@ -6682,18 +6681,7 @@ CONFIG_PACKAGE_lm-sensors=y
 # CONFIG_PACKAGE_macchanger is not set
 # CONFIG_PACKAGE_mbedtls-util is not set
 # CONFIG_PACKAGE_mbtools is not set
-CONFIG_PACKAGE_mc=y
-
-#
-# Configuration
-#
-# CONFIG_MC_DIFFVIEWER is not set
-# CONFIG_MC_EDITOR is not set
-CONFIG_MC_SUBSHELL=y
-# CONFIG_MC_LARGEFILE is not set
-CONFIG_MC_BACKGROUND=y
-CONFIG_MC_CHARSET=y
-CONFIG_MC_VFS=y
+# CONFIG_PACKAGE_mc is not set
 # CONFIG_PACKAGE_mcookie is not set
 # CONFIG_PACKAGE_mmc-utils is not set
 # CONFIG_PACKAGE_moreutils is not set
