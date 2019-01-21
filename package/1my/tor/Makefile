@@ -39,8 +39,8 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  #DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +liblzma +zstd
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
+  #DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libatomic +liblzma +zstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libatomic
 endef
 
 define Package/tor/description
@@ -92,7 +92,7 @@ CONFIGURE_ARGS += \
 	--with-ssl-dir="$(STAGING_DIR)/usr" \
 	--with-openssl-dir="$(STAGING_DIR)/usr" \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
-	--disable-silent-rules \
+	--enable-silent-rules \
 	--disable-asciidoc \
 	--disable-seccomp \
 	--disable-libscrypt \
@@ -111,8 +111,8 @@ CONFIGURE_ARGS += \
 
 EXTRA_CFLAGS += -std=gnu99
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables -pedantic
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables --pedantic
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables
 EXTRA_LDFLAGS += -latomic
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
