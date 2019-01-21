@@ -16,7 +16,6 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -53,11 +52,8 @@ endef
 # bash_cv_sys_named_pipes: Required for process substituion
 CONFIGURE_VARS += \
 	ac_cv_rl_prefix="$(STAGING_DIR)/usr" \
-	ac_cv_rl_version="7.0" \
-	bash_cv_getcwd_malloc=yes \
+	ac_cv_rl_version="8.0" \
 	bash_cv_job_control_missing=present \
-	bash_cv_dev_fd=whacky \
-	bash_cv_sys_named_pipes=present \
 
 # The following are some other tests that cannot run when cross-compiling
 CONFIGURE_VARS += \
@@ -68,8 +64,9 @@ CONFIGURE_ARGS+= \
 	--with-curses \
 	--without-bash-malloc \
 	--bindir=/bin \
+	--disable-rpath \
 	--enable-readline \
-	--with-installed-readline="$(STAGING_DIR)/usr" \
+	--with-installed-readline \
 
 define Package/bash/postinst
 #!/bin/sh
