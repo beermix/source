@@ -97,6 +97,7 @@ CONFIGURE_ARGS += \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-unittests \
+	--disable-bufferevents \
 	--enable-zstd=no \
 	--enable-lzma=no \
 	--with-tor-user=tor \
