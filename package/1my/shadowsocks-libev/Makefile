@@ -39,7 +39,7 @@ define Package/shadowsocks-libev/Default
 	DEPENDS:=$(2)
 endef
 
-Package/shadowsocks-libev = $(call Package/shadowsocks-libev/Default,shared,+zlib +libpthread +libev +libcares +libpcre +libsodium +libmbedtls +libnetfilter-conntrack)
+Package/shadowsocks-libev = $(call Package/shadowsocks-libev/Default,shared,+zlib +libpthread +libev +libcares +libpcre +libsodium +libmbedtls)
 Package/shadowsocks-libev-server = $(call Package/shadowsocks-libev/Default,shared,+zlib +libpthread +libev +libcares +libpcre +libsodium +libmbedtls)
 
 Package/shadowsocks-libev-static = $(call Package/shadowsocks-libev/Default,static,+zlib +libpthread)
@@ -58,8 +58,7 @@ CONFIGURE_ARGS += \
 				--disable-ssp \
 				--disable-documentation \
 				--disable-assert \
-				--disable-silent-rules \
-				--enable-connmarktos
+				--disable-silent-rules
 
 ifeq ($(BUILD_VARIANT),static)
 	CONFIGURE_ARGS += \
