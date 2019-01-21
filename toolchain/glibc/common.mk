@@ -57,14 +57,17 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
-		BASH_SHELL=/bin/bash \
+		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--enable-kernel=4.14 \
 		--enable-stack-protector=strong \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--enable-bind-now \
+		--enable-lock-elision \
 		--disable-debug \
+		--without-selinux \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
