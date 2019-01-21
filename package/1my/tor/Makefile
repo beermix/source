@@ -100,13 +100,20 @@ CONFIGURE_ARGS += \
 	--enable-zstd=no \
 	--enable-lzma=no \
 	--with-tor-user=tor \
-	--with-tor-group=tor
+	--with-tor-group=tor \
+	--disable-android \
+	--disable-libfuzzer \.
+	--disable-module-dirauth \
+	--enable-pic \
+	--disable-rust \
+	--disable-restart-debugging \
+	--disable-zstd-advanced-apis
 
 EXTRA_CFLAGS += -std=gnu99
 
-#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -Wall |  -pedantic -Werror --param ssp-buffer-size=1ssp-buffer-size=1
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables -Wall
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables -Wall
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables -pedantic
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables --pedantic
+TARGET_LDFLAGS+=-latomic
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
