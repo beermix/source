@@ -61,7 +61,6 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--enable-kernel=4.19 \
 		--enable-stack-protector=strong \
-		--enable-static-pie \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
