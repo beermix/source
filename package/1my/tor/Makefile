@@ -111,8 +111,8 @@ CONFIGURE_ARGS += \
 
 EXTRA_CFLAGS += -std=gnu99
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O2 -funroll-loops -fasynchronous-unwind-tables
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -funroll-loops -fasynchronous-unwind-tables
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CXXFLAGS)) -O3 -funroll-loops -fasynchronous-unwind-tables
 EXTRA_LDFLAGS += -latomic
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
