@@ -53,7 +53,10 @@ endef
 CONFIGURE_VARS += \
 	ac_cv_rl_prefix="$(STAGING_DIR)/usr" \
 	ac_cv_rl_version="8.0" \
+	bash_cv_getcwd_malloc=yes \
 	bash_cv_job_control_missing=present \
+	bash_cv_dev_fd=whacky \
+	bash_cv_sys_named_pipes=present \
 
 # The following are some other tests that cannot run when cross-compiling
 CONFIGURE_VARS += \
@@ -66,7 +69,6 @@ CONFIGURE_ARGS+= \
 	--bindir=/bin \
 	--disable-rpath \
 	--enable-readline \
-	--with-installed-readline \
 
 define Package/bash/postinst
 #!/bin/sh
