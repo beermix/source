@@ -97,18 +97,11 @@ CONFIGURE_ARGS += \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-unittests \
-	--disable-bufferevents \
 	--enable-zstd=no \
 	--enable-lzma=no \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
-	--disable-android \
-	--disable-libfuzzer \
-	--disable-module-dirauth \
-	--enable-pic \
-	--disable-rust \
-	--disable-restart-debugging \
-	--disable-zstd-advanced-apis
+	--enable-gcc-warnings
 
 EXTRA_CFLAGS += -std=gnu99
 
