@@ -98,6 +98,7 @@ CONFIGURE_ARGS += \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-largefile \
+	--disable-unittests \
 	--disable-lzma \
 	--enable-zstd=no \
 	--disable-tool-name-check \
@@ -108,8 +109,8 @@ CONFIGURE_ARGS += \
 
 EXTRA_CFLAGS += -std=gnu99
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
