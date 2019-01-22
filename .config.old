@@ -3683,7 +3683,7 @@ CONFIG_PACKAGE_libip4tc=y
 # CONFIG_PACKAGE_libip6tc is not set
 # CONFIG_PACKAGE_libiptc is not set
 CONFIG_PACKAGE_libxtables=y
-CONFIG_PACKAGE_libxtables-nft=y
+# CONFIG_PACKAGE_libxtables-nft is not set
 
 #
 # Instant Messaging
@@ -5584,7 +5584,7 @@ CONFIG_PACKAGE_iptables-mod-tproxy=y
 CONFIG_PACKAGE_iptables-mod-trace=y
 CONFIG_PACKAGE_iptables-mod-u32=y
 CONFIG_PACKAGE_iptables-mod-ulog=y
-CONFIG_PACKAGE_iptables-nft=y
+# CONFIG_PACKAGE_iptables-nft is not set
 CONFIG_PACKAGE_iptaccount=y
 # CONFIG_PACKAGE_iptgeoip is not set
 # CONFIG_PACKAGE_miniupnpc is not set
