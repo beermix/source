@@ -8,16 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.3.5.7
-PKG_RELEASE:=2
+PKG_VERSION:=5dc6d23
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org/ \
-	https://archive.torproject.org/tor-package-archive
-#PKG_HASH:=826a4cb2c099a29c7cf91516ffffcfcb5aace7533b8853a8c8bddcfe2bfb1023
-PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
-		Peter Wagner <tripolar@gmx.at>
-PKG_LICENSE_FILES:=LICENSE
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/torproject/tor.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+
+PKG_INSTALL:=1
+PKG_FIXUP:=autoreconf
 
 PKG_INSTALL:=1
 
@@ -94,12 +94,15 @@ CONFIGURE_ARGS += \
 	--with-openssl-dir="$(STAGING_DIR)/usr" \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc \
+	--enable-silent-rules \
 	--disable-seccomp \
 	--disable-libscrypt \
-	--disable-unittests \
 	--disable-largefile \
 	--disable-lzma \
 	--enable-zstd=no \
+	--disable-tool-name-check \
+	tor_cv_cflags__fPIE=no \
+	tor_cv_ldflags__pie=no \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
