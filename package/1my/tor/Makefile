@@ -105,8 +105,8 @@ CONFIGURE_ARGS += \
 
 EXTRA_CFLAGS += -std=gnu99
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops -Wall
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops -Wall
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
