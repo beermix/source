@@ -31,7 +31,7 @@ define Package/libreadline
   TITLE:=Command lines edition library
   DEPENDS:=+libncursesw
   URL:=http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
-  ABI_VERSION:=$(PKG_VERSION)
+  ABI_VERSION:=8
 endef
 
 define Package/libreadline/description
@@ -61,7 +61,7 @@ endef
 
 define Package/libreadline/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{history,readline}.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{history,readline}.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call HostBuild))
