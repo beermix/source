@@ -49,6 +49,9 @@ endef
 CONFIGURE_ARGS += \
 	--disable-shared \
 	--enable-static \
+	
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 MAKE_PATH := src
 

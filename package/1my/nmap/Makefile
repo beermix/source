@@ -6,9 +6,9 @@
 
 #TODO
 #
-# * uClibcpp not supported, performance +100x slower. libstdcpp is being used. https://bugs.busybox.net/show_bug.cgi?id=2545
+# * uClibcpp not supported, performance +100x slower. libstdcpp is being used. #
 # * liblua is still not recognized/blindly accepted. Impossible to compile with support
-#
+#  https://nmap.org/dist/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
@@ -88,6 +88,9 @@ CONFIGURE_ARGS += \
 	--with-liblinear=included \
 	--without-liblua \
 	--without-zenmap
+
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 CONFIGURE_VARS += \
 	ac_cv_dnet_bsd_bpf=no \

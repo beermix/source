@@ -69,6 +69,9 @@ define Package/git-gitweb/conffiles
 /etc/gitweb.conf
 endef
 
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
 	CFLAGS="$(TARGET_CFLAGS)" \
@@ -89,7 +92,7 @@ MAKE_FLAGS := \
 	GITWEB_CSS="/gitweb/gitweb.css" \
 	GITWEB_LOGO="/gitweb/gitweb-logo.png" \
 	GITWEB_FAVICON="/gitweb/gitweb-favicon.png"
-
+	
 CONFIGURE_ARGS += \
 	--without-iconv \
 
