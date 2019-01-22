@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://dist.torproject.org/?C=M;O=D
+# https://dist.torproject.org/?C=M;O=D | https://github.com/torproject/tor/branches/active
 
 include $(TOPDIR)/rules.mk
 
@@ -41,7 +41,8 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
+  #DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libatomic +liblzma +zstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libatomic
 endef
 
 define Package/tor/description
@@ -104,9 +105,9 @@ CONFIGURE_ARGS += \
 	--with-tor-group=tor
 
 EXTRA_CFLAGS += -std=gnu99
+#EXTRA_CFLAGS += -std=gnu99 -O3 -fomit-frame-pointer -funroll-loops -Wall
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops -Wall
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops -Wall
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
