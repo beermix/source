@@ -31,6 +31,14 @@ ifeq ($(PKG_VERSION),2.31)
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
+ifeq ($(PKG_VERSION),2.32)
+  PKG_SOURCE_PROTO:=git
+  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+  PKG_SOURCE_VERSION:=4ece7be
+  PKG_SOURCE_URL:=https://github.com/bminor/binutils-gdb
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+endif
+
 ifneq ($(CONFIG_BINUTILS_VERSION_2_29_ARC),)
   PKG_REV:=arc-2017.09-release
   PKG_SOURCE_URL:=https://github.com/foss-for-synopsys-dwc-arc-processors/binutils-gdb/archive/$(PKG_REV)/
