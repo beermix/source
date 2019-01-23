@@ -27,7 +27,7 @@ ifeq ($(PKG_VERSION),2.31)
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
   PKG_SOURCE_VERSION:=595d734
-  PKG_SOURCE_URL:=git://github.com/bminor/binutils-gdb
+  PKG_SOURCE_URL:=git://sourceware.org/git/binutils-gdb.git
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
@@ -35,7 +35,7 @@ ifeq ($(PKG_VERSION),2.32)
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
   PKG_SOURCE_VERSION:=eccf574
-  PKG_SOURCE_URL:=git://github.com/bminor/binutils-gdb
+  PKG_SOURCE_URL:=git://sourceware.org/git/binutils-gdb.git
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
