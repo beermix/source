@@ -1,0 +1,27 @@
+diff --git a/dnet-config.in b/dnet-config.in
+index 7c9a697..771b2a8 100644
+--- a/dnet-config.in
++++ b/dnet-config.in
+@@ -78,13 +78,19 @@ if test "$echo_exec_prefix" = "yes"; then
+ fi
+ 
+ if test "$echo_cflags" = "yes"; then
+-      if test "$includedir" != /usr/include ; then
+-        echo -I$includedir
++      includes=
++      if test "@includedir@" != "/usr/include" ; then
++             includes=-I@includedir@
+       fi
++      echo $includes
+ fi
+ 
+ if test "$echo_libs" = "yes"; then
+-      echo -L$libdir -ldnet @LIBS@
++      libs=
++      if test "@libdir@" != "/usr/lib" ; then
++             libs=-I@libdir@
++      fi
++      echo $libs -ldnet @LIBS@
+ fi      
+ 
+ exit 0
