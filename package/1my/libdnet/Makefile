@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libdnet
-PKG_VERSION:=8029bf9
+PKG_VERSION:=034d60b
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/sgeto/libdnet
+PKG_SOURCE_URL:=https://github.com/dist-script/libdnet
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
@@ -35,7 +35,7 @@ define Package/libdnet/description
  networking routines.
 endef
 
-TARGET_CFLAGS += $(FPIC) -I$PKG_BUILD/include
+TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
 	--enable-shared \

@@ -28,8 +28,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSI
 
 include $(INCLUDE_DIR)/package.mk
 
-NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre
-NPING_DEPENDS:=+libpcap +libpthread +libstdcpp
+NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre +libdnet
+NPING_DEPENDS:=+libpcap +libpthread +libstdcpp +libdnet
 
 define Package/nmap/default
   SUBMENU:=NMAP Suite
@@ -79,7 +79,7 @@ $(call Package/nmap/default)
 endef
 
 CONFIGURE_ARGS += \
-	--with-libdnet=included \
+	--with-libdnet="$(STAGING_DIR)/usr" \
 	--with-libpcre="$(STAGING_DIR)/usr" \
 	--with-libpcap="$(STAGING_DIR)/usr" \
 	--with-pcap=linux \
@@ -87,8 +87,8 @@ CONFIGURE_ARGS += \
 	--without-liblua \
 	--without-zenmap
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+#TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 CONFIGURE_VARS += \
 	ac_cv_dnet_bsd_bpf=no \
