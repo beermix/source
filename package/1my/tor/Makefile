@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=e65d645
+PKG_VERSION:=95b214d
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -97,14 +97,9 @@ CONFIGURE_ARGS += \
 	--enable-silent-rules \
 	--disable-seccomp \
 	--disable-libscrypt \
-	--disable-largefile \
-	--disable-unittests \
 	--disable-lzma \
 	--enable-zstd=no \
-	--disable-tool-name-check \
 	--enable-silent-rules \
-	tor_cv_cflags__fPIE=no \
-	tor_cv_ldflags__pie=no \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
@@ -121,7 +116,9 @@ else
 endif
 
 CONFIGURE_VARS += \
-	CROSS_COMPILE="yes"
+	CROSS_COMPILE="yes" \
+	tor_cv_cflags__fPIE=no \
+	tor_cv_ldflags__pie=no
 
 define Package/tor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
