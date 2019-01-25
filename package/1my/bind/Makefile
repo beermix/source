@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bind
-PKG_VERSION:=9.11.3
+PKG_VERSION:=9.13.5
 PKG_RELEASE:=1
 USERID:=bind=57:bind=57
 
