@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=95b214d
+PKG_VERSION:=589b60d
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -98,6 +98,8 @@ CONFIGURE_ARGS += \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-lzma \
+	--disable-zstd-advanced-apis \
+	--disable-memory-sentinels \
 	--enable-zstd=no \
 	--enable-silent-rules \
 	--with-tor-user=tor \

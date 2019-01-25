@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 ARCH:=i386
 BOARD:=x86
 BOARDNAME:=x86
-FEATURES:=squashfs ext4 vdi vmdk pcmcia targz fpu
+FEATURES:=squashfs ext4 targz fpu
 SUBTARGETS:=generic legacy geode 64
 MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 
-KERNEL_PATCHVER:=4.19
+KERNEL_PATCHVER:=4.14
 
 KERNELNAME:=bzImage
 
