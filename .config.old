@@ -323,7 +323,7 @@ CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--without-cloog --without-ppl --disable-libada 
 # CONFIG_SJLJ_EXCEPTIONS is not set
 # CONFIG_INSTALL_GFORTRAN is not set
 # CONFIG_INSTALL_GCCGO is not set
-CONFIG_NASM=y
+# CONFIG_NASM is not set
 
 #
 # C Library
