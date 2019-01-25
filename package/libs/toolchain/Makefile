@@ -112,6 +112,7 @@ endef
 define Package/libgcc
 $(call Package/gcc/Default)
   TITLE:=GCC support library
+  ABI_VERSION:=1
 endef
 
 define Package/libgcc/config
@@ -138,6 +139,7 @@ define Package/libatomic
 $(call Package/gcc/Default)
   DEPENDS:=+libgcc
   TITLE:=Atomic support library
+  ABI_VERSION:=1
 endef
 
 define Package/libatomic/config
@@ -191,6 +193,7 @@ define Package/libstdcpp
 $(call Package/gcc/Default)
   NAME:=libstdc++
   TITLE:=GNU Standard C++ Library v3
+  ABI_VERSION:=6
 endef
 
 define Package/libstdcpp/config
