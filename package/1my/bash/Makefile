@@ -9,12 +9,17 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bash
 PKG_VERSION:=ddf3f64
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/bminor/bash
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+
+PKG_LICENSE:=GPL-3.0+
+PKG_LICENSE_FILES:=COPYING
+PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 
 PKG_INSTALL:=1
 
@@ -64,12 +69,15 @@ CONFIGURE_VARS += \
 	bash_cv_printf_a_format=yes \
 
 CONFIGURE_ARGS+= \
+	--with-installed-readline="$(STAGING_DIR)/usr" \
 	--with-curses \
 	--without-bash-malloc \
 	--bindir=/bin \
 	--disable-rpath \
+	--enable-direxpand-default \
+	--enable-job-control \
 	--enable-readline \
-	--with-installed-readline \
+	--with-installed-readline
 
 define Package/bash/postinst
 #!/bin/sh
@@ -84,6 +92,5 @@ define Package/bash/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/bash $(1)/bin/
 	$(LN) bash $(1)/bin/rbash
 endef
-
 
 $(eval $(call BuildPackage,bash))
