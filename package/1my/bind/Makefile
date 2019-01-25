@@ -4,7 +4,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# http://www.mirrorservice.org/sites/ftp.isc.org/isc/bind9/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
