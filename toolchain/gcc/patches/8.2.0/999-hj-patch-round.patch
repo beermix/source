@@ -299,27 +299,3 @@ index 918241d953a..98150d37d8d 100644
     && optimize_function_for_speed_p (cfun)
     && (!REG_P (operands[1])
         || REGNO (operands[0]) != REGNO (operands[1]))
-diff --git a/gcc/testsuite/gcc.target/i386/pr87007.c b/gcc/testsuite/gcc.target/i386/pr87007.c
-new file mode 100644
-index 00000000000..e6f17ad6dc0
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/i386/pr87007.c
-@@ -0,0 +1,15 @@
-+/* { dg-do compile } */
-+/* { dg-options "-O2 -march=skylake" } */
-+
-+extern float f;
-+extern double d;
-+extern int i;
-+
-+void
-+foo (void)
-+{
-+  d = f;
-+  f = i;
-+}
-+
-+/* { dg-final { scan-assembler-times "vxorp\[ds\]\[^\n\r\]*xmm\[0-9\]" 1 } } */
--- 
-2.17.1
-
