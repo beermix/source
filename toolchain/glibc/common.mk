@@ -66,6 +66,7 @@ GLIBC_CONFIGURE:= \
 		--enable-bind-now \
 		--enable-lock-elision \
 		--disable-debug \
+		--disable-werror \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
