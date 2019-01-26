@@ -4,6 +4,7 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://dist.torproject.org/?C=M;O=D
+# https://github.com/torproject/tor/tree/release-0.3.5
 
 include $(TOPDIR)/rules.mk
 
@@ -18,8 +19,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
-
-PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -100,6 +99,7 @@ CONFIGURE_ARGS += \
 	--disable-lzma \
 	--disable-zstd-advanced-apis \
 	--disable-memory-sentinels \
+	--disable-gcc-hardening \
 	--enable-zstd=no \
 	--enable-silent-rules \
 	--with-tor-user=tor \
@@ -110,17 +110,15 @@ EXTRA_CFLAGS += -std=gnu99
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops
 TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops
 
-ifneq ($(CONFIG_SSP_SUPPORT),y)
-	CONFIGURE_ARGS += \
-		--disable-gcc-hardening
-else
-	EXTRA_CFLAGS += -fPIC
-endif
+#ifneq ($(CONFIG_SSP_SUPPORT),y)
+#	CONFIGURE_ARGS += \
+#		--disable-gcc-hardening
+#else
+#	EXTRA_CFLAGS += -fPIC
+#endif
 
 CONFIGURE_VARS += \
-	CROSS_COMPILE="yes" \
-	tor_cv_cflags__fPIE=no \
-	tor_cv_ldflags__pie=no
+	CROSS_COMPILE="yes"
 
 define Package/tor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
