@@ -98,7 +98,6 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-lzma \
 	--disable-zstd-advanced-apis \
-	--disable-memory-sentinels \
 	--disable-gcc-hardening \
 	--enable-zstd=no \
 	--enable-silent-rules \
@@ -107,9 +106,10 @@ CONFIGURE_ARGS += \
 
 EXTRA_CFLAGS += -std=gnu99
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -fomit-frame-pointer -funroll-loops
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
 
+# -funroll-loops 	--disable-memory-sentinels \
 #ifneq ($(CONFIG_SSP_SUPPORT),y)
 #	CONFIGURE_ARGS += \
 #		--disable-gcc-hardening
