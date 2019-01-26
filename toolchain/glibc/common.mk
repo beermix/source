@@ -55,7 +55,6 @@ GLIBC_CONFIGURE:= \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
-		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
