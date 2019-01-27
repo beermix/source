@@ -13,7 +13,7 @@ include $(INCLUDE_DIR)/download.mk
 
 PKG_BUILD_DIR ?= $(BUILD_DIR)/$(PKG_NAME)$(if $(PKG_VERSION),-$(PKG_VERSION))
 PKG_INSTALL_DIR ?= $(PKG_BUILD_DIR)/ipkg-install
-PKG_BUILD_PARALLEL ?= 1
+PKG_BUILD_PARALLEL ?=
 PKG_USE_MIPS16 ?= 1
 PKG_IREMAP ?= 1
 
@@ -144,7 +144,7 @@ define Build/Exports/Default
   $(1) : export CONFIG_SITE:=$$(CONFIG_SITE)
   $(1) : export PKG_CONFIG_PATH:=$$(PKG_CONFIG_PATH)
   $(1) : export PKG_CONFIG_LIBDIR:=$$(PKG_CONFIG_PATH)
-  $(1) : export CCACHE_DIR:=$(STAGING_DIR)/ccache
+  $(if $(CONFIG_CCACHE),$(1) : export CCACHE_DIR:=$(STAGING_DIR)/ccache)
 endef
 Build/Exports=$(Build/Exports/Default)
 
