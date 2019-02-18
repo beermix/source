@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-PKG_VERSION:=b7b4200
+PKG_VERSION:=402e46b
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/hishamhm/htop
