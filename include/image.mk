@@ -229,8 +229,7 @@ define Image/mkfs/squashfs
 	$(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
 		-nopad -noappend -root-owned \
 		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
-		-processors 1 \
-		$(if $(SOURCE_DATE_EPOCH),-fixed-time $(SOURCE_DATE_EPOCH))
+		-processors 1
 endef
 
 # $(1): board name
@@ -558,6 +557,8 @@ define Device/DumpInfo
 Target-Profile: DEVICE_$(1)
 Target-Profile-Name: $(DEVICE_TITLE)
 Target-Profile-Packages: $(DEVICE_PACKAGES)
+Target-Profile-hasImageMetadata: $(if $(foreach image,$(IMAGES),$(findstring append-metadata,$(IMAGE/$(image)))),1,0)
+Target-Profile-SupportedDevices: $(SUPPORTED_DEVICES)
 Target-Profile-Description:
 $(DEVICE_DESCRIPTION)
 @@
