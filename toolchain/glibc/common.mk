@@ -4,7 +4,7 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://github.com/bminor/glibc/tree/release/2.28/master
-# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.28/master
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.29/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=HEAD
 include $(TOPDIR)/rules.mk
 
@@ -13,7 +13,7 @@ PKG_VERSION:=2.29
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=067fc32968b601493f4b247a3ac00caeea3f3d61
+PKG_SOURCE_VERSION:=42dfc13abf6fbb4c7a0215238eb636b7d374e0e0
 PKG_SOURCE_URL:=git://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 

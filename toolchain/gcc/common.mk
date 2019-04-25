@@ -50,9 +50,9 @@ endif
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 #endif
 
-ifeq ($(PKG_VERSION),8.2.1)
+ifeq ($(PKG_VERSION),8.3.1)
   PKG_VERSION:=8.2.1
-  PKG_REV:=8-20190215
+  PKG_REV:=8-20190419
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)

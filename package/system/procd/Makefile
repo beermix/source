@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=procd
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL=$(PROJECT_GIT)/project/procd.git
-PKG_SOURCE_DATE:=2018-12-27
-PKG_SOURCE_VERSION:=e2b055edf26419c183f4bdc3aa47da789081f72e
-PKG_MIRROR_HASH:=de5dbf7b48a0ec9fa0ec741f00bd4f7725c3db80ec0e85e623f13ea00b980e36
+PKG_SOURCE_DATE:=2019-04-07
+PKG_SOURCE_VERSION:=baaf38c5e540b23ba086d94743de860b60c37161
+PKG_MIRROR_HASH:=315f50294fbc745fbbd909317948544ad78071f15622995d4f508c692a3d0bc3
 CMAKE_INSTALL:=1
 
 PKG_LICENSE:=GPL-2.0
@@ -45,6 +45,7 @@ define Package/procd
   CATEGORY:=Base system
   DEPENDS:=+ubusd +ubus +libjson-script +ubox +USE_GLIBC:librt +libubox +libubus
   TITLE:=OpenWrt system process manager
+  USERID:=:dialout=20 :audio=29
 endef
 
 define Package/procd-ujail
@@ -57,7 +58,7 @@ endef
 define Package/procd-seccomp
   SECTION:=base
   CATEGORY:=Base system
-  DEPENDS:=@arm||@armeb||@mips||@mipsel||@i386||@x86_64 @!TARGET_uml @KERNEL_SECCOMP +libubox +libblobmsg-json
+  DEPENDS:=@arm||@armeb||@mips||@mipsel||@i386||@powerpc||@x86_64 @!TARGET_uml @KERNEL_SECCOMP +libubox +libblobmsg-json
   TITLE:=OpenWrt process seccomp helper + utrace
 endef
 
