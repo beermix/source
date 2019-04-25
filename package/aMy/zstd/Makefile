@@ -1,7 +1,7 @@
 ﻿include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zstd
-PKG_VERSION:=v1.3.7
+PKG_VERSION:=v1.4.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/facebook/zstd
