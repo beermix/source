@@ -2,18 +2,13 @@
 
 choice
 	prompt "GCC compiler Version" if TOOLCHAINOPTS
-	default GCC_USE_VERSION_7_1_ARC if arc
+	default GCC_USE_VERSION_8 if arc
 	default GCC_USE_VERSION_7
 	help
 	  Select the version of gcc you wish to use.
 
-	config GCC_USE_VERSION_7_1_ARC
-		select GCC_VERSION_7_1_ARC
-		bool "gcc 7.1.x with support of ARC cores"
-		depends on arc
-
-	config GCC_USE_VERSION_9
-		bool "gcc 9.x"
+	config GCC_USE_VERSION_5
+		bool "gcc 5.x"
 		depends on !arc
 
 	config GCC_USE_VERSION_7
@@ -22,7 +17,6 @@ choice
 
 	config GCC_USE_VERSION_8
 		bool "gcc 8.x"
-		depends on !arc
 endchoice
 
 config GCC_USE_GRAPHITE
@@ -39,7 +33,7 @@ config EXTRA_GCC_CONFIG_OPTIONS
 config GCC_DEFAULT_PIE
 	bool
 	prompt "Build executable with PIE enabled by default" if TOOLCHAINOPTS
-	depends on !GCC_USE_VERSION_9
+	depends on !GCC_USE_VERSION_5
 	default n
 	help
 	    Use gcc configure option --enable-default-pie to turn on -fPIE and -pie by default.
