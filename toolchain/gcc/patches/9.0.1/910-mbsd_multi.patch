@@ -112,9 +112,21 @@ Date:   Tue Jul 31 00:52:27 2007 +0000
  ; Nonzero means ignore `#ident' directives.  0 means handle them.
  ; Generate position-independent code for executables if possible
  ; On SVR4 targets, it also controls whether or not to emit a
+--- a/gcc/opts.c
++++ b/gcc/opts.c
+@@ -2065,6 +2065,9 @@ common_handle_option (struct gcc_options
+ 			       opts, opts_set, loc, dc);
+       break;
+ 
++    case OPT_fhonour_copts:
++      break;
++
+     case OPT_Wlarger_than_:
+       opts->x_larger_than_size = value;
+       opts->x_warn_larger_than = value != -1;
 --- a/gcc/doc/invoke.texi
 +++ b/gcc/doc/invoke.texi
-@@ -7012,6 +7012,17 @@ This option is only supported for C and
+@@ -7014,6 +7014,17 @@ This option is only supported for C and
  @option{-Wall} and by @option{-Wpedantic}, which can be disabled with
  @option{-Wno-pointer-sign}.
  
