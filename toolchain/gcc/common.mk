@@ -36,8 +36,8 @@ ifeq ($(PKG_VERSION),7.4.0)
   PKG_HASH:=eddde28d04f334aec1604456e536416549e9b1aa137fc69204e65eb0c009fe51
 endif
 
-ifeq ($(PKG_VERSION),8.2.0)
-  PKG_HASH:=196c3c04ba2613f893283977e6011b2345d1cd1af9abeac58e916b1aab3e0080
+ifeq ($(PKG_VERSION),8.3.0)
+  PKG_HASH:=
 endif
 
 #ifeq ($(PKG_VERSION),8.3.1)
