@@ -1,12 +1,12 @@
 CC ?= gcc
-CFLAGS += -s
+CFLAGS += -s -O3
 LIBS = 
 SRC_FILES = *.c
 
-all: tpws
+all: ip2net
 
-tpws: $(SRC_FILES)
+ip2net: $(SRC_FILES)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LIBS)
 
 clean:
-	rm -f tpws *.o
+	rm -f ip2net *.o
