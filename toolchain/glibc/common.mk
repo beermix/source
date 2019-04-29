@@ -66,6 +66,9 @@ GLIBC_CONFIGURE:= \
 		--enable-bind-now \
 		--enable-lock-elision \
 		--disable-debug \
+		--disable-build-nscd \
+		--disable-nscd \
+		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
