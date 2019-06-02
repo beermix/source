@@ -9831,6 +9831,7 @@ xprint-server    8100/tcp
 xprint-server    8100/udp
 ldoms-migr       8101/tcp
 kz-migr          8102/tcp
+skynetflow       8111/udp
 mtl8000-matrix   8115/tcp
 mtl8000-matrix   8115/udp
 cp-cluster       8116/tcp
@@ -10260,6 +10261,7 @@ secure-ts        9318/tcp
 secure-ts        9318/udp
 guibase          9321/tcp
 guibase          9321/udp
+gnmi-gnoi        9339/tcp
 mpidcmgr         9343/tcp
 mpidcmgr         9343/udp
 mphlpdmc         9344/tcp
@@ -10596,6 +10598,7 @@ xoraya          11876/udp
 x2e-disc        11877/udp
 sysinfo-sp      11967/tcp
 sysinfo-sp      11967/udp
+tibsd           11971/tcp
 wmereceiving    11997/sctp
 wmedistribution 11998/sctp
 wmereporting    11999/sctp
