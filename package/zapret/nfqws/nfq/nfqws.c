@@ -13,6 +13,9 @@
 #include <getopt.h>
 #include <fcntl.h>
 #include <pwd.h>
+#include <sys/capability.h>
+#include <sys/prctl.h>
+#include <errno.h>
 
 bool proto_check_ipv4(unsigned char *data,int len)
 {
@@ -251,17 +254,59 @@ struct cbdata_s
 	char hostspell[4];
 };
 
+
+static const char *http_methods[] = { "GET /","POST /","HEAD /","OPTIONS /","PUT /","DELETE /","CONNECT /","TRACE /",NULL };
+// data/len points to data payload
+bool modify_tcp_packet(unsigned char *data,int len,struct tcphdr *tcphdr,const struct cbdata_s *cbdata)
+{
+	const char **method;
+	size_t method_len = 0;
+	unsigned char *phost,*pua;
+	bool bRet = false;
+	
+	if (cbdata->wsize && tcp_synack_segment(tcphdr))
+	{
+		tcp_rewrite_winsize(tcphdr,(uint16_t)cbdata->wsize);
+		bRet = true;
+	}
+
+	if ((cbdata->hostcase || cbdata->hostnospace) && (phost = find_bin(data,len,"\r\nHost: ",8)))
+	{
+		if (cbdata->hostcase)
+		{
+			printf("modifying Host: => %c%c%c%c:\n",cbdata->hostspell[0],cbdata->hostspell[1],cbdata->hostspell[2],cbdata->hostspell[3]);
+			memcpy(phost+2,cbdata->hostspell,4);
+			bRet = true;
+		}
+		if (cbdata->hostnospace && (pua = find_bin(data,len,"\r\nUser-Agent: ",14)) && (pua = find_bin(pua+1,len-(pua-data)-1,"\r\n",2)))
+		{
+			printf("removing space after Host: and adding it to User-Agent:\n");
+			if (pua > phost)
+			{
+				memmove(phost+7,phost+8,pua-phost-8);
+				phost[pua-phost-1] = ' ';
+			}
+			else
+			{
+				memmove(pua+1,pua,phost-pua+7);
+				*pua = ' ';
+			}
+			bRet = true;
+		}
+	}
+	return bRet;
+}
+
 // ret: false - not modified, true - modified
 bool processPacketData(unsigned char *data,int len,const struct cbdata_s *cbdata)
 {
 	struct iphdr *iphdr = NULL;
 	struct ip6_hdr *ip6hdr = NULL;
 	struct tcphdr *tcphdr = NULL;
-	unsigned char *phost,*pua;
 	int len_tcp;
 	bool bRet = false;
 	uint8_t proto;
-	
+
 	if (proto_check_ipv4(data,len))
 	{
 		iphdr = (struct iphdr *) data;
@@ -281,40 +326,13 @@ bool processPacketData(unsigned char *data,int len,const struct cbdata_s *cbdata
 	
 	if (proto==IPPROTO_TCP && proto_check_tcp(data,len))
 	{
+	
 		tcphdr = (struct tcphdr *) data;
 		len_tcp = len;
 		proto_skip_tcp(&data,&len);
 		//printf("got TCP packet. payload_len=%d\n",len);
-		if (cbdata->wsize && tcp_synack_segment(tcphdr))
-		{
-			tcp_rewrite_winsize(tcphdr,(uint16_t)cbdata->wsize);
-			bRet = true;
-		}
-		if ((cbdata->hostcase || cbdata->hostnospace) && (phost = find_bin(data,len,"\r\nHost: ",8)))
-		{
-			if (cbdata->hostcase)
-			{
-				printf("modifying Host: => %c%c%c%c:\n",cbdata->hostspell[0],cbdata->hostspell[1],cbdata->hostspell[2],cbdata->hostspell[3]);
-				memcpy(phost+2,cbdata->hostspell,4);
-				bRet = true;
-			}
-			if (cbdata->hostnospace && (pua = find_bin(data,len,"\r\nUser-Agent: ",14)) && (pua = find_bin(pua+1,len-(pua-data)-1,"\r\n",2)))
-			{
-				printf("removing space after Host: and adding it to User-Agent:\n");
-				if (pua > phost)
-				{
-					memmove(phost+7,phost+8,pua-phost-8);
-					phost[pua-phost-1] = ' ';
-				}
-				else
-				{
-					memmove(pua+1,pua,phost-pua+7);
-					*pua = ' ';
-				}
-				bRet = true;
-			}
-		}
-		if (bRet)
+
+		if (bRet = modify_tcp_packet(data,len,tcphdr,cbdata))
 		{
 			if (iphdr)
 				tcp_fix_checksum(tcphdr,len_tcp,iphdr->saddr,iphdr->daddr);
@@ -348,34 +366,141 @@ static int cb(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg,
 	return nfq_set_verdict(qh, id, NF_ACCEPT, 0, NULL);
 }
 
+bool setpcap(cap_value_t *caps,int ncaps)
+{
+	cap_t capabilities;
+	
+	if (!(capabilities = cap_init()))
+		return false;
+	
+	if (ncaps && (cap_set_flag(capabilities, CAP_PERMITTED, ncaps, caps, CAP_SET) ||
+		cap_set_flag(capabilities, CAP_EFFECTIVE, ncaps, caps, CAP_SET)))
+	{
+		cap_free(capabilities);
+		return false;
+	}
+	if (cap_set_proc(capabilities))
+	{
+		cap_free(capabilities);
+		return false;
+	}
+	cap_free(capabilities);
+	return true;
+}
+int getmaxcap()
+{
+	int maxcap = CAP_LAST_CAP;
+	FILE *F = fopen("/proc/sys/kernel/cap_last_cap","r");
+	if (F)
+	{
+		fscanf(F,"%d",&maxcap);
+		fclose(F);
+	}
+	return maxcap;
+	
+}
+bool dropcaps()
+{
+	// must have CAP_SETPCAP at the end. its required to clear bounding set
+	cap_value_t cap_values[] = {CAP_NET_ADMIN,CAP_SETPCAP};
+	int capct=sizeof(cap_values)/sizeof(*cap_values);
+	int maxcap = getmaxcap();
+
+	if (setpcap(cap_values, capct))
+	{
+		for(int cap=0;cap<=maxcap;cap++)
+		{
+			if (cap_drop_bound(cap))
+			{
+				fprintf(stderr,"could not drop cap %d\n",cap);
+				perror("cap_drop_bound");
+			}
+		}
+	}
+	// now without CAP_SETPCAP
+	if (!setpcap(cap_values, capct - 1))
+	{
+		perror("setpcap");
+		return false;
+	}
+	return true;
+}
 bool droproot(uid_t uid, gid_t gid)
 {
-    if (uid)
-    {
-         if (setgid(gid))
-         {
-		perror("setgid: ");
-		return false;
-         }
-         if (setuid(uid))
-         {
-		perror("setuid: ");
-		return false;
-         }
-    }
-   return true;
+	if (uid || gid)
+	{
+		if (prctl(PR_SET_KEEPCAPS, 1L))
+		{
+			perror("prctl(PR_SET_KEEPCAPS): ");
+			return false;
+		}
+		if (setgid(gid))
+		{
+			perror("setgid: ");
+			return false;
+		}
+		if (setuid(uid))
+		{
+			perror("setuid: ");
+			return false;
+		}
+	}
+	return dropcaps();
 }
+
+void daemonize()
+{
+	int pid;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork: ");
+		exit(2);
+	}
+	else if (pid != 0)
+		exit(0);
+
+	if (setsid() == -1)
+		exit(2);
+	if (chdir("/") == -1)
+		exit(2);
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
+	/* redirect fd's 0,1,2 to /dev/null */
+	open("/dev/null", O_RDWR);
+	/* stdin */
+	dup(0);
+	/* stdout */
+	dup(0);
+	/* stderror */
+}
+
+bool writepid(const char *filename)
+{
+	FILE *F;
+	if (!(F=fopen(filename,"w")))
+		return false;
+	fprintf(F,"%d",getpid());
+	fclose(F);
+	return true;
+}
+
 
 void exithelp()
 {
 	printf(
-          " --qnum=<nfqueue_number>\n"
-          " --wsize=<window_size>\t; set window size. 0 = do not modify\n"
-          " --hostcase\t\t; change Host: => host:\n"
-          " --hostspell\t\t; exact spelling of \"Host\" header. must be 4 chars. default is \"host\"\n"
-          " --hostnospace\t\t; remove space after Host: and add it to User-Agent: to preserve packet size\n"
-          " --daemon\t\t; daemonize\n"
-        );
+	" --qnum=<nfqueue_number>\n"
+	" --wsize=<window_size>\t; set window size. 0 = do not modify\n"
+	" --hostcase\t\t; change Host: => host:\n"
+	" --hostspell\t\t; exact spelling of \"Host\" header. must be 4 chars. default is \"host\"\n"
+	" --hostnospace\t\t; remove space after Host: and add it to User-Agent: to preserve packet size\n"
+	" --daemon\t\t; daemonize\n"
+	" --pidfile=<filename>\t; write pid to file\n"
+	" --user=<username>\t; drop root privs\n"
+	" --uid=uid[:gid]\t; drop root privs\n"
+	);
 	exit(1);
 }
 
@@ -391,20 +516,24 @@ int main(int argc, char **argv)
 	int v;
 	bool daemon=false;
 	uid_t uid=0;
-	gid_t gid;
+	gid_t gid=0;
+	char pidfile[256];
 
 	memset(&cbdata,0,sizeof(cbdata));
 	memcpy(cbdata.hostspell,"host",4); // default hostspell
-	
+	*pidfile = 0;
+
 	const struct option long_options[] = {
-    	    {"qnum",required_argument,0,0},	// optidx=0
-    	    {"daemon",no_argument,0,0},		// optidx=1
-    	    {"wsize",required_argument,0,0},	// optidx=2
-    	    {"hostcase",no_argument,0,0},	// optidx=3
-    	    {"hostspell",required_argument,0,0}, // optidx=4
-    	    {"hostnospace",no_argument,0,0},	// optidx=5
-    	    {"user",required_argument,0,0},	// optidx=6
-    	    {NULL,0,NULL,0}
+		{"qnum",required_argument,0,0},	// optidx=0
+		{"daemon",no_argument,0,0},		// optidx=1
+		{"wsize",required_argument,0,0},	// optidx=2
+		{"hostcase",no_argument,0,0},	// optidx=3
+		{"hostspell",required_argument,0,0}, // optidx=4
+		{"hostnospace",no_argument,0,0},	// optidx=5
+		{"pidfile",required_argument,0,0},	// optidx=6
+		{"user",required_argument,0,0 },// optidx=7
+		{"uid",required_argument,0,0 },// optidx=8
+		{NULL,0,NULL,0}
 	};
 	if (argc<2) exithelp();
 	while ((v=getopt_long_only(argc,argv,"",long_options,&option_index))!=-1)
@@ -446,7 +575,11 @@ int main(int argc, char **argv)
 		case 5: /* hostnospace */
 		    cbdata.hostnospace = true;
 		    break;
-		case 6: /* user */
+		case 6: /* pidfile */
+		    strncpy(pidfile,optarg,sizeof(pidfile));
+		    pidfile[sizeof(pidfile)-1]='\0';
+		    break;
+		case 7: /* user */
 	    	{
 	    		struct passwd *pwd = getpwnam(optarg);
 			if (!pwd)
@@ -458,75 +591,68 @@ int main(int argc, char **argv)
 			gid = pwd->pw_gid;
 			break;
 	    	}
+		case 8: /* uid */
+			gid=0x7FFFFFFF; // default git. drop gid=0
+			if (!sscanf(optarg,"%u:%u",&uid,&gid))
+			{
+				fprintf(stderr, "--uid should be : uid[:gid]\n");
+				exit(1);
+			}
+			break;
 	    }
 	}
 
-	if (daemon)
-	{
-	    int pid;
-	    
-            pid = fork();
-            if (pid == -1)
-                return -1;
-            else if (pid != 0)
-        	return 0;
-            if (setsid() == -1)
-                return -1;  
-            if (chdir ("/") == -1)  
-                return -1;
-	    close(STDIN_FILENO);
-	    close(STDOUT_FILENO);
-	    close(STDERR_FILENO);                
-	    /* redirect fd's 0,1,2 to /dev/null */  
-            open ("/dev/null", O_RDWR);  
-            /* stdin */
-            dup(0);  
-            /* stdout */
-            dup(0);  
-            /* stderror */
-	}
+	if (daemon) daemonize();
 	
+	h = NULL;
+	qh = NULL;
+
+	if (*pidfile && !writepid(pidfile))
+	{
+		fprintf(stderr,"could not write pidfile\n");
+		goto exiterr;
+	}
+
 	printf("opening library handle\n");
 	h = nfq_open();
 	if (!h) {
 		fprintf(stderr, "error during nfq_open()\n");
-		exit(1);
+		goto exiterr;
 	}
 
 	printf("unbinding existing nf_queue handler for AF_INET (if any)\n");
 	if (nfq_unbind_pf(h, AF_INET) < 0) {
 		fprintf(stderr, "error during nfq_unbind_pf()\n");
-		exit(1);
+		goto exiterr;
 	}
 
 	printf("binding nfnetlink_queue as nf_queue handler for AF_INET\n");
 	if (nfq_bind_pf(h, AF_INET) < 0) {
 		fprintf(stderr, "error during nfq_bind_pf()\n");
-		exit(1);
+		goto exiterr;
 	}
 
 	printf("binding this socket to queue '%u'\n", cbdata.qnum);
 	qh = nfq_create_queue(h, cbdata.qnum, &cb, &cbdata);
 	if (!qh) {
 		fprintf(stderr, "error during nfq_create_queue()\n");
-		exit(1);
+		goto exiterr;
 	}
 
 	printf("setting copy_packet mode\n");
 	if (nfq_set_mode(qh, NFQNL_COPY_PACKET, 0xffff) < 0) {
 		fprintf(stderr, "can't set packet_copy mode\n");
-		exit(1);
+		goto exiterr;
 	}
-
+	
+	if (!droproot(uid,gid)) goto exiterr;
+	fprintf(stderr,"Running as UID=%u GID=%u\n",getuid(),getgid());
+		
 	fd = nfq_fd(h);
-
-	if (droproot(uid,gid))
+	while ((rv = recv(fd, buf, sizeof(buf), 0)) && rv >= 0)
 	{
-		while ((rv = recv(fd, buf, sizeof(buf), 0)) && rv >= 0)
-		{
-		    int r=nfq_handle_packet(h, buf, rv);
-		    if (r) fprintf(stderr,"nfq_handle_packet error %d\n",r);
-		}
+	    int r=nfq_handle_packet(h, buf, rv);
+	    if (r) fprintf(stderr,"nfq_handle_packet error %d\n",r);
 	}
 
 	printf("unbinding from queue 0\n");
@@ -542,5 +668,10 @@ int main(int argc, char **argv)
 	printf("closing library handle\n");
 	nfq_close(h);
 
-	exit(0);
+	return 0;
+	
+exiterr:
+	if (qh) nfq_destroy_queue(qh);
+	if (h) nfq_close(h);
+	return 1;
 }
