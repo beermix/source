@@ -1,6 +1,6 @@
 ﻿include $(TOPDIR)/rules.mk
 
-PKG_NAME:=zstd
+PKG_NAME:=libzstd
 PKG_VERSION:=v1.4.0
 
 PKG_SOURCE_PROTO:=git
@@ -21,7 +21,7 @@ CMAKE_OPTIONS += \
 	-DZSTD_BUILD_SHARED=1 \
 	-DZSTD_BUILD_STATIC=0
 
-define Package/zstd
+define Package/libzstd
 	SECTION:=libs
 	CATEGORY:=Libraries
 	TITLE:=Zstandard is a real-time compression algorithm
@@ -41,10 +41,10 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so $(1)/usr/lib/
 endef
 
-define Package/zstd/install
+define Package/libzstd/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so.* $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so $(1)/usr/lib/
 endef
 
-$(eval $(call BuildPackage,zstd))
+$(eval $(call BuildPackage,libzstd))
