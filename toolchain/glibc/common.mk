@@ -58,7 +58,7 @@ GLIBC_CONFIGURE:= \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
-		--enable-kernel=4.14 \
+		--enable-kernel=4.4.0 \
 		--enable-stack-protector=strong \
 		--without-gd \
 		--without-cvs \
