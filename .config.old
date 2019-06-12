@@ -273,6 +273,7 @@ CONFIG_USE_LIBSTDCXX=y
 CONFIG_PKG_CHECK_FORMAT_SECURITY=y
 # CONFIG_PKG_ASLR_PIE is not set
 CONFIG_PKG_CC_STACKPROTECTOR_NONE=y
+# CONFIG_PKG_CC_STACKPROTECTOR_REGULAR is not set
 CONFIG_KERNEL_CC_STACKPROTECTOR_NONE=y
 # CONFIG_KERNEL_CC_STACKPROTECTOR_REGULAR is not set
 # CONFIG_KERNEL_CC_STACKPROTECTOR_STRONG is not set
@@ -298,7 +299,7 @@ CONFIG_EXTERNAL_KERNEL_TREE=""
 CONFIG_KERNEL_GIT_CLONE_URI=""
 # CONFIG_BUILD_LOG is not set
 # CONFIG_SRC_TREE_OVERRIDE is not set
-CONFIG_EXTRA_OPTIMIZATION="--param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse -fdiagnostics-color=always"
+CONFIG_EXTRA_OPTIMIZATION="--param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse -fdiagnostics-color=always"
 CONFIG_TARGET_OPTIONS=y
 CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 -O2 -pipe -fomit-frame-pointer -fno-caller-saves -fno-plt"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
