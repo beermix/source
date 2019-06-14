@@ -94,9 +94,13 @@ CONFIGURE_ARGS += \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc \
 	--enable-silent-rules \
+	--disable-seccomp \
+	--disable-libscrypt \
 	--disable-lzma \
+	--disable-zstd-advanced-apis \
 	--disable-gcc-hardening \
 	--enable-zstd=no \
+	--enable-silent-rules \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
