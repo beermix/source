@@ -59,9 +59,9 @@ ifeq ($(PKG_VERSION),8.3.1)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
-ifeq ($(PKG_VERSION),9.0.1)
+ifeq ($(PKG_VERSION),9.1.1)
   PKG_VERSION:=9.0.1
-  PKG_REV:=9-20190428
+  PKG_REV:=9-20190615
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
