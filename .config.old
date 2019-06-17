@@ -7142,4 +7142,4 @@ CONFIG_STRACE_NONE=y
 # font-utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng atop bash boost bwm-ng coreutils dnscrypt-proxy expat file gdbm git gnutls grep htop i2pd icu ldns libaio libev liblz4 libsodium lm-sensors mini_snmpd miniupnpc nano nmap pcre procps-ng redsocks shadowsocks-libev squid tor xz zsh"
+CONFIG_OVERRIDE_PKGS="aircrack-ng atop bash boost bwm-ng coreutils dnscrypt-proxy expat file gdbm git gnutls grep i2pd icu ldns libaio libev liblz4 libsodium lm-sensors mini_snmpd miniupnpc nmap pcre procps-ng redsocks shadowsocks-libev squid tor xz"
