@@ -1,0 +1,12 @@
+--- a/devlink/devlink.c
++++ b/devlink/devlink.c
+@@ -22,7 +22,9 @@
+ #include <linux/devlink.h>
+ #include <libmnl/libmnl.h>
+ #include <netinet/ether.h>
++#ifdef __GLIBC__
+ #include <sys/sysinfo.h>
++#endif
+ #include <sys/queue.h>
+ 
+ #include "SNAPSHOT.h"
