@@ -102,8 +102,8 @@ CONFIGURE_ARGS += \
 
 EXTRA_CFLAGS += -std=gnu99
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -Wall
+TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3 -Wall
 
 # -funroll-loops 	--disable-memory-sentinels \
 #ifneq ($(CONFIG_SSP_SUPPORT),y)
