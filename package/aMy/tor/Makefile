@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=a219449
+PKG_VERSION:=ea14fb1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -98,6 +98,7 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
+	--disable-silent-rules \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
@@ -106,7 +107,7 @@ TARGET_LDFLAGS += -Wl,--gc-sections
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
-		--disable-gcc-hardening
+		--disable-gcc-hardening --disable-linker-hardening
 else
 	EXTRA_CFLAGS += $(FPIC)
 endif
