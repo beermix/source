@@ -298,7 +298,7 @@ CONFIG_KERNEL_GIT_CLONE_URI=""
 # CONFIG_SRC_TREE_OVERRIDE is not set
 CONFIG_EXTRA_OPTIMIZATION="-mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse -fdiagnostics-color=always"
 CONFIG_TARGET_OPTIONS=y
-CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 -O2 -pipe -fomit-frame-pointer -fno-caller-saves -fno-plt"
+CONFIG_TARGET_OPTIMIZATION="-m32 -O2 -pipe -fomit-frame-pointer -fno-caller-saves -fno-plt"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
 CONFIG_NEED_TOOLCHAIN=y
 CONFIG_TOOLCHAINOPTS=y
