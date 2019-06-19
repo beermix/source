@@ -58,7 +58,6 @@ endif
 
 CMAKE_OPTIONS += \
 	-DZLIB_COMPAT=1 \
-	-DWITH_OPTIM=1 \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
 
