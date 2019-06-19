@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=re2c
-PKG_VERSION:=2.13.03
+PKG_VERSION:=1.1.1
 
 PKG_SOURCE_URL:=https://github.com/skvadrik/re2c/releases/download/{$PKG_VERSION}/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
