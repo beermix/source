@@ -630,7 +630,9 @@ endif
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
+  ifneq ($(CONFIG_TARGET_i386),)
 	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
+  endif
   endef
 
   define Package/ldconfig/install
