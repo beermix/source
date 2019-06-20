@@ -98,7 +98,7 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
-	--disable-silent-rules \
+	--enable-silent-rules \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
