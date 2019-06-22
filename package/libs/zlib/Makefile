@@ -8,13 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=d1c35e4
+PKG_VERSION:=1.2.11
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=@SF/libpng http://www.zlib.net
+PKG_HASH:=4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066
+
+PKG_LICENSE:=Zlib
+PKG_LICENSE_FILES:=README
+PKG_CPE_ID:=cpe:/a:gnu:zlib
 
 PKG_CONFIG_DEPENDS:= CONFIG_ZLIB_OPTIMIZE_SPEED
 
@@ -57,8 +60,6 @@ ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
 endif
 
 CMAKE_OPTIONS += \
-	-DZLIB_COMPAT=1 \
-	-DCMAKE_BUILD_TYPE=Release \
 	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
 
 define Build/InstallDev
