@@ -10,7 +10,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=38774ca
+PKG_VERSION:=4b44797
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
