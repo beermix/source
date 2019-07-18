@@ -44,28 +44,9 @@ ifeq ($(PKG_VERSION),9.1.0)
   PKG_HASH:=79a66834e96a6050d8fe78db2c3b32fb285b230b855d0a66288235bc04b327a0
 endif
 
-#ifeq ($(PKG_VERSION),8.3.1)
-#  PKG_VERSION:=8.3.1
-#  PKG_REV:=8.3.1-20181127
-#  PKG_HASH:=6f64ffda2839e96a8551b767bf4f92be4e7a09377ea40058355b4eeb13bc3800
-#  PKG_SOURCE_URL:=https://sources.archlinux.org/other/gcc
-#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#endif
-
-#ifeq ($(PKG_VERSION),8.3.1)
-#  PKG_VERSION:=8.3.1
-#  PKG_REV:=8-20190607
-#  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
-#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#endif
-
 ifeq ($(PKG_VERSION),9.1.1)
   PKG_VERSION:=9.1.1
-  PKG_REV:=9-20190706
+  PKG_REV:=9-20190713
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
