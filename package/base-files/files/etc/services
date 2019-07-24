@@ -3736,8 +3736,6 @@ onehome-remote   2198/tcp
 onehome-remote   2198/udp
 onehome-help     2199/tcp
 onehome-help     2199/udp
-ici              2200/tcp
-ici              2200/udp
 ats              2201/tcp
 ats              2201/udp
 imtc-map         2202/tcp
@@ -10023,6 +10021,7 @@ ultraseek-http   8765/tcp
 ultraseek-http   8765/udp
 amcs             8766/tcp
 amcs             8766/udp
+core-of-source   8767/tcp
 dpap             8770/tcp
 dpap             8770/udp
 uec              8778/tcp
