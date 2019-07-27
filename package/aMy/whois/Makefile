@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=whois
-PKG_VERSION:=7efff0a
+PKG_VERSION:=416b3e9
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rfc1036/whois
@@ -13,7 +13,7 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-#PKG_BUILD_DEPENDS:=gettext-full/host
+PKG_BUILD_DEPENDS:=gettext-full/host
 
 include $(INCLUDE_DIR)/package.mk
 
