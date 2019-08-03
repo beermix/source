@@ -1,0 +1,61 @@
+From f9248fff7642ea0b52548168533ba56c3ca8fac9 Mon Sep 17 00:00:00 2001
+From: pmelange <isprotejesvalkata@gmail.com>
+Date: Tue, 30 Jul 2019 11:05:22 +0200
+Subject: [PATCH] 18.04 busybox: nslookup_lede.c patch - add SRV support
+
+Add support for querying and parsing SRV DNS records to nslookup_lede.c
+
+This patch is based on http://lists.busybox.net/pipermail/busybox/2019-June/087359.html
+
+Signed-off-by: pmelange <isprotejesvalkata@gmail.com>
+---
+ .../patches/230-add_nslookup_lede.patch       | 22 ++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/package/utils/busybox/patches/230-add_nslookup_lede.patch b/package/utils/busybox/patches/230-add_nslookup_lede.patch
+index f0ac4b51c15..8dc44455b8e 100644
+--- a/package/utils/busybox/patches/230-add_nslookup_lede.patch
++++ b/package/utils/busybox/patches/230-add_nslookup_lede.patch
+@@ -34,7 +34,7 @@ Signed-off-by: Jo-Philipp Wich <jo@mein.io>
+  # However, on *other platforms* it fails when some of those flags
+ --- /dev/null
+ +++ b/networking/nslookup_lede.c
+-@@ -0,0 +1,914 @@
++@@ -0,0 +1,934 @@
+ +/*
+ + * nslookup_lede - musl compatible replacement for busybox nslookup
+ + *
+@@ -128,6 +128,7 @@ Signed-off-by: Jo-Philipp Wich <jo@mein.io>
+ +	{ ns_t_cname, "CNAME" },
+ +	{ ns_t_mx,    "MX"    },
+ +	{ ns_t_txt,   "TXT"   },
+++	{ ns_t_srv,   "SRV"   },
+ +	{ ns_t_ptr,   "PTR"   },
+ +	{ ns_t_any,   "ANY"   },
+ +	{ }
+@@ -259,6 +260,25 @@ Signed-off-by: Jo-Philipp Wich <jo@mein.io>
+ +			}
+ +			break;
+ +
+++		case ns_t_srv:
+++			if (rdlen < 6) {
+++				//printf("SRV record too short\n");
+++				return -1;
+++			}
+++
+++			cp = ns_rr_rdata(rr);
+++			n = ns_name_uncompress(ns_msg_base(handle), ns_msg_end(handle),
+++			                       cp + 6, dname, sizeof(dname));
+++
+++			if (n < 0) {
+++				//printf("Unable to uncompress domain: %s\n", strerror(errno));
+++				return -1;
+++			}
+++
+++			printf("%s\tservice = %hu %hu %hu %s\n", ns_rr_name(rr),
+++				ns_get16(cp), ns_get16(cp + 2), ns_get16(cp + 4), dname);
+++			break;
+++
+ +		case ns_t_soa:
+ +			if (rdlen < 20) {
+ +				//fprintf(stderr, "SOA record too short\n");
