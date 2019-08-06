@@ -4,13 +4,13 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://github.com/torproject/tor/branches/active
-# https://github.com/torproject/tor/tree/release-0.4.1
+# https://github.com/torproject/tor/tree/release-0.4.0
 # https://github.com/torproject/tor/tree/release-0.3.5
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=4b44797
+PKG_VERSION:=5a918ce
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -103,8 +103,10 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-TARGET_CFLAGS += -O3 -Wall -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_CFLAGS += -O3 -Wall
+
+#TARGET_CFLAGS += -O3 -Wall -ffunction-sections -fdata-sections
+#TARGET_LDFLAGS += -Wl,--gc-sections
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
