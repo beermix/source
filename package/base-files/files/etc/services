@@ -10925,6 +10925,7 @@ irtrans         21000/tcp
 irtrans         21000/udp
 notezilla-lan   21010/tcp
 trinket-agent   21212/tcp
+cohesity-agent  21213/tcp
 aigairserver    21221/tcp
 rdm-tfs         21553/tcp
 dfserver        21554/tcp
