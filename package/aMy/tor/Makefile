@@ -10,7 +10,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=5a918ce
+PKG_VERSION:=4b44797
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -110,7 +110,7 @@ TARGET_CFLAGS += -O3 -Wall
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
-		--disable-gcc-hardening --disable-linker-hardening
+		--disable-gcc-hardening
 else
 	EXTRA_CFLAGS += $(FPIC)
 endif
