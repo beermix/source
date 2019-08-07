@@ -10,20 +10,17 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
 PKG_VERSION:=2.30
-
 PKG_SOURCE_URL:=@GNU/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_HASH:=e2c4114e569afbe7edbc29131a43be833850ab9a459d81beb2588016d2bbb8af
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+GLIBC_PATH:=
 
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-#PKG_SOURCE_VERSION:=0a8262a1b269f8f1602933248e69dfb041aab7a2
-#PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+
+PATCH_DIR:=$(PATH_PREFIX)/patches/$(PKG_VERSION)
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
-PATCH_DIR:=$(PATH_PREFIX)/patches
 
 include $(INCLUDE_DIR)/toolchain-build.mk
 
@@ -68,6 +65,7 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--disable-debug \
+		--enable-obsolete-rpc \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
@@ -84,7 +82,7 @@ endef
 
 define Host/Configure
 	[ -f $(HOST_BUILD_DIR)/.autoconf ] || { \
-		cd $(HOST_BUILD_DIR)/; \
+		cd $(HOST_BUILD_DIR)/$(GLIBC_PATH); \
 		autoconf --force && \
 		touch $(HOST_BUILD_DIR)/.autoconf; \
 	}
@@ -96,6 +94,9 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
+	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
+		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
+	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 
