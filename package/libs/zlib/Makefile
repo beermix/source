@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=f06c71f
+PKG_VERSION:=74a3e05
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng
@@ -58,7 +58,7 @@ endif
 
 CMAKE_OPTIONS += \
 	-DZLIB_COMPAT=ON \
-	-DWITH_OPTIM=ON \
+	-DWITH_OPTIM=OFF \
 	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
 
 define Build/InstallDev
