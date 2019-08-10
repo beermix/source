@@ -246,7 +246,7 @@ define Package/libc/config
 		string
 		prompt "libc shared library files (use wildcards)"
 		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libc
-		default "./lib/ld{*.so*,-linux*.so.*} ./lib/lib{anl,c,cidn,crypt,dl,m,nsl,nss_dns,nss_files,resolv,util}{-*.so,.so.*,.so}"
+		default "./lib/ld{*.so*,-linux*.so.*} ./lib/lib{anl,c,cidn,crypt,dl,m,nsl,nss_dns,nss_files,resolv,util}{-*.so,.so.*}"
 
 	endmenu
 endef
@@ -559,6 +559,13 @@ endif
 		$(TOOLCHAIN_DIR)/lib/libc.so.* \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-$(LIBC_SO_VERSION).so \
 		$(1)/lib/
+	for file in libuargp libcrypt libdl libm libutil libnsl libresolv; do \
+		$(CP) \
+			$(TOOLCHAIN_DIR)/lib/$$$$file.so* \
+			$(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so \
+			$(1)/opt/lib/; \
+	done
+
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
 		$(PKG_BUILD_DIR)/libm-* \
