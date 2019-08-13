@@ -8,15 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=git
-PKG_VERSION:=2.19.2
-PKG_RELEASE:=4
+PKG_VERSION:=2.22.1
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/software/scm/git/
 PKG_HASH:=
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
@@ -27,7 +26,7 @@ define Package/git/Default
   CATEGORY:=Network
   SUBMENU:=Version Control Systems
   DEPENDS:=+libopenssl +libpthread +librt +zlib
-  URL:=http://git-scm.com
+  URL:=https://git-scm.com
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 endef
 
@@ -57,7 +56,7 @@ endef
 define Package/git-gitweb
 $(call Package/git/Default)
   TITLE:=Git repository web interface
-  DEPENDS+= +git
+  DEPENDS+=	+git
 endef
 
 define Package/git-gitweb/description
@@ -68,9 +67,6 @@ endef
 define Package/git-gitweb/conffiles
 /etc/gitweb.conf
 endef
-
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
@@ -92,7 +88,7 @@ MAKE_FLAGS := \
 	GITWEB_CSS="/gitweb/gitweb.css" \
 	GITWEB_LOGO="/gitweb/gitweb-logo.png" \
 	GITWEB_FAVICON="/gitweb/gitweb-favicon.png"
-	
+
 CONFIGURE_ARGS += \
 	--without-iconv \
 
@@ -109,14 +105,11 @@ define Build/Compile
 endef
 
 define Package/git/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/git $(1)/usr/bin
 	$(RM) $(PKG_INSTALL_DIR)/usr/bin/git-cvsserver
+	$(RM) $(PKG_INSTALL_DIR)/usr/bin/git-shell
+	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/git-* $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/usr/lib/git-core
-	ln $(1)/usr/bin/git $(1)/usr/lib/git-core/git
-	ln $(1)/usr/bin/git-shell $(1)/usr/lib/git-core/git-shell
-	ln $(1)/usr/bin/git-upload-pack $(1)/usr/lib/git-core/git-upload-pack
 	$(INSTALL_DIR) $(1)/usr/share/git-core/templates
 	( cd $(PKG_INSTALL_DIR); $(TAR) \
 		--exclude=usr/lib/git-core/git-http-backend \
@@ -125,13 +118,12 @@ define Package/git/install
 		--exclude=usr/lib/git-core/git-remote-ftps \
 		--exclude=usr/lib/git-core/git-remote-http \
 		--exclude=usr/lib/git-core/git-remote-https \
-		--exclude=usr/lib/git-core/git \
-		--exclude=usr/lib/git-core/git-shell \
-		--exclude=usr/lib/git-core/git-upload-pack \
 		-cf - \
 		usr/lib/git-core \
 		usr/share/git-core/templates \
 	) | ( cd $(1); $(TAR) -xf - )
+	ln $(1)/usr/lib/git-core/git $(1)/usr/bin/git
+	ln $(1)/usr/lib/git-core/git-shell $(1)/usr/bin/git-shell
 endef
 
 define Package/git-http/install
