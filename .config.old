@@ -7192,4 +7192,4 @@ CONFIG_STRACE_NONE=y
 # Font-Utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng atop bwm-ng coreutils dnscrypt-proxy file grep i2pd lm-sensors nano pcre procps-ng redsocks tor"
+CONFIG_OVERRIDE_PKGS="aircrack-ng atop bwm-ng coreutils dnscrypt-proxy file grep i2pd lm-sensors nano pcre procps-ng redsocks"
