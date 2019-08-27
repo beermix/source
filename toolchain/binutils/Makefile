@@ -3,7 +3,8 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/bminor/binutils-gdb
+# https://github.com/bminor/binutils-gdb/tree/binutils-2_32-branch
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=binutils
