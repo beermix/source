@@ -53,6 +53,15 @@ ifeq ($(PKG_VERSION),9.2.1)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
+ifeq ($(PKG_VERSION),10.0.0)
+  PKG_VERSION:=10.0.0
+  PKG_REV:=10-20190825
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+endif
+
 PATCH_DIR=../patches/$(GCC_VERSION)
 
 BUGURL=http://bugs.openwrt.org/
