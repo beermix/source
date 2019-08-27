@@ -44,9 +44,9 @@ ifeq ($(PKG_VERSION),9.2.0)
   PKG_HASH:=ea6ef08f121239da5695f76c9b33637a118dcf63e24164422231917fa61fb206
 endif
 
-ifeq ($(PKG_VERSION),9.1.1)
+ifeq ($(PKG_VERSION),9.2.1)
   PKG_VERSION:=9.1.1
-  PKG_REV:=9-20190803
+  PKG_REV:=9-20190824
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
