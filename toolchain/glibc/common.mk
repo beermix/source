@@ -3,17 +3,20 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/bminor/glibc/tree/release/2.29/master
-# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.29/master
+# https://github.com/bminor/glibc/tree/release/2.30/master
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.30/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=HEAD
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.30
-PKG_SOURCE_URL:=@GNU/glibc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=e2c4114e569afbe7edbc29131a43be833850ab9a459d81beb2588016d2bbb8af
+PKG_VERSION:=2.30.9000
+
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=1bced8cadc82077f0201801239e89eb24b68e9aa
+PKG_MIRROR_HASH:=
+PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
@@ -58,10 +61,10 @@ GLIBC_CONFIGURE:= \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
 		--disable-werror \
-		--enable-kernel=4.14 \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--enable-kernel=4.14 \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
