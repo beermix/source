@@ -30,85 +30,6 @@ define Package/gcc/Default
   VERSION:=$(LIBGCC_VERSION)-$(PKG_RELEASE)
 endef
 
-define Package/locales
-$(call Package/gcc/Default)
-  TITLE:=Locales support (independent of system lib)
-  VERSION:=$(LIBC_VERSION)-$(PKG_RELEASE)
-  DEPENDS:=@USE_GLIBC
-endef
-
-define Package/gconv-modules
-$(call Package/gcc/Default)
-  TITLE:=Glibc gconv modules
-  VERSION:=$(LIBC_VERSION)-$(PKG_RELEASE)
-  DEPENDS:=@USE_GLIBC
-endef
-
-define Package/locales/config
-	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_locales
-
-	config TOOLCHAIN_USR_DIR
-		string
-		prompt "External toolchain usr directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_locales
-
-	config LOCALE_PROGS_SPEC
-		string
-		prompt "programs to work with locales"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_locales
-		default "./bin/locale ./bin/localedef"
-
-	config i18N_LOCALES
-		string
-		prompt "locale sources to install"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_locales
-
-	config i18N_CHARMAPS
-		string
-		prompt "charmaps to install"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_locales
-
-	endmenu
-endef
-
-define Package/locales/postinst
-#!/bin/sh
-
-echo "Entware uses separate locale-archive file independent from main system"
-if [ -f '/lib/locale/locale-archive' ]
-then
-	echo "locale-archive file found, checking format"
-	/bin/locale.new -a 2>&1 >/dev/null | grep 'LC_COLLATE' > /dev/null
-	if [ $$? -eq 0 ] ; then
-		echo "Old format locale archive found. Deleting!"
-		rm -f /lib/locale/locale-archive
-	fi
-fi
-if ! [ -f '/lib/locale/locale-archive' ]
-then
-	mkdir -p /lib/locale
-	echo "Creating locale archive - /lib/locale/locale-archive"
-	echo "Adding en_EN.UTF-8"
-	/bin/localedef.new -c -f UTF-8 -i en_US en_US.UTF-8
-	echo "Adding ru_RU.UTF-8"
-	/bin/localedef.new -c -f UTF-8 -i ru_RU ru_RU.UTF-8
-fi
-if [ -f '/lib/locale/locale-archive' ]
-then
-	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
-	echo "You can add new locales to Entware using /bin/localedef.new"
-fi
-if ! [ -f '/lib/locale/locale-archive' ]
-then
-	echo "locale-archive file was not created, not enough memory? Downloading..."
-	wget http://pkg.entware.net/binaries/other/locale-archive.2.23 -O /lib/locale/locale-archive
-	echo "You can download locale sources from http://pkg.entware.net/sources/i18n_glib223.tar.gz"
-	echo "You can add new locales to Entware using /bin/localedef.new"
-fi
-
-endef
-
 define Package/libgcc
 $(call Package/gcc/Default)
   TITLE:=GCC support library
@@ -382,31 +303,6 @@ define Package/libgomp/config
 	endmenu
 endef
 
-define Package/libgo
-$(call Package/gcc/Default)
-  TITLE:=Go support library
-  DEPENDS+=@INSTALL_GCCGO
-endef
-
-define Package/libgo/config
-	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-
-	config LIBGO_ROOT_DIR
-		string
-		prompt "libgo shared library base directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
-		default "/"  if NATIVE_TOOLCHAIN
-
-	config LIBGO_FILE_SPEC
-		string
-		prompt "libgo shared library files (use wildcards)"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-		default "./usr/lib/libgo.so.*"
-
-	endmenu
-endef
 
 define Package/ldd
 $(call Package/libc/Default)
@@ -476,9 +372,6 @@ LIBGCC_SO=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so.*))
 define Build/Compile/uClibc
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-*.so \
-		$(TOOLCHAIN_DIR)/lib/libcrypt-*.so \
-		$(TOOLCHAIN_DIR)/lib/libm-*.so \
-		$(TOOLCHAIN_DIR)/lib/libpthread-*.so \
 		$(PKG_BUILD_DIR)/
 endef
 ifneq ($(LIBGCC_SO),)
@@ -510,11 +403,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/lib/libgfortran.so.* $(1)/usr/lib/
   endef
 
-  define Package/libgo/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libgo.so.* $(1)/usr/lib/
-  endef
-
   define Package/libssp/install
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) $(TOOLCHAIN_DIR)/lib/libssp.so.* $(1)/lib/
@@ -533,8 +421,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
-		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
-		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
 	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
@@ -543,10 +429,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 			fi; \
 		done; \
 	done
-ifneq ($(CONFIG_TARGET_x86_64),)
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/lib
-endif
   endef
 
   define Package/uClibc/install
@@ -559,17 +441,8 @@ endif
 		$(TOOLCHAIN_DIR)/lib/libc.so.* \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-$(LIBC_SO_VERSION).so \
 		$(1)/lib/
-	for file in libuargp libcrypt libdl libm libutil libnsl libresolv; do \
-		$(CP) \
-			$(TOOLCHAIN_DIR)/lib/$$$$file.so* \
-			$(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so \
-			$(1)/opt/lib/; \
-	done
-
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
-		$(PKG_BUILD_DIR)/libm-* \
-		$(PKG_BUILD_DIR)/libcrypt-* \
 		$(1)/lib/
   endef
 
@@ -647,27 +520,6 @@ endif
 	$(CP) $(TOOLCHAIN_DIR)/sbin/ldconfig $(1)/sbin/
   endef
 
-  define Package/locales/install
-	$(INSTALL_DIR) $(1)/lib/locale
-	$(INSTALL_DIR) $(1)/share/i18n/locales
-	$(INSTALL_DIR) $(1)/share/i18n/charmaps
-	$(INSTALL_DIR) $(1)/bin
-	$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/bin/locale.new
-	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/bin/localedef.new
-	for file in $(ilocales); do \
-		$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/$$$$file $(1)/share/i18n/locales ; \
-	done ; \
-	for file in $(icharmaps); do \
-		$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/$$$$file $(1)/share/i18n/charmaps ; \
-	done ; \
-	exit 0
-  endef
-
-  define Package/gconv-modules/install
-	$(INSTALL_DIR) $(1)/lib/gconv
-	$(CP) $(TOOLCHAIN_DIR)/lib/gconv/* $(1)/lib/gconv/
-  endef
-
 else
 
   define Package/libgcc/install
@@ -685,14 +537,6 @@ else
 	done
   endef
 
-  define Package/libgo/install
-	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/lib ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGO_ROOT_DIR))/$$$$file $(1)/lib/ ; \
-	done
-  endef
-
   define Package/libssp/install
 	for file in $(call qstrip,$(CONFIG_LIBSSP_FILE_SPEC)); do \
 		$(INSTALL_DIR) $(1)/lib ; \
@@ -706,7 +550,6 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	rm -f $(1)/opt/$$$$dir/*.py ; \
 	exit 0
   endef
 
@@ -715,8 +558,6 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBC_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	$(INSTALL_DIR) $(1)/etc ; \
-	$(CP) ./glibc-files/etc/nsswitch.conf $(1)/etc/nsswitch.conf ; \
 	exit 0
   endef
 
@@ -778,28 +619,6 @@ else
 	exit 0
   endef
 
-  define Package/locales/install
-	$(INSTALL_DIR) $(1)/usr/lib/locale; \
-	for file in $(call qstrip,$(CONFIG_LOCALE_PROGS_SPEC)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/bin ; \
-		$(CP) $(call qstrip,$(CONFIG_TOOLCHAIN_USR_DIR))/$$$$file $(1)/usr/bin/ ; \
-	done ; \
-	mv $(1)/usr/bin/locale $(1)/usr/bin/locale.new; \
-	mv $(1)/usr/bin/localedef $(1)/usr/bin/localedef.new; \
-	for file in $(call qstrip,$(CONFIG_i18N_LOCALES)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/share/i18n/locales; \
-		$(CP) $(call qstrip,$(CONFIG_TOOLCHAIN_USR_DIR))/$$$$file $(1)/usr/share/i18n/locales ; \
-	done ; \
-	for file in $(call qstrip,$(CONFIG_i18N_CHARMAPS)); do \
-		dir=`dirname $$$$file` ; \
-		$(INSTALL_DIR) $(1)/usr/share/i18n/charmaps; \
-		$(CP) $(call qstrip,$(CONFIG_TOOLCHAIN_USR_DIR))/$$$$file $(1)/usr/share/i18n/charmaps ; \
-	done ; \
-	exit 0
-  endef
-
 endif
 
 $(eval $(call BuildPackage,libc))
@@ -812,8 +631,5 @@ $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
 $(eval $(call BuildPackage,libgomp))
-$(eval $(call BuildPackage,libgo))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
-$(eval $(call BuildPackage,locales))
-$(eval $(call BuildPackage,gconv-modules))
