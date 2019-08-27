@@ -57,7 +57,7 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		BASH_SHELL=/bin/sh \
 		--disable-profile \
-		--enable-kernel=4.19 \
+		--enable-kernel=4.14 \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
