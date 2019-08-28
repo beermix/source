@@ -56,7 +56,6 @@ HOST_CONFIGURE_ARGS = \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
-	--enable-targets=i386-linux \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
