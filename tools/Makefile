@@ -23,7 +23,7 @@ endif
 
 tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
 tools-y += m4 libtool autoconf automake flex bison pkg-config mklibs zlib
-tools-y += sstrip make-ext4fs e2fsprogs mtd-utils
+tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
 tools-y += firmware-utils patch-image quilt padjffs2
 tools-y += mm-macros missing-macros cmake scons bc findutils gengetopt patchelf
 tools-y += mtools dosfstools libressl
@@ -70,6 +70,7 @@ $(curdir)/gengetopt/compile := $(curdir)/libtool/compile
 $(curdir)/patchelf/compile := $(curdir)/libtool/compile
 $(curdir)/dosfstools/compile := $(curdir)/autoconf/compile $(curdir)/automake/compile
 $(curdir)/libressl/compile := $(curdir)/pkg-config/compile
+$(curdir)/mkimage/compile += $(curdir)/libressl/compile
 $(curdir)/firmware-utils/compile += $(curdir)/libressl/compile $(curdir)/zlib/compile
 $(curdir)/cmake/compile += $(curdir)/libressl/compile
 $(curdir)/zlib/compile := $(curdir)/cmake/compile
