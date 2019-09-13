@@ -97,7 +97,6 @@ CONFIGURE_ARGS += \
 	--disable-asciidoc \
 	--disable-seccomp \
 	--disable-libscrypt \
-	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
 	--enable-silent-rules \
