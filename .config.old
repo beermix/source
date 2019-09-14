@@ -3986,7 +3986,7 @@ CONFIG_PACKAGE_lua=y
 # Filesystem
 #
 # CONFIG_PACKAGE_libacl is not set
-# CONFIG_PACKAGE_libattr is not set
+CONFIG_PACKAGE_libattr=y
 # CONFIG_PACKAGE_libfuse is not set
 # CONFIG_PACKAGE_libow is not set
 # CONFIG_PACKAGE_libow-capi is not set
@@ -4881,7 +4881,8 @@ CONFIG_PACKAGE_libxtables=y
 #
 # CONFIG_PACKAGE_libbotan is not set
 # CONFIG_PACKAGE_libgnutls is not set
-# CONFIG_PACKAGE_libmbedtls is not set
+CONFIG_PACKAGE_libmbedtls=y
+# CONFIG_LIBMBEDTLS_DEBUG_C is not set
 # CONFIG_PACKAGE_libnss is not set
 CONFIG_PACKAGE_libopenssl=y
 
@@ -4994,7 +4995,7 @@ CONFIG_PACKAGE_bind-libs=y
 # CONFIG_PACKAGE_getdns is not set
 # CONFIG_PACKAGE_gflags is not set
 # CONFIG_PACKAGE_giflib is not set
-# CONFIG_PACKAGE_glib2 is not set
+CONFIG_PACKAGE_glib2=y
 # CONFIG_PACKAGE_glog is not set
 # CONFIG_PACKAGE_google-authenticator-libpam is not set
 # CONFIG_PACKAGE_hidapi is not set
@@ -5115,7 +5116,7 @@ CONFIG_PACKAGE_libf2fs=y
 # CONFIG_PACKAGE_libfastjson is not set
 # CONFIG_PACKAGE_libfdisk is not set
 # CONFIG_PACKAGE_libfdt is not set
-# CONFIG_PACKAGE_libffi is not set
+CONFIG_PACKAGE_libffi=y
 # CONFIG_PACKAGE_libffmpeg-audio-dec is not set
 # CONFIG_PACKAGE_libffmpeg-custom is not set
 # CONFIG_PACKAGE_libffmpeg-full is not set
@@ -5187,7 +5188,7 @@ CONFIG_PACKAGE_libmnl=y
 # CONFIG_PACKAGE_libmodbus is not set
 # CONFIG_PACKAGE_libmosquitto-nossl is not set
 # CONFIG_PACKAGE_libmosquitto-ssl is not set
-# CONFIG_PACKAGE_libmount is not set
+CONFIG_PACKAGE_libmount=y
 # CONFIG_PACKAGE_libmpdclient is not set
 # CONFIG_PACKAGE_libmpeg2 is not set
 # CONFIG_PACKAGE_libmpg123 is not set
@@ -5319,7 +5320,9 @@ CONFIG_LIBSODIUM_MINIMAL=y
 # CONFIG_PACKAGE_libspeexdsp is not set
 CONFIG_PACKAGE_libss=y
 # CONFIG_PACKAGE_libssh is not set
-# CONFIG_PACKAGE_libssh2 is not set
+CONFIG_PACKAGE_libssh2=y
+CONFIG_LIBSSH2_MBEDTLS=y
+# CONFIG_LIBSSH2_OPENSSL is not set
 # CONFIG_PACKAGE_libstoken is not set
 # CONFIG_PACKAGE_libstrophe is not set
 # CONFIG_PACKAGE_libtalloc is not set
@@ -6467,7 +6470,7 @@ CONFIG_PRIVOXY_disable-stats=y
 # CONFIG_PACKAGE_socksify is not set
 # CONFIG_PACKAGE_spawn-fcgi is not set
 # CONFIG_PACKAGE_squid is not set
-CONFIG_PACKAGE_tinyproxy=y
+# CONFIG_PACKAGE_tinyproxy is not set
 CONFIG_PACKAGE_uhttpd=y
 # CONFIG_PACKAGE_uhttpd-mod-lua is not set
 # CONFIG_PACKAGE_uhttpd-mod-ubus is not set
@@ -7146,7 +7149,18 @@ CONFIG_PACKAGE_lm-sensors=y
 # CONFIG_PACKAGE_macchanger is not set
 # CONFIG_PACKAGE_mbedtls-util is not set
 # CONFIG_PACKAGE_mbtools is not set
-# CONFIG_PACKAGE_mc is not set
+CONFIG_PACKAGE_mc=y
+
+#
+# Configuration
+#
+# CONFIG_MC_DIFFVIEWER is not set
+# CONFIG_MC_EDITOR is not set
+# CONFIG_MC_SUBSHELL is not set
+CONFIG_MC_LARGEFILE=y
+# CONFIG_MC_BACKGROUND is not set
+CONFIG_MC_CHARSET=y
+CONFIG_MC_VFS=y
 # CONFIG_PACKAGE_mcookie is not set
 # CONFIG_PACKAGE_micrond is not set
 # CONFIG_PACKAGE_mmc-utils is not set
