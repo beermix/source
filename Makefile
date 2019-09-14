@@ -61,10 +61,10 @@ dirclean: clean
 	rm -rf $(TMP_DIR)
 
 clr: clean
-	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_TOOLCHAIN)
+	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_BASE)/hostpkg/opkg-* $(BUILD_DIR_BASE)/hostpkg/ucert-* $(BUILD_DIR_BASE)/hostpkg/libubox-* $(BUILD_DIR_TOOLCHAIN)
 	
 clr2: clean
-	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_TOOLCHAIN)
+	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_BASE)/hostpkg/opkg-* $(BUILD_DIR_BASE)/hostpkg/ucert-* $(BUILD_DIR_BASE)/hostpkg/libubox-* $(BUILD_DIR_TOOLCHAIN)
 	rm -rf $(TMP_DIR)
 
 ifndef DUMP_TARGET_DB
