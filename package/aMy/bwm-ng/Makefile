@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bwm-ng
-PKG_VERSION:=059e028
+PKG_VERSION:=b81da65
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/vgropp/bwm-ng
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/bwm-ng
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+BWMNG_LIBNCURSES:libncurses
+  DEPENDS:=+BWMNG_LIBNCURSES:libncurses +libstatgrab
   TITLE:=bwm-ng
   URL:=http://www.gropp.org/?id=projects&sub=bwm-ng
   MENU:=1
@@ -48,7 +48,11 @@ define Build/Configure
 	$(if $(CONFIG_BWMNG_GETOPT_LONG),--with,--without)-getopt_long \
 	--with-strip \
 	--with-procnetdev \
-	--with-diskstats \
+	--with-libstatgrab \
+	--with-getifaddrs \
+	--with-sysctl \
+	--with-sysctldisk \
+	--with-partitions \
 	)
 endef
 

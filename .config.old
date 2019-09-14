@@ -5319,6 +5319,7 @@ CONFIG_LIBSODIUM_MINIMAL=y
 CONFIG_PACKAGE_libss=y
 # CONFIG_PACKAGE_libssh is not set
 # CONFIG_PACKAGE_libssh2 is not set
+# CONFIG_PACKAGE_libstatgrab is not set
 # CONFIG_PACKAGE_libstoken is not set
 # CONFIG_PACKAGE_libstrophe is not set
 # CONFIG_PACKAGE_libtalloc is not set
@@ -6524,7 +6525,7 @@ CONFIG_PACKAGE_bwm-ng=y
 #
 CONFIG_BWMNG_CONFIGFILE=y
 CONFIG_BWMNG_HTML=y
-# CONFIG_BWMNG_CSV is not set
+CONFIG_BWMNG_CSV=y
 CONFIG_BWMNG_EXTENDEDSTATS=y
 CONFIG_BWMNG_LIBNCURSES=y
 CONFIG_BWMNG_TIME=y
@@ -7269,4 +7270,4 @@ CONFIG_STRACE_NONE=y
 # Font-Utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng atop bwm-ng coreutils file grep i2pd lm-sensors nano pcre procps-ng redsocks"
+CONFIG_OVERRIDE_PKGS="aircrack-ng atop bwm-ng coreutils file grep i2pd lm-sensors nano procps-ng redsocks"
