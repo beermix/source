@@ -326,7 +326,7 @@ CONFIG_KERNEL_GIT_CLONE_URI=""
 # CONFIG_SRC_TREE_OVERRIDE is not set
 CONFIG_EXTRA_OPTIMIZATION="-mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -fdiagnostics-color=always"
 CONFIG_TARGET_OPTIONS=y
-CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 -O2 -pipe -fomit-frame-pointer"
+CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 -O2 -pipe -fomit-frame-pointer -fno-caller-saves -fno-plt"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
 CONFIG_NEED_TOOLCHAIN=y
 CONFIG_TOOLCHAINOPTS=y
