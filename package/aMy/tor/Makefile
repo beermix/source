@@ -97,6 +97,8 @@ CONFIGURE_ARGS += \
 	--disable-asciidoc \
 	--disable-seccomp \
 	--disable-libscrypt \
+	--disable-module-dirauth \
+	--disable-linker-hardening \
 	--disable-lzma \
 	--disable-zstd \
 	--enable-silent-rules \
