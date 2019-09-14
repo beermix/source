@@ -1,3 +1,7 @@
+config GCC_VERSION_5
+	default y if GCC_USE_VERSION_5
+	bool
+
 config GCC_VERSION_8
 	default y if GCC_USE_VERSION_8
 	default y if arc && !GCC_USE_VERSION_9
@@ -6,7 +10,7 @@ config GCC_VERSION_8
 config GCC_VERSION_9
 	default y if GCC_USE_VERSION_9
 	bool
-	
+
 config GCC_VERSION_10
 	default y if GCC_USE_VERSION_10
 	bool
@@ -18,7 +22,6 @@ config GCC_USE_EMBEDDED_PATH_REMAP
 
 config GCC_VERSION
 	string
-	default "7.4.1"
+	default "10.0.0"
 	default "8.3.0"		if GCC_VERSION_8
 	default "9.2.1"		if GCC_VERSION_9
-	default "10.0.0"		if GCC_VERSION_10

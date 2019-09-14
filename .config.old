@@ -324,9 +324,9 @@ CONFIG_EXTERNAL_KERNEL_TREE=""
 CONFIG_KERNEL_GIT_CLONE_URI=""
 # CONFIG_BUILD_LOG is not set
 # CONFIG_SRC_TREE_OVERRIDE is not set
-CONFIG_EXTRA_OPTIMIZATION="-mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -fdiagnostics-color=always"
+CONFIG_EXTRA_OPTIMIZATION="-mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -fomit-frame-pointer -fno-caller-saves -fno-plt"
 CONFIG_TARGET_OPTIONS=y
-CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 -O2 -pipe -fomit-frame-pointer -fno-caller-saves -fno-plt"
+CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 -O2 -pipe -fdiagnostics-color=always"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
 CONFIG_NEED_TOOLCHAIN=y
 CONFIG_TOOLCHAINOPTS=y
@@ -342,11 +342,10 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux"
 #
 # Compiler
 #
-# CONFIG_GCC_USE_VERSION_5 is not set
-CONFIG_GCC_USE_VERSION_7=y
+# CONFIG_GCC_USE_VERSION_7 is not set
 # CONFIG_GCC_USE_VERSION_8 is not set
 # CONFIG_GCC_USE_VERSION_9 is not set
-# CONFIG_GCC_USE_VERSION_10 is not set
+CONFIG_GCC_USE_VERSION_10=y
 # CONFIG_GCC_USE_GRAPHITE is not set
 CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --enable-gnu-indirect-function --disable-vtable-verify --with-tune=haswell --with-arch=bonnell"
 # CONFIG_GCC_DEFAULT_PIE is not set
@@ -370,6 +369,7 @@ CONFIG_LIBC_USE_GLIBC=y
 CONFIG_USE_GLIBC=y
 CONFIG_BINUTILS_VERSION_2_33=y
 CONFIG_BINUTILS_VERSION="2.33"
+CONFIG_GCC_VERSION_10=y
 # CONFIG_GCC_USE_EMBEDDED_PATH_REMAP is not set
 CONFIG_GCC_VERSION="7.4.1"
 CONFIG_LIBC="glibc"
