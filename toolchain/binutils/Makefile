@@ -3,8 +3,9 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/bminor/binutils-gdb
+# https://github.com/bminor/binutils-gdb/branches/active
 # https://github.com/bminor/binutils-gdb/tree/binutils-2_32-branch
+# https://github.com/bminor/binutils-gdb/tree/binutils-2_33-branch
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=binutils
@@ -16,24 +17,15 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
 TAR_OPTIONS += --exclude='*.rej'
 
-ifeq ($(PKG_VERSION),2.29.1)
-  PKG_HASH:=e7010a46969f9d3e53b650a518663f98a5dde3c3ae21b7d71e5e6803bc36b577
-endif
-
-ifeq ($(PKG_VERSION),2.31.1)
-  PKG_HASH:=5d20086ecf5752cc7d9134246e9588fa201740d540f7eb84d795b1f7a93bca86
-endif
-
 ifeq ($(PKG_VERSION),2.32)
   PKG_HASH:=0ab6c55dd86a92ed561972ba15b9b70a8b9f75557f896446c82e8b36e473ee04
 endif
 
 ifeq ($(PKG_VERSION),2.33)
-  PKG_HASH:=89c52ae3a20e8d84a250095781c1e022af542b3f
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-  PKG_SOURCE_VERSION:=678bfa5443384360cf31c9c228753224eec6f4d2
-  PKG_SOURCE_URL:=git://sourceware.org/git/binutils-gdb.git
+  PKG_SOURCE_VERSION:=60391a255b720e37ab1efbb7e83bf7dfa270a0fe
+  PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
