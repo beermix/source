@@ -24,7 +24,7 @@ ifdef CONFIG_PKG_ASLR_PIE
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_REGULAR
   ifeq ($(strip $(PKG_SSP)),1)
-    TARGET_CFLAGS += --param=ssp-buffer-size=4 -fstack-protector
+    TARGET_CFLAGS += -fstack-protector
   endif
 endif
 ifdef CONFIG_PKG_CC_STACKPROTECTOR_STRONG

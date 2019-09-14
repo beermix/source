@@ -19,7 +19,6 @@ choice
 
 	config GCC_USE_VERSION_10
 		bool "gcc 10.x"
-		depends on !arc
 
 endchoice
 
