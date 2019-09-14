@@ -11,6 +11,9 @@ choice
 		bool "gcc 5.x"
 		depends on !arc
 
+	config GCC_USE_VERSION_7
+		bool "gcc 7.x"
+
 	config GCC_USE_VERSION_8
 		bool "gcc 8.x"
 
