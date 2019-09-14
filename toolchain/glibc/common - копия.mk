@@ -13,7 +13,7 @@ PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=5b4f738
+PKG_SOURCE_VERSION:=5b4f7382af46b4187a958e40fb3123ac3ce16810
 PKG_MIRROR_HASH:=
 #PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
@@ -50,8 +50,8 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -fno-stack-protector -g $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 --param=ssp-buffer-size=4 -fstack-protector -znow -zrelro -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
-	LDFLAGS="" \
+	CFLAGS="-O2 $(filter-out -Os -fdiagnostics-color=always -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 --param=ssp-buffer-size=4 -fstack-protector -Wl,-z,now -Wl,-z,relro,$(call qstrip,$(TARGET_CFLAGS)))" \
+	LDFLAGS=" $(filter-out -znow -zrelro,$(call qstrip,$(TARGET_LDFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
