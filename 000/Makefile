@@ -1,22 +1,24 @@
 #
-# Copyright (C) 2008-2016 OpenWrt.org -flto
+# Copyright (C) 2008-2019 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/torproject/tor/branches/active
-# https://github.com/torproject/tor/tree/release-0.4.1
-# https://github.com/torproject/tor/tree/release-0.3.5
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=b485554
+PKG_VERSION:=0.4.1.5
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/torproject/tor.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://dist.torproject.org/ \
+	https://archive.torproject.org/tor-package-archive
+PKG_HASH:=a864e0b605fb933fcc167bf242eed4233949e8a1bf23ac8e0381b106cd920425
+PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
+		Peter Wagner <tripolar@gmx.at>
+PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:torproject:tor
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
@@ -97,14 +99,12 @@ CONFIGURE_ARGS += \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-unittests \
-	--disable-module-dirauth \
-	--disable-linker-hardening \
 	--disable-lzma \
 	--disable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-TARGET_CFLAGS += -O3 -Wall -ffunction-sections -fdata-sections -flto
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
