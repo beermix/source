@@ -8,5 +8,5 @@ config BINUTILS_VERSION_2_33
 
 config BINUTILS_VERSION
 	string
-	default "2.32"		       if BINUTILS_VERSION_2_32
+	default "2.32"	       if BINUTILS_VERSION_2_32
 	default "2.33"	       if BINUTILS_VERSION_2_33

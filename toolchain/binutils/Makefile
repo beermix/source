@@ -24,8 +24,9 @@ endif
 ifeq ($(PKG_VERSION),2.33)
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-  PKG_SOURCE_VERSION:=60391a255b720e37ab1efbb7e83bf7dfa270a0fe
-  PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
+  PKG_SOURCE_VERSION:=60391a2
+  #PKG_SOURCE_URL:=https://github.com/bminor/binutils-gdb.git
+  PKG_SOURCE_URL:=git://sourceware.org/git/binutils-gdb.git
   PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
