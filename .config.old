@@ -338,7 +338,7 @@ CONFIG_TOOLCHAINOPTS=y
 # CONFIG_BINUTILS_USE_VERSION_2_31 is not set
 # CONFIG_BINUTILS_USE_VERSION_2_32 is not set
 CONFIG_BINUTILS_USE_VERSION_2_33=y
-CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux"
+CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux --without-ppl --without-cloog"
 
 #
 # Compiler
@@ -348,7 +348,7 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux"
 # CONFIG_GCC_USE_VERSION_9 is not set
 CONFIG_GCC_USE_VERSION_10=y
 # CONFIG_GCC_USE_GRAPHITE is not set
-CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --with-default-libstdcxx-abi=gcc4-compatible"
+CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --with-default-libstdcxx-abi=gcc4-compatible --without-ppl --without-cloog --disable-libada --disable-libitm --disable-libquadmath"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
 # CONFIG_GCC_LIBSSP is not set
