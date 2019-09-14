@@ -60,13 +60,22 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
-		BASH_SHELL=/bin/bash \
+		BASH_SHELL=/bin/sh \
+		ac_cv_path_PERL=no \
+		ac_cv_prog_MAKEINFO= \
+		--disable-sanity-checks \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-kernel=4.19 \
+		--disable-build-nscd \
+		--disable-nscd \
+		--disable-timezone-tools \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
