@@ -41,8 +41,13 @@ ifeq ($(PKG_VERSION),7.4.1)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
-ifeq ($(PKG_VERSION),8.3.0)
-  PKG_HASH:=64baadfe6cc0f4947a84cb12d7f0dfaf45bb58b7e92461639596c21e02d97d2c
+ifeq ($(PKG_VERSION),8.3.1)
+  PKG_VERSION:=8.3.1
+  PKG_REV:=9-20190913
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
 ifeq ($(PKG_VERSION),9.2.0)
