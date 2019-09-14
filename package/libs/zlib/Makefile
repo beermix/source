@@ -59,6 +59,7 @@ endif
 CMAKE_OPTIONS += \
 	-DZLIB_COMPAT=ON \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DWITH_OPTIM=ON \
 	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
 
 define Build/InstallDev

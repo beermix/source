@@ -348,7 +348,7 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux --without-ppl 
 # CONFIG_GCC_USE_VERSION_9 is not set
 CONFIG_GCC_USE_VERSION_10=y
 # CONFIG_GCC_USE_GRAPHITE is not set
-CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --with-default-libstdcxx-abi=gcc4-compatible --without-ppl --without-cloog --disable-libada --disable-libitm --disable-libquadmath"
+CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --with-default-libstdcxx-abi=gcc4-compatible --without-ppl --without-cloog --disable-libada --disable-libitm --disable-libquadmath --enable-gnu-unique-object --disable-vtable-verify"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
 # CONFIG_GCC_LIBSSP is not set
@@ -5307,7 +5307,7 @@ CONFIG_PACKAGE_libsmartcols=y
 # CONFIG_PACKAGE_libsndfile is not set
 # CONFIG_PACKAGE_libsoc is not set
 # CONFIG_PACKAGE_libsocks is not set
-CONFIG_PACKAGE_libsodium=y
+# CONFIG_PACKAGE_libsodium is not set
 
 #
 # Configuration
@@ -5499,7 +5499,7 @@ CONFIG_PACKAGE_luci-app-commands=y
 # CONFIG_PACKAGE_luci-app-cshark is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-diag-core is not set
-CONFIG_PACKAGE_luci-app-dnscrypt-proxy=y
+# CONFIG_PACKAGE_luci-app-dnscrypt-proxy is not set
 # CONFIG_PACKAGE_luci-app-dump1090 is not set
 # CONFIG_PACKAGE_luci-app-dynapoint is not set
 # CONFIG_PACKAGE_luci-app-e2guardian is not set
@@ -5655,11 +5655,6 @@ CONFIG_PACKAGE_luci-i18n-commands-ru=y
 # CONFIG_PACKAGE_luci-i18n-commands-vi is not set
 # CONFIG_PACKAGE_luci-i18n-commands-zh-cn is not set
 # CONFIG_PACKAGE_luci-i18n-commands-zh-tw is not set
-# CONFIG_PACKAGE_luci-i18n-dnscrypt-proxy-es is not set
-# CONFIG_PACKAGE_luci-i18n-dnscrypt-proxy-ja is not set
-CONFIG_PACKAGE_luci-i18n-dnscrypt-proxy-ru=y
-# CONFIG_PACKAGE_luci-i18n-dnscrypt-proxy-zh-cn is not set
-# CONFIG_PACKAGE_luci-i18n-dnscrypt-proxy-zh-tw is not set
 # CONFIG_PACKAGE_luci-i18n-firewall-ca is not set
 # CONFIG_PACKAGE_luci-i18n-firewall-cs is not set
 # CONFIG_PACKAGE_luci-i18n-firewall-de is not set
@@ -6037,13 +6032,13 @@ CONFIG_PACKAGE_bind-rndc=y
 # CONFIG_PACKAGE_danish is not set
 # CONFIG_PACKAGE_ddns-scripts is not set
 # CONFIG_PACKAGE_dhcp-forwarder is not set
-CONFIG_PACKAGE_dnscrypt-proxy=y
+# CONFIG_PACKAGE_dnscrypt-proxy is not set
 
 #
 # Configuration
 #
 # CONFIG_DNSCRYPT_ENABLE_PLUGINS is not set
-CONFIG_PACKAGE_dnscrypt-proxy-resolvers=y
+# CONFIG_PACKAGE_dnscrypt-proxy-resolvers is not set
 # CONFIG_PACKAGE_dnsdist is not set
 
 #
