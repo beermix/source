@@ -290,8 +290,8 @@ CONFIG_USE_STRIP=y
 CONFIG_STRIP_ARGS="--strip-all"
 # CONFIG_STRIP_KERNEL_EXPORTS is not set
 # CONFIG_USE_MKLIBS is not set
-# CONFIG_USE_UCLIBCXX is not set
-CONFIG_USE_LIBSTDCXX=y
+CONFIG_USE_UCLIBCXX=y
+# CONFIG_USE_LIBSTDCXX is not set
 
 #
 # Hardening build options
@@ -307,9 +307,9 @@ CONFIG_KERNEL_CC_STACKPROTECTOR_NONE=y
 CONFIG_PKG_FORTIFY_SOURCE_NONE=y
 # CONFIG_PKG_FORTIFY_SOURCE_1 is not set
 # CONFIG_PKG_FORTIFY_SOURCE_2 is not set
-CONFIG_PKG_RELRO_NONE=y
+# CONFIG_PKG_RELRO_NONE is not set
 # CONFIG_PKG_RELRO_PARTIAL is not set
-# CONFIG_PKG_RELRO_FULL is not set
+CONFIG_PKG_RELRO_FULL=y
 CONFIG_DEVEL=y
 # CONFIG_BROKEN is not set
 CONFIG_BINARY_FOLDER=""
@@ -324,7 +324,7 @@ CONFIG_EXTERNAL_KERNEL_TREE=""
 CONFIG_KERNEL_GIT_CLONE_URI=""
 # CONFIG_BUILD_LOG is not set
 # CONFIG_SRC_TREE_OVERRIDE is not set
-CONFIG_EXTRA_OPTIMIZATION="-mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse -fomit-frame-pointer -fno-caller-saves -fno-plt"
+CONFIG_EXTRA_OPTIMIZATION="--param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse -fdiagnostics-color=always -fomit-frame-pointer -fno-caller-saves -fno-plt"
 CONFIG_TARGET_OPTIONS=y
 CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 -O2 -pipe"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
@@ -338,7 +338,7 @@ CONFIG_TOOLCHAINOPTS=y
 # CONFIG_BINUTILS_USE_VERSION_2_31 is not set
 CONFIG_BINUTILS_USE_VERSION_2_32=y
 # CONFIG_BINUTILS_USE_VERSION_2_33 is not set
-CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--without-ppl --without-cloog --enable-targets=i386-linux"
+CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux"
 
 #
 # Compiler
@@ -348,7 +348,7 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--without-ppl --without-cloog --enable-tar
 # CONFIG_GCC_USE_VERSION_9 is not set
 CONFIG_GCC_USE_VERSION_10=y
 # CONFIG_GCC_USE_GRAPHITE is not set
-CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--without-ppl --without-cloog --disable-libada --with-default-libstdcxx-abi=gcc4-compatible --disable-libitm --disable-libquadmath --enable-gnu-indirect-function --disable-vtable-verify --with-tune=haswell"
+CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-default-libstdcxx-abi=gcc4-compatible --enable-gnu-indirect-function --disable-vtable-verify --with-tune=haswell"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
 # CONFIG_GCC_LIBSSP is not set
