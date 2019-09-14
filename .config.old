@@ -4880,8 +4880,7 @@ CONFIG_PACKAGE_libxtables=y
 #
 # CONFIG_PACKAGE_libbotan is not set
 # CONFIG_PACKAGE_libgnutls is not set
-CONFIG_PACKAGE_libmbedtls=y
-# CONFIG_LIBMBEDTLS_DEBUG_C is not set
+# CONFIG_PACKAGE_libmbedtls is not set
 # CONFIG_PACKAGE_libnss is not set
 CONFIG_PACKAGE_libopenssl=y
 
@@ -5308,8 +5307,8 @@ CONFIG_PACKAGE_libsmartcols=y
 # CONFIG_PACKAGE_libspeexdsp is not set
 CONFIG_PACKAGE_libss=y
 # CONFIG_PACKAGE_libssh is not set
-CONFIG_PACKAGE_libssh2=y
-CONFIG_LIBSSH2_MBEDTLS=y
+# CONFIG_PACKAGE_libssh2 is not set
+# CONFIG_LIBSSH2_MBEDTLS is not set
 # CONFIG_LIBSSH2_OPENSSL is not set
 CONFIG_PACKAGE_libstatgrab=y
 # CONFIG_PACKAGE_libstoken is not set
@@ -7139,7 +7138,7 @@ CONFIG_PACKAGE_mc=y
 CONFIG_MC_LARGEFILE=y
 CONFIG_MC_BACKGROUND=y
 CONFIG_MC_CHARSET=y
-CONFIG_MC_VFS=y
+# CONFIG_MC_VFS is not set
 # CONFIG_PACKAGE_mcookie is not set
 # CONFIG_PACKAGE_micrond is not set
 # CONFIG_PACKAGE_mmc-utils is not set
