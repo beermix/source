@@ -10,7 +10,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=b485554
+PKG_VERSION:=6c3f339
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -36,13 +36,13 @@ define Package/tor/Default/description
  improve their safety and security on the Internet. Using Tor can help you
  anonymize web browsing and publishing, instant messaging, IRC, SSH, and
  more. Tor also provides a platform on which software developers can build
- new applications with built-in anonymity, safety, and privacy features.
+ new applications with built-in anonymity, safety, and privacy features. 
 endef
-
+#  +liblzma +libzstd
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +liblzma +libzstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
 endef
 
 define Package/tor/description
@@ -98,8 +98,8 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-module-dirauth \
-	--enable-lzma \
-	--enable-zstd \
+	--disable-lzma \
+	--disable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
