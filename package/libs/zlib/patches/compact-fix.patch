@@ -1,0 +1,22 @@
+diff --git a/configure b/configure
+index a00e7cf..320fd68 100755
+--- a/configure
++++ b/configure
+@@ -239,17 +239,6 @@ if test $build64 -eq 1; then
+   LDFLAGS="${LDFLAGS} -m64"
+ fi
+ 
+-# Set library name depending on zlib-compat option
+-if test $compat -eq 0; then
+-  LIBNAME=libz-ng
+-  LIBNAME2=zlib-ng
+-  SUFFIX=-ng
+-else
+-  LIBNAME=libz
+-  LIBNAME2=zlib
+-  SUFFIX=""
+-fi
+-
+ STATICLIB=${LIBNAME}.a
+ MAPNAME=${LIBNAME2}.map
+ 
