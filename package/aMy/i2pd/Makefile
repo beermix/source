@@ -24,13 +24,13 @@ include $(INCLUDE_DIR)/cmake.mk
 export CMAKE_SOURCE_DIR=$(PKG_INSTALL_DIR)/../build
 
 CMAKE_OPTIONS += \
-	-DWITH_AESNI=OFF \
-	-DWITH_AVX=OFF \
-	-DWITH_BINARY=ON \
-	-DWITH_HARDENING=OFF \
-	-DWITH_LIBRARY=OFF \
-	-DWITH_STATIC=OFF \
-	-DWITH_UPNP=OFF
+	-DWITH_AESNI=0 \
+	-DWITH_AVX=0 \
+	-DWITH_BINARY=1 \
+	-DWITH_HARDENING=0 \
+	-DWITH_LIBRARY=0 \
+	-DWITH_STATIC=1 \
+	-DWITH_UPNP=0
 
 define Package/i2pd
 	SECTION:=net
@@ -40,7 +40,6 @@ define Package/i2pd
 	TITLE:=full-featured C++ implementation of I2P client
 	URL:=https://github.com/PurpleI2P/i2pd
 	USERID:=i2pd:i2pd
-	MAINTAINER:=David Yang <mmyangfl@gmail.com>
 endef
 
 define Package/i2pd/description
@@ -50,9 +49,10 @@ define Package/i2pd/description
 endef
 
 define Package/i2pd/conffiles
+	/etc/config/i2pd
 	/etc/i2pd/i2pd.conf
-	/etc/i2pd/subscriptions.txt
 	/etc/i2pd/tunnels.conf
+	/etc/i2pd/tunnels.d/*
 endef
 
 TARGET_LDFLAGS+=-latomic
@@ -63,16 +63,18 @@ define Package/i2pd/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/i2pd $(1)/usr/sbin
 	$(INSTALL_DIR) $(1)/usr/share/i2pd
 	$(CP) $(PKG_BUILD_DIR)/contrib/certificates  $(1)/usr/share/i2pd
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/i2pd.config $(1)/etc/config/i2pd
 	$(INSTALL_DIR) $(1)/etc/i2pd
-	$(LN) /usr/share/i2pd/certificates $(1)/etc/i2pd/certificates
-	$(LN) /var/lib/i2pd/peerProfiles $(1)/etc/i2pd/peerProfiles
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/contrib/i2pd.conf $(1)/etc/i2pd
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/contrib/i2pd.conf $(1)/etc/i2pd
 	$(SED) ' \
 		s/127.0.0.1/192.168.1.1/g; \
 		s/datadir = \/var\/lib/datadir = \/etc/ \
 	' $(1)/etc/i2pd/i2pd.conf
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/contrib/subscriptions.txt $(1)/etc/i2pd
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/contrib/tunnels.conf $(1)/etc/i2pd
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/contrib/tunnels.conf $(1)/etc/i2pd
+	$(INSTALL_DIR) $(1)/etc/i2pd/tunnels.d
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/contrib/tunnels.d/*.conf  $(1)/etc/i2pd/tunnels.d
+	# subscriptions.txt deprecated, see #8088
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/i2pd.init $(1)/etc/init.d/i2pd
 endef
