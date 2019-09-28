@@ -18,6 +18,8 @@ PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_LICENSE:=BSD-3-clause
 
+PKG_BUILD_PARALLEL:=1
+
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
