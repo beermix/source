@@ -7200,4 +7200,4 @@ CONFIG_STRACE_NONE=y
 # Font-Utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng atop bash coreutils file git grep i2pd lm-sensors nano nmap procps-ng redsocks"
+CONFIG_OVERRIDE_PKGS="aircrack-ng atop coreutils file git grep i2pd lm-sensors nano procps-ng redsocks"
