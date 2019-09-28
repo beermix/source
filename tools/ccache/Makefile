@@ -12,7 +12,7 @@ PKG_VERSION:=3.7.4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://github.com/ccache/ccache/releases/download/v$(PKG_VERSION)
-PKG_HASH:=
+PKG_HASH:=04c0af414b8cf89e541daed59735547fbfd323b1aaa983da0216f6b6731e6836
 
 include $(INCLUDE_DIR)/host-build.mk
 
