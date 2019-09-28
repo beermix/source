@@ -22,12 +22,13 @@
 	};
 
 	memory@0 {
-		device_type = "memory";
 		reg = <0x0 0x8000000>;
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <100>;
 
 		reset {
@@ -43,7 +44,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		internet_red {
@@ -151,10 +152,11 @@
 		};
 	};
 
-	mdio {
+	mdio@0 {
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "lantiq,xrx200-mdio";
+		reg = <0>;
 
 		phy0: ethernet-phy@0 {
 			reg = <0x0>;

@@ -14,21 +14,13 @@
 	};
 
 	cpus {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
 		cpu@0 {
 			compatible = "mips,mips24Kc";
-			reg = <0>;
 		};
 	};
 
-	reboot {
-		compatible = "syscon-reboot";
-
-		regmap = <&rcu0>;
-		offset = <0x10>;
-		mask = <0x40000000>;
+	memory@0 {
+		device_type = "memory";
 	};
 
 	biu@1f800000 {
@@ -85,14 +77,12 @@
 		vmmc: vmmc@107000 {
 			status = "disabled";
 			compatible = "lantiq,vmmc-xway";
-			reg = <0x107000 0x400>;
+			reg = <0x103000 0x400>;
 			interrupt-parent = <&icu0>;
 			interrupts = <150 151 152 153 154 155>;
 		};
 
 		rcu0: rcu@203000 {
-			#address-cells = <1>;
-			#size-cells = <1>;
 			compatible = "lantiq,danube-rcu", "simple-mfd", "syscon";
 			reg = <0x203000 0x1000>;
 			ranges = <0x0 0x203000 0x100>;
@@ -114,6 +104,15 @@
 				reset-names = "ctrl";
 				#phy-cells = <0>;
 			};
+
+			reboot@10 {
+				compatible = "syscon-reboot";
+				reg = <0x10 4>;
+
+				regmap = <&rcu0>;
+				offset = <0x10>;
+				mask = <0x40000000>;
+			};
 		};
 	};
 
@@ -130,6 +129,16 @@
 			ranges = <0 0 0x0 0x3ffffff /* addrsel0 */
 				1 0 0x4000000 0x4000010>; /* addsel1 */
 			compatible = "lantiq,localbus", "simple-bus";
+
+			gpiomm: gpiomm@1 {
+				compatible = "lantiq,gpio-mm";
+				reg = <1 0x0 0x10 >;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <2>;
+				gpio-controller;
+				status = "disabled";
+			};
 		};
 
 		gptu@e100a00 {
@@ -200,7 +209,6 @@
 
 		mei@e116000 {
 			compatible = "lantiq,mei-xway";
-			reg = <0xe116000 0x400>;
 			interrupt-parent = <&icu0>;
 			interrupts = <63>;
 		};
@@ -215,7 +223,6 @@
 
 		ppe@e234000 {
 			compatible = "lantiq,ppe-danube";
-			reg = <0xe234000 0x40000>;
 			interrupt-parent = <&icu0>;
 			interrupts = <96>;
 		};

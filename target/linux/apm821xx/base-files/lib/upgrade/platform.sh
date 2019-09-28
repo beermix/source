@@ -22,7 +22,7 @@ platform_do_upgrade() {
 
 	case "$board" in
 	wd,mybooklive)
-		mbl_do_upgrade "$1"
+		mbl_do_upgrade "$ARGV"
 		;;
 	meraki,mr24|\
 	meraki,mx60|\
@@ -32,7 +32,7 @@ platform_do_upgrade() {
 		nand_do_upgrade "$1"
 		;;
 	*)
-		default_do_upgrade "$1"
+		default_do_upgrade "$ARGV"
 		;;
 	esac
 }

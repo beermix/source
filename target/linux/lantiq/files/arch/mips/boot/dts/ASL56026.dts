@@ -23,12 +23,13 @@
 	};
 
 	memory@0 {
-		device_type = "memory";
 		reg = <0x0 0x2000000>;
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <100>;
 
 		reset {
@@ -38,7 +39,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		dsl: dsl {
@@ -94,10 +95,11 @@
 		};
 	};
 
-	mdio {
+	mdio@0 {
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "lantiq,xrx200-mdio";
+		reg = <0>;
 
 		phy11: ethernet-phy@11 {
 			reg = <0x11>;
@@ -132,10 +134,12 @@
 };
 
 &localbus {
-	flash@0 {
+	nor@0 {
 		compatible = "lantiq,nor";
 		bank-width = <2>;
 		reg = <0 0x0 0x0800000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
 
 		partitions {
 			compatible = "fixed-partitions";

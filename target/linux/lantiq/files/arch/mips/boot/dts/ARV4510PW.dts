@@ -26,12 +26,13 @@
 	};
 
 	memory@0 {
-		device_type = "memory";
 		reg = <0x0 0x2000000>;
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <100>;
 
 		wps {
@@ -46,7 +47,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 		power: power {
 			label = "power";
@@ -177,10 +178,12 @@
 };
 
 &localbus {
-	flash@0 {
+	nor@0 {
 		compatible = "lantiq,nor";
 		bank-width = <2>;
 		reg = <0 0x0 0x1000000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
 
 		lantiq,noxip;
 

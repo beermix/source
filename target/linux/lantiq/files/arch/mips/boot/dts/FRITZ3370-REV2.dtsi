@@ -23,7 +23,6 @@
 	};
 
 	memory@0 {
-		device_type = "memory";
 		reg = <0x0 0x8000000>;
 	};
 
@@ -32,8 +31,10 @@
 		gpios = <&gpio 45 GPIO_ACTIVE_HIGH>;
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <100>;
 
 		power {
@@ -49,7 +50,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		power_green: power {
@@ -153,10 +154,11 @@
 		};
 	};
 
-	mdio {
+	mdio@0 {
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "lantiq,xrx200-mdio";
+		reg = <0>;
 
 		phy0: ethernet-phy@0 {
 			reg = <0x0>;
@@ -258,33 +260,29 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pins_spi_default>;
 
-	flash@4 {
+	m25p80@4 {
+		#address-cells = <1>;
+		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
-		reg = <4>;
+		reg = <4 0>;
 		spi-max-frequency = <1000000>;
 
-		partitions {
-			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
+		urlader: partition@0 {
+			reg = <0x0 0x20000>;
+			label = "urlader";
+			read-only;
+		};
 
-			urlader: partition@0 {
-				reg = <0x0 0x20000>;
-				label = "urlader";
-				read-only;
-			};
+		partition@20000 {
+			reg = <0x20000 0x10000>;
+			label = "tffs (1)";
+			read-only;
+		};
 
-			partition@20000 {
-				reg = <0x20000 0x10000>;
-				label = "tffs (1)";
-				read-only;
-			};
-
-			partition@30000 {
-				reg = <0x30000 0x10000>;
-				label = "tffs (2)";
-				read-only;
-			};
+		partition@30000 {
+			reg = <0x30000 0x10000>;
+			label = "tffs (2)";
+			read-only;
 		};
 	};
 };

@@ -148,7 +148,7 @@ platform_do_upgrade_dir825b() {
 		else
 			PART_NAME="firmware"
 		fi
-		default_do_upgrade "$1"
+		default_do_upgrade "$ARGV"
 		;;
 	"43493030")
 		if [ -z "$fw_mtd" ]; then
@@ -159,7 +159,7 @@ platform_do_upgrade_dir825b() {
 				exit 1
 			}
 		fi
-		dir825b_do_upgrade_combined "firmware" "$1"
+		dir825b_do_upgrade_combined "firmware" "$ARGV"
 		;;
 	esac
 }

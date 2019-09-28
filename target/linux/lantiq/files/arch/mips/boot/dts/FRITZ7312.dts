@@ -24,12 +24,13 @@
 	};
 
 	memory@0 {
-		device_type = "memory";
 		reg = <0x0 0x4000000>;
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <100>;
 
 		wlan {
@@ -44,7 +45,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		power: power {
@@ -120,6 +121,7 @@
 	mdio-bus {
 		#address-cells = <1>;
 		#size-cells = <0>;
+		reg = <0>;
 
 		phy0: ethernet-phy@0 {
 			reg = <0>;
@@ -129,10 +131,12 @@
 };
 
 &localbus {
-	flash@0 {
+	nor@0 {
 		compatible = "lantiq,nor";
 		bank-width = <2>;
 		reg = <0 0x0 0x1000000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
 
 		partitions {
 			compatible = "fixed-partitions";

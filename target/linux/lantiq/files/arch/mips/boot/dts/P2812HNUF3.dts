@@ -16,10 +16,12 @@
 };
 
 &localbus {
-	flash@0 {
+	nor@0 {
 		compatible = "lantiq,nor";
 		bank-width = <2>;
 		reg = <0 0x0 0x800000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -42,7 +44,7 @@
 		};
 	};
 
-	flash@1 {
+	nand@1 {
 		compatible = "lantiq,nand-xway";
 		lantiq,cs = <1>;
 		bank-width = <2>;

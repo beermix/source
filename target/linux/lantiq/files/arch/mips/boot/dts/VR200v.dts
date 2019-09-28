@@ -24,8 +24,10 @@
 		led-usb2 = &led_usb;
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <100>;
 		reset {
 			label = "reset";
@@ -53,7 +55,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 		power: power {
 			label = "vr200v:blue:power";

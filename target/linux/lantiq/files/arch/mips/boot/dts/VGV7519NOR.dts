@@ -8,7 +8,7 @@
 };
 
 &localbus {
-	flash@0 {
+	nor@0 {
 		partitions {
 			partition@0 {
 				label = "uboot";

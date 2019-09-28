@@ -40,19 +40,15 @@ platform_do_upgrade() {
 	local board=$(board_name)
 
 	case "$board" in
-	adtran,bsap1800-v2|\
-	adtran,bsap1840)
-		redboot_fis_do_upgrade "$1" vmlinux_2
-		;;
 	jjplus,ja76pf2)
-		redboot_fis_do_upgrade "$1" linux
+		redboot_fis_do_upgrade "$ARGV" linux
 		;;
 	ubnt,routerstation|\
 	ubnt,routerstation-pro)
-		redboot_fis_do_upgrade "$1" kernel
+		redboot_fis_do_upgrade "$ARGV" kernel
 		;;
 	*)
-		default_do_upgrade "$1"
+		default_do_upgrade "$ARGV"
 		;;
 	esac
 }
