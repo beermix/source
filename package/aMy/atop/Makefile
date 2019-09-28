@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atop
-PKG_VERSION:=1b50456
+PKG_VERSION:=a802f1a
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/Atoptool/atop
