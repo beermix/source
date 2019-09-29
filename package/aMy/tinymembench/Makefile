@@ -1,5 +1,4 @@
 #
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tinymembench
@@ -31,5 +30,3 @@ define Package/tinymembench/install
 endef
 
 $(eval $(call BuildPackage,tinymembench))
-
-
