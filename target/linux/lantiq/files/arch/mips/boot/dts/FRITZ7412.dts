@@ -11,19 +11,21 @@
 	model = "AVM FRITZ!Box 7412";
 
 	chosen {
-		bootargs = "console=ttyLTQ0,115200 mem=126M vpe1_load_addr=0x87e00000 vpe1_mem=2M maxvpes=1 maxtcs=1 nosmp";
+		bootargs = "console=ttyLTQ0,115200";
 	};
 
 	aliases {
 		led-boot = &power_green;
 		led-failsafe = &power_red;
 		led-running = &power_green;
+		led-upgrade = &power_red;
 
 		led-dsl = &info;
 		led-wifi = &wifi;
 	};
 
 	memory@0 {
+		device_type = "memory";
 		reg = <0x0 0x8000000>;
 	};
 
@@ -33,13 +35,13 @@
 		
 		wps {
 			label = "wps";
-			gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_WPS_BUTTON>;
 		};
 		
 		dect {
 			label = "dect";
-			gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_PHONE>;
 		};
 	};
@@ -81,12 +83,10 @@
 };
 
 &localbus {
-	nand@0 {
+	flash@0 {
 		compatible = "lantiq,nand-xway";
 		bank-width = <2>;
 		reg = <0 0x0 0x2000000>;
-		#address-cells = <1>;
-		#size-cells = <1>;
 		lantiq,cs = <1>;
 
 		partitions {
@@ -212,10 +212,9 @@
 		};
 	};
 
-	mdio@0 {
+	mdio {
 		#address-cells = <1>;
 		#size-cells = <0>;
-		reg = <0>;
 		compatible = "lantiq,xrx200-mdio";
 		
 		phy11: ethernet-phy@11 {
