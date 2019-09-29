@@ -278,27 +278,29 @@ define Package/libgfortran/config
 	endmenu
 endef
 
-define Package/libgomp
+
+define Package/libgo
 $(call Package/gcc/Default)
-  TITLE:=OpenMP support library
+  TITLE:=Go support library
+  DEPENDS+=@INSTALL_GCCGO
 endef
 
-define Package/libgomp/config
+define Package/libgo/config
 	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
 
-	config LIBGOMP_ROOT_DIR
+	config LIBGO_ROOT_DIR
 		string
-		prompt "libgomp shared library base directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		prompt "libgo shared library base directory"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
 		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
 		default "/"  if NATIVE_TOOLCHAIN
 
-	config LIBGOMP_FILE_SPEC
+	config LIBGO_FILE_SPEC
 		string
-		prompt "libgomp shared library files (use wildcards)"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
-		default "./lib/libgomp.so*"
+		prompt "libgo shared library files (use wildcards)"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		default "./usr/lib/libgo.so.*"
 
 	endmenu
 endef
@@ -555,6 +557,13 @@ else
 	done
   endef
 
+  define Package/libgo/install
+	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
+		$(INSTALL_DIR) $(1)/lib ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBGO_ROOT_DIR))/$$$$file $(1)/lib/ ; \
+	done
+  endef
+
   define Package/libssp/install
 	for file in $(call qstrip,$(CONFIG_LIBSSP_FILE_SPEC)); do \
 		$(INSTALL_DIR) $(1)/lib ; \
@@ -654,6 +663,6 @@ $(eval $(call BuildPackage,libpthread))
 $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
-$(eval $(call BuildPackage,libgomp))
+$(eval $(call BuildPackage,libgo))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
