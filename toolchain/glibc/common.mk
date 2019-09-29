@@ -12,7 +12,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.30
+PKG_VERSION:=2.30.9000
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -53,7 +53,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -g -fno-stack-protector $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 --param=ssp-buffer-size=4 -fstack-protector -znow -zrelro -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -g -fno-stack-protector $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 --param=ssp-buffer-size=4 -fstack-protector -znow -zrelro Wl,-z,now -Wl,-z,relro -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
