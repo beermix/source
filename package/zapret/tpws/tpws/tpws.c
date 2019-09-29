@@ -23,6 +23,8 @@
 #include <signal.h>
 #include <sys/capability.h>
 #include <sys/prctl.h>
+#include <sys/resource.h>
+#include <time.h>
 
 #include "tpws.h"
 #include "tpws_conn.h"
@@ -109,8 +111,20 @@ void exithelp()
 		" --bind-wait-ifup=<sec>\t\t; wait for interface to appear and up\n"
 		" --bind-wait-ip=<sec>\t\t; after ifup wait for ip address to appear up to N seconds\n"
 		" --bind-wait-ip-linklocal=<sec>\t; accept only link locals first N seconds then any\n"
+		" --socks\t\t\t; implement socks4/5 proxy instead of transparent proxy\n"
+		" --no-resolve\t\t\t; disable socks5 remote dns ability (resolves are not async, they block all activity)\n"
+		" --local-rcvbuf=<bytes>\n"
+		" --local-sndbuf=<bytes>\n"
+		" --remote-rcvbuf=<bytes>\n"
+		" --remote-sndbuf=<bytes>\n"
 		" --port=<port>\n"
 		" --maxconn=<max_connections>\n"
+		" --daemon\t\t\t; daemonize\n"
+		" --pidfile=<filename>\t\t; write pid to file\n"
+		" --user=<username>\t\t; drop root privs\n"
+		" --uid=uid[:gid]\t\t; drop root privs\n"
+		" --debug\t\t\t; print debug messages\n"
+		"\nTAMPERING:\n"
 		" --hostlist=<filename>\t\t; only act on host in the list (one host per line, subdomains auto apply)\n"
 		" --split-http-req=method|host\n"
 		" --split-pos=<numeric_offset>\t; split at specified pos. invalidates split-http-req.\n"
@@ -119,14 +133,10 @@ void exithelp()
 		" --hostdot\t\t\t; add \".\" after Host: name\n"
 		" --hosttab\t\t\t; add tab after Host: name\n"
 		" --hostnospace\t\t\t; remove space after Host:\n"
+		" --hostpad=<bytes>\t\t; add dummy padding headers before Host:\n"
 		" --methodspace\t\t\t; add extra space after method\n"
 		" --methodeol\t\t\t; add end-of-line before method\n"
 		" --unixeol\t\t\t; replace 0D0A to 0A\n"
-		" --daemon\t\t\t; daemonize\n"
-		" --pidfile=<filename>\t\t; write pid to file\n"
-		" --user=<username>\t\t; drop root privs\n"
-		" --uid=uid[:gid]\t\t; drop root privs\n"
-		" --debug\t\t\t; print debug messages\n"
 	);
 	exit(1);
 }
@@ -176,15 +186,22 @@ void parse_params(int argc, char *argv[])
 		{ "hostspell",required_argument,0,0 },// optidx=15
 		{ "hostdot",no_argument,0,0 },// optidx=16
 		{ "hostnospace",no_argument,0,0 },// optidx=17
-		{ "split-http-req",required_argument,0,0 },// optidx=18
-		{ "split-pos",required_argument,0,0 },// optidx=19
-		{ "methodspace",no_argument,0,0 },// optidx=20
-		{ "methodeol",no_argument,0,0 },// optidx=21
-		{ "hosttab",no_argument,0,0 },// optidx=22
-		{ "unixeol",no_argument,0,0 },// optidx=23
-		{ "hostlist",required_argument,0,0 },// optidx=24
-		{ "pidfile",required_argument,0,0 },// optidx=25
-		{ "debug",no_argument,0,0 },// optidx=26
+		{ "hostpad",required_argument,0,0 },// optidx=18
+		{ "split-http-req",required_argument,0,0 },// optidx=19
+		{ "split-pos",required_argument,0,0 },// optidx=20
+		{ "methodspace",no_argument,0,0 },// optidx=21
+		{ "methodeol",no_argument,0,0 },// optidx=22
+		{ "hosttab",no_argument,0,0 },// optidx=23
+		{ "unixeol",no_argument,0,0 },// optidx=24
+		{ "hostlist",required_argument,0,0 },// optidx=25
+		{ "pidfile",required_argument,0,0 },// optidx=26
+		{ "debug",no_argument,0,0 },// optidx=27
+		{ "local-rcvbuf",required_argument,0,0 },// optidx=28
+		{ "local-sndbuf",required_argument,0,0 },// optidx=29
+		{ "remote-rcvbuf",required_argument,0,0 },// optidx=30
+		{ "remote-sndbuf",required_argument,0,0 },// optidx=31
+		{ "socks",no_argument,0,0 },// optidx=32
+		{ "no-resolve",no_argument,0,0 },// optidx=33
 		{ NULL,0,NULL,0 }
 	};
 	while ((v = getopt_long_only(argc, argv, "", long_options, &option_index)) != -1)
@@ -263,7 +280,7 @@ void parse_params(int argc, char *argv[])
 			break;
 		case 13: /* maxconn */
 			params.maxconn = atoi(optarg);
-			if (params.maxconn <= 0)
+			if (params.maxconn <= 0 || params.maxconn > 10000)
 			{
 				fprintf(stderr, "bad maxconn\n");
 				exit_clean(1);
@@ -271,6 +288,7 @@ void parse_params(int argc, char *argv[])
 			break;
 		case 14: /* hostcase */
 			params.hostcase = true;
+			params.tamper = true;
 			break;
 		case 15: /* hostspell */
 			if (strlen(optarg) != 4)
@@ -280,14 +298,21 @@ void parse_params(int argc, char *argv[])
 			}
 			params.hostcase = true;
 			memcpy(params.hostspell, optarg, 4);
+			params.tamper = true;
 			break;
 		case 16: /* hostdot */
 			params.hostdot = true;
+			params.tamper = true;
 			break;
 		case 17: /* hostnospace */
 			params.hostnospace = true;
+			params.tamper = true;
 			break;
-		case 18: /* split-http-req */
+		case 18: /* hostpad */
+			params.hostpad = atoi(optarg);
+			params.tamper = true;
+			break;
+		case 19: /* split-http-req */
 			if (!strcmp(optarg, "method"))
 				params.split_http_req = split_method;
 			else if (!strcmp(optarg, "host"))
@@ -297,8 +322,9 @@ void parse_params(int argc, char *argv[])
 				fprintf(stderr, "Invalid argument for split-http-req\n");
 				exit_clean(1);
 			}
+			params.tamper = true;
 			break;
-		case 19: /* split-pos */
+		case 20: /* split-pos */
 			i = atoi(optarg);
 			if (i)
 				params.split_pos = i;
@@ -307,31 +333,55 @@ void parse_params(int argc, char *argv[])
 				fprintf(stderr, "Invalid argument for split-pos\n");
 				exit_clean(1);
 			}
+			params.tamper = true;
 			break;
-		case 20: /* methodspace */
+		case 21: /* methodspace */
 			params.methodspace = true;
+			params.tamper = true;
 			break;
-		case 21: /* methodeol */
+		case 22: /* methodeol */
 			params.methodeol = true;
+			params.tamper = true;
 			break;
-		case 22: /* hosttab */
+		case 23: /* hosttab */
 			params.hosttab = true;
+			params.tamper = true;
 			break;
-		case 23: /* unixeol */
+		case 24: /* unixeol */
 			params.unixeol = true;
+			params.tamper = true;
 			break;
-		case 24: /* hostlist */
+		case 25: /* hostlist */
 			if (!LoadHostList(&params.hostlist, optarg))
 				exit_clean(1);
 			strncpy(params.hostfile,optarg,sizeof(params.hostfile));
 			params.hostfile[sizeof(params.hostfile)-1]='\0';
+			params.tamper = true;
 			break;
-		case 25: /* pidfile */
+		case 26: /* pidfile */
 			strncpy(params.pidfile,optarg,sizeof(params.pidfile));
 			params.pidfile[sizeof(params.pidfile)-1]='\0';
 			break;
-		case 26:
+		case 27:
 			params.debug = true;
+			break;
+		case 28: /* local-rcvbuf */
+			params.local_rcvbuf = atoi(optarg)/2;
+			break;
+		case 29: /* local-sndbuf */
+			params.local_sndbuf = atoi(optarg)/2;
+			break;
+		case 30: /* remote-rcvbuf */
+			params.remote_rcvbuf = atoi(optarg)/2;
+			break;
+		case 31: /* remote-sndbuf */
+			params.remote_sndbuf = atoi(optarg)/2;
+			break;
+		case 32: /* socks */
+			params.proxy_type = CONN_TYPE_SOCKS;
+			break;
+		case 33: /* no-resolve */
+			params.no_resolve = true;
 			break;
 		}
 	}
@@ -510,6 +560,48 @@ bool find_listen_addr(struct sockaddr_storage *salisten, bool bindll, int *if_in
 	return found;
 }
 
+bool set_ulimit()
+{
+	FILE *F;
+	int n,cur_lim=0;
+	// 4 fds per tamper connection (2 pipe + 2 socket), 6 fds for tcp proxy connection (4 pipe + 2 socket)
+	// additional 1/3 for unpaired remote legs sending buffers
+	// 16 for listen_fd, epoll, hostlist, ...
+	int fdmax = (params.tamper ? 4 : 6) * params.maxconn;
+	fdmax += fdmax/3 + 16;
+	int fdmin_system = fdmax + 4096;
+
+	DBGPRINT("set_ulimit : fdmax=%d fdmin_system=%d",fdmax,fdmin_system);
+
+	if (!(F=fopen("/proc/sys/fs/file-max","r")))
+		return false;
+	n=fscanf(F,"%d",&cur_lim);
+	fclose(F);
+	if (!n)	return false;
+	DBGPRINT("set_ulimit : current system file-max=%d",cur_lim);
+	if (cur_lim<fdmin_system)
+	{
+		DBGPRINT("set_ulimit : system fd limit is too low. trying to increase");
+		if (!(F=fopen("/proc/sys/fs/file-max","w")))
+		{
+			fprintf(stderr,"set_ulimit : could not open /proc/sys/fs/file-max for write\n");
+			return false;
+		}
+		n=fprintf(F,"%d",fdmin_system);
+		fclose(F);
+		if (!n)
+		{
+			fprintf(stderr,"set_ulimit : could not write to /proc/sys/fs/file-max\n");
+			return false;
+		}
+	}
+
+	struct rlimit rlim = {fdmax,fdmax};
+	n=setrlimit(RLIMIT_NOFILE, &rlim);
+	if (n==-1) perror("setrlimit");
+	return n!=-1;
+}
+
 
 int main(int argc, char *argv[]) {
 	int listen_fd = -1;
@@ -518,6 +610,8 @@ int main(int argc, char *argv[]) {
 	struct sockaddr_storage salisten;
 	socklen_t salisten_len;
 	int ipv6_only=0,if_index=0;
+
+	srand(time(NULL));
 
 	parse_params(argc, argv);
 
@@ -647,16 +741,35 @@ int main(int argc, char *argv[]) {
 	
 	//Mark that this socket can be used for transparent proxying
 	//This allows the socket to accept connections for non-local IPs
-	if (setsockopt(listen_fd, SOL_IP, IP_TRANSPARENT, &yes, sizeof(yes)) == -1)
+	if (params.proxy_type==CONN_TYPE_TRANSPARENT)
 	{
-		perror("setsockopt (IP_TRANSPARENT): ");
+		if (setsockopt(listen_fd, SOL_IP, IP_TRANSPARENT, &yes, sizeof(yes)) == -1)
+		{
+			perror("setsockopt (IP_TRANSPARENT): ");
+			goto exiterr;
+		}
+	}
+
+	if (!set_socket_buffers(listen_fd, params.local_rcvbuf, params.local_sndbuf))
 		goto exiterr;
+	if (!params.local_rcvbuf)
+	{
+		// HACK : dont know why but if dont set RCVBUF explicitly RCVBUF of accept()-ed socket can be very large. may be linux bug ?
+		int v,sz;
+		sz=sizeof(int);
+		if (!getsockopt(listen_fd,SOL_SOCKET,SO_RCVBUF,&v,&sz))
+		{
+			v/=2;
+			setsockopt(listen_fd,SOL_SOCKET,SO_RCVBUF,&v,sizeof(int));
+		}
 	}
 
 	if (bind(listen_fd, (struct sockaddr *)&salisten, salisten_len) == -1) {
 		perror("bind: ");
 		goto exiterr;
 	}
+
+	set_ulimit();
 
 	if (!droproot())
 	{
@@ -669,7 +782,9 @@ int main(int argc, char *argv[]) {
 		perror("listen: ");
 		goto exiterr;
 	}
-	
+
+
+
 	//splice() causes the process to receive the SIGPIPE-signal if one part (for
 	//example a socket) is closed during splice(). I would rather have splice()
 	//fail and return -1, so blocking SIGPIPE.
@@ -679,6 +794,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	fprintf(stderr, "Will listen to port %d\n", params.port);
+	fprintf(stderr, params.proxy_type==CONN_TYPE_SOCKS ? "socks mode\n" : "transparent proxy mode\n");
+	if (!params.tamper) fprintf(stderr, "TCP proxy mode (no tampering)\n");
 
 	signal(SIGHUP, onhup); 
 

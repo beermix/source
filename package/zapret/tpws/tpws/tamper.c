@@ -20,15 +20,18 @@ bool find_host(char **pHost,char *buf,size_t bs)
 {
 	if (!*pHost)
 	{
-		*pHost = find_bin(buf, bs, "\nHost: ", 7);
-		if (*pHost) (*pHost)++;
-		printf("Found Host: at pos %zu\n",*pHost - buf);
+		*pHost = find_bin(buf, bs, "\nHost:", 6);
+		if (*pHost)
+		{
+			(*pHost)++;
+			printf("Found Host: at pos %zu\n",*pHost - buf);
+		}
 	}
 	return !!*pHost;
 }
 
 static const char *http_methods[] = { "GET /","POST /","HEAD /","OPTIONS /","PUT /","DELETE /","CONNECT /","TRACE /",NULL };
-void modify_tcp_segment(char *segment,size_t *size,size_t *split_pos)
+void modify_tcp_segment(char *segment,size_t segment_buffer_size,size_t *size,size_t *split_pos)
 {
 	char *p, *pp, *pHost = NULL;
 	size_t method_len = 0, pos;
@@ -56,7 +59,7 @@ void modify_tcp_segment(char *segment,size_t *size,size_t *split_pos)
 		if (params.hostlist && find_host(&pHost,segment,*size))
 		{
 			bool bInHostList = false;
-			p = pHost + 6;
+			p = pHost + 5;
 			while (p < (segment + *size) && (*p == ' ' || *p == '\t')) p++;
 			pp = p;
 			while (pp < (segment + *size) && (pp - p) < (sizeof(Host) - 1) && *pp != '\r' && *pp != '\n') pp++;
@@ -95,59 +98,7 @@ void modify_tcp_segment(char *segment,size_t *size,size_t *split_pos)
 				}
 				pHost = NULL; // invalidate
 			}
-
-			if (params.methodspace)
-			{
-				// we only work with data blocks looking as HTTP query, so method is at the beginning
-				printf("Adding extra space after method\n");
-				p = segment + method_len + 1;
-				pos = method_len + 1;
-				memmove(p + 1, p, *size - pos);
-				*p = ' '; // insert extra space
-				(*size)++; // block will grow by 1 byte
-				if (pHost) pHost++; // Host: position will move by 1 byte
-			}
-			if ((params.hostdot || params.hosttab) && find_host(&pHost,segment,*size))
-			{
-				p = pHost + 6;
-				while (p < (segment + *size) && *p != '\r' && *p != '\n') p++;
-				if (p < (segment + *size))
-				{
-					pos = p - segment;
-					printf("Adding %s to host name at pos %zu\n", params.hostdot ? "dot" : "tab", pos);
-					memmove(p + 1, p, *size - pos);
-					*p = params.hostdot ? '.' : '\t'; // insert dot or tab
-					(*size)++; // block will grow by 1 byte
-				}
-			}
-			if (params.hostnospace && find_host(&pHost,segment,*size) && pHost[5] == ' ')
-			{
-				p = pHost + 6;
-				pos = p - segment;
-				printf("Removing space before host name at pos %zu\n", pos);
-				memmove(p - 1, p, *size - pos);
-				(*size)--; // block will shrink by 1 byte
-				bRemovedHostSpace = 1;
-			}
-			if (!params.split_pos)
-			{
-				switch (params.split_http_req)
-				{
-				case split_method:
-					*split_pos = method_len - 1;
-					break;
-				case split_host:
-					if (find_host(&pHost,segment,*size))
-						*split_pos = pHost + 6 - bRemovedHostSpace - segment;
-					break;
-				}
-			}
-			if (params.hostcase && find_host(&pHost,segment,*size))
-			{
-				printf("Changing 'Host:' => '%c%c%c%c:' at pos %zu\n", params.hostspell[0], params.hostspell[1], params.hostspell[2], params.hostspell[3], pHost - segment);
-				memcpy(pHost, params.hostspell, 4);
-			}
-			if (params.methodeol)
+			if (params.methodeol && (*size+1+!params.unixeol)<=segment_buffer_size)
 			{
 				printf("Adding EOL before method\n");
 				if (params.unixeol)
@@ -165,8 +116,107 @@ void modify_tcp_segment(char *segment,size_t *size,size_t *split_pos)
 					segment[1] = '\n';
 					if (*split_pos) *split_pos += 2;
 				}
+				pHost = NULL; // invalidate
 			}
-			if (params.split_pos && params.split_pos < *size) *split_pos = params.split_pos;
+			if (params.methodspace && *size<segment_buffer_size)
+			{
+				// we only work with data blocks looking as HTTP query, so method is at the beginning
+				printf("Adding extra space after method\n");
+				p = segment + method_len + 1;
+				pos = method_len + 1;
+				memmove(p + 1, p, *size - pos);
+				*p = ' '; // insert extra space
+				(*size)++; // block will grow by 1 byte
+				if (pHost) pHost++; // Host: position will move by 1 byte
+			}
+			if ((params.hostdot || params.hosttab) && *size<segment_buffer_size && find_host(&pHost,segment,*size))
+			{
+				p = pHost + 5;
+				while (p < (segment + *size) && *p != '\r' && *p != '\n') p++;
+				if (p < (segment + *size))
+				{
+					pos = p - segment;
+					printf("Adding %s to host name at pos %zu\n", params.hostdot ? "dot" : "tab", pos);
+					memmove(p + 1, p, *size - pos);
+					*p = params.hostdot ? '.' : '\t'; // insert dot or tab
+					(*size)++; // block will grow by 1 byte
+				}
+			}
+			if (params.hostnospace && find_host(&pHost,segment,*size) && (pHost+5)<(segment+*size) && pHost[5] == ' ')
+			{
+				p = pHost + 6;
+				pos = p - segment;
+				printf("Removing space before host name at pos %zu\n", pos);
+				memmove(p - 1, p, *size - pos);
+				(*size)--; // block will shrink by 1 byte
+				bRemovedHostSpace = 1;
+			}
+			if (params.hostcase && find_host(&pHost,segment,*size))
+			{
+				printf("Changing 'Host:' => '%c%c%c%c:' at pos %zu\n", params.hostspell[0], params.hostspell[1], params.hostspell[2], params.hostspell[3], pHost - segment);
+				memcpy(pHost, params.hostspell, 4);
+			}
+			if (params.hostpad && find_host(&pHost,segment,*size))
+			{
+				//  add :  XXXXX: <padding?[\r\n|\n]
+				char s[8];
+				size_t hsize = params.unixeol ? 8 : 9;
+				size_t hostpad = params.hostpad<hsize ? hsize : params.hostpad;
+
+				if ((hsize+*size)>segment_buffer_size)
+					printf("could not add host padding : buffer too small\n");
+				else
+				{
+					if ((hostpad+*size)>segment_buffer_size)
+					{
+						hostpad=segment_buffer_size-*size;
+						printf("host padding reduced to %zu bytes : buffer too small\n", hostpad);
+					}
+					else
+						printf("host padding with %zu bytes\n", hostpad);
+					
+					p = pHost;
+					pos = p - segment;
+					memmove(p + hostpad, p, *size - pos);
+					(*size) += hostpad;
+					while(hostpad)
+					{
+						#define MAX_HDR_SIZE	2048
+						size_t padsize = hostpad > hsize ? hostpad-hsize : 0;
+						if (padsize>MAX_HDR_SIZE) padsize=MAX_HDR_SIZE;
+						// if next header would be too small then add extra padding to the current one
+						if ((hostpad-padsize-hsize)<hsize) padsize+=hostpad-padsize-hsize;
+						snprintf(s,sizeof(s),"%c%04x: ", 'a'+rand()%('z'-'a'+1), rand() & 0xFFFF);
+						memcpy(p,s,7);
+						p+=7;
+						memset(p,'a'+rand()%('z'-'a'+1),padsize);
+						p+=padsize;
+						if (params.unixeol)
+							*p++='\n';
+						else
+						{
+							*p++='\r';
+							*p++='\n';
+						}
+						hostpad-=hsize+padsize;
+					}
+					pHost = NULL; // invalidate
+				}
+			}
+			if (!params.split_pos)
+			{
+				switch (params.split_http_req)
+				{
+				case split_method:
+					*split_pos = method_len - 1 + params.methodeol + (params.methodeol && !params.unixeol);
+					break;
+				case split_host:
+					if (find_host(&pHost,segment,*size))
+						*split_pos = pHost + 6 - bRemovedHostSpace - segment;
+					break;
+				}
+			}
+			else if (params.split_pos < *size) *split_pos = params.split_pos;
 		}
 		else
 		{
@@ -175,7 +225,6 @@ void modify_tcp_segment(char *segment,size_t *size,size_t *split_pos)
 	}
 	else
 	{
-		printf("Data block does not look like http request start\n");
 		// this is the only parameter applicable to non-http block (may be https ?)
 		if (params.split_pos && params.split_pos < *size) *split_pos = params.split_pos;
 	}

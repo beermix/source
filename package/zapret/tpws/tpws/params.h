@@ -13,18 +13,25 @@ struct params_s
 	bool bind_if6;
 	bool bindll,bindll_force;
 	int bind_wait_ifup,bind_wait_ip,bind_wait_ip_ll;
+	uint8_t proxy_type;
+	bool no_resolve;
 	uid_t uid;
 	gid_t gid;
-	uint16_t port;
 	bool daemon;
+	uint16_t port;
+	int maxconn;
+	int local_rcvbuf,local_sndbuf,remote_rcvbuf,remote_sndbuf;
+
+	bool tamper; // any tamper option is set
 	bool hostcase, hostdot, hosttab, hostnospace, methodspace, methodeol, unixeol;
+	int hostpad;
 	char hostspell[4];
 	enum splithttpreq split_http_req;
 	int split_pos;
-	int maxconn;
 	char hostfile[256];
 	char pidfile[256];
 	strpool *hostlist;
+
 	bool debug;
 };
 
