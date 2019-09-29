@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysbench
-PKG_VERSION:=1.0.17
+PKG_VERSION:=74f3b6b
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/akopytov/sysbench
