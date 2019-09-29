@@ -25,14 +25,13 @@ include $(INCLUDE_DIR)/host-build.mk
 define Package/sysbench
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpthread +luajit
+  DEPENDS:=+libpthread
   TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 endef
 
 CONFIGURE_ARGS += \
 	--without-mysql \
 	--without-pgsql \
-	--with-system-luajit \
 	--with-gcc-arch=atom
 
 define Package/sysbench/description

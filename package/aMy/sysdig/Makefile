@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysdig
-PKG_VERSION:=0.24.1
+PKG_VERSION:=0.26.4
 
 PKG_SOURCE_URL:=https://fossies.org/linux/misc
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
