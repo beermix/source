@@ -64,7 +64,6 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
-		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
 		--disable-sanity-checks \
 		--enable-add-ons \
@@ -79,8 +78,8 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
+#export libc_cv_forced_unwind=yes
+#export libc_cv_c_cleanup=yes
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
