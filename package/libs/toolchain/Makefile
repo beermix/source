@@ -167,7 +167,7 @@ define Package/libc/config
 		string
 		prompt "libc shared library files (use wildcards)"
 		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libc
-		default "./lib/ld{*.so*,-linux*.so.*} ./lib/lib{anl,c,cidn,crypt,dl,m,nsl,nss_dns,nss_files,resolv,util}{-*.so,.so.*,.so}"
+		default "./lib/ld{*.so*,-linux*.so.*} ./lib/lib{anl,c,cidn,crypt,dl,m,nsl,nss_dns,nss_files,resolv,util}{-*.so,.so.*}"
 
 	endmenu
 endef
@@ -372,6 +372,9 @@ LIBGCC_SO=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so.*))
 define Build/Compile/uClibc
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-*.so \
+		$(TOOLCHAIN_DIR)/lib/libcrypt-*.so \
+		$(TOOLCHAIN_DIR)/lib/libm-*.so \
+		$(TOOLCHAIN_DIR)/lib/libpthread-*.so \
 		$(PKG_BUILD_DIR)/
 endef
 ifneq ($(LIBGCC_SO),)
@@ -421,6 +424,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
+		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
+		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
 	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
@@ -429,6 +434,10 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 			fi; \
 		done; \
 	done
+ifneq ($(CONFIG_TARGET_x86_64),)
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/opt/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/opt/lib
+endif
   endef
 
   define Package/uClibc/install
@@ -441,8 +450,17 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		$(TOOLCHAIN_DIR)/lib/libc.so.* \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-$(LIBC_SO_VERSION).so \
 		$(1)/lib/
+	for file in libuargp libcrypt libdl libm libutil libnsl libresolv; do \
+		$(CP) \
+			$(TOOLCHAIN_DIR)/lib/$$$$file.so* \
+			$(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so \
+			$(1)/opt/lib/; \
+	done
+
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
+		$(PKG_BUILD_DIR)/libm-* \
+		$(PKG_BUILD_DIR)/libcrypt-* \
 		$(1)/lib/
   endef
 
@@ -550,6 +568,7 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
+	rm -f $(1)/opt/$$$$dir/*.py ; \
 	exit 0
   endef
 
@@ -558,6 +577,8 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBC_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
+	$(INSTALL_DIR) $(1)/opt/etc ; \
+	$(CP) ./glibc-files/etc/nsswitch.conf $(1)/etc/nsswitch.conf ; \
 	exit 0
   endef
 
@@ -607,6 +628,9 @@ else
 		$(INSTALL_DIR) $(1)/$$$$dir ; \
 		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
+	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/opt/bin/ldd ; \
+	$(SED) 's!/lib/ld-linux.so.3!/usr/lib/ld-linux.so.3!g' $(1)/usr/bin/ldd ; \
+	$(SED) 's!/lib/ld-linux.so.2!/usr/lib/ld-linux.so.2!g' $(1)/usr/bin/ldd ; \
 	exit 0
   endef
 
