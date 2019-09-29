@@ -434,8 +434,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		done; \
 	done
 ifneq ($(CONFIG_TARGET_x86_64),)
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/opt/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/opt/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/usr/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/usr/lib
 endif
   endef
 
@@ -449,17 +449,8 @@ endif
 		$(TOOLCHAIN_DIR)/lib/libc.so.* \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-$(LIBC_SO_VERSION).so \
 		$(1)/lib/
-	for file in libuargp libcrypt libdl libm libutil libnsl libresolv; do \
-		$(CP) \
-			$(TOOLCHAIN_DIR)/lib/$$$$file.so* \
-			$(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so \
-			$(1)/opt/lib/; \
-	done
-
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
-		$(PKG_BUILD_DIR)/libm-* \
-		$(PKG_BUILD_DIR)/libcrypt-* \
 		$(1)/lib/
   endef
 
@@ -574,7 +565,7 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	rm -f $(1)/opt/$$$$dir/*.py ; \
+	rm -f $(1)/$$$$dir/*.py ; \
 	exit 0
   endef
 
@@ -583,7 +574,7 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBC_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	$(INSTALL_DIR) $(1)/opt/etc ; \
+	$(INSTALL_DIR) $(1)/etc ; \
 	$(CP) ./glibc-files/etc/nsswitch.conf $(1)/etc/nsswitch.conf ; \
 	exit 0
   endef
@@ -634,7 +625,7 @@ else
 		$(INSTALL_DIR) $(1)/$$$$dir ; \
 		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
-	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/opt/bin/ldd ; \
+	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/usr/bin/ldd ; \
 	$(SED) 's!/lib/ld-linux.so.3!/usr/lib/ld-linux.so.3!g' $(1)/usr/bin/ldd ; \
 	$(SED) 's!/lib/ld-linux.so.2!/usr/lib/ld-linux.so.2!g' $(1)/usr/bin/ldd ; \
 	exit 0
