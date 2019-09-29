@@ -53,25 +53,34 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -g -fno-stack-protector $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 --param=ssp-buffer-size=4 -fstack-protector -znow -zrelro -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -g -fno-stack-protector $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 -fstack-protector -znow -zrelro -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
+		ac_cv_path_PERL=no \
+		ac_cv_prog_MAKEINFO= \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
+		--disable-sanity-checks \
+		--enable-add-ons \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
-		--enable-add-ons \
 		--enable-kernel=4.19 \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
+export libc_cv_forced_unwind=yes
+export libc_cv_c_cleanup=yes
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes

@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysbench
-PKG_VERSION:=74f3b6b
+PKG_VERSION:=1.0.17
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/akopytov/sysbench
@@ -23,26 +23,15 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 
 define Package/sysbench
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=utils
+  CATEGORY:=Utilities
   DEPENDS:=+libpthread
-  TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
+  TITLE:=sysbench is a scriptable multi-threaded benchmark tool based on LuaJIT
 endef
 
 CONFIGURE_ARGS += \
 	--without-mysql \
-	--without-pgsql \
-	--with-gcc-arch=atom
-
-define Package/sysbench/description
- sysbench is tests.
- 
- Redsocks supports tunneling TCP connections and UDP packets. It has
- authentication support for both, SOCKS and HTTP proxies.
- 
- Also included is a small DNS server returning answers with the "truncated" flag
- set for any UDP query, forcing the resolver to use TCP.
-endef
+	--without-pgsql
 
 define Package/sysbench/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
