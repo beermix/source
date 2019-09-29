@@ -32,9 +32,6 @@ define Host/Install
 		  done \
 		done \
 	)
-#	rm -f \
-#		$(TOOLCHAIN_DIR)/lib/libresolv*.so* \
-#		$(TOOLCHAIN_DIR)/lib/libnsl*.so*
 endef
 
 $(eval $(call HostBuild))
