@@ -3,14 +3,14 @@ src-git luci https://git.openwrt.org/project/luci.git
 src-git routing https://git.openwrt.org/feed/routing.git
 #src-git OnionIoT https://github.com/OnionIoT/OpenWRT-Packages.git
 #src-git openwrtshadowsocks https://github.com/shadowsocks/openwrt-shadowsocks
-#src-git telephony https://git.openwrt.org/feed/telephony.git
+src-git telephony https://git.openwrt.org/feed/telephony.git
 #src-git video https://github.com/openwrt/video.git
 #src-git targets https://github.com/openwrt/targets.git
 #src-git management https://github.com/openwrt-management/packages.git
 #src-git oldpackages http://git.openwrt.org/packages.git
 #src-git dnsforwarder https://github.com/aa65535/openwrt-dns-forwarder
 #src-git openwrtextra https://github.com/shangjiyu/openwrt-extra
-#src-git owrtfeeds https://github.com/shadowsocks/openwrt-feeds.git
+src-git owrtfeeds https://github.com/shadowsocks/openwrt-feeds.git
 #src-link mypkgs /home/user/-f2fs/pkg-ledex
 #src-git PcapDNSProxy https://github.com/wongsyrone/openwrt-Pcap_DNSProxy.git
 #src-git golang https://github.com/Entware/entware-ng-go.git
