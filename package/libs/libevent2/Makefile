@@ -110,8 +110,8 @@ define Package/libevent2-pthreads/description
 	threading & locking.
 endef
 
-TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -flto
+#TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
+#TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -flto
 
 CMAKE_OPTIONS += \
 	-DEVENT__DISABLE_BENCHMARK:BOOL=ON \
