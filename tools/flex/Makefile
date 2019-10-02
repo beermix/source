@@ -7,11 +7,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=flex
-PKG_VERSION:=d894cfd
+PKG_VERSION:=8b1fbf6
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/bminor/bash
+PKG_SOURCE_URL:=https://github.com/westes/flex
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -21,7 +21,7 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --disable-shared
+HOST_CONFIGURE_ARGS += --disable-shared --disable-doc
 
 define Host/Install
 	$(call Host/Install/Default)
