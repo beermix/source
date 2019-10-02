@@ -16,7 +16,7 @@ PKG_VERSION:=2.30.9000
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=d7a568af5546e0313abbc04060c8e9b0d3f750b4
+PKG_SOURCE_VERSION:=a6aaabd036d735a1b412f441bf6c706832655598
 PKG_MIRROR_HASH:=
 #PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
@@ -78,8 +78,8 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-#export libc_cv_forced_unwind=yes
-#export libc_cv_c_cleanup=yes
+export libc_cv_forced_unwind=yes
+export libc_cv_c_cleanup=yes
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
