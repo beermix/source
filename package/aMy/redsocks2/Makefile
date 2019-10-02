@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=redsocks2
-PKG_VERSION:=ea2b56a
+PKG_VERSION:=513576a
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/semigodking/redsocks.git
+PKG_SOURCE_URL:=https://github.com/semigodking/redsocks
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz

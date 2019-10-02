@@ -44,7 +44,6 @@ define Build/Configure
 		--disable-etcdir \
 		--disable-gdbm \
 		--enable-dynamic \
-		--disable-libc-musl \
 		--enable-pcre \
 		--enable-cap \
 		--enable-multibyte \

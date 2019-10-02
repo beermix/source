@@ -40,6 +40,7 @@ endef
 CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--without-slang \
+	--disable-wrapping \
 	--enable-color \
 	--disable-libmagic \
 

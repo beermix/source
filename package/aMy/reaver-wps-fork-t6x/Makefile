@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reaver-wps-fork-t6x
-PKG_VERSION:=b4ba9b8
+PKG_VERSION:=37de8c8
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/t6x/reaver-wps-fork-t6x
