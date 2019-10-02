@@ -132,6 +132,8 @@ GCC_CONFIGURE:= \
 		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
+		--disable-libitm \
+		--disable-libquadmath \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
