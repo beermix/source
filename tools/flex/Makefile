@@ -7,12 +7,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=flex
-PKG_CPE_ID:=cpe:/a:flex_project:flex
-PKG_VERSION:=2.6.4
+PKG_VERSION:=d894cfd
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/westes/flex/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/bminor/bash
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_FIXUP:=autoreconf
 HOST_BUILD_PARALLEL:=1
