@@ -56,10 +56,10 @@ GLIBC_CONFIGURE:= \
 	CFLAGS="-O2 -g $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 -fstack-protector -znow -zrelro -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
-	ac_cv_path_PERL=no \
-	ac_cv_prog_MAKEINFO= \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
+		ac_cv_path_PERL=no \
+		ac_cv_prog_MAKEINFO= \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
