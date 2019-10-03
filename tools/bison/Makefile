@@ -26,6 +26,7 @@ endef
 
 define Host/Install
 	$(call Host/Install/Default)
+	$(INSTALL_BIN) ./scripts/yacc $(STAGING_DIR_HOST)/bin/yacc
 endef
 
 $(eval $(call HostBuild))
