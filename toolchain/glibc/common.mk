@@ -53,7 +53,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -g -fno-stack-protector $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 -fstack-protector -znow -zrelro -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -g -fno-stack-protector $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 -fstack-protector -znow -zrelro -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
