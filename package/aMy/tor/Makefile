@@ -94,18 +94,16 @@ define Package/tor/conffiles
 endef
 
 CONFIGURE_ARGS += \
-	--with-libevent-dir="$(STAGING_DIR)/usr" \
-	--with-openssl-dir="$(STAGING_DIR)/usr" \
-	--with-zlib-dir="$(STAGING_DIR)/usr" \
-	--disable-asciidoc \
-	--disable-seccomp \
-	--disable-libscrypt \
-	--disable-unittests \
-	--disable-module-dirauth \
-	--enable-lzma \
-	--enable-zstd \
-	--with-tor-user=tor \
-	--with-tor-group=tor
+        --with-libevent-dir="$(STAGING_DIR)/usr" \
+        --with-openssl-dir="$(STAGING_DIR)/usr" \
+        --with-zlib-dir="$(STAGING_DIR)/usr" \
+        --disable-asciidoc \
+        --disable-seccomp \
+        --disable-libscrypt \
+        --disable-unittests \
+        --disable-module-dirauth \
+        --with-tor-user=tor \
+        --with-tor-group=tor
 
 TARGET_CFLAGS += -O3 -Wall
 #TARGET_LDFLAGS += -Wl,--gc-sections -flto
