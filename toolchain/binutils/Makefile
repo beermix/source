@@ -6,7 +6,6 @@
 # https://github.com/bminor/binutils-gdb/branches/active
 # https://github.com/bminor/binutils-gdb/tree/binutils-2_32-branch
 # https://github.com/bminor/binutils-gdb/tree/binutils-2_33-branch
-# 	
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=binutils
