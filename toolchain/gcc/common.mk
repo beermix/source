@@ -135,6 +135,7 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--with-system-zlib \
 		--with-tune=haswell \
 		--with-arch=pentium4 \
 		$(GRAPHITE_CONFIGURE) \

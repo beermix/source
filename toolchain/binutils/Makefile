@@ -47,9 +47,16 @@ HOST_CONFIGURE_ARGS = \
 	--target=$(REAL_GNU_TARGET_NAME) \
 	--with-sysroot=$(TOOLCHAIN_DIR) \
 	--enable-deterministic-archives \
+	--enable-ld=default \
+	--enable-lto \
+	--enable-relro \
+	--enable-threads \
+	--with-pic \
+	--enable-targets=i386-linux \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
+	--with-system-zlib \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
