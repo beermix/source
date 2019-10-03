@@ -58,6 +58,8 @@ GLIBC_CONFIGURE:= \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
+		ac_cv_path_PERL=no \
+		ac_cv_prog_MAKEINFO= \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
@@ -72,7 +74,8 @@ GLIBC_CONFIGURE:= \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
-		--enable-kernel=4.14 \
+		--enable-kernel=4.19 \
+		--enable-static-pie \
 		--disable-debug \
 		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
