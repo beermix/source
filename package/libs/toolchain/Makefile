@@ -278,29 +278,27 @@ define Package/libgfortran/config
 	endmenu
 endef
 
-
-define Package/libgo
+define Package/libgomp
 $(call Package/gcc/Default)
-  TITLE:=Go support library
-  DEPENDS+=@INSTALL_GCCGO
+  TITLE:=OpenMP support library
 endef
 
-define Package/libgo/config
+define Package/libgomp/config
 	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
 
-	config LIBGO_ROOT_DIR
+	config LIBGOMP_ROOT_DIR
 		string
-		prompt "libgo shared library base directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		prompt "libgomp shared library base directory"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
 		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
 		default "/"  if NATIVE_TOOLCHAIN
 
-	config LIBGO_FILE_SPEC
+	config LIBGOMP_FILE_SPEC
 		string
-		prompt "libgo shared library files (use wildcards)"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-		default "./usr/lib/libgo.so.*"
+		prompt "libgomp shared library files (use wildcards)"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		default "./lib/libgomp.so*"
 
 	endmenu
 endef
@@ -405,11 +403,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/lib/libgfortran.so.* $(1)/usr/lib/
   endef
 
-  define Package/libgo/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libgo.so.* $(1)/usr/lib/
-  endef
-
   define Package/libssp/install
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) $(TOOLCHAIN_DIR)/lib/libssp.so.* $(1)/lib/
@@ -428,8 +421,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
-		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
-		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
 	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
@@ -438,10 +429,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 			fi; \
 		done; \
 	done
-ifneq ($(CONFIG_TARGET_x86_64),)
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/usr/lib
-endif
   endef
 
   define Package/uClibc/install
@@ -523,9 +510,6 @@ endif
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
-#  ifneq ($(CONFIG_TARGET_i386),)
-#	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
-#  endif
   endef
 
   define Package/ldconfig/install
@@ -550,13 +534,6 @@ else
 	done
   endef
 
-  define Package/libgo/install
-	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
-		$(INSTALL_DIR) $(1)/lib ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGO_ROOT_DIR))/$$$$file $(1)/lib/ ; \
-	done
-  endef
-
   define Package/libssp/install
 	for file in $(call qstrip,$(CONFIG_LIBSSP_FILE_SPEC)); do \
 		$(INSTALL_DIR) $(1)/lib ; \
@@ -570,7 +547,6 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	rm -f $(1)/$$$$dir/*.py ; \
 	exit 0
   endef
 
@@ -579,8 +555,6 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBC_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	$(INSTALL_DIR) $(1)/etc ; \
-	$(CP) ./glibc-files/etc/nsswitch.conf $(1)/etc/nsswitch.conf ; \
 	exit 0
   endef
 
@@ -630,9 +604,6 @@ else
 		$(INSTALL_DIR) $(1)/$$$$dir ; \
 		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
-	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/usr/bin/ldd ; \
-	$(SED) 's!/lib/ld-linux.so.3!/usr/lib/ld-linux.so.3!g' $(1)/usr/bin/ldd ; \
-	$(SED) 's!/lib/ld-linux.so.2!/usr/lib/ld-linux.so.2!g' $(1)/usr/bin/ldd ; \
 	exit 0
   endef
 
@@ -656,6 +627,6 @@ $(eval $(call BuildPackage,libpthread))
 $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
-$(eval $(call BuildPackage,libgo))
+$(eval $(call BuildPackage,libgomp))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
