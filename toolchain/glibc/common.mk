@@ -67,7 +67,6 @@ GLIBC_CONFIGURE:= \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
 		--disable-sanity-checks \
-		--enable-add-ons \
 		--enable-bind-now \
 		--with-elf \
 		--with-tls \
@@ -78,6 +77,7 @@ GLIBC_CONFIGURE:= \
 		--enable-kernel=4.19 \
 		--enable-static-pie \
 		--disable-debug \
+		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_forced_unwind=yes
