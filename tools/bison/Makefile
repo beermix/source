@@ -17,7 +17,7 @@ HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --disable-rpath --with-gnu-ld
+HOST_CONFIGURE_ARGS += --enable-threads=pth --disable-rpath --with-gnu-ld
 
 define Host/Clean
 	-$(MAKE) -C $(HOST_BUILD_DIR) uninstall
@@ -26,6 +26,7 @@ endef
 
 define Host/Install
 	$(call Host/Install/Default)
+	$(INSTALL_BIN) ./scripts/yacc $(STAGING_DIR_HOST)/bin/yacc
 endef
 
 $(eval $(call HostBuild))
