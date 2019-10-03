@@ -46,7 +46,6 @@ HOST_CONFIGURE_ARGS = \
 	--host=$(GNU_HOST_NAME) \
 	--target=$(REAL_GNU_TARGET_NAME) \
 	--with-sysroot=$(TOOLCHAIN_DIR) \
-	--enable-deterministic-archives \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
