@@ -6,7 +6,7 @@
 # https://github.com/bminor/binutils-gdb/branches/active
 # https://github.com/bminor/binutils-gdb/tree/binutils-2_32-branch
 # https://github.com/bminor/binutils-gdb/tree/binutils-2_33-branch
-# 	--enable-deterministic-archives \
+# 	
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=binutils
@@ -47,6 +47,7 @@ HOST_CONFIGURE_ARGS = \
 	--host=$(GNU_HOST_NAME) \
 	--target=$(REAL_GNU_TARGET_NAME) \
 	--with-sysroot=$(TOOLCHAIN_DIR) \
+	--enable-deterministic-archives \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
