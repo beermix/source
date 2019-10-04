@@ -23,5 +23,5 @@ config GCC_USE_EMBEDDED_PATH_REMAP
 config GCC_VERSION
 	string
 	default "8.3.1"		if GCC_VERSION_8
-	default "9.2.1"		if GCC_VERSION_9
+	default "9.2.0"		if GCC_VERSION_9
 	default "10.0.0"		if GCC_VERSION_10
