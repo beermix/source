@@ -352,7 +352,7 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
 # CONFIG_GCC_USE_VERSION_8 is not set
 CONFIG_GCC_USE_VERSION_9=y
 # CONFIG_GCC_USE_VERSION_10 is not set
-CONFIG_GCC_USE_GRAPHITE=y
+# CONFIG_GCC_USE_GRAPHITE is not set
 CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --enable-checking=release --with-default-libstdcxx-abi=gcc4-compatible"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
@@ -4982,7 +4982,7 @@ CONFIG_PACKAGE_libopenssl-conf=y
 # CONFIG_PACKAGE_libavahi-nodbus-support is not set
 # CONFIG_PACKAGE_libavl is not set
 # CONFIG_PACKAGE_libbfd is not set
-CONFIG_PACKAGE_libblkid=y
+# CONFIG_PACKAGE_libblkid is not set
 CONFIG_PACKAGE_libblobmsg-json=y
 # CONFIG_PACKAGE_libbsd is not set
 # CONFIG_PACKAGE_libcanfestival is not set
