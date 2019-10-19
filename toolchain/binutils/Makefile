@@ -25,6 +25,10 @@ ifeq ($(PKG_VERSION),2.31)
   PKG_HASH:=
 endif
 
+ifeq ($(PKG_VERSION),2.33.1)
+  PKG_HASH:=ab66fc2d1c3ec0359b8e08843c9f33b63e8707efdff5e4cc5c200eae24722cbf
+endif
+
 ifeq ($(PKG_VERSION),2.33)
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
