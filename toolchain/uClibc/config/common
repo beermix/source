@@ -30,7 +30,7 @@ HAVE_SHARED=y
 KERNEL_HEADERS="."
 LDSO_BASE_FILENAME="ld.so"
 LDSO_CACHE_SUPPORT=y
-# LDSO_GNU_HASH_SUPPORT is not set
+LDSO_GNU_HASH_SUPPORT=y
 LDSO_LD_LIBRARY_PATH=y
 LDSO_LDD_SUPPORT=y
 # LDSO_NO_CLEANUP is not set
@@ -63,7 +63,7 @@ TARGET_SUBARCH=""
 # TARGET_bfin is not set
 # TARGET_c6x is not set
 # TARGET_cris is not set
-# TARGET_e1 is not set
+# TARGET_csky is not set
 # TARGET_frv is not set
 # TARGET_h8300 is not set
 # TARGET_hppa is not set
@@ -75,15 +75,15 @@ TARGET_SUBARCH=""
 # TARGET_metag is not set
 # TARGET_microblaze is not set
 # TARGET_mips is not set
-# TARGET_nios is not set
+# TARGET_nds32 is not set
 # TARGET_nios2 is not set
 # TARGET_or1k is not set
 # TARGET_powerpc is not set
+# TARGET_riscv64 is not set
 # TARGET_sh is not set
-# TARGET_sh64 is not set
 # TARGET_sparc is not set
-# TARGET_v850 is not set
-# TARGET_vax is not set
+# TARGET_sparc64 is not set
+# TARGET_tile is not set
 # TARGET_x86_64 is not set
 # TARGET_xtensa is not set
 UCLIBC_BSD_SPECIFIC=y
