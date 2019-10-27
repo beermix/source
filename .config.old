@@ -144,7 +144,7 @@ CONFIG_GRUB_BOOTOPTS="pti=off l1tf=off spectre_v2=off nospectre_v2 nospec_store_
 CONFIG_GRUB_TIMEOUT="1"
 CONFIG_GRUB_TITLE="OpenWrt"
 # CONFIG_VDI_IMAGES is not set
-# CONFIG_VMDK_IMAGES is not set
+CONFIG_VMDK_IMAGES=y
 CONFIG_TARGET_IMAGES_GZIP=y
 
 #
@@ -330,7 +330,7 @@ CONFIG_BUILD_LOG_DIR=""
 # CONFIG_SRC_TREE_OVERRIDE is not set
 CONFIG_EXTRA_OPTIMIZATION=""
 CONFIG_TARGET_OPTIONS=y
-CONFIG_TARGET_OPTIMIZATION="-march=bonnell -m32 -O2 -pipe -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -fomit-frame-pointer"
+CONFIG_TARGET_OPTIMIZATION="-march=pentium4 -O2 -pipe -fomit-frame-pointer"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
 CONFIG_NEED_TOOLCHAIN=y
 CONFIG_TOOLCHAINOPTS=y
@@ -350,8 +350,8 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
 # CONFIG_GCC_USE_VERSION_5 is not set
 # CONFIG_GCC_USE_VERSION_7 is not set
 # CONFIG_GCC_USE_VERSION_8 is not set
-# CONFIG_GCC_USE_VERSION_9 is not set
-CONFIG_GCC_USE_VERSION_10=y
+CONFIG_GCC_USE_VERSION_9=y
+# CONFIG_GCC_USE_VERSION_10 is not set
 # CONFIG_GCC_USE_GRAPHITE is not set
 CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --enable-checking=release --with-default-libstdcxx-abi=gcc4-compatible"
 # CONFIG_GCC_DEFAULT_PIE is not set
@@ -375,9 +375,9 @@ CONFIG_LIBC_USE_GLIBC=y
 CONFIG_USE_GLIBC=y
 CONFIG_BINUTILS_VERSION_2_33_1=y
 CONFIG_BINUTILS_VERSION="2.33.1"
-CONFIG_GCC_VERSION_10=y
+CONFIG_GCC_VERSION_9=y
 CONFIG_GCC_USE_EMBEDDED_PATH_REMAP=y
-CONFIG_GCC_VERSION="10.0.0"
+CONFIG_GCC_VERSION="9.2.0"
 CONFIG_LIBC="glibc"
 CONFIG_TARGET_SUFFIX="gnu"
 # CONFIG_IB is not set
