@@ -1,9 +1,9 @@
 ARCH_LITTLE_ENDIAN=y
 # CONFIG_386 is not set
-# CONFIG_486 is not set
+CONFIG_486=y
 # CONFIG_586 is not set
 # CONFIG_586MMX is not set
-CONFIG_686=y
+# CONFIG_686 is not set
 # CONFIG_CRUSOE is not set
 # CONFIG_CYRIXIII is not set
 # CONFIG_ELAN is not set
