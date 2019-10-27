@@ -254,7 +254,6 @@ menu "Global build settings"
 		config KERNEL_CC_STACKPROTECTOR_REGULAR
 			bool "Regular"
 		config KERNEL_CC_STACKPROTECTOR_STRONG
-			depends on !GCC_VERSION_4_8
 			bool "Strong"
 	endchoice
 
