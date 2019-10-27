@@ -46,7 +46,7 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +liblzma +libzstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
 endef
 
 define Package/tor/description
@@ -101,6 +101,8 @@ CONFIGURE_ARGS += \
         --disable-seccomp \
         --disable-libscrypt \
         --disable-unittests \
+        --enable-lzma=no \
+        --enable-zstd=no \
         --disable-module-dirauth \
         --with-tor-user=tor \
         --with-tor-group=tor
