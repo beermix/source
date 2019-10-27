@@ -4,20 +4,16 @@ include ../common.mk
 
 GCC_CONFIGURE += \
 	--with-headers=$(TOOLCHAIN_DIR)/include \
-	--enable-libsanitizer \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--enable-libstdcxx-time=yes \
-	--disable-libstdcxx-pch \
-	--enable-c99 \
-	--enable-clocale=gnu \
-	--enable-__cxa_atexit \
-	--enable-decimal-float \
-	--enable-tls \
 	--with-libelf=$(TOPDIR)/staging_dir/host
+
+ifndef CONFIG_USE_GLIBC
+  GCC_CONFIGURE += --disable-libsanitizer
+endif
 
 ifdef CONFIG_USE_MUSL
   GCC_MAKE += gcc_cv_libc_provides_ssp=yes

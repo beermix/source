@@ -56,7 +56,7 @@ endif
 
 ifeq ($(PKG_VERSION),9.2.1)
   PKG_VERSION:=9.2.1
-  PKG_REV:=9-20191019
+  PKG_REV:=9-20191026
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -65,7 +65,7 @@ endif
 
 ifeq ($(PKG_VERSION),10.0.0)
   PKG_VERSION:=10.0.0
-  PKG_REV:=10-20191013
+  PKG_REV:=10-20191020
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -130,15 +130,11 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--disable-libunwind-exceptions \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--with-system-zlib \
-		--with-tune=haswell \
-		--with-arch=pentium4 \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \

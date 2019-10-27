@@ -35,7 +35,7 @@ endef
 # UBNT_VERSION e.g. one of (6.0.0, 8.5.0)
 define Device/ubnt
   DEVICE_VENDOR := Ubiquiti
-  DEVICE_PACKAGES := kmod-usb-core kmod-usb2
+  DEVICE_PACKAGES := kmod-usb2
   IMAGE_SIZE := 7552k
   UBNT_BOARD := XM
   UBNT_VERSION := 6.0.0
@@ -154,7 +154,7 @@ TARGET_DEVICES += ubnt_nanostation-ac-loco
 define Device/ubnt_nanostation-m
   $(Device/ubnt-xm)
   DEVICE_MODEL := Nanostation M
-  SUPPORTED_DEVICES += nano-m
+  SUPPORTED_DEVICES += nanostation-m
 endef
 TARGET_DEVICES += ubnt_nanostation-m
 
@@ -221,9 +221,16 @@ endef
 define Device/ubnt_unifiac-lite
   $(Device/ubnt_unifiac)
   DEVICE_MODEL := UniFi AC-Lite
-  SUPPORTED_DEVICES += ubnt-unifiac-lite
+  SUPPORTED_DEVICES += unifiac-lite
 endef
 TARGET_DEVICES += ubnt_unifiac-lite
+
+define Device/ubnt_unifiac-lr
+  $(Device/ubnt_unifiac)
+  DEVICE_MODEL := UniFi AC-LR
+  SUPPORTED_DEVICES += unifiac-lite ubnt,unifiac-lite
+endef
+TARGET_DEVICES += ubnt_unifiac-lr
 
 define Device/ubnt_unifiac-mesh
   $(Device/ubnt_unifiac)
@@ -242,7 +249,7 @@ TARGET_DEVICES += ubnt_unifiac-mesh-pro
 define Device/ubnt_unifiac-pro
   $(Device/ubnt_unifiac)
   DEVICE_MODEL := UniFi AC-Pro
-  DEVICE_PACKAGES += kmod-usb-core kmod-usb2
+  DEVICE_PACKAGES += kmod-usb2
   SUPPORTED_DEVICES += ubnt-unifiac-pro
 endef
 TARGET_DEVICES += ubnt_unifiac-pro
