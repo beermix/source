@@ -240,7 +240,6 @@ menu "Global build settings"
 			depends on KERNEL_CC_STACKPROTECTOR_REGULAR
 		config PKG_CC_STACKPROTECTOR_STRONG
 			bool "Strong"
-			depends on !GCC_VERSION_4_8
 			depends on KERNEL_CC_STACKPROTECTOR_STRONG
 	endchoice
 
