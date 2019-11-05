@@ -72,7 +72,7 @@ GLIBC_CONFIGURE:= \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
-		--enable-kernel=4.14 \
+		--enable-kernel=4.19 \
 		--disable-debug \
 		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
