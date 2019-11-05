@@ -3241,7 +3241,6 @@ CONFIG_PACKAGE_kmod-random-core=y
 #
 # Voice over IP
 #
-# CONFIG_PACKAGE_kmod-dahdi is not set
 
 #
 # W1 support
@@ -4963,31 +4962,6 @@ CONFIG_PACKAGE_libopenssl-conf=y
 # Sound
 #
 # CONFIG_PACKAGE_liblo is not set
-
-#
-# Telephony
-#
-# CONFIG_PACKAGE_bcg729 is not set
-# CONFIG_PACKAGE_dahdi-tools-libtonezone is not set
-# CONFIG_PACKAGE_gsmlib is not set
-# CONFIG_PACKAGE_libctb is not set
-# CONFIG_PACKAGE_libfreetdm-stable is not set
-# CONFIG_PACKAGE_libiksemel is not set
-# CONFIG_PACKAGE_libosip2 is not set
-# CONFIG_PACKAGE_libpj is not set
-# CONFIG_PACKAGE_libpjlib-util is not set
-# CONFIG_PACKAGE_libpjmedia is not set
-# CONFIG_PACKAGE_libpjnath is not set
-# CONFIG_PACKAGE_libpjsip is not set
-# CONFIG_PACKAGE_libpjsip-simple is not set
-# CONFIG_PACKAGE_libpjsip-ua is not set
-# CONFIG_PACKAGE_libpjsua is not set
-# CONFIG_PACKAGE_libpjsua2 is not set
-# CONFIG_PACKAGE_libre is not set
-# CONFIG_PACKAGE_librem is not set
-# CONFIG_PACKAGE_libspandsp is not set
-# CONFIG_PACKAGE_libsrtp is not set
-# CONFIG_PACKAGE_libsrtp2 is not set
 # CONFIG_PACKAGE_alsa-lib is not set
 # CONFIG_PACKAGE_argp-standalone is not set
 # CONFIG_PACKAGE_avro-c is not set
@@ -5016,6 +4990,7 @@ CONFIG_PACKAGE_libopenssl-conf=y
 # CONFIG_PACKAGE_giflib is not set
 # CONFIG_PACKAGE_glib2 is not set
 # CONFIG_PACKAGE_glog is not set
+# CONFIG_PACKAGE_google-authenticator-libpam is not set
 # CONFIG_PACKAGE_hidapi is not set
 # CONFIG_PACKAGE_ibrcommon is not set
 # CONFIG_PACKAGE_ibrdtn is not set
@@ -5151,7 +5126,6 @@ CONFIG_PACKAGE_libexpat=y
 # CONFIG_PACKAGE_libgdbm is not set
 # CONFIG_PACKAGE_libgee is not set
 # CONFIG_PACKAGE_libglpk is not set
-# CONFIG_PACKAGE_google-authenticator-libpam is not set
 # CONFIG_PACKAGE_libgmp is not set
 # CONFIG_PACKAGE_libgnurl is not set
 # CONFIG_PACKAGE_libgpg-error is not set
@@ -5277,7 +5251,6 @@ CONFIG_PACKAGE_libpcre=y
 # CONFIG_PACKAGE_libplistcxx is not set
 # CONFIG_PACKAGE_libpng is not set
 # CONFIG_PACKAGE_libpopt is not set
-# CONFIG_PACKAGE_libpri is not set
 # CONFIG_PACKAGE_libprotobuf-c is not set
 # CONFIG_PACKAGE_libpsl is not set
 # CONFIG_PACKAGE_libqmi is not set
@@ -6344,25 +6317,6 @@ CONFIG_PACKAGE_ip-tiny=y
 # CONFIG_PACKAGE_tcprewrite is not set
 
 #
-# Telephony
-#
-# CONFIG_PACKAGE_asterisk16 is not set
-# CONFIG_PACKAGE_baresip is not set
-# CONFIG_PACKAGE_freeswitch-stable is not set
-# CONFIG_PACKAGE_kamailio5 is not set
-# CONFIG_PACKAGE_miax is not set
-# CONFIG_PACKAGE_pcapsipdump is not set
-# CONFIG_PACKAGE_restund is not set
-# CONFIG_PACKAGE_rtpproxy is not set
-# CONFIG_PACKAGE_sipp is not set
-# CONFIG_PACKAGE_siproxd is not set
-# CONFIG_PACKAGE_yate is not set
-
-#
-# Telephony Lantiq
-#
-
-#
 # Time Synchronization
 #
 # CONFIG_PACKAGE_chrony is not set
@@ -6966,15 +6920,6 @@ CONFIG_PACKAGE_bash=y
 # CONFIG_PACKAGE_mksh is not set
 # CONFIG_PACKAGE_tcsh is not set
 CONFIG_PACKAGE_zsh=y
-
-#
-# Telephony
-#
-# CONFIG_PACKAGE_dahdi-cfg is not set
-# CONFIG_PACKAGE_dahdi-monitor is not set
-# CONFIG_PACKAGE_gsm-utils is not set
-# CONFIG_PACKAGE_sipgrep is not set
-# CONFIG_PACKAGE_sngrep is not set
 
 #
 # Terminal
