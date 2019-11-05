@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "hostlist.h"
 #include "gzip.h"
-#include "params.h"
+
 
 static bool addpool(strpool **hostlist, char **s, char *end)
 {
@@ -93,7 +93,7 @@ bool LoadHostList(strpool **hostlist, char *filename)
 }
 
 
-bool SearchHostList(strpool *hostlist, const char *host)
+bool SearchHostList(strpool *hostlist, const char *host, bool debug)
 {
 	if (hostlist)
 	{
@@ -102,7 +102,7 @@ bool SearchHostList(strpool *hostlist, const char *host)
 		while (p)
 		{
 			bInHostList = StrPoolCheckStr(hostlist, p);
-			VPRINT("Hostlist check for %s : %s", p, bInHostList ? "positive" : "negative")
+			if (debug) printf("Hostlist check for %s : %s\n", p, bInHostList ? "positive" : "negative");
 			if (bInHostList) return true;
 			p = strchr(p, '.');
 			if (p) p++;
