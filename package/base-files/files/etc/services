@@ -1944,10 +1944,6 @@ hp-sci           1299/tcp
 hp-sci           1299/udp
 h323hostcallsc   1300/tcp
 h323hostcallsc   1300/udp
-ci3-software-1   1301/tcp
-ci3-software-1   1301/udp
-ci3-software-2   1302/tcp
-ci3-software-2   1302/udp
 sftsrv           1303/tcp
 sftsrv           1303/udp
 boomerang        1304/tcp
@@ -8684,7 +8680,7 @@ personal-agent   5555/udp
 freeciv          5556/tcp
 freeciv          5556/udp
 farenet          5557/tcp
-hpe-dp-bura      5565/tcp
+dp-bura          5565/tcp
 westec-connect   5566/tcp
 dof-dps-mc-sec   5567/tcp
 dof-dps-mc-sec   5567/udp
