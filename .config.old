@@ -4956,7 +4956,6 @@ CONFIG_OPENSSL_ENGINE=y
 CONFIG_PACKAGE_libopenssl-conf=y
 # CONFIG_PACKAGE_libopenssl-devcrypto is not set
 # CONFIG_PACKAGE_libopenssl-padlock is not set
-# CONFIG_PACKAGE_libwolfssl is not set
 
 #
 # Sound
@@ -6366,7 +6365,6 @@ CONFIG_PACKAGE_ip-tiny=y
 # Version Control Systems
 #
 CONFIG_PACKAGE_git=y
-# CONFIG_PACKAGE_git-gitweb is not set
 CONFIG_PACKAGE_git-http=y
 # CONFIG_PACKAGE_subversion-client is not set
 # CONFIG_PACKAGE_subversion-libs is not set
@@ -7246,4 +7244,4 @@ CONFIG_STRACE_NONE=y
 # Font-Utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng expat xz"
+CONFIG_OVERRIDE_PKGS="aircrack-ng bash boost bwm-ng coreutils expat file git grep htop i2pd lm-sensors nano nmap procps-ng redsocks tor xz zsh"
