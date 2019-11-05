@@ -10,17 +10,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.4.1.6
-PKG_RELEASE:=1
+PKG_VERSION:=13155e2
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org/ \
-	https://archive.torproject.org/tor-package-archive
-PKG_HASH:=
-PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
-		Peter Wagner <tripolar@gmx.at>
-PKG_LICENSE_FILES:=LICENSE
-PKG_CPE_ID:=cpe:/a:torproject:tor
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/torproject/tor.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
