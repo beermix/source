@@ -41,7 +41,7 @@ HOST_CONFIGURE_ARGS = \
 	--host=$(GNU_HOST_NAME) \
 	--target=$(REAL_GNU_TARGET_NAME) \
 	--with-sysroot=$(TOOLCHAIN_DIR) \
-	--enable-deterministic-archives \
+	--disable-deterministic-archives \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
@@ -73,17 +73,17 @@ define Host/Prepare
 endef
 
 define Host/Compile
-	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
+	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) MAKEINFO=true all
 endef
 
 define Host/Install
 	mkdir -p $(TOOLCHAIN_DIR)/initial
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR)/initial \
-		install
+		MAKEINFO=true install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR) \
-		install
+		MAKEINFO=true install
 	$(call FixupLibdir,$(TOOLCHAIN_DIR)/initial)
 	$(RM) $(TOOLCHAIN_DIR)/initial/lib/libiberty.a
 	$(CP) $(TOOLCHAIN_DIR)/bin/$(REAL_GNU_TARGET_NAME)-readelf $(HOST_BUILD_PREFIX)/bin/readelf
