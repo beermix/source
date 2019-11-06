@@ -105,9 +105,9 @@ $(eval $(call SetupHostCommand,cp,Please install GNU fileutils, \
 	gcp --help 2>&1 | grep 'Copy SOURCE', \
 	cp --help 2>&1 | grep 'Copy SOURCE'))
 
-$(eval $(call SetupHostCommand,seq,Please install seq, \
+$(eval $(call SetupHostCommand,seq,, \
 	gseq --version, \
-	seq --version 2>&1 | grep seq))
+	seq --version))
 
 $(eval $(call SetupHostCommand,awk,Please install GNU 'awk', \
 	gawk --version 2>&1 | grep GNU, \
@@ -140,8 +140,6 @@ $(eval $(call SetupHostCommand,wget,Please install GNU 'wget', \
 
 $(eval $(call SetupHostCommand,perl,Please install Perl 5.x, \
 	perl --version | grep "perl.*v5"))
-
-$(eval $(call CleanupPython2))
 
 $(eval $(call SetupHostCommand,python,Please install Python >= 3.5, \
 	python3.7 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?', \
