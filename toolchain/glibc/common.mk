@@ -16,9 +16,9 @@ PKG_VERSION:=2.30.9000
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=f2e30cc
-#PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
-PKG_SOURCE_URL:=https://github.com/bminor/glibc
+PKG_SOURCE_VERSION:=807edded258e888dbfa0d19ca967d6e42882d069
+PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
+#PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
