@@ -2364,13 +2364,13 @@ CONFIG_PACKAGE_libatomic=y
 CONFIG_PACKAGE_libc=y
 CONFIG_PACKAGE_libgcc=y
 # CONFIG_PACKAGE_libgomp is not set
-CONFIG_PACKAGE_liblsan=y
+# CONFIG_PACKAGE_liblsan is not set
 CONFIG_PACKAGE_libpthread=y
 CONFIG_PACKAGE_librt=y
 CONFIG_PACKAGE_libstdcpp=y
 # CONFIG_PACKAGE_libthread-db is not set
-CONFIG_PACKAGE_libtsan=y
-CONFIG_PACKAGE_libubsan=y
+# CONFIG_PACKAGE_libtsan is not set
+# CONFIG_PACKAGE_libubsan is not set
 CONFIG_PACKAGE_logd=y
 # CONFIG_PACKAGE_mtd is not set
 CONFIG_PACKAGE_netifd=y
