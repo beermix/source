@@ -73,7 +73,7 @@ define Host/Prepare
 endef
 
 define Host/Compile
-	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) MAKEINFO=true all
+	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
 endef
 
 define Host/Install
