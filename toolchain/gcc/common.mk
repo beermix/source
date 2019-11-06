@@ -52,7 +52,7 @@ endif
 
 ifeq ($(PKG_VERSION),9.2.0)
   PKG_HASH:=ea6ef08f121239da5695f76c9b33637a118dcf63e24164422231917fa61fb206
-  echo ${PKG_VERSION} > ${GCC_DIR}/gcc/BASE-VER
+  #echo ${PKG_VERSION} > ${GCC_DIR}/gcc/BASE-VER
 endif
 
 ifeq ($(PKG_VERSION),9.2.1)
