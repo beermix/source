@@ -17,9 +17,8 @@ PKG_VERSION:=2.30.9000
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=f2e30cc0f89f348a154c5c09d21a1de561c7b2f8
-PKG_MIRROR_HASH:=
 #PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
-KG_SOURCE_URL:=https://github.com/bminor/glibc.git
+PKG_SOURCE_URL:=https://github.com/bminor/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
@@ -51,7 +50,6 @@ endif
 # "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
-	unset LDFLAGS; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O2 -g -fno-stack-protector $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 -fstack-protector -znow -zrelro -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
