@@ -1,0 +1,1600 @@
+From 301dfc1f92ffea1c921bbe5ef348caf8beb0195a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Date: Tue, 19 Mar 2019 10:31:22 +0000
+Subject: [PATCH 01/13] tools/b43-tools/b43-fwsquash: convert to Python 3 with
+ 2-to-3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Let's convert the script to Python 3.
+
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+(cherry picked from commit 5989a75cc455e09b79fe6880ba6bae6f6332cd24)
+---
+ tools/b43-tools/files/b43-fwsquash.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/b43-tools/files/b43-fwsquash.py b/tools/b43-tools/files/b43-fwsquash.py
+index 2946d7c3c32..6b4952cbc1d 100755
+--- a/tools/b43-tools/files/b43-fwsquash.py
++++ b/tools/b43-tools/files/b43-fwsquash.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # b43 firmware file squasher
+ # Removes unnecessary firmware files
+@@ -37,7 +37,7 @@ def usage():
+ 
+ phytypes = phytypes.split(',')
+ try:
+-	corerevs = map(lambda r: int(r), corerevs.split(','))
++	corerevs = [int(r) for r in corerevs.split(',')]
+ except ValueError:
+ 	print("ERROR: \"%s\" is not a valid COREREVS string\n" % corerevs)
+ 	usage()
+@@ -45,7 +45,7 @@ def usage():
+ 
+ 
+ fwfiles = os.listdir(fwpath)
+-fwfiles = filter(lambda str: str.endswith(".fw"), fwfiles)
++fwfiles = [str for str in fwfiles if str.endswith(".fw")]
+ if not fwfiles:
+ 	print("ERROR: No firmware files found in %s" % fwpath)
+ 	sys.exit(1)
+
+From 6b1a2c56524e8a837c6f75c5db4ea9d954c45c00 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Date: Tue, 19 Mar 2019 10:29:40 +0000
+Subject: [PATCH 02/13] scripts/dl_github_archive.py: convert to Python 3 with
+ 2-to-3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Let's convert the script to Python 3.
+
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+(cherry picked from commit e785da815bcf5f83ae5337a396efeca2445eb8bd)
+---
+ scripts/dl_github_archive.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/dl_github_archive.py b/scripts/dl_github_archive.py
+index 1dc1c6ac9cd..90832701137 100755
+--- a/scripts/dl_github_archive.py
++++ b/scripts/dl_github_archive.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # Copyright (c) 2018 Yousong Zhou <yszhou4tech@gmail.com>
+ #
+@@ -20,7 +20,7 @@
+ import subprocess
+ import sys
+ import time
+-import urllib2
++import urllib.request
+ 
+ TMPDIR = os.environ.get('TMP_DIR') or '/tmp'
+ TMPDIR_DL = os.path.join(TMPDIR, 'dl')
+@@ -194,7 +194,7 @@ def _cache_init(self, fin):
+             self.cache[k] = (ts, updated)
+ 
+     def _cache_flush(self, fout):
+-        cache = sorted(self.cache.iteritems(), cmp=lambda a, b: b[1][1] - a[1][1])
++        cache = sorted(self.cache.items(), key=lambda a: a[1][1])
+         cache = cache[:self.__cachen]
+         self.cache = {}
+         os.ftruncate(fout.fileno(), 0)
+@@ -397,9 +397,9 @@ def _make_request(self, path):
+             'Accept': 'application/vnd.github.v3+json',
+             'User-Agent': 'OpenWrt',
+         }
+-        req = urllib2.Request(url, headers=headers)
++        req = urllib.request.Request(url, headers=headers)
+         sslcontext = ssl._create_unverified_context()
+-        fileobj = urllib2.urlopen(req, context=sslcontext)
++        fileobj = urllib.request.urlopen(req, context=sslcontext)
+         return fileobj
+ 
+     def _error(self, msg):
+
+From cab17087cf2a3d6571b80fc73647ea558801fefa Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Date: Tue, 19 Mar 2019 10:30:34 +0000
+Subject: [PATCH 03/13] scripts/jungo-image: convert to Python 3 with 2-to-3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Let's convert the script to Python 3.
+
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+(cherry picked from commit 57bb89b57fe6cc14f299dab8afcad33d9b948a3c)
+---
+ scripts/flashing/jungo-image.py | 52 ++++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/scripts/flashing/jungo-image.py b/scripts/flashing/jungo-image.py
+index 9947e7c7209..fdd4562374f 100755
+--- a/scripts/flashing/jungo-image.py
++++ b/scripts/flashing/jungo-image.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # Copyright 2008, 2009 (C) Jose Vasconcellos <jvasco@verizon.net>
+ #
+@@ -32,9 +32,9 @@
+ import string
+ import binascii
+ import socket
+-import thread
+-import SocketServer
+-import SimpleHTTPServer
++import _thread
++import socketserver
++import http.server
+ 
+ reboot = 0
+ HOST = "192.168.1.1"
+@@ -56,8 +56,8 @@
+ ####################
+ 
+ def start_server(server):
+-    httpd = SocketServer.TCPServer((server,PORT),SimpleHTTPServer.SimpleHTTPRequestHandler)
+-    thread.start_new_thread(httpd.serve_forever,())
++    httpd = socketserver.TCPServer((server,PORT),http.server.SimpleHTTPRequestHandler)
++    _thread.start_new_thread(httpd.serve_forever,())
+ 
+ ####################
+ 
+@@ -66,11 +66,11 @@ def get_flash_size():
+     tn.write("cat /proc/cpuinfo\n")
+     buf = tn.read_until("Returned 0", 3)
+     if not buf:
+-        print "Unable to obtain CPU information; make sure to not use A0 stepping!"
++        print("Unable to obtain CPU information; make sure to not use A0 stepping!")
+     elif buf.find('rev 0') > 0:
+-        print "Warning: IXP42x stepping A0 detected!"
++        print("Warning: IXP42x stepping A0 detected!")
+         if imagefile or url:
+-            print "Error: No linux support for A0 stepping!"
++            print("Error: No linux support for A0 stepping!")
+             sys.exit(2)
+ 
+     # now get flash size
+@@ -86,9 +86,9 @@ def get_flash_size():
+         i = buf.rfind('Range ')
+         if i > 0:
+             return int(buf[i+17:].split()[0],16)
+-        print "Can't determine flash size!"
++        print("Can't determine flash size!")
+     else:
+-        print "Unable to obtain flash size!"
++        print("Unable to obtain flash size!")
+     sys.exit(2)
+ 
+ def image_dump(tn, dumpfile):
+@@ -110,13 +110,13 @@ def image_dump(tn, dumpfile):
+ 	if i > 0:
+ 	    i += 4
+ 	else:
+-	    print "No MAC address found! (use -f option)"
++	    print("No MAC address found! (use -f option)")
+ 	    sys.exit(1)
+         dumpfile = "%s-%s.bin" % (platform, buf[i:i+17].replace(':',''))
+     else:
+         tn.write("\n")
+ 
+-    print "Dumping flash contents (%dMB) to %s" % (flashsize/1048576, dumpfile)
++    print("Dumping flash contents (%dMB) to %s" % (flashsize/1048576, dumpfile))
+     f = open(dumpfile, "wb")
+ 
+     t=flashsize/dumplen
+@@ -137,7 +137,7 @@ def image_dump(tn, dumpfile):
+             if s and s[0][-1] == ':':
+ 		a=int(s[0][:-1],16)
+ 		if a != count:
+-		    print "Format error: %x != %x"%(a,count)
++		    print("Format error: %x != %x"%(a,count))
+ 		    sys.exit(2)
+ 	    	count += 16
+ 		f.write(binascii.a2b_hex(string.join(s[1:],'')))
+@@ -145,7 +145,7 @@ def image_dump(tn, dumpfile):
+ 
+     f.close()
+     if verbose:
+-	print ""
++	print("")
+ 
+ def telnet_option(sock,cmd,option):
+     #print "Option: %d %d" % (ord(cmd), ord(option))
+@@ -156,11 +156,11 @@ def telnet_option(sock,cmd,option):
+     sock.sendall(telnetlib.IAC + c + option)
+ 
+ def telnet_timeout():
+-    print "Fatal error: telnet timeout!"
++    print("Fatal error: telnet timeout!")
+     sys.exit(1)
+ 
+ def usage():
+-    print __doc__ % os.path.basename(sys.argv[0])
++    print(__doc__ % os.path.basename(sys.argv[0]))
+ 
+ ####################
+ 
+@@ -178,7 +178,7 @@ def usage():
+ 	usage()
+ 	sys.exit(1)
+     elif o in ("-V", "--version"):
+-	print "%s: 0.11" % sys.argv[0]
++	print("%s: 0.11" % sys.argv[0])
+ 	sys.exit(1)
+     elif o in ("-d", "--no-dump"):
+ 	do_dump = 1
+@@ -213,8 +213,8 @@ def usage():
+ # create a telnet session to the router
+ try:
+     tn = telnetlib.Telnet(HOST)
+-except socket.error, msg:
+-    print "Unable to establish telnet session to %s: %s" % (HOST, msg)
++except socket.error as msg:
++    print("Unable to establish telnet session to %s: %s" % (HOST, msg))
+     sys.exit(1)
+ 
+ tn.set_option_negotiation_callback(telnet_option)
+@@ -250,7 +250,7 @@ def usage():
+         cmd = "load -u http://%s:%d/%s -r 0\n" % (server, PORT, splitpath[1])
+ 
+         if not os.access(imagefile, os.R_OK):
+-            print "File access error: %s" % (imagefile)
++            print("File access error: %s" % (imagefile))
+             sys.exit(3)
+ 
+         # make sure we're in the directory where the image is located
+@@ -260,23 +260,23 @@ def usage():
+         start_server(server)
+ 
+     if verbose:
+-	print "Unlocking flash..."
++	print("Unlocking flash...")
+     tn.write("unlock 0 0x%x\n" % flashsize)
+     buf = tn.read_until("Returned 0",5)
+ 
+     if verbose:
+-	print "Writing new image..."
+-    print cmd,
++	print("Writing new image...")
++    print(cmd, end=' ')
+     tn.write(cmd)
+     buf = tn.read_until("Returned 0",10)
+ 
+     # wait till the transfer completed
+     buf = tn.read_until("Download completed successfully",20)
+     if buf:
+-	print "Flash update complete!"
++	print("Flash update complete!")
+         if reboot:
+             tn.write("reboot\n")
+-            print "Rebooting..."
++            print("Rebooting...")
+ 
+ tn.write("exit\n")
+ tn.close()
+
+From 38b14d85fdcb8ff1658d548d6f43113fda4bd799 Mon Sep 17 00:00:00 2001
+From: Yangbo Lu <yangbo.lu@nxp.com>
+Date: Wed, 19 Jun 2019 11:12:19 +0800
+Subject: [PATCH 04/13] layerscape: convert to python3 for rcw
+
+Python 2.7 will not be maintained past 2020. Let's convert
+to python3 for rcw. Also drop byte swapping since TF-A had
+been already used which handled byte swapping instead.
+
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+(cherry picked from commit df0d555ea5a984ccfc2a493b63267a6e24d87c5b)
+---
+ .../patches/0001-Disable-byte-swapping.patch  |  44 ++
+ ...ort-byte-swapping-without-tclsh-tool.patch |  82 ---
+ .../patches/0002-Convert-to-python3.patch     | 504 ++++++++++++++++++
+ 3 files changed, 548 insertions(+), 82 deletions(-)
+ create mode 100644 package/firmware/layerscape/ls-rcw/patches/0001-Disable-byte-swapping.patch
+ delete mode 100644 package/firmware/layerscape/ls-rcw/patches/0001-rcw-support-byte-swapping-without-tclsh-tool.patch
+ create mode 100644 package/firmware/layerscape/ls-rcw/patches/0002-Convert-to-python3.patch
+
+diff --git a/package/firmware/layerscape/ls-rcw/patches/0001-Disable-byte-swapping.patch b/package/firmware/layerscape/ls-rcw/patches/0001-Disable-byte-swapping.patch
+new file mode 100644
+index 00000000000..2ea260bfd4e
+--- /dev/null
++++ b/package/firmware/layerscape/ls-rcw/patches/0001-Disable-byte-swapping.patch
+@@ -0,0 +1,44 @@
++From ef78dc0683a7f5ae80b27878a8a2f91d504e3290 Mon Sep 17 00:00:00 2001
++From: Yangbo Lu <yangbo.lu@nxp.com>
++Date: Wed, 19 Jun 2019 10:50:29 +0800
++Subject: [PATCH 1/2] Disable byte swapping
++
++Because TF-A had already handled rcw byte swapping, the
++byte swapping in rcw could be dropped.
++
++Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
++---
++ Makefile     | 4 ----
++ Makefile.inc | 1 -
++ 2 files changed, 5 deletions(-)
++
++diff --git a/Makefile b/Makefile
++index f697241..837b69e 100644
++--- a/Makefile
+++++ b/Makefile
++@@ -14,10 +14,6 @@ TCLSH := $(shell command -v tclsh 2> /dev/null)
++ VER = $(shell git describe --tags)
++ 
++ all install clean:
++-ifndef TCLSH
++-	$(error "tclsh is not available. please  install it.")
++-	exit 1
++-endif
++ 	@for board in $(BOARDS); do \
++ 		$(MAKE) -C $$board $@ DESTDIR=$(DESTDIR)/$$board; \
++ 	done
++diff --git a/Makefile.inc b/Makefile.inc
++index 87639bc..7d9a3d3 100644
++--- a/Makefile.inc
+++++ b/Makefile.inc
++@@ -17,7 +17,6 @@ targets = $(txt_sources:.txt=.bin) $(rcw_sources:.rcw=.bin) $(swap_sources)
++ 	$(RCW) -i $< -o $@
++ 
++ all: $(targets)
++-	$(QSPI_SWAP_SCRIPT) $(QSPI_SWAP_LIST)
++ 
++ install: $(targets)
++ 	$(INSTALL) -d $(DESTDIR)
++-- 
++2.7.4
++
+diff --git a/package/firmware/layerscape/ls-rcw/patches/0001-rcw-support-byte-swapping-without-tclsh-tool.patch b/package/firmware/layerscape/ls-rcw/patches/0001-rcw-support-byte-swapping-without-tclsh-tool.patch
+deleted file mode 100644
+index 08492dd479a..00000000000
+--- a/package/firmware/layerscape/ls-rcw/patches/0001-rcw-support-byte-swapping-without-tclsh-tool.patch
++++ /dev/null
+@@ -1,82 +0,0 @@
+-From c87a500c45f36ad248b1298d63e590d1d7e74f12 Mon Sep 17 00:00:00 2001
+-From: Yangbo Lu <yangbo.lu@nxp.com>
+-Date: Tue, 3 Jul 2018 11:06:47 +0800
+-Subject: [PATCH] rcw: support byte swapping without tclsh tool
+-
+-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+----
+- Makefile     |    4 ----
+- byte_swap.py |   32 ++++++++++++++++++++++++++++++++
+- qspi_swap.sh |    2 +-
+- 3 files changed, 33 insertions(+), 5 deletions(-)
+- create mode 100755 byte_swap.py
+-
+-diff --git a/Makefile b/Makefile
+-index 9f0587e..393bb2c 100644
+---- a/Makefile
+-+++ b/Makefile
+-@@ -13,10 +13,6 @@ TCLSH := $(shell command -v tclsh 2> /dev/null)
+- VER = $(shell git describe --tags)
+- 
+- all install clean:
+--ifndef TCLSH
+--	$(error "tclsh is not available. please  install it.")
+--	exit 1
+--endif
+- 	@for board in $(BOARDS); do \
+- 		$(MAKE) -C $$board $@ DESTDIR=$(DESTDIR)/$$board; \
+- 	done
+-diff --git a/byte_swap.py b/byte_swap.py
+-new file mode 100755
+-index 0000000..386310e
+---- /dev/null
+-+++ b/byte_swap.py
+-@@ -0,0 +1,32 @@
+-+#!/usr/bin/env python
+-+"""
+-+Swap the 4/8 bytes endian except for PBI CRC
+-+2016-10-9: Initial version
+-+
+-+Usage:
+-+	./byte_swap.py <file_name> <byte>
+-+"""
+-+import sys
+-+
+-+try:
+-+    file_name = sys.argv[1]
+-+    byte = int(sys.argv[2])
+-+except:
+-+    print("Usage: ./byte_swap.py <file_name> <byte>")
+-+    print("E.g.: ./byte_swap.py rcw_1600.bin 8\n")
+-+    exit
+-+
+-+with open(file_name,'rb') as file:
+-+    tmp = file.read()
+-+file.close()
+-+
+-+with open(file_name + '.swapped','wb') as file:
+-+    for i in range(0, len(tmp) - 1, byte):
+-+	if(tmp[i:i+4].encode('hex')) == "08610040":
+-+	    #print("PBI CRC command")
+-+	    file.write(tmp[i:i+8])
+-+	    break
+-+	file.write(tmp[i:i+byte][::-1])
+-+file.close()
+-+
+-+print("Swapped file: " + file_name + '.swapped')
+-diff --git a/qspi_swap.sh b/qspi_swap.sh
+-index 0b58e44..d23fd8b 100755
+---- a/qspi_swap.sh
+-+++ b/qspi_swap.sh
+-@@ -9,7 +9,7 @@ do
+- 	if [ "$board_name" = "$current_dir" ]; then
+- 		if [ -e $filename ]; then
+- 			swapped_file="$filename.swapped"
+--			tclsh ../tools/byte_swap.tcl $filename $swapped_file 8
+-+			../byte_swap.py $filename 8
+- 		fi
+- 	fi
+- done < $1
+--- 
+-1.7.1
+-
+diff --git a/package/firmware/layerscape/ls-rcw/patches/0002-Convert-to-python3.patch b/package/firmware/layerscape/ls-rcw/patches/0002-Convert-to-python3.patch
+new file mode 100644
+index 00000000000..8aa629dd85a
+--- /dev/null
++++ b/package/firmware/layerscape/ls-rcw/patches/0002-Convert-to-python3.patch
+@@ -0,0 +1,504 @@
++From 7bd43eb9e5cdf2035793d50a31bf13052eb9812a Mon Sep 17 00:00:00 2001
++From: Yangbo Lu <yangbo.lu@nxp.com>
++Date: Wed, 19 Jun 2019 10:25:41 +0800
++Subject: [PATCH 2/2] Convert to python3
++
++Python 2.7 will not be maintained past 2020. Let's convert
++to python3 for rcw. Below were the changes of this patch.
++- Adapted print usage
++- Didn't use tab anymore
++- Handled str and bytes type separately
++- Other minor changes
++
++Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
++---
++ Makefile.inc |   2 +-
++ rcw.py       | 144 +++++++++++++++++++++++++++++------------------------------
++ 2 files changed, 73 insertions(+), 73 deletions(-)
++
++diff --git a/Makefile.inc b/Makefile.inc
++index 7d9a3d3..8bee2be 100644
++--- a/Makefile.inc
+++++ b/Makefile.inc
++@@ -1,6 +1,6 @@
++ DESTDIR = $(shell basename $(CURDIR))
++ INSTALL = install
++-PYTHON ?= python2
+++PYTHON ?= python3
++ RCW = $(PYTHON) ../rcw.py
++ QSPI_SWAP_LIST = $(shell pwd)/../qspi_swap_list.txt
++ QSPI_SWAP_SCRIPT=$(shell pwd)/../qspi_swap.sh
++diff --git a/rcw.py b/rcw.py
++index e5cd28b..619770a 100755
++--- a/rcw.py
+++++ b/rcw.py
++@@ -1,4 +1,4 @@
++-#!/usr/bin/env python2
+++#!/usr/bin/env python3
++ 
++ # rcw.py -- compiles an RCW source file into an PBL/RCW binary
++ 
++@@ -95,7 +95,7 @@ from optparse import OptionParser, OptionGroup
++ class ordered_dict(dict):
++     def __init__(self, *args, **kwargs):
++         dict.__init__(self, *args, **kwargs)
++-        self._order = self.keys()
+++        self._order = list(self.keys())
++ 
++     def __setitem__(self, key, value):
++         dict.__setitem__(self, key, value)
++@@ -132,7 +132,7 @@ def crc32(data):
++ 
++     crc = 0xffffffff
++     for i in data:
++-        crc = (crc << 8) ^ table[(crc >> 24) ^ ord(i)]
+++        crc = (crc << 8) ^ table[(crc >> 24) ^ int(i)]
++         crc = crc & 0xffffffff
++ 
++     return crc
++@@ -187,7 +187,7 @@ def command_line():
++         options.output = '/dev/stdout'
++ 
++     if options.reverse and not options.rcwi:
++-        print "Error: -r option requires --rcw"
+++        print("Error: -r option requires --rcw")
++         sys.exit(1)
++ 
++ # Checks if the bits for the given field overlap those of another field that
++@@ -196,27 +196,27 @@ def check_for_overlap(name, begin, end):
++     global symbols
++ 
++     if name in symbols:
++-        print 'Error: Duplicate bitfield definition for', name
+++        print('Error: Duplicate bitfield definition for', name)
++         return
++ 
++     # Iterate over the list of symbols that have already been defined
++-    for n, [b, e] in symbols.iteritems():
+++    for n, [b, e] in symbols.items():
++         # check if either 'begin' or 'end' is inside an bitfield range
++         if (b <= begin <= e) or (b <= end <= e):
++-            print 'Error: Bitfield', name, 'overlaps with', n
+++            print('Error: Bitfield', name, 'overlaps with', n)
++ 
++ #
++ # Build a u-boot PBI section for SPI/SD/NAND boot
++-# 	refer: Chapter 10, u-boot of QorIQ_SDK_Infocenter.pdf
+++#         refer: Chapter 10, u-boot of QorIQ_SDK_Infocenter.pdf
++ #
++ # pre-cond 1: u-boot.xxd should be created
++ # how to create u-boot.xxd
++-# 	xxd u-boot.bin > u-boot.xxd1 && cut -d " " -f1-10 u-boot.xxd1 > u-boot.xxd && rm -f u-boot.xxd1
+++#         xxd u-boot.bin > u-boot.xxd1 && cut -d " " -f1-10 u-boot.xxd1 > u-boot.xxd && rm -f u-boot.xxd1
++ #
++ # rcw file should include spi_boot.rcw as well
++ #
++ def build_pbi_uboot(lines):
++-    subsection = ''
+++    subsection = b''
++     cnt = 1
++     l_tmp = []
++ 
++@@ -224,55 +224,55 @@ def build_pbi_uboot(lines):
++     for l in lines:
++         # prepare 0x40 per lines except the last one
++         # add flush at the end 
++-	lstr = l.split()
++-	addr = int(lstr[0][:-1], 16)
+++        lstr = l.split()
+++        addr = int(lstr[0][:-1], 16)
++         
++         # print l
++         #
++         # last two lines take  0x20 numbers
++         #
++-	if ((cnt % 2 == 0) and (cnt > len(lines) -4)):
+++        if ((cnt % 2 == 0) and (cnt > len(lines) -4)):
++             l_tmp.append(l)
++             b = []
++ 
++-	    for t in l_tmp:
+++            for t in l_tmp:
++                 lstr = t.split()
++ 
++-	        for i in range(1, len(lstr)):
+++                for i in range(1, len(lstr)):
++                     b.append(int(lstr[i], 16))
++ 
++             subsection += struct.pack('>LHHHHHHHHHHHHHHHH',\
++-		0x0C1F80000 + (addr - 0x10),\
++-		b[0],  b[1],  b[2],  b[3],  b[4],  b[5],  b[6],  b[7],\
++-		b[8],  b[9],  b[10], b[11], b[12], b[13], b[14], b[15])
+++                0x0C1F80000 + (addr - 0x10),\
+++                b[0],  b[1],  b[2],  b[3],  b[4],  b[5],  b[6],  b[7],\
+++                b[8],  b[9],  b[10], b[11], b[12], b[13], b[14], b[15])
++             l_tmp = []
++         #
++         # the rest of lines take 0x40 numbers
++         elif (cnt % 4 == 0):
++             l_tmp.append(l)
++-	    b = []
++-	    for t in l_tmp:
+++            b = []
+++            for t in l_tmp:
++                 lstr = t.split()
++-	        for i in range(1, len(lstr)):
+++                for i in range(1, len(lstr)):
++                     b.append(int(lstr[i], 16))
++ 
++             subsection += struct.pack('>LHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH',\
++-		0x081F80000 + (addr - 0x30),\
++-		b[0],  b[1],  b[2],  b[3],  b[4],  b[5],  b[6],  b[7],\
++-		b[8],  b[9],  b[10], b[11], b[12], b[13], b[14], b[15],\
++-		b[16], b[17], b[18], b[19], b[20], b[21], b[22], b[23], \
++-		b[24], b[25], b[26], b[27], b[28], b[29], b[30], b[31])
+++                0x081F80000 + (addr - 0x30),\
+++                b[0],  b[1],  b[2],  b[3],  b[4],  b[5],  b[6],  b[7],\
+++                b[8],  b[9],  b[10], b[11], b[12], b[13], b[14], b[15],\
+++                b[16], b[17], b[18], b[19], b[20], b[21], b[22], b[23], \
+++                b[24], b[25], b[26], b[27], b[28], b[29], b[30], b[31])
++             l_tmp = []
++         else:
++             l_tmp.append(l)
++ 
++-	cnt = cnt + 1
+++        cnt = cnt + 1
++ 
++     return subsection
++ 
++ # Build a PBI section
++ def build_pbi(lines):
++-    subsection = ''
+++    subsection = b''
++     global vars
++ 
++     if 'pbiformat' in vars:
++@@ -286,9 +286,9 @@ def build_pbi(lines):
++     for l in lines:
++         # Check for an instruction without 0-2 parameters
++         # The + ' ' is a hack to make the regex work for just 'flush'
++-        m = re.match(r'\s*([a-z]+)(|\.b1|\.b2|\.b4|\.short|\.long)\s*(?<=\s)([^,]*),?([^,]*),?([^,]*),?([^,]*)', l + ' ')
+++        m = re.match(r'\s*([a-z]+)(|\.b1|\.b2|\.b4|\.short|\.long)\s*(?<=\s)([^,]*),?([^,]*),?([^,]*),?([^,]*)', l.decode("ascii") + ' ')
++         if not m:
++-            print 'Unknown PBI subsection command "%s"' % l
+++            print('Unknown PBI subsection command "%s"' % l)
++             return ''
++         op = m.group(1)
++         opsize = m.group(2)
++@@ -306,7 +306,7 @@ def build_pbi(lines):
++         p4 = eval(p4, {"__builtins__":None}, {}) if len(p4) else None
++         if op == 'wait':
++             if p1 == None:
++-                print 'Error: "wait" instruction requires one parameter'
+++                print('Error: "wait" instruction requires one parameter')
++                 return ''
++             if pbiformat == 2:
++                 v1 = struct.pack(endianess + 'L', 0x80820000 | p1)
++@@ -318,7 +318,7 @@ def build_pbi(lines):
++                 subsection += v2
++         elif op == 'write':
++             if p1 == None or p2 == None:
++-                print 'Error: "write" instruction requires two parameters'
+++                print('Error: "write" instruction requires two parameters')
++                 return ''
++             if pbiformat == 2:
++                 v1 = struct.pack(endianess + 'L', (opsizebytes << 28) | p1)
++@@ -329,7 +329,7 @@ def build_pbi(lines):
++             subsection += v2
++         elif op == 'awrite':
++             if p1 == None or p2 == None:
++-                print 'Error: "awrite" instruction requires two parameters'
+++                print('Error: "awrite" instruction requires two parameters')
++                 return ''
++             if pbiformat == 2:
++                 v1 = struct.pack(endianess + 'L', 0x80000000 + (opsizebytes << 26) + p1)
++@@ -340,10 +340,10 @@ def build_pbi(lines):
++             subsection += v2
++         elif op == 'poll':
++             if pbiformat != 2:
++-                print 'Error: "poll" not support for old PBI format'
+++                print('Error: "poll" not support for old PBI format')
++                 return ''
++             if p1 == None or p2 == None or p3 == None:
++-                print 'Error: "poll" instruction requires three parameters'
+++                print('Error: "poll" instruction requires three parameters')
++                 return ''
++             if opsize == '.long':
++                 cmd = 0x81
++@@ -357,19 +357,19 @@ def build_pbi(lines):
++             subsection += v3
++         elif op == 'loadacwindow':
++             if pbiformat != 2:
++-                print 'Error: "loadacwindow" not supported for old PBI format'
+++                print('Error: "loadacwindow" not supported for old PBI format')
++                 return ''
++             if p1 == None:
++-                print 'Error: "loadacwindow" instruction requires one parameter'
+++                print('Error: "loadacwindow" instruction requires one parameter')
++                 return ''
++             v1 = struct.pack(endianess + 'L', 0x80120000 + p1)
++             subsection += v1
++         elif op == 'blockcopy':
++             if pbiformat != 2:
++-                print 'Error: "blockcopy" not supported for old PBI format'
+++                print('Error: "blockcopy" not supported for old PBI format')
++                 return ''
++             if p1 == None or p2 == None or p3 == None or p4 == None:
++-                print 'Error: "blockcopy" instruction requires four parameters'
+++                print('Error: "blockcopy" instruction requires four parameters')
++                 return ''
++             v1 = struct.pack(endianess + 'L', 0x80000000 + (p1 & 0xff))
++             v2 = struct.pack(endianess + 'L', p2)
++@@ -382,7 +382,7 @@ def build_pbi(lines):
++         elif op == 'flush':
++             subsection += struct.pack('>LL', 0x09000000 | (int(vars['pbladdr'], 16) & 0x00ffff00), 0)
++         else:
++-            print 'Unknown PBI subsection command "%s"' % l
+++            print('Unknown PBI subsection command "%s"' % l)
++             return ''
++ 
++     return subsection
++@@ -394,7 +394,7 @@ def parse_subsection(header, lines):
++     elif header == "uboot":
++         return build_pbi_uboot(lines)
++ 
++-    print 'Error: unknown subsection "%s"' % header
+++    print('Error: unknown subsection "%s"' % header)
++     return ''
++ 
++ # Parse the .rcw file, one line at a time
++@@ -408,10 +408,10 @@ def parse_source_file(source):
++     symbols = ordered_dict()
++ 
++     in_subsection = False   # True == we're in a subsection
++-    pbi = ''
+++    pbi = b''
++ 
++     for l2 in source:
++-        l = re.sub(r'\s+', '', l2) # Remove all whitespace
+++        l = re.sub(r'\s+', '', l2.decode("ascii")) # Remove all whitespace
++ 
++         if not len(l):  # Skip blank or comment-only lines
++             continue
++@@ -466,14 +466,14 @@ def parse_source_file(source):
++             (name, value) = m.groups()
++             value = int(value, 0)
++             if not name in symbols:
++-                print 'Error: Unknown bitfield', name
+++                print('Error: Unknown bitfield', name)
++             else:
++                 if options.warnings and (name in assignments):
++-                    print 'Warning: Duplicate assignment for bitfield', name
+++                    print('Warning: Duplicate assignment for bitfield', name)
++                 assignments[name] = value
++             continue
++ 
++-        print 'Error: unknown command', ' '.join(l2)
+++        print('Error: unknown command', ' '.join(l2))
++ 
++ # Parse the -D command line parameter for additional bitfield assignments
++ def parse_cmdline_bitfields():
++@@ -484,12 +484,12 @@ def parse_cmdline_bitfields():
++         # This is the same regex as used in parse_source_file()
++         m = re.search(r'([A-Z0-9_]+)=([0-9a-zA-Z]+)', l)
++         if not m:
++-            print 'Unrecognized command-line bitfield:', l
+++            print('Unrecognized command-line bitfield:', l)
++         else:
++             (name, value) = m.groups()
++             value = int(value, 0)
++             if not name in symbols:
++-                print 'Error: Unknown bitfield', name
+++                print('Error: Unknown bitfield', name)
++             else:
++                 # Don't bother printing a warning, since the command-line will
++                 # normally be used to overwrite values in the .rcw file
++@@ -510,7 +510,7 @@ def read_source_file(filename):
++     global options
++ 
++     if not find_program('gcc'):
++-        print 'Could not find gcc in PATH'
+++        print('Could not find gcc in PATH')
++         return None
++ 
++     i = ['-I', '.']     # Always look in the current directory
++@@ -521,7 +521,7 @@ def read_source_file(filename):
++         shell=False, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
++     ret = p.communicate()
++     if p.returncode != 0:
++-        print ret[1],
+++        print(ret[1],)
++         return None
++ 
++     return ret[0].splitlines()
++@@ -532,13 +532,13 @@ def check_vars():
++     global options
++ 
++     if not 'size' in vars:
++-        print 'Error: "%size" variable must be specified'
+++        print('Error: "%size" variable must be specified')
++         sys.exit(1)
++ 
++     if options.pbl:
++         if 'pbiformat' in vars and int(vars['pbiformat'], 0) == 2:
++             if 'sysaddr' in vars:
++-                print 'Error: PBL format does not use %sysaddr'
+++                print('Error: PBL format does not use %sysaddr')
++                 sys.exit(1)
++             #if 'pbladdr' in vars:
++             #    print 'Error: PBL format does not use %pbladdr'
++@@ -546,7 +546,7 @@ def check_vars():
++         else:
++             # If we want the PBL header/footer, the vars for those must be defined
++             if not 'sysaddr' in vars:
++-                print 'Error: PBL format requires %sysaddr to be defined'
+++                print('Error: PBL format requires %sysaddr to be defined')
++                 sys.exit(1)
++ 
++ # Create a .bin file
++@@ -581,7 +581,7 @@ def create_binary():
++     dont64bswapcrc = 0
++     if 'dont64bswapcrc' in vars and int(vars['dont64bswapcrc'], 0):
++         dont64bswapcrc = 1
++-    bits = 0L
+++    bits = 0
++ 
++     # Magic hack. If a pbi is specified and we didn't set the size,
++     # set it for the new format!
++@@ -593,7 +593,7 @@ def create_binary():
++                 pbilen += 2
++             assignments['PBI_LENGTH'] = pbilen
++             
++-    for n, v in assignments.iteritems():
+++    for n, v in assignments.items():
++         # n = name of symbol
++         # v = value to assign
++         bb, ee = symbols[n]   # First bit and last bit
++@@ -603,13 +603,13 @@ def create_binary():
++ 
++         # Make sure it's not too large
++         if v >= (1 << s):
++-            print 'Error: Value', v, 'is too large for field', n
+++            print('Error: Value', v, 'is too large for field', n)
++             continue
++ 
++         # If we treat the bitfield as "classic" numbered, reverse
++         # the value before adding it!
++         if b != bb:
++-            v = int(bin(v)[2:].zfill(s)[::-1], 2)
+++            v = int(bin(int(v))[2:].zfill(s)[::-1], 2)
++                 
++         # Set the bits.  We assume that bits [b:e] are already zero.  They can be
++         # non-zero only if we have overlapping bitfield definitions, which we
++@@ -617,7 +617,7 @@ def create_binary():
++         bits += v << ((size - 1) - e)
++ 
++     # Generate the binary.  First, apply the preamble, if requested
++-    binary = ''
+++    binary = b''
++     if options.pbl:
++         # Starting with LS2, we have a larger field and a different
++         # format.
++@@ -626,7 +626,7 @@ def create_binary():
++             # Load RCW command
++             binary += struct.pack(endianess + 'L', 0x80100000)
++         else:
++-            length_byte = (((size / 8) & 63) << 1) | 1
+++            length_byte = (((size // 8) & 63) << 1) | 1
++             binary += struct.pack(endianess + 'L', (length_byte << 24) | (int(vars['sysaddr'], 16) & 0x00ffffff))
++ 
++     # Then convert 'bits' into an array of bytes
++@@ -634,7 +634,7 @@ def create_binary():
++         byte = bits >> i & 0xff
++         if classicbitnumbers:
++             byte = int(bin(byte)[2:].zfill(8)[::-1], 2)
++-        binary += chr(byte)
+++        binary += bytes([byte])
++ 
++     if options.pbl:
++         if pbiformat == 2:
++@@ -672,11 +672,11 @@ def create_binary():
++             # Precise bit any byte ordering of the CRC calculation is
++             # not clearly specified. This is empirical.
++             if classicbitnumbers:
++-                    newcrcbinary = ''
+++                    newcrcbinary = b''
++                     for c in crcbinary:
++-                        byte = ord(c)
+++                        byte = int(c)
++                         byte = int(bin(byte)[2:].zfill(8)[::-1], 2)
++-                        newcrcbinary += chr(byte)
+++                        newcrcbinary += bytes([byte])
++                     crcbinary = newcrcbinary
++ 
++             # Calculate and add the CRC
++@@ -693,7 +693,7 @@ def create_binary():
++         l = len(binary)
++         if dont64bswapcrc and options.pbl:
++             l -= 8
++-        newbinary = ''
+++        newbinary = b''
++         for i in range(0, l, 8):
++                 x64 = struct.unpack('>Q', binary[i:i + 8])[0]
++                 newbinary += struct.pack('<Q', x64)
++@@ -771,7 +771,7 @@ def create_source():
++                 # We skip the checksum field
++                 pbi = binary[8 + (size / 8) + 4:]
++             else:
++-                print 'Weird binary RCW format!'
+++                print('Weird binary RCW format!')
++                 bitbytes = ''
++         else:
++             if binary[0:4] == preambletst:
++@@ -780,7 +780,7 @@ def create_source():
++                 bitbytes = rcw
++                 pbi = binary[8 + (size / 8):]
++             else:
++-                print 'Weird binary RCW format!'
+++                print('Weird binary RCW format!')
++                 bitbytes = ''
++     else:
++         bitbytes = binary
++@@ -827,16 +827,16 @@ def create_source():
++             bits &= ~(mask << shift)
++ 
++     if bits:
++-        print 'Unknown bits in positions:',
+++        print('Unknown bits in positions:',)
++         mask = 1
++         n = 0
++         while bits:
++             if (bits & mask):
++-                print n,
+++                print(n,)
++             n += 1
++             bits &= ~mask
++             mask <<= 1
++-        print
+++        print()
++ 
++     if len(pbi) > 0:
++         l = len(pbi)
++@@ -953,7 +953,7 @@ def create_source():
++                     if cnt == 0:
++                         cnt = 64
++                     if i + cnt >= l:
++-                        print 'Error in write 0x%08x at offset %d within PBI\n' % (word, i)
+++                        print('Error in write 0x%08x at offset %d within PBI\n' % (word, i))
++                     if (addr & 0x00ffff00 == pbladdr):
++                         arg1 = struct.unpack(endianess + 'L', pbi[i:i+4])[0]
++                         i += 4
++@@ -986,8 +986,8 @@ def create_source():
++ 
++     return source
++ 
++-if (sys.version_info < (2,6)) or (sys.version_info >= (3,0)):
++-    print 'Only Python versions 2.6 or 2.7 are supported.'
+++if (sys.version_info < (3,0)):
+++    print('Only Python versions 3.0+ are supported.')
++     sys.exit(1)
++ 
++ # Make all 'print' statements output to stderr instead of stdout
++-- 
++2.7.4
++
+
+From b1636b2355988b91453c9ca110860956827152bf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Date: Tue, 19 Mar 2019 13:02:07 +0100
+Subject: [PATCH 05/13] build: switch to Python 3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This patch switches Python used in buildroot to Python 3 as Python 2.x
+series is going to be EOL relatively soon[1].
+
+ "Being the last of the Python 2.x series, 2.7 will have an extended
+  period of maintenance. Specifically, 2.7 will receive bugfix support
+  until January 1, 2020. After the last release, 2.7 will receive no
+  support."
+
+It seems like Python 3 is going to be needed in order to support Meson
+build system which has gained some traction recently.
+
+Build tested on following targets:
+
+ ath79/generic
+ imx6/generic
+ ipq40xx/generic
+ lantiq/xway
+ layerscape/armv7 (broken)
+ layerscape/armv8_32b (broken)
+ layerscape/armv8_64b (broken)
+ mvebu/cortexa72
+ ramips/mt7621
+ ramips/mt7620
+ sunxi/cortexa7
+ x86/64
+
+Layerscape targets are unfortunately left broken as their ls-rcw
+firmware package uses Python 2 and converting it to Python 3 would take
+more then reasoanble amount of time (I've tried to fix it already) and
+would be better fixed by someone who can even run test it.
+
+Run tested on ath79 (Archer C7 v5), ipq40xx (nbg6617) and x86_64 (QEMU
+and apu2).
+
+1. https://www.python.org/dev/peps/pep-0373/
+
+Ref: PR#1937
+Cc: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: Mathew McBride <matt@traverse.com.au>
+Acked-by: Yousong Zhou <yszhou4tech@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+(cherry picked from commit 19938c8de7a062626796f53a2805608c0dd4edbd)
+---
+ README                  |  2 +-
+ include/prereq-build.mk | 15 +++++++++++----
+ 2 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/README b/README
+index 55ca92af65f..c867c1fa4da 100644
+--- a/README
++++ b/README
+@@ -11,7 +11,7 @@ To build your own firmware you need a Linux, BSD or MacOSX system (case
+ sensitive filesystem required). Cygwin is unsupported because of the lack
+ of a case sensitive file system.
+ 
+-You need gcc, binutils, bzip2, flex, python, perl, make, find, grep, diff,
++You need gcc, binutils, bzip2, flex, python3.5+, perl, make, find, grep, diff,
+ unzip, gawk, getopt, subversion, libz-dev and libc headers installed.
+ 
+ 1. Run "./scripts/feeds update -a" to obtain all the latest package definitions
+diff --git a/include/prereq-build.mk b/include/prereq-build.mk
+index cbfc62397e8..965b178569e 100644
+--- a/include/prereq-build.mk
++++ b/include/prereq-build.mk
+@@ -141,10 +141,17 @@ $(eval $(call SetupHostCommand,wget,Please install GNU 'wget', \
+ $(eval $(call SetupHostCommand,perl,Please install Perl 5.x, \
+ 	perl --version | grep "perl.*v5"))
+ 
+-$(eval $(call SetupHostCommand,python,Please install Python 2.x, \
+-	python2.7 -V 2>&1 | grep Python, \
+-	python2 -V 2>&1 | grep Python, \
+-	python -V 2>&1 | grep Python))
++$(eval $(call SetupHostCommand,python,Please install Python >= 3.5, \
++	python3.7 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?', \
++	python3.6 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?', \
++	python3.5 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?', \
++	python3 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?'))
++
++$(eval $(call SetupHostCommand,python3,Please install Python >= 3.5, \
++	python3.7 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?', \
++	python3.6 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?', \
++	python3.5 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?', \
++	python3 -V 2>&1 | grep -E 'Python 3\.[5-9]\.?'))
+ 
+ $(eval $(call SetupHostCommand,git,Please install Git (git-core) >= 1.7.12.2, \
+ 	git --exec-path | xargs -I % -- grep -q -- --recursive %/git-submodule))
+
+From 7937e2fc2f1cea07074be95a14d26a3f7befeebd Mon Sep 17 00:00:00 2001
+From: Zachary Riedlshah <git@zacharyrs.me>
+Date: Wed, 5 Jun 2019 22:58:19 +1200
+Subject: [PATCH 06/13] wireless-regdb: update to 2019.06.03
+
+Fixes build issues on a python3 host (issues with the print statement
+formatting in the current build).
+
+Includes 100-regdb-write-firmware-file-format-version-code-20.patch and
+other fixes.
+
+Closes bugs.openwrt.org/index.php?do=details&task_id=1605.
+
+Uses the tarball as requested.
+
+Signed-off-by: Zachary Riedlshah <git@zacharyrs.me>
+(cherry picked from commit ef3f868da0d78adf2490a762ff567cf5b636c213)
+---
+ package/firmware/wireless-regdb/Makefile      |  17 +-
+ ...firmware-file-format-version-code-20.patch | 251 ------------------
+ 2 files changed, 8 insertions(+), 260 deletions(-)
+ delete mode 100644 package/firmware/wireless-regdb/patches/100-regdb-write-firmware-file-format-version-code-20.patch
+
+diff --git a/package/firmware/wireless-regdb/Makefile b/package/firmware/wireless-regdb/Makefile
+index d06da2c7083..7fc895ba616 100644
+--- a/package/firmware/wireless-regdb/Makefile
++++ b/package/firmware/wireless-regdb/Makefile
+@@ -1,22 +1,21 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=wireless-regdb
++PKG_VERSION:=2019.06.03
+ 
+-PKG_SOURCE_PROTO:=git
+-PKG_SOURCE_URL:=https://git.kernel.org/pub/scm/linux/kernel/git/sforshee/wireless-regdb.git
+-PKG_SOURCE_DATE:=2017-10-20
+-PKG_SOURCE_VERSION:=4343d359ed5e7404de8803a74df186457b26ab79
+-PKG_MIRROR_HASH:=5f5b669f32ae36cb65b1d99efbbbfd42c2983cda32f6448346e3e54ffaba3889
++PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
++PKG_SOURCE_URL:=@KERNEL/software/network/wireless-regdb/
++PKG_HASH:=cd917ed86b63ce8d93947979f1f18948f03a4ac0ad89ec25227b36ac00dc54bf
+ 
+ PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
+ 
+ include $(INCLUDE_DIR)/package.mk
+ 
+ define Package/wireless-regdb
+-  SECTION:=firmware
+-  CATEGORY:=Firmware
+-  URL:=$(patsubst pub/scm,cgit,$(PKG_SOURCE_URL))
+-  TITLE:=Wireless Regulatory Database
++	SECTION:=firmware
++	CATEGORY:=Firmware
++	URL:=https://git.kernel.org/pub/scm/linux/kernel/git/sforshee/wireless-regdb.git/
++	TITLE:=Wireless Regulatory Database
+ endef
+ 
+ define Build/Compile
+diff --git a/package/firmware/wireless-regdb/patches/100-regdb-write-firmware-file-format-version-code-20.patch b/package/firmware/wireless-regdb/patches/100-regdb-write-firmware-file-format-version-code-20.patch
+deleted file mode 100644
+index 0c5c63fc5f6..00000000000
+--- a/package/firmware/wireless-regdb/patches/100-regdb-write-firmware-file-format-version-code-20.patch
++++ /dev/null
+@@ -1,251 +0,0 @@
+-From: Johannes Berg <johannes.berg@intel.com>
+-Date: Mon, 9 Oct 2017 11:50:57 +0200
+-Subject: [PATCH] regdb: write firmware file format (version code 20)
+-
+-TODO: clean up the Makefile stuff ...
+-
+-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+----
+- create mode 100755 db2fw.py
+-
+---- a/Makefile
+-+++ b/Makefile
+-@@ -1,7 +1,5 @@
+- # Install prefix
+- PREFIX ?= /usr
+--CRDA_PATH ?= $(PREFIX)/lib/crda
+--CRDA_KEY_PATH ?= $(CRDA_PATH)/pubkeys
+- 
+- MANDIR ?= $(PREFIX)/share/man/
+- 
+-@@ -30,39 +28,47 @@ REGDB_AUTHOR ?= $(shell if [ -f $(DISTRO
+- 		fi)
+- 
+- REGDB_PRIVKEY ?= ~/.wireless-regdb-$(REGDB_AUTHOR).key.priv.pem
+--REGDB_PUBKEY ?= $(REGDB_AUTHOR).key.pub.pem
+--
+--REGDB_UPSTREAM_PUBKEY ?= sforshee.key.pub.pem
+-+REGDB_PUBCERT ?= $(REGDB_AUTHOR).x509.pem
+- 
+- REGDB_CHANGED = $(shell $(SHA1SUM) -c --status sha1sum.txt >/dev/null 2>&1; \
+-         if [ $$? -ne 0 ]; then \
+--                echo maintainer-clean $(REGDB_PUBKEY); \
+-+                echo maintainer-clean $(REGDB_PUBCERT); \
+-         fi)
+- 
+- .PHONY: all clean mrproper install maintainer-clean install-distro-key
+- 
+--all: $(REGDB_CHANGED) regulatory.bin sha1sum.txt
+-+all: $(REGDB_CHANGED) regulatory.db.p7s sha1sum.txt
+- 
+- clean:
+- 	@rm -f *.pyc *.gz
+- 
+- maintainer-clean: clean
+--	@rm -f regulatory.bin
+-+	@rm -f regulatory.db regulatory.db.p7s
+- 
+- mrproper: clean maintainer-clean
+--	@echo Removed public key, regulatory.bin and compresed man pages
+--	@rm -f $(REGDB_PUBKEY) .custom
+-+	@echo Removed public key, regulatory.db* and compressed man pages
+-+	@rm -f $(REGDB_PUBCERT) .custom
+- 
+--regulatory.bin: db.txt $(REGDB_PRIVKEY) $(REGDB_PUBKEY)
+--	@echo Generating $@ digitally signed by $(REGDB_AUTHOR)...
+--	./db2bin.py regulatory.bin db.txt $(REGDB_PRIVKEY)
+-+regulatory.db: db.txt db2fw.py
+-+	@echo "Generating $@"
+-+	./db2fw.py regulatory.db db.txt
+-+
+-+regulatory.db.p7s: regulatory.db $(REGDB_PRIVKEY) $(REGDB_PUBCERT)
+-+	@echo "Signing regulatory.db (by $(REGDB_AUTHOR))..."
+-+	@openssl smime -sign \
+-+		-signer $(REGDB_PUBCERT) \
+-+		-inkey $(REGDB_PRIVKEY) \
+-+		-in $< -nosmimecap -binary \
+-+		-outform DER -out $@
+- 
+- sha1sum.txt: db.txt
+- 	sha1sum $< > $@
+- 
+--$(REGDB_PUBKEY): $(REGDB_PRIVKEY)
+--	@echo "Generating public key for $(REGDB_AUTHOR)..."
+--	openssl rsa -in $(REGDB_PRIVKEY) -out $(REGDB_PUBKEY) -pubout -outform PEM
+-+$(REGDB_PUBCERT): $(REGDB_PRIVKEY)
+-+	@echo "Generating certificate for $(REGDB_AUTHOR)..."
+-+	@openssl req -config regulatory.openssl.conf \
+-+		-key $(REGDB_PRIVKEY) -days 36500 -utf8 -nodes -batch \
+-+		-x509 -outform PEM -out $(REGDB_PUBCERT)
+- 	@echo $(REGDB_PUBKEY) > .custom
+- 
+- 
+-@@ -97,16 +103,7 @@ install-distro-key: maintainer-clean $(D
+- #	make maintainer-clean
+- #	make
+- #	sudo make install
+--install: regulatory.bin.5.gz
+--	install -m 755 -d $(DESTDIR)/$(CRDA_PATH)
+--	install -m 755 -d $(DESTDIR)/$(CRDA_KEY_PATH)
+--	if [ -f .custom ]; then \
+--		install -m 644 -t $(DESTDIR)/$(CRDA_KEY_PATH)/ $(shell cat .custom); \
+--	fi
+--	install -m 644 -t $(DESTDIR)/$(CRDA_KEY_PATH)/ $(REGDB_UPSTREAM_PUBKEY)
+--	install -m 644 -t $(DESTDIR)/$(CRDA_PATH)/ regulatory.bin
+-+install: regulatory.db.5.gz
+-+	install -m 644 -t $(DESTDIR)/$(CRDA_PATH)/ regulatory.db
+- 	install -m 755 -d $(DESTDIR)/$(MANDIR)/man5/
+--	install -m 644 -t $(DESTDIR)/$(MANDIR)/man5/ regulatory.bin.5.gz
+--
+--uninstall:
+--	rm -rf $(DESTDIR)/$(CRDA_PATH)/
+-+	install -m 644 -t $(DESTDIR)/$(MANDIR)/man5/ regulatory.db.5.gz
+---- a/README
+-+++ b/README
+-@@ -18,8 +18,8 @@ python module is used by the web viewer
+- implemented as a MoinMoin macro (and used on http://wireless.kernel.org)
+- to allow viewing the database for verification.
+- 
+--The dbparse module is also used by db2bin.py, the `compiler', which
+--compiles and signs the binary database.
+-+The dbparse module is also used by db2bin.py and db2fw.py, the `compilers'
+-+that compile the database to its binary formats.
+- 
+- For more information, please see the CRDA git repository:
+- 
+---- /dev/null
+-+++ b/db2fw.py
+-@@ -0,0 +1,133 @@
+-+#!/usr/bin/env python
+-+
+-+from cStringIO import StringIO
+-+import struct
+-+import hashlib
+-+from dbparse import DBParser
+-+import sys
+-+
+-+MAGIC = 0x52474442
+-+VERSION = 20
+-+
+-+if len(sys.argv) < 3:
+-+    print 'Usage: %s output-file input-file' % sys.argv[0]
+-+    sys.exit(2)
+-+
+-+def create_rules(countries):
+-+    result = {}
+-+    for c in countries.itervalues():
+-+        for rule in c.permissions:
+-+            result[rule] = 1
+-+    return result.keys()
+-+
+-+def create_collections(countries):
+-+    result = {}
+-+    for c in countries.itervalues():
+-+        result[(c.permissions, c.dfs_region)] = 1
+-+    return result.keys()
+-+
+-+
+-+def be32(output, val):
+-+    output.write(struct.pack('>I', val))
+-+def be16(output, val):
+-+    output.write(struct.pack('>H', val))
+-+
+-+class PTR(object):
+-+    def __init__(self, output):
+-+        self._output = output
+-+        self._pos = output.tell()
+-+        be16(output, 0)
+-+        self._written = False
+-+
+-+    def set(self, val=None):
+-+        if val is None:
+-+            val = self._output.tell()
+-+        assert val & 3 == 0
+-+        self._offset = val
+-+        pos = self._output.tell()
+-+        self._output.seek(self._pos)
+-+        be16(self._output, val >> 2)
+-+        self._output.seek(pos)
+-+        self._written = True
+-+
+-+    def get(self):
+-+        return self._offset
+-+
+-+    @property
+-+    def written(self):
+-+        return self._written
+-+
+-+p = DBParser()
+-+countries = p.parse(file(sys.argv[2]))
+-+rules = create_rules(countries)
+-+rules.sort(cmp=lambda x, y: cmp(x.freqband, y.freqband))
+-+collections = create_collections(countries)
+-+collections.sort(cmp=lambda x, y: cmp(x[0][0].freqband, y[0][0].freqband))
+-+
+-+output = StringIO()
+-+
+-+# struct regdb_file_header
+-+be32(output, MAGIC)
+-+be32(output, VERSION)
+-+
+-+country_ptrs = {}
+-+countrynames = countries.keys()
+-+countrynames.sort()
+-+for alpha2 in countrynames:
+-+    coll = countries[alpha2]
+-+    output.write(struct.pack('>cc', str(alpha2[0]), str(alpha2[1])))
+-+    country_ptrs[alpha2] = PTR(output)
+-+output.write('\x00' * 4)
+-+
+-+reg_rules = {}
+-+flags = 0
+-+for reg_rule in rules:
+-+    freq_range, power_rule = reg_rule.freqband, reg_rule.power
+-+    reg_rules[reg_rule] = output.tell()
+-+    assert power_rule.max_ant_gain == 0
+-+    flags = 0
+-+    # convert to new rule flags
+-+    assert reg_rule.flags & ~0x899 == 0
+-+    if reg_rule.flags & 1<<0:
+-+        flags |= 1<<0
+-+    if reg_rule.flags & 1<<3:
+-+        flags |= 1<<1
+-+    if reg_rule.flags & 1<<4:
+-+        flags |= 1<<2
+-+    if reg_rule.flags & 1<<7:
+-+        flags |= 1<<3
+-+    if reg_rule.flags & 1<<11:
+-+        flags |= 1<<4
+-+    rule_len = 16
+-+    cac_timeout = 0 # TODO
+-+    if not (flags & 1<<2):
+-+        cac_timeout = 0
+-+    if cac_timeout:
+-+        rule_len += 2
+-+    output.write(struct.pack('>BBHIII', rule_len, flags, power_rule.max_eirp * 100,
+-+                             freq_range.start * 1000, freq_range.end * 1000, freq_range.maxbw * 1000,
+-+                             ))
+-+    if cac_timeout:
+-+        output.write(struct.pack('>H', cac_timeout))
+-+    while rule_len % 4:
+-+        output.write('\0')
+-+        rule_len += 1
+-+
+-+for coll in collections:
+-+    for alpha2 in countrynames:
+-+        if (countries[alpha2].permissions, countries[alpha2].dfs_region) == coll:
+-+            assert not country_ptrs[alpha2].written
+-+            country_ptrs[alpha2].set()
+-+    slen = 3
+-+    output.write(struct.pack('>BBBx', slen, len(list(coll[0])), coll[1]))
+-+    coll = list(coll[0])
+-+    for regrule in coll:
+-+        be16(output, reg_rules[regrule] >> 2)
+-+    if len(coll) % 2:
+-+        be16(output, 0)
+-+
+-+for alpha2 in countrynames:
+-+    assert country_ptrs[alpha2].written
+-+
+-+outfile = open(sys.argv[1], 'w')
+-+outfile.write(output.getvalue())
+
+From 9f1a8190eae39e9c51c6cb3de8dcca068a0c0050 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Date: Mon, 18 Mar 2019 21:40:36 +0000
+Subject: [PATCH 07/13] wireless-regdb: prefer python provided by make variable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Usage of predefined make variables is preferred.
+
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+(cherry picked from commit d3853d17a37a67541736b8b13f412a49ab382b9a)
+---
+ package/firmware/wireless-regdb/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/firmware/wireless-regdb/Makefile b/package/firmware/wireless-regdb/Makefile
+index 7fc895ba616..715c5ecda29 100644
+--- a/package/firmware/wireless-regdb/Makefile
++++ b/package/firmware/wireless-regdb/Makefile
+@@ -19,7 +19,7 @@ define Package/wireless-regdb
+ endef
+ 
+ define Build/Compile
+-	python $(PKG_BUILD_DIR)/db2fw.py $(PKG_BUILD_DIR)/regulatory.db $(PKG_BUILD_DIR)/db.txt
++	$(PYTHON) $(PKG_BUILD_DIR)/db2fw.py $(PKG_BUILD_DIR)/regulatory.db $(PKG_BUILD_DIR)/db.txt
+ endef
+ 
+ define Package/wireless-regdb/install
+
+From 2bc94927b0309e7d173cfe358f5364c03bf139bb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Date: Thu, 25 Jul 2019 09:21:42 +0200
+Subject: [PATCH 08/13] wireless-regdb: set PKGARCH:=all
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+As it's an architecture-independent binary file.
+
+Ref: https://github.com/openwrt/openwrt/pull/1521#issuecomment-514687053
+Suggested-by: Deng Qingfang <dengqf6@mail2.sysu.edu.cn>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+(cherry picked from commit 57d1c05ec945b4853708d686c0782c4b1dcff0a9)
+---
+ package/firmware/wireless-regdb/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/package/firmware/wireless-regdb/Makefile b/package/firmware/wireless-regdb/Makefile
+index 715c5ecda29..e5dd10c7450 100644
+--- a/package/firmware/wireless-regdb/Makefile
++++ b/package/firmware/wireless-regdb/Makefile
+@@ -12,6 +12,7 @@ PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
+ include $(INCLUDE_DIR)/package.mk
+ 
+ define Package/wireless-regdb
++	PKGARCH:=all
+ 	SECTION:=firmware
+ 	CATEGORY:=Firmware
+ 	URL:=https://git.kernel.org/pub/scm/linux/kernel/git/sforshee/wireless-regdb.git/
+
+From 30451d9c9f3e0cb8e08ab35057b293270ddde0b1 Mon Sep 17 00:00:00 2001
+From: John Crispin <john@phrozen.org>
+Date: Tue, 30 Jul 2019 00:33:12 +0200
+Subject: [PATCH 09/13] wireless-regdb: fix Makefile indentation
+
+Signed-off-by: John Crispin <john@phrozen.org>
+(cherry picked from commit 8562e77953e76c1ec7ba01ce18dc468d5628f3dc)
+---
+ package/firmware/wireless-regdb/Makefile | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/package/firmware/wireless-regdb/Makefile b/package/firmware/wireless-regdb/Makefile
+index e5dd10c7450..88a8d0bd9c3 100644
+--- a/package/firmware/wireless-regdb/Makefile
++++ b/package/firmware/wireless-regdb/Makefile
+@@ -12,11 +12,11 @@ PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
+ include $(INCLUDE_DIR)/package.mk
+ 
+ define Package/wireless-regdb
+-	PKGARCH:=all
+-	SECTION:=firmware
+-	CATEGORY:=Firmware
+-	URL:=https://git.kernel.org/pub/scm/linux/kernel/git/sforshee/wireless-regdb.git/
+-	TITLE:=Wireless Regulatory Database
++  PKGARCH:=all
++  SECTION:=firmware
++  CATEGORY:=Firmware
++  URL:=https://git.kernel.org/pub/scm/linux/kernel/git/sforshee/wireless-regdb.git/
++  TITLE:=Wireless Regulatory Database
+ endef
+ 
+ define Build/Compile
+
+From 3aa0fa1f3b7305cd1e89bb900c0c539f7302e3d1 Mon Sep 17 00:00:00 2001
+From: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Date: Tue, 30 Jul 2019 08:36:32 +0100
+Subject: [PATCH 10/13] wireless-regdb: fix patch fuzz
+
+Refresh patches to tidy up some fuzz warnings
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+(cherry picked from commit 12840674d0550e6f5aa077cd2b578988f0c07074)
+---
+ .../firmware/wireless-regdb/patches/500-world-regd-5GHz.patch   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/firmware/wireless-regdb/patches/500-world-regd-5GHz.patch b/package/firmware/wireless-regdb/patches/500-world-regd-5GHz.patch
+index 9baba808bca..ae38f93537b 100644
+--- a/package/firmware/wireless-regdb/patches/500-world-regd-5GHz.patch
++++ b/package/firmware/wireless-regdb/patches/500-world-regd-5GHz.patch
+@@ -5,7 +5,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ ---
+ --- a/db.txt
+ +++ b/db.txt
+-@@ -6,7 +6,7 @@ country 00:
++@@ -16,7 +16,7 @@ country 00:
+  	# Channel 14. Only JP enables this and for 802.11b only
+  	(2474 - 2494 @ 20), (20), NO-IR, NO-OFDM
+  	# Channel 36 - 48
+
+From a6d15aa61b72ff8ed75f053aa9102c5c25221067 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Date: Wed, 31 Jul 2019 18:11:01 +0200
+Subject: [PATCH 11/13] wireless-regdb: fix build when python2 from package
+ feeds exists
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+wireless-regdb fails to build if there is python2 installed from package
+feeds, as staging_dir/hostpkg/bin/python is python2 and
+staging_dir/hostpkg/bin takes precedence over staging_dir/host/bin
+(proper place with python -> python3 symlink) which leads to the build
+failure of wireless-regdb, so this patch makes it explicit which python
+should be used.
+
+Reported-by: Hauke Mehrtens <hauke@hauke-m.de>
+Tested-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Tested-by: Russell Senior <russell@personaltelco.net>
+Tested-by: Lucian Cristian <lucian.cristian@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+(cherry picked from commit b6bae4a2c9f11f7e55319c2b4c709396ce649688)
+---
+ package/firmware/wireless-regdb/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/firmware/wireless-regdb/Makefile b/package/firmware/wireless-regdb/Makefile
+index 88a8d0bd9c3..26f470af44c 100644
+--- a/package/firmware/wireless-regdb/Makefile
++++ b/package/firmware/wireless-regdb/Makefile
+@@ -20,7 +20,7 @@ define Package/wireless-regdb
+ endef
+ 
+ define Build/Compile
+-	$(PYTHON) $(PKG_BUILD_DIR)/db2fw.py $(PKG_BUILD_DIR)/regulatory.db $(PKG_BUILD_DIR)/db.txt
++	$(STAGING_DIR_HOST)/bin/$(PYTHON) $(PKG_BUILD_DIR)/db2fw.py $(PKG_BUILD_DIR)/regulatory.db $(PKG_BUILD_DIR)/db.txt
+ endef
+ 
+ define Package/wireless-regdb/install
+
+From 02358bdc47739f59481abe0e9df94b5d2284b179 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Mon, 19 Aug 2019 13:39:18 +0000
+Subject: [PATCH 12/13] scripts/dl_github_archive.py: fix python3 transition
+
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+(cherry picked from commit 164037983d00cc5b27f970b40c4a697d31277164)
+---
+ scripts/dl_github_archive.py | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/dl_github_archive.py b/scripts/dl_github_archive.py
+index 90832701137..c2167acbf7b 100755
+--- a/scripts/dl_github_archive.py
++++ b/scripts/dl_github_archive.py
+@@ -203,7 +203,7 @@ def _cache_flush(self, fout):
+             ts = ent[0]
+             updated = ent[1]
+             line = '{0} {1} {2}\n'.format(k, ts, updated)
+-            fout.write(line)
++            fout.write(line.encode('utf-8'))
+ 
+ 
+ class DownloadGitHubTarball(object):
+@@ -345,6 +345,7 @@ def _init_commit_ts(self):
+         version_is_sha1sum = len(self.version) == 40
+         if not version_is_sha1sum:
+             apis.insert(0, apis.pop())
++        reasons = ''
+         for api in apis:
+             url = api['url']
+             attr_path = api['attr_path']
+@@ -357,9 +358,9 @@ def _init_commit_ts(self):
+                 self.commit_ts = ct
+                 self.commit_ts_cache.set(url, ct)
+                 return
+-            except Exception:
+-                pass
+-        raise self._error('Cannot fetch commit ts: {}'.format(url))
++            except Exception as e:
++                reasons += '\n' + ("  {}: {}".format(url, e))
++        raise self._error('Cannot fetch commit ts:{}'.format(reasons))
+ 
+     def _init_commit_ts_remote_get(self, url, attrpath):
+         resp = self._make_request(url)
+
+From fa4488ae6bc77d23547ca678b23077de4bb23d63 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Mon, 4 Nov 2019 11:09:38 +0000
+Subject: [PATCH 13/13] scripts/dl_github_archive.py: fix python3 str, bytes
+ confusion
+
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+(cherry picked from commit d26738bc767f48d2dee7097cbfc6d07ffeee58fb)
+---
+ scripts/dl_github_archive.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/dl_github_archive.py b/scripts/dl_github_archive.py
+index c2167acbf7b..59fd7067be9 100755
+--- a/scripts/dl_github_archive.py
++++ b/scripts/dl_github_archive.py
+@@ -203,7 +203,7 @@ def _cache_flush(self, fout):
+             ts = ent[0]
+             updated = ent[1]
+             line = '{0} {1} {2}\n'.format(k, ts, updated)
+-            fout.write(line.encode('utf-8'))
++            fout.write(line)
+ 
+ 
+ class DownloadGitHubTarball(object):
