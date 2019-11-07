@@ -35,9 +35,6 @@ set_led_state() {
 		status_led="$upgrade"
 		status_led_blink_preinit_regular
 		;;
-	config)
-		status_led_blink_pulse
-		;;
 	done)
 		status_led_off
 		[ -n "$running" ] && {

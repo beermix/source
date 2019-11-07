@@ -31,7 +31,7 @@ define Package/libevent2/Default
   CATEGORY:=Libraries
   TITLE:=Event notification
   URL:=http://libevent.org
-  ABI_VERSION:=8
+  ABI_VERSION:=7
 endef
 
 define Package/libevent2/Default/description
@@ -73,6 +73,7 @@ endef
 define Package/libevent2-extra
   $(call Package/libevent2/Default)
   TITLE+= extra library (version 2.1)
+  DEPENDS+=+libevent2-core
 endef
 
 define Package/libevent2-extra/description
@@ -85,7 +86,7 @@ endef
 define Package/libevent2-openssl
   $(call Package/libevent2/Default)
   TITLE+= OpenSSL library (version 2.1)
-  DEPENDS+=+libopenssl
+  DEPENDS+=+libopenssl +libevent2-core
 endef
 
 define Package/libevent2-openssl/description
@@ -98,7 +99,7 @@ endef
 define Package/libevent2-pthreads
   $(call Package/libevent2/Default)
   TITLE+= Pthreads library (version 2.1)
-  DEPENDS+=+libpthread
+  DEPENDS+=+libpthread +libevent2-core
 endef
 
 define Package/libevent2-pthreads/description
