@@ -24,6 +24,7 @@ include $(INCLUDE_DIR)/cmake.mk
 define Package/zlib
   SECTION:=libs
   CATEGORY:=Libraries
+  DEPENDS:-libasan
   TITLE:=Library implementing the deflate compression method
   URL:=http://www.zlib.net/
 endef
@@ -32,7 +33,7 @@ define Package/zlib-dev
   SECTION:=devel
   CATEGORY:=Development
   SUBMENU:=Libraries
-  DEPENDS:=zlib
+  DEPENDS:=zlib -libasan
   TITLE:=Development files for the zlib library
 endef
 
@@ -64,7 +65,7 @@ CMAKE_OPTIONS += \
 	-DWITH_NATIVE_INSTRUCTIONS:BOOL=OFF \
 	-DWITH_NEW_STRATEGIES:BOOL=ON \
 	-DWITH_OPTIM:BOOL=ON \
-	-DWITH_SANITIZERS:BOOL=OFF \
+	-DWITH_SANITIZERS:BOOL=ON \
 	-DZLIB_COMPAT:BOOL=ON \
 	-DZLIB_ENABLE_TESTS:BOOL=ON \
 	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
