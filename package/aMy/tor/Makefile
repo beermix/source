@@ -100,6 +100,7 @@ CONFIGURE_ARGS += \
         --enable-lzma=no \
         --enable-zstd=no \
         --disable-module-dirauth \
+        --enable-silent-rules \
         --with-tor-user=tor \
         --with-tor-group=tor
 
