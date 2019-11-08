@@ -65,7 +65,7 @@ CONFIGURE_ARGS += \
 	--disable-doxygen-html \
 	--with-homedir=/etc/mc \
 	--with-screen=ncurses \
-	--disable-silent-rules \
+	--enable-silent-rules \
 	--without-x \
 
 CONFIGURE_VARS += \
