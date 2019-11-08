@@ -30,10 +30,9 @@ define Package/libstatgrab
 endef
 
 CONFIGURE_ARGS += \
-	--disable-examples \
-	--disable-manpages \
-	--disable-setuid-binaries \
-	--disable-man-build
+	--disable-tests \
+	--disable-man \
+	--disable-setuid-binaries
 
 define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
