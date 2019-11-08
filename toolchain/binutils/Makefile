@@ -33,6 +33,8 @@ ifeq ($(PKG_VERSION),2.33.1)
   PKG_HASH:=ab66fc2d1c3ec0359b8e08843c9f33b63e8707efdff5e4cc5c200eae24722cbf
 endif
 
+export LANG=C.UTF-8
+
 HOST_BUILD_PARALLEL:=1
 
 PATCH_DIR:=./patches/$(PKG_VERSION)
@@ -49,6 +51,8 @@ HOST_CONFIGURE_ARGS = \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
+	--enable-secureplt \
+	--enable-targets=i386-linux \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
@@ -77,17 +81,17 @@ define Host/Prepare
 endef
 
 define Host/Compile
-	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
+	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) MAKEINFO=true all
 endef
 
 define Host/Install
 	mkdir -p $(TOOLCHAIN_DIR)/initial
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR)/initial \
-		install
+		MAKEINFO=true install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR) \
-		install
+		MAKEINFO=true install
 	$(call FixupLibdir,$(TOOLCHAIN_DIR)/initial)
 	$(RM) $(TOOLCHAIN_DIR)/initial/lib/libiberty.a
 	$(CP) $(TOOLCHAIN_DIR)/bin/$(REAL_GNU_TARGET_NAME)-readelf $(HOST_BUILD_PREFIX)/bin/readelf

@@ -77,6 +77,7 @@ HOST_MAKE_FLAGS += \
 	TARGET_RANLIB=$(TARGET_RANLIB) \
 	LIBLZMA=$(STAGING_DIR_HOST)/lib/liblzma.a
 
+
 define Host/Configure
 	$(SED) 's,(RANLIB),(TARGET_RANLIB),' $(HOST_BUILD_DIR)/grub-core/Makefile.in
 	$(Host/Configure/Default)
