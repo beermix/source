@@ -33,8 +33,6 @@ ifeq ($(PKG_VERSION),2.33.1)
   PKG_HASH:=ab66fc2d1c3ec0359b8e08843c9f33b63e8707efdff5e4cc5c200eae24722cbf
 endif
 
-export LANG=C.UTF-8
-
 HOST_BUILD_PARALLEL:=1
 
 PATCH_DIR:=./patches/$(PKG_VERSION)

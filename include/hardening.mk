@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+#  -Wl,--hash-style=gnu -Wl,--no-copy-dt-needed-entries
 
 PKG_CHECK_FORMAT_SECURITY ?= 1
 PKG_ASLR_PIE ?= 1
@@ -50,7 +50,7 @@ ifdef CONFIG_PKG_RELRO_PARTIAL
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
-    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro -Wl,--hash-style=gnu -Wl,--no-copy-dt-needed-entries
+    TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro
     TARGET_LDFLAGS += -znow -zrelro
   endif
 endif
