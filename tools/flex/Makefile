@@ -8,18 +8,18 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=flex
 PKG_CPE_ID:=cpe:/a:flex_project:flex
-PKG_VERSION:=2.6.4
+PKG_VERSION:=2.6.0
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/westes/flex/releases/download/v$(PKG_VERSION)/
-PKG_HASH:=e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995
+PKG_SOURCE_URL:=https://github.com/westes/flex/archive/v$(PKG_VERSION)/
+PKG_HASH:=cde6e46064a941a3810f7bbc612a2c39cb3aa29ce7eb775089c2515d0adfa7e9
 
 HOST_FIXUP:=autoreconf
 HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --disable-shared --disable-rpath --with-gnu-ld
+HOST_CONFIGURE_ARGS += ac_cv_func_realloc_0_nonnull=yes ac_cv_func_malloc_0_nonnull=yes --disable-shared
 
 define Host/Install
 	$(call Host/Install/Default)
