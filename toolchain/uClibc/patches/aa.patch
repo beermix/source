@@ -1,0 +1,2224 @@
+diff --git a/extra/Configs/Config.in b/extra/Configs/Config.in
+index e062086ac..4e26e6741 100644
+--- a/extra/Configs/Config.in
++++ b/extra/Configs/Config.in
+@@ -480,7 +480,7 @@ config LDSO_LD_LIBRARY_PATH
+ 
+ config UCLIBC_CTOR_DTOR
+ 	bool
+-	default y
++	default y if !TARGET_riscv64
+ 	help
+ 	  If you wish to build uClibc with support for global constructor
+ 	  (ctor) and global destructor (dtor) support, then answer Y here.
+@@ -529,6 +529,7 @@ config UCLIBC_HAS_LINUXTHREADS
+ 	# linuxthreads need nanosleep()
+ 	select UCLIBC_HAS_REALTIME
+ 	depends on !TARGET_aarch64 && \
++		   !TARGET_riscv64 && \
+ 		   !TARGET_metag
+ 	help
+ 	  If you want to compile uClibc with Linuxthreads support, then answer Y.
+diff --git a/extra/Configs/Config.riscv64 b/extra/Configs/Config.riscv64
+index 7d0136a2b..f1e8511ee 100644
+--- a/extra/Configs/Config.riscv64
++++ b/extra/Configs/Config.riscv64
+@@ -12,4 +12,3 @@ config FORCE_OPTIONS_FOR_ARCH
+ 	default y
+ 	select ARCH_LITTLE_ENDIAN
+ 	select ARCH_HAS_MMU
+-	select ARCH_HAS_NO_LDSO
+diff --git a/include/elf.h b/include/elf.h
+index 9aae04cef..d1be3bc1b 100644
+--- a/include/elf.h
++++ b/include/elf.h
+@@ -271,6 +271,7 @@ typedef struct
+ #define EM_AARCH64	183		/* ARM AARCH64 */
+ #define EM_MICROBLAZE	189		/* Xilinx Microblaze */
+ #define EM_ARCV2	195		/* ARCv2 Cores */
++#define EM_RISCV        243     	/* RISC-V */
+ #define EM_CSKY		252		/* C-SKY Cores */
+ 
+ /* NEXT FREE NUMBER: Increment this after adding your official arch number */
+@@ -3725,6 +3726,72 @@ typedef Elf32_Addr Elf32_Conflict;
+ #define R_ARC_TLS_LE_S9		0x4a
+ #define R_ARC_TLS_LE_32		0x4b
+ 
++/* RISC-V ELF Flags */
++#define EF_RISCV_RVC                    0x0001
++#define EF_RISCV_FLOAT_ABI              0x0006
++#define EF_RISCV_FLOAT_ABI_SOFT         0x0000
++#define EF_RISCV_FLOAT_ABI_SINGLE       0x0002
++#define EF_RISCV_FLOAT_ABI_DOUBLE       0x0004
++#define EF_RISCV_FLOAT_ABI_QUAD         0x0006
++
++/* RISC-V relocations.  */
++#define R_RISCV_NONE             0
++#define R_RISCV_32               1
++#define R_RISCV_64               2
++#define R_RISCV_RELATIVE         3
++#define R_RISCV_COPY             4
++#define R_RISCV_JUMP_SLOT        5
++#define R_RISCV_TLS_DTPMOD32     6
++#define R_RISCV_TLS_DTPMOD64     7
++#define R_RISCV_TLS_DTPREL32     8
++#define R_RISCV_TLS_DTPREL64     9
++#define R_RISCV_TLS_TPREL32     10
++#define R_RISCV_TLS_TPREL64     11
++#define R_RISCV_BRANCH          16
++#define R_RISCV_JAL             17
++#define R_RISCV_CALL            18
++#define R_RISCV_CALL_PLT        19
++#define R_RISCV_GOT_HI20        20
++#define R_RISCV_TLS_GOT_HI20    21
++#define R_RISCV_TLS_GD_HI20     22
++#define R_RISCV_PCREL_HI20      23
++#define R_RISCV_PCREL_LO12_I    24
++#define R_RISCV_PCREL_LO12_S    25
++#define R_RISCV_HI20            26
++#define R_RISCV_LO12_I          27
++#define R_RISCV_LO12_S          28
++#define R_RISCV_TPREL_HI20      29
++#define R_RISCV_TPREL_LO12_I    30
++#define R_RISCV_TPREL_LO12_S    31
++#define R_RISCV_TPREL_ADD       32
++#define R_RISCV_ADD8            33
++#define R_RISCV_ADD16           34
++#define R_RISCV_ADD32           35
++#define R_RISCV_ADD64           36
++#define R_RISCV_SUB8            37
++#define R_RISCV_SUB16           38
++#define R_RISCV_SUB32           39
++#define R_RISCV_SUB64           40
++#define R_RISCV_GNU_VTINHERIT   41
++#define R_RISCV_GNU_VTENTRY     42
++#define R_RISCV_ALIGN           43
++#define R_RISCV_RVC_BRANCH      44
++#define R_RISCV_RVC_JUMP        45
++#define R_RISCV_RVC_LUI         46
++#define R_RISCV_GPREL_I         47
++#define R_RISCV_GPREL_S         48
++#define R_RISCV_TPREL_I         49
++#define R_RISCV_TPREL_S         50
++#define R_RISCV_RELAX           51
++#define R_RISCV_SUB6            52
++#define R_RISCV_SET6            53
++#define R_RISCV_SET8            54
++#define R_RISCV_SET16           55
++#define R_RISCV_SET32           56
++#define R_RISCV_32_PCREL        57
++
++#define R_RISCV_NUM             58
++
+ #ifdef	__cplusplus
+ }
+ #endif
+diff --git a/include/unistd.h b/include/unistd.h
+index fdde8f02f..36cd5fcb5 100644
+--- a/include/unistd.h
++++ b/include/unistd.h
+@@ -585,13 +585,11 @@ extern int execve (const char *__path, char *const __argv[],
+ 		   char *const __envp[]) __THROW __nonnull ((1, 2));
+ libc_hidden_proto(execve)
+ 
+-#if 0 /*def __USE_XOPEN2K8*/
+ /* Execute the file FD refers to, overlaying the running program image.
+    ARGV and ENVP are passed to the new program, as for `execve'.  */
+ extern int fexecve (int __fd, char *const __argv[], char *const __envp[])
+      __THROW __nonnull ((2));
+-#endif
+-
++libc_hidden_proto(fexecve)
+ 
+ /* Execute PATH with arguments ARGV and environment from `environ'.  */
+ extern int execv (const char *__path, char *const __argv[])
+diff --git a/ldso/ldso/riscv64/dl-startup.h b/ldso/ldso/riscv64/dl-startup.h
+new file mode 100644
+index 000000000..dabe1bebd
+--- /dev/null
++++ b/ldso/ldso/riscv64/dl-startup.h
+@@ -0,0 +1,90 @@
++/*
++ * Architecture specific code used by dl-startup.c
++ * Copyright (C) 2019 Waldemar Brodkorb <wbx@uclibc-ng.org>
++ * Ported from GNU libc
++ * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
++ */
++
++/* Copyright (C) 2011-2019 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of the
++   License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <features.h>
++#include <sys/asm.h>
++
++#ifndef _RTLD_PROLOGUE
++# define _RTLD_PROLOGUE(entry)                                          \
++        ".globl\t" __STRING (entry) "\n\t"                              \
++        ".type\t" __STRING (entry) ", @function\n"                      \
++        __STRING (entry) ":\n\t"
++#endif
++
++#ifndef _RTLD_EPILOGUE
++# define _RTLD_EPILOGUE(entry)                                          \
++        ".size\t" __STRING (entry) ", . - " __STRING (entry) "\n\t"
++#endif
++
++#define STRINGXP(X) __STRING (X)  
++
++__asm__(\
++	".text\n\
++        " _RTLD_PROLOGUE (_start) "\
++        mv a0, sp\n\
++        jal _dl_start\n\
++        # Stash user entry point in s0.\n\
++        mv s0, a0\n\
++        # See if we were run as a command with the executable file\n\
++        # name as an extra leading argument.\n\
++        lw a0, _dl_skip_args\n\
++        # Load the original argument count.\n\
++        " STRINGXP (REG_L) " a1, 0(sp)\n\
++        # Subtract _dl_skip_args from it.\n\
++        sub a1, a1, a0\n\
++        # Adjust the stack pointer to skip _dl_skip_args words.\n\
++        sll a0, a0, " STRINGXP (PTRLOG) "\n\
++        add sp, sp, a0\n\
++        # Save back the modified argument count.\n\
++        " STRINGXP (REG_S) " a1, 0(sp)\n\
++        # Pass our finalizer function to _start.\n\
++        lla a0, _dl_fini\n\
++        # Jump to the user entry point.\n\
++        jr s0\n\
++        " _RTLD_EPILOGUE (_start) "\
++        .previous" \
++);
++
++/* Get a pointer to the argv array.  On many platforms this can be just
++ * the address of the first argument, on other platforms we need to
++ * do something a little more subtle here.  */
++#define GET_ARGV(ARGVP, ARGS) ARGVP = (((unsigned long*)ARGS)+1)
++
++/* Function calls are not safe until the GOT relocations have been done.  */
++#define NO_FUNCS_BEFORE_BOOTSTRAP
++
++/* Handle relocation of the symbols in the dynamic loader. */
++static __always_inline
++void PERFORM_BOOTSTRAP_RELOC(ELF_RELOC *rpnt, ElfW(Addr) *reloc_addr,
++	ElfW(Addr) symbol_addr, ElfW(Addr) load_addr, ElfW(Addr) *sym)
++{
++	switch (ELF_R_TYPE(rpnt->r_info)) {
++		case R_RISCV_NONE:
++			break;
++		case R_RISCV_JUMP_SLOT:
++			*reloc_addr = symbol_addr + rpnt->r_addend;
++			break;
++		default:
++			_dl_exit(1);
++	}
++}
+diff --git a/ldso/ldso/riscv64/dl-syscalls.h b/ldso/ldso/riscv64/dl-syscalls.h
+new file mode 100644
+index 000000000..f40c4fd31
+--- /dev/null
++++ b/ldso/ldso/riscv64/dl-syscalls.h
+@@ -0,0 +1 @@
++/* stub for arch-specific syscall issues */
+diff --git a/ldso/ldso/riscv64/dl-sysdep.h b/ldso/ldso/riscv64/dl-sysdep.h
+new file mode 100644
+index 000000000..91a45af46
+--- /dev/null
++++ b/ldso/ldso/riscv64/dl-sysdep.h
+@@ -0,0 +1,91 @@
++/*
++ * Various assembly language/system dependent hacks that are required
++ * so that we can minimize the amount of platform specific code.
++ * Copyright (C) 2000-2004 by Erik Andersen <andersen@codepoet.org>
++ * Copyright (C) 2019 by Waldemar Brodkorb <wbx@uclibc-ng.org>
++ * Ported from GNU C Library
++ * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
++ */
++
++/* Copyright (C) 2011-2019 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of the
++   License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* Define this if the system uses RELOCA.  */
++#define ELF_USES_RELOCA
++
++#include <elf.h>
++#include <link.h>
++
++/* Initialization sequence for the GOT.  */
++#define INIT_GOT(GOT_BASE,MODULE) \
++{				\
++  GOT_BASE[2] = (unsigned long) _dl_linux_resolve; \
++  GOT_BASE[1] = (unsigned long) MODULE; \
++}
++
++/* Here we define the magic numbers that this dynamic loader should accept */
++#define MAGIC1 EM_RISCV
++#undef  MAGIC2
++
++/* Used for error messages */
++#define ELF_TARGET "RISC-V"
++
++struct elf_resolve;
++unsigned long _dl_linux_resolver(struct elf_resolve * tpnt, int reloc_entry);
++
++#define ELF_MACHINE_JMP_SLOT R_RISCV_JUMP_SLOT
++
++#define elf_machine_type_class(type)                            \
++  ((ELF_RTYPE_CLASS_PLT * ((type) == ELF_MACHINE_JMP_SLOT       \
++     || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_DTPREL32)    \
++     || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_DTPMOD32)    \
++     || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_TPREL32)     \
++     || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_DTPREL64)    \
++     || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_DTPMOD64)    \
++     || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_TPREL64)))   \
++   | (ELF_RTYPE_CLASS_COPY * ((type) == R_RISCV_COPY)))
++
++
++/* Return the link-time address of _DYNAMIC.  */
++static inline ElfW(Addr)
++elf_machine_dynamic (void)
++{
++  extern ElfW(Addr) _GLOBAL_OFFSET_TABLE_ __attribute__ ((visibility ("hidden")));
++  return _GLOBAL_OFFSET_TABLE_;
++}
++
++
++/* Return the run-time load address of the shared object.  */
++static __always_inline ElfW(Addr) __attribute__ ((unused))
++elf_machine_load_address (void)
++{
++  ElfW(Addr) load_addr;
++  __asm__ ("lla %0, _DYNAMIC" : "=r" (load_addr));
++  return load_addr - elf_machine_dynamic ();
++}
++
++static __always_inline void
++elf_machine_relative(Elf64_Addr load_off, const Elf64_Addr rel_addr,
++                     Elf64_Word relative_count)
++{
++	Elf64_Rela *rpnt = (Elf64_Rela*)rel_addr;
++	--rpnt;
++	do {
++		Elf64_Addr *const reloc_addr = (Elf64_Addr*)(load_off + (++rpnt)->r_offset);
++
++		*reloc_addr = load_off + rpnt->r_addend;
++	} while (--relative_count);
++}
+diff --git a/ldso/ldso/riscv64/elfinterp.c b/ldso/ldso/riscv64/elfinterp.c
+new file mode 100644
+index 000000000..8ddba1f9f
+--- /dev/null
++++ b/ldso/ldso/riscv64/elfinterp.c
+@@ -0,0 +1,293 @@
++/* RISCV ELF shared library loader suppport
++ *
++ * Copyright (C) 2001-2004 Erik Andersen
++ * Copyright (C) 2019 Waldemar Brodkorb <wbx@uclibc-ng.org>
++ *
++ * All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. The name of the above contributors may not be
++ *    used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE CONTRIBUTORS ``AS IS'' AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE
++ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ */
++
++/* Program to load an ELF binary on a linux system, and run it.
++   References to symbols in sharable libraries can be resolved by either
++   an ELF sharable library or a linux style of shared library. */
++
++#include "ldso.h"
++
++extern int _dl_linux_resolve(void);
++
++unsigned long _dl_linux_resolver(struct elf_resolve *tpnt, int reloc_entry)
++{
++	ELF_RELOC *this_reloc;
++	char *strtab;
++	ElfW(Sym) *symtab;
++	int symtab_index;
++	char *rel_addr;
++	char *new_addr;
++	char **got_addr;
++	ElfW(Addr) instr_addr;
++	char *symname;
++
++	rel_addr = (char *)tpnt->dynamic_info[DT_JMPREL];
++	this_reloc = (ELF_RELOC *)(rel_addr + reloc_entry);
++	symtab_index = ELF_R_SYM(this_reloc->r_info);
++
++	symtab = (ElfW(Sym) *)tpnt->dynamic_info[DT_SYMTAB];
++	strtab = (char *)tpnt->dynamic_info[DT_STRTAB];
++	symname = strtab + symtab[symtab_index].st_name;
++
++	/* Address of jump instruction to fix up */
++	instr_addr = (this_reloc->r_offset + tpnt->loadaddr);
++	got_addr = (char **)instr_addr;
++
++	/* Get the address of the GOT entry */
++	new_addr = _dl_find_hash(symname, &_dl_loaded_modules->symbol_scope, tpnt, ELF_RTYPE_CLASS_PLT, NULL);
++	if (unlikely(!new_addr)) {
++		_dl_dprintf(2, "%s: can't resolve symbol '%s'\n", _dl_progname, symname);
++		_dl_exit(1);
++	}
++#if defined (__SUPPORT_LD_DEBUG__)
++	if (_dl_debug_bindings) {
++		_dl_dprintf(_dl_debug_file, "\nresolve function: %s", symname);
++		if (_dl_debug_detail) _dl_dprintf(_dl_debug_file,
++				"\tpatched %x ==> %x @ %x", *got_addr, new_addr, got_addr);
++	}
++	if (!_dl_debug_nofixups) {
++		*got_addr = new_addr;
++	}
++#else
++	*got_addr = new_addr;
++#endif
++	return (unsigned long)new_addr;
++}
++
++static int
++_dl_parse(struct elf_resolve *tpnt, struct r_scope_elem *scope,
++	  unsigned long rel_addr, unsigned long rel_size,
++	  int (*reloc_fnc) (struct elf_resolve *tpnt, struct r_scope_elem *scope,
++			    ELF_RELOC *rpnt, ElfW(Sym) *symtab, char *strtab))
++{
++	unsigned int i;
++	char *strtab;
++	ElfW(Sym) *symtab;
++	ELF_RELOC *rpnt;
++	int symtab_index;
++
++	/* Parse the relocation information */
++	rpnt = (ELF_RELOC *)rel_addr;
++	rel_size = rel_size / sizeof(ELF_RELOC);
++
++	symtab = (ElfW(Sym) *)tpnt->dynamic_info[DT_SYMTAB];
++	strtab = (char *)tpnt->dynamic_info[DT_STRTAB];
++
++	for (i = 0; i < rel_size; i++, rpnt++) {
++		int res;
++
++		symtab_index = ELF_R_SYM(rpnt->r_info);
++
++		debug_sym(symtab, strtab, symtab_index);
++		debug_reloc(symtab, strtab, rpnt);
++
++		res = reloc_fnc(tpnt, scope, rpnt, symtab, strtab);
++
++		if (res==0) 
++			continue;
++
++		_dl_dprintf(2, "\n%s: ", _dl_progname);
++
++		if (symtab_index)
++			_dl_dprintf(2, "symbol '%s': ", 
++				strtab + symtab[symtab_index].st_name);
++
++		if (unlikely(res < 0)) {
++		        int reloc_type = ELF_R_TYPE(rpnt->r_info);
++			_dl_dprintf(2, "can't handle reloc type %x\n", reloc_type);
++			_dl_exit(-res);
++		} else if (unlikely(res > 0)) {
++			_dl_dprintf(2, "can't resolve symbol\n");
++			return res;
++		}
++	  }
++
++	  return 0;
++}
++
++static int
++_dl_do_reloc (struct elf_resolve *tpnt, struct r_scope_elem *scope,
++	      ELF_RELOC *rpnt, ElfW(Sym) *symtab, char *strtab)
++{
++	int reloc_type;
++	int symtab_index;
++	char *symname;
++#if defined USE_TLS && USE_TLS
++	struct elf_resolve *tls_tpnt = NULL;
++#endif
++	struct symbol_ref sym_ref;
++	ElfW(Addr) *reloc_addr;
++	ElfW(Addr) symbol_addr;
++#if defined (__SUPPORT_LD_DEBUG__)
++	ElfW(Addr) old_val;
++#endif
++
++	reloc_addr = (ElfW(Addr)*)(tpnt->loadaddr + (unsigned long)rpnt->r_offset);
++	reloc_type = ELF_R_TYPE(rpnt->r_info);
++	symtab_index = ELF_R_SYM(rpnt->r_info);
++	sym_ref.sym = &symtab[symtab_index];
++	sym_ref.tpnt = NULL;
++	symbol_addr = 0;
++	symname = strtab + sym_ref.sym->st_name;
++
++	if (symtab_index) {
++		symbol_addr = (ElfW(Addr))_dl_find_hash(symname, scope, tpnt,
++				elf_machine_type_class(reloc_type), &sym_ref);
++
++		/*
++		 * We want to allow undefined references to weak symbols - this might
++		 * have been intentional.  We should not be linking local symbols
++		 * here, so all bases should be covered.
++		 */
++		if (unlikely (!symbol_addr && 
++			(ELF_ST_TYPE(symtab[symtab_index].st_info) != STT_TLS) &&
++			(ELF_ST_BIND(symtab[symtab_index].st_info) != STB_WEAK))) {
++			return 1;
++		}
++		if (_dl_trace_prelink) {
++			_dl_debug_lookup (symname, tpnt, &symtab[symtab_index],
++						&sym_ref, elf_machine_type_class(reloc_type));
++		}
++#if defined USE_TLS && USE_TLS
++		tls_tpnt = sym_ref.tpnt;
++#endif
++	} else {
++		/*
++		 * Relocs against STN_UNDEF are usually treated as using a
++		 * symbol value of zero, and using the module containing the
++		 * reloc itself.
++		 */
++		symbol_addr = sym_ref.sym->st_value;
++#if defined USE_TLS && USE_TLS
++		tls_tpnt = tpnt;
++#endif
++	}
++
++#if defined (__SUPPORT_LD_DEBUG__)
++	old_val = *reloc_addr;
++#endif
++
++	switch (reloc_type) {
++		case R_RISCV_NONE:
++			break;
++		case R_RISCV_64: 		/* REL_SYMBOLIC */
++		case R_RISCV_JUMP_SLOT:	/* REL_PLT */
++			*reloc_addr = symbol_addr + rpnt->r_addend;
++			break;
++		case R_RISCV_RELATIVE:
++			*reloc_addr += tpnt->loadaddr + rpnt->r_addend;
++			break;
++		case R_RISCV_COPY:
++			_dl_memcpy((void *) reloc_addr,
++				   (void *) symbol_addr, sym_ref.sym->st_size);
++			break;
++#if defined USE_TLS && USE_TLS
++		case R_RISCV_TLS_DTPMOD64:
++			*reloc_addr = tls_tpnt->l_tls_modid;
++			break;
++		case R_RISCV_TLS_DTPREL64:
++			*reloc_addr = symbol_addr;
++			break;
++		case R_RISCV_TLS_TPREL64:
++			CHECK_STATIC_TLS ((struct link_map *) tls_tpnt);
++			*reloc_addr = tls_tpnt->l_tls_offset + symbol_addr + rpnt->r_addend;
++			break;
++#endif
++		default:
++			return -1; /*call _dl_exit(1) */
++	}
++
++#if defined (__SUPPORT_LD_DEBUG__)
++	if (_dl_debug_reloc && _dl_debug_detail) {
++		_dl_dprintf(_dl_debug_file, "\tpatched: %x ==> %x @ %x\n", 
++				old_val, *reloc_addr, reloc_addr);
++	}
++#endif
++
++	return 0;
++}
++
++#undef __RISCV_LAZY_RELOC_WORKS
++#ifdef __RISCV_LAZY_RELOC_WORKS
++static int
++_dl_do_lazy_reloc (struct elf_resolve *tpnt, struct r_scope_elem *scope,
++		   ELF_RELOC *rpnt, ElfW(Sym) *symtab, char *strtab)
++{
++	int reloc_type;
++	ElfW(Addr) *reloc_addr;
++#if defined (__SUPPORT_LD_DEBUG__)
++	ElfW(Addr) old_val;
++#endif
++
++	(void)scope;
++	(void)strtab;
++
++	reloc_addr = (ElfW(Addr)*)(tpnt->loadaddr + rpnt->r_offset);
++	reloc_type = ELF_R_TYPE(rpnt->r_info);
++
++#if defined (__SUPPORT_LD_DEBUG__)
++	old_val = *reloc_addr;
++#endif
++
++	switch (reloc_type) {
++		case R_RISCV_NONE:
++			break;
++		case R_RISCV_JUMP_SLOT:
++			break;
++		default:
++			return -1; /*call _dl_exit(1) */
++	}
++
++#if defined (__SUPPORT_LD_DEBUG__)
++	if (_dl_debug_reloc && _dl_debug_detail) {
++		_dl_dprintf(_dl_debug_file, "\tpatched_lazy: %x ==> %x @ %x\n",
++			    old_val, *reloc_addr, reloc_addr);
++	}
++#endif
++
++	return 0;
++}
++#endif
++
++void _dl_parse_lazy_relocation_information(struct dyn_elf *rpnt,
++	unsigned long rel_addr, unsigned long rel_size)
++{
++#ifdef __RISCV_LAZY_RELOC_WORKS
++	(void)_dl_parse(rpnt->dyn, NULL, rel_addr, rel_size, _dl_do_lazy_reloc);
++#else
++	_dl_parse_relocation_information(rpnt, &_dl_loaded_modules->symbol_scope,
++									rel_addr, rel_size);
++#endif
++}
++
++int _dl_parse_relocation_information(struct dyn_elf *rpnt,
++	struct r_scope_elem *scope, unsigned long rel_addr, unsigned long rel_size)
++{
++	return _dl_parse(rpnt->dyn, scope, rel_addr, rel_size, _dl_do_reloc);
++}
+diff --git a/ldso/ldso/riscv64/resolve.S b/ldso/ldso/riscv64/resolve.S
+new file mode 100644
+index 000000000..2b964274f
+--- /dev/null
++++ b/ldso/ldso/riscv64/resolve.S
+@@ -0,0 +1,96 @@
++/*
++ * Copyright (C) 2019 by Waldemar Brodkorb <wbx@uclibc-ng.org>
++ * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
++ * ported from GNU libc
++ */
++
++/* Copyright (C) 2017-2019 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of the
++   License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library.  If not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <features.h>
++
++#include <sysdep.h>
++#include <sys/asm.h>
++
++/* Assembler veneer called from the PLT header code for lazy loading.
++   The PLT header passes its own args in t0-t2.  */
++
++#ifdef __riscv_float_abi_soft
++# define FRAME_SIZE (-((-10 * SZREG) & ALMASK))
++#else
++# define FRAME_SIZE (-((-10 * SZREG - 8 * SZFREG) & ALMASK))
++#endif
++
++ENTRY (_dl_linux_resolve)
++  # Save arguments to stack.
++  addi sp, sp, -FRAME_SIZE
++  REG_S ra, 9*SZREG(sp)
++  REG_S a0, 1*SZREG(sp)
++  REG_S a1, 2*SZREG(sp)
++  REG_S a2, 3*SZREG(sp)
++  REG_S a3, 4*SZREG(sp)
++  REG_S a4, 5*SZREG(sp)
++  REG_S a5, 6*SZREG(sp)
++  REG_S a6, 7*SZREG(sp)
++  REG_S a7, 8*SZREG(sp)
++
++#ifndef __riscv_float_abi_soft
++  FREG_S fa0, (10*SZREG + 0*SZFREG)(sp)
++  FREG_S fa1, (10*SZREG + 1*SZFREG)(sp)
++  FREG_S fa2, (10*SZREG + 2*SZFREG)(sp)
++  FREG_S fa3, (10*SZREG + 3*SZFREG)(sp)
++  FREG_S fa4, (10*SZREG + 4*SZFREG)(sp)
++  FREG_S fa5, (10*SZREG + 5*SZFREG)(sp)
++  FREG_S fa6, (10*SZREG + 6*SZFREG)(sp)
++  FREG_S fa7, (10*SZREG + 7*SZFREG)(sp)
++#endif
++
++  # Update .got.plt and obtain runtime address of callee.
++  slli a1, t1, 1
++  mv a0, t0       # link map
++  add a1, a1, t1  # reloc offset (== thrice the .got.plt offset)
++  la a2, _dl_fixup
++  jalr a2
++  mv t1, a0
++
++  # Restore arguments from stack.
++  REG_L ra, 9*SZREG(sp)
++  REG_L a0, 1*SZREG(sp)
++  REG_L a1, 2*SZREG(sp)
++  REG_L a2, 3*SZREG(sp)
++  REG_L a3, 4*SZREG(sp)
++  REG_L a4, 5*SZREG(sp)
++  REG_L a5, 6*SZREG(sp)
++  REG_L a6, 7*SZREG(sp)
++  REG_L a7, 8*SZREG(sp)
++
++#ifndef __riscv_float_abi_soft
++  FREG_L fa0, (10*SZREG + 0*SZFREG)(sp)
++  FREG_L fa1, (10*SZREG + 1*SZFREG)(sp)
++  FREG_L fa2, (10*SZREG + 2*SZFREG)(sp)
++  FREG_L fa3, (10*SZREG + 3*SZFREG)(sp)
++  FREG_L fa4, (10*SZREG + 4*SZFREG)(sp)
++  FREG_L fa5, (10*SZREG + 5*SZFREG)(sp)
++  FREG_L fa6, (10*SZREG + 6*SZFREG)(sp)
++  FREG_L fa7, (10*SZREG + 7*SZFREG)(sp)
++#endif
++
++  addi sp, sp, FRAME_SIZE
++
++  # Invoke the callee.
++  jr t1
++END (_dl_linux_resolve)
++
+diff --git a/libc/sysdeps/linux/aarch64/__syscall_error.c b/libc/sysdeps/linux/aarch64/__syscall_error.c
+index 2b642e816..c682aae49 100644
+--- a/libc/sysdeps/linux/aarch64/__syscall_error.c
++++ b/libc/sysdeps/linux/aarch64/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/alpha/__syscall_error.c b/libc/sysdeps/linux/alpha/__syscall_error.c
+index 7c081f3b5..c986e484d 100644
+--- a/libc/sysdeps/linux/alpha/__syscall_error.c
++++ b/libc/sysdeps/linux/alpha/__syscall_error.c
+@@ -8,7 +8,7 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+    an error number into errno.  */
+-int attribute_hidden __syscall_error (void)
++long attribute_hidden __syscall_error (void)
+ {
+ 	register int err_no __asm__("$0");
+ 	__set_errno (err_no);
+diff --git a/libc/sysdeps/linux/arc/__syscall_error.c b/libc/sysdeps/linux/arc/__syscall_error.c
+index 962d743e4..7f30485a8 100644
+--- a/libc/sysdeps/linux/arc/__syscall_error.c
++++ b/libc/sysdeps/linux/arc/__syscall_error.c
+@@ -8,7 +8,7 @@
+ #include <errno.h>
+ #include <sys/syscall.h>
+ 
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/arc/bits/syscalls.h b/libc/sysdeps/linux/arc/bits/syscalls.h
+index 248ef7844..c858d788b 100644
+--- a/libc/sysdeps/linux/arc/bits/syscalls.h
++++ b/libc/sysdeps/linux/arc/bits/syscalls.h
+@@ -34,7 +34,7 @@
+ /* ldso doesn't have real errno */
+ #define ERRNO_ERRANDS(_sys_result)
+ #else /* !IS_IN_rtld */
+-extern int __syscall_error (int);
++extern long __syscall_error (int);
+ #ifndef IS_IN_libc
+ /* Inter-libc callers use PLT */
+ #define CALL_ERRNO_SETTER   "bl   __syscall_error@plt    \n\t"
+diff --git a/libc/sysdeps/linux/arm/__syscall_error.c b/libc/sysdeps/linux/arm/__syscall_error.c
+index 2b642e816..c682aae49 100644
+--- a/libc/sysdeps/linux/arm/__syscall_error.c
++++ b/libc/sysdeps/linux/arm/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/common/fexecve.c b/libc/sysdeps/linux/common/fexecve.c
+new file mode 100644
+index 000000000..99a35c5b8
+--- /dev/null
++++ b/libc/sysdeps/linux/common/fexecve.c
+@@ -0,0 +1,52 @@
++/* Copyright (C) 1994-2019 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <errno.h>
++#include <stddef.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <sys/stat.h>
++
++int
++fexecve (int fd, char *const argv[], char *const envp[])
++{
++  if (fd < 0 || argv == NULL || envp == NULL)
++    {
++      __set_errno (EINVAL);
++      return -1;
++    }
++  /* We use the /proc filesystem to get the information.  If it is not
++     mounted we fail.  */
++  char buf[sizeof "/proc/self/fd/" + sizeof (int) * 3];
++  snprintf (buf, sizeof (buf), "/proc/self/fd/%d", fd);
++
++  /* We do not need the return value.  */
++  execve (buf, argv, envp);
++
++  int save = errno;
++
++  /* We come here only if the 'execve' call fails.  Determine whether
++     /proc is mounted.  If not we return ENOSYS.  */
++  struct stat st;
++  if (stat ("/proc/self/fd", &st) != 0 && errno == ENOENT)
++    save = ENOSYS;
++
++  __set_errno (save);
++
++  return -1;
++}
++libc_hidden_def(fexecve)
+diff --git a/libc/sysdeps/linux/csky/__syscall_error.c b/libc/sysdeps/linux/csky/__syscall_error.c
+index cc1fb5977..c6a4a14eb 100644
+--- a/libc/sysdeps/linux/csky/__syscall_error.c
++++ b/libc/sysdeps/linux/csky/__syscall_error.c
+@@ -8,7 +8,7 @@
+ #include <errno.h>
+ #include <features.h>
+ 
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/csky/clone.c b/libc/sysdeps/linux/csky/clone.c
+index 991cb8962..f0fcc257b 100644
+--- a/libc/sysdeps/linux/csky/clone.c
++++ b/libc/sysdeps/linux/csky/clone.c
+@@ -9,7 +9,7 @@
+ #include <sysdep.h>
+ #include <unistd.h>
+ 
+-extern int __syscall_error(int err_no);
++extern long __syscall_error(int err_no);
+ 
+ extern int __csky_clone (
+   int flags,
+diff --git a/libc/sysdeps/linux/frv/sysdep.c b/libc/sysdeps/linux/frv/sysdep.c
+index bfae12100..28beb418f 100644
+--- a/libc/sysdeps/linux/frv/sysdep.c
++++ b/libc/sysdeps/linux/frv/sysdep.c
+@@ -19,7 +19,7 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+    an error number into errno.  */
+-int __syscall_error (int err_no)
++long __syscall_error (int err_no)
+ {
+   __set_errno (-err_no);
+   return -1;
+diff --git a/libc/sysdeps/linux/hppa/__syscall_error.c b/libc/sysdeps/linux/hppa/__syscall_error.c
+index 5e109a83b..af26cf6ab 100644
+--- a/libc/sysdeps/linux/hppa/__syscall_error.c
++++ b/libc/sysdeps/linux/hppa/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/i386/__syscall_error.c b/libc/sysdeps/linux/i386/__syscall_error.c
+index 36946bc6d..102ebbedb 100644
+--- a/libc/sysdeps/linux/i386/__syscall_error.c
++++ b/libc/sysdeps/linux/i386/__syscall_error.c
+@@ -25,8 +25,8 @@
+ #include <errno.h>
+ #include <features.h>
+ 
+-int __syscall_error(void) attribute_hidden;
+-int __syscall_error(void)
++long __syscall_error(void) attribute_hidden;
++long __syscall_error(void)
+ {
+ 	register int eax __asm__ ("%eax");
+ 	int _errno = -eax;
+diff --git a/libc/sysdeps/linux/ia64/__syscall_error.c b/libc/sysdeps/linux/ia64/__syscall_error.c
+index 0727b2b53..cc2b13450 100644
+--- a/libc/sysdeps/linux/ia64/__syscall_error.c
++++ b/libc/sysdeps/linux/ia64/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(void) attribute_hidden;
+-int __syscall_error(void)
++long __syscall_error(void) attribute_hidden;
++long __syscall_error(void)
+ {
+ 	register int err_no __asm__("%r8");
+ 	__set_errno(err_no);
+diff --git a/libc/sysdeps/linux/m68k/__syscall_error.c b/libc/sysdeps/linux/m68k/__syscall_error.c
+index a29f6ffd6..2d2677521 100644
+--- a/libc/sysdeps/linux/m68k/__syscall_error.c
++++ b/libc/sysdeps/linux/m68k/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(void) attribute_hidden;
+-int __syscall_error(void)
++long __syscall_error(void) attribute_hidden;
++long __syscall_error(void)
+ {
+ 	register int err_no __asm__("%d0");
+ 	__set_errno(-err_no);
+diff --git a/libc/sysdeps/linux/metag/__syscall_error.c b/libc/sysdeps/linux/metag/__syscall_error.c
+index f97cd0126..3e82abe0d 100644
+--- a/libc/sysdeps/linux/metag/__syscall_error.c
++++ b/libc/sysdeps/linux/metag/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/microblaze/__syscall_error.c b/libc/sysdeps/linux/microblaze/__syscall_error.c
+index 2b642e816..c682aae49 100644
+--- a/libc/sysdeps/linux/microblaze/__syscall_error.c
++++ b/libc/sysdeps/linux/microblaze/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/mips/__syscall_error.c b/libc/sysdeps/linux/mips/__syscall_error.c
+index 5e109a83b..af26cf6ab 100644
+--- a/libc/sysdeps/linux/mips/__syscall_error.c
++++ b/libc/sysdeps/linux/mips/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/nds32/__syscall_error.c b/libc/sysdeps/linux/nds32/__syscall_error.c
+index 2aa6903e2..c8e6044a7 100644
+--- a/libc/sysdeps/linux/nds32/__syscall_error.c
++++ b/libc/sysdeps/linux/nds32/__syscall_error.c
+@@ -8,8 +8,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/nios2/__syscall_error.c b/libc/sysdeps/linux/nios2/__syscall_error.c
+index 2b642e816..c682aae49 100644
+--- a/libc/sysdeps/linux/nios2/__syscall_error.c
++++ b/libc/sysdeps/linux/nios2/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/or1k/__syscall_error.c b/libc/sysdeps/linux/or1k/__syscall_error.c
+index 1b7e8a394..7d1e09d91 100644
+--- a/libc/sysdeps/linux/or1k/__syscall_error.c
++++ b/libc/sysdeps/linux/or1k/__syscall_error.c
+@@ -17,11 +17,11 @@
+ 
+ #include <errno.h>
+ 
+-int __syscall_error (int err_no);
++long __syscall_error (int err_no);
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error (int err_no)
++long __syscall_error (int err_no)
+ {
+ 	__set_errno (err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/powerpc/__syscall_error.c b/libc/sysdeps/linux/powerpc/__syscall_error.c
+index 5e109a83b..af26cf6ab 100644
+--- a/libc/sysdeps/linux/powerpc/__syscall_error.c
++++ b/libc/sysdeps/linux/powerpc/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/riscv64/__syscall_error.c b/libc/sysdeps/linux/riscv64/__syscall_error.c
+index 2b642e816..c682aae49 100644
+--- a/libc/sysdeps/linux/riscv64/__syscall_error.c
++++ b/libc/sysdeps/linux/riscv64/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/riscv64/bits/uClibc_arch_features.h b/libc/sysdeps/linux/riscv64/bits/uClibc_arch_features.h
+index b754f3227..94ec2f51f 100644
+--- a/libc/sysdeps/linux/riscv64/bits/uClibc_arch_features.h
++++ b/libc/sysdeps/linux/riscv64/bits/uClibc_arch_features.h
+@@ -8,7 +8,7 @@
+ #undef __UCLIBC_ABORT_INSTRUCTION__
+ 
+ /* can your target use syscall6() for mmap ? */
+-#undef __UCLIBC_MMAP_HAS_6_ARGS__
++#define __UCLIBC_MMAP_HAS_6_ARGS__
+ 
+ #define __UCLIBC_SYSCALL_ALIGN_64BIT__
+ 
+diff --git a/libc/sysdeps/linux/riscv64/bits/uClibc_page.h b/libc/sysdeps/linux/riscv64/bits/uClibc_page.h
+new file mode 100644
+index 000000000..4792d370f
+--- /dev/null
++++ b/libc/sysdeps/linux/riscv64/bits/uClibc_page.h
+@@ -0,0 +1,34 @@
++/*  Copyright (C) 2004     Erik Andersen
++ *
++ *  This library is free software; you can redistribute it and/or
++ *  modify it under the terms of the GNU Lesser General Public
++ *  License as published by the Free Software Foundation; either
++ *  version 2.1 of the License, or (at your option) any later version.
++ *
++ *  The GNU C Library is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  Lesser General Public License for more details.
++ *
++ *  You should have received a copy of the GNU Lesser General Public
++ *  License along with the GNU C Library; see the file COPYING.LIB.  If
++ *  not, see <http://www.gnu.org/licenses/>.
++ */
++
++/* Supply an architecture specific value for PAGE_SIZE and friends.  */
++
++#ifndef _UCLIBC_PAGE_H
++#define _UCLIBC_PAGE_H
++
++/* PAGE_SHIFT determines the page size -- in this case 4096 */
++#define PAGE_SHIFT	13
++#define PAGE_SIZE	(1UL << PAGE_SHIFT)
++#define PAGE_MASK	(~(PAGE_SIZE-1))
++
++/* Some architectures always use 12 as page shift for mmap2() eventhough the
++ * real PAGE_SHIFT != 12.  Other architectures use the same value as
++ * PAGE_SHIFT...
++ */
++#define MMAP2_PAGE_SHIFT PAGE_SHIFT
++
++#endif /* _UCLIBC_PAGE_H */
+diff --git a/libc/sysdeps/linux/riscv64/crt1.S b/libc/sysdeps/linux/riscv64/crt1.S
+index 1e8403d26..15aa0763c 100644
+--- a/libc/sysdeps/linux/riscv64/crt1.S
++++ b/libc/sysdeps/linux/riscv64/crt1.S
+@@ -45,6 +45,9 @@
+ 	.globl	_start
+ 	.type	_start,%function
+ 
++	.weak _init
++	.weak _fini
++
+ _start:
+ 	call  .Lload_gp
+ 	mv    a5, a0  /* rtld_fini.  */
+@@ -52,12 +55,9 @@ _start:
+ 	la   a0, main
+ 	REG_L a1, 0(sp)      /* argc.  */
+ 	addi  a2, sp, SZREG  /* argv.  */
+-	/*
+-	 * No support fo app_init/app_fini as we don't support shared libraries.
+-	 */
+-	mv    a3, zero
+-	mv    a4, zero
+ 	andi  sp, sp, ALMASK /* Align stack. */
++	lla   a3, _init
++	lla   a4, _fini
+ 	mv    a6, sp  /* stack_end.  */
+ 
+ 	tail  __uClibc_main@plt
+diff --git a/libc/sysdeps/linux/riscv64/sys/ucontext.h b/libc/sysdeps/linux/riscv64/sys/ucontext.h
+index 2a80a853c..2893ff359 100644
+--- a/libc/sysdeps/linux/riscv64/sys/ucontext.h
++++ b/libc/sysdeps/linux/riscv64/sys/ucontext.h
+@@ -21,6 +21,8 @@
+ #define _SYS_UCONTEXT_H	1
+ 
+ #include <features.h>
++#include <signal.h>
++#include <bits/sigcontext.h>
+ 
+ typedef unsigned long int __riscv_mc_gp_state[32];
+ 
+diff --git a/libc/sysdeps/linux/riscv64/sysdep.h b/libc/sysdeps/linux/riscv64/sysdep.h
+index b12329332..3fa04bb57 100644
+--- a/libc/sysdeps/linux/riscv64/sysdep.h
++++ b/libc/sysdeps/linux/riscv64/sysdep.h
+@@ -20,6 +20,7 @@
+ #define _LINUX_RISCV_SYSDEP_H 1
+ 
+ #include <common/sysdep.h>
++#include <sys/syscall.h>
+ 
+ #ifdef __ASSEMBLER__
+ 
+diff --git a/libc/sysdeps/linux/sparc/__syscall_error.c b/libc/sysdeps/linux/sparc/__syscall_error.c
+index 5e109a83b..af26cf6ab 100644
+--- a/libc/sysdeps/linux/sparc/__syscall_error.c
++++ b/libc/sysdeps/linux/sparc/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/sparc64/__syscall_error.c b/libc/sysdeps/linux/sparc64/__syscall_error.c
+index 5e109a83b..af26cf6ab 100644
+--- a/libc/sysdeps/linux/sparc64/__syscall_error.c
++++ b/libc/sysdeps/linux/sparc64/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/tile/__syscall_error.c b/libc/sysdeps/linux/tile/__syscall_error.c
+index a91fdff3a..31cab3799 100644
+--- a/libc/sysdeps/linux/tile/__syscall_error.c
++++ b/libc/sysdeps/linux/tile/__syscall_error.c
+@@ -6,7 +6,7 @@
+ #include <errno.h>
+ #include <features.h>
+ 
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libc/sysdeps/linux/x86_64/__syscall_error.c b/libc/sysdeps/linux/x86_64/__syscall_error.c
+index 448f50983..7f0f388c4 100644
+--- a/libc/sysdeps/linux/x86_64/__syscall_error.c
++++ b/libc/sysdeps/linux/x86_64/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(void) attribute_hidden;
+-int __syscall_error(void)
++long __syscall_error(void) attribute_hidden;
++long __syscall_error(void)
+ {
+ 	register int err_no __asm__ ("%rcx");
+ 	__asm__ ("mov %rax, %rcx\n\t"
+diff --git a/libc/sysdeps/linux/xtensa/__syscall_error.c b/libc/sysdeps/linux/xtensa/__syscall_error.c
+index 2b642e816..c682aae49 100644
+--- a/libc/sysdeps/linux/xtensa/__syscall_error.c
++++ b/libc/sysdeps/linux/xtensa/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(-err_no);
+ 	return -1;
+diff --git a/libpthread/nptl/sysdeps/riscv64/Makefile.arch b/libpthread/nptl/sysdeps/riscv64/Makefile.arch
+new file mode 100644
+index 000000000..01fdac0b5
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/riscv64/Makefile.arch
+@@ -0,0 +1,4 @@
++# Makefile for uClibc-ng NPTL
++# Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
++
++libc_arch_a_CSRC = libc-tls.c
+diff --git a/libpthread/nptl/sysdeps/riscv64/dl-tls.h b/libpthread/nptl/sysdeps/riscv64/dl-tls.h
+new file mode 100644
+index 000000000..01663edf3
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/riscv64/dl-tls.h
+@@ -0,0 +1,24 @@
++/* Copyright (C) 2005-2016 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of the
++   License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++/* Type used for the representation of TLS information in the GOT.  */
++typedef struct
++{
++  unsigned long int ti_module;
++  unsigned long int ti_offset;
++} tls_index;
++
++extern void *__tls_get_addr (tls_index *ti);
+diff --git a/libpthread/nptl/sysdeps/riscv64/libc-tls.c b/libpthread/nptl/sysdeps/riscv64/libc-tls.c
+new file mode 100644
+index 000000000..500de1d64
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/riscv64/libc-tls.c
+@@ -0,0 +1,34 @@
++/* Copyright (C) 2005-2016 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of the
++   License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#include <sysdeps/generic/libc-tls.c>
++#include <dl-tls.h>
++
++/* On OpenRISC, linker optimizations are not required, so __tls_get_addr
++   can be called even in statically linked binaries.  In this case module
++   must be always 1 and PT_TLS segment exist in the binary, otherwise it
++   would not link.  */
++
++#if defined(USE_TLS) && USE_TLS
++
++void *
++__tls_get_addr (tls_index *ti)
++{
++  dtv_t *dtv = THREAD_DTV ();
++  return (char *) dtv[1].pointer.val + ti->ti_offset;
++}
++
++#endif
+diff --git a/libpthread/nptl/sysdeps/riscv64/pthread_spin_lock.c b/libpthread/nptl/sysdeps/riscv64/pthread_spin_lock.c
+new file mode 100644
+index 000000000..cec3acbc6
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/riscv64/pthread_spin_lock.c
+@@ -0,0 +1,65 @@
++/* pthread_spin_lock -- lock a spin lock.  Generic version.
++   Copyright (C) 2012-2016 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#include <atomic.h>
++#include "pthreadP.h"
++
++/* A machine-specific version can define SPIN_LOCK_READS_BETWEEN_CMPXCHG
++  to the number of plain reads that it's optimal to spin on between uses
++  of atomic_compare_and_exchange_val_acq.  If spinning forever is optimal
++  then use -1.  If no plain reads here would ever be optimal, use 0.  */
++#define SPIN_LOCK_READS_BETWEEN_CMPXCHG 1000
++
++int
++pthread_spin_lock (pthread_spinlock_t *lock)
++{
++  /* atomic_exchange usually takes less instructions than
++     atomic_compare_and_exchange.  On the other hand,
++     atomic_compare_and_exchange potentially generates less bus traffic
++     when the lock is locked.
++     We assume that the first try mostly will be successful, and we use
++     atomic_exchange.  For the subsequent tries we use
++     atomic_compare_and_exchange.  */
++  if (atomic_exchange_acq (lock, 1) == 0)
++    return 0;
++
++  do
++    {
++      /* The lock is contended and we need to wait.  Going straight back
++	 to cmpxchg is not a good idea on many targets as that will force
++	 expensive memory synchronizations among processors and penalize other
++	 running threads.
++	 On the other hand, we do want to update memory state on the local core
++	 once in a while to avoid spinning indefinitely until some event that
++	 will happen to update local memory as a side-effect.  */
++      if (SPIN_LOCK_READS_BETWEEN_CMPXCHG >= 0)
++	{
++	  int wait = SPIN_LOCK_READS_BETWEEN_CMPXCHG;
++
++	  while (*lock != 0 && wait > 0)
++	    --wait;
++	}
++      else
++	{
++	  while (*lock != 0)
++	    ;
++	}
++    }
++  while (atomic_compare_and_exchange_val_acq (lock, 1, 0) != 0);
++
++  return 0;
++}
+diff --git a/libpthread/nptl/sysdeps/riscv64/pthread_spin_trylock.c b/libpthread/nptl/sysdeps/riscv64/pthread_spin_trylock.c
+new file mode 100644
+index 000000000..4e9aa64d3
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/riscv64/pthread_spin_trylock.c
+@@ -0,0 +1,26 @@
++/* pthread_spin_trylock -- trylock a spin lock.  Generic version.
++   Copyright (C) 2012-2016 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#include <errno.h>
++#include <atomic.h>
++#include "pthreadP.h"
++
++int
++pthread_spin_trylock (pthread_spinlock_t *lock)
++{
++  return atomic_exchange_acq (lock, 1) ? EBUSY : 0;
++}
+diff --git a/libpthread/nptl/sysdeps/riscv64/pthreaddef.h b/libpthread/nptl/sysdeps/riscv64/pthreaddef.h
+new file mode 100644
+index 000000000..fbd40a74f
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/riscv64/pthreaddef.h
+@@ -0,0 +1,36 @@
++/* Copyright (C) 2002-2012 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of the
++   License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++/* Default stack size.  */
++#define ARCH_STACK_DEFAULT_SIZE (2 * 1024 * 1024)
++
++/* Required stack pointer alignment at beginning.  */
++#define STACK_ALIGN 16
++
++/* Minimal stack size after allocating thread descriptor and guard size.  */
++#define MINIMAL_REST_STACK 2048
++
++/* Alignment requirement for TCB.  */
++#define TCB_ALIGNMENT 16
++
++/* Location of current stack frame.  */
++#define CURRENT_STACK_FRAME __builtin_frame_address (0)
++
++
++/* XXX Until we have a better place keep the definitions here.  */
++#define __exit_thread_inline(val) \
++  INLINE_SYSCALL (exit, 1, (val))
++
+diff --git a/libpthread/nptl/sysdeps/riscv64/tcb-offsets.sym b/libpthread/nptl/sysdeps/riscv64/tcb-offsets.sym
+new file mode 100644
+index 000000000..86025a402
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/riscv64/tcb-offsets.sym
+@@ -0,0 +1,6 @@
++#include <sysdep.h>
++#include <tls.h>
++
++MULTIPLE_THREADS_OFFSET         offsetof (struct pthread, header.multiple_threads)
++TID_OFFSET                      offsetof (struct pthread, tid)
++TP_TO_PTHREAD_OFFSET            -(sizeof (struct pthread) + sizeof (tcbhead_t))
+diff --git a/libpthread/nptl/sysdeps/riscv64/tls.h b/libpthread/nptl/sysdeps/riscv64/tls.h
+new file mode 100644
+index 000000000..33a378154
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/riscv64/tls.h
+@@ -0,0 +1,201 @@
++/* Definition for thread-local data handling.  NPTL/OR1K version.
++   Copyright (C) 2005, 2007, 2011 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library.  If not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#ifndef _TLS_H
++#define _TLS_H  1
++
++#ifndef __ASSEMBLER__
++# include <stdbool.h>
++# include <stddef.h>
++# include <stdint.h>
++
++/* Type for the dtv.  */
++typedef union dtv
++{
++  size_t counter;
++  struct
++  {
++    void *val;
++    bool is_static;
++  } pointer;
++} dtv_t;
++
++typedef struct
++{
++  dtv_t *dtv;
++} tcbhead_t;
++
++register tcbhead_t *__thread_self __asm__("tp");
++
++# define TLS_MULTIPLE_THREADS_IN_TCB 1
++
++#else /* __ASSEMBLER__ */
++# include <tcb-offsets.h>
++#endif /* __ASSEMBLER__ */
++
++/* We require TLS support in the tools.  */
++#define HAVE_TLS_SUPPORT                1
++#define HAVE_TLS_MODEL_ATTRIBUTE        1
++#define HAVE___THREAD                   1
++
++/* Signal that TLS support is available.  */
++#define USE_TLS	1
++
++#ifndef __ASSEMBLER__
++
++/* Get system call information.  */
++# include <sysdep.h>
++
++/* The TP points to the start of the TLS block.
++ * As I understand it, this isn't strictly that "TP points to DTV" - it's
++ * more where to place the TCB in the TLS block. This will place it in 
++ * the beginning.
++ *
++ * Layout:
++ *  ------------------------------------
++ *  | PRE | TCB | TLS MEMORY ..        |
++ *  ------------------------------------
++ *              ^ r10 / TP
++ *
++ * PRE is the struct pthread described below
++ * TCB is tcbhead_t
++ * TLS memory is where the TLS program sections are loaded
++ *
++ * See _dl_allocate_tls_storage and __libc_setup_tls for more information.
++ */
++# define TLS_DTV_AT_TP  1
++
++/* Get the thread descriptor definition.  */
++# include <../../descr.h>
++
++/* Requirements for the TCB.  */
++# define TLS_INIT_TCB_SIZE    sizeof (tcbhead_t)
++# define TLS_INIT_TCB_ALIGN   __alignof__ (tcbhead_t)
++
++# define TLS_TCB_SIZE         sizeof (tcbhead_t)
++# define TLS_TCB_ALIGN        __alignof__ (tcbhead_t)
++
++/* This is the size of the TCB.  */
++
++/* This is the size we need before TCB.
++ * To support THREAD_GETMEM with friends we want to have a
++ * struct pthread available.
++ * Yank it in infront of everything, I'm sure nobody will mind.
++ *
++ * This memory is really allocated PRE the TLS block, so it's possible
++ * to do ((char*)tlsblock) - TLS_PRE_TCB_SIZE to access it.
++ * This is done for THREAD_SELF. */
++# define TLS_PRE_TCB_SIZE sizeof (struct pthread)
++
++
++/* Install the dtv pointer.
++ * When called, dtvp is a pointer not the DTV per say (which should start
++ * with the generation counter) but to the length of the DTV.
++ * We can always index with -1, so we store dtvp[1]
++ */
++# define INSTALL_DTV(tcbp, dtvp) \
++  (((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1)
++
++/* Install new dtv for current thread
++ * In a logicial world dtv here would also point to the length of the DTV.
++ * However it does not, this time it points to the generation counter,
++ * so just store it.
++ *
++ * Note: -1 is still valid and contains the length. */
++# define INSTALL_NEW_DTV(dtv) \
++  (THREAD_DTV() = (dtv))
++
++/* Return dtv of given thread descriptor.  */
++# define GET_DTV(tcbp) \
++  (((tcbhead_t *) (tcbp))->dtv)
++
++/* Code to initially initialize the thread pointer.
++ *
++ * Set TP to the address _after_ tcbhead_t. This will allow us
++ * to change the size of tcbhead_t without having to re-link everything.
++ *
++ * secondcall has something to do with USE__THREAD,
++ * seems to always be 0 so we don't care about it.
++ *
++ * This has to return NULL on success (or a string with the failure text).
++ * It's hard to fail this, so return NULL always.
++ */
++# define TLS_INIT_TP(tcbp, secondcall) \
++  ({__thread_self = ((tcbhead_t *)tcbp + 1); NULL;})
++
++/* Return the address of the dtv for the current thread.
++ *
++ * Dereference TP, offset to dtv - really straightforward.
++ * Remember that we made TP point to after tcb, so we need to reverse that.
++ */
++#  define THREAD_DTV() \
++  ((((tcbhead_t *)__thread_self)-1)->dtv)
++
++/* Return the thread descriptor for the current thread. 
++ *
++ * Return a pointer to the TLS_PRE area where we allocated space for
++ * a struct pthread. Again, TP points to after tcbhead_t, compensate with
++ * TLS_INIT_TCB_SIZE.
++ *
++ * I regard this is a seperate system from the "normal" TLS.
++ */
++# define THREAD_SELF \
++  ((struct pthread *) ((char *) __thread_self - TLS_INIT_TCB_SIZE \
++    - TLS_PRE_TCB_SIZE))
++
++/* Magic for libthread_db to know how to do THREAD_SELF.  */
++# define DB_THREAD_SELF \
++  CONST_THREAD_AREA (32, sizeof (struct pthread))
++
++/* Access to data in the thread descriptor is easy.  */
++#define THREAD_GETMEM(descr, member) \
++  descr->member
++#define THREAD_GETMEM_NC(descr, member, idx) \
++  descr->member[idx]
++#define THREAD_SETMEM(descr, member, value) \
++  descr->member = (value)
++#define THREAD_SETMEM_NC(descr, member, idx, value) \
++  descr->member[idx] = (value)
++
++/* Get and set the global scope generation counter in struct pthread.  */
++#define THREAD_GSCOPE_FLAG_UNUSED 0
++#define THREAD_GSCOPE_FLAG_USED   1
++#define THREAD_GSCOPE_FLAG_WAIT   2
++#define THREAD_GSCOPE_RESET_FLAG() \
++  do                       \
++    { int __res                    \
++  = atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,       \
++             THREAD_GSCOPE_FLAG_UNUSED);         \
++      if (__res == THREAD_GSCOPE_FLAG_WAIT)            \
++  lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
++    }                      \
++  while (0)
++#define THREAD_GSCOPE_SET_FLAG() \
++  do                       \
++    {                      \
++      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;       \
++      atomic_write_barrier ();                 \
++    }                      \
++  while (0)
++#define THREAD_GSCOPE_WAIT() \
++  GL(dl_wait_lookup_done) ()
++
++#endif /* __ASSEMBLER__ */
++
++#endif  /* tls.h */
++
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/__syscall_error.c b/libpthread/nptl/sysdeps/unix/sysv/linux/__syscall_error.c
+index 5e109a83b..af26cf6ab 100644
+--- a/libpthread/nptl/sysdeps/unix/sysv/linux/__syscall_error.c
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/__syscall_error.c
+@@ -10,8 +10,8 @@
+ 
+ /* This routine is jumped to by all the syscall handlers, to stash
+  * an error number into errno.  */
+-int __syscall_error(int err_no) attribute_hidden;
+-int __syscall_error(int err_no)
++long __syscall_error(int err_no) attribute_hidden;
++long __syscall_error(int err_no)
+ {
+ 	__set_errno(err_no);
+ 	return -1;
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/aarch64/bits/pthreadtypes.h b/libpthread/nptl/sysdeps/unix/sysv/linux/aarch64/bits/pthreadtypes.h
+index 47293a1a8..67fcee28b 100644
+--- a/libpthread/nptl/sysdeps/unix/sysv/linux/aarch64/bits/pthreadtypes.h
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/aarch64/bits/pthreadtypes.h
+@@ -36,7 +36,6 @@
+    exposed on purpose.  */
+ typedef unsigned long int pthread_t;
+ 
+-
+ union pthread_attr_t
+ {
+   char __size[__SIZEOF_PTHREAD_ATTR_T];
+@@ -44,7 +43,7 @@ union pthread_attr_t
+ };
+ #ifndef __have_pthread_attr_t
+ typedef union pthread_attr_t pthread_attr_t;
+-# define __have_pthread_attr_t1
++# define __have_pthread_attr_t	1
+ #endif
+ 
+ typedef struct __pthread_internal_list
+@@ -75,9 +74,6 @@ typedef union
+   long int __align;
+ } pthread_mutex_t;
+ 
+-/* Mutex __spins initializer used by PTHREAD_MUTEX_INITIALIZER.  */
+-#define __PTHREAD_SPINS 0
+-
+ typedef union
+ {
+   char __size[__SIZEOF_PTHREAD_MUTEXATTR_T];
+@@ -141,8 +137,6 @@ typedef union
+   long int __align;
+ } pthread_rwlock_t;
+ 
+-#define __PTHREAD_RWLOCK_ELISION_EXTRA 0
+-
+ typedef union
+ {
+   char __size[__SIZEOF_PTHREAD_RWLOCKATTR_T];
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/Makefile b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/Makefile
+new file mode 100644
+index 000000000..2caba11b7
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/Makefile
+@@ -0,0 +1,9 @@
++# Makefile for uClibc-ng NPTL
++# Licensed under the LGPL v2.1 or later, see the file COPYING.LIB in this tarball.
++
++top_srcdir=../../../../../../../
++top_builddir=../../../../../../../
++all: objs
++include $(top_builddir)Rules.mak
++include Makefile.arch
++include $(top_srcdir)Makerules
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/Makefile.arch b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/Makefile.arch
+new file mode 100644
+index 000000000..94aa25ffb
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/Makefile.arch
+@@ -0,0 +1,9 @@
++# Makefile for uClibc-ng NPTL
++# Licensed under the LGPL v2.1 or later, see the file COPYING.LIB in this tarball.
++
++libpthread_linux_arch_SSRC =
++libpthread_linux_arch_CSRC = pthread_once.c
++
++libc_linux_arch_CSRC = fork.c
++
++CFLAGS += $(SSP_ALL_CFLAGS)
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/bits/pthreadtypes.h b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/bits/pthreadtypes.h
+new file mode 100644
+index 000000000..13d138cd3
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/bits/pthreadtypes.h
+@@ -0,0 +1,167 @@
++/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#ifndef _BITS_PTHREADTYPES_H
++#define _BITS_PTHREADTYPES_H	1
++
++#define __SIZEOF_PTHREAD_ATTR_T 	56
++#define __SIZEOF_PTHREAD_MUTEX_T 	40
++#define __SIZEOF_PTHREAD_MUTEXATTR_T 	4
++#define __SIZEOF_PTHREAD_COND_T 	48
++#define __SIZEOF_PTHREAD_COND_COMPAT_T 	12
++#define __SIZEOF_PTHREAD_CONDATTR_T 	4
++#define __SIZEOF_PTHREAD_RWLOCK_T 	56
++#define __SIZEOF_PTHREAD_RWLOCKATTR_T 	8
++#define __SIZEOF_PTHREAD_BARRIER_T 	32
++#define __SIZEOF_PTHREAD_BARRIERATTR_T 	4
++
++
++/* Thread identifiers.  The structure of the attribute type is not
++   exposed on purpose.  */
++typedef unsigned long int pthread_t;
++
++union pthread_attr_t
++{
++  char __size[__SIZEOF_PTHREAD_ATTR_T];
++  long int __align;
++};
++#ifndef __have_pthread_attr_t
++typedef union pthread_attr_t pthread_attr_t;
++# define __have_pthread_attr_t  1
++#endif
++
++typedef struct __pthread_internal_list
++{
++  struct __pthread_internal_list *__prev;
++  struct __pthread_internal_list *__next;
++} __pthread_list_t;
++
++
++/* Data structures for mutex handling.  The structure of the attribute
++   type is not exposed on purpose.  */
++typedef union
++{
++  struct __pthread_mutex_s
++  {
++    int __lock;
++    unsigned int __count;
++    int __owner;
++    unsigned int __nusers;
++    /* KIND must stay at this position in the structure to maintain
++       binary compatibility with static initializers.  */
++    int __kind;
++    int __spins;
++    __pthread_list_t __list;
++#define __PTHREAD_MUTEX_HAVE_PREV	1
++  } __data;
++  char __size[__SIZEOF_PTHREAD_MUTEX_T];
++  long int __align;
++} pthread_mutex_t;
++
++typedef union
++{
++  char __size[__SIZEOF_PTHREAD_MUTEXATTR_T];
++  long int __align;
++} pthread_mutexattr_t;
++
++
++/* Data structure for conditional variable handling.  The structure of
++   the attribute type is not exposed on purpose.  */
++typedef union
++{
++  struct
++  {
++    int __lock;
++    unsigned int __futex;
++    __extension__ unsigned long long int __total_seq;
++    __extension__ unsigned long long int __wakeup_seq;
++    __extension__ unsigned long long int __woken_seq;
++    void *__mutex;
++    unsigned int __nwaiters;
++    unsigned int __broadcast_seq;
++  } __data;
++  char __size[__SIZEOF_PTHREAD_COND_T];
++  __extension__ long long int __align;
++} pthread_cond_t;
++
++typedef union
++{
++  char __size[__SIZEOF_PTHREAD_CONDATTR_T];
++  long int __align;
++} pthread_condattr_t;
++
++
++/* Keys for thread-specific data */
++typedef unsigned int pthread_key_t;
++
++
++/* Once-only execution */
++typedef int pthread_once_t;
++
++
++#if defined __USE_UNIX98 || defined __USE_XOPEN2K
++/* Data structure for read-write lock variable handling.  The
++   structure of the attribute type is not exposed on purpose.  */
++typedef union
++{
++  struct
++  {
++    int __lock;
++    unsigned int __nr_readers;
++    unsigned int __readers_wakeup;
++    unsigned int __writer_wakeup;
++    unsigned int __nr_readers_queued;
++    unsigned int __nr_writers_queued;
++    int __writer;
++    int __shared;
++    unsigned long int __pad1;
++    unsigned long int __pad2;
++    unsigned int __flags;
++  } __data;
++  char __size[__SIZEOF_PTHREAD_RWLOCK_T];
++  long int __align;
++} pthread_rwlock_t;
++
++typedef union
++{
++  char __size[__SIZEOF_PTHREAD_RWLOCKATTR_T];
++  long int __align;
++} pthread_rwlockattr_t;
++#endif
++
++
++#ifdef __USE_XOPEN2K
++/* POSIX spinlock data type.  */
++typedef volatile int pthread_spinlock_t;
++
++
++/* POSIX barriers data type.  The structure of the type is
++   deliberately not exposed.  */
++typedef union
++{
++  char __size[__SIZEOF_PTHREAD_BARRIER_T];
++  long int __align;
++} pthread_barrier_t;
++
++typedef union
++{
++  char __size[__SIZEOF_PTHREAD_BARRIERATTR_T];
++  int __align;
++} pthread_barrierattr_t;
++#endif
++
++#endif	/* bits/pthreadtypes.h */
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/bits/semaphore.h b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/bits/semaphore.h
+new file mode 100644
+index 000000000..796a4383b
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/bits/semaphore.h
+@@ -0,0 +1,33 @@
++/* Copyright (C) 2002, 2005, 2007 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library.  If not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#ifndef _SEMAPHORE_H
++# error "Never use <bits/semaphore.h> directly; include <semaphore.h> instead."
++#endif
++
++
++#define __SIZEOF_SEM_T	(4 * __SIZEOF_POINTER__)
++
++
++/* Value returned if `sem_open' failed.  */
++#define SEM_FAILED      ((sem_t *) 0)
++
++
++typedef union
++{
++  char __size[__SIZEOF_SEM_T];
++  long int __align;
++} sem_t;
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/createthread.c b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/createthread.c
+new file mode 100644
+index 000000000..10bb1bbfe
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/createthread.c
+@@ -0,0 +1,22 @@
++/* Copyright (C) 2012 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; see the file COPYING.LIB.  If
++   not, see <http://www.gnu.org/licenses/>.  */
++
++/* Value passed to 'clone' for initialization of the thread register.  */
++#define TLS_VALUE ((void *) (pd) \
++		   + TLS_PRE_TCB_SIZE + TLS_INIT_TCB_SIZE)
++
++/* Get the real implementation.  */
++#include <sysdeps/pthread/createthread.c>
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/fork.c b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/fork.c
+new file mode 100644
+index 000000000..e55d05d41
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/fork.c
+@@ -0,0 +1,27 @@
++/* Copyright (C) 2005 Free Software Foundation, Inc.
++   Contributed by Phil Blundell <pb@nexus.co.uk>, 2005
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++#include <sched.h>
++#include <signal.h>
++#include <sysdep.h>
++#include <tls.h>
++
++#define ARCH_FORK() \
++  INLINE_SYSCALL (clone, 5,                                                  \
++                 CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD, 0,     \
++                 NULL, &THREAD_SELF->tid, NULL)
++
++#include "../fork.c"
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/pthread_once.c b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/pthread_once.c
+new file mode 100644
+index 000000000..ce68ce68c
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/pthread_once.c
+@@ -0,0 +1,92 @@
++/* Copyright (C) 2003-2013 Free Software Foundation, Inc.
++   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#include "pthreadP.h"
++#include <lowlevellock.h>
++
++
++unsigned long int __fork_generation attribute_hidden;
++
++
++static void
++clear_once_control (void *arg)
++{
++  pthread_once_t *once_control = (pthread_once_t *) arg;
++
++  *once_control = 0;
++  lll_futex_wake (once_control, INT_MAX, LLL_PRIVATE);
++}
++
++
++int
++__pthread_once (once_control, init_routine)
++     pthread_once_t *once_control;
++     void (*init_routine) (void);
++{
++  while (1)
++    {
++      int oldval, val, newval;
++
++      val = *once_control;
++      do
++	{
++	  /* Check if the initialized has already been done.  */
++	  if ((val & 2) != 0)
++	    return 0;
++
++	  oldval = val;
++	  newval = (oldval & 3) | __fork_generation | 1;
++	  val = atomic_compare_and_exchange_val_acq (once_control, newval,
++						     oldval);
++	}
++      while (__builtin_expect (val != oldval, 0));
++
++      /* Check if another thread already runs the initializer.	*/
++      if ((oldval & 1) != 0)
++	{
++	  /* Check whether the initializer execution was interrupted
++	     by a fork.	 */
++	  if (((oldval ^ newval) & -4) == 0)
++	    {
++	      /* Same generation, some other thread was faster. Wait.  */
++	      lll_futex_wait (once_control, newval, LLL_PRIVATE);
++	      continue;
++	    }
++	}
++
++      /* This thread is the first here.  Do the initialization.
++	 Register a cleanup handler so that in case the thread gets
++	 interrupted the initialization can be restarted.  */
++      pthread_cleanup_push (clear_once_control, once_control);
++
++      init_routine ();
++
++      pthread_cleanup_pop (0);
++
++
++      /* Add one to *once_control.  */
++      atomic_increment (once_control);
++
++      /* Wake up all other threads.  */
++      lll_futex_wake (once_control, INT_MAX, LLL_PRIVATE);
++      break;
++    }
++
++  return 0;
++}
++weak_alias (__pthread_once, pthread_once)
++strong_alias (__pthread_once, __pthread_once_internal)
+diff --git a/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/sysdep-cancel.h b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/sysdep-cancel.h
+new file mode 100644
+index 000000000..f7e70514a
+--- /dev/null
++++ b/libpthread/nptl/sysdeps/unix/sysv/linux/riscv64/sysdep-cancel.h
+@@ -0,0 +1,38 @@
++/* Copyright (C) 2014 Free Software Foundation, Inc.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library.  If not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#include <sysdep.h>
++#include <tls.h>
++#ifndef __ASSEMBLER__
++# include <pthreadP.h>
++#endif
++
++#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
++
++# define SINGLE_THREAD_P \
++  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
++                                   header.multiple_threads) == 0, 1)
++
++#else
++
++# define SINGLE_THREAD_P 1
++# define NO_CANCELLATION 1
++
++#endif
++
++#define RTLD_SINGLE_THREAD_P \
++  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
++                                   header.multiple_threads) == 0, 1)
+diff --git a/utils/ldd.c b/utils/ldd.c
+index 4c5635ca7..8852be399 100644
+--- a/utils/ldd.c
++++ b/utils/ldd.c
+@@ -122,6 +122,11 @@
+ #define ELFCLASSM	ELFCLASS32
+ #endif
+ 
++#if defined(__riscv)
++#define MATCH_MACHINE(x) (x == EM_RISCV)
++#define ELFCLASSM	ELFCLASS64
++#endif
++
+ #if defined(__sh__)
+ #define MATCH_MACHINE(x) (x == EM_SH)
+ #define ELFCLASSM	ELFCLASS32
