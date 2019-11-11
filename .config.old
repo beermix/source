@@ -326,7 +326,7 @@ CONFIG_KERNEL_GIT_CLONE_URI=""
 # CONFIG_BUILD_LOG is not set
 CONFIG_BUILD_LOG_DIR=""
 # CONFIG_SRC_TREE_OVERRIDE is not set
-CONFIG_EXTRA_OPTIMIZATION="-fno-caller-saves -fno-plt"
+CONFIG_EXTRA_OPTIMIZATION="-fno-caller-saves -fno-plt -fomit-frame-pointer"
 CONFIG_TARGET_OPTIONS=y
 CONFIG_TARGET_OPTIMIZATION="-march=bonnell -O2 -pipe --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
@@ -351,7 +351,7 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux"
 # CONFIG_GCC_USE_VERSION_8 is not set
 CONFIG_GCC_USE_VERSION_9=y
 # CONFIG_GCC_USE_VERSION_10 is not set
-CONFIG_GCC_USE_GRAPHITE=y
+# CONFIG_GCC_USE_GRAPHITE is not set
 CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --with-default-libstdcxx-abi=gcc4-compatible"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
