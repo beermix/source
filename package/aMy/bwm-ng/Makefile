@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/bwm-ng
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+BWMNG_LIBNCURSES:libncurses +libstatgrab
+  DEPENDS:=+BWMNG_LIBNCURSES:libncurses
   TITLE:=bwm-ng
   URL:=http://www.gropp.org/?id=projects&sub=bwm-ng
   MENU:=1
@@ -48,7 +48,6 @@ define Build/Configure
 	$(if $(CONFIG_BWMNG_GETOPT_LONG),--with,--without)-getopt_long \
 	--with-strip \
 	--with-procnetdev \
-	--with-libstatgrab \
 	--with-getifaddrs \
 	--with-sysctl \
 	--with-sysctldisk \
