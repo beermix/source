@@ -97,18 +97,17 @@ CONFIGURE_ARGS += \
         --disable-seccomp \
         --disable-libscrypt \
         --disable-unittests \
-        --enable-lzma=no \
-        --enable-zstd=no \
+        --disable-zstd \
+        --disable-zstd \
         --disable-module-dirauth \
         --enable-silent-rules \
         --with-tor-user=tor \
         --with-tor-group=tor
 
-TARGET_CFLAGS += -O3 -Wall
-#TARGET_LDFLAGS += -Wl,--gc-sections -flto
+#TARGET_CFLAGS += -O3 -Wall
 
-#TARGET_CFLAGS += -O3 -Wall -ffunction-sections -fdata-sections
-#TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
