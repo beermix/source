@@ -49,8 +49,6 @@ HOST_CONFIGURE_ARGS = \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
-	--enable-secureplt \
-	--enable-targets=i386-linux \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
@@ -79,17 +77,17 @@ define Host/Prepare
 endef
 
 define Host/Compile
-	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) MAKEINFO=true all
+	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
 endef
 
 define Host/Install
 	mkdir -p $(TOOLCHAIN_DIR)/initial
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR)/initial \
-		MAKEINFO=true install
+		install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR) \
-		MAKEINFO=true install
+		install
 	$(call FixupLibdir,$(TOOLCHAIN_DIR)/initial)
 	$(RM) $(TOOLCHAIN_DIR)/initial/lib/libiberty.a
 	$(CP) $(TOOLCHAIN_DIR)/bin/$(REAL_GNU_TARGET_NAME)-readelf $(HOST_BUILD_PREFIX)/bin/readelf
