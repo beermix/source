@@ -5099,7 +5099,7 @@ CONFIG_LIBCURL_NTLM=y
 # CONFIG_PACKAGE_libdrm is not set
 # CONFIG_PACKAGE_libdw is not set
 # CONFIG_PACKAGE_libecdsautil is not set
-CONFIG_PACKAGE_libedit=y
+# CONFIG_PACKAGE_libedit is not set
 CONFIG_PACKAGE_libelf=y
 # CONFIG_PACKAGE_libesmtp is not set
 # CONFIG_PACKAGE_libestr is not set
