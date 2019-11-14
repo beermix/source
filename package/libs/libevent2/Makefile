@@ -116,9 +116,7 @@ CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
 	--disable-libevent-regress \
-	--disable-silent-rules \
 	--disable-samples \
-	--disable-clock-gettime \
 	--disable-debug-mode
 
 #MAKE_FLAGS += CFLAGS="$(TARGET_CFLAGS)"
