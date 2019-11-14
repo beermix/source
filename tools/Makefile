@@ -41,7 +41,7 @@ tools-$(CONFIG_TARGET_apm821xx)$(CONFIG_TARGET_gemini) += genext2fs
 tools-$(CONFIG_TARGET_tegra) += cbootimage cbootimage-configs
 
 # builddir dependencies
-$(curdir)/bison/compile := $(curdir)/flex/compile
+$(curdir)/bison/compile := $(curdir)/m4/compile
 $(curdir)/flex/compile := $(curdir)/libtool/compile $(curdir)/bison/compile
 $(curdir)/libtool/compile := $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/automake/compile $(curdir)/missing-macros/compile
 $(curdir)/squashfs/compile := $(curdir)/lzma-old/compile
