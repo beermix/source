@@ -98,7 +98,7 @@ CONFIGURE_ARGS += \
         --disable-libscrypt \
         --disable-unittests \
         --disable-zstd \
-        --disable-zstd \
+        --disable-lzma \
         --disable-module-dirauth \
         --enable-silent-rules \
         --with-tor-user=tor \
