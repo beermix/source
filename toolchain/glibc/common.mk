@@ -12,11 +12,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.27
+PKG_VERSION:=2.30.9000
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=92f04eedb50dc12643addbcb033a06b51633d0ff
+PKG_SOURCE_VERSION:=9e3e27c4e32c02e93d9779e41356adfb357957e3
 PKG_MIRROR_HASH:=
 #PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
@@ -67,6 +67,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-kernel=4.14 \
+		--enable-static-pie \
 		--disable-debug \
 		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
