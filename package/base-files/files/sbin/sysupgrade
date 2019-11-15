@@ -14,7 +14,7 @@ export SAVE_OVERLAY=0
 export SAVE_OVERLAY_PATH=
 export SAVE_PARTITIONS=1
 export SAVE_INSTALLED_PKGS=0
-export SKIP_UNCHANGED=
+export SKIP_UNCHANGED=0
 export CONF_IMAGE=
 export CONF_BACKUP_LIST=0
 export CONF_BACKUP=
@@ -29,8 +29,8 @@ export UMOUNT_ETCBACKUP_DIR=0
 while [ -n "$1" ]; do
 	case "$1" in
 		-i) export INTERACTIVE=1;;
-		-v) export VERBOSE="$((VERBOSE + 1))";;
-		-q) export VERBOSE="$((VERBOSE - 1))";;
+		-v) export VERBOSE="$(($VERBOSE + 1))";;
+		-q) export VERBOSE="$(($VERBOSE - 1))";;
 		-n) export SAVE_CONFIG=0;;
 		-c) export SAVE_OVERLAY=1 SAVE_OVERLAY_PATH=/etc;;
 		-o) export SAVE_OVERLAY=1 SAVE_OVERLAY_PATH=/;;
@@ -60,7 +60,7 @@ export INSTALLED_PACKAGES=${ETCBACKUP_DIR}/installed_packages.txt
 
 IMAGE="$1"
 
-[ -z "$IMAGE" ] && [ -z "$NEED_IMAGE" ] && [ "$CONF_BACKUP_LIST" -eq 0 ] || [ "$HELP" -gt 0 ] && {
+[ -z "$IMAGE" -a -z "$NEED_IMAGE" -a $CONF_BACKUP_LIST -eq 0 -o $HELP -gt 0 ] && {
 	cat <<EOF
 Usage: $0 [<upgrade-option>...] <image file or URL>
        $0 [-q] [-i] [-c] [-u] [-o] [-k] <backup-command> <file>
@@ -101,7 +101,7 @@ EOF
 	exit 1
 }
 
-[ -n "$IMAGE" ] && [ -n "$NEED_IMAGE" ] && {
+[ -n "$IMAGE" -a -n "$NEED_IMAGE" ] && {
 	cat <<-EOF
 		-b|--create-backup and -r|--restore-backup do not perform a firmware upgrade.
 		Do not specify both -b|-r and a firmware image.
@@ -118,40 +118,25 @@ list_conffiles() {
 		BEGIN { conffiles = 0 }
 		/^Conffiles:/ { conffiles = 1; next }
 		!/^ / { conffiles = 0; next }
-		# in format: <space><filename><space><hash>
-		conffiles == 1 { print $(NF) "  " substr($0,2,length($0)-length($(NF))-2) }
+		conffiles == 1 { print }
 	' /usr/lib/opkg/status
 }
 
 list_changed_conffiles() {
-	list_conffiles | while read -r csum_file; do
-		file="$(echo "$csum_file" | cut -d" " -f3-)"
+	# Cannot handle spaces in filenames - but opkg cannot either...
+	list_conffiles | while read file csum; do
 		[ -r "$file" ] || continue
-		echo "${csum_file}" | sha256sum -sc - || echo "$file"
+
+		echo "${csum}  ${file}" | sha256sum -sc - || echo "$file"
 	done
-}
-
-find_bkpfiles() {
-	find "$@" \( -type f -o -type l \) \
-		${SKIP_UNCHANGED:+\( \! -exec test -e "/rom/{}" \; -o \! -exec cmp -s "/{}" "/rom/{}" \; \)} \
-		-print
-}
-
-list_keepfiles() {
-	set --
-	sed -ne '/^[[:space:]]*$/d; /^#/d; p' \
-                /etc/sysupgrade.conf /lib/upgrade/keep.d/* 2>/dev/null |
-	{
-		while read -r filename; do
-			set -- "$@" "$filename"
-		done
-		find_bkpfiles "$@" 2>/dev/null
-	}
 }
 
 add_conffiles() {
 	local file="$1"
-	{ list_keepfiles; list_changed_conffiles; } | sort -u > "$file"
+	( find $(sed -ne '/^[[:space:]]*$/d; /^#/d; p' \
+		/etc/sysupgrade.conf /lib/upgrade/keep.d/* 2>/dev/null) \
+		\( -type f -o -type l \) $find_filter 2>/dev/null;
+	  list_changed_conffiles ) | sort -u > "$file"
 	return 0
 }
 
@@ -165,14 +150,17 @@ add_overlayfiles() {
 		local conffiles=$1.conffiles
 		local keepfiles=$1.keepfiles
 
-		list_conffiles | cut -f3- -d ' ' | sort -u > "$conffiles"
+		list_conffiles | cut -f2 -d ' ' | sort -u > "$conffiles"
 
 		# backup files from /etc/sysupgrade.conf and /lib/upgrade/keep.d, but
 		# ignore those aready controlled by opkg conffiles
-		list_keepfiles | sort -u | grep -h -v -x -F -f "$conffiles" > "$keepfiles"
+		find $(sed -ne '/^[[:space:]]*$/d; /^#/d; p' \
+			/etc/sysupgrade.conf /lib/upgrade/keep.d/* 2>/dev/null) \
+			\( -type f -o -type l \) 2>/dev/null | sort -u |
+			grep -h -v -x -F -f $conffiles > "$keepfiles"
 
 		# backup conffiles, but only those changed if '-u'
-		[ "$SKIP_UNCHANGED" = 1 ] &&
+		[ $SKIP_UNCHANGED = 1 ] &&
 			list_changed_conffiles | sort -u > "$conffiles"
 
 		# do not backup files from packages, except those listed
@@ -182,44 +170,22 @@ add_overlayfiles() {
 			find /usr/lib/opkg/info -type f -name "*.control" -exec sed \
 				-ne '/^Alternatives/{s/^Alternatives: //;s/, /\n/g;p}' {} \; |
 				cut -f2 -d:
-		} |  grep -v -x -F -f "$conffiles" |
-		     grep -v -x -F -f "$keepfiles" | sort -u > "$packagesfiles"
+		} |  grep -v -x -F -f $conffiles |
+		     grep -v -x -F -f $keepfiles | sort -u > "$packagesfiles"
 		rm -f "$keepfiles" "$conffiles"
 	fi
 
 	# busybox grep bug when file is empty
-	[ -s "$packagesfiles" ] || echo > "$packagesfiles"
+	[ -s "$packagesfiles" ] || echo > $packagesfiles
 
-	# filter out paths hidden by mount
-	set -- \( \( -path ""
-	while read -r mount_line; do
-		mount_line="${mount_line#* }"
-		mount_dir="${mount_line%% *}"
-		[ "$mount_dir" != "/" ] || continue
-		# spaces are escaped as \040 in /proc/mounts
-		mount_dir="${mount_dir//\\040/ }"
-		# single quotes as \134 in /proc/mounts, but find needs it in double for glob pattern
-		mount_dir="${mount_dir//\\134/\\\\}"
-		# more glob pattern escape
-		mount_dir="${mount_dir//\*/\\*}"
-		mount_dir="${mount_dir//\[/\\[}"
-		set -- "$@" -o -path ".$mount_dir"
-	done </proc/mounts
-	set -- "$@" \) -prune \) -o
-
-	(cd /overlay/upper/ || exit 1
-		find_bkpfiles .$SAVE_OVERLAY_PATH "$@" | sed \
+	( cd /overlay/upper/; find .$SAVE_OVERLAY_PATH \( -type f -o -type l \) $find_filter | sed \
 		-e 's,^\.,,' \
 		-e '\,^/etc/board.json$,d' \
 		-e '\,/[^/]*-opkg$,d' \
 		-e '\,^/etc/urandom.seed$,d' \
 		-e "\,^$INSTALLED_PACKAGES$,d" \
-		-e '\,^/usr/lib/opkg/.*,d' |
-		grep -v -x -F -f "$packagesfiles"
-	) > "$file" || {
-		echo "Failed to list files in '/overlay/upper/'" >&2
-		exit 1
-	}
+		-e '\,^/usr/lib/opkg/.*,d' \
+	) | grep -v -x -F -f $packagesfiles > "$file"
 
 	rm -f "$packagesfiles"
 
@@ -236,11 +202,13 @@ else
 	sysupgrade_init_conffiles="add_conffiles"
 fi
 
-if [ "$SKIP_UNCHANGED" = 1 ]; then
+find_filter=""
+if [ $SKIP_UNCHANGED = 1 ]; then
 	[ ! -d /rom/ ] && {
 		echo "'/rom/' is required by '-u'"
 		exit 1
 	}
+	find_filter='( ( -exec test -e /rom/{} ; -exec cmp -s /{} /rom/{} ; ) -o -print )'
 fi
 
 include /lib/upgrade
@@ -263,7 +231,7 @@ do_save_conffiles() {
 		# Avoid touching filesystem on each backup
 		RAMFS="$(mktemp -d -t sysupgrade.XXXXXX)"
 		mkdir -p "$RAMFS/upper" "$RAMFS/work"
-		mount -t overlay overlay -o "lowerdir=$ETCBACKUP_DIR,upperdir=$RAMFS/upper,workdir=$RAMFS/work" "$ETCBACKUP_DIR" &&
+		mount -t overlay overlay -o lowerdir=$ETCBACKUP_DIR,upperdir=$RAMFS/upper,workdir=$RAMFS/work $ETCBACKUP_DIR &&
 			UMOUNT_ETCBACKUP_DIR=1 || {
 				echo "Cannot mount '$ETCBACKUP_DIR' as tmpfs to avoid touching disk while saving the list of installed packages." >&2
 				ask_bool 0 "Abort" && exit
@@ -280,20 +248,18 @@ do_save_conffiles() {
 
 	v "Saving config files..."
 	[ "$VERBOSE" -gt 1 ] && TAR_V="v" || TAR_V=""
-	sed -i -e 's,^/,,' $CONFFILES
-	tar -C / -c${TAR_V}zf "$conf_tar" -T "$CONFFILES"
-	local err=$?
+	tar c${TAR_V}zf "$conf_tar" -T "$CONFFILES" 2>/dev/null
+	if [ "$?" -ne 0 ]; then
+		echo "Failed to create the configuration backup."
+		rm -f "$conf_tar"
+		exit 1
+	fi
+
 	[ "$UMOUNT_ETCBACKUP_DIR" -eq 1 ] && {
 		umount "$ETCBACKUP_DIR"
 		rm -rf "$RAMFS"
 	}
 	rm -f "$CONFFILES"
-
-	if [ "$err" -ne 0 ]; then
-		echo "Failed to create the configuration backup." >&2
-		rm -f "$conf_tar"
-		exit 1
-	fi
 }
 
 if [ $CONF_BACKUP_LIST -eq 1 ]; then
@@ -363,7 +329,7 @@ json_get_var valid "valid"
 }
 
 if [ -n "$CONF_IMAGE" ]; then
-	case "$(get_magic_word "$CONF_IMAGE" cat)" in
+	case "$(get_magic_word $CONF_IMAGE cat)" in
 		# .gz files
 		1f8b) ;;
 		*)
