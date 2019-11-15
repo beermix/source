@@ -11,9 +11,7 @@ PKG_VERSION:=1.07.1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.gnu.org/gnu/bc/
-PKG_HASH:=
-
-HOST_FIXUP:=autoreconf
+PKG_HASH:=62adfca89b0a1c0164c2cdca59ca210c1d44c3ffc46daf9931cf4942664cb02a
 
 include $(INCLUDE_DIR)/host-build.mk
 
