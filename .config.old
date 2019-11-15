@@ -4996,7 +4996,7 @@ CONFIG_PACKAGE_glib2=y
 # CONFIG_PACKAGE_icu is not set
 # CONFIG_PACKAGE_icu-data-tools is not set
 # CONFIG_PACKAGE_icu-full-data is not set
-# CONFIG_PACKAGE_jansson is not set
+CONFIG_PACKAGE_jansson=y
 # CONFIG_PACKAGE_jsoncpp is not set
 # CONFIG_PACKAGE_knot-libs is not set
 # CONFIG_PACKAGE_knot-libzscanner is not set
@@ -5025,8 +5025,8 @@ CONFIG_PACKAGE_libcap=y
 # CONFIG_PACKAGE_libcgroup is not set
 # CONFIG_PACKAGE_libcharset is not set
 # CONFIG_PACKAGE_libcoap is not set
-# CONFIG_PACKAGE_libcomerr is not set
-# CONFIG_PACKAGE_libconfig is not set
+CONFIG_PACKAGE_libcomerr=y
+CONFIG_PACKAGE_libconfig=y
 # CONFIG_PACKAGE_libcups is not set
 CONFIG_PACKAGE_libcurl=y
 
@@ -6067,7 +6067,7 @@ CONFIG_DNSDIST_OPENSSL=y
 # CONFIG_PACKAGE_ngircd-nossl is not set
 # CONFIG_PACKAGE_prosody is not set
 # CONFIG_PACKAGE_quassel-irssi is not set
-CONFIG_PACKAGE_telegram-cli=y
+# CONFIG_PACKAGE_telegram-cli is not set
 # CONFIG_PACKAGE_umurmur-mbedtls is not set
 # CONFIG_PACKAGE_umurmur-openssl is not set
 # CONFIG_PACKAGE_znc is not set
