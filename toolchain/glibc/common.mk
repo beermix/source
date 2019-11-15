@@ -18,8 +18,8 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=c347431fb5fd3f124c05e82fb7a661b396e86f82
 PKG_MIRROR_HASH:=
-#PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
-PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
+PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
+#PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
@@ -71,6 +71,9 @@ GLIBC_CONFIGURE:= \
 		--enable-kernel=4.14 \
 		--disable-debug \
 		--enable-add-ons \
+		--disable-build-nscd \
+		--disable-nscd \
+		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_forced_unwind=yes
