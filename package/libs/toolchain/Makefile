@@ -646,6 +646,9 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/
+	#$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/usr/bin/
   endef
 
   define Package/ldconfig/install
