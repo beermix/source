@@ -140,14 +140,14 @@ CONFIG_TARGET_IMAGES_GZIP=y
 #
 # Image Options
 #
-CONFIG_TARGET_KERNEL_PARTSIZE=20
+CONFIG_TARGET_KERNEL_PARTSIZE=18
 CONFIG_TARGET_ROOTFS_PARTSIZE=650
 CONFIG_TARGET_ROOTFS_PARTNAME=""
 
 #
 # Global build settings
 #
-CONFIG_JSON_ADD_IMAGE_INFO=y
+# CONFIG_JSON_ADD_IMAGE_INFO is not set
 # CONFIG_ALL_NONSHARED is not set
 # CONFIG_ALL_KMODS is not set
 # CONFIG_ALL is not set
@@ -180,8 +180,8 @@ CONFIG_KERNEL_DEBUG_FS=y
 # CONFIG_KERNEL_TASKSTATS is not set
 CONFIG_KERNEL_KALLSYMS=y
 # CONFIG_KERNEL_FTRACE is not set
-# CONFIG_KERNEL_DEBUG_KERNEL is not set
-# CONFIG_KERNEL_DEBUG_INFO is not set
+CONFIG_KERNEL_DEBUG_KERNEL=y
+CONFIG_KERNEL_DEBUG_INFO=y
 # CONFIG_KERNEL_DYNAMIC_DEBUG is not set
 # CONFIG_KERNEL_KPROBES is not set
 CONFIG_KERNEL_AIO=y
@@ -198,7 +198,8 @@ CONFIG_KERNEL_PRINTK_TIME=y
 # CONFIG_KERNEL_SLABINFO is not set
 # CONFIG_KERNEL_PROC_PAGE_MONITOR is not set
 CONFIG_KERNEL_KEXEC=y
-# CONFIG_KERNEL_CRASH_DUMP is not set
+CONFIG_KERNEL_PROC_VMCORE=y
+CONFIG_KERNEL_CRASH_DUMP=y
 # CONFIG_USE_RFKILL is not set
 # CONFIG_USE_SPARSE is not set
 # CONFIG_KERNEL_DEVTMPFS is not set
@@ -313,7 +314,7 @@ CONFIG_KERNEL_GIT_CLONE_URI=""
 # CONFIG_BUILD_LOG is not set
 CONFIG_BUILD_LOG_DIR=""
 # CONFIG_SRC_TREE_OVERRIDE is not set
-CONFIG_EXTRA_OPTIMIZATION="-fno-caller-saves -fno-plt -fomit-frame-pointer"
+CONFIG_EXTRA_OPTIMIZATION="-fno-caller-saves -fno-plt"
 CONFIG_TARGET_OPTIONS=y
 CONFIG_TARGET_OPTIMIZATION="-march=bonnell -O2 -pipe --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
@@ -339,7 +340,7 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
 CONFIG_GCC_USE_VERSION_9=y
 # CONFIG_GCC_USE_VERSION_10 is not set
 # CONFIG_GCC_USE_GRAPHITE is not set
-CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-default-libstdcxx-abi=gcc4-compatible --with-linker-hash-style=gnu"
+CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-default-libstdcxx-abi=gcc4-compatible"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
 # CONFIG_GCC_LIBSSP is not set
@@ -2384,18 +2385,13 @@ CONFIG_PROCD_SHOW_BOOT=y
 # CONFIG_PACKAGE_procd-ujail is not set
 # CONFIG_PACKAGE_qos-scripts is not set
 # CONFIG_PACKAGE_resolveip is not set
-CONFIG_PACKAGE_rpcd=y
-CONFIG_PACKAGE_rpcd-mod-file=y
-CONFIG_PACKAGE_rpcd-mod-iwinfo=y
-# CONFIG_PACKAGE_rpcd-mod-rpcsys is not set
-CONFIG_PACKAGE_snapshot-tool=y
-# CONFIG_PACKAGE_sqm-scripts is not set
-# CONFIG_PACKAGE_sqm-scripts-extra is not set
+# CONFIG_PACKAGE_rpcd is not set
+# CONFIG_PACKAGE_snapshot-tool is not set
 # CONFIG_PACKAGE_swconfig is not set
 CONFIG_PACKAGE_ubox=y
 CONFIG_PACKAGE_ubus=y
 CONFIG_PACKAGE_ubusd=y
-CONFIG_PACKAGE_ucert=y
+# CONFIG_PACKAGE_ucert is not set
 # CONFIG_PACKAGE_ucert-full is not set
 CONFIG_PACKAGE_uci=y
 CONFIG_PACKAGE_urandom-seed=y
