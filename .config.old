@@ -306,9 +306,9 @@ CONFIG_PKG_CHECK_FORMAT_SECURITY=y
 CONFIG_PKG_FORTIFY_SOURCE_NONE=y
 # CONFIG_PKG_FORTIFY_SOURCE_1 is not set
 # CONFIG_PKG_FORTIFY_SOURCE_2 is not set
-# CONFIG_PKG_RELRO_NONE is not set
+CONFIG_PKG_RELRO_NONE=y
 # CONFIG_PKG_RELRO_PARTIAL is not set
-CONFIG_PKG_RELRO_FULL=y
+# CONFIG_PKG_RELRO_FULL is not set
 CONFIG_DEVEL=y
 # CONFIG_BROKEN is not set
 CONFIG_BINARY_FOLDER=""
@@ -350,7 +350,7 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux"
 CONFIG_GCC_USE_VERSION_9=y
 # CONFIG_GCC_USE_VERSION_10 is not set
 CONFIG_GCC_USE_GRAPHITE=y
-CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --disable-libunwind-exceptions --with-default-libstdcxx-abi=new --with-tune=core-avx2"
+CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --disable-libunwind-exceptions --with-tune=core-avx2"
 CONFIG_GCC_DEFAULT_PIE=y
 # CONFIG_GCC_DEFAULT_SSP is not set
 # CONFIG_GCC_LIBSSP is not set
