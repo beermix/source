@@ -12,11 +12,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.29
+PKG_VERSION:=2.27
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=8646009efd1df151cc796055c7f6306495835577
+PKG_SOURCE_VERSION:=92f04eedb50dc12643addbcb033a06b51633d0ff
 PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 #PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
@@ -62,17 +62,13 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
-		--disable-sanity-checks \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
 		--disable-profile \
+		--disable-werror \
 		--without-gd \
 		--without-cvs \
 		--enable-kernel=4.14 \
 		--disable-debug \
 		--enable-add-ons \
-		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
