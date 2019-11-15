@@ -26,7 +26,7 @@ define Package/lnav/Default
 	CATEGORY:=Utilities
 	TITLE:=lnav
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libpthread +libstdcpp +libncurses +libreadline +zlib +libsqlite3 +libpcre +libbz2 +libcurl +libopenssl  
+	DEPENDS:=+libpthread +libstdcpp +libncurses +libreadline +zlib +libsqlite3 +libpcre +libpcrecpp +libbz2 +libcurl +libopenssl  
 endef
 
 Package/lnav = $(Package/lnav/Default)
