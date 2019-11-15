@@ -649,8 +649,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/
 	mkdir -p $(1)/usr/share/i18n/charmaps
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-8 $(1)/usr/share/i18n/charmaps
-	pigz --best --force $(1)/usr/share/i18n/charmaps/UTF-8
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-8.gz $(1)/usr/share/i18n/charmaps
+	#pigz --best --force $(1)/usr/share/i18n/charmaps/UTF-8
 	mkdir -p $(1)/usr/share/i18n/locales
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/POSIX $(1)/usr/share/i18n/locales
   endef
