@@ -648,7 +648,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/
-	#$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/* $(1)/usr/share/i18n/charmaps/
   endef
 
   define Package/ldconfig/install

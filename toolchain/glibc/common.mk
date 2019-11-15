@@ -72,7 +72,7 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--without-gd \
 		--without-cvs \
-		--enable-kernel=4.19 \
+		--enable-kernel=4.14 \
 		--disable-debug \
 		--enable-add-ons \
 		--disable-timezone-tools \
