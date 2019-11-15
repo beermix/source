@@ -21,14 +21,12 @@ include $(INCLUDE_DIR)/package.mk
 #TARGET_CXXFLAGS += -D_ISOC99_SOURCE
 #TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC), -lc)
 
-#CONFIGURE_ARGS += --disable-silent-rules --disable-static
-
 define Package/lnav/Default
-	SECTION:=net
-	CATEGORY:=Network
-	TITLE:=Lightweight Secured Socks5 Proxy
+	SECTION:=utils
+	CATEGORY:=Utilities
+	TITLE:=lnav
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libsqlite3 +libpcre +libbz2 +libcurl +libopenssl +libpthread +libncurses +libreadline +libstdcpp +zlib
+	DEPENDS:=+libpthread +libstdcpp +libncurses +libreadline +zlib +libsqlite3 +libpcre +libbz2 +libcurl +libopenssl  
 endef
 
 Package/lnav = $(Package/lnav/Default)
