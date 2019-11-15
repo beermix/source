@@ -106,8 +106,8 @@ CONFIGURE_ARGS += \
 
 #TARGET_CFLAGS += -O3 -Wall
 
-TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections -flto
+TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
