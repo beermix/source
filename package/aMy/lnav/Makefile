@@ -12,14 +12,20 @@ PKG_VERSION:=0.8.5
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/tstack/lnav/releases/download/v$(PKG_VERSION)/
 
-#PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=1	
+PKG_FIXUP:=autoreconf
+PKG_BUILD_PARALLEL:=1
 
+PKG_INSTALL:=1	
+
+include $(INCLUDE_DIR)/uclibc++.mk
 include $(INCLUDE_DIR)/package.mk
 
-#TARGET_CFLAGS += -D_DEFAULT_SOURCE
-#TARGET_CXXFLAGS += -D_ISOC99_SOURCE
-#TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC), -lc)
+Package/lnav = $(Package/lnav/Default)
+
+CONFIGURE_ARGS += \
+	--enable-silent-rules \
+	--disable-static \
+	--disable-tinfo
 
 define Package/lnav/Default
 	SECTION:=utils
@@ -28,8 +34,6 @@ define Package/lnav/Default
 	URL:=https://github.com/tstack/lnav
 	DEPENDS:=+libpthread +libstdcpp +libncurses +libreadline +zlib +libsqlite3 +libpcre +libpcrecpp +libbz2 +libcurl +libopenssl  
 endef
-
-Package/lnav = $(Package/lnav/Default)
 
 define Package/lnav/install
 	$(INSTALL_DIR) $(1)/usr/bin
