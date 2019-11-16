@@ -317,7 +317,7 @@ CONFIG_GCC_USE_VERSION_8=y
 # CONFIG_GCC_USE_VERSION_9 is not set
 # CONFIG_GCC_USE_VERSION_10 is not set
 CONFIG_GCC_USE_GRAPHITE=y
-CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu"
+CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--with-linker-hash-style=gnu --with-default-libstdcxx-abi=gcc4-compatible"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
 # CONFIG_GCC_LIBSSP is not set
@@ -341,7 +341,7 @@ CONFIG_BINUTILS_VERSION_2_32=y
 CONFIG_BINUTILS_VERSION="2.32"
 CONFIG_GCC_VERSION_8=y
 CONFIG_GCC_USE_EMBEDDED_PATH_REMAP=y
-CONFIG_GCC_VERSION="8.3.1"
+CONFIG_GCC_VERSION="8.3.0"
 CONFIG_LIBC="glibc"
 CONFIG_TARGET_SUFFIX="gnu"
 # CONFIG_IB is not set
@@ -7018,7 +7018,6 @@ CONFIG_MC_CHARSET=y
 # CONFIG_PACKAGE_mcookie is not set
 # CONFIG_PACKAGE_micrond is not set
 # CONFIG_PACKAGE_mmc-utils is not set
-# CONFIG_PACKAGE_more is not set
 # CONFIG_PACKAGE_moreutils is not set
 # CONFIG_PACKAGE_mosh-client is not set
 # CONFIG_PACKAGE_mosh-server is not set
