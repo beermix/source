@@ -339,7 +339,8 @@ CONFIG_LIBC_USE_GLIBC=y
 CONFIG_USE_GLIBC=y
 CONFIG_BINUTILS_VERSION_2_31_1=y
 CONFIG_BINUTILS_VERSION="2.31.1"
-# CONFIG_GCC_USE_EMBEDDED_PATH_REMAP is not set
+CONFIG_GCC_VERSION_7=y
+CONFIG_GCC_USE_EMBEDDED_PATH_REMAP=y
 CONFIG_GCC_VERSION="7.5.0"
 CONFIG_LIBC="glibc"
 CONFIG_TARGET_SUFFIX="gnu"
@@ -6469,7 +6470,7 @@ CONFIG_PACKAGE_libipset=y
 # CONFIG_PACKAGE_memcached is not set
 # CONFIG_PACKAGE_mii-tool is not set
 # CONFIG_PACKAGE_mikrotik-btest is not set
-# CONFIG_PACKAGE_mini_snmpd is not set
+CONFIG_PACKAGE_mini_snmpd=y
 # CONFIG_PACKAGE_mosquitto-client-nossl is not set
 # CONFIG_PACKAGE_mosquitto-client-ssl is not set
 # CONFIG_PACKAGE_mosquitto-nossl is not set
