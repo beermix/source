@@ -48,6 +48,7 @@ HOST_CONFIGURE_ARGS = \
 	--enable-deterministic-archives \
 	--enable-plugins \
 	--disable-multilib \
+	--enable-secureplt \
 	--disable-werror \
 	--disable-nls \
 	--disable-sim \
@@ -71,9 +72,11 @@ endif
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
+	$(RM) -rf gdb $(HOST_BUILD_DIR)/libdecnumber $(HOST_BUILD_DIR)/readline $(HOST_BUILD_DIR)/sim
 	ln -snf $(notdir $(HOST_BUILD_DIR)) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 	$(CP) $(SCRIPT_DIR)/config.{guess,sub} $(HOST_BUILD_DIR)/
 	$(SED) 's, " Linaro.*,,' $(HOST_BUILD_DIR)/bfd/version.h
+	$(SED) "s/#define BFD_VERSION_DATE.*/#define BFD_VERSION_DATE 20190203/g" $(HOST_BUILD_DIR)/bfd/version.h
 endef
 
 define Host/Compile
