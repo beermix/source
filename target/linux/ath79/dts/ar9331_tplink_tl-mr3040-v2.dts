@@ -13,7 +13,6 @@
 	aliases {
 		led-boot = &led_lan;
 		led-failsafe = &led_lan;
-		label-mac-device = &eth0;
 	};
 
 	leds {
@@ -41,7 +40,8 @@
 	};
 
 	keys {
-		compatible = "gpio-keys";
+		compatible = "gpio-keys-polled";
+		poll-interval = <20>;
 
 		reset {
 			label = "reset";

@@ -12,7 +12,6 @@
 		led-failsafe = &power_orange;
 		led-running = &power_green;
 		led-upgrade = &power_orange;
-		label-mac-device = &eth0;
 	};
 
 	chosen {

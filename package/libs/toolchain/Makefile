@@ -646,15 +646,15 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
-	#$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
-	#$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/
-	#$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/usr/bin/
-	#$(CP) $(TOOLCHAIN_DIR)/bin/getent $(1)/usr/bin/
-	#mkdir -p $(1)/usr/share/i18n/charmaps
-	#$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-8.gz $(1)/usr/share/i18n/charmaps
+	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/getent $(1)/usr/bin/
+	mkdir -p $(1)/usr/share/i18n/charmaps
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-8.gz $(1)/usr/share/i18n/charmaps
 	#pigz --best --force $(1)/usr/share/i18n/charmaps/UTF-8
-	#mkdir -p $(1)/usr/share/i18n/locales
-	#$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/POSIX $(1)/usr/share/i18n/locales
+	mkdir -p $(1)/usr/share/i18n/locales
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/POSIX $(1)/usr/share/i18n/locales
 	#mkdir -p $(1)/usr/lib/locale
 	#ln -s /root/.config/locale $(1)/usr/lib/locale
   endef

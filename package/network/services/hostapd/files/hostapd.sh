@@ -223,8 +223,6 @@ hostapd_common_add_bss_config() {
 	config_add_int time_advertisement
 	config_add_string time_zone
 
-	config_add_boolean ieee80211k rrm_neighbor_report rrm_beacon_report
-
 	config_add_boolean ieee80211r pmk_r1_push ft_psk_generate_local ft_over_ds
 	config_add_int r0_key_lifetime reassociation_deadline
 	config_add_string mobility_domain r1_key_holder
@@ -254,7 +252,7 @@ hostapd_set_bss_options() {
 
 	wireless_vif_parse_encryption
 
-	local bss_conf bss_md5sum
+	local bss_conf
 	local wep_rekey wpa_group_rekey wpa_pair_rekey wpa_master_rekey wpa_key_mgmt
 
 	json_get_vars \
@@ -491,17 +489,6 @@ hostapd_set_bss_options() {
 		append bss_conf "bss_transition=$bss_transition" "$N"
 	fi
 
-	json_get_vars ieee80211k
-	set_default ieee80211k 0
-	if [ "$ieee80211k" -eq "1" ]; then
-		json_get_vars rrm_neighbor_report rrm_beacon_report
-
-		set_default rrm_neighbor_report 1
-		set_default rrm_beacon_report 1
-		append bss_conf "rrm_neighbor_report=$rrm_neighbor_report" "$N"
-		append bss_conf "rrm_beacon_report=$rrm_beacon_report" "$N"
-	fi
-
 	if [ "$wpa" -ge "1" ]; then
 		json_get_vars ieee80211r
 		set_default ieee80211r 0
@@ -626,9 +613,6 @@ hostapd_set_bss_options() {
 			append bss_conf "vlan_file=$vlan_file" "$N"
 		}
 	}
-
-	bss_md5sum=$(echo $bss_conf | md5sum | cut -d" " -f1)
-	append bss_conf "config_id=$bss_md5sum" "$N"
 
 	append "$var" "$bss_conf" "$N"
 	return 0
@@ -770,15 +754,6 @@ wpa_supplicant_add_network() {
 		ieee80211w ieee80211r \
 		multi_ap
 
-	case "$auth_type" in
-		sae|owe|eap192|eap-eap192)
-			set_default ieee80211w 2
-		;;
-		psk-sae)
-			set_default ieee80211w 1
-		;;
-	esac
-
 	set_default ieee80211r 0
 	set_default multi_ap 0
 
@@ -820,7 +795,6 @@ wpa_supplicant_add_network() {
 		none) ;;
 		owe)
 			hostapd_append_wpa_key_mgmt
-			key_mgmt="$wpa_key_mgmt"
 		;;
 		wep)
 			local wep_keyidx=0
@@ -953,19 +927,21 @@ EOF
 }
 
 wpa_supplicant_run() {
-	local ifname="$1"
-	local hostapd_ctrl="$2"
+	local ifname="$1"; shift
 
 	_wpa_supplicant_common "$ifname"
 
-	ubus call wpa_supplicant.$phy config_add "{ \
-		\"driver\": \"${_w_driver:-wext}\", \"ctrl\": \"$_rpath\", \
-		\"iface\": \"$ifname\", \"config\": \"$_config\" \
-		${network_bridge:+, \"bridge\": \"$network_bridge\"} \
-		${hostapd_ctrl:+, \"hostapd_ctrl\": \"$hostapd_ctrl\"} \
-		}"
+	/usr/sbin/wpa_supplicant -B -s \
+		${network_bridge:+-b $network_bridge} \
+		-P "/var/run/wpa_supplicant-${ifname}.pid" \
+		-D ${_w_driver:-wext} \
+		-i "$ifname" \
+		-c "$_config" \
+		-C "$_rpath" \
+		"$@"
 
 	ret="$?"
+	wireless_add_process "$(cat "/var/run/wpa_supplicant-${ifname}.pid")" /usr/sbin/wpa_supplicant 1
 
 	[ "$ret" != 0 ] && wireless_setup_vif_failed WPA_SUPPLICANT_FAILED
 
@@ -973,5 +949,5 @@ wpa_supplicant_run() {
 }
 
 hostapd_common_cleanup() {
-	killall meshd-nl80211
+	killall hostapd wpa_supplicant meshd-nl80211
 }

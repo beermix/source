@@ -1399,7 +1399,7 @@ define KernelPackage/usb-net-cdc-mbim
 endef
 
 define KernelPackage/usb-net-cdc-mbim/description
- Kernel module for CDC MBIM (Mobile Broadband Interface Model) devices
+ Kernel module for Option USB High Speed Mobile Devices
 endef
 
 $(eval $(call KernelPackage,usb-net-cdc-mbim))
@@ -1674,6 +1674,7 @@ define KernelPackage/usb3
 	CONFIG_USB_XHCI_HCD \
 	CONFIG_USB_XHCI_PCI \
 	CONFIG_USB_XHCI_PLATFORM \
+	CONFIG_USB_XHCI_MVEBU=y \
 	CONFIG_USB_XHCI_MTK \
 	CONFIG_USB_XHCI_HCD_DEBUGGING=n
   FILES:= \

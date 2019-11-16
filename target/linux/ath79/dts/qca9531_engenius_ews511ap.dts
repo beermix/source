@@ -11,8 +11,9 @@
 	model = "EnGenius EWS511AP";
 
 	keys {
-		compatible = "gpio-keys";
+		compatible = "gpio-keys-polled";
 
+		poll-interval = <20>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&jtag_disable_pins>;
 

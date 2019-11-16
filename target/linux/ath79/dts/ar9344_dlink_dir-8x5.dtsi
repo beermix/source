@@ -148,3 +148,4 @@
 	status = "okay";
 	qca,no-eeprom;
 };
+

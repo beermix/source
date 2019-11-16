@@ -15,7 +15,6 @@
 		led-boot = &wlan;
 		led-failsafe = &wlan;
 		led-upgrade = &wlan;
-		label-mac-device = &eth0;
 	};
 
 	leds {
@@ -39,7 +38,8 @@
 	};
 
 	keys {
-		compatible = "gpio-keys";
+		compatible = "gpio-keys-polled";
+		poll-interval = <100>;
 
 		manual {
 			label = "manual";

@@ -15,7 +15,6 @@
 		led-failsafe = &system;
 		led-running = &system;
 		led-upgrade = &system;
-		label-mac-device = &eth0;
 	};
 
 	chosen {
@@ -29,7 +28,8 @@
 	};
 
 	keys {
-		compatible = "gpio-keys";
+		compatible = "gpio-keys-polled";
+		poll-interval = <20>;
 
 		reset {
 			label = "reset";

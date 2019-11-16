@@ -16,7 +16,6 @@
 		led-failsafe = &system;
 		led-running = &system;
 		led-upgrade = &system;
-		label-mac-device = &eth1;
 	};
 
 	gpio_leds: leds {
@@ -79,6 +78,7 @@
 			gpio-export,output = <1>;
 			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
 		};
+
 	};
 };
 

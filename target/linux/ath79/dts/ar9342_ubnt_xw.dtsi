@@ -14,7 +14,6 @@
 		led-running = &system;
 		led-upgrade = &system;
 		led-failsafe = &system;
-		label-mac-device = &wmac;
 	};
 
 	leds {

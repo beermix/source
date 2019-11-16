@@ -12,7 +12,6 @@
 
 	aliases {
 		serial0 = &uart;
-		label-mac-device = &wmac;
 	};
 
 	leds {

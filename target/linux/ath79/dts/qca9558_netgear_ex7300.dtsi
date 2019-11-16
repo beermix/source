@@ -16,7 +16,6 @@
 		led-failsafe = &power_amber;
 		led-running = &power_green;
 		led-upgrade = &power_amber;
-		label-mac-device = &eth0;
 	};
 
 	led_spi {
@@ -24,8 +23,8 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		sck-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
-		mosi-gpios = <&gpio 15 GPIO_ACTIVE_HIGH>;
+		gpio-sck = <&gpio 18 GPIO_ACTIVE_HIGH>;
+		gpio-mosi = <&gpio 15 GPIO_ACTIVE_HIGH>;
 		num-chipselects = <0>;
 
 		led_gpio: led_gpio@0 {
@@ -34,6 +33,7 @@
 			gpio-controller;
 			#gpio-cells = <2>;
 			registers-number = <1>;
+			lines-initial-states = /bits/ 8 <0xff>;
 			spi-max-frequency = <500000>;
 
 			gpio_latch_bit {
