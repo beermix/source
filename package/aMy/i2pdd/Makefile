@@ -4,7 +4,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/PurpleI2P/i2pd
+#
 
 include $(TOPDIR)/rules.mk
 
@@ -15,28 +15,13 @@ PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/PurpleI2P/i2pd/tar.gz/$(PKG_VERSION)?
-PKG_HASH:=
+#PKG_HASH:=181327edc7cf5b3c25ee51ecc518a4da90fa9e421eca2107996791038a514a21
 
 PKG_MAINTAINER:=David Yang <mmyangfl@gmail.com>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
 
-PKG_BUILD_PARALLEL:=1
-
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
-
-export CMAKE_SOURCE_DIR=$(PKG_INSTALL_DIR)/../build
-
-CMAKE_OPTIONS += \
-	-DWITH_AESNI=0 \
-	-DWITH_AVX=0 \
-	-DWITH_BINARY=1 \
-	-DWITH_HARDENING=0 \
-	-DWITH_LIBRARY=0 \
-	-DWITH_STATIC=0 \
-	-DCMAKE_BUILD_TYPE=Release  \
-	-DWITH_UPNP=0
 
 define Package/i2pd
 	SECTION:=net
