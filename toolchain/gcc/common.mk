@@ -139,7 +139,6 @@ GCC_CONFIGURE:= \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
-		--enable-checking=release \
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
