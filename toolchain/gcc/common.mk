@@ -134,12 +134,17 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
-		--with-gnu-as \
+		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--enable-checking=release \
+		--enable-gnu-indirect-function \
+		--disable-vtable-verify \
+		--disable-libunwind-exceptions \
+		--enable-threads=posix\
+		--enable-__cxa_atexit\
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \

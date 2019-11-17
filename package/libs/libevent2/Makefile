@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libevent2
 PKG_VERSION:=2.1.11
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=libevent-$(PKG_VERSION)-stable.tar.gz
 PKG_SOURCE_URL:=https://github.com/libevent/libevent/releases/download/release-$(PKG_VERSION)-stable
@@ -18,13 +18,15 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/libevent-$(PKG_VERSION)-stable
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=BSD-3-Clause
+PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:libevent_project:libevent
 
-PKG_FIXUP:=autoreconf
-PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
+PKG_CONFIG_DEPENDS:= \
+	CONFIG_PACKAGE_libevent2-openssl \
+	CONFIG_PACKAGE_libevent2-mbedtls
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/libevent2/Default
   SECTION:=libs
@@ -109,26 +111,23 @@ define Package/libevent2-pthreads/description
 	threading & locking.
 endef
 
-TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -flto
 
-CONFIGURE_ARGS += \
-	--enable-shared \
-	--enable-static \
-	--disable-libevent-regress \
-	--disable-samples \
-	--disable-debug-mode
-
-#MAKE_FLAGS += CFLAGS="$(TARGET_CFLAGS)"
+CMAKE_OPTIONS += \
+	-DEVENT__DISABLE_BENCHMARK:BOOL=ON \
+	-DEVENT__DISABLE_DEBUG_MODE:BOOL=ON \
+	-DEVENT__DISABLE_REGRESS:BOOL=ON \
+	-DEVENT__DISABLE_SAMPLES:BOOL=ON \
+	$(if $(CONFIG_PACKAGE_libevent2-openssl),-DEVENT__DISABLE_OPENSSL:BOOL=OFF,-DEVENT__DISABLE_OPENSSL:BOOL=ON) \
+	$(if $(CONFIG_PACKAGE_libevent2-pthreads),-DEVENT__DISABLE_THREAD_SUPPORT:BOOL=OFF,-DEVENT__DISABLE_THREAD_SUPPORT:BOOL=ON) \
+	-DEVENT__DISABLE_TESTS:BOOL=ON \
+	-DBUILD_TESTING:BOOL=OFF
 
 define Build/InstallDev
-	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libevent*.{la,a,so} $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libevent*-2.1.so* $(1)/usr/lib/
-	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/libevent*.pc $(1)/usr/lib/pkgconfig/
+	$(call Build/InstallDev/cmake,$(1))
+	$(SED) 's,/usr/include,$$$${prefix}/include,g' $(1)/usr/lib/pkgconfig/libevent*.pc
+	$(SED) 's,/usr/lib,$$$${exec_prefix}/lib,g' $(1)/usr/lib/pkgconfig/libevent*.pc
 endef
 
 define Package/libevent2/install
