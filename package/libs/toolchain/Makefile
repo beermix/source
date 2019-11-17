@@ -655,7 +655,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	#pigz --best --force $(1)/share/i18n/charmaps/UTF-8
 	mkdir -p $(1)/share/i18n/locales
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/ $(1)/share/i18n/
-	#mkdir -p $(1)/lib/locale
+	mkdir -p $(1)/lib/locale
 	#ln -s /root/.config/locale $(1)/lib/locale
   endef
 
