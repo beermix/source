@@ -4,7 +4,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/PurpleI2P/i2pd
 
 include $(TOPDIR)/rules.mk
 
@@ -21,7 +21,16 @@ PKG_MAINTAINER:=David Yang <mmyangfl@gmail.com>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
 
+PKG_BUILD_PARALLEL:=1
+
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
+
+export CMAKE_SOURCE_DIR=$(PKG_INSTALL_DIR)/../build
+
+CMAKE_OPTIONS += \
+	-DWITH_AESNI=OFF \
+	-DWITH_AVX=OFF
 
 define Package/i2pd
 	SECTION:=net
@@ -46,7 +55,9 @@ define Package/i2pd/conffiles
 	/etc/i2pd/tunnels.d/*
 endef
 
-TARGET_LDFLAGS+=-latomic
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS+=-latomic -Wl,--gc-sections,--as-needed -flto
+
 MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
