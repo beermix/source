@@ -8,25 +8,23 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=file
-PKG_VERSION:=5.36
-PKG_RELEASE:=3
+PKG_VERSION:=5ad78c7
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://fossies.org/linux/misc/
-PKG_HASH:=
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/file/file.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_LICENSE:=BSD-2c
-PKG_LICENSE_FILES:=COPYING
-
-PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/file/Default
   TITLE:=File type determination
-  URL:=ftp://ftp.astron.com/pub/file/
+  URL:=https://darwinsys.com/file/
   MAINTAINER:=Marko Ratkaj <marko.ratkaj@sartura.hr>
 endef
 
@@ -35,7 +33,7 @@ $(call Package/file/Default)
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE+= utility
-  DEPENDS:=+libmagic +libexpat +libattr
+  DEPENDS:=+libmagic
 endef
 
 define Package/libmagic
@@ -43,19 +41,21 @@ $(call Package/file/Default)
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE+= library
-  DEPENDS:=+zlib
+  DEPENDS:=+zlib +libbz2
 endef
 
+TARGET_CFLAGS += $(FPIC)
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+
 CONFIGURE_ARGS += \
-	--disable-shared \
+	--enable-shared \
 	--enable-static \
-	
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+	--disable-libseccomp \
+	--disable-rpath \
+	--disable-warnings \
+	--without-pic
 
 MAKE_PATH := src
-
-TARGET_CFLAGS += $(FPIC)
 
 define Build/Compile/magic
 	( cd $(PKG_BUILD_DIR)/magic/Magdir; \
@@ -76,7 +76,7 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/magic.h $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libmagic.a $(1)/usr/lib/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libmagic.{a,so*} $(1)/usr/lib/
 endef
 
 define Package/file/install
@@ -86,14 +86,11 @@ define Package/file/install
 	$(SED) "/^#/d" $(PKG_INSTALL_DIR)/usr/share/file/magic
 	$(SED) "/^$$$$/d" $(PKG_INSTALL_DIR)/usr/share/file/magic
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/file/magic $(1)/usr/share/misc/
-
-	# For some reason both "magic" and "magic.mgc" MUST exist
-	#ln -sf magic $(1)/usr/share/misc/magic.mgc
 endef
 
 define Package/libmagic/install
 	$(INSTALL_DIR) $(1)/usr/lib
-#	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libmagic.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libmagic.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,file))
