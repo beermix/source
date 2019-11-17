@@ -10,7 +10,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=29eb7b0
+PKG_VERSION:=6a490d3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -104,7 +104,7 @@ CONFIGURE_ARGS += \
         --with-tor-user=tor \
         --with-tor-group=tor
 
-#TARGET_CFLAGS += -O3 -Wall
+#TARGET_CFLAGS += -O3
 
 TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
