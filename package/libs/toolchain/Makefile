@@ -651,12 +651,13 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/getent $(1)/usr/bin/
 	mkdir -p $(1)/share/i18n/charmaps
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/ $(1)/share/i18n/
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-8.gz $(1)/share/i18n/charmaps/UTF-8.gz
 	#pigz --best --force $(1)/share/i18n/charmaps/UTF-8
 	mkdir -p $(1)/share/i18n/locales
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/ $(1)/share/i18n/
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/ru_RU $(1)/share/i18n/locales/ru_RU
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/en_US $(1)/share/i18n/locales/en_US
 	mkdir -p $(1)/lib/locale
-	ln -s /root/.locale $(1)/lib/locale
+	#ln -s /root/.locale $(1)/lib/locale
   endef
 
   define Package/ldconfig/install
