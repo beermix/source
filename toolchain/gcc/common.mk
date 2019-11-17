@@ -139,6 +139,12 @@ GCC_CONFIGURE:= \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
+		--enable-checking=release \
+		--enable-gnu-indirect-function \
+		--disable-vtable-verify \
+		--disable-libunwind-exceptions \
+		--enable-threads=posix\
+		--enable-__cxa_atexit\
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
@@ -150,7 +156,6 @@ GCC_CONFIGURE:= \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
-		--disable-decimal-float \
 		--with-diagnostics-color=always
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
