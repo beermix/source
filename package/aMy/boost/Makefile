@@ -124,7 +124,7 @@ define Package/boost/config
 
 	config boost-fiber-exclude
 		bool
-		default y if (TARGET_ar7 || TARGET_brcm47xx_generic || TARGET_brcm47xx_legacy || TARGET_lantiq_ase || TARGET_rb532 || mips32 || mips64 || boost-coroutine-exclude)
+		default y if boost-coroutine-exclude
 		default n
 
 	menu "Select Boost Options"
