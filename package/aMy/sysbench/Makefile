@@ -32,7 +32,8 @@ endef
 CONFIGURE_ARGS += \
 	--without-mysql \
 	--without-pgsql \
-	--disable-shared
+	--disable-shared \
+	--with-system-luajit
 
 define Package/sysbench/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
