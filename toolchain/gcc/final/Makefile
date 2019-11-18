@@ -9,14 +9,6 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--enable-__cxa_atexit \
-	--enable-decimal-float \
-	--enable-tls \
-	--enable-c99 \
-	--enable-long-long \
-	--disable-libstdcxx-pch \
-	--enable-libstdcxx-time \
-	--enable-clocale=gnu \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifndef CONFIG_USE_GLIBC
