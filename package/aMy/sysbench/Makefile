@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysbench
-PKG_VERSION:=1.0.17
+PKG_VERSION:=1.0.18
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/akopytov/sysbench
@@ -25,13 +25,14 @@ include $(INCLUDE_DIR)/host-build.mk
 define Package/sysbench
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libpthread
+  DEPENDS:=+libpthread +luajit
   TITLE:=sysbench is a scriptable multi-threaded benchmark tool based on LuaJIT
 endef
 
 CONFIGURE_ARGS += \
 	--without-mysql \
-	--without-pgsql
+	--without-pgsql \
+	--disable-shared
 
 define Package/sysbench/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
