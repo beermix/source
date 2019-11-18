@@ -47,6 +47,7 @@ HOST_CONFIGURE_ARGS = \
 	--with-sysroot=$(TOOLCHAIN_DIR) \
 	--enable-deterministic-archives \
 	--enable-plugins \
+	--enable-targets=i386-linux \
 	--disable-multilib \
 	--disable-werror \
 	--disable-nls \
