@@ -47,7 +47,7 @@ endif
 
 ifeq ($(PKG_VERSION),8.3.1)
   PKG_VERSION:=8.3.1
-  PKG_REV:=8-20191108
+  PKG_REV:=8-20191115
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -140,6 +140,8 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--with-default-libstdcxx-abi=new \
+		--disable-libunwind-exceptions \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
