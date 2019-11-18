@@ -7226,4 +7226,4 @@ CONFIG_STRACE_NONE=y
 # Font-Utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="aircrack-ng xz"
+CONFIG_OVERRIDE_PKGS="aircrack-ng miniupnpd pcre xz"
