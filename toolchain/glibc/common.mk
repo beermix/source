@@ -12,11 +12,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.28
+PKG_VERSION:=2.30
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=cedb3e47c68d319607736a820da2d5b3b8ddff6f
+PKG_SOURCE_VERSION:=c347431fb5fd3f124c05e82fb7a661b396e86f82
 PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 #PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
@@ -58,6 +58,9 @@ GLIBC_CONFIGURE:= \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
