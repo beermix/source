@@ -11,9 +11,9 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
-#ifndef CONFIG_USE_GLIBC
+ifndef CONFIG_USE_GLIBC
   GCC_CONFIGURE += --disable-libsanitizer
-#endif
+endif
 
 ifdef CONFIG_USE_MUSL
   GCC_MAKE += gcc_cv_libc_provides_ssp=yes

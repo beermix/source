@@ -33,7 +33,7 @@ ifeq ($(PKG_VERSION),5.5.0)
 endif
 
 ifeq ($(PKG_VERSION),7.5.0)
-  PKG_HASH:=
+  PKG_HASH:=b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661
 endif
 
 ifeq ($(PKG_VERSION),7.4.1)
@@ -56,7 +56,6 @@ endif
 
 ifeq ($(PKG_VERSION),9.2.0)
   PKG_HASH:=ea6ef08f121239da5695f76c9b33637a118dcf63e24164422231917fa61fb206
-  #echo ${PKG_VERSION} > ${GCC_DIR}/gcc/BASE-VER
 endif
 
 ifeq ($(PKG_VERSION),9.2.1)
@@ -141,7 +140,8 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--with-default-libstdcxx-abi=new \
-		--disable-libunwind-exceptions \
+		--enable-gnu-unique-object \
+		--disable-vtable-verify \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
