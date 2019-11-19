@@ -12,11 +12,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.27
+PKG_VERSION:=2.30
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=92f04eedb50dc12643addbcb033a06b51633d0ff
+PKG_SOURCE_VERSION:=919af705eef416f4469341dfdf4ca23450f30236
 PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 #PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
