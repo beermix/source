@@ -1,5 +1,5 @@
 BOARDNAME:=Generic
-CPU_TYPE :=atom
+CPU_TYPE :=pentium4
 FEATURES += audio pci pcie usb
 DEFAULT_PACKAGES += kmod-button-hotplug
 

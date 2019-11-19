@@ -5294,7 +5294,7 @@ CONFIG_PACKAGE_libsodium=y
 #
 # Configuration
 #
-CONFIG_LIBSODIUM_MINIMAL=y
+# CONFIG_LIBSODIUM_MINIMAL is not set
 # CONFIG_PACKAGE_libsoup is not set
 # CONFIG_PACKAGE_libsoxr is not set
 # CONFIG_PACKAGE_libspeex is not set
