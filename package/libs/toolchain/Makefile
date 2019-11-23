@@ -659,7 +659,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/iso* $(1)/share/i18n/locales/
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/translit_* $(1)/share/i18n/locales/
 	mkdir -p $(1)/lib/locale
-	#ln -s /root/.locale $(1)/lib/locale
   endef
 
   define Package/ldconfig/install
