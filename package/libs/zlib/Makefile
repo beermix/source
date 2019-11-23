@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=3fb5f57
+PKG_VERSION:=5bd3c58
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng
@@ -57,8 +57,7 @@ ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
 endif
 
 CMAKE_OPTIONS += \
-	-DZLIB_COMPAT=ON \
-	-DWITH_OPTIM=ON
+	-DZLIB_COMPAT=ON
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
