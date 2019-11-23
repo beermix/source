@@ -1,6 +1,0 @@
-diff -Naur gcc-9.2.0-orig/gcc/BASE-VER gcc-9.2.0/gcc/BASE-VER
---- gcc-9.2.0-orig/gcc/BASE-VER	2019-11-12 17:19:29.297488424 +0300
-+++ gcc-9.2.0/gcc/BASE-VER	2019-11-12 17:20:22.905483027 +0300
-@@ -1 +1 @@
--9.2.1
-+9.2.0
