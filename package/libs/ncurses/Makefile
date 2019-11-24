@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.1-20190907
+PKG_VERSION:=6.1-20190803
 PKG_RELEASE:=6
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tgz
-PKG_SOURCE_URL:=http://invisible-mirror.net/archives/ncurses/current/
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://dl.dropboxusercontent.com/s/t30phz1j2yxkauc/ 
 PKG_HASH:=
 
 PKG_LICENSE:=MIT
