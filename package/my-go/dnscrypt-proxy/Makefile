@@ -11,9 +11,9 @@ PKG_NAME:=dnscrypt-proxy
 PKG_VERSION:=bc22f94
 PKG_RELEASE:=1
 #PKG_GOGET:=github.com/jedisct1/dnscrypt-proxy
-PKG_GOGET:=github.com/jedisct1/dnscrypt-proxy/dnscrypt-proxy
+PKG_GOGET:=github.com/jedisct1/dnscrypt-proxy
 
-GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
+#GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)

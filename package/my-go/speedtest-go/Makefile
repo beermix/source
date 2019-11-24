@@ -10,9 +10,9 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=speedtest-go
 PKG_VERSION:=v1.0.3
 PKG_RELEASE:=1
-PKG_GOGET:=github.com/showwin/speedtest-go
+#PKG_GOGET:=github.com/showwin/speedtest-go
 
-GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.bz2
+GOPKG_SOURCE=GO_$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.gz
 
 #!!! uncomment PKG_SOURCE to download fixed version
 PKG_SOURCE=$(GOPKG_SOURCE)
