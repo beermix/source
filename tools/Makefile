@@ -39,8 +39,8 @@ tools-$(BUILD_ISL) += isl
 tools-$(CONFIG_USE_SPARSE) += sparse
 tools-$(CONFIG_TARGET_apm821xx)$(CONFIG_TARGET_gemini) += genext2fs
 tools-$(CONFIG_TARGET_tegra) += cbootimage cbootimage-configs
-tools-y += go-src
-tools-y += go-bootstrap
+#tools-y += go-src
+#tools-y += go-bootstrap
 
 # builddir dependencies
 $(curdir)/bison/compile := $(curdir)/flex/compile
@@ -80,7 +80,7 @@ $(curdir)/wrt350nv2-builder/compile := $(curdir)/zlib/compile
 $(curdir)/lzma-old/compile := $(curdir)/zlib/compile
 $(curdir)/make-ext4fs/compile := $(curdir)/zlib/compile
 $(curdir)/cbootimage/compile += $(curdir)/automake/compile
-$(curdir)/go-src/compile := $(curdir)/go-bootstrap/compile
+#$(curdir)/go-src/compile := $(curdir)/go-bootstrap/compile
 
 ifneq ($(HOST_OS),Linux)
   $(curdir)/squashfskit4/compile += $(curdir)/coreutils/compile

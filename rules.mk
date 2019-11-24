@@ -271,7 +271,6 @@ ifeq ($(ARCH),i386)
 endif
 
 
-
 HOSTCC:=gcc
 HOSTCXX:=g++
 HOST_CPPFLAGS:=-I$(STAGING_DIR_HOST)/include $(if $(IS_PACKAGE_BUILD),-I$(STAGING_DIR_HOSTPKG)/include -I$(STAGING_DIR)/host/include)
