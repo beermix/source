@@ -151,7 +151,7 @@ CONFIG_TARGET_IMAGES_GZIP=y
 # Image Options
 #
 CONFIG_TARGET_KERNEL_PARTSIZE=16
-CONFIG_TARGET_ROOTFS_PARTSIZE=250
+CONFIG_TARGET_ROOTFS_PARTSIZE=380
 CONFIG_TARGET_ROOTFS_PARTNAME=""
 
 #
@@ -3117,7 +3117,6 @@ CONFIG_PACKAGE_kmod-slhc=y
 CONFIG_PACKAGE_kmod-tcp-bbr=y
 # CONFIG_PACKAGE_kmod-trelay is not set
 # CONFIG_PACKAGE_kmod-tun is not set
-CONFIG_PACKAGE_kmod-udptunnel4=y
 CONFIG_PACKAGE_kmod-veth=y
 # CONFIG_PACKAGE_kmod-vxlan is not set
 # CONFIG_PACKAGE_kmod-wireguard is not set
@@ -5783,34 +5782,6 @@ CONFIG_PACKAGE_luci-i18n-shadowsocks-libev-ru=y
 # CONFIG_PACKAGE_luci-i18n-shadowsocks-libev-vi is not set
 # CONFIG_PACKAGE_luci-i18n-shadowsocks-libev-zh-cn is not set
 # CONFIG_PACKAGE_luci-i18n-shadowsocks-libev-zh-tw is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-bg is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-ca is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-cs is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-de is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-el is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-en is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-es is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-fr is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-he is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-hi is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-hu is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-it is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-ja is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-ko is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-ms is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-nb_NO is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-pl is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-pt is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-pt-br is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-ro is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-ru is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-sk is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-sv is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-tr is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-uk is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-vi is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-zh-cn is not set
-# CONFIG_PACKAGE_luci-i18n-uhttpd-zh-tw is not set
 # CONFIG_PACKAGE_luci-i18n-upnp-bg is not set
 # CONFIG_PACKAGE_luci-i18n-upnp-ca is not set
 # CONFIG_PACKAGE_luci-i18n-upnp-cs is not set
@@ -5839,34 +5810,6 @@ CONFIG_PACKAGE_luci-i18n-upnp-ru=y
 # CONFIG_PACKAGE_luci-i18n-upnp-vi is not set
 # CONFIG_PACKAGE_luci-i18n-upnp-zh-cn is not set
 # CONFIG_PACKAGE_luci-i18n-upnp-zh-tw is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-bg is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-ca is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-cs is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-de is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-el is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-en is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-es is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-fr is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-he is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-hi is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-hu is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-it is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-ja is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-ko is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-ms is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-nb_NO is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-pl is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-pt is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-pt-br is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-ro is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-ru is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-sk is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-sv is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-tr is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-uk is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-vi is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-zh-cn is not set
-# CONFIG_PACKAGE_luci-i18n-wireguard-zh-tw is not set
 
 #
 # Mail
