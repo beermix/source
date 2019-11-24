@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.1-20190803
-PKG_RELEASE:=6
+PKG_VERSION:=6.0
+PKG_RELEASE:=7
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://dl.dropboxusercontent.com/s/t30phz1j2yxkauc/ 
-PKG_HASH:=
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
+PKG_HASH:=f551c24b30ce8bfb6e96d9f59b42fbea30fa3a6123384172f9e7284bcf647260
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
@@ -51,6 +51,15 @@ define Package/libncurses-dev
   TITLE:=Development files for the ncurses library
 endef
 
+define Package/ncurses-bin
+  SECTION:=utils
+  CATEGORY:=Utilities
+  SUBMENU:=Terminal
+  DEPENDS:=+libncursesw
+  TITLE:=Terminal-related programs
+  URL:=http://www.gnu.org/software/ncurses/
+endef
+
 TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
@@ -63,7 +72,7 @@ CONFIGURE_ARGS += \
 	--without-debug \
 	--without-manpages \
 	--without-profile \
-	--without-progs \
+	--with-progs \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
@@ -101,13 +110,20 @@ MAKE_FLAGS += \
 	HOSTCC="$(HOSTCC)" \
 	HOSTCCFLAGS="" \
 	PKG_CONFIG_LIBDIR=/usr/lib/pkgconfig \
-	libs
+	libs \
+	progs
 
 define Build/Install/Default
 	$(MAKE_VARS) \
 	$(MAKE) -C $(PKG_BUILD_DIR)/$(MAKE_PATH) \
 		$(MAKE_INSTALL_FLAGS) \
-		$(1) install.libs install.data;
+		$(1) install.libs install.data install.progs;
+endef
+
+define Package/ncurses-bin/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+	rm $(1)/usr/bin/ncursesw6-config
 endef
 
 define Package/terminfo/install
@@ -173,4 +189,5 @@ endef
 $(eval $(call HostBuild))
 $(eval $(call BuildPackage,terminfo))
 $(eval $(call BuildPackage,libncurses))
+$(eval $(call BuildPackage,ncurses-bin))
 $(eval $(call BuildPackage,libncurses-dev))
