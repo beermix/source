@@ -419,6 +419,32 @@ define Package/libgomp/config
 	endmenu
 endef
 
+define Package/libgo
+$(call Package/gcc/Default)
+  TITLE:=Go support library
+  DEPENDS+=@INSTALL_GCCGO
+endef
+
+define Package/libgo/config
+	menu "Configuration"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+
+	config LIBGO_ROOT_DIR
+		string
+		prompt "libgo shared library base directory"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
+		default "/"  if NATIVE_TOOLCHAIN
+
+	config LIBGO_FILE_SPEC
+		string
+		prompt "libgo shared library files (use wildcards)"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		default "./usr/lib/libgo.so.*"
+
+	endmenu
+endef
+
 
 define Package/ldd
 $(call Package/libc/Default)
@@ -488,6 +514,9 @@ LIBGCC_SO=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so.*))
 define Build/Compile/uClibc
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-*.so \
+		$(TOOLCHAIN_DIR)/lib/libcrypt-*.so \
+		$(TOOLCHAIN_DIR)/lib/libm-*.so \
+		$(TOOLCHAIN_DIR)/lib/libpthread-*.so \
 		$(PKG_BUILD_DIR)/
 endef
 ifneq ($(LIBGCC_SO),)
@@ -813,5 +842,6 @@ $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
 $(eval $(call BuildPackage,libgomp))
+$(eval $(call BuildPackage,libgo))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
