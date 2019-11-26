@@ -14,6 +14,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_HASH:=6c8bc56c477affecba9c59e2c9f026967ac8bad01b51bdd07916db40a517b9fa
 
 HOST_BUILD_PARALLEL:=1
+HOST_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/host-build.mk
 
