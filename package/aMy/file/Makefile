@@ -8,16 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=file
-PKG_VERSION:=5ad78c7
+PKG_VERSION:=5.37
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/file/file.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://src.fedoraproject.org/lookaside/pkgs/file/ \
+	http://download.openpkg.org/components/cache/file/ \
+	ftp://ftp.astron.com/pub/file/
+PKG_HASH:=e9c13967f7dd339a3c241b7710ba093560b9a33013491318e88e6b8b57bae07f
+
+PKG_LICENSE:=BSD-2c
+PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -41,7 +44,7 @@ $(call Package/file/Default)
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE+= library
-  DEPENDS:=+zlib +libbz2
+  DEPENDS:=+zlib
 endef
 
 TARGET_CFLAGS += $(FPIC)
