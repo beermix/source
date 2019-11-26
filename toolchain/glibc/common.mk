@@ -12,11 +12,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.30
-PKG_SOURCE_URL:=@GNU/glibc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=e2c4114e569afbe7edbc29131a43be833850ab9a459d81beb2588016d2bbb8af
+PKG_VERSION:=2.29
+
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=5422ac2d08dec91d4eb61d20b5e4b121500a4b88
+PKG_MIRROR_HASH:=
+PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
@@ -49,7 +52,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 -fstack-protector -znow -zrelro -mno-cx16 -mmmx -msse -msse2 -msse3 -mssse3 -mfpmath=sse --param=l1-cache-size=24 --param=l1-cache-line-size=64 --param=l2-cache-size=512 --param l1-cache-size=24 --param l1-cache-line-size=64 --param l2-cache-size=512 -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -g $(filter-out -fomit-frame-pointer -D_FORTIFY_SOURCE=1 -D_FORTIFY_SOURCE=2 -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
