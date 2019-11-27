@@ -51,7 +51,7 @@ endef
 define Package/wireguard
   $(call Package/wireguard/Default)
   TITLE:=WireGuard meta-package
-  DEPENDS:=+wireguard-tools
+  DEPENDS:=+wireguard-tools +kmod-wireguard
 endef
 
 include $(INCLUDE_DIR)/kernel-defaults.mk
@@ -93,10 +93,24 @@ define Package/wireguard-tools/install
 	$(INSTALL_BIN) ./files/wireguard_watchdog $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/lib/netifd/proto/
 	$(INSTALL_BIN) ./files/wireguard.sh $(1)/lib/netifd/proto/
-	$(INSTALL_DIR) -m0700 $(1)/etc/wireguard/
-	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d/
-	$(INSTALL_DATA) ./files/wireguard-tools $(1)/lib/upgrade/keep.d/
+endef
+
+define KernelPackage/wireguard
+  SECTION:=kernel
+  CATEGORY:=Kernel modules
+  SUBMENU:=Network Support
+  TITLE:=WireGuard kernel module
+  DEPENDS:=+IPV6:kmod-udptunnel6 +kmod-udptunnel4
+  FILES:= $(PKG_BUILD_DIR)/src/wireguard.$(LINUX_KMOD_SUFFIX)
+  AUTOLOAD:=$(call AutoProbe,wireguard)
+endef
+
+define KernelPackage/wireguard/description
+  $(call Package/wireguard/Default/description)
+
+  This package provides the kernel module for WireGuard.
 endef
 
 $(eval $(call BuildPackage,wireguard))
 $(eval $(call BuildPackage,wireguard-tools))
+$(eval $(call KernelPackage,wireguard))
