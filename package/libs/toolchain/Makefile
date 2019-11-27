@@ -594,7 +594,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
 		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
-	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil libnss_compat libnss_db libnss_dns libnss_hesiod libpcprofile libSegFault; do \
+	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
 			if [ -e "$$$$file" ]; then \
 				$(CP) $$$$file $(1)/lib/; \
