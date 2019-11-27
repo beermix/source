@@ -52,7 +52,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 $(filter-out -fno-plt -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 $(filter-out -fno-caller-saves -fno-plt -fomit-frame-pointer -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
