@@ -6727,6 +6727,7 @@ CONFIG_PACKAGE_whois=y
 # CONFIG_PACKAGE_espeak is not set
 # CONFIG_PACKAGE_faad2 is not set
 # CONFIG_PACKAGE_fdk-aac is not set
+# CONFIG_PACKAGE_fdk-aac-free is not set
 # CONFIG_PACKAGE_forked-daapd is not set
 # CONFIG_PACKAGE_ices is not set
 # CONFIG_PACKAGE_lame is not set
