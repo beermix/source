@@ -18,8 +18,6 @@ define Host/Install
 		BUILD_CFLAGS="$(HOST_CFLAGS)" \
 		install_root="$(TOOLCHAIN_DIR)" \
 		install
-		install -m644 $(TOPDIR)/toolchain/glibc/files/sdt.h $(TOOLCHAIN_DIR)/include/sys/sdt.h
-		install -m644 $(TOPDIR)/toolchain/glibc/files/sdt-config.h $(TOOLCHAIN_DIR)/include/sys/sdt-config.h
 	( cd $(TOOLCHAIN_DIR) ; \
 		for d in lib usr/lib ; do \
 		  for f in libc.so libpthread.so libgcc_s.so ; do \
