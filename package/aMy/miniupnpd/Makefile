@@ -16,6 +16,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=950894779661197fe093855fda29a728f434b5756eb4fa6cb5f7b9bff7ffe0c1
 
 PKG_LICENSE:=BSD-3-Clause
+PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:miniupnp_project:miniupnpd
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/version.mk
@@ -38,8 +40,9 @@ define Build/Prepare
 	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
 endef
 
-TARGET_CFLAGS += -flto -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += $(FPIC) -flto -Wl,--gc-sections
+TARGET_CFLAGS += $(FPIC)
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+
 MAKE_FLAGS += \
 	TARGET_OPENWRT=1 TEST=0 LIBS="" \
 	CC="$(TARGET_CC) -DIPTABLES_143 -lip4tc -luuid \
