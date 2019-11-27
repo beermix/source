@@ -291,8 +291,8 @@ CONFIG_PKG_FORTIFY_SOURCE_NONE=y
 # CONFIG_PKG_FORTIFY_SOURCE_1 is not set
 # CONFIG_PKG_FORTIFY_SOURCE_2 is not set
 # CONFIG_PKG_RELRO_NONE is not set
-# CONFIG_PKG_RELRO_PARTIAL is not set
-CONFIG_PKG_RELRO_FULL=y
+CONFIG_PKG_RELRO_PARTIAL=y
+# CONFIG_PKG_RELRO_FULL is not set
 CONFIG_DEVEL=y
 CONFIG_BROKEN=y
 CONFIG_BINARY_FOLDER=""
@@ -324,7 +324,7 @@ CONFIG_TOOLCHAINOPTS=y
 # CONFIG_BINUTILS_USE_VERSION_2_31_1 is not set
 # CONFIG_BINUTILS_USE_VERSION_2_32 is not set
 CONFIG_BINUTILS_USE_VERSION_2_33_1=y
-CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux"
+CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
 
 #
 # Compiler
@@ -334,8 +334,8 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS="--enable-targets=i386-linux"
 # CONFIG_GCC_USE_VERSION_8 is not set
 CONFIG_GCC_USE_VERSION_9=y
 # CONFIG_GCC_USE_VERSION_10 is not set
-CONFIG_GCC_USE_GRAPHITE=y
-CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--enable-checking=release --with-tune=haswell --with-arch=bonnell"
+# CONFIG_GCC_USE_GRAPHITE is not set
+CONFIG_EXTRA_GCC_CONFIG_OPTIONS="--enable-checking=release"
 # CONFIG_GCC_DEFAULT_PIE is not set
 # CONFIG_GCC_DEFAULT_SSP is not set
 # CONFIG_GCC_LIBSSP is not set
@@ -359,7 +359,7 @@ CONFIG_USE_GLIBC=y
 CONFIG_BINUTILS_VERSION_2_33_1=y
 CONFIG_BINUTILS_VERSION="2.33.1"
 CONFIG_GCC_VERSION_9=y
-CONFIG_GCC_VERSION="9.2.0"
+CONFIG_GCC_VERSION="9.2.1"
 # CONFIG_GCC_USE_IREMAP is not set
 CONFIG_LIBC="glibc"
 CONFIG_TARGET_SUFFIX="gnu"
@@ -2662,7 +2662,18 @@ CONFIG_PACKAGE_r8169-firmware=y
 #
 # CAN Support
 #
-# CONFIG_PACKAGE_kmod-can is not set
+CONFIG_PACKAGE_kmod-can=y
+# CONFIG_PACKAGE_kmod-can-bcm is not set
+# CONFIG_PACKAGE_kmod-can-c-can is not set
+CONFIG_PACKAGE_kmod-can-gw=y
+CONFIG_PACKAGE_kmod-can-raw=y
+# CONFIG_PACKAGE_kmod-can-slcan is not set
+# CONFIG_PACKAGE_kmod-can-usb-8dev is not set
+# CONFIG_PACKAGE_kmod-can-usb-ems is not set
+# CONFIG_PACKAGE_kmod-can-usb-esd is not set
+# CONFIG_PACKAGE_kmod-can-usb-kvaser is not set
+# CONFIG_PACKAGE_kmod-can-usb-peak is not set
+# CONFIG_PACKAGE_kmod-can-vcan is not set
 
 #
 # Cryptographic API modules
@@ -2793,8 +2804,18 @@ CONFIG_PACKAGE_kmod-hwmon-core=y
 #
 # I2C support
 #
-# CONFIG_PACKAGE_kmod-i2c-core is not set
+CONFIG_PACKAGE_kmod-i2c-core=y
+CONFIG_PACKAGE_kmod-i2c-algo-bit=y
+# CONFIG_PACKAGE_kmod-i2c-algo-pca is not set
+# CONFIG_PACKAGE_kmod-i2c-algo-pcf is not set
+CONFIG_PACKAGE_kmod-i2c-gpio=y
 # CONFIG_PACKAGE_kmod-i2c-gpio-custom is not set
+CONFIG_PACKAGE_kmod-i2c-i801=y
+# CONFIG_PACKAGE_kmod-i2c-mux is not set
+CONFIG_PACKAGE_kmod-i2c-piix4=y
+CONFIG_PACKAGE_kmod-i2c-pxa=y
+CONFIG_PACKAGE_kmod-i2c-smbus=y
+# CONFIG_PACKAGE_kmod-i2c-tiny-usb is not set
 
 #
 # Industrial I/O Modules
