@@ -683,7 +683,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/locale $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/getent $(1)/usr/bin/
 	mkdir -p $(1)/share/i18n/charmaps
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-* $(1)/share/i18n/charmaps/
