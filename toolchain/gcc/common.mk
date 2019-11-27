@@ -136,6 +136,7 @@ GCC_CONFIGURE:= \
 		--with-gnu-as \
 		--enable-target-optspace \
 		--enable-checking=release \
+		--with-default-libstdcxx-abi=gcc4-compatible \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--without-ppl \
