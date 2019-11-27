@@ -133,9 +133,15 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
+		--with-gnu-as \
 		--enable-target-optspace \
+		--enable-checking=release \
 		--disable-libgomp \
 		--disable-libmudflap \
+		--without-ppl \
+		--disable-libada \
+		--disable-libitm \
+		--disable-libquadmath \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
