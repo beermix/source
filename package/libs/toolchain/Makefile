@@ -687,7 +687,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/bin/getent $(1)/usr/bin/
 	mkdir -p $(1)/share/i18n/charmaps
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-* $(1)/share/i18n/charmaps/
-	#pigz --best --force $(1)/share/i18n/charmaps/UTF-8
 	mkdir -p $(1)/share/i18n/locales
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/ru_* $(1)/share/i18n/locales/
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/en_* $(1)/share/i18n/locales/

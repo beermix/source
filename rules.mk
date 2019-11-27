@@ -249,32 +249,32 @@ export PKG_CONFIG
 
 export GOROOT:=$(STAGING_DIR_HOST)/go
 
-ifeq ($(ARCH),mips)
-    GOARCH=mips
-endif
-ifeq ($(ARCH),mipsel)
-    GOARCH=mipsle
-endif
-ifeq ($(ARCH),arm)
-    GOARCH=arm
-   ifeq ($(ARCH_SUFFIX),_cortex-a9)
-	GOARM=GOARM=7
-   else
-	GOARM=GOARM=5
-   endif
-endif
-ifeq ($(ARCH),x86_64)
-    GOARCH=amd64
-endif
-ifeq ($(ARCH),i386)
-    GOARCH=386
-endif
+#ifeq ($(ARCH),mips)
+#    GOARCH=mips
+#endif
+#ifeq ($(ARCH),mipsel)
+#    GOARCH=mipsle
+#endif
+#ifeq ($(ARCH),arm)
+#    GOARCH=arm
+#   ifeq ($(ARCH_SUFFIX),_cortex-a9)
+#	GOARM=GOARM=7
+#   else
+#	GOARM=GOARM=5
+#   endif
+#endif
+#ifeq ($(ARCH),x86_64)
+#    GOARCH=amd64
+#endif
+#ifeq ($(ARCH),i386)
+#    GOARCH=386
+#endif
 
 
 HOSTCC:=gcc
 HOSTCXX:=g++
 HOST_CPPFLAGS:=-I$(STAGING_DIR_HOST)/include $(if $(IS_PACKAGE_BUILD),-I$(STAGING_DIR_HOSTPKG)/include -I$(STAGING_DIR)/host/include)
-HOST_CFLAGS:=-O2 $(HOST_CPPFLAGS)
+HOST_CFLAGS:=-O2 -pipe $(HOST_CPPFLAGS)
 HOST_LDFLAGS:=-L$(STAGING_DIR_HOST)/lib $(if $(IS_PACKAGE_BUILD),-L$(STAGING_DIR_HOSTPKG)/lib -L$(STAGING_DIR)/host/lib)
 
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
