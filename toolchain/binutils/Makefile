@@ -59,9 +59,7 @@ HOST_CONFIGURE_ARGS = \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
-	--without-ppl \
-	--without-cloog \
-	--disable-libada \
+
 	--enable-targets=i386-linux \
 	--disable-nls \
 	--disable-sim \

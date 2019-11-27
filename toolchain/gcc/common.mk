@@ -60,11 +60,16 @@ endif
 
 ifeq ($(PKG_VERSION),9.2.1)
   PKG_VERSION:=9.2.1
-  PKG_REV:=af9377945330a3062785a9d8b287008d0a531005
-  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc/archive
-  PKG_SOURCE:=$(PKG_REV).tar.gz
+  PKG_REV:=9-20191123
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+#  PKG_REV:=af9377945330a3062785a9d8b287008d0a531005
+#  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc/archive
+#  PKG_SOURCE:=$(PKG_REV).tar.gz
+#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
 ifeq ($(PKG_VERSION),10.0.0)
@@ -134,7 +139,6 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--enable-checking=release \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
