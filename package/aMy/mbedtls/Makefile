@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mbedtls
-PKG_VERSION:=mbedtls-2.20.0d0
+PKG_VERSION:=mbedtls-2.16.3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/ARMmbed/mbedtls
@@ -83,9 +83,11 @@ TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS))
 
 CMAKE_OPTIONS += \
-	-DUSE_SHARED_MBEDTLS_LIBRARY:Bool=ON \
-	-DENABLE_TESTING:Bool=OFF \
-	-DENABLE_PROGRAMS:Bool=ON
+	-DUSE_SHARED_MBEDTLS_LIBRARY=ON \
+	-DENABLE_TESTING=OFF \
+	-DENABLE_PROGRAMS=ON \
+	-DLINK_WITH_PTHREAD=ON \
+	-DCMAKE_BUILD_TYPE=Release
 
 define Build/Configure
 	$(Build/Configure/Default)
