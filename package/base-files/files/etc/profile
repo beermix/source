@@ -49,11 +49,18 @@ in order to prevent unauthorized SSH logins.
 EOF
 fi
 
-service() {
-	[ -f "/etc/init.d/$1" ] || {
+service() { 
+	if [ "$1" = "enabled" ] && [ -z "$2" ]; then 
+		for F in /etc/init.d/* ; do 
+			$F enabled && echo "$F on" || echo "$F **disabled**"
+		done; 
+	elif [ -f "/etc/init.d/$1" ] && [ "$2" = "ubus" ]; then
+		ubus call service list "{'name': '$1'}"
+	elif [ -f "/etc/init.d/$1" ]; then 
+		/etc/init.d/$@
+	else 
 		echo "service "'"'"$1"'"'" not found, the following services are available:"
 		ls "/etc/init.d"
 		return 1
-	}
-	/etc/init.d/$@
+	fi
 }
