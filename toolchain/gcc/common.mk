@@ -47,7 +47,7 @@ endif
 
 ifeq ($(PKG_VERSION),8.3.1)
   PKG_VERSION:=8.3.1
-  PKG_REV:=8-20191115
+  PKG_REV:=8-20191122
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
