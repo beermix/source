@@ -139,6 +139,9 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
+		--disable-libunwind-exceptions \
+		--disable-vtable-verify \
+		--enable-checking=release \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
