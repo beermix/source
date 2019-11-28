@@ -7,17 +7,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bison
-PKG_VERSION:=3.4.2
+PKG_VERSION:=3.0.5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_HASH:=27d05534699735dc69e86add5b808d6cb35900ad3fd63fa82e3eb644336abfa0
+PKG_HASH:=075cef2e814642e30e10e8155e93022e4a91ca38a65aa1d5467d4e969f97f338
 
 HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
-HOST_CONFIGURE_ARGS += --enable-threads=pth --disable-yacc
+HOST_CONFIGURE_ARGS += --enable-threads=pth
 
 define Host/Clean
 	-$(MAKE) -C $(HOST_BUILD_DIR) uninstall
