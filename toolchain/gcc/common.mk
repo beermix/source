@@ -140,7 +140,6 @@ GCC_CONFIGURE:= \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--disable-libunwind-exceptions \
-		--disable-vtable-verify \
 		--enable-checking=release \
 		--disable-libgomp \
 		--disable-libmudflap \
