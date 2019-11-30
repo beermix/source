@@ -6445,6 +6445,8 @@ CONFIG_PACKAGE_uhttpd=y
 #
 # Wireless
 #
+# CONFIG_PACKAGE_aircrack-ng is not set
+# CONFIG_PACKAGE_airmon-ng is not set
 # CONFIG_PACKAGE_dynapoint is not set
 # CONFIG_PACKAGE_hcxdumptool is not set
 # CONFIG_PACKAGE_hcxtools is not set

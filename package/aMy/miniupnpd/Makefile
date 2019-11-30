@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=miniupnpd
-PKG_VERSION:=2.1
-PKG_RELEASE:=2
+PKG_VERSION:=2.1.20191006
+PKG_RELEASE:=1
 
-PKG_SOURCE_URL:=http://miniupnp.free.fr/files
+PKG_SOURCE_URL:=https://miniupnp.tuxfamily.org/files
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=950894779661197fe093855fda29a728f434b5756eb4fa6cb5f7b9bff7ffe0c1
+PKG_HASH:=218fad7af31f3c22fb4c9db28a55a2a8b5067d41f5b38f52008a057a00d2206d
 
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
@@ -28,7 +28,7 @@ define Package/miniupnpd
   DEPENDS:=+iptables +libip4tc +IPV6:libip6tc +IPV6:ip6tables +libuuid
   TITLE:=Lightweight UPnP IGD, NAT-PMP & PCP daemon
   SUBMENU:=Firewall
-  URL:=http://miniupnp.free.fr/
+  URL:=https://miniupnp.tuxfamily.org/
 endef
 
 define Package/miniupnpd/conffiles
@@ -40,7 +40,7 @@ define Build/Prepare
 	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
 endef
 
-TARGET_CFLAGS += $(FPIC)
+TARGET_CFLAGS += $(FPIC) -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 MAKE_FLAGS += \
