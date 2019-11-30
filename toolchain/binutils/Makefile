@@ -59,6 +59,9 @@ HOST_CONFIGURE_ARGS = \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
+	--enable-relro \
+	--enable-threads \
+	--with-pic \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
