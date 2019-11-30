@@ -139,6 +139,9 @@ GCC_CONFIGURE:= \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--enable-checking=release \
+		--enable-cld \
+		--with-arch=atom \
+		--with-tune=generic \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
