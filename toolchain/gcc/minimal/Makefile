@@ -5,7 +5,7 @@ include ../common.mk
 
 GCC_CONFIGURE += \
 	--with-newlib \
-	--without-headers \
+	--with-headers=$(TOOLCHAIN_DIR)/include \
 	--enable-languages=c \
 	--disable-libsanitizer \
 	--disable-libssp \

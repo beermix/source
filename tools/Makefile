@@ -33,7 +33,7 @@ tools-$(CONFIG_TARGET_mxs) += elftosb sdimage
 tools-$(CONFIG_TARGET_ar71xx) += lzma-old
 tools-$(CONFIG_TARGET_ar71xx)$(CONFIG_TARGET_ath79) += squashfs
 tools-$(CONFIG_USES_MINOR) += kernel2minor
-tools-y += lzma squashfskit4 zip
+tools-y += lzma squashfskit4 zip elfutils
 tools-$(BUILD_B43_TOOLS) += b43-tools
 tools-$(BUILD_ISL) += isl
 tools-$(CONFIG_USE_SPARSE) += sparse
@@ -78,6 +78,7 @@ $(curdir)/zlib/compile := $(curdir)/cmake/compile
 $(curdir)/wrt350nv2-builder/compile := $(curdir)/zlib/compile
 $(curdir)/lzma-old/compile := $(curdir)/zlib/compile
 $(curdir)/make-ext4fs/compile := $(curdir)/zlib/compile
+$(curdir)/elfutils/compile := $(curdir)/zlib/compile
 $(curdir)/cbootimage/compile += $(curdir)/automake/compile
 # $(curdir)/go-src/compile := $(curdir)/go-bootstrap/compile
 
