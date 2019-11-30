@@ -107,8 +107,7 @@ SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
 TAR_OPTIONS += \
-	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
-	--exclude=libjava
+	--exclude=libjava/*
 
 export libgcc_cv_fixed_point=no
 ifdef CONFIG_USE_UCLIBC
@@ -139,7 +138,6 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--disable-libunwind-exceptions \
 		--enable-checking=release \
 		--disable-libgomp \
 		--disable-libmudflap \
