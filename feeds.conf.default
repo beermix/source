@@ -8,4 +8,4 @@ src-git routing https://git.openwrt.org/feed/routing.git
 #src-git oldpackages http://git.openwrt.org/packages.git
 #src-link custom /usr/src/openwrt/custom-feed
 src-git M0N3Y https://github.com/G-M0N3Y-2503/packages.git
-src-git luizluca https://github.com/luizluca/openwrt-packages
+#src-git luizluca https://github.com/luizluca/openwrt-packages
