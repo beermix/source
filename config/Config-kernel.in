@@ -858,10 +858,4 @@ config KERNEL_CC_OPTIMIZE_FOR_SIZE
 	help
 	  Enabling this option will pass "-Os" instead of "-O2" to
 	  your compiler resulting in a smaller kernel.
-
-config CONFIG_CC_OPTIMIZE_HARDER
-	bool "Optimize HARDER"
-	help
-	  Enabling this option will pass "-O3" instead of "-O2" to
-	  your compiler resulting in a fastest kernel.
 endchoice
