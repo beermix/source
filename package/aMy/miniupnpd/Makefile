@@ -8,16 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=miniupnpd
-PKG_VERSION:=2.0
-PKG_RELEASE:=1
+PKG_VERSION:=2.1
+PKG_RELEASE:=2
 
 PKG_SOURCE_URL:=http://miniupnp.free.fr/files
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=1c07a215dd9b362e75a9efc05e2fb3b4
+PKG_HASH:=
 
 PKG_LICENSE:=BSD-3-Clause
-PKG_LICENSE_FILES:=LICENSE
-PKG_CPE_ID:=cpe:/a:miniupnp_project:miniupnpd
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/version.mk
@@ -28,7 +26,7 @@ define Package/miniupnpd
   DEPENDS:=+iptables +libip4tc +IPV6:libip6tc +IPV6:ip6tables +libuuid
   TITLE:=Lightweight UPnP IGD, NAT-PMP & PCP daemon
   SUBMENU:=Firewall
-  URL:=https://miniupnp.tuxfamily.org/
+  URL:=http://miniupnp.free.fr/
 endef
 
 define Package/miniupnpd/conffiles
@@ -38,6 +36,8 @@ endef
 define Build/Prepare
 	$(call Build/Prepare/Default)
 	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
+	sed -i -e "s#^CFLAGS = .*-D#CPPFLAGS += -I/usr/include -D#" -e '/^CFLAGS :=/s/CFLAGS/CPPFLAGS/g' -e "s/#CFLAGS += -ansi/##CFLAGS += -ansi/g" -e "s/LIBS = -lip4tc/LIBS = -lip4tc/g" -e 's///' -e "s/-m /-m /g" $(PKG_BUILD_DIR)/Makefile.linux
+	sed -i -e 's/\(strncpy(\([->a-z.]\+\), "[a-zA-Z]\+", \)IPT_FUNCTION_MAXNAMELEN);/\1sizeof(\2));/' $(PKG_BUILD_DIR)/netfilter/iptcrdr.c
 endef
 
 TARGET_CFLAGS += $(FPIC) -flto
