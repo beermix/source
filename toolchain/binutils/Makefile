@@ -61,7 +61,6 @@ HOST_CONFIGURE_ARGS = \
 	--enable-ld=default \
 	--disable-werror \
 	--enable-gold=yes \
-	--enable-64-bit-bfd \
 	--enable-relro \
 	--with-mmap \
 	--disable-nls \
