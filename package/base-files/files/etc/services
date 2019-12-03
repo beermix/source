@@ -11343,6 +11343,7 @@ pmcdproxy       44322/tcp
 pmcdproxy       44322/udp
 pmwebapi        44323/tcp
 cognex-dataman  44444/tcp
+acronis-backup  44445/tcp
 domiq           44544/udp
 rbr-debug       44553/tcp
 rbr-debug       44553/udp
