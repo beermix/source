@@ -58,10 +58,12 @@ HOST_CONFIGURE_ARGS = \
 	--enable-deterministic-archives \
 	--enable-plugins \
 	--disable-multilib \
+	--enable-ld=default \
 	--disable-werror \
+	--enable-gold=yes \
+	--enable-64-bit-bfd \
 	--enable-relro \
-	--enable-threads \
-	--with-pic \
+	--with-mmap \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
