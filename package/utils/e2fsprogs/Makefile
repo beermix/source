@@ -156,7 +156,6 @@ CONFIGURE_ARGS += \
 	--disable-tls		\
 	--disable-nls		\
 	--disable-rpath		\
-	--disable-threads \
 	--disable-fuse2fs
 
 define Build/Prepare
