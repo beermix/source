@@ -142,6 +142,7 @@ GCC_CONFIGURE:= \
 		--enable-checking=release \
 		--enable-cld \
 		--with-linker-hash-style=gnu \
+		--enable-poison-system-directories \
 		--with-arch=atom \
 		--with-tune=generic \
 		--disable-libgomp \
