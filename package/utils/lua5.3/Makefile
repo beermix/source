@@ -76,7 +76,7 @@ $(call Package/lua5.3/Default/description)
   This package contains the Lua language compiler.
 endef
 
-TARGET_CFLAGS += -DLUA_USE_LINUX $(FPIC) -std=gnu99
+TARGET_CFLAGS += -DLUA_USE_LINUX $(FPIC) -std=gnu99 -fno-lto -mzero-caller-saved-regs=used
 
 define Build/Compile
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
