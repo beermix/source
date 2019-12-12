@@ -44,6 +44,7 @@ CONFIGURE_ARGS += \
 	--disable-wrapping \
 	--enable-color \
 	--disable-libmagic \
+	--disable-rpath \
 
 CONFIGURE_VARS += \
 	ac_cv_header_regex_h=no \
