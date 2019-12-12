@@ -69,8 +69,6 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
