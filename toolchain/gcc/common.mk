@@ -141,6 +141,7 @@ GCC_CONFIGURE:= \
 		--enable-target-optspace \
 		--enable-checking=release \
 		--enable-cld \
+		--with-linker-hash-style=gnu \
 		--with-arch=atom \
 		--with-tune=generic \
 		--disable-libgomp \
