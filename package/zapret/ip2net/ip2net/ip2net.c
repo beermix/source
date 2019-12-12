@@ -1,7 +1,7 @@
 // group ipv4/ipv6 list from stdout into subnets
 // each line must contain either ip or ip/bitcount
-// valid ip/bitcount are passed through without modification
-// ip are groupped into subnets
+// valid ip/bitcount and ip1-ip2 are passed through without modification
+// ips are groupped into subnets
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +26,7 @@
 // must be no less than N ipv6 in subnet
 #define DEFAULT_V6_THRESHOLD	5
 
-int ucmp(const void * a, const void * b, void *arg)
+static int ucmp(const void * a, const void * b, void *arg)
 {
 	if (*(uint32_t*)a < *(uint32_t*)b)
 		return -1;
@@ -35,13 +35,13 @@ int ucmp(const void * a, const void * b, void *arg)
 	else
 		return 0;
 }
-uint32_t mask_from_bitcount(uint32_t zct)
+static uint32_t mask_from_bitcount(uint32_t zct)
 {
 	return ~((1 << zct) - 1);
 }
 // make presorted array unique. return number of unique items.
 // 1,1,2,3,3,0,0,0 (ct=8) => 1,2,3,0 (ct=4)
-uint32_t unique(uint32_t *pu, uint32_t ct)
+static uint32_t unique(uint32_t *pu, uint32_t ct)
 {
 	uint32_t i, j, u;
 	for (i = j = 0; j < ct; i++)
@@ -55,7 +55,7 @@ uint32_t unique(uint32_t *pu, uint32_t ct)
 
 
 
-int cmp6(const void * a, const void * b, void *arg)
+static int cmp6(const void * a, const void * b, void *arg)
 {
 	for (uint8_t i = 0; i < sizeof(((struct in6_addr *)0)->s6_addr); i++)
 	{
@@ -67,7 +67,7 @@ int cmp6(const void * a, const void * b, void *arg)
 	return 0;
 }
 // make presorted array unique. return number of unique items.
-uint32_t unique6(struct in6_addr *pu, uint32_t ct)
+static uint32_t unique6(struct in6_addr *pu, uint32_t ct)
 {
 	uint32_t i, j, k;
 	for (i = j = 0; j < ct; i++)
@@ -77,29 +77,33 @@ uint32_t unique6(struct in6_addr *pu, uint32_t ct)
 	}
 	return i;
 }
-void mask_from_bitcount6(uint32_t zct, struct in6_addr *a)
+static void mask_from_bitcount6(uint32_t zct, struct in6_addr *a)
 {
-	if (zct > 128) zct = 128;
-	int32_t n = zct < 128 ? (127 - zct) >> 3 : -1;
-	for (int32_t i = 0; i < sizeof(a->s6_addr); i++)
-		a->s6_addr[i] = i > n ? 0x00 : i < n ? 0xFF : ~((1 << (zct & 7)) - 1);
+	if (zct >= 128)
+		memset(a->s6_addr,0x00,16);
+	else
+	{
+		int32_t n = (127 - zct) >> 3;
+		memset(a->s6_addr,0xFF,n);
+		memset(a->s6_addr+n,0x00,16-n);
+		a->s6_addr[n] = ~((1 << (zct & 7)) - 1);
+	}
 }
 // result = a & b
-void ip6_and(const struct in6_addr *a, const struct in6_addr *b, struct in6_addr *result)
+static void ip6_and(const struct in6_addr *a, const struct in6_addr *b, struct in6_addr *result)
 {
-	for (uint8_t i = 0; i < (sizeof(a->s6_addr) / sizeof(uint32_t)); i++)
-		((uint32_t*)result->s6_addr)[i] = ((uint32_t*)a->s6_addr)[i] & ((uint32_t*)b->s6_addr)[i];
+	((uint64_t*)result->s6_addr)[0] = ((uint64_t*)a->s6_addr)[0] & ((uint64_t*)b->s6_addr)[0];
+	((uint64_t*)result->s6_addr)[1] = ((uint64_t*)a->s6_addr)[1] & ((uint64_t*)b->s6_addr)[1];
 }
 
-
-void rtrim(char *s)
+static void rtrim(char *s)
 {
 	if (s)
 		for (char *p = s + strlen(s) - 1; p >= s && (*p == '\n' || *p == '\r'); p--) *p = '\0';
 }
 
 
-struct params_s
+static struct params_s
 {
 	bool ipv6;
 	uint32_t pctmult, pctdiv; // for v4
@@ -108,7 +112,7 @@ struct params_s
 } params;
 
 
-void exithelp()
+static void exithelp()
 {
 	printf(
 		" -4\t\t\t\t; ipv4 list (default)\n"
@@ -120,7 +124,7 @@ void exithelp()
 	exit(1);
 }
 
-void parse_params(int argc, char *argv[])
+static void parse_params(int argc, char *argv[])
 {
 	int option_index = 0;
 	int v, i;
@@ -195,7 +199,7 @@ void parse_params(int argc, char *argv[])
 
 int main(int argc, char **argv)
 {
-	char str[256];
+	char str[256],d;
 	uint32_t ipct = 0, iplist_size = 0, pos = 0, p, zct, ip_ct, pos_end;
 
 	parse_params(argc, argv);
@@ -208,20 +212,29 @@ int main(int argc, char **argv)
 		while (fgets(str, sizeof(str), stdin))
 		{
 			rtrim(str);
-			zct = 128;
-			if (s = strchr(str, '/'))
+			d = 0;
+			if ((s = strchr(str, '/')) || (s = strchr(str, '-')))
 			{
-				sscanf(s + 1, "%u", &zct);
+				d = *s;
 				*s = '\0';
 			}
 			if (inet_pton(AF_INET6, str, &a))
 			{
-				if (zct < 128)
+				if (d=='/')
 				{
 					// we have subnet ip6/y
 					// output it as is
-					*s = '/';
-					printf("%s\n", str);
+					*s = d;
+					if (sscanf(s + 1, "%u", &zct) && zct!=128)
+					{
+						if (zct<128) printf("%s\n", str);
+						continue;
+					}
+				}
+				else if (d=='-')
+				{
+					*s = d;
+					if (inet_pton(AF_INET6, s+1, &a)) printf("%s\n", str);
 					continue;
 				}
 				if (ipct >= iplist_size)
@@ -268,7 +281,7 @@ int main(int argc, char **argv)
 				if (ip_ct == 1) break;
 				if (ip_ct >= params.v6_threshold)
 				{
-					// network found. but is there smaller network with the same ip_ct ? dont do carpet bombing is possible, use smaller subnets
+					// network found. but is there smaller network with the same ip_ct ? dont do carpet bombing if possible, use smaller subnets
 					if (!ip_ct_best || ip_ct == ip_ct_best)
 					{
 						ip_ct_best = ip_ct;
@@ -290,13 +303,21 @@ int main(int argc, char **argv)
 	}
 	else // ipv4
 	{
-		uint32_t u1, u2, u3, u4, ip;
+		uint32_t u1,u2,u3,u4, u11,u22,u33,u44, ip;
 		uint32_t *iplist = NULL, *iplist_new;
 		uint32_t i, subnet_ct, end_ip;
 
 		while (fgets(str, sizeof(str), stdin))
 		{
-			if ((i = sscanf(str, "%u.%u.%u.%u/%u", &u1, &u2, &u3, &u4, &zct)) >= 4 && !(u1 & 0xFFFFFF00) && !(u2 & 0xFFFFFF00) && !(u3 & 0xFFFFFF00) && !(u4 & 0xFFFFFF00))
+			if ((i = sscanf(str, "%u.%u.%u.%u-%u.%u.%u.%u", &u1, &u2, &u3, &u4, &u11, &u22, &u33, &u44)) >= 8 && 
+				!(u1 & 0xFFFFFF00) && !(u2 & 0xFFFFFF00) && !(u3 & 0xFFFFFF00) && !(u4 & 0xFFFFFF00) &&
+				!(u11 & 0xFFFFFF00) && !(u22 & 0xFFFFFF00) && !(u33 & 0xFFFFFF00) && !(u44 & 0xFFFFFF00))
+			{
+				printf("%u.%u.%u.%u-%u.%u.%u.%u\n", u1, u2, u3, u4, u11, u22, u33, u44);
+			}
+			else
+			if ((i = sscanf(str, "%u.%u.%u.%u/%u", &u1, &u2, &u3, &u4, &zct)) >= 4 &&
+				!(u1 & 0xFFFFFF00) && !(u2 & 0xFFFFFF00) && !(u3 & 0xFFFFFF00) && !(u4 & 0xFFFFFF00))
 			{
 				if (i == 5 && zct != 32)
 				{
@@ -346,7 +367,7 @@ int main(int argc, char **argv)
 				if (ip_ct == 1) break;
 				if (ip_ct >= (subnet_ct*params.pctmult / params.pctdiv))
 				{
-					// network found. but is there smaller network with the same ip_ct ? dont do carpet bombing is possible, use smaller subnets
+					// network found. but is there smaller network with the same ip_ct ? dont do carpet bombing if possible, use smaller subnets
 					if (!ip_ct_best || ip_ct == ip_ct_best)
 					{
 						ip_ct_best = ip_ct;

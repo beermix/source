@@ -29,7 +29,7 @@
 
 // keep separate legs counter. counting every time thousands of legs can consume cpu
 static int legs_local, legs_remote;
-void count_legs(struct tailhead *conn_list)
+static void count_legs(struct tailhead *conn_list)
 {
 	tproxy_conn_t *conn = NULL;
 
@@ -38,13 +38,13 @@ void count_legs(struct tailhead *conn_list)
 		conn->remote ? legs_remote++ : legs_local++;
 	
 }
-void print_legs()
+static void print_legs()
 {
 	VPRINT("Legs : local:%d remote:%d", legs_local, legs_remote)
 }
 
 
-bool socks5_send_rep(int fd,uint8_t rep)
+static bool socks5_send_rep(int fd,uint8_t rep)
 {
 	s5_rep s5rep;
 	memset(&s5rep,0,sizeof(s5rep));
@@ -53,7 +53,7 @@ bool socks5_send_rep(int fd,uint8_t rep)
 	s5rep.atyp = S5_ATYP_IP4;
 	return send(fd,&s5rep,sizeof(s5rep),MSG_DONTWAIT)==sizeof(s5rep);
 }
-bool socks5_send_rep_errno(int fd,int errn)
+static bool socks5_send_rep_errno(int fd,int errn)
 {
 	uint8_t rep;
 	switch(errn)
@@ -72,26 +72,26 @@ bool socks5_send_rep_errno(int fd,int errn)
 	}
 	return socks5_send_rep(fd,rep);
 }
-bool socks4_send_rep(int fd, uint8_t rep)
+static bool socks4_send_rep(int fd, uint8_t rep)
 {
 	s4_rep s4rep;
 	memset(&s4rep, 0, sizeof(s4rep));
 	s4rep.rep = rep;
 	return send(fd, &s4rep, sizeof(s4rep), MSG_DONTWAIT) == sizeof(s4rep);
 }
-bool socks4_send_rep_errno(int fd, int errn)
+static bool socks4_send_rep_errno(int fd, int errn)
 {
 	return socks4_send_rep(fd, errn ? S4_REP_FAILED : S4_REP_OK);
 }
-bool socks_send_rep(uint8_t ver, int fd, uint8_t rep5)
+static bool socks_send_rep(uint8_t ver, int fd, uint8_t rep5)
 {
 	return ver==5 ? socks5_send_rep(fd, rep5) : socks4_send_rep(fd, rep5 ? S4_REP_FAILED : S4_REP_OK);
 }
-bool socks_send_rep_errno(uint8_t ver, int fd, int errn)
+static bool socks_send_rep_errno(uint8_t ver, int fd, int errn)
 {
 	return ver==5 ? socks5_send_rep_errno(fd,errn) : socks4_send_rep_errno(fd, errn);
 }
-bool proxy_remote_conn_ack(tproxy_conn_t *conn)
+static bool proxy_remote_conn_ack(tproxy_conn_t *conn)
 {
 	// if proxy mode acknowledge connection request
 	// conn = remote. conn->partner = local
@@ -117,7 +117,7 @@ bool proxy_remote_conn_ack(tproxy_conn_t *conn)
 
 
 
-bool send_buffer_create(send_buffer_t *sb, char *data, size_t len)
+static bool send_buffer_create(send_buffer_t *sb, char *data, size_t len)
 {
 	if (sb->data)
 	{
@@ -135,7 +135,7 @@ bool send_buffer_create(send_buffer_t *sb, char *data, size_t len)
 	sb->pos = 0;
 	return true;
 }
-bool send_buffer_free(send_buffer_t *sb)
+static bool send_buffer_free(send_buffer_t *sb)
 {
 	if (sb->data)
 	{
@@ -143,27 +143,27 @@ bool send_buffer_free(send_buffer_t *sb)
 		sb->data = NULL;
 	}
 }
-void send_buffers_free(send_buffer_t *sb_array, int count)
+static void send_buffers_free(send_buffer_t *sb_array, int count)
 {
 	for (int i=0;i<count;i++)
 		send_buffer_free(sb_array+i);
 }
-void conn_free_buffers(tproxy_conn_t *conn)
+static void conn_free_buffers(tproxy_conn_t *conn)
 {
 	send_buffers_free(conn->wr_buf,sizeof(conn->wr_buf)/sizeof(conn->wr_buf[0]));
 }
-bool send_buffer_present(send_buffer_t *sb)
+static bool send_buffer_present(send_buffer_t *sb)
 {
 	return !!sb->data;
 }
-bool send_buffers_present(send_buffer_t *sb_array, int count)
+static bool send_buffers_present(send_buffer_t *sb_array, int count)
 {
 	for(int i=0;i<count;i++)
 		if (send_buffer_present(sb_array+i))
 			return true;
 	return false;
 }
-ssize_t send_buffer_send(send_buffer_t *sb, int fd)
+static ssize_t send_buffer_send(send_buffer_t *sb, int fd)
 {
 	ssize_t wr;
 
@@ -181,7 +181,7 @@ ssize_t send_buffer_send(send_buffer_t *sb, int fd)
 	
 	return wr;
 }
-ssize_t send_buffers_send(send_buffer_t *sb_array, int count, int fd, size_t *real_wr)
+static ssize_t send_buffers_send(send_buffer_t *sb_array, int count, int fd, size_t *real_wr)
 {
 	ssize_t wr=0,twr=0;
 
@@ -205,43 +205,43 @@ ssize_t send_buffers_send(send_buffer_t *sb_array, int count, int fd, size_t *re
 	return twr;
 }
 
-bool conn_in_tcp_mode(tproxy_conn_t *conn)
+static bool conn_in_tcp_mode(tproxy_conn_t *conn)
 {
 	return !(conn->conn_type==CONN_TYPE_SOCKS && conn->socks_state!=S_TCP);
 }
 
-bool conn_partner_alive(tproxy_conn_t *conn)
+static bool conn_partner_alive(tproxy_conn_t *conn)
 {
 	return conn->partner && conn->partner->state!=CONN_CLOSED;
 }
-bool conn_buffers_present(tproxy_conn_t *conn)
+static bool conn_buffers_present(tproxy_conn_t *conn)
 {
 	return send_buffers_present(conn->wr_buf,sizeof(conn->wr_buf)/sizeof(conn->wr_buf[0]));
 }
-ssize_t conn_buffers_send(tproxy_conn_t *conn)
+static ssize_t conn_buffers_send(tproxy_conn_t *conn)
 {
 	size_t wr,real_twr;
 	wr = send_buffers_send(conn->wr_buf,sizeof(conn->wr_buf)/sizeof(conn->wr_buf[0]), conn->fd, &real_twr);
 	conn->twr += real_twr;
 	return wr;
 }
-bool conn_has_unsent(tproxy_conn_t *conn)
+static bool conn_has_unsent(tproxy_conn_t *conn)
 {
 	return conn->wr_unsent || conn_buffers_present(conn);
 }
-int conn_bytes_unread(tproxy_conn_t *conn)
+static int conn_bytes_unread(tproxy_conn_t *conn)
 {
 	int numbytes=-1;
 	ioctl(conn->fd, FIONREAD, &numbytes)!=-1;
 	return numbytes;
 }
-bool conn_has_unsent_pair(tproxy_conn_t *conn)
+static bool conn_has_unsent_pair(tproxy_conn_t *conn)
 {
 	return conn_has_unsent(conn) || (conn_partner_alive(conn) && conn_has_unsent(conn->partner));
 }
 
 
-ssize_t send_or_buffer(send_buffer_t *sb, int fd, char *buf, size_t len)
+static ssize_t send_or_buffer(send_buffer_t *sb, int fd, char *buf, size_t len)
 {
 	ssize_t wr=0;
 	if (len)
@@ -257,40 +257,40 @@ ssize_t send_or_buffer(send_buffer_t *sb, int fd, char *buf, size_t len)
 	return wr;
 }
 
-bool set_linger(int fd)
+static bool set_linger(int fd)
 {
 	struct linger ling={1,5};
 	return setsockopt(fd,SOL_SOCKET,SO_LINGER,&ling,sizeof(ling))!=-1;
 }
-int set_keepalive(int fd)
+static int set_keepalive(int fd)
 {
 	int yes=1;
 	return setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &yes, sizeof(int))!=-1;
 }
 
-bool ismapped(const struct sockaddr_in6 *sa)
+static bool ismapped(const struct sockaddr_in6 *sa)
 {
 	// ::ffff:1.2.3.4
 	return !memcmp(sa->sin6_addr.s6_addr,"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff",12);
 }
-bool mappedcmp(const struct sockaddr_in *sa1,const struct sockaddr_in6 *sa2)
+static bool mappedcmp(const struct sockaddr_in *sa1,const struct sockaddr_in6 *sa2)
 {
 	return ismapped(sa2) && !memcmp(sa2->sin6_addr.s6_addr+12,&sa1->sin_addr.s_addr,4);
 }
-bool sacmp(const struct sockaddr *sa1,const struct sockaddr *sa2)
+static bool sacmp(const struct sockaddr *sa1,const struct sockaddr *sa2)
 {
 	return sa1->sa_family==AF_INET && sa2->sa_family==AF_INET && !memcmp(&((struct sockaddr_in*)sa1)->sin_addr,&((struct sockaddr_in*)sa2)->sin_addr,sizeof(struct in_addr)) ||
 		sa1->sa_family==AF_INET6 && sa2->sa_family==AF_INET6 && !memcmp(&((struct sockaddr_in6*)sa1)->sin6_addr,&((struct sockaddr_in6*)sa2)->sin6_addr,sizeof(struct in6_addr)) ||
 		sa1->sa_family==AF_INET && sa2->sa_family==AF_INET6 && mappedcmp((struct sockaddr_in*)sa1,(struct sockaddr_in6*)sa2) ||
 		sa1->sa_family==AF_INET6 && sa2->sa_family==AF_INET && mappedcmp((struct sockaddr_in*)sa2,(struct sockaddr_in6*)sa1);
 }
-uint16_t saport(const struct sockaddr *sa)
+static uint16_t saport(const struct sockaddr *sa)
 {
 	return htons(sa->sa_family==AF_INET ? ((struct sockaddr_in*)sa)->sin_port :
 		     sa->sa_family==AF_INET6 ? ((struct sockaddr_in6*)sa)->sin6_port : 0);
 }
 // -1 = error,  0 = not local, 1 = local
-bool check_local_ip(const struct sockaddr *saddr)
+static bool check_local_ip(const struct sockaddr *saddr)
 {
 	struct ifaddrs *addrs,*a;
     
@@ -311,7 +311,7 @@ bool check_local_ip(const struct sockaddr *saddr)
 	freeifaddrs(addrs);
 	return bres;
 }
-void print_addrinfo(const struct addrinfo *ai)
+static void print_addrinfo(const struct addrinfo *ai)
 {
 	char str[64];
 	while (ai)
@@ -330,7 +330,7 @@ void print_addrinfo(const struct addrinfo *ai)
 		ai = ai->ai_next;
 	}
 }
-void print_sockaddr(const struct sockaddr *sa)
+static void print_sockaddr(const struct sockaddr *sa)
 {
 	char str[64];
 	switch (sa->sa_family)
@@ -472,7 +472,7 @@ static bool get_dest_addr(int sockfd, struct sockaddr_storage *orig_dst)
 }
 
 //Free resources occupied by this connection
-void free_conn(tproxy_conn_t *conn)
+static void free_conn(tproxy_conn_t *conn)
 {
 	if (!conn) return;
 	if (conn->fd) close(conn->fd);
@@ -513,7 +513,7 @@ static tproxy_conn_t *new_conn(int fd, bool remote)
 	return conn;
 }
 
-bool epoll_set(tproxy_conn_t *conn, uint32_t events)
+static bool epoll_set(tproxy_conn_t *conn, uint32_t events)
 {
 	struct epoll_event ev;
 
@@ -529,7 +529,7 @@ bool epoll_set(tproxy_conn_t *conn, uint32_t events)
 	}
 	return true;
 }
-bool epoll_del(tproxy_conn_t *conn)
+static bool epoll_del(tproxy_conn_t *conn)
 {
 	struct epoll_event ev;
 
@@ -544,7 +544,7 @@ bool epoll_del(tproxy_conn_t *conn)
 	return true;
 }
 
-bool epoll_update_flow(tproxy_conn_t *conn)
+static bool epoll_update_flow(tproxy_conn_t *conn)
 {
 	if (conn->bFlowInPrev==conn->bFlowIn && conn->bFlowOutPrev==conn->bFlowOut && conn->bPrevRdhup==(conn->state==CONN_RDHUP))
 		return true; // unchanged, no need to syscall
@@ -557,7 +557,7 @@ bool epoll_update_flow(tproxy_conn_t *conn)
 	conn->bPrevRdhup = (conn->state==CONN_RDHUP);
 	return true;
 }
-bool epoll_set_flow(tproxy_conn_t *conn, bool bFlowIn, bool bFlowOut)
+static bool epoll_set_flow(tproxy_conn_t *conn, bool bFlowIn, bool bFlowOut)
 {
 	conn->bFlowIn = bFlowIn;
 	conn->bFlowOut = bFlowOut;
@@ -566,7 +566,7 @@ bool epoll_set_flow(tproxy_conn_t *conn, bool bFlowIn, bool bFlowOut)
 
 //Acquires information, initiates a connect and initialises a new connection
 //object. Return NULL if anything fails, pointer to object otherwise
-tproxy_conn_t* add_tcp_connection(int efd, struct tailhead *conn_list,
+static tproxy_conn_t* add_tcp_connection(int efd, struct tailhead *conn_list,
         int local_fd, uint16_t listen_port, conn_type_t proxy_type)
 {
 	struct sockaddr_storage orig_dst;
@@ -650,7 +650,7 @@ tproxy_conn_t* add_tcp_connection(int efd, struct tailhead *conn_list,
 	//Proxy mode : I need to service proxy protocol
 	// remote connection not started until proxy handshake is complete
 
-	if (!epoll_set(conn, proxy_type==CONN_TYPE_TRANSPARENT ? 0 : (EPOLLIN|EPOLLRDHUP)))
+	if (!epoll_set(conn, proxy_type==CONN_TYPE_TRANSPARENT ? EPOLLRDHUP : (EPOLLIN|EPOLLRDHUP)))
 	{
 		free_conn(conn->partner);
 		free_conn(conn);
@@ -669,7 +669,7 @@ tproxy_conn_t* add_tcp_connection(int efd, struct tailhead *conn_list,
 
 //Checks if a connection attempt was successful or not
 //Returns true if successfull, false if not
-bool check_connection_attempt(tproxy_conn_t *conn, int efd)
+static bool check_connection_attempt(tproxy_conn_t *conn, int efd)
 {
 	int fd_flags = 0;
 	int errn = 0;
@@ -680,6 +680,13 @@ bool check_connection_attempt(tproxy_conn_t *conn, int efd)
 		// locals are connected since accept
 		// remote need to be checked only once
 		return true;
+	}
+
+	if (!conn_partner_alive(conn))
+	{
+		// local leg died ?
+		VPRINT("check_connection_attempt : fd=%d (remote) : local leg died. failing this connection attempt.", conn->fd)
+		return false;
 	}
 
 	// check the connection was sucessfull. it means its not in in SO_ERROR state
@@ -701,7 +708,7 @@ bool check_connection_attempt(tproxy_conn_t *conn, int efd)
 
 
 
-bool epoll_set_flow_pair(tproxy_conn_t *conn)
+static bool epoll_set_flow_pair(tproxy_conn_t *conn)
 {
 	bool bHasUnsent = conn_has_unsent(conn);
 	bool bHasUnsentPartner = conn_partner_alive(conn) ? conn_has_unsent(conn->partner) : false;
@@ -718,7 +725,7 @@ bool epoll_set_flow_pair(tproxy_conn_t *conn)
 	return true;
 }
 
-bool handle_unsent(tproxy_conn_t *conn)
+static bool handle_unsent(tproxy_conn_t *conn)
 {
 	ssize_t wr=0,twr=0;
 
@@ -796,7 +803,7 @@ bool proxy_mode_connect_remote(const struct sockaddr *sa, tproxy_conn_t *conn, s
 	return true;
 }
 
-bool handle_proxy_mode(tproxy_conn_t *conn, struct tailhead *conn_list)
+static bool handle_proxy_mode(tproxy_conn_t *conn, struct tailhead *conn_list)
 {
 	// To simplify things I dont care about buffering. If message splits, I just hang up
 	// in proxy mode messages are short. they can be split only intentionally. all normal programs send them in one packet
@@ -986,7 +993,7 @@ bool handle_proxy_mode(tproxy_conn_t *conn, struct tailhead *conn_list)
 
 #define RD_BLOCK_SIZE 65536
 #define MAX_WASTE (1024*1024)
-bool handle_epoll(tproxy_conn_t *conn, struct tailhead *conn_list, uint32_t evt)
+static bool handle_epoll(tproxy_conn_t *conn, struct tailhead *conn_list, uint32_t evt)
 {
 	int numbytes;
 	ssize_t rd = 0, wr = 0;
@@ -1110,7 +1117,7 @@ bool handle_epoll(tproxy_conn_t *conn, struct tailhead *conn_list, uint32_t evt)
 	return rd>=0 && !oom;
 }
 
-bool remove_closed_connections(int efd, struct tailhead *close_list)
+static bool remove_closed_connections(int efd, struct tailhead *close_list)
 {
 	tproxy_conn_t *conn = NULL;
 	bool bRemoved = false;
@@ -1131,15 +1138,18 @@ bool remove_closed_connections(int efd, struct tailhead *close_list)
 }
 
 // move to close list connection and its partner
-void close_tcp_conn(tproxy_conn_t *conn, struct tailhead *conn_list, struct tailhead *close_list)
+static void close_tcp_conn(struct tailhead *conn_list, struct tailhead *close_list, tproxy_conn_t *conn)
 {
-	conn->state = CONN_CLOSED;
-	TAILQ_REMOVE(conn_list, conn, conn_ptrs);
-	TAILQ_INSERT_TAIL(close_list, conn, conn_ptrs);
+	if (conn->state != CONN_CLOSED)
+	{
+		conn->state = CONN_CLOSED;
+		TAILQ_REMOVE(conn_list, conn, conn_ptrs);
+		TAILQ_INSERT_TAIL(close_list, conn, conn_ptrs);
+	}
 }
 
 
-bool read_all_and_buffer(tproxy_conn_t *conn, int buffer_number)
+static bool read_all_and_buffer(tproxy_conn_t *conn, int buffer_number)
 {
 	if (conn_partner_alive(conn))
 	{
@@ -1167,18 +1177,51 @@ bool read_all_and_buffer(tproxy_conn_t *conn, int buffer_number)
 }
 
 
-#define CONN_CLOSE(conn) { \
- if (conn->state!=CONN_CLOSED) close_tcp_conn(conn, &conn_list, &close_list); \
+static bool conn_timed_out(tproxy_conn_t *conn)
+{
+	if (conn->orphan_since && conn->state==CONN_UNAVAILABLE)
+	{
+		time_t timediff = time(NULL) - conn->orphan_since;
+		return timediff>=params.max_orphan_time;
+	}
+	else
+		return false;
 }
-#define CONN_CLOSE_BOTH(conn) { \
- if (conn_partner_alive(conn)) CONN_CLOSE(conn->partner); \
- CONN_CLOSE(conn); \
+static void conn_close_timed_out(struct tailhead *conn_list, struct tailhead *close_list)
+{
+	tproxy_conn_t *c,*cnext = NULL;
+
+	DBGPRINT("conn_close_timed_out")
+
+	c = TAILQ_FIRST(conn_list);
+	while(c)
+	{
+		cnext = TAILQ_NEXT(c,conn_ptrs);
+		if (conn_timed_out(c))
+		{
+			DBGPRINT("closing timed out connection: fd=%d remote=%d",c->fd,c->remote)
+			close_tcp_conn(conn_list,close_list,c);
+		}
+		c = cnext;
+	}
 }
 
-#define CONN_CLOSE_WITH_PARTNER_CHECK(conn) { \
- CONN_CLOSE(conn); \
- if (conn_partner_alive(conn) && !conn_has_unsent(conn->partner)) \
-  CONN_CLOSE(conn->partner); \
+static void conn_close_both(struct tailhead *conn_list, struct tailhead *close_list, tproxy_conn_t *conn)
+{
+	if (conn_partner_alive(conn)) close_tcp_conn(conn_list,close_list,conn->partner);
+	close_tcp_conn(conn_list,close_list,conn);
+}
+static void conn_close_with_partner_check(struct tailhead *conn_list, struct tailhead *close_list, tproxy_conn_t *conn)
+{
+	close_tcp_conn(conn_list,close_list,conn);
+	if (conn_partner_alive(conn))
+	{ 
+		if (!conn_has_unsent(conn->partner))
+			close_tcp_conn(conn_list,close_list,conn->partner);
+		else if (conn->partner->remote && conn->partner->state==CONN_UNAVAILABLE && params.max_orphan_time)
+			// time out only remote legs that are not connected yet
+			conn->partner->orphan_since = time(NULL);
+	}
 }
 
 int event_loop(int listen_fd)
@@ -1189,6 +1232,7 @@ int event_loop(int listen_fd)
 	int efd, i;
 	struct epoll_event ev, events[MAX_EPOLL_EVENTS];
 	struct tailhead conn_list, close_list;
+	time_t tm,last_timeout_check=0;
 
 	legs_local = legs_remote = 0;
 	//Initialize queue (remember that TAILQ_HEAD just defines the struct)
@@ -1270,7 +1314,7 @@ int event_loop(int listen_fd)
 						if (events[i].events & EPOLLHUP) DBGPRINT("EPOLLHUP")
 						proxy_remote_conn_ack(conn);
 						read_all_and_buffer(conn,3);
-						CONN_CLOSE_WITH_PARTNER_CHECK(conn);
+						conn_close_with_partner_check(&conn_list,&close_list,conn);
 						continue;
 					}
 					if (events[i].events & EPOLLOUT)
@@ -1278,7 +1322,7 @@ int event_loop(int listen_fd)
 						if (!check_connection_attempt(conn, efd))
 						{
 							VPRINT("Connection attempt failed for fd=%d", conn->fd)
-							CONN_CLOSE_BOTH(conn);
+							conn_close_both(&conn_list,&close_list,conn);
 							continue;
 						}
 					}
@@ -1296,7 +1340,7 @@ int event_loop(int listen_fd)
 						else
 						{
 							DBGPRINT("conn fd=%d has no unsent, closing", conn->fd)
-							CONN_CLOSE_WITH_PARTNER_CHECK(conn);
+							conn_close_with_partner_check(&conn_list,&close_list,conn);
 						}
 						continue;
 					}
@@ -1307,7 +1351,7 @@ int event_loop(int listen_fd)
 						if (!handle_epoll(conn, &conn_list, events[i].events))
 						{
 							DBGPRINT("handle_epoll false")
-							CONN_CLOSE_WITH_PARTNER_CHECK(conn);
+							conn_close_with_partner_check(&conn_list,&close_list,conn);
 							continue;
 						}
 					}
@@ -1315,7 +1359,13 @@ int event_loop(int listen_fd)
 
 			}
 		}
-
+		tm = time(NULL);
+		if (last_timeout_check!=tm)
+		{
+			// limit whole list lookups to once per second
+			last_timeout_check=tm;
+			conn_close_timed_out(&conn_list,&close_list);
+		}
 		if (remove_closed_connections(efd, &close_list))
 		{
 			// at least one leg was removed. recount legs

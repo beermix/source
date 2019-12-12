@@ -1,5 +1,5 @@
 CC ?= gcc
-CFLAGS += -s -O3
+CFLAGS += -std=c99 -s -O3
 LIBS = -lz -lcap
 SRC_FILES = *.c
 

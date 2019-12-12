@@ -2,12 +2,14 @@
 
 #include <stdbool.h>
 #include <sys/queue.h>
+#include <time.h>
 
 #define BACKLOG 10
 #define MAX_EPOLL_EVENTS 64
 #define IP_TRANSPARENT 19 //So that application compiles on OpenWRT
 #define SPLICE_LEN 65536
 #define DEFAULT_MAX_CONN	512
+#define DEFAULT_MAX_ORPHAN_TIME	5
 
 int event_loop(int listen_fd);
 
@@ -46,8 +48,7 @@ struct tproxy_conn
 	conn_type_t conn_type;
 
 	struct tproxy_conn *partner; // other leg
-	//Create the struct which contains ptrs to next/prev element
-	TAILQ_ENTRY(tproxy_conn) conn_ptrs;
+	time_t orphan_since;
 
 	// socks5 state machine
 	enum {
@@ -80,6 +81,9 @@ struct tproxy_conn
 	// all buffers are sent strictly from 0 to countof(wr_buf)-1
 	// buffer cannot be sent if there is unsent data in a lower buffer
 	struct send_buffer wr_buf[4];
+
+	//Create the struct which contains ptrs to next/prev element
+	TAILQ_ENTRY(tproxy_conn) conn_ptrs;
 };
 typedef struct tproxy_conn tproxy_conn_t;
 

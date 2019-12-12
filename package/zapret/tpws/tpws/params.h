@@ -9,7 +9,7 @@ enum splithttpreq { split_none = 0, split_method, split_host };
 
 struct params_s
 {
-	char bindaddr[64],bindiface[IFNAMSIZ];
+	char bindaddr[64],bindiface[IF_NAMESIZE];
 	bool bind_if6;
 	bool bindll,bindll_force;
 	int bind_wait_ifup,bind_wait_ip,bind_wait_ip_ll;
@@ -20,7 +20,7 @@ struct params_s
 	gid_t gid;
 	bool daemon;
 	uint16_t port;
-	int maxconn;
+	int maxconn,maxfiles,max_orphan_time;
 	int local_rcvbuf,local_sndbuf,remote_rcvbuf,remote_sndbuf;
 
 	bool tamper; // any tamper option is set
