@@ -60,7 +60,6 @@ HOST_CONFIGURE_ARGS = \
 	--disable-multilib \
 	--disable-werror \
 	--enable-relro \
-	--with-mmap \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
