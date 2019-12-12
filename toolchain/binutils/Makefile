@@ -58,9 +58,7 @@ HOST_CONFIGURE_ARGS = \
 	--enable-deterministic-archives \
 	--enable-plugins \
 	--disable-multilib \
-	--enable-ld=default \
 	--disable-werror \
-	--enable-gold=yes \
 	--enable-relro \
 	--with-mmap \
 	--disable-nls \

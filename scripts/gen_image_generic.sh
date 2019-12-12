@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Copyright (C) 2006-2012 OpenWrt.org
 set -e -x
 [ $# == 5 -o $# == 6 ] || {
