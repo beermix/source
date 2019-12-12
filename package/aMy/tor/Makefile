@@ -3,14 +3,14 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/torproject/tor/tree/maint-0.4.1
+# https://github.com/torproject/tor/tree/maint-0.4.2
 # https://github.com/torproject/tor/tree/maint-0.3.5
 # https://archive.torproject.org/tor-package-archive/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=14089a2
+PKG_VERSION:=b7d18f8
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -101,20 +101,15 @@ CONFIGURE_ARGS += \
         --disable-lzma \
         --disable-module-dirauth \
         --enable-silent-rules \
+        --disable-gcc-hardening \
+        --disable-linker-hardening \
         --with-tor-user=tor \
         --with-tor-group=tor
 
-TARGET_CFLAGS += -O3
+#TARGET_CFLAGS += -O3
 
-#TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections
-#TARGET_LDFLAGS += -Wl,--gc-sections
-
-ifneq ($(CONFIG_SSP_SUPPORT),y)
-	CONFIGURE_ARGS += \
-		--disable-gcc-hardening
-else
-	EXTRA_CFLAGS += $(FPIC)
-endif
+TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
