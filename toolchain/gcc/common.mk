@@ -142,7 +142,7 @@ GCC_CONFIGURE:= \
 		--enable-checking=release \
 		--enable-cld \
 		--with-linker-hash-style=gnu \
-		--with-tune=generic \
+		--with-tune=haswell \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
