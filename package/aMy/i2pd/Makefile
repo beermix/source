@@ -4,7 +4,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/PurpleI2P/i2pd/releases
 
 include $(TOPDIR)/rules.mk
 
