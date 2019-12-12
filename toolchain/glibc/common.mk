@@ -12,14 +12,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.30.9000
-
-PKG_SOURCE_PROTO:=git
+PKG_VERSION:=2.30
+PKG_SOURCE_URL:=@GNU/glibc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_HASH:=e2c4114e569afbe7edbc29131a43be833850ab9a459d81beb2588016d2bbb8af
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=ef4e158c736d067304164c3daa763e4f425af248
-PKG_MIRROR_HASH:=
-PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
@@ -61,7 +58,11 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
+		--disable-sanity-checks \
 		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
