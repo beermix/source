@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gettext-tiny
-PKG_VERSION:=55a2119
+PKG_VERSION:=73fc3e7ef7e016a3874b632fd0475969d288f309
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/sabotage-linux/gettext-tiny.git
@@ -25,13 +25,25 @@ define Host/Compile
 		CFLAGS="$(HOST_CFLAGS)" \
 		LDFLAGS="$(HOST_LDFLAGS) -fPIC" \
 		LIBINTL=NONE
+
+#	cp $(HOST_BUILD_DIR)/extra/gettextize.in $(HOST_BUILD_DIR)/gettextize
+
+#	$(SED) 's,@PACKAGE@,gettext-tools,g;' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@VERSION@,$(GETTEXT_GNU_VERSION),g;' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@ARCHIVE_VERSION@,$(PKG_VERSION),' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@prefix@,$(HOST_BUILD_DIR),g;' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@datarootdir@,$${prefix}/share,g;' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@datadir@,$${prefix}/share,g;' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@PATH_SEPARATOR@,:,g;' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@RELOCATABLE@,no,g;' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@exec_prefix@,$${prefix},g;' $(HOST_BUILD_DIR)/gettextize
+#	$(SED) 's,@bindir@,$${exec_prefix}/bin,g;' $(HOST_BUILD_DIR)/gettextize
 endef
 
 define Host/Install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(STAGING_DIR_HOST) \
-		LIBINTL=NONE \
-		install
+		LIBINTL=NONE install
 endef
 
 $(eval $(call HostBuild))
