@@ -58,12 +58,12 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
-		--enable-bind-now \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
 		--enable-kernel=4.14 \
+		--disable-debug \
 		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 

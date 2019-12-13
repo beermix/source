@@ -1,0 +1,67 @@
+From 780392a8aee95cdae0e2df8e3900e39ac538d7d7 Mon Sep 17 00:00:00 2001
+From: Rosen Penev <rosenp@gmail.com>
+Date: Sun, 27 Oct 2019 12:41:57 -0700
+Subject: [PATCH] cmath: Fix function overloads
+
+The original macro was only used by GCC and nowhere else. Use a better
+check to see if they should be defined.
+
+Also fixed up the int pow functions to only be available to < C++11.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ include/cmath | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/include/cmath b/include/cmath
+index 5409e64..5cc00d6 100644
+--- a/include/cmath
++++ b/include/cmath
+@@ -71,7 +71,7 @@ namespace std {
+ 	using ::tan;
+ 	using ::tanh;
+ 
+-#ifndef __CORRECT_ISO_CPP_MATH_H_PROTO
++#if !(defined(_AIX) || defined(__sun__))
+ 	inline float abs  (float x){
+ 		return fabsf(x);
+ 	}
+@@ -126,10 +126,13 @@ namespace std {
+ 	inline float pow  (float x, float y){
+ 		return powf(x, y);
+ 	}
+-#if 1 // DR 550 removed this
++#if __cplusplus < 201103L // DR 550 removed this
+ 	inline float pow  (float x, int y){
+ 		return pow((double)x, (double)y);
+ 	}
++	inline double pow(double x, int y){
++		return pow((double)x, (double)y);
++	}
+ #endif
+ 	inline float sin  (float x){
+ 		return sinf(x);
+@@ -208,9 +211,11 @@ namespace std {
+ 	inline long double pow  (long double x, long double y){
+ 		return powl(x, y);
+ 	}
++# if __cplusplus < 201103L // DR 550 removed this
+ 	inline long double pow  (long double x, int y){
+ 		return powl(x, (long double)y );
+ 	}
++# endif
+ 	inline long double sin  (long double x){
+ 		return sinl(x);
+ 	}
+@@ -227,7 +232,7 @@ namespace std {
+ 		return tanhl(x);
+ 	}
+ # endif	//	 __UCLIBCXX_HAS_LONG_DOUBLE__
+-#endif	//	 __CORRECT_ISO_CPP_MATH_H_PROTO
++#endif	//	 !(defined(_AIX) || defined(__sun__))
+ }
+ 
+ #endif	//__STD_HEADER_CMATH
+-- 
+2.23.0
+

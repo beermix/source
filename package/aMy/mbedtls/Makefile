@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/ARMmbed/mbedtls/releases
 
 include $(TOPDIR)/rules.mk
 
@@ -87,7 +87,8 @@ CMAKE_OPTIONS += \
 	-DENABLE_TESTING=OFF \
 	-DENABLE_PROGRAMS=ON \
 	-DLINK_WITH_PTHREAD=ON \
-	-DCMAKE_BUILD_TYPE=Release
+	-DCMAKE_BUILD_TYPE=Release \
+	-Wno-dev
 
 define Build/Configure
 	$(Build/Configure/Default)

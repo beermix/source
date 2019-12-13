@@ -1,0 +1,595 @@
+From 0d32d54d33210c7142787a8a9c10d46a6dbcd8d2 Mon Sep 17 00:00:00 2001
+From: Rosen Penev <rosenp@gmail.com>
+Date: Sun, 27 Oct 2019 11:29:18 -0700
+Subject: [PATCH] cmath: Add C++11 math functions
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ include/cmath | 549 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 548 insertions(+), 1 deletion(-)
+
+diff --git a/include/cmath b/include/cmath
+index 5cc00d6..1d4fc79 100644
+--- a/include/cmath
++++ b/include/cmath
+@@ -45,6 +45,126 @@
+ #undef sqrt
+ #undef tan
+ #undef tanh
++# if __cplusplus >= 201103L
++#undef acosh
++#undef acoshf
++#undef acoshl
++#undef asinh
++#undef asinhf
++#undef asinhl
++#undef atanh
++#undef atanhf
++#undef atanhl
++#undef cbrt
++#undef cbrtf
++#undef cbrtl
++#undef copysign
++#undef copysignf
++#undef copysignl
++#undef erf
++#undef erff
++#undef erfl
++#undef erfc
++#undef erfcf
++#undef erfcl
++#undef exp2
++#undef exp2f
++#undef exp2l
++#undef expm1
++#undef expm1f
++#undef expm1l
++#undef fdim
++#undef fdimf
++#undef fdiml
++#undef fma
++#undef fmaf
++#undef fmal
++#undef fmax
++#undef fmaxf
++#undef fmaxl
++#undef fmin
++#undef fminf
++#undef fminl
++#undef hypot
++#undef hypotf
++#undef hypotl
++#undef ilogb
++#undef ilogbf
++#undef ilogbl
++#undef lgamma
++#undef lgammaf
++#undef lgammal
++#undef llrint
++#undef llrintf
++#undef llrintl
++#undef llround
++#undef llroundf
++#undef llroundl
++#undef log1p
++#undef log1pf
++#undef log1pl
++#undef log2
++#undef log2f
++#undef log2l
++#undef logb
++#undef logbf
++#undef logbl
++#undef lrint
++#undef lrintf
++#undef lrintl
++#undef lround
++#undef lroundf
++#undef lroundl
++#undef nan
++#undef nanf
++#undef nanl
++#undef nearbyint
++#undef nearbyintf
++#undef nearbyintl
++#undef nextafter
++#undef nextafterf
++#undef nextafterl
++#undef nexttoward
++#undef nexttowardf
++#undef nexttowardl
++#undef remainder
++#undef remainderf
++#undef remainderl
++#undef remquo
++#undef remquof
++#undef remquol
++#undef rint
++#undef rintf
++#undef rintl
++#undef round
++#undef roundf
++#undef roundl
++#undef scalbln
++#undef scalblnf
++#undef scalblnl
++#undef scalbn
++#undef scalbnf
++#undef scalbnl
++#undef tgamma
++#undef tgammaf
++#undef tgammal
++#undef trunc
++#undef truncf
++#undef truncl
++
++#undef fpclassify
++#undef isfinite
++#undef isinf
++#undef isnan
++#undef isnormal
++#undef signbit
++#undef isgreater
++#undef isgreaterequal
++#undef isless
++#undef islessequal
++#undef islessgreater
++#undef isunordered
++# endif //	__cplusplus >= 201103L
+ 
+ namespace std {
+ 
+@@ -70,6 +190,115 @@ namespace std {
+ 	using ::sqrt;
+ 	using ::tan;
+ 	using ::tanh;
++# if __cplusplus >= 201103L
++	using ::double_t;
++	using ::float_t;
++	using ::acosh;
++	using ::acoshf;
++	using ::acoshl;
++	using ::asinh;
++	using ::asinhf;
++	using ::asinhl;
++	using ::atanh;
++	using ::atanhf;
++	using ::atanhl;
++	using ::cbrt;
++	using ::cbrtf;
++	using ::cbrtl;
++	using ::copysign;
++	using ::copysignf;
++	using ::copysignl;
++	using ::erf;
++	using ::erff;
++	using ::erfl;
++	using ::erfc;
++	using ::erfcf;
++	using ::erfcl;
++	using ::exp2;
++	using ::exp2f;
++	using ::exp2l;
++	using ::expm1;
++	using ::expm1f;
++	using ::expm1l;
++	using ::fdim;
++	using ::fdimf;
++	using ::fdiml;
++	using ::fma;
++	using ::fmaf;
++	using ::fmal;
++	using ::fmax;
++	using ::fmaxf;
++	using ::fmaxl;
++	using ::fmin;
++	using ::fminf;
++	using ::fminl;
++	using ::hypot;
++	using ::hypotf;
++	using ::hypotl;
++	using ::ilogb;
++	using ::ilogbf;
++	using ::ilogbl;
++	using ::lgamma;
++	using ::lgammaf;
++	using ::lgammal;
++	using ::llrint;
++	using ::llrintf;
++	using ::llrintl;
++	using ::llround;
++	using ::llroundf;
++	using ::llroundl;
++	using ::log1p;
++	using ::log1pf;
++	using ::log1pl;
++	using ::log2;
++	using ::log2f;
++	using ::log2l;
++	using ::logb;
++	using ::logbf;
++	using ::logbl;
++	using ::lrint;
++	using ::lrintf;
++	using ::lrintl;
++	using ::lround;
++	using ::lroundf;
++	using ::lroundl;
++	using ::nan;
++	using ::nanf;
++	using ::nanl;
++	using ::nearbyint;
++	using ::nearbyintf;
++	using ::nearbyintl;
++	using ::nextafter;
++	using ::nextafterf;
++	using ::nextafterl;
++	using ::nexttoward;
++	using ::nexttowardf;
++	using ::nexttowardl;
++	using ::remainder;
++	using ::remainderf;
++	using ::remainderl;
++	using ::remquo;
++	using ::remquof;
++	using ::remquol;
++	using ::rint;
++	using ::rintf;
++	using ::rintl;
++	using ::round;
++	using ::roundf;
++	using ::roundl;
++	using ::scalbln;
++	using ::scalblnf;
++	using ::scalblnl;
++	using ::scalbn;
++	using ::scalbnf;
++	using ::scalbnl;
++	using ::tgamma;
++	using ::tgammaf;
++	using ::tgammal;
++	using ::trunc;
++	using ::truncf;
++	using ::truncl;
++# endif //	__cplusplus >= 201103L
+ 
+ #if !(defined(_AIX) || defined(__sun__))
+ 	inline float abs  (float x){
+@@ -155,7 +384,114 @@ namespace std {
+ 	inline double pow(double x, int y){
+ 		return pow((double)x, (double)y);
+ 	}
+-
++	inline bool signbit (float x) {
++		return signbit(x);
++	}
++	inline int fpclassify (float x) {
++		return fpclassify(x);
++	}
++	inline bool isfinite (float x) {
++		return isfinite(x);
++	}
++	inline bool isinf (float x) {
++		return isinf(x);
++	}
++	inline bool isnan (float x) {
++		return isnan(x);
++	}
++	inline bool isnormal (float x) {
++		return isnormal(x);
++	}
++	inline bool isgreater (float x, float y) {
++		return isgreater(x, y);
++	}
++	inline bool isgreaterequal (float x, float y) {
++		return isgreaterequal(x, y);
++	}
++	inline bool isless (float x) {
++		return isless(x);
++	}
++	inline bool islessequal (float x) {
++		return islessequal(x);
++	}
++	inline bool islessgreater (float x) {
++		return islessgreater(x);
++	}
++	inline bool isunordered (float x) {
++		return isunordered(x);
++	}
++	inline bool signbit (double x) {
++		return signbit(x);
++	}
++	inline int fpclassify (double x) {
++		return fpclassify(x);
++	}
++	inline bool isfinite (double x) {
++		return isfinite(x);
++	}
++	inline bool isinf (double x) {
++		return isinf(x);
++	}
++	inline bool isnan (double x) {
++		return isnan(x);
++	}
++	inline bool isnormal (double x) {
++		return isnormal(x);
++	}
++	inline bool isgreater (double x, double y) {
++		return isgreater(x, y);
++	}
++	inline bool isgreaterequal (double x, double y) {
++		return isgreaterequal(x, y);
++	}
++	inline bool isless (double x) {
++		return isless(x);
++	}
++	inline bool islessequal (double x) {
++		return islessequal(x);
++	}
++	inline bool islessgreater (double x) {
++		return islessgreater(x);
++	}
++	inline bool isunordered (double x) {
++		return isunordered(x);
++	}
++	inline bool signbit (long double x) {
++		return signbit(x);
++	}
++	inline int fpclassify (long double x) {
++		return fpclassify(x);
++	}
++	inline int isfinite (long double x) {
++		return isfinite(x);
++	}
++	inline bool isinf (long double x) {
++		return isinf(x);
++	}
++	inline bool isnan (long double x) {
++		return isnan(x);
++	}
++	inline bool isnormal (long double x) {
++		return isnormal(x);
++	}
++	inline bool isgreater (long double x, long double y) {
++		return isgreater(x, y);
++	}
++	inline bool isgreaterequal (long double x, long double y) {
++		return isgreaterequal(x, y);
++	}
++	inline bool isless (long double x) {
++		return isless(x);
++	}
++	inline bool islessequal (long double x) {
++		return islessequal(x);
++	}
++	inline bool islessgreater (long double x) {
++		return islessgreater(x);
++	}
++	inline bool isunordered (long double x) {
++		return isunordered(x);
++	}
+ # ifdef __UCLIBCXX_HAS_LONG_DOUBLE__
+ 	inline long double abs  (long double x){
+ 		return fabsl(x);
+@@ -231,7 +567,218 @@ namespace std {
+ 	inline long double tanh (long double x){
+ 		return tanhl(x);
+ 	}
++
+ # endif	//	 __UCLIBCXX_HAS_LONG_DOUBLE__
++
++# if __cplusplus >= 201103L
++	inline float acosh(float x){
++		return acoshf(x);
++	}
++	inline float asinh(float x){
++		return asinhf(x);
++	}
++	inline float atanh(float x){
++		return atanhf(x);
++	}
++	inline float cbrt(float x){
++		return cbrtf(x);
++	}
++	inline float copysign(float x, float y){
++		return copysignf(x, y);
++	}
++	inline float erf(float x){
++		return erff(x);
++	}
++	inline float erfc(float x){
++		return erfcf(x);
++	}
++	inline float exp2(float x){
++		return exp2f(x);
++	}
++	inline float expm1(float x){
++		return expm1f(x);
++	}
++	inline float fdim(float x, float y){
++		return fdimf(x, y);
++	}
++	inline float fma(float x, float y, float z){
++		return fmaf(x, y, z);
++	}
++	inline float fmax(float x, float y){
++		return fmaxf(x, y);
++	}
++	inline float fmin(float x, float y){
++		return fminf(x, y);
++	}
++	inline float hypot(float x, float y){
++		return hypotf(x, y);
++	}
++	inline float ilogb(float x){
++		return ilogbf(x);
++	}
++	inline float lgamma(float x){
++		return lgammaf(x);
++	}
++	inline float llrint(float x){
++		return llrintf(x);
++	}
++	inline float llround(float x){
++		return llroundf(x);
++	}
++	inline float log1p(float x){
++		return log1pf(x);
++	}
++	inline float log2(float x){
++		return log2f(x);
++	}
++	inline float logb(float x){
++		return logbf(x);
++	}
++	inline float lrint(float x){
++		return lrintf(x);
++	}
++	inline float lround(float x){
++		return lroundf(x);
++	}
++	inline float nearbyint(float x){
++		return nearbyintf(x);
++	}
++	inline float nextafter(float x, float y){
++		return nextafterf(x, y);
++	}
++	inline float remainder(float x, float y){
++		return remainderf(x, y);
++	}
++	inline float remquo(float x, float y, int *z){
++		return remquof(x, y, z);
++	}
++	inline float rint(float x){
++		return rintf(x);
++	}
++	inline float round(float x){
++		return roundf(x);
++	}
++	inline float scalbln(float x, float y){
++		return scalblnf(x, y);
++	}
++	inline float scalbn(float x, float y){
++		return scalbnf(x, y);
++	}
++	inline float tgamma(float x){
++		return tgammaf(x);
++	}
++	inline float trunc(float x){
++		return truncf(x);
++	}
++
++# ifdef __UCLIBCXX_HAS_LONG_DOUBLE__
++	inline long double acosh(long double x){
++		return acoshl(x);
++	}
++	inline long double asinh(long double x){
++		return asinhl(x);
++	}
++	inline long double atanh(long double x){
++		return atanhl(x);
++	}
++	inline long double cbrt(long double x){
++		return cbrtl(x);
++	}
++	inline long double copysign(long double x, long double y){
++		return copysignl(x, y);
++	}
++	inline long double erf(long double x){
++		return erfl(x);
++	}
++	inline long double erfc(long double x){
++		return erfcl(x);
++	}
++	inline long double exp2(long double x){
++		return exp2l(x);
++	}
++	inline long double expm1(long double x){
++		return expm1l(x);
++	}
++	inline long double fdim(long double x, long double y){
++		return fdiml(x, y);
++	}
++	inline long double fma(long double x, long double y, long double z){
++		return fmal(x, y, z);
++	}
++	inline long double fmax(long double x, long double y){
++		return fmaxl(x, y);
++	}
++	inline long double fmin(long double x, long double y){
++		return fminl(x, y);
++	}
++	inline long double hypot(long double x, long double y){
++		return hypotl(x, y);
++	}
++	inline long double ilogb(long double x){
++		return ilogbl(x);
++	}
++	inline long double lgamma(long double x){
++		return lgammal(x);
++	}
++	inline long double llrint(long double x){
++		return llrintl(x);
++	}
++	inline long double llround(long double x){
++		return llroundl(x);
++	}
++	inline long double log1p(long double x){
++		return log1pl(x);
++	}
++	inline long double log2(long double x){
++		return log2l(x);
++	}
++	inline long double logb(long double x){
++		return logbl(x);
++	}
++	inline long double lrint(long double x){
++		return lrintl(x);
++	}
++	inline long double lround(long double x){
++		return lroundl(x);
++	}
++	inline long double nearbyint(long double x){
++		return nearbyintl(x);
++	}
++	inline long double nextafter(long double x, long double y){
++		return nextafterl(x, y);
++	}
++	inline long double nexttoward(long double x, long double y){
++		return nexttowardl(x, y);
++	}
++	inline long double remainder(long double x, long double y){
++		return remainderl(x, y);
++	}
++	inline long double remquo(long double x, long double y, int *z){
++		return remquol(x, y, z);
++	}
++	inline long double rint(long double x){
++		return rintl(x);
++	}
++	inline long double round(long double x){
++		return roundl(x);
++	}
++	inline long double scalbln(long double x, long double y){
++		return scalblnl(x, y);
++	}
++	inline long double scalbn(long double x, long double y){
++		return scalbnl(x, y);
++	}
++	inline long double tgamma(long double x){
++		return tgammal(x);
++	}
++	inline long double trunc(long double x){
++		return truncl(x);
++	}
++	inline float nexttoward(float x, long double y){
++		return nexttowardf(x, y);
++	}
++# endif //	__UCLIBCXX_HAS_LONG_DOUBLE__
++# endif //	__cplusplus >= 201103L
+ #endif	//	 !(defined(_AIX) || defined(__sun__))
+ }
+ 
+-- 
+2.23.0
+

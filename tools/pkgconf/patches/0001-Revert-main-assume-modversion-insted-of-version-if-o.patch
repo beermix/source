@@ -1,0 +1,48 @@
+From b1eec6b27560928fc9b111164c8abd7d5e527588 Mon Sep 17 00:00:00 2001
+From: Andre Heider <a.heider@gmail.com>
+Date: Wed, 27 Nov 2019 15:21:42 +0100
+Subject: [PATCH] Revert "main: assume --modversion insted of --version if
+ other flags or module names are provided"
+
+This reverts commit 12a0eb124cea85586e57f33c91a1e4c73459eef6.
+
+This "user friendly" behavior is actually detrimental. pkg-config is very
+often wrapped in a shell script of cross-compiling toolchains. Such wrappers
+may pass extra arguments, such as --static, (reasonably) not expecting that
+to break --version. Some build systems (meson being one example) use
+--version to determine whether pkg-config is usable. Naturally, the wrappers
+fail this test, even though they would've worked with the original pkg-config.
+
+Fixes #6
+---
+ cli/main.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/cli/main.c b/cli/main.c
+index 563ec8f..fc698a4 100644
+--- a/cli/main.c
++++ b/cli/main.c
+@@ -1005,18 +1005,8 @@ main(int argc, char *argv[])
+ 
+ 	if ((want_flags & PKG_VERSION) == PKG_VERSION)
+ 	{
+-		if (argc > 2)
+-		{
+-			fprintf(stderr, "%s: --version specified with other options or module names, assuming --modversion.\n", argv[0]);
+-
+-			want_flags &= ~PKG_VERSION;
+-			want_flags |= PKG_MODVERSION;
+-		}
+-		else
+-		{
+-			version();
+-			return EXIT_SUCCESS;
+-		}
++		version();
++		return EXIT_SUCCESS;
+ 	}
+ 
+ 	if ((want_flags & PKG_HELP) == PKG_HELP)
+-- 
+2.24.0
+

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # 2009 (C) Copyright Industrie Dial Face S.p.A.
 #          Luigi 'Comio' Mantellini <luigi.mantellini@idf-hit.com>
@@ -15,10 +15,10 @@
 #
 
 PROGNAME=$0
-REALNAME=`readlink -f $0`
+REALNAME=$(readlink -f $0)
 
-REALNAME_BASE=`basename $REALNAME`
-REALNAME_DIR=`dirname $REALNAME`
+REALNAME_BASE=$(basename $REALNAME)
+REALNAME_DIR=$(dirname $REALNAME)
 
 TARGET_FUNDAMENTAL_ASFLAGS=''
 TARGET_FUNDAMENTAL_CFLAGS=''
@@ -30,7 +30,7 @@ TARGET_TOOLCHAIN_TRIPLET=${REALNAME_BASE%-*}
 BINARY=${PROGNAME##*-}
 
 # Parse our tool name, splitting it at '-' characters.
-IFS=- read TOOLCHAIN_ARCH TOOLCHAIN_BUILDROOT TOOLCHAIN_OS TOOLCHAIN_PLATFORM PROGNAME << EOF
+IFS=- read -r TOOLCHAIN_ARCH TOOLCHAIN_BUILDROOT TOOLCHAIN_OS TOOLCHAIN_PLATFORM PROGNAME << EOF
 $REALNAME_BASE
 EOF
 
