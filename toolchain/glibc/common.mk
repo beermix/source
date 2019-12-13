@@ -49,11 +49,11 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -g $(filter-out -fno-caller-saves -fomit-frame-pointer -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -fno-stack-protector $(filter-out -fno-caller-saves -fomit-frame-pointer -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
-		BASH_SHELL=/bin/bash \
+		BASH_SHELL=/bin/sh \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \

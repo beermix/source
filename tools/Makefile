@@ -25,7 +25,7 @@ tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc expat
 tools-y += m4 libtool autoconf automake flex bison pkgconf mklibs zlib
 tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
 tools-y += firmware-utils patch-image quilt padjffs2
-tools-y += mm-macros missing-macros autoconf-archive cmake bc findutils gengetopt patchelf
+tools-y += mm-macros missing-macros intltool gettext-tiny autoconf-archive cmake bc findutils gengetopt patchelf
 tools-y += mtools dosfstools libressl
 tools-$(CONFIG_TARGET_orion_generic) += wrt350nv2-builder upslug2
 tools-$(CONFIG_TARGET_x86) += qemu
@@ -39,14 +39,11 @@ tools-$(BUILD_ISL) += isl
 tools-$(CONFIG_USE_SPARSE) += sparse
 tools-$(CONFIG_TARGET_apm821xx)$(CONFIG_TARGET_gemini) += genext2fs
 tools-$(CONFIG_TARGET_tegra) += cbootimage cbootimage-configs
-# tools-y += go-src
-# tools-y += go-bootstrap
 
 # builddir dependencies
 $(curdir)/bison/compile := $(curdir)/flex/compile
 $(curdir)/flex/compile := $(curdir)/libtool/compile
-$(curdir)/libtool/compile := $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/automake/compile $(curdir)/missing-macros/compile
-$(curdir)/autoconf-archive/compile := $(curdir)/missing-macros/compile
+$(curdir)/libtool/compile := $(curdir)/autoconf-archive/compile $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/automake/compile $(curdir)/missing-macros/compile $(curdir)/gettext-tiny/compile $(curdir)/intltool/compile
 $(curdir)/squashfs/compile := $(curdir)/lzma-old/compile
 $(curdir)/squashfskit4/compile := $(curdir)/xz/compile $(curdir)/zlib/compile
 $(curdir)/quilt/compile := $(curdir)/autoconf/compile $(curdir)/findutils/compile
@@ -80,7 +77,6 @@ $(curdir)/wrt350nv2-builder/compile := $(curdir)/zlib/compile
 $(curdir)/lzma-old/compile := $(curdir)/zlib/compile
 $(curdir)/make-ext4fs/compile := $(curdir)/zlib/compile
 $(curdir)/cbootimage/compile += $(curdir)/automake/compile
-# $(curdir)/go-src/compile := $(curdir)/go-bootstrap/compile
 
 ifneq ($(HOST_OS),Linux)
   $(curdir)/squashfskit4/compile += $(curdir)/coreutils/compile
