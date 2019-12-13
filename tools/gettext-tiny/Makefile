@@ -3,12 +3,13 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
+#  PKG_VERSION:=73fc3e7
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gettext-tiny
-PKG_VERSION:=73fc3e7
+PKG_VERSION:=55a2119
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/sabotage-linux/gettext-tiny.git
