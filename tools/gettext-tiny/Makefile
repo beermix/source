@@ -22,9 +22,7 @@ include $(INCLUDE_DIR)/host-build.mk
 define Host/Compile
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(STAGING_DIR_HOST) \
-		CFLAGS="$(HOST_CFLAGS)" \
-		LDFLAGS="$(HOST_LDFLAGS) -fPIC" \
-		LIBINTL=NONE
+		LIBINTL=FLAVOR
 
 #	cp $(HOST_BUILD_DIR)/extra/gettextize.in $(HOST_BUILD_DIR)/gettextize
 
@@ -43,7 +41,7 @@ endef
 define Host/Install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(STAGING_DIR_HOST) \
-		LIBINTL=NONE install
+		LIBINTL=FLAVOR install
 endef
 
 $(eval $(call HostBuild))
