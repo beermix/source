@@ -20,7 +20,7 @@ endef
 
 define Host/Install
 	$(INSTALL_DIR) $(STAGING_DIR_HOST)/share/aclocal
-	$(INSTALL_DATA) ./src/m4/*.m4 $(STAGING_DIR_HOST)/share/aclocal/
+	# $(INSTALL_DATA) ./src/m4/*.m4 $(STAGING_DIR_HOST)/share/aclocal/
 	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin
 	$(INSTALL_BIN) ./src/bin/* $(STAGING_DIR_HOST)/bin/
 endef
