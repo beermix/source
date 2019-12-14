@@ -300,18 +300,18 @@ CONFIG_USE_UCLIBCXX=y
 #
 # Hardening build options
 #
-# CONFIG_PKG_CHECK_FORMAT_SECURITY is not set
+CONFIG_PKG_CHECK_FORMAT_SECURITY=y
 # CONFIG_PKG_ASLR_PIE is not set
-CONFIG_PKG_CC_STACKPROTECTOR_NONE=y
-# CONFIG_PKG_CC_STACKPROTECTOR_STRONG is not set
+# CONFIG_PKG_CC_STACKPROTECTOR_NONE is not set
+CONFIG_PKG_CC_STACKPROTECTOR_STRONG=y
 # CONFIG_KERNEL_CC_STACKPROTECTOR_NONE is not set
 # CONFIG_KERNEL_CC_STACKPROTECTOR_REGULAR is not set
 CONFIG_KERNEL_CC_STACKPROTECTOR_STRONG=y
 CONFIG_KERNEL_STACKPROTECTOR=y
 CONFIG_KERNEL_STACKPROTECTOR_STRONG=y
-CONFIG_PKG_FORTIFY_SOURCE_NONE=y
+# CONFIG_PKG_FORTIFY_SOURCE_NONE is not set
 # CONFIG_PKG_FORTIFY_SOURCE_1 is not set
-# CONFIG_PKG_FORTIFY_SOURCE_2 is not set
+CONFIG_PKG_FORTIFY_SOURCE_2=y
 # CONFIG_PKG_RELRO_NONE is not set
 # CONFIG_PKG_RELRO_PARTIAL is not set
 CONFIG_PKG_RELRO_FULL=y
@@ -2367,7 +2367,7 @@ CONFIG_PACKAGE_fstools=y
 # CONFIG_FSTOOLS_OVL_MOUNT_COMPRESS_ZLIB is not set
 CONFIG_PACKAGE_fwtool=y
 CONFIG_PACKAGE_getrandom=y
-CONFIG_PACKAGE_iucode-tool=y
+# CONFIG_PACKAGE_iucode-tool is not set
 CONFIG_PACKAGE_jsonfilter=y
 CONFIG_PACKAGE_libatomic=y
 CONFIG_PACKAGE_libc=y
@@ -2492,6 +2492,7 @@ CONFIG_PACKAGE_grub2=y
 # CONFIG_PACKAGE_m4 is not set
 # CONFIG_PACKAGE_make is not set
 # CONFIG_PACKAGE_meson is not set
+# CONFIG_PACKAGE_meson-src is not set
 # CONFIG_PACKAGE_ninja is not set
 # CONFIG_PACKAGE_objdump is not set
 # CONFIG_PACKAGE_patch is not set
@@ -2504,10 +2505,7 @@ CONFIG_PACKAGE_grub2=y
 #
 # Extra packages
 #
-# CONFIG_PACKAGE_jose is not set
-# CONFIG_PACKAGE_libjose is not set
-# CONFIG_PACKAGE_meson-src is not set
-# CONFIG_PACKAGE_tang is not set
+CONFIG_PACKAGE_glib2=y
 
 #
 # Firmware
@@ -5014,7 +5012,6 @@ CONFIG_PACKAGE_libopenssl-conf=y
 # CONFIG_PACKAGE_getdns is not set
 # CONFIG_PACKAGE_gflags is not set
 # CONFIG_PACKAGE_giflib is not set
-CONFIG_PACKAGE_glib2=y
 # CONFIG_PACKAGE_glog is not set
 # CONFIG_PACKAGE_hidapi is not set
 # CONFIG_PACKAGE_ibrcommon is not set
@@ -6548,12 +6545,6 @@ CONFIG_PACKAGE_iperf3=y
 CONFIG_PACKAGE_ipset=y
 # CONFIG_PACKAGE_ipset-dns is not set
 # CONFIG_PACKAGE_iptraf-ng is not set
-# CONFIG_PACKAGE_iputils-arping is not set
-# CONFIG_PACKAGE_iputils-clockdiff is not set
-CONFIG_PACKAGE_iputils-ping=y
-# CONFIG_PING_LEGACY_SYMLINKS is not set
-# CONFIG_PACKAGE_iputils-tftpd is not set
-# CONFIG_PACKAGE_iputils-tracepath is not set
 # CONFIG_PACKAGE_iw is not set
 # CONFIG_PACKAGE_iw-full is not set
 # CONFIG_PACKAGE_jool-tools is not set
@@ -7250,3 +7241,4 @@ CONFIG_PACKAGE_stress-ng=y
 # Font-Utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
+CONFIG_OVERRIDE_PKGS="iputils libsodium redsocks xz"
