@@ -18,7 +18,6 @@ PKG_MAINTAINER:=Rosen Penev <rosenp@gmail.com>
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE.txt
 
-CMAKE_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 CMAKE_BINARY_SUBDIR:=build
 
@@ -30,7 +29,7 @@ define Package/libcxx
   CATEGORY:=Libraries
   TITLE:=LLVM libstdc++
   URL:=https://libcxx.llvm.org/
-  DEPENDS:=+libatomic
+  DEPENDS:=+libatomic +libpthread
 endef
 
 define Package/libcxx/description
@@ -48,6 +47,12 @@ CMAKE_OPTIONS += \
 
 TARGET_CXXFLAGS += -D_LIBCPP_DISABLE_DEPRECATION_WARNINGS -Wno-attributes -flto
 TARGET_LDFLAGS += -Wl,--as-needed
+
+define Build/InstallDev
+	$(call Build/InstallDev/cmake,$(1))
+	$(CP) files/g++-libcxx	$(TOOLCHAIN_DIR)/bin/
+	$(SED) 's,CXX,$(TARGET_CXX),g' $(TOOLCHAIN_DIR)/bin/g++-libcxx
+endef
 
 define Package/libcxx/install
 	$(INSTALL_DIR)					$(1)/usr/lib

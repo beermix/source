@@ -63,8 +63,7 @@ endif
 
 CONFIGURE_ARGS += \
 	--program-prefix=eu- \
-	--without-lzma \
-	--disable-progs
+	--without-lzma
 
 TARGET_CFLAGS += -D_GNU_SOURCE -Wno-unused-result -Wno-format-nonliteral
 

@@ -174,7 +174,6 @@ TARGET_CFLAGS:=$(TARGET_OPTIMIZATION)$(if $(CONFIG_DEBUG), -g3) $(call qstrip,$(
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_ASFLAGS_DEFAULT = $(TARGET_CFLAGS)
 TARGET_ASFLAGS = $(TARGET_ASFLAGS_DEFAULT)
-TARGET_GCCGOFLAGS = -g1 -O2
 TARGET_CPPFLAGS:=-I$(STAGING_DIR)/usr/include
 TARGET_LDFLAGS:=-L$(STAGING_DIR)/usr/lib -L$(STAGING_DIR)/lib
 ifneq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
@@ -197,9 +196,6 @@ ifndef DUMP
     TARGET_CROSS:=$(if $(TARGET_CROSS),$(TARGET_CROSS),$(OPTIMIZE_FOR_CPU)-openwrt-linux$(if $(TARGET_SUFFIX),-$(TARGET_SUFFIX))-)
     TARGET_CFLAGS+= -fhonour-copts -Wno-error=unused-but-set-variable -Wno-error=unused-result
     TARGET_CPPFLAGS+= -I$(TOOLCHAIN_DIR)/usr/include
-    ifeq ($(CONFIG_USE_MUSL),y)
-      TARGET_CPPFLAGS+= -I$(TOOLCHAIN_DIR)/include/fortify
-    endif
     TARGET_CPPFLAGS+= -I$(TOOLCHAIN_DIR)/include
     TARGET_LDFLAGS+= -L$(TOOLCHAIN_DIR)/usr/lib -L$(TOOLCHAIN_DIR)/lib
     TARGET_PATH:=$(TOOLCHAIN_DIR)/bin:$(TARGET_PATH)
@@ -246,30 +242,6 @@ export SH_FUNC:=. $(INCLUDE_DIR)/shell.sh;
 PKG_CONFIG:=$(STAGING_DIR_HOST)/bin/pkg-config
 
 export PKG_CONFIG
-
-export GOROOT:=$(STAGING_DIR_HOST)/go
-
-#ifeq ($(ARCH),mips)
-#    GOARCH=mips
-#endif
-#ifeq ($(ARCH),mipsel)
-#    GOARCH=mipsle
-#endif
-#ifeq ($(ARCH),arm)
-#    GOARCH=arm
-#   ifeq ($(ARCH_SUFFIX),_cortex-a9)
-#	GOARM=GOARM=7
-#   else
-#	GOARM=GOARM=5
-#   endif
-#endif
-#ifeq ($(ARCH),x86_64)
-#    GOARCH=amd64
-#endif
-#ifeq ($(ARCH),i386)
-#    GOARCH=386
-#endif
-
 
 HOSTCC:=gcc
 HOSTCXX:=g++
