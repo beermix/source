@@ -13,7 +13,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nmap
-PKG_VERSION:=ff61845
+PKG_VERSION:=87a92c9
 PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 
 PKG_SOURCE_PROTO:=git
