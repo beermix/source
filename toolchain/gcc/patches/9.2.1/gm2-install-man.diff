@@ -1,0 +1,21 @@
+--- a/src/gcc/gm2/Make-lang.in
++++ b/src/gcc/gm2/Make-lang.in
+@@ -403,15 +403,9 @@
+ 
+ gm2.install-man: $(GENERATED_MANPAGES) installdirs
+ 	-if [ -f xgm2$(exeext) ] ; then \
+-	  if [ -f xgm2-cross$(exeext) ] ; then \
+-	    rm -f $(DESTDIR)$(man1dir)/$(GM2_CROSS_NAME)$(man1ext); \
+-	    $(INSTALL_DATA) gm2/man/gm2.1 $(DESTDIR)$(man1dir)/$(GM2_CROSS_NAME)$(man1ext); \
+-	    chmod a-x $(DESTDIR)$(man1dir)/$(GM2_CROSS_NAME)$(man1ext); \
+-	  else \
+-	    rm -f $(DESTDIR)$(man1dir)/$(GM2_INSTALL_NAME)$(man1ext); \
+-	    $(INSTALL_DATA) gm2/man/gm2.1 $(DESTDIR)$(man1dir)/$(GM2_INSTALL_NAME)$(man1ext); \
+-	    chmod a-x $(DESTDIR)$(man1dir)/$(GM2_INSTALL_NAME)$(man1ext); \
+-	  fi; \
++	  rm -f $(DESTDIR)$(man1dir)/$(GM2_INSTALL_NAME)$(man1ext); \
++	  $(INSTALL_DATA) gm2/man/gm2.1 $(DESTDIR)$(man1dir)/$(GM2_INSTALL_NAME)$(man1ext); \
++	  chmod a-x $(DESTDIR)$(man1dir)/$(GM2_INSTALL_NAME)$(man1ext); \
+ 	else true; fi
+ 
+ gm2.install-normal: gm2.install-common gm2.install-info gm2.install-man
