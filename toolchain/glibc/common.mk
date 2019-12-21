@@ -18,7 +18,8 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=50f20fe506abb8853641006a7b90a81af21d7b91
 PKG_MIRROR_HASH:=
-PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
+#PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
+PKG_SOURCE_URL:=https://github.com/bminor/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
