@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+#  -mzero-caller-saved-regs=used
 
 include $(TOPDIR)/rules.mk
 
@@ -90,7 +90,7 @@ endef
 define Build/Configure
 endef
 
-TARGET_CFLAGS += -DLUA_USE_LINUX $(FPIC) -std=gnu99 -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used
+TARGET_CFLAGS += -DLUA_USE_LINUX $(FPIC) -std=gnu99 -fno-lto -fstack-protector-strong
 
 define Build/Compile
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
