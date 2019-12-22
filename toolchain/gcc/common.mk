@@ -146,6 +146,19 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--enable-clocale=gnu \
+		--enable-libstdcxx-time=yes \
+		--with-default-libstdcxx-abi=new \
+		--enable-gnu-unique-object \
+		--disable-vtable-verify \
+		--with-system-zlib \
+		--with-target-system-zlib=auto \
+		--enable-objc-gc=auto \
+		--enable-offload-targets=nvptx-none,hsa \
+		--without-cuda-driver \
+		--enable-checking=release \
+		--with-build-config=bootstrap-lto-lean \
+		--enable-link-mutex \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
