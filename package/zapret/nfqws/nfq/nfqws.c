@@ -21,6 +21,9 @@
 #define NF_DROP 0
 #define NF_ACCEPT 1
 
+
+#define Q_RCVBUF	(128*1024)	// in bytes
+#define Q_MAXLEN	1024		// in packets
 #define DPI_DESYNC_FWMARK_DEFAULT 0x40000000
 
 
@@ -779,6 +782,8 @@ void exit_clean(int code)
 	exit(code);
 }
 
+
+
 int main(int argc, char **argv)
 {
 	struct nfq_handle *h;
@@ -981,19 +986,44 @@ int main(int argc, char **argv)
 		fprintf(stderr, "can't set packet_copy mode\n");
 		goto exiterr;
 	}
+	if (nfq_set_queue_maxlen(qh, Q_MAXLEN) < 0) {
+		fprintf(stderr, "can't set queue maxlen\n");
+		goto exiterr;
+	}
+	// accept packets if they cant be handled
+	if (nfq_set_queue_flags(qh, NFQA_CFG_F_FAIL_OPEN , NFQA_CFG_F_FAIL_OPEN))
+	{
+		fprintf(stderr, "can't set queue flags. errno=%d\n", errno);
+		// dot not fail. not supported on old linuxes <3.6 
+	}
 
 	if (!droproot(uid, gid)) goto exiterr;
-	fprintf(stderr, "Running as UID=%u GID=%u\n", getuid(), getgid());
+	printf("Running as UID=%u GID=%u\n", getuid(), getgid());
 
 	signal(SIGHUP, onhup); 
 
 	fd = nfq_fd(h);
-	while ((rv = recv(fd, buf, sizeof(buf), 0)) && rv >= 0)
+
+	// increase socket buffer size. on slow systems reloading hostlist can take a while.
+	// if too many unhandled packets are received its possible to get "no buffer space available" error
+	rv = Q_RCVBUF/2;
+	if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &rv, sizeof(int)) <0)
 	{
-		dohup();
-		int r = nfq_handle_packet(h, buf, rv);
-		if (r) fprintf(stderr, "nfq_handle_packet error %d\n", r);
+		perror("setsockopt (SO_RCVBUF): ");
+		goto exiterr;
 	}
+	do
+	{
+		while ((rv = recv(fd, buf, sizeof(buf), 0)) && rv >= 0)
+		{
+			dohup();
+			int r = nfq_handle_packet(h, buf, rv);
+			if (r) fprintf(stderr, "nfq_handle_packet error %d\n", r);
+		}
+		fprintf(stderr, "recv: errno %d\n",errno);
+		perror("recv");
+		// do not fail on ENOBUFS
+	} while(errno==ENOBUFS);
 
 	printf("unbinding from queue 0\n");
 	nfq_destroy_queue(qh);
