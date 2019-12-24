@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://kernel.ubuntu.com/~cking/tarballs/stress-ng/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
@@ -21,7 +21,7 @@ define Package/stress-ng
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=stress-ng
-  DEPENDS:=+libattr +libbsd +zlib
+  DEPENDS:=+libattr +libbsd +zlib +libaio
 endef
 
 define Package/stress-ng/install
