@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=e2fsprogs
-PKG_VERSION:=1.44.5
-PKG_RELEASE:=2
+PKG_VERSION:=1.45.4
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/linux/kernel/people/tytso/e2fsprogs/v$(PKG_VERSION)/
-PKG_HASH:=ba5eb3069d69160d96818bb9700de9ab5a8458d9add1fd85d427c0000d34c5b9
+PKG_HASH:=65faf6b590ca1da97440d6446bd11de9e0914b42553740ba5d9d2a796fa0dc02
 
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=NOTICE
@@ -142,10 +142,10 @@ $(call Package/e2fsprogs)
   DEPENDS:= +e2fsprogs
 endef
 
-TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto -fno-stack-protector -U_FORTIFY_SOURCE
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
 
 TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lrt)
-TARGET_LDFLAGS += -flto -fno-stack-protector -U_FORTIFY_SOURCE
+TARGET_LDFLAGS += -flto
 
 CONFIGURE_ARGS += \
 	--disable-testio-debug \
