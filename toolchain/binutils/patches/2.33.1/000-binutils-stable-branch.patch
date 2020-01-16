@@ -2051,3 +2051,821 @@ index ef444b2875..4dbbaadf9b 100644
  #define BFD_VERSION @bfd_version@
  #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
  #define REPORT_BUGS_TO @report_bugs_to@
+
+commit a1c8d4f515278a7f447af4223941a1e897f27799
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Wed Dec 25 00:01:15 2019 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 4dbbaadf9b..bc009c1c3a 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20191224
++#define BFD_VERSION_DATE 20191225
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit f25f35f84c2f4ebc2cf41abdedb2868b89b8580d
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Thu Dec 26 00:02:06 2019 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index bc009c1c3a..a48eaa1618 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20191225
++#define BFD_VERSION_DATE 20191226
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit ee33b2b6b5905f3697c20b08f8aa4d8b1d135ab2
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Fri Dec 27 00:01:50 2019 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index a48eaa1618..54c7d89bf5 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20191226
++#define BFD_VERSION_DATE 20191227
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit cf6dc3355153b4b006754e6b90fb4d93f4cadc92
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sat Dec 28 00:01:45 2019 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 54c7d89bf5..82cc1c6177 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20191227
++#define BFD_VERSION_DATE 20191228
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 6fd37f7a6c2049ae3bb1592ef93f9385878186cf
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sun Dec 29 00:02:15 2019 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 82cc1c6177..f48fd88057 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20191228
++#define BFD_VERSION_DATE 20191229
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit e87be223b713da123ae7d0162cf18b9d0d3bf07f
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Mon Dec 30 00:01:15 2019 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index f48fd88057..220be5bb9f 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20191229
++#define BFD_VERSION_DATE 20191230
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit b8229b2eea9662b2e5d2f195b0b398176a7da6cd
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Tue Dec 31 00:01:31 2019 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 220be5bb9f..3674fb5fe1 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20191230
++#define BFD_VERSION_DATE 20191231
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 3754ee881e134502327b4ab3ab1dfba37e11b7bd
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Wed Jan 1 00:01:09 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 3674fb5fe1..9132e6eeb0 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20191231
++#define BFD_VERSION_DATE 20200101
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 13cb08b3f14f93ab03f251b93423f56680838193
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Thu Jan 2 00:01:49 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 9132e6eeb0..95b70cd605 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200101
++#define BFD_VERSION_DATE 20200102
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 5d806324458dd247267f540ea7e48bb3cdd93218
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Fri Jan 3 00:02:20 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 95b70cd605..eab4edb38d 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200102
++#define BFD_VERSION_DATE 20200103
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 468af261309f49e8313d7176c1e0cf666d82323e
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sat Jan 4 00:01:15 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index eab4edb38d..459c049167 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200103
++#define BFD_VERSION_DATE 20200104
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit eb4d619b9b1180147a8779a3d6dcbc60a6a8947c
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sun Jan 5 00:02:03 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 459c049167..47ab02b38b 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200104
++#define BFD_VERSION_DATE 20200105
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 4b5276de7d7c96dd83d85c2d507af329c1add6cc
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Mon Jan 6 00:01:26 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 47ab02b38b..6c21df1745 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200105
++#define BFD_VERSION_DATE 20200106
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit d86cb3648924cbe8d97b820e74cb98ea24bedc46
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Tue Jan 7 00:01:12 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 6c21df1745..7961e2f9d9 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200106
++#define BFD_VERSION_DATE 20200107
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit e577ec51a22d08c86dda3f846a2247222c1144e8
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Wed Jan 8 00:01:14 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 7961e2f9d9..909f006072 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200107
++#define BFD_VERSION_DATE 20200108
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 1ba9e537e2b343e22b0a43a9802a47996481a79c
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Thu Jan 9 00:02:35 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 909f006072..36097cbc34 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200108
++#define BFD_VERSION_DATE 20200109
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 8b4cd5006feae8fe36cf5fff64f54400893ba260
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Fri Jan 10 00:01:16 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 36097cbc34..a7060135c1 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200109
++#define BFD_VERSION_DATE 20200110
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 2b2776e7417ca0893f0168972760d8d527dcd575
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sat Jan 11 00:01:39 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index a7060135c1..a39938344f 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200110
++#define BFD_VERSION_DATE 20200111
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 846416a5ae37f3fddfc6e50f49790baad1f0453a
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Sun Jan 12 00:02:49 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index a39938344f..47fc27efcd 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200111
++#define BFD_VERSION_DATE 20200112
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 75d04843439abaa43cd581e8357cbe5cf93a0926
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Mon Jan 13 00:01:08 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 47fc27efcd..8c83bf30ef 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200112
++#define BFD_VERSION_DATE 20200113
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit c06868784d819a45c43947180c69e168aecaf368
+Author: Szabolcs Nagy <szabolcs.nagy@arm.com>
+Date:   Mon Oct 21 16:59:11 2019 +0100
+
+    [ARM][gas] fix build breakage with gcc-10 by using correct enum type
+    
+    Fixes
+    
+    ../../gas/config/tc-arm.c: In function 'parse_reg_list':
+    ../../gas/config/tc-arm.c:1946:35: error: implicit conversion from 'enum reg_list_els' to 'enum arm_reg_type' [-Werror=enum-conversion]
+     1946 |        reg = arm_reg_parse (&str, REGLIST_RN);
+          |                                   ^~~~~~~~~~
+    
+    gas/ChangeLog:
+    
+            Backported from mainline.
+            2020-01-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+    
+            * config/tc-arm.c (parse_reg_list): Use REG_TYPE_RN instead of
+            REGLIST_RN.
+
+diff --git a/gas/ChangeLog b/gas/ChangeLog
+index fcb5592f9f..81f066d6d7 100644
+--- a/gas/ChangeLog
++++ b/gas/ChangeLog
+@@ -1,3 +1,11 @@
++2020-01-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backported from mainline.
++	2020-01-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	* config/tc-arm.c (parse_reg_list): Use REG_TYPE_RN instead of
++	REGLIST_RN.
++
+ 2019-12-06  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
+ 
+ 	Backported from mainline.
+diff --git a/gas/config/tc-arm.c b/gas/config/tc-arm.c
+index caabdbba90..9910572fd9 100644
+--- a/gas/config/tc-arm.c
++++ b/gas/config/tc-arm.c
+@@ -1868,7 +1868,7 @@ parse_reg_list (char ** strp, enum reg_list_els etype)
+ 	      const char apsr_str[] = "apsr";
+ 	      int apsr_str_len = strlen (apsr_str);
+ 
+-	      reg = arm_reg_parse (&str, REGLIST_RN);
++	      reg = arm_reg_parse (&str, REG_TYPE_RN);
+ 	      if (etype == REGLIST_CLRM)
+ 		{
+ 		  if (reg == REG_SP || reg == REG_PC)
+
+commit 6fbcfe4762c3732339cffd82426d00d35382b858
+Author: Szabolcs Nagy <szabolcs.nagy@arm.com>
+Date:   Thu Jan 9 17:20:56 2020 +0000
+
+    [PR ld/22269] arm: Avoid dynamic relocs for undefweak symbols in static PIE
+    
+    With static PIE linking undefined weak symbols are resolved to 0, so no
+    dynamic relocation is needed for them. The UNDEFWEAK_NO_DYNAMIC_RELOC
+    macro was introduced so this case can be handled easily, but it was not
+    applied consistently in the first attempt to fix ld/22269 for arm:
+    
+      commit 95b03e4ad68e7a90f5096b47df595636344b783a
+      arm: Check UNDEFWEAK_NO_DYNAMIC_RELOC
+    
+    This patch fixes spurious relative relocs in static PIE binaries against
+    GOT entries created for undefined weak symbols on arm*-*, this fixes
+    
+    FAIL: pr22269-1 (static pie undefined weak)
+    
+    bfd/ChangeLog:
+    
+            Backported from master
+            2020-01-10  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+    
+            PR ld/22269
+            * elf32-arm.c (elf32_arm_final_link_relocate): Use
+            UNDEFWEAK_NO_DYNAMIC_RELOC.
+            (allocate_dynrelocs_for_symbol): Likewise.
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 86ce07a1c1..198abd027f 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,13 @@
++2020-01-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backported from master
++	2020-01-10  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	PR ld/22269
++	* elf32-arm.c (elf32_arm_final_link_relocate): Use
++	UNDEFWEAK_NO_DYNAMIC_RELOC.
++	(allocate_dynrelocs_for_symbol): Likewise.
++
+ 2019-10-20  John David Anglin  <danglin@gcc.gnu.org>
+ 
+ 	* elf32-hppa.c (elf32_hppa_size_dynamic_sections): Provide 8-byte
+diff --git a/bfd/elf32-arm.c b/bfd/elf32-arm.c
+index cce796dafd..21cf4b08fd 100644
+--- a/bfd/elf32-arm.c
++++ b/bfd/elf32-arm.c
+@@ -11572,8 +11572,7 @@ elf32_arm_final_link_relocate (reloc_howto_type *	    howto,
+ 		  if (dynreloc_st_type == STT_GNU_IFUNC)
+ 		    outrel.r_info = ELF32_R_INFO (0, R_ARM_IRELATIVE);
+ 		  else if (bfd_link_pic (info)
+-			   && (ELF_ST_VISIBILITY (h->other) == STV_DEFAULT
+-			       || h->root.type != bfd_link_hash_undefweak))
++			   && !UNDEFWEAK_NO_DYNAMIC_RELOC (info, h))
+ 		    outrel.r_info = ELF32_R_INFO (0, R_ARM_RELATIVE);
+ 		  else
+ 		    {
+@@ -16527,8 +16526,7 @@ allocate_dynrelocs_for_symbol (struct elf_link_hash_entry *h, void * inf)
+ 	       GOT entry's R_ARM_IRELATIVE relocation.  */
+ 	    elf32_arm_allocate_irelocs (info, htab->root.srelgot, 1);
+ 	  else if (bfd_link_pic (info)
+-		   && (ELF_ST_VISIBILITY (h->other) == STV_DEFAULT
+-		       || h->root.type != bfd_link_hash_undefweak))
++		   && !UNDEFWEAK_NO_DYNAMIC_RELOC (info, h))
+ 	    /* Reserve room for the GOT entry's R_ARM_RELATIVE relocation.  */
+ 	    elf32_arm_allocate_dynrelocs (info, htab->root.srelgot, 1);
+ 	  else if (htab->fdpic_p && tls_type == GOT_NORMAL)
+
+commit d8e39d4adf856851c064b2a9c47d7ad055999ca7
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Tue Jan 14 00:01:22 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 8c83bf30ef..0c3f67dc8c 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200113
++#define BFD_VERSION_DATE 20200114
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit dc28d8fd3465e68cb8d6d657077054e95015868c
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Wed Jan 15 00:01:21 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 0c3f67dc8c..b8e8fcf063 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200114
++#define BFD_VERSION_DATE 20200115
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
+
+commit 02efd171de60180efa8f77e311cd1382a52553c6
+Author: Alan Modra <amodra@gmail.com>
+Date:   Tue Jan 14 20:45:53 2020 +1030
+
+    PR25384, PowerPC64 ELFv1 copy relocs against function symbols
+    
+    Function symbols of course don't normally want .dynbss copies but
+    with some old versions of gcc they are needed to copy the function
+    descriptor.  This patch restricts the cases where they are useful to
+    compilers using dot-symbols, and enables the warning regardless of
+    whether a PLT entry is emitted in the executable.  PLTs in shared
+    libraries are affected by a .dynbss copy in the executable.
+    
+    bfd/
+            PR 25384
+            * elf64-ppc.c (ELIMINATE_COPY_RELOCS): Update comment.
+            (ppc64_elf_adjust_dynamic_symbol): Don't allow .dynbss copies
+            of function symbols unless dot symbols are present.  Do warn
+            whenever one is created, regardles of whether a PLT entry is
+            also emitted for the function symbol.
+    ld/
+            * testsuite/ld-powerpc/ambiguousv1b.d: Adjust expected output.
+            * testsuite/ld-powerpc/funref.s: Align func_tab.
+            * testsuite/ld-powerpc/funref2.s: Likewise.
+            * testsuite/ld-powerpc/funv1.s: Add dot symbols.
+    
+    (cherry picked from commit e1c6cf618cbeebbafd34afc5ee921fcbf7061bfa)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index 198abd027f..67342f1e98 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,12 @@
++2020-01-15  Alan Modra  <amodra@gmail.com>
++
++	PR 25384
++	* elf64-ppc.c (ELIMINATE_COPY_RELOCS): Update comment.
++	(ppc64_elf_adjust_dynamic_symbol): Don't allow .dynbss copies
++	of function symbols unless dot symbols are present.  Do warn
++	whenever one is created, regardles of whether a PLT entry is
++	also emitted for the function symbol.
++
+ 2020-01-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+ 
+ 	Backported from master
+diff --git a/bfd/elf64-ppc.c b/bfd/elf64-ppc.c
+index 731f1ca657..c093612d08 100644
+--- a/bfd/elf64-ppc.c
++++ b/bfd/elf64-ppc.c
+@@ -2768,20 +2768,20 @@ must_be_dyn_reloc (struct bfd_link_info *info,
+ }
+ 
+ /* If ELIMINATE_COPY_RELOCS is non-zero, the linker will try to avoid
+-   copying dynamic variables from a shared lib into an app's dynbss
++   copying dynamic variables from a shared lib into an app's .dynbss
+    section, and instead use a dynamic relocation to point into the
+-   shared lib.  With code that gcc generates, it's vital that this be
+-   enabled;  In the PowerPC64 ABI, the address of a function is actually
+-   the address of a function descriptor, which resides in the .opd
+-   section.  gcc uses the descriptor directly rather than going via the
+-   GOT as some other ABI's do, which means that initialized function
+-   pointers must reference the descriptor.  Thus, a function pointer
+-   initialized to the address of a function in a shared library will
+-   either require a copy reloc, or a dynamic reloc.  Using a copy reloc
+-   redefines the function descriptor symbol to point to the copy.  This
+-   presents a problem as a plt entry for that function is also
+-   initialized from the function descriptor symbol and the copy reloc
+-   may not be initialized first.  */
++   shared lib.  With code that gcc generates it is vital that this be
++   enabled;  In the PowerPC64 ELFv1 ABI the address of a function is
++   actually the address of a function descriptor which resides in the
++   .opd section.  gcc uses the descriptor directly rather than going
++   via the GOT as some other ABIs do, which means that initialized
++   function pointers reference the descriptor.  Thus, a function
++   pointer initialized to the address of a function in a shared
++   library will either require a .dynbss copy and a copy reloc, or a
++   dynamic reloc.  Using a .dynbss copy redefines the function
++   descriptor symbol to point to the copy.  This presents a problem as
++   a PLT entry for that function is also initialized from the function
++   descriptor symbol and the copy may not be initialized first.  */
+ #define ELIMINATE_COPY_RELOCS 1
+ 
+ /* Section name for stubs is the associated section name plus this
+@@ -6435,13 +6435,23 @@ ppc64_elf_adjust_dynamic_symbol (struct bfd_link_info *info,
+       || h->protected_def)
+     return TRUE;
+ 
+-  if (h->plt.plist != NULL)
++  if (h->type == STT_FUNC
++      || h->type == STT_GNU_IFUNC)
+     {
+-      /* We should never get here, but unfortunately there are versions
+-	 of gcc out there that improperly (for this ABI) put initialized
+-	 function pointers, vtable refs and suchlike in read-only
+-	 sections.  Allow them to proceed, but warn that this might
+-	 break at runtime.  */
++      /* .dynbss copies of function symbols only work if we have
++	 ELFv1 dot-symbols.  ELFv1 compilers since 2004 default to not
++	 use dot-symbols and set the function symbol size to the text
++	 size of the function rather than the size of the descriptor.
++	 That's wrong for copying a descriptor.  */
++      if (((struct ppc_link_hash_entry *) h)->oh == NULL
++	  || !(h->size == 24 || h->size == 16))
++	return TRUE;
++
++      /* We should never get here, but unfortunately there are old
++	 versions of gcc (circa gcc-3.2) that improperly for the
++	 ELFv1 ABI put initialized function pointers, vtable refs and
++	 suchlike in read-only sections.  Allow them to proceed, but
++	 warn that this might break at runtime.  */
+       info->callbacks->einfo
+ 	(_("%P: copy reloc against `%pT' requires lazy plt linking; "
+ 	   "avoid setting LD_BIND_NOW=1 or upgrade gcc\n"),
+diff --git a/ld/ChangeLog b/ld/ChangeLog
+index 9f1179e15e..c4cc2b0542 100644
+--- a/ld/ChangeLog
++++ b/ld/ChangeLog
+@@ -1,3 +1,10 @@
++2020-01-15  Alan Modra  <amodra@gmail.com>
++
++	* testsuite/ld-powerpc/ambiguousv1b.d: Adjust expected output.
++	* testsuite/ld-powerpc/funref.s: Align func_tab.
++	* testsuite/ld-powerpc/funref2.s: Likewise.
++	* testsuite/ld-powerpc/funv1.s: Add dot symbols.
++
+ 2019-10-12  Nick Clifton  <nickc@redhat.com>
+ 
+ 	Release 2.33.1
+diff --git a/ld/testsuite/ld-powerpc/ambiguousv1b.d b/ld/testsuite/ld-powerpc/ambiguousv1b.d
+index 9be1371e5e..205f7ea46f 100644
+--- a/ld/testsuite/ld-powerpc/ambiguousv1b.d
++++ b/ld/testsuite/ld-powerpc/ambiguousv1b.d
+@@ -3,6 +3,7 @@
+ #as: -a64
+ #ld: -melf64ppc --emit-stub-syms
+ #ld_after_inputfiles: tmpdir/funv1.so
++#warning: .*requires lazy plt linking.*
+ #readelf: -rs --wide
+ # Check that we do the right thing with funref2.s that doesn't have
+ # anything to mark it as ELFv1 or ELFv2.  Since my_func address is
+@@ -15,9 +16,9 @@ Relocation section .* contains 1 entry:
+ 
+ Symbol table '\.dynsym' contains 2 entries:
+ #...
+-.*: 0*[1-9a-f][0-9a-f]*     4 FUNC    GLOBAL DEFAULT   1[23] my_func
++.*: 0*[1-9a-f][0-9a-f]* +24 FUNC +GLOBAL DEFAULT +1[23] my_func
+ #...
+ Symbol table '\.symtab' contains .* entries:
+ #...
+-.*: 0*[1-9a-f][0-9a-f]*     4 FUNC    GLOBAL DEFAULT   1[23] my_func
++.*: 0*[1-9a-f][0-9a-f]* +24 FUNC +GLOBAL DEFAULT +1[23] my_func
+ #pass
+diff --git a/ld/testsuite/ld-powerpc/funref.s b/ld/testsuite/ld-powerpc/funref.s
+index 3f7de479ce..27c1bcf6b1 100644
+--- a/ld/testsuite/ld-powerpc/funref.s
++++ b/ld/testsuite/ld-powerpc/funref.s
+@@ -1,4 +1,5 @@
+  .data
+  .globl func_tab
++ .p2align 3
+ func_tab:
+  .dc.a my_func
+diff --git a/ld/testsuite/ld-powerpc/funref2.s b/ld/testsuite/ld-powerpc/funref2.s
+index a2bf949126..14c58f0123 100644
+--- a/ld/testsuite/ld-powerpc/funref2.s
++++ b/ld/testsuite/ld-powerpc/funref2.s
+@@ -1,4 +1,5 @@
+  .section .rodata,"a",@progbits
+  .globl func_tab
++ .p2align 3
+ func_tab:
+  .dc.a my_func
+diff --git a/ld/testsuite/ld-powerpc/funv1.s b/ld/testsuite/ld-powerpc/funv1.s
+index e79009d1d2..988ad0d8c1 100644
+--- a/ld/testsuite/ld-powerpc/funv1.s
++++ b/ld/testsuite/ld-powerpc/funv1.s
+@@ -1,10 +1,12 @@
+- .globl my_func
+- .type my_func,@function
+- .section .opd,"aw",@progbits
++# old style ELFv1, with dot-symbols
++ .globl my_func, .my_func
++ .type .my_func, @function
++ .section .opd, "aw", @progbits
+ my_func:
+- .quad .Lmy_func, .TOC.@tocbase
++ .quad .my_func, .TOC.@tocbase, 0
++ .size my_func, . - my_func
+ 
+  .text
+-.Lmy_func:
++.my_func:
+  blr
+- .size my_func,.-.Lmy_func
++ .size .my_func, . - .my_func
+
+commit 6824500f42c02fea174b5e62889b7910e45d51f3
+Author: Alan Modra <amodra@gmail.com>
+Date:   Wed Jan 15 16:15:43 2020 +1030
+
+    Reinstate gas em=freebsd for sparc-freebsd
+    
+    In commit c9098af41e3 I over-simplified the sparc target decoding,
+    missing the fact that prior to that patch sparc-*-freebsd fell through
+    to the generic *-*-freebsd match.
+    
+            * configure.tgt: Add sparc-*-freebsd case.
+    
+    (cherry picked from commit c24d0e8d4850d4913a1630a53e272c930849406d)
+
+diff --git a/gas/ChangeLog b/gas/ChangeLog
+index 81f066d6d7..e9a9b22407 100644
+--- a/gas/ChangeLog
++++ b/gas/ChangeLog
+@@ -1,3 +1,7 @@
++2020-01-15  Alan Modra  <amodra@gmail.com>
++
++	* configure.tgt: Add sparc-*-freebsd case.
++
+ 2020-01-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+ 
+ 	Backported from mainline.
+diff --git a/gas/configure.tgt b/gas/configure.tgt
+index a4828c4cae..c0d2fe24a8 100644
+--- a/gas/configure.tgt
++++ b/gas/configure.tgt
+@@ -392,6 +392,7 @@ case ${generic_target} in
+ 
+   sparc-*-linux-*)			fmt=elf em=linux ;;
+   sparc-*-solaris*)			fmt=elf em=solaris ;;
++  sparc-*-freebsd*)			fmt=elf em=freebsd ;;
+   sparc-*-*bsd*)			fmt=elf em=nbsd ;;
+ 
+   spu-*-elf)				fmt=elf ;;
+
+commit ec74683a323e7aadb7a725c996ddce1efdb72d42
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Thu Jan 16 00:02:01 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index b8e8fcf063..6d879e8ed0 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200115
++#define BFD_VERSION_DATE 20200116
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
