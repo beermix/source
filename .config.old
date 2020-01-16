@@ -5492,9 +5492,9 @@ CONFIG_ZLIB_OPTIMIZE_SPEED=y
 #
 CONFIG_PACKAGE_luci=y
 # CONFIG_PACKAGE_luci-light is not set
-# CONFIG_PACKAGE_luci-nginx is not set
+CONFIG_PACKAGE_luci-nginx=y
 # CONFIG_PACKAGE_luci-ssl is not set
-CONFIG_PACKAGE_luci-ssl-nginx=y
+# CONFIG_PACKAGE_luci-ssl-nginx is not set
 # CONFIG_PACKAGE_luci-ssl-openssl is not set
 
 #
@@ -6478,7 +6478,7 @@ CONFIG_NGINX_HEADERS_MORE=y
 # CONFIG_NGINX_RTMP_MODULE is not set
 # CONFIG_NGINX_TS_MODULE is not set
 # CONFIG_PACKAGE_nginx-all-module is not set
-# CONFIG_PACKAGE_nginx-mod-luci is not set
+CONFIG_PACKAGE_nginx-mod-luci=y
 CONFIG_PACKAGE_nginx-mod-luci-ssl=y
 CONFIG_PACKAGE_nginx-ssl=y
 
