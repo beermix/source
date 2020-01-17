@@ -139,26 +139,13 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--enable-cld \
 		--with-tune=generic \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--enable-clocale=gnu \
-		--enable-libstdcxx-time=yes \
-		--with-default-libstdcxx-abi=new \
-		--enable-gnu-unique-object \
-		--disable-vtable-verify \
-		--with-system-zlib \
-		--with-target-system-zlib=auto \
-		--enable-objc-gc=auto \
-		--enable-offload-targets=nvptx-none,hsa \
-		--without-cuda-driver \
-		--enable-checking=release \
-		--with-build-config=bootstrap-lto-lean \
-		--enable-link-mutex \
+		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
