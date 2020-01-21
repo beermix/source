@@ -60,7 +60,7 @@ endif
 
 ifeq ($(PKG_VERSION),9.2.1)
   PKG_VERSION:=9.2.1
-  PKG_REV:=9-20200111
+  PKG_REV:=9-20200118
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -140,6 +140,7 @@ GCC_CONFIGURE:= \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--with-tune=generic \
+		--enable-checking=release \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
