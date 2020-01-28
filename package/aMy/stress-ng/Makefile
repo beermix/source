@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=stress-ng
-PKG_VERSION:=0.10.14
+PKG_VERSION:=0.10.17
 
 PKG_SOURCE_URL:=http://kernel.ubuntu.com/~cking/tarballs/stress-ng
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
