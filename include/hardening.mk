@@ -52,13 +52,13 @@ endif
 ifdef CONFIG_PKG_RELRO_PARTIAL
   ifeq ($(strip $(PKG_RELRO)),1)
     TARGET_CFLAGS += -Wl,-z,relro
-    TARGET_LDFLAGS += -zrelro -fno-plt
+    TARGET_LDFLAGS += -zrelro
   endif
 endif
 ifdef CONFIG_PKG_RELRO_FULL
   ifeq ($(strip $(PKG_RELRO)),1)
     TARGET_CFLAGS += -Wl,-z,now -Wl,-z,relro
-    TARGET_LDFLAGS += -znow -zrelro -fno-plt
+    TARGET_LDFLAGS += -znow -zrelro
   endif
 endif
 
