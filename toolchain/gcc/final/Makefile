@@ -8,7 +8,8 @@ GCC_CONFIGURE += \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
-	--enable-lto
+	--enable-lto \
+	--with-libelf
 
 ifndef CONFIG_USE_GLIBC
   GCC_CONFIGURE += --disable-libsanitizer
