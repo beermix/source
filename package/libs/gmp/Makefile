@@ -8,12 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gmp
-PKG_VERSION:=6.1.2
-PKG_RELEASE:=2
+PKG_VERSION:=6.2.0
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)$(PKG_REVISION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/gmp/
-PKG_HASH:=87b565e89a9a684fe4ebeeddb8399dce2599f9c9049854ca8c0dfbdea0e21912
+PKG_HASH:=258e6cd51b3fbdfc185c716d55f82c08aff57df0c6fbd143cf6ed561267a1526
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
@@ -43,8 +42,6 @@ CONFIGURE_VARS += CC="$(TARGET_CROSS)gcc"
 CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
-	--without-readline \
-	--disable-fft \
 
 define Build/Compile
 	$(call Build/Compile/Default, \
