@@ -10,10 +10,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=3bfbeff
+PKG_VERSION:=b8bfea1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/torproject/tor.git
+PKG_SOURCE_URL:=https://github.com/torproject/tor
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -105,8 +105,6 @@ CONFIGURE_ARGS += \
         --disable-linker-hardening \
         --with-tor-user=tor \
         --with-tor-group=tor
-
-#TARGET_CFLAGS += -O3
 
 TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
