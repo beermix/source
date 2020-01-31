@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcork
-PKG_VERSION:=17bf6a2
+PKG_VERSION:=d6ecc2c
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -17,29 +17,30 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=1
-
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
 
-define Package/libcork/Default
+define Package/libcork
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=libcork
-  DEPENDS:=+check
+  DEPENDS:=+libpthread +librt +check
 endef
 
-define Package/libcork/Default/description
+CMAKE_OPTIONS += -DENABLE_SHARED_EXECUTABLES:BOOL=NO
+
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/include/libcork $(1)/usr/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/libcork/* $(1)/usr/include/libcork/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib
+	$(CP) $(PKG_BUILD_DIR)/src/libcork.pc $(1)/usr/lib/pkgconfig
 endef
 
-define Package/libcork
-  $(call Package/libcork/Default)
-  TITLE+= libcork
-endef
-
-define Package/libcork/description
-	$(call Package/libcork/Default/description)
+define Package/libcork/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcork.so.* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/cork-hash $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,libcork))

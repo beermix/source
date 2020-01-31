@@ -1,0 +1,13 @@
+diff --git a/build-aux/calculate b/build-aux/calculate
+index d9151ab..867154c 100755
+--- a/build-aux/calculate
++++ b/build-aux/calculate
+@@ -36,7 +36,7 @@ fi
+ # Fall back on `git describe`
+ case "$WHAT" in
+   version)
+-    version=$(git describe --abbrev=7 --dirty --always);;
++    version=0.15.0;;
+   commit)
+     version=$(git rev-parse HEAD);;
+ esac

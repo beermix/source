@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcorkipset
-PKG_VERSION:=91e42e2
+PKG_VERSION:=c6f3f11
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -17,36 +17,29 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
+PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
+
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
-define Package/libcorkipset/Default
+define Package/libcorkipset
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=libcorkipset
+  DEPENDS:=+libpthread +librt +libcork
 endef
-
-define Package/libcorkipset/Default/description
-endef
-
-define Package/libcorkipset
-  $(call Package/libcorkipset/Default)
-  TITLE+= libcorkipset
-endef
-
-define Package/libcorkipset/description
-	$(call Package/libcorkipset/Default/description)
-endef
-
-CMAKE_OPTIONS += 
 
 define Build/InstallDev
-	$(call Build/InstallDev/cmake,$(1))
+	$(INSTALL_DIR) $(1)/usr/include/libcorkipset $(1)/usr/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/libcorkipset/* $(1)/usr/include/libcorkipset/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/*.pc $(1)/usr/lib/pkgconfig
 endef
 
 define Package/libcorkipset/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libevent-2.1.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcorkipset.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libcorkipset))

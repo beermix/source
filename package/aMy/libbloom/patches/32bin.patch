@@ -1,0 +1,16 @@
+diff --git a/Makefile b/Makefile
+index 80b06e2..747a37b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -35,9 +35,9 @@ COM=${CC} $(CFLAGS) $(CPPFLAGS) -Wall ${OPT} ${MM} -std=c99 -fPIC -DBLOOM_VERSIO
+ TESTDIR=$(TOP)/misc/test
+ 
+ ifeq ($(BITS),)
+-MM=-m64
++MM=-m32
+ else ifeq ($(BITS),64)
+-MM=-m64
++MM=-m32
+ else ifeq ($(BITS),32)
+ MM=-m32
+ else ifeq ($(BITS),default)

@@ -1,0 +1,14 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ed3e309..67d777e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -87,7 +87,8 @@ endif (ENABLE_STATIC OR NOT ENABLE_SHARED_EXECUTABLES)
+ 
+ add_c_executable(
+     cork-hash
+-    OUTPUT_NAME cork-hash
++    SKIP_INSTALL
++    OUTPUT_NAME acork-hash
+     SOURCES cork-hash/cork-hash.c
+     LOCAL_LIBRARIES
+         libcork
