@@ -75,7 +75,7 @@ proto_wireguard_setup_peer() {
 		echo "PersistentKeepalive=${persistent_keepalive}" >> "${wg_cfg}"
 	fi
 
-	if [ "${route_allowed_ips}" -ne 0 ]; then
+	if [ ${route_allowed_ips} -ne 0 ]; then
 		for allowed_ip in ${allowed_ips}; do
 			case "${allowed_ip}" in
 				*:*/*)
@@ -102,11 +102,7 @@ proto_wireguard_setup() {
 
 	local private_key
 	local listen_port
-	local addresses
 	local mtu
-	local fwmark
-	local ip6prefix
-	local nohostroute
 
 	config_load network
 	config_get private_key "${config}" "private_key"
@@ -139,7 +135,7 @@ proto_wireguard_setup() {
 	config_foreach proto_wireguard_setup_peer "wireguard_${config}"
 
 	# apply configuration file
-	${WG} setconf "${config}" "${wg_cfg}"
+	${WG} setconf ${config} "${wg_cfg}"
 	WG_RETURN=$?
 
 	rm -f "${wg_cfg}"
@@ -175,7 +171,7 @@ proto_wireguard_setup() {
 	if [ "${nohostroute}" != "1" ]; then
 		wg show "${config}" endpoints | \
 		sed -E 's/\[?([0-9.:a-f]+)\]?:([0-9]+)/\1 \2/' | \
-		while IFS="$(printf '\t')" read -r address port; do
+		while IFS=$'\t ' read -r key address port; do
 			[ -n "${port}" ] || continue
 			proto_add_host_dependency "${config}" "${address}"
 		done
