@@ -293,8 +293,8 @@ CONFIG_STRIP_ARGS="--strip-all"
 CONFIG_STRIP_KERNEL_EXPORTS=y
 CONFIG_USE_MKLIBS=y
 # CONFIG_USE_UCLIBCXX is not set
-# CONFIG_USE_LIBCXX is not set
-CONFIG_USE_LIBSTDCXX=y
+CONFIG_USE_LIBCXX=y
+# CONFIG_USE_LIBSTDCXX is not set
 
 #
 # Hardening build options
@@ -5087,7 +5087,7 @@ CONFIG_PACKAGE_libbsd=y
 # CONFIG_PACKAGE_libcanfestival is not set
 CONFIG_PACKAGE_libcap=y
 # CONFIG_PACKAGE_libcap-bin is not set
-# CONFIG_PACKAGE_libcares is not set
+CONFIG_PACKAGE_libcares=y
 # CONFIG_PACKAGE_libcgroup is not set
 # CONFIG_PACKAGE_libcharset is not set
 # CONFIG_PACKAGE_libcoap is not set
@@ -5139,7 +5139,7 @@ CONFIG_LIBCURL_PROXY=y
 # CONFIG_LIBCURL_UNIX_SOCKETS is not set
 # CONFIG_LIBCURL_LIBCURL_OPTION is not set
 # CONFIG_LIBCURL_VERBOSE is not set
-# CONFIG_PACKAGE_libcxx is not set
+CONFIG_PACKAGE_libcxx=y
 # CONFIG_PACKAGE_libdaemon is not set
 # CONFIG_PACKAGE_libdaq is not set
 # CONFIG_PACKAGE_libdb47 is not set
@@ -5157,7 +5157,7 @@ CONFIG_LIBCURL_PROXY=y
 CONFIG_PACKAGE_libelf=y
 # CONFIG_PACKAGE_libesmtp is not set
 # CONFIG_PACKAGE_libestr is not set
-# CONFIG_PACKAGE_libev is not set
+CONFIG_PACKAGE_libev=y
 # CONFIG_PACKAGE_libevdev is not set
 CONFIG_PACKAGE_libevent2=y
 # CONFIG_PACKAGE_libevent2-core is not set
@@ -6550,21 +6550,12 @@ CONFIG_PACKAGE_nuttcp=y
 # CONFIG_PACKAGE_seafile-server is not set
 # CONFIG_PACKAGE_ser2net is not set
 CONFIG_PACKAGE_shadowsocks-libev=y
-CONFIG_PACKAGE_shadowsocks-libev-server=y
+# CONFIG_PACKAGE_shadowsocks-libev-server is not set
 
 #
 # Shadowsocks-libev Compile Configuration
 #
-CONFIG_SHADOWSOCKS_STATIC_LINK=y
-
-#
-# Select libraries
-#
-CONFIG_SHADOWSOCKS_WITH_EV=y
-CONFIG_SHADOWSOCKS_WITH_PCRE=y
-CONFIG_SHADOWSOCKS_WITH_CARES=y
-CONFIG_SHADOWSOCKS_WITH_SODIUM=y
-CONFIG_SHADOWSOCKS_WITH_MBEDTLS=y
+# CONFIG_SHADOWSOCKS_STATIC_LINK is not set
 # CONFIG_PACKAGE_simple-adblock is not set
 # CONFIG_PACKAGE_smartdns is not set
 # CONFIG_PACKAGE_smartsnmpd is not set
