@@ -139,7 +139,7 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--with-tune=generic \
+		--disable-libgomp \
 		--enable-checking=release \
 		--disable-libmudflap \
 		--disable-multilib \
