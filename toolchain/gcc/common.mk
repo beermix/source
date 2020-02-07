@@ -141,7 +141,6 @@ GCC_CONFIGURE:= \
 		--enable-target-optspace \
 		--with-tune=generic \
 		--enable-checking=release \
-		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
