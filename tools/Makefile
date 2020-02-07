@@ -23,7 +23,7 @@ endif
 
 tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc expat
 tools-y += m4 libtool autoconf automake flex bison pkgconf mklibs zlib
-tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
+tools-y += libarchive sstrip make-ext4fs e2fsprogs mtd-utils mkimage
 tools-y += firmware-utils patch-image quilt padjffs2
 tools-y += mm-macros missing-macros cmake bc findutils gengetopt patchelf
 tools-y += mtools dosfstools libressl
