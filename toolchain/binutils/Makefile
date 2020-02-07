@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 # https://github.com/bminor/binutils-gdb/branches/active
 # https://github.com/bminor/binutils-gdb/tree/binutils-2_32-branch
-# https://github.com/bminor/binutils-gdb/tree/binutils-2_33-branch
+# https://github.com/bminor/binutils-gdb/tree/binutils-2_34-branch
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=binutils
@@ -43,8 +43,8 @@ ifeq ($(PKG_VERSION),2.33.1)
   PKG_HASH:=ab66fc2d1c3ec0359b8e08843c9f33b63e8707efdff5e4cc5c200eae24722cbf
 endif
 
-ifeq ($(PKG_VERSION),2.34
-  PKG_HASH:=
+ifeq ($(PKG_VERSION),2.34)
+  PKG_HASH:=f00b0e8803dc9bab1e2165bd568528135be734df3fabf8d0161828cd56028952
 endif
 
 HOST_BUILD_PARALLEL:=1
