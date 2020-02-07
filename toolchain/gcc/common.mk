@@ -140,13 +140,11 @@ GCC_CONFIGURE:= \
 		--with-gnu-ld \
 		--enable-target-optspace \
 		--disable-libgomp \
-		--enable-checking=release \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
 		--disable-libstdcxx-debug \
-		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
