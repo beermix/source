@@ -7932,6 +7932,8 @@ menandmice-upg   4603/tcp
 irp              4604/tcp
 sixchat          4605/tcp
 ventoso          4621/udp
+dots-signal      4646/tcp
+dots-signal      4646/udp
 playsta2-app     4658/tcp
 playsta2-app     4658/udp
 playsta2-lob     4659/tcp
@@ -10005,6 +10007,7 @@ sun-as-jmxrmi    8686/tcp
 sun-as-jmxrmi    8686/udp
 openremote-ctrl  8688/tcp
 vnyx             8699/tcp
+semi-grpc        8710/tcp
 nvc              8711/tcp
 dtp-net          8732/udp
 ibus             8733/tcp
@@ -10020,6 +10023,7 @@ amcs             8766/tcp
 amcs             8766/udp
 core-of-source   8767/tcp
 sandpolis        8768/tcp
+oktaauthenticat  8769/tcp
 dpap             8770/tcp
 dpap             8770/udp
 uec              8778/tcp
@@ -10443,6 +10447,7 @@ swdtp-sv        10009/tcp
 swdtp-sv        10009/udp
 rxapi           10010/tcp
 abb-hw          10020/tcp
+cefd-vmp        10023/udp
 zabbix-agent    10050/tcp
 zabbix-agent    10050/udp
 zabbix-trapper  10051/tcp
@@ -10531,7 +10536,6 @@ irisa           11000/tcp
 irisa           11000/udp
 metasys         11001/tcp
 metasys         11001/udp
-cefd-vmp        10023/udp
 weave           11095/tcp
 weave           11095/udp
 origo-sync      11103/tcp
@@ -11122,6 +11126,7 @@ tw-auth-key     27999/udp
 nxlmd           28000/tcp
 nxlmd           28000/udp
 pqsp            28001/tcp
+gruber-cashreg  28010/tcp
 a27-ran-ran     28119/udp
 voxelstorm      28200/tcp
 voxelstorm      28200/udp
@@ -11206,6 +11211,7 @@ mlsn            32801/udp
 retp            32811/tcp
 idmgratm        32896/tcp
 idmgratm        32896/udp
+wg-endpt-comms  33000/tcp
 mysqlx          33060/tcp
 aurora-balaena  33123/tcp
 aurora-balaena  33123/udp
