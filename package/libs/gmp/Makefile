@@ -42,6 +42,8 @@ CONFIGURE_VARS += CC="$(TARGET_CROSS)gcc"
 CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
+	--without-readline \
+	--disable-fft \
 
 define Build/Compile
 	$(call Build/Compile/Default, \

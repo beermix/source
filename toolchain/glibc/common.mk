@@ -7,7 +7,7 @@
 # https://github.com/bminor/glibc/tree/release/2.29/master
 # https://github.com/bminor/glibc/tree/release/2.28/master
 # https://github.com/bminor/glibc/tree/release/2.27/master
-# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.30/master
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.31/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=HEAD
 include $(TOPDIR)/rules.mk
 
