@@ -24,7 +24,9 @@ include $(INCLUDE_DIR)/host-build.mk
 HOST_CONFIGURE_ARGS += \
 	--disable-acl \
 	--disable-nls \
-	--enable-threads=pth
+	--enable-threads=posix \
+	--disable-i18n \
+	--without-selinux
 
 HOST_CONFIGURE_VARS += \
 	ac_cv_search_setfilecon=no \
