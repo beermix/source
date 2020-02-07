@@ -73,6 +73,7 @@ $(curdir)/mkimage/compile += $(curdir)/libressl/compile
 $(curdir)/firmware-utils/compile += $(curdir)/libressl/compile $(curdir)/zlib/compile
 $(curdir)/cmake/compile += $(curdir)/libressl/compile
 $(curdir)/zlib/compile := $(curdir)/cmake/compile
+$(curdir)/libarchive/compile := $(curdir)/xz/compile $(curdir)/libtool/compile $(curdir)/zlib/compile
 $(curdir)/wrt350nv2-builder/compile := $(curdir)/zlib/compile
 $(curdir)/lzma-old/compile := $(curdir)/zlib/compile
 $(curdir)/make-ext4fs/compile := $(curdir)/zlib/compile
