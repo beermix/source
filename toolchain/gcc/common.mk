@@ -145,6 +145,8 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--disable-libstdcxx-debug \
+		--with-tune=generic \
+		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
