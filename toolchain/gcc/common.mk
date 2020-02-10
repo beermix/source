@@ -145,6 +145,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--disable-libstdcxx-debug \
+		--enable-checking=release \
 		--with-tune=generic \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
