@@ -419,32 +419,6 @@ define Package/libgomp/config
 	endmenu
 endef
 
-define Package/libgo
-$(call Package/gcc/Default)
-  TITLE:=Go support library
-  DEPENDS+=@INSTALL_GCCGO
-endef
-
-define Package/libgo/config
-	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-
-	config LIBGO_ROOT_DIR
-		string
-		prompt "libgo shared library base directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
-		default "/"  if NATIVE_TOOLCHAIN
-
-	config LIBGO_FILE_SPEC
-		string
-		prompt "libgo shared library files (use wildcards)"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-		default "./usr/lib/libgo.so.*"
-
-	endmenu
-endef
-
 
 define Package/ldd
 $(call Package/libc/Default)
@@ -550,11 +524,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/lib/libssp.so.* $(1)/lib/
   endef
 
-  define Package/libgo/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libgo.so.* $(1)/usr/lib/
-  endef
-
   define Package/libstdcpp/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(TOOLCHAIN_DIR)/lib/libstdc++.so.* $(1)/usr/lib/
@@ -588,8 +557,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
-		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
-		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
 	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
@@ -679,17 +646,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/getent $(1)/usr/bin/
-	mkdir -p $(1)/share/i18n/charmaps
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-* $(1)/share/i18n/charmaps/
-	mkdir -p $(1)/share/i18n/locales
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/ru_* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/en_* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/i18n* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/iso* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/translit_* $(1)/share/i18n/locales/
-	mkdir -p $(1)/lib/locale
   endef
 
   define Package/ldconfig/install
@@ -705,13 +661,6 @@ else
 		$(CP) $(call qstrip,$(CONFIG_LIBGCC_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
 	exit 0
-  endef
-
-  define Package/libgo/install
-	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
-		$(INSTALL_DIR) $(1)/lib ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGO_ROOT_DIR))/$$$$file $(1)/lib/ ; \
-	done
   endef
 
   define Package/libgfortran/install
@@ -851,6 +800,5 @@ $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
 $(eval $(call BuildPackage,libgomp))
-$(eval $(call BuildPackage,libgo))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
