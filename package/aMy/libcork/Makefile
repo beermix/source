@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcork
-PKG_VERSION:=d6ecc2c
+PKG_VERSION:=0.15.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/dcreager/libcork
+PKG_SOURCE_URL:=https://github.com/redjack/libcork
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -27,7 +27,7 @@ define Package/libcork
   DEPENDS:=+libpthread +librt +check
 endef
 
-CMAKE_OPTIONS += -DENABLE_SHARED_EXECUTABLES:BOOL=NO
+CMAKE_OPTIONS += -DCMAKE_BUILD_TYPE=Release -DENABLE_STATIC=OFF -DCMAKE_INSTALL_LIBDIR=lib
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/libcork $(1)/usr/lib/pkgconfig
