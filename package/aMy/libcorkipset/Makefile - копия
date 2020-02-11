@@ -8,14 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcorkipset
-PKG_VERSION:=91e42e2
+PKG_VERSION:=1.1.1+20150311-8
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/rogers0/libcorkipset
+PKG_SOURCE_URL:=https://github.com/rogers0/libcorkipset/archive/debian/
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
@@ -30,15 +29,23 @@ define Package/libcorkipset
   DEPENDS:=+libpthread +librt +libcork +check
 endef
 
+
 define Build/Prepare
 	$(call Build/Prepare/Default)
-	sed -e 's%#include <ipset%#include <libcorkipset%' -e 's%#include "ipset%#include "libcorkipset%' -i $(PKG_BUILD_DIR)/include/ipset/*.h $(PKG_BUILD_DIR)/*/*/*/*.c $(PKG_BUILD_DIR)/*/*/*/*.c.in $(PKG_BUILD_DIR)/*/*/*.c $(PKG_BUILD_DIR)/*/*.c
-
-	mv -f $(PKG_BUILD_DIR)/include/ipset $(PKG_BUILD_DIR)/include/libcorkipset
+	for p in (PKG_BUILD_DIR)/debian/patches/*.patch; do
+		patch -p1 -i $(PKG_BUILD_DIR)
+	done
+	
+	sed -e 's%#include <ipset%#include <libcorkipset%' \
+		-e 's%#include "ipset%#include "libcorkipset%' \
+		-i $(PKG_BUILD_DIR)/include/ipset/*.h $(PKG_BUILD_DIR)/*/*/*/*.c $(PKG_BUILD_DIR)/*/*/*/*.c.in $(PKG_BUILD_DIR)/*/*/*.c $(PKG_BUILD_DIR)/*/*.c
+	mv $(PKG_BUILD_DIR)/include/ipset i$(PKG_BUILD_DIR)/nclude/libcorkipset
 endef
 
+
 CMAKE_OPTIONS += \
-	-DCMAKE_BUILD_TYPE=Release
+	-DCMAKE_BUILD_TYPE=Release \
+	-DENABLE_STATIC=OFF
 	
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/libcorkipset $(1)/usr/lib/pkgconfig

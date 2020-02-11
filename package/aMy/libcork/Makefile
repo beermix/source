@@ -11,11 +11,10 @@ PKG_NAME:=libcork
 PKG_VERSION:=0.15.0
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/redjack/libcork
+PKG_SOURCE_URL:=https://github.com/dcreager/libcork/archive/
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_SOURCE_VERSION).tar.gz
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -27,8 +26,15 @@ define Package/libcork
   DEPENDS:=+libpthread +librt +check
 endef
 
-CMAKE_OPTIONS += -DCMAKE_BUILD_TYPE=Release -DENABLE_STATIC=OFF -DCMAKE_INSTALL_LIBDIR=lib
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	echo "$(PKG_VERSION)" > $(PKG_BUILD_DIR)/RELEASE-VERSION
+endef
 
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DENABLE_STATIC=OFF
+	
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/libcork $(1)/usr/lib/pkgconfig
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/libcork/* $(1)/usr/include/libcork/
@@ -40,7 +46,7 @@ define Package/libcork/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcork.so.* $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/cork-hash $(1)/usr/bin/
+	#$(CP) $(PKG_INSTALL_DIR)/usr/bin/cork-hash $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,libcork))
