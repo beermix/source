@@ -66,7 +66,6 @@ GLIBC_CONFIGURE:= \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
-		--enable-stack-protector=strong \
 		--enable-kernel=4.14 \
 		--disable-debug \
 		--enable-add-ons \

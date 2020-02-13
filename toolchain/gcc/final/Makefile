@@ -8,7 +8,8 @@ GCC_CONFIGURE += \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
-	--enable-lto
+	--enable-lto \
+	--with-libelf
 
 ifndef CONFIG_USE_GLIBC
   GCC_CONFIGURE += --disable-libsanitizer
@@ -69,7 +70,7 @@ endef
 
 define Host/Install
 	$(CleanupToolchain)
-	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) install-strip
+	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) install
 	# Set up the symlinks to enable lying about target name.
 	set -e; \
 	(cd $(TOOLCHAIN_DIR); \

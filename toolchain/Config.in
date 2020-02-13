@@ -226,7 +226,7 @@ source "toolchain/gcc/Config.in"
 
 config NASM
 	bool
-	depends on ( i386 || x86_64 )
+	depends on (x86_64 || (i386 && !(TARGET_x86_geode || TARGET_x86_legacy)))
 	prompt "Build nasm" if TOOLCHAINOPTS
 	default y
 	help
