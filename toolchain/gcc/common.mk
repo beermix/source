@@ -127,8 +127,8 @@ endif
 GCC_CONFIGURE:= \
 	SHELL="$(BASH)" \
 	$(if $(shell gcc --version 2>&1 | grep -E "Apple.(LLVM|clang)"), \
-		CFLAGS="-O2 -fbracket-depth=512 -pipe" \
-		CXXFLAGS="-O2 -fbracket-depth=512 -pipe" \
+		CFLAGS="-g0 -O2 -fbracket-depth=512 -pipe" \
+		CXXFLAGS="-g0 -O2 -fbracket-depth=512 -pipe" \
 	) \
 	$(HOST_SOURCE_DIR)/configure \
 		--with-bugurl=$(BUGURL) \
@@ -230,9 +230,11 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
-		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CFLAGS="-g0 $(HOST_CFLAGS)" \
+		BOOT_CFLAGS="-g0 $(HOST_CFLAGS)" \
+		BOOT_CXXFLAGS="-g0 $(HOST_CFLAGS)" \
+		CFLAGS_FOR_TARGET="-g0 $(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="-g0 $(TARGET_CFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
@@ -251,8 +253,6 @@ ifneq ($(GCC_PREPARE),)
 	$(SED) 's, DATESTAMP,,' $(HOST_SOURCE_DIR)/gcc/version.c
 	#(cd $(HOST_SOURCE_DIR)/libstdc++-v3; autoconf;);
 	$(SED) 's,gcc_no_link=yes,gcc_no_link=no,' $(HOST_SOURCE_DIR)/libstdc++-v3/configure
-	$(SED) 's,^STRIP = .*$,STRIP = true,g'                   $(HOST_SOURCE_DIR)/Makefile
-	$(SED) 's,^STRIP_FOR_TARGET=.*$,STRIP_FOR_TARGET=true,g' $(HOST_SOURCE_DIR)/Makefile
 	mkdir -p $(GCC_BUILD_DIR)
   endef
 else
