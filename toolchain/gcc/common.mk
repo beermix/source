@@ -251,6 +251,8 @@ ifneq ($(GCC_PREPARE),)
 	$(SED) 's, DATESTAMP,,' $(HOST_SOURCE_DIR)/gcc/version.c
 	#(cd $(HOST_SOURCE_DIR)/libstdc++-v3; autoconf;);
 	$(SED) 's,gcc_no_link=yes,gcc_no_link=no,' $(HOST_SOURCE_DIR)/libstdc++-v3/configure
+	$(SED) 's,^STRIP = .*$,STRIP = true,g'                   $(HOST_SOURCE_DIR)/Makefile
+	$(SED) 's,^STRIP_FOR_TARGET=.*$,STRIP_FOR_TARGET=true,g' $(HOST_SOURCE_DIR)/Makefile
 	mkdir -p $(GCC_BUILD_DIR)
   endef
 else
