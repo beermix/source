@@ -94,6 +94,7 @@ Package/shadowsocks-libev-server/description = $(Package/shadowsocks-libev/descr
 
 CONFIGURE_ARGS += \
 	--disable-documentation \
+	--disable-ssp \
 
 ifeq ($(CONFIG_SHADOWSOCKS_STATIC_LINK),y)
 	ifeq ($(CONFIG_SHADOWSOCKS_WITH_EV),y)
