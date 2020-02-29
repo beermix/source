@@ -1,4 +1,14 @@
 #define _GNU_SOURCE
+
+#include "nfqws.h"
+#include "sec.h"
+#include "desync.h"
+#include "helpers.h"
+#include "checksum.h"
+#include "params.h"
+#include "protocol.h"
+#include "hostlist.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,82 +20,15 @@
 #include <getopt.h>
 #include <fcntl.h>
 #include <pwd.h>
-#include <sys/capability.h>
-#include <sys/prctl.h>
 #include <signal.h>
 #include <errno.h>
 #include <time.h>
-#include "darkmagic.h"
-#include "hostlist.h"
 
 #define NF_DROP 0
 #define NF_ACCEPT 1
 
 
-#define Q_RCVBUF	(128*1024)	// in bytes
-#define Q_MAXLEN	1024		// in packets
-#define DPI_DESYNC_FWMARK_DEFAULT 0x40000000
-
-
-static const char fake_http_request[] = "GET / HTTP/1.1\r\nHost: www.w3.org\r\n"
-                                        "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0\r\n"
-					"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
-                                        "Accept-Encoding: gzip, deflate\r\n\r\n";
-static const uint8_t fake_https_request[] = {
-    0x16, 0x03, 0x01, 0x02, 0x00, 0x01, 0x00, 0x01, 0xfc, 0x03, 0x03, 0x9a, 0x8f, 0xa7, 0x6a, 0x5d,
-    0x57, 0xf3, 0x62, 0x19, 0xbe, 0x46, 0x82, 0x45, 0xe2, 0x59, 0x5c, 0xb4, 0x48, 0x31, 0x12, 0x15,
-    0x14, 0x79, 0x2c, 0xaa, 0xcd, 0xea, 0xda, 0xf0, 0xe1, 0xfd, 0xbb, 0x20, 0xf4, 0x83, 0x2a, 0x94,
-    0xf1, 0x48, 0x3b, 0x9d, 0xb6, 0x74, 0xba, 0x3c, 0x81, 0x63, 0xbc, 0x18, 0xcc, 0x14, 0x45, 0x57,
-    0x6c, 0x80, 0xf9, 0x25, 0xcf, 0x9c, 0x86, 0x60, 0x50, 0x31, 0x2e, 0xe9, 0x00, 0x22, 0x13, 0x01,
-    0x13, 0x03, 0x13, 0x02, 0xc0, 0x2b, 0xc0, 0x2f, 0xcc, 0xa9, 0xcc, 0xa8, 0xc0, 0x2c, 0xc0, 0x30,
-    0xc0, 0x0a, 0xc0, 0x09, 0xc0, 0x13, 0xc0, 0x14, 0x00, 0x33, 0x00, 0x39, 0x00, 0x2f, 0x00, 0x35,
-    0x01, 0x00, 0x01, 0x91, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x0d, 0x00, 0x00, 0x0a, 0x77, 0x77, 0x77,
-    0x2e, 0x77, 0x33, 0x2e, 0x6f, 0x72, 0x67, 0x00, 0x17, 0x00, 0x00, 0xff, 0x01, 0x00, 0x01, 0x00,
-    0x00, 0x0a, 0x00, 0x0e, 0x00, 0x0c, 0x00, 0x1d, 0x00, 0x17, 0x00, 0x18, 0x00, 0x19, 0x01, 0x00,
-    0x01, 0x01, 0x00, 0x0b, 0x00, 0x02, 0x01, 0x00, 0x00, 0x23, 0x00, 0x00, 0x00, 0x10, 0x00, 0x0e,
-    0x00, 0x0c, 0x02, 0x68, 0x32, 0x08, 0x68, 0x74, 0x74, 0x70, 0x2f, 0x31, 0x2e, 0x31, 0x00, 0x05,
-    0x00, 0x05, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x33, 0x00, 0x6b, 0x00, 0x69, 0x00, 0x1d, 0x00,
-    0x20, 0xb0, 0xe4, 0xda, 0x34, 0xb4, 0x29, 0x8d, 0xd3, 0x5c, 0x70, 0xd3, 0xbe, 0xe8, 0xa7, 0x2a,
-    0x6b, 0xe4, 0x11, 0x19, 0x8b, 0x18, 0x9d, 0x83, 0x9a, 0x49, 0x7c, 0x83, 0x7f, 0xa9, 0x03, 0x8c,
-    0x3c, 0x00, 0x17, 0x00, 0x41, 0x04, 0x4c, 0x04, 0xa4, 0x71, 0x4c, 0x49, 0x75, 0x55, 0xd1, 0x18,
-    0x1e, 0x22, 0x62, 0x19, 0x53, 0x00, 0xde, 0x74, 0x2f, 0xb3, 0xde, 0x13, 0x54, 0xe6, 0x78, 0x07,
-    0x94, 0x55, 0x0e, 0xb2, 0x6c, 0xb0, 0x03, 0xee, 0x79, 0xa9, 0x96, 0x1e, 0x0e, 0x98, 0x17, 0x78,
-    0x24, 0x44, 0x0c, 0x88, 0x80, 0x06, 0x8b, 0xd4, 0x80, 0xbf, 0x67, 0x7c, 0x37, 0x6a, 0x5b, 0x46,
-    0x4c, 0xa7, 0x98, 0x6f, 0xb9, 0x22, 0x00, 0x2b, 0x00, 0x09, 0x08, 0x03, 0x04, 0x03, 0x03, 0x03,
-    0x02, 0x03, 0x01, 0x00, 0x0d, 0x00, 0x18, 0x00, 0x16, 0x04, 0x03, 0x05, 0x03, 0x06, 0x03, 0x08,
-    0x04, 0x08, 0x05, 0x08, 0x06, 0x04, 0x01, 0x05, 0x01, 0x06, 0x01, 0x02, 0x03, 0x02, 0x01, 0x00,
-    0x2d, 0x00, 0x02, 0x01, 0x01, 0x00, 0x1c, 0x00, 0x02, 0x40, 0x01, 0x00, 0x15, 0x00, 0x96, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00
-};
-
-
-struct params_s
-{
-	bool debug;
-	int wsize;
-	int qnum;
-	bool hostcase, hostnospace;
-	char hostspell[4];
-	bool desync,desync_retrans,desync_skip_nosni;
-	uint8_t desync_ttl;
-	enum tcp_fooling_mode desync_tcp_fooling_mode;
-	uint32_t desync_fwmark;
-	char hostfile[256];
-	strpool *hostlist;
-};
-
-static struct params_s params;
-
-#define DLOG(format, ...) {if (params.debug) printf(format, ##__VA_ARGS__);}
+struct params_s params;
 
 
 static bool bHup = false;
@@ -113,48 +56,6 @@ static void dohup()
 	}
 }
 
-
-static const uint8_t *find_bin_const(const uint8_t *data, size_t len, const void *blk, size_t blk_len)
-{
-	while (len >= blk_len)
-	{
-		if (!memcmp(data, blk, blk_len))
-			return data;
-		data++;
-		len--;
-	}
-	return NULL;
-}
-static uint8_t *find_bin(uint8_t *data, size_t len, const void *blk, size_t blk_len)
-{
-	while (len >= blk_len)
-	{
-		if (!memcmp(data, blk, blk_len))
-			return data;
-		data++;
-		len--;
-	}
-	return NULL;
-}
-
-
-static void print_sockaddr(const struct sockaddr *sa)
-{
-	char str[64];
-	switch (sa->sa_family)
-	{
-	case AF_INET:
-		if (inet_ntop(sa->sa_family, &((struct sockaddr_in*)sa)->sin_addr, str, sizeof(str)))
-			printf("%s:%d", str, ntohs(((struct sockaddr_in*)sa)->sin_port));
-		break;
-	case AF_INET6:
-		if (inet_ntop(sa->sa_family, &((struct sockaddr_in6*)sa)->sin6_addr, str, sizeof(str)))
-			printf("%s:%d", str, ntohs(((struct sockaddr_in6*)sa)->sin6_port));
-		break;
-	default:
-		printf("UNKNOWN_FAMILY_%d", sa->sa_family);
-	}
-}
 
 
 static bool proto_check_ipv4(uint8_t *data, size_t len)
@@ -204,12 +105,16 @@ static void proto_skip_ipv6(uint8_t **data, size_t *len, uint8_t *proto_type)
 		switch (HeaderType)
 		{
 		case 0: // Hop-by-Hop Options
-		case 60: // Destination Options
 		case 43: // routing
+		case 51: // authentication
+		case 60: // Destination Options
+		case 135: // mobility
+		case 139: // Host Identity Protocol Version v2
+		case 140: // Shim6
 			if (*len < 2) return; // error
 			hdrlen = 8 + ((*data)[1] << 3);
 			break;
-		case 44: // fragment
+		case 44: // fragment. length fixed to 8, hdrlen field defined as reserved
 			hdrlen = 8;
 			break;
 		case 59: // no next header
@@ -238,303 +143,27 @@ static inline bool tcp_synack_segment(const struct tcphdr *tcphdr)
 		tcphdr->syn == 1 &&
 		tcphdr->fin == 0;
 }
-static inline bool tcp_ack_segment(const struct tcphdr *tcphdr)
-{
-	/* check for set bits in TCP hdr */
-	return  tcphdr->urg == 0 &&
-		tcphdr->ack == 1 &&
-		tcphdr->rst == 0 &&
-		tcphdr->syn == 0 &&
-		tcphdr->fin == 0;
-}
-
-
 static void tcp_rewrite_winsize(struct tcphdr *tcp, uint16_t winsize)
 {
 	uint16_t winsize_old;
-	/*
-		uint8_t scale_factor=1;
-		int optlen = (tcp->doff << 2);
-		uint8_t *opt = (uint8_t*)(tcp+1);
-
-		optlen = optlen>sizeof(struct tcphdr) ? optlen-sizeof(struct tcphdr) : 0;
-		printf("optslen=%d\n",optlen);
-		while (optlen)
-		{
-		switch(*opt)
-		{
-			case 0: break; // end of option list;
-			case 1: opt++; optlen--; break; // noop
-			default:
-			if (optlen<2 || optlen<opt[1]) break;
-			if (*opt==3 && opt[1]>=3)
-			{
-				scale_factor=opt[2];
-				printf("Found scale factor %u\n",opt[2]);
-				//opt[2]=0;
-			}
-			optlen-=opt[1];
-			opt+=opt[1];
-		}
-		}
-	*/
 	winsize_old = htons(tcp->window); // << scale_factor;
 	tcp->window = htons(winsize);
 	DLOG("Window size change %u => %u\n", winsize_old, winsize)
 }
 
-
-
-static const char *http_methods[] = { "GET /","POST /","HEAD /","OPTIONS /","PUT /","DELETE /","CONNECT /","TRACE /",NULL };
-static bool IsHttp(const char *data, size_t len)
+// data/len points to data payload
+static bool modify_tcp_packet(uint8_t *data, size_t len, struct tcphdr *tcphdr)
 {
-	const char **method;
-	size_t method_len;
-	for (method = http_methods; *method; method++)
+	if (tcp_synack_segment(tcphdr) && params.wsize)
 	{
-		method_len = strlen(*method);
-		if (method_len <= len && !memcmp(data, *method, method_len))
-			return true;
-	}
-	return false;
-}
-static bool HttpExtractHost(const uint8_t *data, size_t len, char *host, size_t len_host)
-{
-	const uint8_t *p, *s, *e=data+len;
-
-	p = find_bin_const(data, len, "\nHost:", 6);
-	if (!p) return false;
-	p+=6;
-	while(p<e && (*p==' ' || *p=='\t')) p++;
-	s=p;
-	while(s<e && (*s!='\r' && *s!='\n' && *s!=' ' && *s!='\t')) s++;
-	if (s>p)
-	{
-		size_t slen = s-p;
-		if (host && len_host)
-		{
-			if (slen>=len_host) slen=len_host-1;
-			for(size_t i=0;i<slen;i++) host[i]=tolower(p[i]);
-			host[slen]=0;
-		}
+		tcp_rewrite_winsize(tcphdr, (uint16_t)params.wsize);
 		return true;
 	}
 	return false;
 }
-static bool IsTLSClientHello(const uint8_t *data, size_t len)
-{
-	return len>=6 && data[0]==0x16 && data[1]==0x03 && data[2]==0x01 && data[5]==0x01 && (ntohs(*(uint16_t*)(data+3))+5)<=len;
-}
-static bool TLSFindExt(const uint8_t *data, size_t len, uint16_t type, const uint8_t **ext, size_t *len_ext)
-{
-	// +0
-	// u8	ContentType: Handshake
-	// u16	Version: TLS1.0
-	// u16	Length
-	// +5 
-	// u8	HandshakeType: ClientHello
-	// u24	Length
-	// u16	Version
-	// c[32] random
-	// u8	SessionIDLength
-	//	<SessionID>
-	// u16	CipherSuitesLength
-	//	<CipherSuites>
-	// u8	CompressionMethodsLength
-	//	<CompressionMethods>
-	// u16	ExtensionsLength
-
-	size_t l,ll;
-
-	l = 1+2+2+1+3+2+32;
-	// SessionIDLength
-	if (len<(l+1)) return false;
-	ll = data[6]<<16 | data[7]<<8 | data[8]; // HandshakeProtocol length
-	if (len<(ll+9)) return false;
-	l += data[l]+1;
-	// CipherSuitesLength
-	if (len<(l+2)) return false;
-	l += ntohs(*(uint16_t*)(data+l))+2;
-	// CompressionMethodsLength
-	if (len<(l+1)) return false;
-	l += data[l]+1;
-	// ExtensionsLength
-	if (len<(l+2)) return false;
-
-	data+=l; len-=l;
-	l=ntohs(*(uint16_t*)data);
-	data+=2; len-=2;
-	if (l<len) return false;
-
-	uint16_t ntype=htons(type);
-	while(l>=4)
-	{
-		uint16_t etype=*(uint16_t*)data;
-		size_t elen=ntohs(*(uint16_t*)(data+2));
-		data+=4; l-=4;
-		if (l<elen) break;
-		if (etype==ntype)
-		{
-			if (ext && len_ext)
-			{
-				*ext = data;
-				*len_ext = elen;
-			}
-			return true;
-		}
-		data+=elen; l-=elen;
-	}
-
-	return false;
-}
-static bool TLSHelloExtractHost(const uint8_t *data, size_t len, char *host, size_t len_host)
-{
-	const uint8_t *ext;
-	size_t elen;
-
-	if (!TLSFindExt(data,len,0,&ext,&elen)) return false;
-	// u16	data+0 - name list length
-	// u8	data+2 - server name type. 0=host_name
-	// u16	data+3 - server name length
-	if (elen<5 || ext[2]!=0) return false;
-	size_t slen = ntohs(*(uint16_t*)(ext+3));
-	ext+=5; elen-=5;
-	if (slen<elen) return false;
-	if (ext && len_host)
-	{
-		if (slen>=len_host) slen=len_host-1;
-		for(size_t i=0;i<slen;i++) host[i]=tolower(ext[i]);
-		host[slen]=0;
-	}
-	return true;
-}
-
-// data/len points to data payload
-static bool modify_tcp_packet(uint8_t *data, size_t len, struct tcphdr *tcphdr)
-{
-	const char **method;
-	size_t method_len = 0;
-	uint8_t *phost, *pua;
-	bool bRet = false;
-
-	if (params.wsize && tcp_synack_segment(tcphdr))
-	{
-		tcp_rewrite_winsize(tcphdr, (uint16_t)params.wsize);
-		bRet = true;
-	}
-
-	if ((params.hostcase || params.hostnospace) && (phost = find_bin(data, len, "\r\nHost: ", 8)))
-	{
-		if (params.hostcase)
-		{
-			DLOG("modifying Host: => %c%c%c%c:\n", params.hostspell[0], params.hostspell[1], params.hostspell[2], params.hostspell[3])
-			memcpy(phost + 2, params.hostspell, 4);
-			bRet = true;
-		}
-		if (params.hostnospace && (pua = find_bin(data, len, "\r\nUser-Agent: ", 14)) && (pua = find_bin(pua + 1, len - (pua - data) - 1, "\r\n", 2)))
-		{
-			DLOG("removing space after Host: and adding it to User-Agent:\n")
-			if (pua > phost)
-			{
-				memmove(phost + 7, phost + 8, pua - phost - 8);
-				phost[pua - phost - 1] = ' ';
-			}
-			else
-			{
-				memmove(pua + 1, pua, phost - pua + 7);
-				*pua = ' ';
-			}
-			bRet = true;
-		}
-	}
-	return bRet;
-}
 
 
 
-// result : true - drop original packet, false = dont drop
-static bool dpi_desync_packet(const uint8_t *data_pkt, size_t len_pkt, const struct iphdr *iphdr, const struct ip6_hdr *ip6hdr, const struct tcphdr *tcphdr, const uint8_t *data_payload, size_t len_payload)
-{
-	if (!!iphdr == !!ip6hdr) return false; // one and only one must be present
-
-	if (!tcphdr->syn && len_payload)
-	{
-		struct sockaddr_storage src, dst;
-		const uint8_t *fake;
-		size_t fake_size;
-		char host[256];
-		bool bHaveHost=false;
-
-		if (IsHttp(data_payload,len_payload)) 
-		{
-			DLOG("packet contains HTTP request\n")
-			fake = (uint8_t*)fake_http_request;
-			fake_size = sizeof(fake_http_request);
-			if (params.hostlist || params.debug) bHaveHost=HttpExtractHost(data_payload,len_payload,host,sizeof(host));
-		}
-		else if (IsTLSClientHello(data_payload,len_payload))
-		{
-			DLOG("packet contains TLS ClientHello\n")
-			fake = (uint8_t*)fake_https_request;
-			fake_size = sizeof(fake_https_request);
-			if (params.hostlist || params.desync_skip_nosni || params.debug)
-			{
-				bHaveHost=TLSHelloExtractHost(data_payload,len_payload,host,sizeof(host));
-				if (params.desync_skip_nosni && !bHaveHost)
-				{
-					DLOG("Not applying dpi-desync to TLS ClientHello without hostname in the SNI\n")
-					return false;
-				}
-			}
-			
-		}
-		else
-			return false;
-
-		if (bHaveHost)
-		{
-			DLOG("hostname: %s\n",host)
-			if (params.hostlist && !SearchHostList(params.hostlist,host,params.debug))
-			{
-				DLOG("Not applying dpi-desync to this request\n")
-				return false;
-			}
-		}
-
-		extract_endpoints(iphdr, ip6hdr, tcphdr, &src, &dst);
-		if (params.debug)
-		{
-			printf("sending dpi desync packet src=");
-			print_sockaddr((struct sockaddr *)&src);
-			printf(" dst=");
-			print_sockaddr((struct sockaddr *)&dst);
-			printf("\n");
-		}
-
-		uint8_t newdata[1500];
-		size_t newlen = sizeof(newdata);
-		prepare_tcp_segment((struct sockaddr *)&src, (struct sockaddr *)&dst, *((uint8_t*)tcphdr+13), tcphdr->seq, tcphdr->ack_seq,
-			params.desync_ttl ? params.desync_ttl : iphdr ? iphdr->ttl : ip6hdr->ip6_ctlun.ip6_un1.ip6_un1_hlim,
- 			params.desync_tcp_fooling_mode,
-			fake, fake_size, newdata, &newlen);
-		if (!rawsend((struct sockaddr *)&dst, params.desync_fwmark, newdata, newlen))
-			return false;
-
-		if (params.desync_retrans)
-		{
-			DLOG("dropping packet to force retransmission. len=%zu len_payload=%zu\n", len_pkt, len_payload)
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-typedef enum
-{
-	pass = 0, modify, drop
-} packet_process_result;
 static packet_process_result processPacketData(uint8_t *data_pkt, size_t len_pkt, uint32_t *mark)
 {
 	struct iphdr *iphdr = NULL;
@@ -542,8 +171,10 @@ static packet_process_result processPacketData(uint8_t *data_pkt, size_t len_pkt
 	struct tcphdr *tcphdr = NULL;
 	size_t len = len_pkt, len_tcp;
 	uint8_t *data = data_pkt;
-	packet_process_result res = pass;
+	packet_process_result res = pass, res2;
 	uint8_t proto;
+
+	if (*mark & params.desync_fwmark) return res;
 
 	if (proto_check_ipv4(data, len))
 	{
@@ -562,28 +193,19 @@ static packet_process_result processPacketData(uint8_t *data_pkt, size_t len_pkt
 		return res;
 	}
 
-	if (proto == IPPROTO_TCP && proto_check_tcp(data, len))
+	if (proto==IPPROTO_TCP && proto_check_tcp(data, len))
 	{
-
 		tcphdr = (struct tcphdr *) data;
 		len_tcp = len;
 		proto_skip_tcp(&data, &len);
 		//DLOG("got TCP packet. payload_len=%d\n",len)
 
-		if (params.desync && !(*mark & params.desync_fwmark))
-		{
-			if (dpi_desync_packet(data_pkt, len_pkt, iphdr, ip6hdr, tcphdr, data, len))
-				res = drop;
-		}
-
-		if (res!=drop && modify_tcp_packet(data, len, tcphdr))
-		{
-			if (iphdr)
-				tcp_fix_checksum(tcphdr, len_tcp, iphdr->saddr, iphdr->daddr);
-			else
-				tcp6_fix_checksum(tcphdr, len_tcp, &ip6hdr->ip6_src, &ip6hdr->ip6_dst);
+		if (modify_tcp_packet(data, len, tcphdr))
 			res = modify;
-		}
+
+		res2 = dpi_desync_packet(data_pkt, len_pkt, iphdr, ip6hdr, tcphdr, len_tcp, data, len);
+		res = (res2==pass && res==modify) ? modify : res2;
+		if (res==modify) tcp_fix_checksum(tcphdr,len_tcp,iphdr,ip6hdr);
 	}
 	return res;
 }
@@ -615,127 +237,6 @@ static int cb(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg,
 	return nfq_set_verdict2(qh, id, NF_ACCEPT, mark, 0, NULL);
 }
 
-static bool setpcap(cap_value_t *caps, int ncaps)
-{
-	cap_t capabilities;
-
-	if (!(capabilities = cap_init()))
-		return false;
-
-	if (ncaps && (cap_set_flag(capabilities, CAP_PERMITTED, ncaps, caps, CAP_SET) ||
-		cap_set_flag(capabilities, CAP_EFFECTIVE, ncaps, caps, CAP_SET)))
-	{
-		cap_free(capabilities);
-		return false;
-	}
-	if (cap_set_proc(capabilities))
-	{
-		cap_free(capabilities);
-		return false;
-	}
-	cap_free(capabilities);
-	return true;
-}
-static int getmaxcap()
-{
-	int maxcap = CAP_LAST_CAP;
-	FILE *F = fopen("/proc/sys/kernel/cap_last_cap", "r");
-	if (F)
-	{
-		int n = fscanf(F, "%d", &maxcap);
-		fclose(F);
-	}
-	return maxcap;
-
-}
-static bool dropcaps()
-{
-	// must have CAP_SETPCAP at the end. its required to clear bounding set
-	cap_value_t cap_values[] = { CAP_NET_ADMIN,CAP_NET_RAW,CAP_SETPCAP };
-	int capct = sizeof(cap_values) / sizeof(*cap_values);
-	int maxcap = getmaxcap();
-
-	if (setpcap(cap_values, capct))
-	{
-		for (int cap = 0; cap <= maxcap; cap++)
-		{
-			if (cap_drop_bound(cap))
-			{
-				fprintf(stderr, "could not drop cap %d\n", cap);
-				perror("cap_drop_bound");
-			}
-		}
-	}
-	// now without CAP_SETPCAP
-	if (!setpcap(cap_values, capct - 1))
-	{
-		perror("setpcap");
-		return false;
-	}
-	return true;
-}
-static bool droproot(uid_t uid, gid_t gid)
-{
-	if (uid || gid)
-	{
-		if (prctl(PR_SET_KEEPCAPS, 1L))
-		{
-			perror("prctl(PR_SET_KEEPCAPS): ");
-			return false;
-		}
-		if (setgid(gid))
-		{
-			perror("setgid: ");
-			return false;
-		}
-		if (setuid(uid))
-		{
-			perror("setuid: ");
-			return false;
-		}
-	}
-	return dropcaps();
-}
-
-void daemonize()
-{
-	int pid;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork: ");
-		exit(2);
-	}
-	else if (pid != 0)
-		exit(0);
-
-	if (setsid() == -1)
-		exit(2);
-	if (chdir("/") == -1)
-		exit(2);
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
-	close(STDERR_FILENO);
-	/* redirect fd's 0,1,2 to /dev/null */
-	open("/dev/null", O_RDWR);
-	int fd;
-	/* stdin */
-	fd = dup(0);
-	/* stdout */
-	fd = dup(0);
-	/* stderror */
-}
-
-static bool writepid(const char *filename)
-{
-	FILE *F;
-	if (!(F = fopen(filename, "w")))
-		return false;
-	fprintf(F, "%d", getpid());
-	fclose(F);
-	return true;
-}
 
 
 static void exithelp()
@@ -747,23 +248,25 @@ static void exithelp()
 		" --pidfile=<filename>\t\t\t; write pid to file\n"
 		" --user=<username>\t\t\t; drop root privs\n"
 		" --uid=uid[:gid]\t\t\t; drop root privs\n"
-		" --wsize=<window_size>\t\t\t; set window size. 0 = do not modify\n"
+		" --wsize=<window_size>\t\t\t; set window size. 0 = do not modify. OBSOLETE !\n"
 		" --hostcase\t\t\t\t; change Host: => host:\n"
 		" --hostspell\t\t\t\t; exact spelling of \"Host\" header. must be 4 chars. default is \"host\"\n"
 		" --hostnospace\t\t\t\t; remove space after Host: and add it to User-Agent: to preserve packet size\n"
-		" --dpi-desync\t\t\t\t; try to desync dpi state\n"
+		" --dpi-desync[=<mode>]\t\t\t; try to desync dpi state. modes : fake rst rstack disorder disorder2 split split2\n"
 		" --dpi-desync-fwmark=<int|0xHEX>\t; override fwmark for desync packet. default = 0x%08X\n"
 		" --dpi-desync-ttl=<int>\t\t\t; set ttl for desync packet\n"
-		" --dpi-desync-fooling=none|md5sig|badsum\n"
-		" --dpi-desync-retrans=0|1\t\t; 1(default)=drop original data packet to force its retransmission. this adds delay to make sure desync packet goes first\n"
+		" --dpi-desync-fooling=<mode>[,<mode>]\t; can use multiple comma separated values. modes : none md5sig ts badseq badsum\n"
+		" --dpi-desync-retrans=0|1\t\t; 0(default)=reinject original data packet after fake  1=drop original data packet to force its retransmission\n"
 		" --dpi-desync-skip-nosni=0|1\t\t; 1(default)=do not act on ClientHello without SNI (ESNI ?)\n"
+		" --dpi-desync-split-pos=<1..%u>\t; (for disorder only) split TCP packet at specified position\n"
+		" --dpi-desync-any-protocol=0|1\t\t; 0(default)=desync only http and tls  1=desync any nonempty data packet\n"
 		" --hostlist=<filename>\t\t\t; apply dpi desync only to the listed hosts (one host per line, subdomains auto apply)\n",
-		DPI_DESYNC_FWMARK_DEFAULT
+		DPI_DESYNC_FWMARK_DEFAULT,DPI_DESYNC_MAX_FAKE_LEN
 	);
 	exit(1);
 }
 
-void cleanup_params()
+static void cleanup_params()
 {
 	if (params.hostlist)
 	{
@@ -771,12 +274,12 @@ void cleanup_params()
 		params.hostlist = NULL;
 	}
 }
-void exithelp_clean()
+static void exithelp_clean()
 {
 	cleanup_params();
 	exithelp();
 }
-void exit_clean(int code)
+static void exit_clean(int code)
 {
 	cleanup_params();
 	exit(code);
@@ -798,15 +301,15 @@ int main(int argc, char **argv)
 	gid_t gid = 0;
 	char pidfile[256];
 
-	srand(time(NULL));
+	srandom(time(NULL));
 
 	memset(&params, 0, sizeof(params));
 	memcpy(params.hostspell, "host", 4); // default hostspell
 	*pidfile = 0;
 
 	params.desync_fwmark = DPI_DESYNC_FWMARK_DEFAULT;
-	params.desync_retrans = true;
 	params.desync_skip_nosni = true;
+	params.desync_split_pos = 3;
 
 	const struct option long_options[] = {
 		{"debug",optional_argument,0,0},	// optidx=0
@@ -819,13 +322,15 @@ int main(int argc, char **argv)
 		{"hostcase",no_argument,0,0},		// optidx=7
 		{"hostspell",required_argument,0,0},	// optidx=8
 		{"hostnospace",no_argument,0,0},	// optidx=9
-		{"dpi-desync",no_argument,0,0},		// optidx=10
+		{"dpi-desync",optional_argument,0,0},		// optidx=10
 		{"dpi-desync-fwmark",required_argument,0,0},	// optidx=11
 		{"dpi-desync-ttl",required_argument,0,0},	// optidx=12
 		{"dpi-desync-fooling",required_argument,0,0},	// optidx=13
 		{"dpi-desync-retrans",optional_argument,0,0},	// optidx=14
 		{"dpi-desync-skip-nosni",optional_argument,0,0},// optidx=15
-		{"hostlist",required_argument,0,0},		// optidx=16
+		{"dpi-desync-split-pos",required_argument,0,0},// optidx=16
+		{"dpi-desync-any-protocol",optional_argument,0,0},// optidx=17
+		{"hostlist",required_argument,0,0},		// optidx=18
 		{NULL,0,NULL,0}
 	};
 	if (argc < 2) exithelp();
@@ -896,7 +401,25 @@ int main(int argc, char **argv)
 			params.hostnospace = true;
 			break;
 		case 10: /* dpi-desync */
-			params.desync = true;
+			if (!optarg || !strcmp(optarg,"fake"))
+				params.desync_mode = DESYNC_FAKE;
+			else if (!strcmp(optarg,"rst"))
+				params.desync_mode = DESYNC_RST;
+			else if (!strcmp(optarg,"rstack"))
+				params.desync_mode = DESYNC_RSTACK;
+			else if (!strcmp(optarg,"disorder"))
+				params.desync_mode = DESYNC_DISORDER;
+			else if (!strcmp(optarg,"disorder2"))
+				params.desync_mode = DESYNC_DISORDER2;
+			else if (!strcmp(optarg,"split"))
+				params.desync_mode = DESYNC_SPLIT;
+			else if (!strcmp(optarg,"split2"))
+				params.desync_mode = DESYNC_SPLIT2;
+			else
+			{
+				fprintf(stderr, "invalid dpi-desync mode\n");
+				exit_clean(1);
+			}
 			break;
 		case 11: /* dpi-desync */
 			params.desync_fwmark = 0;
@@ -911,16 +434,27 @@ int main(int argc, char **argv)
 			params.desync_ttl = (uint8_t)atoi(optarg);
 			break;
 		case 13: /* dpi-desync-fooling */
-			if (!strcmp(optarg,"none"))
-				params.desync_tcp_fooling_mode = TCP_FOOL_NONE;
-			else if (!strcmp(optarg,"md5sig"))
-				params.desync_tcp_fooling_mode = TCP_FOOL_MD5SIG;
-			else if (!strcmp(optarg,"badsum"))
-				params.desync_tcp_fooling_mode = TCP_FOOL_BADSUM;
-			else
 			{
-				fprintf(stderr, "dpi-desync-fooling allowed values : none,md5sig,badsum\n");
-				exit_clean(1);
+				char *e,*p = optarg;
+				while (p)
+				{
+					e = strchr(p,',');
+					if (e) *e++=0;
+					if (!strcmp(p,"md5sig"))
+						params.desync_tcp_fooling_mode |= TCP_FOOL_MD5SIG;
+					else if (!strcmp(p,"ts"))
+						params.desync_tcp_fooling_mode |= TCP_FOOL_TS;
+					else if (!strcmp(p,"badsum"))
+						params.desync_tcp_fooling_mode |= TCP_FOOL_BADSUM;
+					else if (!strcmp(p,"badseq"))
+						params.desync_tcp_fooling_mode |= TCP_FOOL_BADSEQ;
+					else if (strcmp(p,"none"))
+					{
+						fprintf(stderr, "dpi-desync-fooling allowed values : none,md5sig,ts,badseq,badsum\n");
+						exit_clean(1);
+					}
+					p = e;
+				}
 			}
 			break;
 		case 14: /* dpi-desync-retrans */
@@ -929,19 +463,24 @@ int main(int argc, char **argv)
 		case 15: /* dpi-desync-skip-nosni */
 			params.desync_skip_nosni = !optarg || atoi(optarg);
 			break;
-		case 16: /* hostlist */
+		case 16: /* dpi-desync-split-pos */
+			params.desync_split_pos = atoi(optarg);
+			if (params.desync_split_pos<1 || params.desync_split_pos>DPI_DESYNC_MAX_FAKE_LEN)
+			{
+				fprintf(stderr, "dpi-desync-split-pos must be within 1..%u range\n",DPI_DESYNC_MAX_FAKE_LEN);
+				exit_clean(1);
+			}
+			break;
+		case 17: /* dpi-desync-any-protocol */
+			params.desync_any_proto = !optarg || atoi(optarg);
+			break;
+		case 18: /* hostlist */
 			if (!LoadHostList(&params.hostlist, optarg))
 				exit_clean(1);
 			strncpy(params.hostfile,optarg,sizeof(params.hostfile));
 			params.hostfile[sizeof(params.hostfile)-1]='\0';
 			break;
 		}
-	}
-
-	if (!params.desync && params.hostlist)
-	{
-		fprintf(stderr, "hostlist is applicable only to dpi-desync\n");
-		exit_clean(1);
 	}
 
 	if (daemon) daemonize();
@@ -1000,7 +539,9 @@ int main(int argc, char **argv)
 	if (!droproot(uid, gid)) goto exiterr;
 	printf("Running as UID=%u GID=%u\n", getuid(), getgid());
 
-	signal(SIGHUP, onhup); 
+	signal(SIGHUP, onhup);
+
+	desync_init();
 
 	fd = nfq_fd(h);
 
@@ -1038,6 +579,7 @@ int main(int argc, char **argv)
 	printf("closing library handle\n");
 	nfq_close(h);
 
+	rawsend_cleanup();
 	cleanup_params();
 	return 0;
 
