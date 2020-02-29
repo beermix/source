@@ -255,9 +255,11 @@ menu "Global build settings"
 			bool "None"
 		config PKG_CC_STACKPROTECTOR_REGULAR
 			bool "Regular"
+			select GCC_LIBSSP
 			depends on KERNEL_CC_STACKPROTECTOR_REGULAR
 		config PKG_CC_STACKPROTECTOR_STRONG
 			bool "Strong"
+			select GCC_LIBSSP
 			depends on KERNEL_CC_STACKPROTECTOR_STRONG
 	endchoice
 

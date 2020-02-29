@@ -43,7 +43,7 @@ CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
 	--without-readline \
-	--enable-cxx \
+	--disable-fft \
 
 define Build/Compile
 	$(call Build/Compile/Default, \
