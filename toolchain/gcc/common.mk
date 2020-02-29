@@ -160,7 +160,7 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
-		--with-diagnostics-color=auto
+		--with-diagnostics-color=always
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
 endif
@@ -230,11 +230,9 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
-		CFLAGS="-g0 $(HOST_CFLAGS)" \
-		BOOT_CFLAGS="-g0 $(HOST_CFLAGS)" \
-		BOOT_CXXFLAGS="-g0 $(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="-g0 $(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="-g0 $(TARGET_CFLAGS)" \
+		CFLAGS="$(HOST_CFLAGS)" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
