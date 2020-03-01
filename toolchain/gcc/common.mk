@@ -146,6 +146,7 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--disable-libstdcxx-debug \
 		--enable-checking=release \
+		--disable-libunwind-exceptions \
 		--disable-vtable-verify \
 		--with-tune=generic \
 		--with-linker-hash-style=gnu \
