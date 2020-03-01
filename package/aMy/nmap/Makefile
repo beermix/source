@@ -6,30 +6,32 @@
 
 #TODO
 #
-# * uClibcpp not supported, performance +100x slower. libstdcpp is being used. #
+# * uClibcpp not supported, performance +100x slower. libstdcpp is being used. https://bugs.busybox.net/show_bug.cgi?id=2545
 # * liblua is still not recognized/blindly accepted. Impossible to compile with support
-#  https://nmap.org/dist/?C=M;O=D
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nmap
-PKG_VERSION:=6753d2e
+PKG_VERSION:=7.70
+PKG_RELEASE:=2
 PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/nmap/nmap
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE_URL:=https://nmap.org/dist/
+PKG_HASH:=847b068955f792f4cc247593aca6dc3dc4aae12976169873247488de147a6e18
+PKG_LICENSE:=GPL-2.0
+PKG_LICENSE_FILES:=COPYING
+PKG_CPE_ID:=cpe:/a:nmap:nmap
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
-
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
 NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre
+NCAT_DEPENDS:=+libpcap
 NPING_DEPENDS:=+libpcap +libpthread +libstdcpp
+NDIFF_DEPENDS:=+python
 
 define Package/nmap/default
   SUBMENU:=NMAP Suite
@@ -54,13 +56,14 @@ endef
 
 define Package/ncat
 $(call Package/nmap/default)
+  DEPENDS:=$(NCAT_DEPENDS)
   VARIANT:=nossl
   TITLE:=Much-improved reimplementation of Netcat
 endef
 
 define Package/ncat-ssl
 $(call Package/nmap/default)
-  DEPENDS:=+libopenssl
+  DEPENDS:=$(NCAT_DEPENDS) +libopenssl
   VARIANT:=ssl
   TITLE:=Ncat (with OpenSSL support)
 endef
@@ -74,6 +77,7 @@ endef
 
 define Package/ndiff
 $(call Package/nmap/default)
+  DEPENDS:=$(NDIFF_DEPENDS)
   VARIANT:=nossl
   TITLE:=Utility to compare the results of Nmap scans
 endef
@@ -82,13 +86,8 @@ CONFIGURE_ARGS += \
 	--with-libdnet=included \
 	--with-libpcre="$(STAGING_DIR)/usr" \
 	--with-libpcap="$(STAGING_DIR)/usr" \
-	--with-pcap=linux \
-	--with-liblinear=included \
 	--without-liblua \
 	--without-zenmap
-
-#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-#TARGET_CXXFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 CONFIGURE_VARS += \
 	ac_cv_dnet_bsd_bpf=no \
