@@ -31,9 +31,6 @@ set_state() {
 	preinit_regular)
 		status_led_blink_preinit_regular
 		;;
-	config)
-		status_led_blink_pulse
-		;;
 	done)
 		status_led_on
 		;;
