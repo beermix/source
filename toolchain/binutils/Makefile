@@ -21,16 +21,6 @@ ifeq ($(PKG_VERSION),2.29.1)
   PKG_HASH:=e7010a46969f9d3e53b650a518663f98a5dde3c3ae21b7d71e5e6803bc36b577
 endif
 
-ifeq ($(PKG_VERSION),2.30)
-  #PKG_HASH:=6e46b8aeae2f727a36f0bd9505e405768a72218f1796f0d09757d45209871ae6
-  PKG_SOURCE_PROTO:=git
-  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-  PKG_SOURCE_VERSION:=1a4839f
-  #PKG_SOURCE_URL:=https://github.com/bminor/binutils-gdb.git
-  PKG_SOURCE_URL:=git://sourceware.org/git/binutils-gdb.git
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
-endif
-
 ifeq ($(PKG_VERSION),2.31.1)
   PKG_HASH:=5d20086ecf5752cc7d9134246e9588fa201740d540f7eb84d795b1f7a93bca86
 endif
@@ -101,6 +91,12 @@ define Host/Install
 	$(call FixupLibdir,$(TOOLCHAIN_DIR)/initial)
 	$(RM) $(TOOLCHAIN_DIR)/initial/lib/libiberty.a
 	$(CP) $(TOOLCHAIN_DIR)/bin/$(REAL_GNU_TARGET_NAME)-readelf $(HOST_BUILD_PREFIX)/bin/readelf
+	# ARC gcc requires extlib.
+	# If extlib is not available in "initial" folder
+	# initial gcc will fail to build libc.
+	if [ -d $(TOOLCHAIN_DIR)/extlib ]; then \
+		$(CP) -r $(TOOLCHAIN_DIR)/extlib $(TOOLCHAIN_DIR)/initial/; \
+	fi
 endef
 
 define Host/Clean

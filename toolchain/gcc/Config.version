@@ -6,10 +6,6 @@ config GCC_VERSION_7
 	default y if GCC_USE_VERSION_7
 	bool
 
-config GCC_VERSION_8
-	default y if GCC_USE_VERSION_8
-	bool
-
 config GCC_VERSION_9
 	default y if GCC_USE_VERSION_9
 	bool
@@ -22,8 +18,8 @@ config GCC_VERSION
 	string
 	default "5.5.0"		if GCC_VERSION_5
 	default "7.5.0"		if GCC_VERSION_7
-	default "8.3.1"		if GCC_VERSION_8
 	default "9.2.1"		if GCC_VERSION_9
+	default "8.3.1"
 	default "10.0.1"		if GCC_VERSION_10
 
 config GCC_USE_IREMAP
