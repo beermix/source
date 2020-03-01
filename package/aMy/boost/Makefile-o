@@ -82,6 +82,12 @@ endef
 
 PKG_BUILD_DEPENDS:=boost/host PACKAGE_python:python PACKAGE_python3:python3
 
+include ../../lang/python/python-version.mk
+BOOST_PYTHON_VER=$(PYTHON_VERSION)
+
+include ../../lang/python/python3-version.mk
+BOOST_PYTHON3_VER=$(PYTHON3_VERSION)
+
 BOOST_LIBS =
 
 define Package/boost-libs
@@ -162,7 +168,7 @@ define Package/boost/config
 
 		choice
 			prompt "Compile Boost libraries."
-				default boost-static-libs
+				default boost-static-and-shared-libs
 				help
 					Choose which version to compile.
 					-> Shared:
@@ -184,7 +190,7 @@ define Package/boost/config
 
 		choice
 			prompt "Selects Boost Runtime linkage."
-			default boost-runtime-static
+			default boost-runtime-shared
 			help
 				Choose which C and C++ runtimes to use:
 				-> Use Shared runtimes.
@@ -497,7 +503,7 @@ define Build/InstallDev
 
 	$(INSTALL_DIR) $(1)/usr/lib
 	# copies all cmake files, compiled archive and shared object files
-	$(CP) -v $(PKG_INSTALL_DIR)/lib/{*.a,cmake} $(1)/usr/lib/ || :
+	$(CP) -v $(PKG_INSTALL_DIR)/lib/{*.{a,so*},cmake} $(1)/usr/lib/ || :
 endef
 
 define Host/Install
@@ -507,6 +513,10 @@ endef
 
 define Package/boost/Default/install
 	$(INSTALL_DIR) $(1)/usr/lib
+	$(if $(findstring python,$(2)), $(if $(findstring 3,$(2)), \
+		$(CP) $(PKG_INSTALL_DIR)/lib/libboost_python3*.so* $(1)/usr/lib/ , \
+		$(CP) $(PKG_INSTALL_DIR)/lib/libboost_python2*.so* $(1)/usr/lib/ ), \
+	$(CP) $(PKG_INSTALL_DIR)/lib/libboost_$(2)*.so* $(1)/usr/lib/ )
 endef
 
 define Package/boost-test/install
