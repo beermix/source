@@ -11,11 +11,10 @@
 						[ "eq", "DEVNAME",
 							[ "null", "full", "ptmx", "zero", "tty", "net", "random", "urandom" ]
 						],
-						[ "makedev", "/dev/%DEVNAME%", "0666" ]
-					],
-					[ "if",
-						[ "regex", "DEVNAME", "^bus" ],
-						[ "makedev", "/dev/%DEVNAME%", "0664" ]
+						[
+							[ "makedev", "/dev/%DEVNAME%", "0666" ],
+							[ "return" ]
+						]
 					],
 					[ "if",
 						[ "regex", "DEVNAME", "^snd" ],

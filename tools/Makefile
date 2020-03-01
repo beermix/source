@@ -96,7 +96,7 @@ $(foreach tool, $(tools-y), $(if $(wildcard $(curdir)/$(tool)/patches),$(eval $(
 $(foreach tool, $(filter-out xz,$(tools-y)), $(eval $(curdir)/$(tool)/compile += $(curdir)/xz/compile))
 
 # make any tool depend on tar, xz and patch to ensure that archives can be unpacked and patched properly
-tools-core := tar xz patch zstd
+tools-core := tar xz patch
 
 $(foreach tool, $(tools-y), $(eval $(curdir)/$(tool)/compile += $(patsubst %,$(curdir)/%/compile,$(tools-core))))
 tools-y += $(tools-core)
@@ -138,7 +138,7 @@ $(STAGING_DIR_HOST)/.prepared: $(TMP_DIR)/.build
 	mkdir -p $(BUILD_DIR_HOST)/stamp $(STAGING_DIR_HOST)/include/sys
 	$(INSTALL_DATA) $(TOPDIR)/tools/include/*.h $(STAGING_DIR_HOST)/include/
 	$(INSTALL_DATA) $(TOPDIR)/tools/include/sys/*.h $(STAGING_DIR_HOST)/include/sys/
-	ln -sf lib $(STAGING_DIR_HOST)/lib64
+	ln -snf lib $(STAGING_DIR_HOST)/lib64
 	touch $@
 
 endif
