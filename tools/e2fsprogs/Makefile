@@ -29,7 +29,8 @@ HOST_CONFIGURE_ARGS += \
 	--disable-elf-shlibs \
 	--enable-libuuid \
 	--disable-tls \
-	--disable-nls
+	--disable-nls \
+	--enable-threads=pth
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
