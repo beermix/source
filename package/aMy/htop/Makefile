@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-PKG_VERSION:=f92e55d
+PKG_VERSION:=402e46b
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/kelsieflynn/htop-cputemp
+PKG_SOURCE_URL:=https://github.com/hishamhm/htop
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -41,7 +41,6 @@ CONFIGURE_ARGS += \
 	--disable-hwloc \
 	--enable-proc \
 	--enable-taskstats \
-	--disable-unicode \
 	--enable-linux-affinity \
 	--enable-setuid \
 	--enable-cgroup
