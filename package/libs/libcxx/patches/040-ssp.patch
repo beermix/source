@@ -1,0 +1,11 @@
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -175,6 +175,8 @@ function(cxx_link_system_libraries target)
+     target_link_libraries(${target} PUBLIC atomic)
+   endif()
+ 
++  target_link_libraries(${target} PUBLIC ssp_nonshared)
++
+   if (MINGW)
+     target_link_libraries(${target} PUBLIC "${MINGW_LIBRARIES}")
+   endif()

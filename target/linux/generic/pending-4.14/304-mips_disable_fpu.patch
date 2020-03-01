@@ -135,3 +135,40 @@ v2: incorporated changes suggested by Jonas Gorski
 +#endif
  
  #endif /* __MIPS_ASM_DSEMUL_H__ */
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -653,7 +653,8 @@ unsigned long mips_stack_top(void)
+ 	unsigned long top = TASK_SIZE & PAGE_MASK;
+ 
+ 	/* One page for branch delay slot "emulation" */
+-	top -= PAGE_SIZE;
++	if (IS_ENABLED(CONFIG_MIPS_FPU_EMULATOR))
++		top -= PAGE_SIZE;
+ 
+ 	/* Space for the VDSO, data page & GIC user page */
+ 	top -= PAGE_ALIGN(current->thread.abi->vdso->size);
+--- a/arch/mips/kernel/vdso.c
++++ b/arch/mips/kernel/vdso.c
+@@ -125,13 +125,15 @@ int arch_setup_additional_pages(struct l
+ 		return -EINTR;
+ 
+ 	/* Map delay slot emulation page */
+-	base = mmap_region(NULL, STACK_TOP, PAGE_SIZE,
+-			   VM_READ | VM_EXEC |
+-			   VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC,
+-			   0, NULL);
+-	if (IS_ERR_VALUE(base)) {
+-		ret = base;
+-		goto out;
++	if (IS_ENABLED(CONFIG_MIPS_FPU_EMULATOR)) {
++		base = mmap_region(NULL, STACK_TOP, PAGE_SIZE,
++				   VM_READ | VM_EXEC |
++				   VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC,
++				   0, NULL);
++		if (IS_ERR_VALUE(base)) {
++			ret = base;
++			goto out;
++		}
+ 	}
+ 
+ 	/*
