@@ -5368,11 +5368,9 @@ CONFIG_PACKAGE_libpcap=y
 # CONFIG_PACKAGE_libpciaccess is not set
 CONFIG_PACKAGE_libpcre=y
 CONFIG_PCRE_JIT_ENABLED=y
-# CONFIG_PACKAGE_libpcre16 is not set
 # CONFIG_PACKAGE_libpcre2 is not set
 # CONFIG_PACKAGE_libpcre2-16 is not set
 # CONFIG_PACKAGE_libpcre2-32 is not set
-# CONFIG_PACKAGE_libpcrecpp is not set
 # CONFIG_PACKAGE_libpcsclite is not set
 # CONFIG_PACKAGE_libpfring is not set
 # CONFIG_PACKAGE_libpkcs11-spy is not set
@@ -6567,6 +6565,12 @@ CONFIG_PACKAGE_nginx-util=y
 # CONFIG_PACKAGE_radicale2 is not set
 # CONFIG_PACKAGE_radicale2-examples is not set
 # CONFIG_PACKAGE_radicale2-src is not set
+# CONFIG_PACKAGE_shadowsocks-libev-config is not set
+# CONFIG_PACKAGE_shadowsocks-libev-ss-local is not set
+# CONFIG_PACKAGE_shadowsocks-libev-ss-redir is not set
+# CONFIG_PACKAGE_shadowsocks-libev-ss-rules is not set
+# CONFIG_PACKAGE_shadowsocks-libev-ss-server is not set
+# CONFIG_PACKAGE_shadowsocks-libev-ss-tunnel is not set
 # CONFIG_PACKAGE_sockd is not set
 # CONFIG_PACKAGE_socksify is not set
 # CONFIG_PACKAGE_spawn-fcgi is not set
