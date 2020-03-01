@@ -4,29 +4,41 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/PurpleI2P/i2pd/releases
+# https://github.com/PurpleI2P/i2pd
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_VERSION:=2.30.0
-PKG_RELEASE:=1
+PKG_VERSION:=a0d6c65
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_LICENSE:=BSD-3-clause
+
 PKG_BUILD_PARALLEL:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://codeload.github.com/PurpleI2P/i2pd/tar.gz/$(PKG_VERSION)?
-PKG_HASH:=
-
-PKG_MAINTAINER:=David Yang <mmyangfl@gmail.com>
-PKG_LICENSE:=BSD-3-Clause
-PKG_LICENSE_FILES:=LICENSE
-
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
+
+export CMAKE_SOURCE_DIR=$(PKG_INSTALL_DIR)/../build
+
+CMAKE_OPTIONS += \
+	-DWITH_AESNI=0 \
+	-DWITH_AVX=0 \
+	-DWITH_HARDENING=0 \
+	-DWITH_LIBRARY=0 \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBoost_USE_STATIC_LIBS=ON \
+	-DBoost_USE_STATIC_RUNTIME=ON \
+	-DWITH_UPNP=0
 
 define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
-	DEPENDS:=+libopenssl +boost +boost-system +boost-filesystem \
+	DEPENDS:=+libstdcpp +libpthread +librt +libopenssl +boost +boost-system +boost-filesystem \
 	         +boost-program_options +boost-date_time +libatomic +zlib
 	TITLE:=full-featured C++ implementation of I2P client
 	URL:=https://github.com/PurpleI2P/i2pd
@@ -46,8 +58,7 @@ define Package/i2pd/conffiles
 	/etc/i2pd/tunnels.d/*
 endef
 
-TARGET_LDFLAGS+=-latomic
-MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
+# TARGET_LDFLAGS+=-latomic
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
