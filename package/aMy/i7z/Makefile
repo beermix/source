@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i7z
-PKG_VERSION:=1a41ff1
+PKG_VERSION:=654d94b
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/afontenot/i7z
+PKG_SOURCE_URL:=https://github.com/shdxiang/i7z-simple
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
