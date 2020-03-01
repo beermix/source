@@ -46,8 +46,6 @@ GEN_CONFIG=$(SCRIPT_DIR)/kconfig.pl -n \
 			$(if $(CONFIG_HAS_SPE_FPU),$(if $(wildcard $(CONFIG_DIR)/$(ARCH).e500),.e500))))))
 
 CPU_CFLAGS = \
-	-funsigned-char -fno-builtin \
-	--std=gnu99 -ffunction-sections -fdata-sections \
 	-Wno-unused-but-set-variable \
 	$(TARGET_CFLAGS)
 

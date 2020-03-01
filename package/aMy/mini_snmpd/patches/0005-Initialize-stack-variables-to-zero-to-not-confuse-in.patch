@@ -1,0 +1,58 @@
+From 658b8e17227498a430183706d843ca6a0c8bc7a0 Mon Sep 17 00:00:00 2001
+From: Joachim Nilsson <troglobit@gmail.com>
+Date: Thu, 6 Feb 2020 05:56:27 +0100
+Subject: [PATCH] Initialize stack variables to zero to not confuse
+ inet_ntop()
+
+Found by Valgrind.
+
+Signed-off-by: Joachim Nilsson <troglobit@gmail.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+---
+ mini-snmpd.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/mini-snmpd.c b/mini-snmpd.c
+index 11e7003..10f1877 100644
+--- a/mini-snmpd.c
++++ b/mini-snmpd.c
+@@ -90,10 +90,12 @@ static void handle_udp_client(void)
+ {
+ 	const char *req_msg = "Failed UDP request from";
+ 	const char *snd_msg = "Failed UDP response to";
+-	ssize_t rv;
+-	char straddr[my_inet_addrstrlen] = "";
+-	my_socklen_t socklen;
+ 	struct my_sockaddr_t sockaddr;
++	my_socklen_t socklen;
++	ssize_t rv;
++	char straddr[my_inet_addrstrlen] = { 0 };
++
++	memset(&sockaddr, 0, sizeof(sockaddr));
+ 
+ 	/* Read the whole UDP packet from the socket at once */
+ 	socklen = sizeof(sockaddr);
+@@ -142,13 +144,16 @@ static void handle_udp_client(void)
+ 
+ static void handle_tcp_connect(void)
+ {
+-	int rv;
+ 	const char *msg = "Could not accept TCP connection";
+-	char straddr[my_inet_addrstrlen] = "";
+-	client_t *client;
+-	my_socklen_t socklen;
+ 	struct my_sockaddr_t tmp_sockaddr;
+ 	struct my_sockaddr_t sockaddr;
++	my_socklen_t socklen;
++	client_t *client;
++	char straddr[my_inet_addrstrlen] = "";
++	int rv;
++
++	memset(&tmp_sockaddr, 0, sizeof(tmp_sockaddr));
++	memset(&sockaddr, 0, sizeof(sockaddr));
+ 
+ 	/* Accept the new connection (remember the client's IP address and port) */
+ 	socklen = sizeof(sockaddr);
+-- 
+2.23.0
+

@@ -1,0 +1,56 @@
+From fbd53c1d6ae452b065fe0a2873b8909235987d34 Mon Sep 17 00:00:00 2001
+From: Matt Merhar <mattmerhar@protonmail.com>
+Date: Mon, 10 Feb 2020 23:24:16 -0500
+Subject: [PATCH] Use consistent timeout setting between command line and
+ config file
+
+When specified via -t or --timeout, the timeout is interpreted as being
+in seconds. In the config file, this wound up being interpreted as
+hundredths of seconds, leading to significantly higher resource
+consumption than necessary.
+
+Signed-off-by: Matt Merhar <mattmerhar@protonmail.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+---
+ globals.c    | 2 +-
+ mini-snmpd.c | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/globals.c b/globals.c
+index da3ffe1..bc7dd7d 100644
+--- a/globals.c
++++ b/globals.c
+@@ -25,7 +25,7 @@
+ const struct in_addr inaddr_any = { INADDR_ANY };
+ 
+ int       g_family  = AF_INET;
+-int       g_timeout = 100;
++int       g_timeout = 1;
+ int       g_auth    = 0;
+ int       g_daemon  = 1;
+ int       g_syslog  = 0;
+diff --git a/mini-snmpd.c b/mini-snmpd.c
+index 3ea1583..1e59308 100644
+--- a/mini-snmpd.c
++++ b/mini-snmpd.c
+@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
+ 			break;
+ 
+ 		case 't':
+-			g_timeout = atoi(optarg) * 100;
++			g_timeout = atoi(optarg);
+ 			break;
+ 
+ 		case 'u':
+@@ -533,6 +533,8 @@ int main(int argc, char *argv[])
+ 	if (!g_contact)
+ 		g_contact = "";
+ 
++	g_timeout *= 100;
++
+ 	/* Store the starting time since we need it for MIB updates */
+ 	if (gettimeofday(&tv_last, NULL) == -1) {
+ 		memset(&tv_last, 0, sizeof(tv_last));
+-- 
+2.23.0
+
