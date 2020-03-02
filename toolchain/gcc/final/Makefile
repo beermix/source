@@ -15,7 +15,9 @@ ifndef CONFIG_USE_GLIBC
   GCC_CONFIGURE += --disable-libsanitizer
 endif
 
+ifdef CONFIG_USE_MUSL
   GCC_MAKE += gcc_cv_libc_provides_ssp=yes
+endif
 
 ifneq ($(CONFIG_SJLJ_EXCEPTIONS),)
   GCC_CONFIGURE += \

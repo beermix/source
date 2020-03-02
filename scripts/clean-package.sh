@@ -13,7 +13,7 @@ fi
 	cd "$2" || exit 1
 	while read -r entry; do
 		[ -n "$entry" ] || break
-		[ -f "$entry" ] && rm -f $entry
+		[ ! -d "$entry" ] || [ -L "$entry" ] && rm -f "$entry"
 	done
 ) < "$1"
 sort -r "$1" | (
