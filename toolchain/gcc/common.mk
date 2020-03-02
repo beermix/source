@@ -149,6 +149,7 @@ GCC_CONFIGURE:= \
 		--disable-vtable-verify \
 		--disable-libunwind-exceptions \
 		--with-tune=generic \
+		--disable-libstdcxx-debug \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
