@@ -1,0 +1,7 @@
+diff --git a/gcc/BASE-VER b/gcc/BASE-VER
+index 45acc9e66..deeb3d66e 100644
+--- a/gcc/BASE-VER
++++ b/gcc/BASE-VER
+@@ -1 +1 @@
+-9.2.1
++9.2.0

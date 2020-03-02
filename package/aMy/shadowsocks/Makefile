@@ -24,10 +24,9 @@ PKG_MAINTAINER:=Jian Chang <aa65535@live.com>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)/$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
 
 PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 PKG_BUILD_PARALLEL:=1
-PKG_BUILD_DEPENDS:=c-ares libev libsodium mbedtls pcre
+PKG_BUILD_DEPENDS:=c-ares libev libsodium mbedtls pcre libcap
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SHADOWSOCKS_STATIC_LINK \
@@ -38,6 +37,7 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_SHADOWSOCKS_WITH_MBEDTLS
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/shadowsocks-libev
 	SECTION:=net
@@ -92,10 +92,11 @@ endef
 
 Package/shadowsocks-libev-server/description = $(Package/shadowsocks-libev/description)
 
-CONFIGURE_ARGS += \
-	--disable-ssp \
-	--disable-documentation \
-	--disable-assert
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DWITH_DOC_HTML=0 \
+	-DWITH_DOC_MAN=0 \
+	-DWITH_SS_REDIR=1
 
 ifeq ($(CONFIG_SHADOWSOCKS_STATIC_LINK),y)
 	ifeq ($(CONFIG_SHADOWSOCKS_WITH_EV),y)
@@ -118,12 +119,12 @@ endif
 
 define Package/shadowsocks-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel} $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ss-{local,redir,tunnel} $(1)/usr/bin
 endef
 
 define Package/shadowsocks-libev-server/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-server $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ss-server $(1)/usr/bin
 endef
 
 $(eval $(call BuildPackage,shadowsocks-libev))

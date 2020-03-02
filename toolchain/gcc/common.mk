@@ -59,17 +59,18 @@ ifeq ($(PKG_VERSION),9.2.0)
 endif
 
 ifeq ($(PKG_VERSION),9.2.1)
-  PKG_VERSION:=9.2.1
-  PKG_REV:=9-20200229
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_REV:=af9377945330a3062785a9d8b287008d0a531005
-#  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc/archive
-#  PKG_SOURCE:=$(PKG_REV).tar.gz
+#  PKG_VERSION:=9.2.1
+#  PKG_REV:=9-20200229
+#  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
 #  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+  PKG_VERSION:=6957d3e4eef1f4243eb23ff62aea06139ef4415a
+  PKG_SOURCE_PROTO:=git
+  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc/archive
+  PKG_SOURCE_VERSION:=$(PKG_VERSION)
+  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
 ifeq ($(PKG_VERSION),10.0.1)
@@ -106,9 +107,9 @@ HOST_STAMP_INSTALLED:=$(HOST_BUILD_PREFIX)/stamp/.gcc_$(GCC_VARIANT)_installed
 SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
-TAR_OPTIONS += \
-	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
-	--exclude=libjava
+#TAR_OPTIONS += \
+#	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
+#	--exclude=libjava
 
 export libgcc_cv_fixed_point=no
 ifdef CONFIG_USE_UCLIBC
