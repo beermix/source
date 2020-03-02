@@ -16,8 +16,8 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-#PKG_FIXUP:=autoreconf
-#PKG_BUILD_PARALLEL:=1
+PKG_FIXUP:=autoreconf
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -25,12 +25,15 @@ include $(INCLUDE_DIR)/host-build.mk
 define Package/sysbench
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libpthread
+  DEPENDS:=+libpthread +luajit
   TITLE:=sysbench is a scriptable multi-threaded benchmark tool based on LuaJIT
 endef
 
 CONFIGURE_ARGS += \
-	--without-mysql --without-pgsql --without-gcc-arch
+	--without-mysql \
+	--without-pgsql \
+	--disable-shared \
+	--with-system-luajit
 
 define Package/sysbench/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
