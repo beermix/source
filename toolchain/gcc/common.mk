@@ -146,6 +146,7 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--enable-checking=release \
 		--disable-vtable-verify \
+		--disable-libunwind-exceptions \
 		--with-tune=generic \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
