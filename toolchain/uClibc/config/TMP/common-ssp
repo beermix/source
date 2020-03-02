@@ -219,11 +219,11 @@ HARDWIRED_ABSPATH=y
 # Security options
 #
 # UCLIBC_BUILD_PIE is not set
-# UCLIBC_HAS_SSP is not set
-# UCLIBC_BUILD_SSP is not set
-# UCLIBC_BUILD_RELRO is not set
+UCLIBC_HAS_SSP=y
+UCLIBC_BUILD_SSP=y
+UCLIBC_BUILD_RELRO=y
 # UCLIBC_BUILD_NOW is not set
-# UCLIBC_BUILD_NOEXECSTACK=y
+UCLIBC_BUILD_NOEXECSTACK=y
 #
 # Development/debugging options
 #
