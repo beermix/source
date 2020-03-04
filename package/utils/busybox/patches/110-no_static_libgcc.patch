@@ -1,0 +1,13 @@
+diff --git a/Makefile.flags b/Makefile.flags
+index e378fbad9..d955ac4eb 100644
+--- a/Makefile.flags
++++ b/Makefile.flags
+@@ -60,7 +60,7 @@ CFLAGS += $(call cc-option,-funsigned-char,)
+ 
+ ifneq ($(CC),clang)
+ # "clang-9: warning: argument unused during compilation: '-static-libgcc'"
+-CFLAGS += $(call cc-option,-static-libgcc,)
++CFLAGS += $(call cc-option,)
+ endif
+ 
+ CFLAGS += $(call cc-option,-falign-functions=1,)
