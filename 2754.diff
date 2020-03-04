@@ -1,0 +1,73 @@
+diff --git a/tools/Makefile b/tools/Makefile
+index 2f57d25525b..86852c47d67 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -23,7 +23,7 @@ endif
+ 
+ tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
+ tools-y += m4 libtool autoconf automake flex bison pkg-config mklibs zlib
+-tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
++tools-y += libarchive sstrip make-ext4fs e2fsprogs mtd-utils mkimage
+ tools-y += firmware-utils patch-image quilt padjffs2
+ tools-y += mm-macros missing-macros cmake bc findutils gengetopt patchelf
+ tools-y += mtools dosfstools libressl
+@@ -74,6 +74,7 @@ $(curdir)/mkimage/compile += $(curdir)/libressl/compile
+ $(curdir)/firmware-utils/compile += $(curdir)/libressl/compile $(curdir)/zlib/compile
+ $(curdir)/cmake/compile += $(curdir)/libressl/compile
+ $(curdir)/zlib/compile := $(curdir)/cmake/compile
++$(curdir)/libarchive/compile := $(curdir)/xz/compile $(curdir)/libtool/compile $(curdir)/zlib/compile
+ $(curdir)/wrt350nv2-builder/compile := $(curdir)/zlib/compile
+ $(curdir)/lzma-old/compile := $(curdir)/zlib/compile
+ $(curdir)/make-ext4fs/compile := $(curdir)/zlib/compile
+diff --git a/tools/libarchive/Makefile b/tools/libarchive/Makefile
+new file mode 100644
+index 00000000000..ff3dccc3dba
+--- /dev/null
++++ b/tools/libarchive/Makefile
+@@ -0,0 +1,46 @@
++include $(TOPDIR)/rules.mk
++
++PKG_NAME:=libarchive
++PKG_VERSION:=3.4.1
++
++PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
++PKG_SOURCE_URL:=https://github.com/$(PKG_NAME)/$(PKG_NAME)/releases/download/v$(PKG_VERSION)/ \
++		https://www.$(PKG_NAME).org/downloads/
++PKG_HASH:=bb84e02f08cc3027e08e2473fc46eb7724ba9244e9c6ef8d122f68addd6042f7
++
++HOST_BUILD_PARALLEL:=1
++
++include $(INCLUDE_DIR)/host-build.mk
++
++HOST_CONFIGURE_ARGS += \
++	--disable-shared \
++	--enable-static \
++	--enable-bsdtar=static \
++	--enable-bsdcat=static \
++	--disable-bsdcpio \
++	--disable-rpath \
++	--enable-posix-regex-lib=libc \
++	--disable-xattr \
++	--disable-acl \
++	--without-bz2lib \
++	--without-libb2 \
++	--without-iconv \
++	--without-lz4 \
++	--without-zstd \
++	--without-cng \
++	--without-nettle \
++	--without-openssl \
++	--without-xml2 \
++	--without-expat
++
++define Host/Install
++	$(CP) $(HOST_BUILD_DIR)/bsdtar $(STAGING_DIR_HOST)/bin/
++	$(CP) $(HOST_BUILD_DIR)/bsdcat $(STAGING_DIR_HOST)/bin/
++endef
++
++define Host/Clean
++	rm -f $(STAGING_DIR_HOST)/bin/bsdtar
++	rm -f $(STAGING_DIR_HOST)/bin/bsdcat
++endef
++
++$(eval $(call HostBuild))
