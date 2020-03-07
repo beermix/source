@@ -153,7 +153,6 @@ GCC_CONFIGURE:= \
 		--with-system-zlib \
 		--disable-libstdcxx-debug \
 		--with-linker-hash-style=gnu \
-		--enable-poison-system-directories \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
