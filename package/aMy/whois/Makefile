@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=whois
-PKG_VERSION:=3f75022
+PKG_VERSION:=b0a43f5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rfc1036/whois
