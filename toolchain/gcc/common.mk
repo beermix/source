@@ -150,7 +150,6 @@ GCC_CONFIGURE:= \
 		--disable-libunwind-exceptions \
 		--with-tune=generic \
 		--enable-cld \
-		--with-system-zlib \
 		--disable-libstdcxx-debug \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
