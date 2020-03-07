@@ -334,7 +334,7 @@ CONFIG_BUILD_LOG_DIR=""
 # CONFIG_SRC_TREE_OVERRIDE is not set
 CONFIG_EXTRA_OPTIMIZATION=""
 CONFIG_TARGET_OPTIONS=y
-CONFIG_TARGET_OPTIMIZATION="-m32 -march=bonnell -O2 -pipe -fomit-frame-pointer"
+CONFIG_TARGET_OPTIMIZATION="-m32 -march=bonnell -O2 -pipe"
 # CONFIG_EXTERNAL_TOOLCHAIN is not set
 CONFIG_NEED_TOOLCHAIN=y
 CONFIG_TOOLCHAINOPTS=y
@@ -357,10 +357,10 @@ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
 # CONFIG_GCC_USE_VERSION_8 is not set
 CONFIG_GCC_USE_VERSION_9=y
 # CONFIG_GCC_USE_VERSION_10 is not set
-CONFIG_GCC_USE_GRAPHITE=y
+# CONFIG_GCC_USE_GRAPHITE is not set
 CONFIG_EXTRA_GCC_CONFIG_OPTIONS=""
-# CONFIG_GCC_DEFAULT_PIE is not set
-# CONFIG_GCC_DEFAULT_SSP is not set
+CONFIG_GCC_DEFAULT_PIE=y
+CONFIG_GCC_DEFAULT_SSP=y
 # CONFIG_GCC_LIBSSP is not set
 # CONFIG_SJLJ_EXCEPTIONS is not set
 # CONFIG_INSTALL_GFORTRAN is not set
@@ -4054,6 +4054,7 @@ CONFIG_PACKAGE_lua=y
 # Tcl
 #
 # CONFIG_PACKAGE_tcl is not set
+# CONFIG_PACKAGE_chicken-scheme-full is not set
 # CONFIG_PACKAGE_chicken-scheme-interpreter is not set
 # CONFIG_PACKAGE_slsh is not set
 
@@ -5137,7 +5138,6 @@ CONFIG_PACKAGE_libaio=y
 # CONFIG_PACKAGE_libarchive is not set
 # CONFIG_PACKAGE_libarchive-noopenssl is not set
 # CONFIG_PACKAGE_libasm is not set
-# CONFIG_PACKAGE_libaudiofile is not set
 # CONFIG_PACKAGE_libavahi-client is not set
 # CONFIG_PACKAGE_libavahi-compat-libdnssd is not set
 # CONFIG_PACKAGE_libavahi-dbus-support is not set
@@ -7463,7 +7463,6 @@ CONFIG_PACKAGE_openssl-util=y
 # CONFIG_PACKAGE_serdisplib-tools is not set
 # CONFIG_PACKAGE_setserial is not set
 # CONFIG_PACKAGE_shadow-utils is not set
-# CONFIG_PACKAGE_shinit is not set
 # CONFIG_PACKAGE_sispmctl is not set
 # CONFIG_PACKAGE_slide-switch is not set
 # CONFIG_PACKAGE_smartd is not set
