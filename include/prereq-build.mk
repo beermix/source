@@ -135,6 +135,7 @@ $(eval $(call SetupHostCommand,stat,Cannot find a file stat utility, \
 $(eval $(call SetupHostCommand,unzip,Please install 'unzip', \
 	unzip 2>&1 | grep zipfile, \
 	unzip))
+
 $(eval $(call SetupHostCommand,bzip2,Please install 'bzip2', \
 	bzip2 --version </dev/null))
 
