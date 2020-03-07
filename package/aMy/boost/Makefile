@@ -505,9 +505,9 @@ define Host/Install
 	$(CP) $(HOST_BUILD_DIR)/tools/build/src/engine/b2 $(STAGING_DIR_HOSTPKG)/bin/
 endef
 
-define Package/boost/Default/install
-	$(INSTALL_DIR) $(1)/usr/lib
-endef
+#define Package/boost/Default/install
+#	$(INSTALL_DIR) $(1)/usr/lib
+#endef
 
 define Package/boost-test/install
 		$(INSTALL_DIR) $(1)/usr/lib
