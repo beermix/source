@@ -5034,8 +5034,8 @@ ttg-protocol     2862/tcp
 ttg-protocol     2862/udp
 sonardata        2863/tcp
 sonardata        2863/udp
-astromed-main    2864/tcp
-astromed-main    2864/udp
+astronova-main   2864/tcp
+astronova-main   2864/udp
 pit-vpn          2865/tcp
 pit-vpn          2865/udp
 iwlistener       2866/tcp
