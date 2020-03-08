@@ -139,6 +139,7 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
+		--with-gnu-as \
 		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
@@ -146,10 +147,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--enable-checking=release \
-		--disable-vtable-verify \
-		--disable-libunwind-exceptions \
 		--with-tune=generic \
-		--enable-cld \
 		--disable-libstdcxx-debug \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
