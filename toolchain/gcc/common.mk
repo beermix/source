@@ -66,8 +66,8 @@ ifeq ($(PKG_VERSION),9.2.1)
 #  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
  
-#  PKG_REV:=6957d3e
-  PKG_REV:=3786be0
+  PKG_REV:=6957d3e
+#  PKG_REV:=3786be0
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc.git
   PKG_SOURCE_VERSION:=$(PKG_REV)
@@ -148,11 +148,10 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--enable-checking=release \
 		--with-tune=generic \
 		--disable-libstdcxx-debug \
-		--disable-libunwind-exceptions \
-		--enable-gnu-unique-object \
-		--enable-linker-build-id \
+		--disable-libstdcxx-verbose \
 		--with-linker-hash-style=gnu \
 		--enable-clocale=gnu \
 		$(GRAPHITE_CONFIGURE) \
