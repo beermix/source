@@ -30,6 +30,13 @@ define Package/gcc/Default
   VERSION:=$(LIBGCC_VERSION)-$(PKG_RELEASE)
 endef
 
+define Package/gconv-modules
+$(call Package/gcc/Default)
+  TITLE:=Glibc gconv modules
+  VERSION:=$(LIBC_VERSION)-$(PKG_RELEASE)
+  DEPENDS:=@USE_GLIBC
+endef
+
 define Package/libgcc
 $(call Package/gcc/Default)
   TITLE:=GCC support library
@@ -394,27 +401,29 @@ define Package/libgfortran/config
 	endmenu
 endef
 
-define Package/libgomp
+
+define Package/libgo
 $(call Package/gcc/Default)
-  TITLE:=OpenMP support library
+  TITLE:=Go support library
+  DEPENDS+=@INSTALL_GCCGO
 endef
 
-define Package/libgomp/config
+define Package/libgo/config
 	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
 
-	config LIBGOMP_ROOT_DIR
+	config LIBGO_ROOT_DIR
 		string
-		prompt "libgomp shared library base directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		prompt "libgo shared library base directory"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
 		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
 		default "/"  if NATIVE_TOOLCHAIN
 
-	config LIBGOMP_FILE_SPEC
+	config LIBGO_FILE_SPEC
 		string
-		prompt "libgomp shared library files (use wildcards)"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
-		default "./lib/libgomp.so*"
+		prompt "libgo shared library files (use wildcards)"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		default "./usr/lib/libgo.so.*"
 
 	endmenu
 endef
@@ -557,8 +566,10 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
+		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
+		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
-	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
+	for file in libanl libc libcidn libcrypt libdl libmvec libm libnsl libnss_dns libnss_db libnss_files libnss_hesiod libresolv libSegFault libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
 			if [ -e "$$$$file" ]; then \
 				$(CP) $$$$file $(1)/lib/; \
@@ -657,6 +668,11 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/iso* $(1)/share/i18n/locales/
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/translit_* $(1)/share/i18n/locales/
 	mkdir -p $(1)/lib/locale
+  endef
+
+  define Package/gconv-modules/install
+	$(INSTALL_DIR) $(1)//lib/gconv
+	$(CP) $(TOOLCHAIN_DIR)/lib/gconv/* $(1)/lib/gconv/
   endef
 
   define Package/ldconfig/install
@@ -769,10 +785,10 @@ else
 	exit 0
   endef
 
-  define Package/libgomp/install
-	for file in $(call qstrip,$(CONFIG_LIBGOMP_FILE_SPEC)); do \
-		$(INSTALL_DIR) $(1)/lib ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGOMP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
+  define Package/libgo/install
+	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
+	$(INSTALL_DIR) $(1)/opt/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libgo.so.* $(1)/lib/
 	done ; \
 	exit 0
   endef
@@ -810,6 +826,7 @@ $(eval $(call BuildPackage,libpthread))
 $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
-$(eval $(call BuildPackage,libgomp))
+$(eval $(call BuildPackage,libgo))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
+$(eval $(call BuildPackage,gconv-modules))
