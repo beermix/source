@@ -1,5 +1,4 @@
 GCC_VARIANT:=minimal
-GCC_PREPARE=$(if $(CONFIG_USE_MUSL),,1)
 
 include ../common.mk
 
