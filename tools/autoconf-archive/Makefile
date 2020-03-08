@@ -15,4 +15,9 @@ PKG_HASH:=17195c833098da79de5778ee90948f4c5d90ed1a0cf8391b4ab348e2ec511e3f
 
 include $(INCLUDE_DIR)/host-build.mk
 
+define Host/Install
+	$(Host/Install/Default)
+	rm -f $(STAGING_DIR_HOST)/share/aclocal/ax_prog_cc_for_build.m4
+endef
+
 $(eval $(call HostBuild))
