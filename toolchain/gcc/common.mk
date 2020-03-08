@@ -152,8 +152,6 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--disable-libstdcxx-debug \
 		--disable-libstdcxx-verbose \
-		--with-linker-hash-style=gnu \
-		--enable-clocale=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
