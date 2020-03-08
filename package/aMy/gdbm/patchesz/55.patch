@@ -1,0 +1,25 @@
+diff --git a/doc/gdbm.3 b/doc/gdbm.3
+index d803748..d36a852 100644
+--- a/doc/gdbm.3
++++ b/doc/gdbm.3
+@@ -310,7 +310,7 @@ physically written to the disk file.
+ 
+ .BI "int gdbm_sync (GDBM_FILE " dbf ");"
+ 
+-It will not return until the disk file state is syncronized with the
++It will not return until the disk file state is synchronized with the
+ in-memory state of the database.
+ 
+ To convert a \fBgdbm\fR error code into English text, use this routine:
+diff --git a/src/recover.c b/src/recover.c
+index 7cc20a2..f1603d9 100644
+--- a/src/recover.c
++++ b/src/recover.c
+@@ -155,6 +155,7 @@ _gdbm_finish_transfer (GDBM_FILE dbf, GDBM_FILE new_dbf,
+       free (dbf->bucket_cache);
+    }
+ 
++   dbf->lock_type         = new_dbf->lock_type;
+    dbf->desc              = new_dbf->desc;
+    dbf->header            = new_dbf->header;
+    dbf->dir               = new_dbf->dir;

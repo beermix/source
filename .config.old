@@ -5164,7 +5164,7 @@ CONFIG_PACKAGE_libbsd=y
 # CONFIG_PACKAGE_libcanfestival is not set
 CONFIG_PACKAGE_libcap=y
 # CONFIG_PACKAGE_libcap-bin is not set
-CONFIG_PACKAGE_libcares=y
+# CONFIG_PACKAGE_libcares is not set
 # CONFIG_PACKAGE_libcgroup is not set
 # CONFIG_PACKAGE_libcharset is not set
 # CONFIG_PACKAGE_libcoap is not set
@@ -5187,7 +5187,7 @@ CONFIG_LIBCURL_OPENSSL=y
 #
 # Supported protocols
 #
-# CONFIG_LIBCURL_DICT is not set
+CONFIG_LIBCURL_DICT=y
 CONFIG_LIBCURL_FILE=y
 CONFIG_LIBCURL_FTP=y
 # CONFIG_LIBCURL_GOPHER is not set
@@ -5200,7 +5200,7 @@ CONFIG_LIBCURL_COOKIES=y
 # CONFIG_LIBCURL_SSH2 is not set
 # CONFIG_LIBCURL_SMB is not set
 # CONFIG_LIBCURL_SMTP is not set
-# CONFIG_LIBCURL_TELNET is not set
+CONFIG_LIBCURL_TELNET=y
 CONFIG_LIBCURL_TFTP=y
 CONFIG_LIBCURL_NGHTTP2=y
 
@@ -5391,7 +5391,7 @@ CONFIG_PACKAGE_libpcap=y
 # CONFIG_PACKAGE_libpci is not set
 # CONFIG_PACKAGE_libpciaccess is not set
 CONFIG_PACKAGE_libpcre=y
-CONFIG_PCRE_JIT_ENABLED=y
+# CONFIG_PCRE_JIT_ENABLED is not set
 # CONFIG_PACKAGE_libpcre16 is not set
 # CONFIG_PACKAGE_libpcre2 is not set
 # CONFIG_PACKAGE_libpcre2-16 is not set
@@ -6687,7 +6687,7 @@ CONFIG_PACKAGE_ethtool=y
 # CONFIG_PACKAGE_ibrdtn-tools is not set
 # CONFIG_PACKAGE_ibrdtnd is not set
 # CONFIG_PACKAGE_ifstat is not set
-CONFIG_PACKAGE_iftop=y
+# CONFIG_PACKAGE_iftop is not set
 # CONFIG_PACKAGE_iiod is not set
 # CONFIG_PACKAGE_iotivity is not set
 # CONFIG_PACKAGE_iotivity-cpp is not set
@@ -6698,21 +6698,19 @@ CONFIG_PACKAGE_iftop=y
 # CONFIG_PACKAGE_iotivity-resource-container-lib is not set
 # CONFIG_PACKAGE_iotivity-resource-container-sample is not set
 # CONFIG_PACKAGE_iotivity-resource-directory-lib is not set
-CONFIG_PACKAGE_iperf=y
-# CONFIG_IPERF_ENABLE_MULTICAST is not set
+# CONFIG_PACKAGE_iperf is not set
 CONFIG_PACKAGE_iperf3=y
 # CONFIG_PACKAGE_iperf3-ssl is not set
 # CONFIG_PACKAGE_ipip is not set
 CONFIG_PACKAGE_ipset=y
 # CONFIG_PACKAGE_ipset-dns is not set
-CONFIG_PACKAGE_iptraf-ng=y
+# CONFIG_PACKAGE_iptraf-ng is not set
 # CONFIG_PACKAGE_iputils-arping is not set
 # CONFIG_PACKAGE_iputils-clockdiff is not set
 CONFIG_PACKAGE_iputils-ping=y
 # CONFIG_PING_LEGACY_SYMLINKS is not set
 # CONFIG_PACKAGE_iputils-tftpd is not set
-CONFIG_PACKAGE_iputils-tracepath=y
-# CONFIG_TRACEPATH_LEGACY_SYMLINKS is not set
+# CONFIG_PACKAGE_iputils-tracepath is not set
 # CONFIG_PACKAGE_iw is not set
 # CONFIG_PACKAGE_iw-full is not set
 # CONFIG_PACKAGE_jool-tools is not set
