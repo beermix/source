@@ -24,7 +24,7 @@ unexport CFLAGS
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-shared \
-	--disable-assembly \
+	--enable-fat \
 	--enable-cxx
 
 ifeq ($(GNU_HOST_NAME),x86_64-linux-gnux32)
