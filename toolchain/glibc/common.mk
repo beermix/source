@@ -54,9 +54,6 @@ GLIBC_CONFIGURE:= \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
-		BASH_SHELL=/bin/sh \
-		ac_cv_path_PERL=no \
-		ac_cv_prog_MAKEINFO= \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
