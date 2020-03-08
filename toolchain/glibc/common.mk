@@ -63,7 +63,12 @@ GLIBC_CONFIGURE:= \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
-		--disable-werror \
+		--disable-sanity-checks \
+		--enable-add-ons \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--without-gd \
 		--without-cvs \
 		--disable-build-nscd \
@@ -72,11 +77,6 @@ GLIBC_CONFIGURE:= \
 		--disable-timezone-tool \
 		--enable-kernel=4.14 \
 		--disable-debug \
-		--enable-add-ons \
-		--enable-bind-now \
-		--with-elf \
-		--with-tls \
-		--with-__thread \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
