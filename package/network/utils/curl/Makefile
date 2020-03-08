@@ -16,7 +16,7 @@ PKG_SOURCE_URL:=https://dl.uxnr.de/mirror/curl/ \
 	https://curl.mirror.anstey.ca/ \
 	https://curl.askapache.com/download/ \
 	https://curl.haxx.se/download/
-PKG_HASH:=
+PKG_HASH:=9FADF2F082C127757808A28DDD5AB9D1BC2C7061CA7DDAF85814285E15E3271F
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=COPYING
