@@ -10,7 +10,7 @@ GCC_CONFIGURE += \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
 	--enable-gold \
-	--with-libelf=$(TOPDIR)/staging_dir/host
+	--with-libelf
 
 ifndef CONFIG_USE_GLIBC
   GCC_CONFIGURE += --disable-libsanitizer
