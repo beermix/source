@@ -148,6 +148,8 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--with-system-zlib \
+		--enable-checking=release \
 		--with-tune=generic \
 		--disable-libstdcxx-debug \
 		--disable-libunwind-exceptions \
