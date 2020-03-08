@@ -116,6 +116,7 @@ endif
 
 define Package/shadowsocks-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
+	ls $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel} | xargs -n1 setcap cap_net_bind_service+ep \
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel} $(1)/usr/bin
 endef
 
