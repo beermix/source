@@ -5390,7 +5390,7 @@ CONFIG_PCRE_JIT_ENABLED=y
 # CONFIG_PACKAGE_libpcre2 is not set
 # CONFIG_PACKAGE_libpcre2-16 is not set
 # CONFIG_PACKAGE_libpcre2-32 is not set
-# CONFIG_PACKAGE_libpcrecpp is not set
+CONFIG_PACKAGE_libpcrecpp=y
 # CONFIG_PACKAGE_libpcsclite is not set
 # CONFIG_PACKAGE_libpfring is not set
 # CONFIG_PACKAGE_libpkcs11-spy is not set
