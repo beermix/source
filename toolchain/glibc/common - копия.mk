@@ -60,8 +60,12 @@ GLIBC_CONFIGURE:= \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
+		--disable-sanity-checks \
 		--enable-add-ons \
 		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--without-gd \
 		--without-cvs \
 		--enable-lock-elision \
@@ -72,6 +76,7 @@ GLIBC_CONFIGURE:= \
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
+export libc_cv_forced_unwind=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
