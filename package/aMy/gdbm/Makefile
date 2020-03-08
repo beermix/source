@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gdbm
-PKG_VERSION:=1.11
+PKG_VERSION:=1.18.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/gdbm
-#PKG_HASH:=86e613527e5dba544e73208f42b78b7c022d4fa5a6d5498bf18c8d6f745b91dc
+PKG_HASH:=86e613527e5dba544e73208f42b78b7c022d4fa5a6d5498bf18c8d6f745b91dc
 
 PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -40,7 +40,15 @@ endef
 
 CONFIGURE_ARGS += \
 	--enable-shared \
-	--enable-libgdbm-compat
+	--enable-static
+
+define Build/Compile
+	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		BINOWN=`id -u` \
+		BINGRP=`id -g` \
+		DESTDIR="$(PKG_INSTALL_DIR)" \
+		all install
+endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
