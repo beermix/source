@@ -12,10 +12,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.31
+PKG_VERSION:=2.30
 PKG_SOURCE_URL:=@GNU/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
+#PKG_HASH:=9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
@@ -54,23 +54,34 @@ GLIBC_CONFIGURE:= \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
+		ac_cv_path_PERL=no \
+		ac_cv_prog_MAKEINFO= \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
+		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-lock-elision \
+		--disable-timezone-tool
 		--enable-kernel=4.14 \
-		--enable-static-pie \
 		--disable-debug \
 		--enable-add-ons \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
+export libc_cv_forced_unwind=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
