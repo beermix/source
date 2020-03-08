@@ -65,8 +65,10 @@ GLIBC_CONFIGURE:= \
 		--enable-bind-now \
 		--without-gd \
 		--without-cvs \
+		--enable-lock-elision \
 		--enable-kernel=4.14 \
 		--enable-stack-protector=strong \
+		--enable-obsolete-rpc \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
