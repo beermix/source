@@ -59,20 +59,21 @@ ifeq ($(PKG_VERSION),9.2.0)
 endif
 
 ifeq ($(PKG_VERSION),9.2.1)
-#  PKG_VERSION:=9.2.1
-#  PKG_REV:=9.3.0-RC-20200305
-#  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
-#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_REV:=6957d3e
-  PKG_REV:=3786be0
-  PKG_SOURCE_PROTO:=git
-  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc.git
-  PKG_SOURCE_VERSION:=$(PKG_REV)
-  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+  PKG_VERSION:=9.2.1
+  PKG_REV:=9.3.0-RC-20200305
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+
+#  PKG_REV:=6957d3e
+#  PKG_REV:=3786be0
+#  PKG_SOURCE_PROTO:=git
+#  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc.git
+#  PKG_SOURCE_VERSION:=$(PKG_REV)
+#  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+#  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 #  PKG_HASH:=eb3e555786f009cb618ded545f8d2308b5a352acd5245a30d270e63721af3701
 endif
 
