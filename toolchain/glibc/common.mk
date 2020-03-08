@@ -60,6 +60,10 @@ GLIBC_CONFIGURE:= \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
+		--disable-sanity-checks \
 		--enable-add-ons \
 		--enable-bind-now \
 		--without-gd \
