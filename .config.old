@@ -2372,7 +2372,6 @@ CONFIG_PACKAGE_libatomic=y
 CONFIG_PACKAGE_libc=y
 CONFIG_PACKAGE_libgcc=y
 # CONFIG_PACKAGE_libgfortran is not set
-CONFIG_PACKAGE_libgomp=y
 # CONFIG_PACKAGE_liblsan is not set
 CONFIG_PACKAGE_libpthread=y
 CONFIG_PACKAGE_librt=y
