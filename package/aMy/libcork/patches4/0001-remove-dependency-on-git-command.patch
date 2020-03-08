@@ -40,7 +40,7 @@ index 40e8d05..43f1dab 100755
  # please add it to your top-level .gitignore file.
  
 -version=$(git describe)
-+version=$(dpkg-parsechangelog --show-field Version)
++version=0.15.0
  if [ -n ${version} ]; then
      # If we got something from git-describe, write the version to the
      # output file.

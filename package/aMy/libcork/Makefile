@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcork
-PKG_VERSION:=0.15.0
+PKG_VERSION:=fb35659
 PKG_RELEASE:=1
 
-PKG_SOURCE_URL:=https://github.com/dcreager/libcork/archive/
+PKG_SOURCE_URL:=https://github.com/rogers0/libcork.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_SOURCE_VERSION).tar.gz
@@ -28,7 +28,11 @@ endef
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
-	echo "$(PKG_VERSION)" > $(PKG_BUILD_DIR)/RELEASE-VERSION
+	rm -f obj-*/docs/old/html/.buildinfo
+	sed -i " \
+		s%http[s]*://cdn.mathjax.org/mathjax/latest/MathJax.js%file:///usr/share/javascript/mathjax/MathJax.js%; \
+		s%https://cdnjs.cloudflare.com/ajax/libs/mathjax/[0-9].[0-9].[0-9]/MathJax.js%file:///usr/share/javascript/mathjax/MathJax.js%" \
+		obj-*/docs/old/html/*.html
 endef
 
 CMAKE_OPTIONS += \
