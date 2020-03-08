@@ -122,6 +122,7 @@ endef
 
 define Package/shadowsocks-libev-server/install
 	$(INSTALL_DIR) $(1)/usr/bin
+	ls $(PKG_BUILD_DIR)/src/ss-server | xargs -n1 setcap cap_net_bind_service+ep \
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-server $(1)/usr/bin
 endef
 
