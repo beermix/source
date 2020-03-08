@@ -27,10 +27,9 @@ PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 PKG_BUILD_PARALLEL:=1
-PKG_BUILD_DEPENDS:=c-ares libev libsodium mbedtls pcre libudns libcap
+PKG_BUILD_DEPENDS:=c-ares libev libsodium mbedtls pcre
 
 PKG_CONFIG_DEPENDS:= \
-	CONFIG_SHADOWSOCKS_STATIC_LINK \
 	CONFIG_SHADOWSOCKS_WITH_EV \
 	CONFIG_SHADOWSOCKS_WITH_PCRE \
 	CONFIG_SHADOWSOCKS_WITH_CARES \
@@ -44,7 +43,7 @@ define Package/shadowsocks-libev
 	CATEGORY:=Network
 	TITLE:=Lightweight Secured Socks5 Proxy
 	URL:=https://github.com/shadowsocks/shadowsocks-libev
-	DEPENDS:=+libpthread \
+	DEPENDS:=+libpthread +libudns +libcap \
 		+!SHADOWSOCKS_WITH_EV:libev \
 		+!SHADOWSOCKS_WITH_PCRE:libpcre \
 		+!SHADOWSOCKS_WITH_CARES:libcares \
@@ -93,36 +92,16 @@ endef
 Package/shadowsocks-libev-server/description = $(Package/shadowsocks-libev/description)
 
 CONFIGURE_ARGS += \
+	--disable-ssp \
 	--disable-documentation
-
-ifeq ($(CONFIG_SHADOWSOCKS_STATIC_LINK),y)
-	ifeq ($(CONFIG_SHADOWSOCKS_WITH_EV),y)
-		CONFIGURE_ARGS += --with-ev="$(STAGING_DIR)/usr"
-	endif
-	ifeq ($(CONFIG_SHADOWSOCKS_WITH_PCRE),y)
-		CONFIGURE_ARGS += --with-pcre="$(STAGING_DIR)/usr"
-	endif
-	ifeq ($(CONFIG_SHADOWSOCKS_WITH_CARES),y)
-		CONFIGURE_ARGS += --with-cares="$(STAGING_DIR)/usr"
-	endif
-	ifeq ($(CONFIG_SHADOWSOCKS_WITH_SODIUM),y)
-		CONFIGURE_ARGS += --with-sodium="$(STAGING_DIR)/usr"
-	endif
-	ifeq ($(CONFIG_SHADOWSOCKS_WITH_MBEDTLS),y)
-		CONFIGURE_ARGS += --with-mbedtls="$(STAGING_DIR)/usr"
-	endif
-	CONFIGURE_ARGS += LDFLAGS="-Wl,-static -static -static-libgcc"
-endif
 
 define Package/shadowsocks-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	ls $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel} | xargs -n1 setcap cap_net_bind_service+ep \
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel} $(1)/usr/bin
 endef
 
 define Package/shadowsocks-libev-server/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	ls $(PKG_BUILD_DIR)/src/ss-server | xargs -n1 setcap cap_net_bind_service+ep \
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-server $(1)/usr/bin
 endef
 
