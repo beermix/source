@@ -161,6 +161,7 @@ GCC_CONFIGURE:= \
 		--disable-libstdcxx-debug \
 		--disable-libstdcxx-verbose \
 		--disable-libunwind-exceptions \
+		--disable-vtable-verify \
 		--disable-libstdcxx-pch \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
