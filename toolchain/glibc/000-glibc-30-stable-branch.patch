@@ -7087,3 +7087,44 @@ index 30e7abe6fd..c21e4d779a 100644
    printf ("info: signals received during fork: %u\n", fork_signals);
    printf ("info: signals received during free: %u\n", free_signals);
    printf ("info: signals received during malloc: %u\n", malloc_signals);
+
+commit 75fa5fd7c37417b29d66294bee3431b9567416bf
+Author: Fangrui Song <maskray@google.com>
+Date:   Tue Feb 4 21:55:44 2020 -0800
+
+    Improve IFUNC check [BZ #25506]
+    
+    GNU ld's RISCV port does not support IFUNC. ld -no-pie produces no
+    relocation and the test passed incorrectly. Be more rigid by testing
+    IRELATIVE explicitly.
+    
+    Tested-by: Aurelien Jarno <aurelien@aurel32.net>
+    Reviewed-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+    (cherry picked from commit 87a698a21646b7ee620923ef5ffa9735471a8ddd)
+
+diff --git a/configure b/configure
+index 6d26b8246f..83ae6899c5 100755
+--- a/configure
++++ b/configure
+@@ -4035,7 +4035,7 @@ if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+ 	    -o conftest conftest.S 1>&5 2>&5; then
+   # Do a link to see if the backend supports IFUNC relocs.
+   $READELF -r conftest 1>&5
+-  LC_ALL=C $READELF -r conftest | grep 'no relocations' >/dev/null || {
++  LC_ALL=C $READELF -Wr conftest | grep -q 'IRELATIVE\|R_SPARC_JMP_IREL' && {
+     libc_cv_ld_gnu_indirect_function=yes
+   }
+ fi
+diff --git a/configure.ac b/configure.ac
+index 7436485419..51b85359ee 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -648,7 +648,7 @@ if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+ 	    -o conftest conftest.S 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
+   # Do a link to see if the backend supports IFUNC relocs.
+   $READELF -r conftest 1>&AS_MESSAGE_LOG_FD
+-  LC_ALL=C $READELF -r conftest | grep 'no relocations' >/dev/null || {
++  LC_ALL=C $READELF -Wr conftest | grep -q 'IRELATIVE\|R_SPARC_JMP_IREL' && {
+     libc_cv_ld_gnu_indirect_function=yes
+   }
+ fi
