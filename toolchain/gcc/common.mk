@@ -163,6 +163,8 @@ GCC_CONFIGURE:= \
 		--disable-libunwind-exceptions \
 		--disable-vtable-verify \
 		--disable-libstdcxx-pch \
+		--enable-libstdcxx-time \
+		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
