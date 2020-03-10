@@ -107,8 +107,9 @@ CONFIGURE_ARGS += \
         --with-tor-user=tor \
         --with-tor-group=tor
 
-TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
+# TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections
+# TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_CFLAGS += -O3
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
