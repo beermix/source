@@ -52,7 +52,7 @@ CONFIGURE_ARGS+= \
 
 define Package/mini_snmpd/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/mini_snmpd $(1)/usr/bin/
+	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/mini-snmpd $(1)/usr/bin/mini_snmpd
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/mini_snmpd.config $(1)/etc/config/mini_snmpd
 	$(INSTALL_DIR) $(1)/etc/init.d
