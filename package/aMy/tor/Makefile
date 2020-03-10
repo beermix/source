@@ -4,13 +4,14 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://github.com/torproject/tor/tree/release-0.4.2
+# https://github.com/torproject/tor/tree/release-0.4.3
 # https://github.com/torproject/tor/tree/maint-0.3.5
 # https://archive.torproject.org/tor-package-archive/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=557bc74
+PKG_VERSION:=ad024c8
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor
