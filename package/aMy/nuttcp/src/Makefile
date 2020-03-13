@@ -1,7 +1,9 @@
+CC ?= gcc
+CFLAGS += -s -O3
+LIBS = 
+SRC_FILES = nuttcp-8.1.4.c
+
 all: nuttcp
 
-nuttcp:
-	$(CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -Wall nuttcp-6.1.2.c -o $@ $^
-
-clean:
-	rm -f nuttcp
+nuttcp: $(SRC_FILES)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LIBS)
