@@ -60,6 +60,7 @@ clean: FORCE
 dirclean: clean
 	rm -rf $(STAGING_DIR_HOST) $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/host $(BUILD_DIR_BASE)/hostpkg $(BUILD_DIR_TOOLCHAIN)
 	rm -rf $(TMP_DIR)
+	$(MAKE) -C $(TOPDIR)/scripts/config clean
 
 clr: clean
 	rm -rf $(STAGING_DIR_HOSTPKG) $(TOOLCHAIN_DIR) $(BUILD_DIR_BASE)/hostpkg/grub-* $(BUILD_DIR_BASE)/hostpkg/opkg-* $(BUILD_DIR_BASE)/hostpkg/ucert-* $(BUILD_DIR_BASE)/hostpkg/libubox-* $(BUILD_DIR_TOOLCHAIN)
