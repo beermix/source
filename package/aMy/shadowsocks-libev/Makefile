@@ -122,7 +122,7 @@ CONFIGURE_ARGS += \
 	--disable-silent-rules \
 	--disable-ssp \
 
-# TARGET_CFLAGS += -flto
+TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -Wl,--as-needed
 
 $(eval $(call BuildPackage,shadowsocks-libev-config))

@@ -8,26 +8,22 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=shadowsocks-libev
-PKG_VERSION:=3.3.4
-PKG_RELEASE:=1
+PKG_VERSION:=cafdd77
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev.git
-PKG_SOURCE_VERSION:=cafdd77b3d2d8836eb63ec431b76c67198ef2e62
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_LICENSE:=GPLv3
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Jian Chang <aa65535@live.com>
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)/$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
-
 PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
 PKG_BUILD_PARALLEL:=1
-PKG_BUILD_DEPENDS:=c-ares libev libsodium mbedtls pcre
+PKG_BUILD_DEPENDS:=c-ares libev libsodium mbedtls pcre libcap
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SHADOWSOCKS_WITH_EV \
@@ -37,13 +33,14 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_SHADOWSOCKS_WITH_MBEDTLS
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/shadowsocks-libev
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Lightweight Secured Socks5 Proxy
 	URL:=https://github.com/shadowsocks/shadowsocks-libev
-	DEPENDS:=+libpthread +libudns +libcap \
+	DEPENDS:=+libpthread \
 		+!SHADOWSOCKS_WITH_EV:libev \
 		+!SHADOWSOCKS_WITH_PCRE:libpcre \
 		+!SHADOWSOCKS_WITH_CARES:libcares \
@@ -53,56 +50,25 @@ endef
 
 Package/shadowsocks-libev-server = $(Package/shadowsocks-libev)
 
-define Package/shadowsocks-libev-server/config
-menu "Shadowsocks-libev Compile Configuration"
-	depends on PACKAGE_shadowsocks-libev || PACKAGE_shadowsocks-libev-server
-	config SHADOWSOCKS_STATIC_LINK
-		bool "enable static link libraries."
-		default n
-
-		menu "Select libraries"
-			depends on SHADOWSOCKS_STATIC_LINK
-			config SHADOWSOCKS_WITH_EV
-				bool "static link libev."
-				default y
-
-			config SHADOWSOCKS_WITH_PCRE
-				bool "static link libpcre."
-				default y
-
-			config SHADOWSOCKS_WITH_CARES
-				bool "static link libcares."
-				default y
-
-			config SHADOWSOCKS_WITH_SODIUM
-				bool "static link libsodium."
-				default y
-
-			config SHADOWSOCKS_WITH_MBEDTLS
-				bool "static link libmbedtls."
-				default y
-		endmenu
-endmenu
-endef
-
 define Package/shadowsocks-libev/description
 Shadowsocks-libev is a lightweight secured socks5 proxy for embedded devices and low end boxes.
 endef
 
 Package/shadowsocks-libev-server/description = $(Package/shadowsocks-libev/description)
 
-CONFIGURE_ARGS += \
-	--disable-ssp \
-	--disable-documentation
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DWITH_DOC_HTML=0 \
+	-DWITH_DOC_MAN=0
 
 define Package/shadowsocks-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel} $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ss-{local,redir,tunnel} $(1)/usr/bin
 endef
 
 define Package/shadowsocks-libev-server/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-server $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ss-server $(1)/usr/bin
 endef
 
 $(eval $(call BuildPackage,shadowsocks-libev))
