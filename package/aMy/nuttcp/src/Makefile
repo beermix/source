@@ -1,7 +1,7 @@
 all: nuttcp
 
 nuttcp:
-	$(CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -Wall nuttcp-8.1.4.c -o $@ $^
+	$(CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -Wall nuttcp-6.1.2.c -o $@ $^
 
 clean:
 	rm -f nuttcp
