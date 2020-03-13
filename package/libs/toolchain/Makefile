@@ -788,7 +788,7 @@ else
 
   define Package/libgo/install
 	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
-	$(INSTALL_DIR) $(1)/opt/lib
+	$(INSTALL_DIR) $(1)/lib
 	$(CP) $(TOOLCHAIN_DIR)/lib/libgo.so.* $(1)/lib/
 	done ; \
 	exit 0

@@ -2533,3 +2533,46 @@ index f614cf5b61..472cba8cda 100644
  
  Security related changes:
  
+
+commit a3189fb15b41a5de65d94e91512ea50930d7f6ef
+Author: Joseph Myers <joseph@codesourcery.com>
+Date:   Fri Feb 7 13:54:58 2020 +0000
+
+    Update syscall lists for Linux 5.5.
+    
+    Linux 5.5 has no new syscalls to add to syscall-names.list, but it
+    does newly enable the clone3 syscall for AArch64.  This patch updates
+    the kernel version listed in syscall-names.list and regenerates the
+    AArch64 arch-syscall.h.
+    
+    Tested with build-many-glibcs.py.
+    
+    (cherry picked from commit 5828bc4523230685ac29a4a882967913255f5666)
+
+diff --git a/sysdeps/unix/sysv/linux/aarch64/arch-syscall.h b/sysdeps/unix/sysv/linux/aarch64/arch-syscall.h
+index 9378387747..c8471947b9 100644
+--- a/sysdeps/unix/sysv/linux/aarch64/arch-syscall.h
++++ b/sysdeps/unix/sysv/linux/aarch64/arch-syscall.h
+@@ -17,6 +17,7 @@
+ #define __NR_clock_nanosleep 115
+ #define __NR_clock_settime 112
+ #define __NR_clone 220
++#define __NR_clone3 435
+ #define __NR_close 57
+ #define __NR_connect 203
+ #define __NR_copy_file_range 285
+diff --git a/sysdeps/unix/sysv/linux/syscall-names.list b/sysdeps/unix/sysv/linux/syscall-names.list
+index 36e087d8f4..3d89814003 100644
+--- a/sysdeps/unix/sysv/linux/syscall-names.list
++++ b/sysdeps/unix/sysv/linux/syscall-names.list
+@@ -21,8 +21,8 @@
+ # This file can list all potential system calls.  The names are only
+ # used if the installed kernel headers also provide them.
+ 
+-# The list of system calls is current as of Linux 5.4.
+-kernel 5.4
++# The list of system calls is current as of Linux 5.5.
++kernel 5.5
+ 
+ FAST_atomic_update
+ FAST_cmpxchg

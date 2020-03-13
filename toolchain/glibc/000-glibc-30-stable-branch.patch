@@ -7128,3 +7128,181 @@ index 7436485419..51b85359ee 100644
      libc_cv_ld_gnu_indirect_function=yes
    }
  fi
+
+commit 57700813eb411193fbe3af1d991d3d25370d1a6a
+Author: Joseph Myers <joseph@codesourcery.com>
+Date:   Wed Feb 12 23:31:56 2020 +0000
+
+    Avoid ldbl-96 stack corruption from range reduction of pseudo-zero (bug 25487).
+    
+    Bug 25487 reports stack corruption in ldbl-96 sinl on a pseudo-zero
+    argument (an representation where all the significand bits, including
+    the explicit high bit, are zero, but the exponent is not zero, which
+    is not a valid representation for the long double type).
+    
+    Although this is not a valid long double representation, existing
+    practice in this area (see bug 4586, originally marked invalid but
+    subsequently fixed) is that we still seek to avoid invalid memory
+    accesses as a result, in case of programs that treat arbitrary binary
+    data as long double representations, although the invalid
+    representations of the ldbl-96 format do not need to be consistently
+    handled the same as any particular valid representation.
+    
+    This patch makes the range reduction detect pseudo-zero and unnormal
+    representations that would otherwise go to __kernel_rem_pio2, and
+    returns a NaN for them instead of continuing with the range reduction
+    process.  (Pseudo-zero and unnormal representations whose unbiased
+    exponent is less than -1 have already been safely returned from the
+    function before this point without going through the rest of range
+    reduction.)  Pseudo-zero representations would previously result in
+    the value passed to __kernel_rem_pio2 being all-zero, which is
+    definitely unsafe; unnormal representations would previously result in
+    a value passed whose high bit is zero, which might well be unsafe
+    since that is not a form of input expected by __kernel_rem_pio2.
+    
+    Tested for x86_64.
+    
+    (cherry picked from commit 9333498794cde1d5cca518badf79533a24114b6f)
+
+diff --git a/NEWS b/NEWS
+index 555d3b9a09..67018b0658 100644
+--- a/NEWS
++++ b/NEWS
+@@ -35,6 +35,7 @@ The following bugs are resolved with this release:
+   [25225] ld.so fails to link on x86 if GCC defaults to -fcf-protection
+   [25232] No const correctness for strchr et al. for Clang++
+   [25401] Remove incorrect alloc_size attribute from pvalloc
++  [25487] sinl() stack corruption from crafted input (CVE-2020-10029)
+   [25523] MIPS/Linux inline syscall template is miscompiled
+ 
+ 
+diff --git a/sysdeps/ieee754/ldbl-96/Makefile b/sysdeps/ieee754/ldbl-96/Makefile
+index b103254214..052c1c7703 100644
+--- a/sysdeps/ieee754/ldbl-96/Makefile
++++ b/sysdeps/ieee754/ldbl-96/Makefile
+@@ -17,5 +17,6 @@
+ # <http://www.gnu.org/licenses/>.
+ 
+ ifeq ($(subdir),math)
+-tests += test-canonical-ldbl-96 test-totalorderl-ldbl-96
++tests += test-canonical-ldbl-96 test-totalorderl-ldbl-96 test-sinl-pseudo
++CFLAGS-test-sinl-pseudo.c += -fstack-protector-all
+ endif
+diff --git a/sysdeps/ieee754/ldbl-96/e_rem_pio2l.c b/sysdeps/ieee754/ldbl-96/e_rem_pio2l.c
+index 805de22d73..1aeccb47d7 100644
+--- a/sysdeps/ieee754/ldbl-96/e_rem_pio2l.c
++++ b/sysdeps/ieee754/ldbl-96/e_rem_pio2l.c
+@@ -210,6 +210,18 @@ __ieee754_rem_pio2l (long double x, long double *y)
+       return 0;
+     }
+ 
++  if ((i0 & 0x80000000) == 0)
++    {
++      /* Pseudo-zero and unnormal representations are not valid
++	 representations of long double.  We need to avoid stack
++	 corruption in __kernel_rem_pio2, which expects input in a
++	 particular normal form, but those representations do not need
++	 to be consistently handled like any particular floating-point
++	 value.  */
++      y[1] = y[0] = __builtin_nanl ("");
++      return 0;
++    }
++
+   /* Split the 64 bits of the mantissa into three 24-bit integers
+      stored in a double array.  */
+   exp = j0 - 23;
+diff --git a/sysdeps/ieee754/ldbl-96/test-sinl-pseudo.c b/sysdeps/ieee754/ldbl-96/test-sinl-pseudo.c
+new file mode 100644
+index 0000000000..f59b97769d
+--- /dev/null
++++ b/sysdeps/ieee754/ldbl-96/test-sinl-pseudo.c
+@@ -0,0 +1,41 @@
++/* Test sinl for pseudo-zeros and unnormals for ldbl-96 (bug 25487).
++   Copyright (C) 2020 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <math.h>
++#include <math_ldbl.h>
++#include <stdint.h>
++
++static int
++do_test (void)
++{
++  for (int i = 0; i < 64; i++)
++    {
++      uint64_t sig = i == 63 ? 0 : 1ULL << i;
++      long double ld;
++      SET_LDOUBLE_WORDS (ld, 0x4141,
++			 sig >> 32, sig & 0xffffffffULL);
++      /* The requirement is that no stack overflow occurs when the
++	 pseudo-zero or unnormal goes through range reduction.  */
++      volatile long double ldr;
++      ldr = sinl (ld);
++      (void) ldr;
++    }
++  return 0;
++}
++
++#include <support/test-driver.c>
+
+commit 949fbe7826df62ba0521796e6b2cf6468ca70d58
+Author: Florian Weimer <fweimer@redhat.com>
+Date:   Thu Feb 13 17:01:15 2020 +0100
+
+    math/test-sinl-pseudo: Use stack protector only if available
+    
+    This fixes commit 9333498794cde1d5cca518bad ("Avoid ldbl-96 stack
+    corruption from range reduction of pseudo-zero (bug 25487).").
+    
+    (cherry picked from commit c10acd40262486dac597001aecc20ad9d3bd0e4a)
+
+diff --git a/sysdeps/ieee754/ldbl-96/Makefile b/sysdeps/ieee754/ldbl-96/Makefile
+index 052c1c7703..4142695ec8 100644
+--- a/sysdeps/ieee754/ldbl-96/Makefile
++++ b/sysdeps/ieee754/ldbl-96/Makefile
+@@ -18,5 +18,7 @@
+ 
+ ifeq ($(subdir),math)
+ tests += test-canonical-ldbl-96 test-totalorderl-ldbl-96 test-sinl-pseudo
++ifeq ($(have-ssp),yes)
+ CFLAGS-test-sinl-pseudo.c += -fstack-protector-all
+ endif
++endif # $(subdir) == math
+
+commit dd34bce38c822b67fcc42e73969bf6699d6874b6
+Author: Aurelien Jarno <aurelien@aurel32.net>
+Date:   Wed Mar 4 22:32:32 2020 +0100
+
+    Add NEWS entry for CVE-2020-10029 (bug 25487)
+    
+    (cherry picked from commit 15ab195229dc288d1d49612c3de14a33b88065ed)
+
+diff --git a/NEWS b/NEWS
+index 67018b0658..0c4a78c3d5 100644
+--- a/NEWS
++++ b/NEWS
+@@ -15,6 +15,10 @@ CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
+   addresses for loaded libraries and thus bypass ASLR for a setuid
+   program.  Reported by Marcin Kościelnicki.
+ 
++CVE-2020-10029: Trigonometric functions on x86 targets suffered from stack
++  corruption when they were passed a pseudo-zero argument.  Reported by Guido
++  Vranken / ForAllSecure Mayhem.
++
+ The following bugs are resolved with this release:
+ 
+   [23518] login: Remove utmp backend jump tables

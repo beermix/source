@@ -54,8 +54,8 @@ ifeq ($(PKG_VERSION),8.3.1)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
-ifeq ($(PKG_VERSION),9.2.0)
-  PKG_HASH:=ea6ef08f121239da5695f76c9b33637a118dcf63e24164422231917fa61fb206
+ifeq ($(PKG_VERSION),9.3.0)
+  PKG_HASH:=71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1
 endif
 
 ifeq ($(PKG_VERSION),9.2.1)
@@ -76,26 +76,25 @@ ifeq ($(PKG_VERSION),9.2.1)
 endif
 
 ifeq ($(PKG_VERSION),10.0.1)
-#  PKG_VERSION:=10.0.1
-#  PKG_REV:=10-20200301
-#  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
-#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  
-  PKG_REV:=6733eca
-  PKG_SOURCE_PROTO:=git
-  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc.git
-  PKG_SOURCE_VERSION:=$(PKG_REV)
-  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+  PKG_VERSION:=10.0.1
+  PKG_REV:=10-20200308
+  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+#  PKG_REV:=6733eca
+#  PKG_SOURCE_PROTO:=git
+#  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc.git
+#  PKG_SOURCE_VERSION:=$(PKG_REV)
+#  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+#  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
 
 BUGURL=http://bugs.openwrt.org/
-PKGVERSION=OpenWrt GCC $(PKG_VERSION) $(REVISION)
+PKGVERSION=OWrt GCC $(PKG_VERSION) $(REVISION)
 
 HOST_BUILD_PARALLEL:=1
 
@@ -162,8 +161,6 @@ GCC_CONFIGURE:= \
 		--disable-libunwind-exceptions \
 		--disable-vtable-verify \
 		--disable-libstdcxx-pch \
-		--with-default-libstdcxx-abi=new \
-		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -245,10 +242,10 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
-		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
-		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
+		CFLAGS="-g1 $(HOST_CFLAGS)" \
+		CFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)" \
+		GOCFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
 	$(SED) 's,TARGET_CROSS=.*,TARGET_CROSS=$(REAL_GNU_TARGET_NAME)-,' $(TOOLCHAIN_DIR)/info.mk
