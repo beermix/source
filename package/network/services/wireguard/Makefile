@@ -50,7 +50,7 @@ endef
 define Package/wireguard
   $(call Package/wireguard/Default)
   TITLE:=WireGuard meta-package
-  DEPENDS:=+wireguard-tools +kmod-wireguard
+  DEPENDS:=+wireguard-tools +kmod-wireguard +kmod-crypto-manager +kmod-fou
 endef
 
 include $(INCLUDE_DIR)/kernel-defaults.mk
