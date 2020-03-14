@@ -117,10 +117,8 @@ SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
 TAR_OPTIONS += \
-	--exclude=gcc/ada/*.ad* \
+	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
 	--exclude=libjava
-
-#--exclude-from='$(CURDIR)/../exclude-testsuite' 
 
 export libgcc_cv_fixed_point=no
 ifdef CONFIG_USE_UCLIBC
@@ -139,8 +137,8 @@ endif
 GCC_CONFIGURE:= \
 	SHELL="$(BASH)" \
 	$(if $(shell gcc --version 2>&1 | grep -E "Apple.(LLVM|clang)"), \
-		CFLAGS="-g1 -O2 -fbracket-depth=512 -pipe" \
-		CXXFLAGS="-g1 -O2 -fbracket-depth=512 -pipe" \
+		CFLAGS="-O2 -fbracket-depth=512 -pipe" \
+		CXXFLAGS="-O2 -fbracket-depth=512 -pipe" \
 	) \
 	$(HOST_SOURCE_DIR)/configure \
 		--with-bugurl=$(BUGURL) \
@@ -150,7 +148,6 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
-		--with-gnu-as \
 		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
