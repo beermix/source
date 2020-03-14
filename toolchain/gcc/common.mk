@@ -150,12 +150,16 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
+		--with-gnu-as \
 		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--enable-lto \
+		--enable-gold \
+		--enable-ld=default \
 		--enable-checking=release \
 		--with-tune=generic \
 		--disable-libstdcxx-debug \
