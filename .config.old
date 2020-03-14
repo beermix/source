@@ -6533,7 +6533,6 @@ CONFIG_PACKAGE_wireguard=y
 # Version Control Systems
 #
 CONFIG_PACKAGE_git=y
-# CONFIG_PACKAGE_git-gitweb is not set
 CONFIG_PACKAGE_git-http=y
 # CONFIG_PACKAGE_subversion-client is not set
 # CONFIG_PACKAGE_subversion-libs is not set
@@ -6747,8 +6746,6 @@ CONFIG_PACKAGE_libipset=y
 # CONFIG_PACKAGE_mosquitto-ssl is not set
 # CONFIG_PACKAGE_mstpd is not set
 # CONFIG_PACKAGE_mtr is not set
-# CONFIG_PACKAGE_nbd is not set
-# CONFIG_PACKAGE_nbd-server is not set
 # CONFIG_PACKAGE_ncp is not set
 # CONFIG_PACKAGE_ndptool is not set
 # CONFIG_PACKAGE_net-tools-route is not set
@@ -7487,4 +7484,4 @@ CONFIG_PACKAGE_stress-ng=y
 # Font-Utils
 #
 # CONFIG_PACKAGE_fontconfig is not set
-CONFIG_OVERRIDE_PKGS="coreutils file gdbm libffi miniupnpd procps-ng redsocks xz"
+CONFIG_OVERRIDE_PKGS="bash boost bwm-ng coreutils file gdbm git grep htop i2pd libffi libsodium lm-sensors mc mini_snmpd miniupnpd nano ncdu netdata netperf nmap pcre procps-ng redsocks shadowsocks-libev tor xz zsh"
