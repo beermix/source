@@ -8,6 +8,7 @@ GCC_CONFIGURE += \
 	--enable-shared \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
+	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifndef CONFIG_USE_GLIBC

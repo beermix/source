@@ -157,9 +157,6 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--enable-lto \
-		--enable-gold \
-		--enable-ld=default \
 		--enable-checking=release \
 		--with-tune=generic \
 		--disable-libstdcxx-debug \
@@ -247,7 +244,10 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
+		unset CFLAGS \
+		unset CXXFLAGS \
 		CFLAGS="-g1 $(HOST_CFLAGS)" \
+		CXXFLAGS="-g1 $(HOST_CFLAGS)" \
 		CFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)" \
 		CXXFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)" \
 		GOCFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)"
