@@ -71,9 +71,7 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-lock-elision=yes \
 		--enable-bind-now \
-		--enable-tunables \
 		--enable-stack-protector=strong \
-		--enable-obsolete-nsl \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
