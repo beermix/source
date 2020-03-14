@@ -423,7 +423,7 @@ define Package/libgo/config
 		string
 		prompt "libgo shared library files (use wildcards)"
 		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-		default "./usr/lib/libgo.so.*"
+		default "./lib/libgo.so*"
 
 	endmenu
 endef
