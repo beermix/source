@@ -33,7 +33,7 @@ PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=c-ares pcre
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
+
 
 define Package/shadowsocks-libev-config
   SECTION:=net
@@ -117,16 +117,14 @@ define Build/Prepare
 		| $(XARGS) rm -rvf
 endef
 
-CMAKE_OPTIONS += \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DWITH_DOC_HTML=0 \
-	-DWITH_DOC_MAN=0 \
-	-DWITH_STATIC=0 \
-	-DWITH_EMBEDDED_SRC=1 \
-	-DWITH_SS_REDIR=1
+CONFIGURE_ARGS += \
+	--disable-documentation \
+	--disable-silent-rules \
+	--disable-assert \
+	--disable-ssp \
 
 TARGET_CFLAGS += -flto
-TARGET_LDFLAGS += -Wl,--as-needed
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 $(eval $(call BuildPackage,shadowsocks-libev-config))
 $(eval $(call BuildPackage,shadowsocks-libev-ss-rules))

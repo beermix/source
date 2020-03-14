@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=shadowsocks-libev
-PKG_VERSION:=cafdd77
+PKG_VERSION:=64d3235
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev
+PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -20,7 +20,7 @@ PKG_LICENSE:=GPLv3
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Jian Chang <aa65535@live.com>
 
-PKG_INSTALL:=1
+PKG_INSTALL:=0
 PKG_USE_MIPS16:=0
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=c-ares libev libsodium mbedtls pcre libcap
@@ -41,6 +41,8 @@ define Package/shadowsocks-libev
 	TITLE:=Lightweight Secured Socks5 Proxy
 	URL:=https://github.com/shadowsocks/shadowsocks-libev
 	DEPENDS:=+libpthread \
+		+libudns \
+		+libcap \
 		+!SHADOWSOCKS_WITH_EV:libev \
 		+!SHADOWSOCKS_WITH_PCRE:libpcre \
 		+!SHADOWSOCKS_WITH_CARES:libcares \
@@ -56,19 +58,16 @@ endef
 
 Package/shadowsocks-libev-server/description = $(Package/shadowsocks-libev/description)
 
-CMAKE_OPTIONS += \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DWITH_DOC_HTML=0 \
-	-DWITH_DOC_MAN=0
+CMAKE_OPTIONS += -DWITH_DOC_HTML=0 -DWITH_DOC_MAN=0 -DCMAKE_VERBOSE_MAKEFILE=1
 
 define Package/shadowsocks-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ss-{local,redir,tunnel} $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ss-{local,tunnel} $(1)/usr/bin
 endef
 
 define Package/shadowsocks-libev-server/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ss-server $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ss-server $(1)/usr/bin
 endef
 
 $(eval $(call BuildPackage,shadowsocks-libev))
