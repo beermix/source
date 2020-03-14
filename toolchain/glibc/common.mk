@@ -70,6 +70,7 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--enable-add-ons \
 		--enable-lock-elision=yes \
+		--enable-stack-protector=strong \
 		--disable-build-nscd \
 		--disable-nscd \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
