@@ -24,7 +24,7 @@ endif
 tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
 tools-y += autoconf-archive m4 libtool autoconf automake flex bison pkgconf mklibs zlib
 tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
-tools-y += firmware-utils patch-image quilt padjffs2
+tools-y += patch-image quilt padjffs2
 tools-y += mm-macros missing-macros cmake bc findutils gengetopt patchelf
 tools-y += mtools dosfstools libressl
 tools-$(CONFIG_TARGET_orion_generic) += wrt350nv2-builder upslug2
@@ -71,7 +71,6 @@ $(curdir)/patchelf/compile := $(curdir)/libtool/compile
 $(curdir)/dosfstools/compile := $(curdir)/autoconf/compile $(curdir)/automake/compile
 $(curdir)/libressl/compile := $(curdir)/pkgconf/compile
 $(curdir)/mkimage/compile += $(curdir)/libressl/compile
-$(curdir)/firmware-utils/compile += $(curdir)/libressl/compile $(curdir)/zlib/compile
 $(curdir)/cmake/compile += $(curdir)/libressl/compile
 $(curdir)/zlib/compile := $(curdir)/cmake/compile
 # $(curdir)/libarchive/compile := $(curdir)/xz/compile $(curdir)/libtool/compile $(curdir)/zlib/compile
