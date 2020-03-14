@@ -569,7 +569,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
 		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
-	for file in libanl libc libcidn libcrypt libdl libmvec libm libnsl libnss_dns libnss_db libnss_files libnss_hesiod libresolv libSegFault libutil; do \
+	for file in libanl libc libcidn libcrypt libdl libmvec libm libnsl libnss_dns libnss_db libnss_files libnss_hesiod libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
 			if [ -e "$$$$file" ]; then \
 				$(CP) $$$$file $(1)/lib/; \
@@ -656,10 +656,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/localedef $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/getent $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/{getent,getconf,sprof,gencat,makedb,pldd,pcprofiledump,xtrace,sotruss,catchsegv,localedef,lddlibc4,ldd} $(1)/usr/bin/
 	mkdir -p $(1)/share/i18n/charmaps
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-* $(1)/share/i18n/charmaps/
 	mkdir -p $(1)/share/i18n/locales
@@ -672,7 +669,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   endef
 
   define Package/gconv-modules/install
-	$(INSTALL_DIR) $(1)//lib/gconv
+	$(INSTALL_DIR) $(1)/lib/gconv
 	$(CP) $(TOOLCHAIN_DIR)/lib/gconv/* $(1)/lib/gconv/
   endef
 
