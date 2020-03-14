@@ -70,7 +70,6 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--enable-add-ons \
 		--enable-lock-elision=yes \
-		--enable-bind-now \
 		--enable-stack-protector=strong \
 		--disable-build-nscd \
 		--disable-nscd \
