@@ -9,7 +9,6 @@
 # https://github.com/bminor/glibc/tree/release/2.27/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.31/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=HEAD
-# 		--enable-tunables enable-obsolete-nsl \
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
@@ -72,7 +71,9 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-lock-elision=yes \
 		--enable-bind-now \
+		--enable-tunables \
 		--enable-stack-protector=strong \
+		--enable-obsolete-nsl \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
