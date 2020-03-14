@@ -94,7 +94,7 @@ endif
 PATCH_DIR=../patches/$(GCC_VERSION)
 
 BUGURL=http://bugs.openwrt.org/
-PKGVERSION=OWrt GCC $(PKG_VERSION) $(REVISION)
+PKGVERSION=OpenWrt GCC $(PKG_VERSION) $(REVISION)
 
 HOST_BUILD_PARALLEL:=1
 
@@ -155,9 +155,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--enable-checking=release \
-		--with-tune=generic \
 		--disable-libstdcxx-debug \
-		--disable-libstdcxx-verbose \
 		--disable-libstdcxx-pch \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \

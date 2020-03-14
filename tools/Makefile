@@ -22,9 +22,9 @@ ifneq ($(CONFIG_SDK)$(CONFIG_PACKAGE_kmod-b43)$(CONFIG_PACKAGE_b43legacy-firmwar
 endif
 
 tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
-tools-y += autoconf-archive m4 libtool autoconf automake flex bison pkgconf mklibs zlib
+tools-y += m4 libtool autoconf automake flex bison pkgconf mklibs zlib
 tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
-tools-y += patch-image quilt padjffs2
+tools-y += firmware-utils patch-image quilt padjffs2
 tools-y += mm-macros missing-macros cmake bc findutils gengetopt patchelf
 tools-y += mtools dosfstools libressl
 tools-$(CONFIG_TARGET_orion_generic) += wrt350nv2-builder upslug2
@@ -43,7 +43,7 @@ tools-$(CONFIG_TARGET_tegra) += cbootimage cbootimage-configs
 # builddir dependencies
 $(curdir)/bison/compile := $(curdir)/flex/compile
 $(curdir)/flex/compile := $(curdir)/libtool/compile
-$(curdir)/libtool/compile := $(curdir)/autoconf-archive/compile $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/automake/compile $(curdir)/missing-macros/compile
+$(curdir)/libtool/compile := $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/automake/compile $(curdir)/missing-macros/compile
 $(curdir)/squashfs/compile := $(curdir)/lzma-old/compile
 $(curdir)/squashfskit4/compile := $(curdir)/xz/compile $(curdir)/zlib/compile
 $(curdir)/quilt/compile := $(curdir)/autoconf/compile $(curdir)/findutils/compile
@@ -71,9 +71,9 @@ $(curdir)/patchelf/compile := $(curdir)/libtool/compile
 $(curdir)/dosfstools/compile := $(curdir)/autoconf/compile $(curdir)/automake/compile
 $(curdir)/libressl/compile := $(curdir)/pkgconf/compile
 $(curdir)/mkimage/compile += $(curdir)/libressl/compile
+$(curdir)/firmware-utils/compile += $(curdir)/libressl/compile $(curdir)/zlib/compile
 $(curdir)/cmake/compile += $(curdir)/libressl/compile
 $(curdir)/zlib/compile := $(curdir)/cmake/compile
-# $(curdir)/libarchive/compile := $(curdir)/xz/compile $(curdir)/libtool/compile $(curdir)/zlib/compile
 $(curdir)/wrt350nv2-builder/compile := $(curdir)/zlib/compile
 $(curdir)/lzma-old/compile := $(curdir)/zlib/compile
 $(curdir)/make-ext4fs/compile := $(curdir)/zlib/compile
@@ -135,9 +135,13 @@ $(STAGING_DIR)/.prepared: $(TMP_DIR)/.build
 
 $(STAGING_DIR_HOST)/.prepared: $(TMP_DIR)/.build
 	$(call PrepareStaging,$(STAGING_DIR_HOST))
-	#mkdir -p $(BUILD_DIR_HOST)/stamp $(STAGING_DIR_HOST)/include/sys
-	#$(INSTALL_DATA) $(TOPDIR)/tools/include/*.h $(STAGING_DIR_HOST)/include/
-	#$(INSTALL_DATA) $(TOPDIR)/tools/include/sys/*.h $(STAGING_DIR_HOST)/include/sys/
+	mkdir -p $(BUILD_DIR_HOST)/stamp $(STAGING_DIR_HOST)/include/sys
+	$(INSTALL_DATA) $(TOPDIR)/tools/include/*.h $(STAGING_DIR_HOST)/include/
+	$(INSTALL_DATA) $(TOPDIR)/tools/include/sys/*.h $(STAGING_DIR_HOST)/include/sys/
+ifneq ($(HOST_OS),Linux)
+	mkdir -p $(STAGING_DIR_HOST)/include/asm
+	$(INSTALL_DATA) $(TOPDIR)/tools/include/asm/*.h $(STAGING_DIR_HOST)/include/asm/
+endif
 	ln -snf lib $(STAGING_DIR_HOST)/lib64
 	touch $@
 
