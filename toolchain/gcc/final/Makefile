@@ -11,7 +11,6 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--disable-libstdcxx-debug \
 	--disable-libstdcxx-pch \
-	--with-linker-hash-style=gnu \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifndef CONFIG_USE_GLIBC
