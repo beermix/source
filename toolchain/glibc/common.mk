@@ -48,12 +48,9 @@ endif
 # "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
-	unset ASFLAGS; \
-	unset LDFLAGS; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="$(filter-out -fno-plt -pipe -fomit-frame-pointer -fno-caller-saves -Os,$(call qstrip,$(TARGET_CFLAGS))) -mstackrealign -g2  -Wl,-z,max-page-size=0x1000" \
-	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
+	CFLAGS="-O2 -mstackrealign $(filter-out -fno-plt -pipe -fomit-frame-pointer -fno-caller-saves -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
