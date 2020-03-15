@@ -48,6 +48,8 @@ endif
 # "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
+	unset ASFLAGS; \
+	unset LDFLAGS; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="$(filter-out -fno-plt -pipe -fomit-frame-pointer -fno-caller-saves -Os,$(call qstrip,$(TARGET_CFLAGS))) -mstackrealign -g2  -Wl,-z,max-page-size=0x1000" \
@@ -60,12 +62,14 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
+		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
 		--without-gd \
 		--without-cvs \
-		--enable-kernel=5.4 \
+		--enable-kernel=4.14 \
 		--disable-debug \
 		--enable-add-ons \
+		--enable-stack-protector \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
