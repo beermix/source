@@ -155,6 +155,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--enable-checking=release \
+		--with-tune=generic \
 		--disable-libstdcxx-debug \
 		--disable-libstdcxx-pch \
 		--with-linker-hash-style=gnu \
@@ -239,10 +240,10 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
-		CFLAGS="-g1 $(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)" \
-		GOCFLAGS_FOR_TARGET="-g1 $(TARGET_CFLAGS)"
+		CFLAGS="$(HOST_CFLAGS)" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
 	$(SED) 's,TARGET_CROSS=.*,TARGET_CROSS=$(REAL_GNU_TARGET_NAME)-,' $(TOOLCHAIN_DIR)/info.mk
