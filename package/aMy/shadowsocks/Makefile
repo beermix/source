@@ -98,8 +98,8 @@ CONFIGURE_ARGS += \
 	--disable-assert \
 	--disable-ssp \
 
-TARGET_CFLAGS += -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+# TARGET_CFLAGS += -flto
+# TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 ifeq ($(CONFIG_SHADOWSOCKS_STATIC_LINK),y)
 	ifeq ($(CONFIG_SHADOWSOCKS_WITH_EV),y)
