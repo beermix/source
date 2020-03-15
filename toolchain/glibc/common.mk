@@ -64,14 +64,17 @@ GLIBC_CONFIGURE:= \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
 		--disable-profile \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
+		--disable-sanity-checks \
+		--enable-add-ons \
+		--enable-bind-now \
 		--without-gd \
 		--without-cvs \
-		--enable-kernel=4.14 \
+		--enable-lock-elision \
+		--enable-kernel=5.4 \
 		--disable-debug \
-		--enable-add-ons \
-		--enable-stack-protector=strong \
-		--disable-build-nscd \
-		--disable-nscd \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export libc_cv_ssp=no
