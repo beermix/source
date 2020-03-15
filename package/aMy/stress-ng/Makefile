@@ -21,7 +21,7 @@ define Package/stress-ng
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=stress-ng
-  DEPENDS:=+libattr +zlib +libbsd +libcap +libattr +libaio
+  DEPENDS:=+libattr +zlib +libbsd
 endef
 
 define Package/stress-ng/install
