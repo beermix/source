@@ -93,9 +93,13 @@ endef
 Package/shadowsocks-libev-server/description = $(Package/shadowsocks-libev/description)
 
 CONFIGURE_ARGS += \
-	--disable-ssp \
 	--disable-documentation \
-	--disable-assert
+	--disable-silent-rules \
+	--disable-assert \
+	--disable-ssp \
+
+TARGET_CFLAGS += -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 ifeq ($(CONFIG_SHADOWSOCKS_STATIC_LINK),y)
 	ifeq ($(CONFIG_SHADOWSOCKS_WITH_EV),y)
