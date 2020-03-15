@@ -69,7 +69,6 @@ GLIBC_CONFIGURE:= \
 		--enable-kernel=4.14 \
 		--disable-debug \
 		--enable-add-ons \
-		--enable-lock-elision=yes \
 		--enable-stack-protector=strong \
 		--disable-build-nscd \
 		--disable-nscd \
