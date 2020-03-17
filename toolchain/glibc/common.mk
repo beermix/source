@@ -12,11 +12,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.30
+PKG_VERSION:=2.31
 PKG_SOURCE_URL:=@GNU/glibc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=e2c4114e569afbe7edbc29131a43be833850ab9a459d81beb2588016d2bbb8af
-#PKG_HASH:=9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
+# PKG_HASH:=e2c4114e569afbe7edbc29131a43be833850ab9a459d81beb2588016d2bbb8af
+PKG_HASH:=9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
@@ -50,7 +50,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -mstackrealign $(filter-out -fno-plt -pipe -fomit-frame-pointer -fno-caller-saves -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -mstackrealign $(filter-out -fno-plt -pipe -fomit-frame-pointer -fno-caller-saves -mstackrealign -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -60,6 +60,14 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--with-binutils=$(TOOLCHAIN_DIR)/bin \
+		--disable-sanity-checks \
+		--enable-bind-now \
+		--with-elf \
+		--with-tls \
+		--with-__thread \
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-lock-elision \
 		--disable-profile \
 		--without-gd \
 		--without-cvs \

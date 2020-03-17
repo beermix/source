@@ -58,9 +58,9 @@ ifeq ($(PKG_VERSION),9.3.0)
   PKG_HASH:=71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1
 endif
 
-ifeq ($(PKG_VERSION),9.2.1)
+ifeq ($(PKG_VERSION),9.3.1)
   PKG_VERSION:=9.2.1
-  PKG_REV:=9.3.0-RC-20200305
+  PKG_REV:=9-20200314
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -116,9 +116,9 @@ HOST_STAMP_INSTALLED:=$(HOST_BUILD_PREFIX)/stamp/.gcc_$(GCC_VARIANT)_installed
 SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
-#TAR_OPTIONS += \
-#	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
-#	--exclude=libjava
+TAR_OPTIONS += \
+	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
+	--exclude=libjava
 
 export libgcc_cv_fixed_point=no
 ifdef CONFIG_USE_UCLIBC
@@ -155,7 +155,6 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--enable-checking=release \
-		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
