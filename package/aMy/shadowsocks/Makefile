@@ -70,7 +70,7 @@ CONFIGURE_ARGS += \
 
 define Package/shadowsocks-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel} $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel,nat} $(1)/usr/bin
 endef
 
 define Package/shadowsocks-libev-server/install
