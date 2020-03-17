@@ -72,6 +72,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-kernel=5.4 \
+		--enable-stack-protector=strong \
 		--disable-debug \
 		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
