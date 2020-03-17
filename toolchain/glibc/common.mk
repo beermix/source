@@ -68,7 +68,7 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--without-gd \
 		--without-cvs \
-		--enable-kernel=5.4 \
+		--enable-kernel=4.14 \
 		--enable-stack-protector=strong \
 		--disable-debug \
 		--enable-add-ons \
