@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=stress-ng
-PKG_VERSION:=0.11.02
+PKG_VERSION:=0.11.03
 
 PKG_SOURCE_URL:=http://kernel.ubuntu.com/~cking/tarballs/stress-ng
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
@@ -21,7 +21,7 @@ define Package/stress-ng
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=stress-ng
-  DEPENDS:=+libattr +zlib +libbsd
+  DEPENDS:=+zlib +libaio
 endef
 
 define Package/stress-ng/install
