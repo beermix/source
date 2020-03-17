@@ -39850,3 +39850,24 @@ index 0000000000..50b12a0d5d
 +[^>]*> ee30 0a06 	vaddle.f32	s0, s0, s12
 +[^>]*> ee30 0b41 	vsuble.f64	d0, d0, d1
 +#...
+
+commit 3ca4cd1ebde8ba6ce124a4debb977b041dfb56ba
+Author: Andre Vieira <andre.simoesdiasvieira@arm.com>
+Date:   Mon Mar 16 13:15:31 2020 +0000
+
+    gas, arm: Fix bad backport
+    
+    This patch fixes the backport for PR25660 as it contained bad context.
+
+diff --git a/gas/config/tc-arm.c b/gas/config/tc-arm.c
+index 2ee2718744..8ad2d6d3bd 100644
+--- a/gas/config/tc-arm.c
++++ b/gas/config/tc-arm.c
+@@ -7465,7 +7465,6 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
+ 	  po_reg_or_goto (REG_TYPE_VFSD, try_cond);
+ 	  break;
+ 	case OP_oRNSDMQ:
+-	case OP_RNSDMQ:
+ 	  po_reg_or_goto (REG_TYPE_NSD, try_mq2);
+ 	  break;
+ 	  try_mq2:
