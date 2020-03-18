@@ -8,10 +8,8 @@
 define Profile/Generic
   NAME:=Generic x86/Geode
   PACKAGES:= \
-		soloscli linux-atm br2684ctl ppp-mod-pppoa pppdump pppstats \
-		hwclock flashrom tc kmod-pppoa kmod-8139cp kmod-mppe \
-		kmod-usb-ohci-pci kmod-hwmon-lm90 \
-		kmod-via-rhine
+		soloscli linux-atm br2684ctl \
+		hwclock flashrom tc kmod-8139cp kmod-mppe
 endef
 
 define Profile/Generic/Description
