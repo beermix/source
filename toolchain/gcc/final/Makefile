@@ -11,6 +11,9 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--disable-libstdcxx-debug \
 	--disable-libstdcxx-pch \
+	--enable-decimal-float \
+	--enable-libstdcxx-time \
+	--enable-clocale=gnu \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifndef CONFIG_USE_GLIBC
