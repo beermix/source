@@ -173,5 +173,4 @@ endef
 $(eval $(call HostBuild))
 $(eval $(call BuildPackage,terminfo))
 $(eval $(call BuildPackage,libncurses))
-$(eval $(call BuildPackage,ncurses-bin))
 $(eval $(call BuildPackage,libncurses-dev))
