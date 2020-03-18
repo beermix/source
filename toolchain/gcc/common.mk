@@ -164,6 +164,8 @@ GCC_CONFIGURE:= \
 		--disable-libunwind-exceptions \
 		--disable-vtable-verify \
 		--enable-clocale=gnu \
+		--enable-gnu-unique-object \
+		--enable-gnu-indirect-function \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
