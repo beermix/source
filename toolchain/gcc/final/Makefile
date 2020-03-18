@@ -12,7 +12,6 @@ GCC_CONFIGURE += \
 	--disable-libstdcxx-debug \
 	--disable-libstdcxx-pch \
 	--enable-libstdcxx-time \
-	--enable-clocale=gnu \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifndef CONFIG_USE_GLIBC

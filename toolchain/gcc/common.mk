@@ -163,6 +163,7 @@ GCC_CONFIGURE:= \
 		--with-linker-hash-style=gnu \
 		--disable-libunwind-exceptions \
 		--disable-vtable-verify \
+		--enable-clocale=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
