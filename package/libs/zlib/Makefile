@@ -32,7 +32,6 @@ define Package/zlib-dev
   SECTION:=devel
   CATEGORY:=Development
   SUBMENU:=Libraries
-  DEPENDS:=zlib
   TITLE:=Development files for the zlib library
 endef
 
@@ -60,9 +59,10 @@ CMAKE_OPTIONS += \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DWITH_NEW_STRATEGIES=OFF \
-	-DWITH_OPTIM=OFF \
 	-DWITH_SANITIZERS=OFF \
-	-DZLIB_COMPAT=ON
+	-DZLIB_COMPAT=ON \
+	-DWITH_OPTIM=OFF \
+	-DZLIB_ENABLE_TESTS=OFF
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
