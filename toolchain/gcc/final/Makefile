@@ -9,6 +9,7 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
+	--enable-c99 \
 	--disable-libstdcxx-debug \
 	--disable-libstdcxx-pch \
 	--enable-decimal-float \
