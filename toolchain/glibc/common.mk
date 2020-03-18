@@ -12,11 +12,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.30
+PKG_VERSION:=2.31
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=dd34bce38c822b67fcc42e73969bf6699d6874b6
+PKG_SOURCE_VERSION:=ab029a2801d4ddfeade8f64a6e46ee7e47fde710
 PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
@@ -64,7 +64,7 @@ GLIBC_CONFIGURE:= \
 		--enable-bind-now \
 		--disable-build-nscd \
 		--disable-nscd \
-		--enable-lock-elision \
+		--enable-lock-elision=yes \
 		--disable-profile \
 		--without-gd \
 		--without-cvs \
