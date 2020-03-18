@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sysbench
-PKG_VERSION:=1.0.19
+PKG_VERSION:=bd4b418
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/akopytov/sysbench
@@ -16,7 +16,7 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-#PKG_FIXUP:=autoreconf
+PKG_FIXUP:=autoreconf
 #PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -30,7 +30,8 @@ define Package/sysbench
 endef
 
 CONFIGURE_ARGS += \
-	--without-mysql --without-pgsql --without-gcc-arch
+	--without-mysql \
+	--without-pgsql
 
 define Package/sysbench/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
