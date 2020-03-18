@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/bwm-ng
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+BWMNG_LIBNCURSES:libncurses
+  DEPENDS:=+BWMNG_LIBNCURSES:libncurses +libstatgrab
   TITLE:=bwm-ng
   URL:=http://www.gropp.org/?id=projects&sub=bwm-ng
   MENU:=1
