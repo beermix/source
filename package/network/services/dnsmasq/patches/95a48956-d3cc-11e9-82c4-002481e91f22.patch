@@ -1,0 +1,12 @@
+diff --git a/src/dnsmasq.h b/src/dnsmasq.h
+index f53e9a5..d9225ea 100644
+--- a/src/dnsmasq.h
++++ b/src/dnsmasq.h
+@@ -138,6 +138,7 @@ typedef unsigned long long u64;
+ #endif
+ 
+ #if defined(HAVE_LINUX_NETWORK)
++#include <linux/sockios.h>
+ #include <linux/capability.h>
+ /* There doesn't seem to be a universally-available 
+    userspace header for these. */
