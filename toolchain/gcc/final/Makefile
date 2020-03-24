@@ -9,10 +9,6 @@ GCC_CONFIGURE += \
 	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
-	--disable-libstdcxx-debug \
-	--disable-libstdcxx-pch \
-	--enable-libstdcxx-time \
-	--enable-decimal-float \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifndef CONFIG_USE_GLIBC
