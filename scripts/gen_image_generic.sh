@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Copyright (C) 2006-2012 OpenWrt.org
 set -e -x
-if [ $# -ne 5 ] && [ $# -ne 6 ]; then
+[ $# == 5 -o $# == 6 ] || {
     echo "SYNTAX: $0 <file> <kernel size> <kernel directory> <rootfs size> <rootfs image> [<align>]"
     exit 1
-fi
+}
 
 OUTPUT="$1"
 KERNELSIZE="$2"
