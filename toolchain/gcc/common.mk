@@ -63,14 +63,12 @@ ifeq ($(PKG_VERSION),8.4.0)
 endif
 
 ifeq ($(PKG_VERSION),9.3.1)
-  PKG_VERSION:=9.2.1
-  PKG_REV:=9-20200314
+  PKG_REV:=9-20200321
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_REV:=85c0855
-#  PKG_REV:=3786be0
+#  PKG_REV:=c78b41b
 #  PKG_SOURCE_PROTO:=git
 #  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc.git
 #  PKG_SOURCE_VERSION:=$(PKG_REV)
@@ -81,7 +79,7 @@ endif
 
 ifeq ($(PKG_VERSION),10.0.1)
   PKG_VERSION:=10.0.1
-  PKG_REV:=10-20200308
+  PKG_REV:=10-20200322
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -120,9 +118,9 @@ HOST_STAMP_INSTALLED:=$(HOST_BUILD_PREFIX)/stamp/.gcc_$(GCC_VARIANT)_installed
 SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
-TAR_OPTIONS += \
-	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
-	--exclude=libjava
+#TAR_OPTIONS += \
+#	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
+#	--exclude=libjava
 
 export libgcc_cv_fixed_point=no
 ifdef CONFIG_USE_UCLIBC
@@ -164,6 +162,9 @@ GCC_CONFIGURE:= \
 		--with-linker-hash-style=gnu \
 		--disable-libunwind-exceptions \
 		--disable-vtable-verify \
+		--enable-clocale=gnu \
+		--enable-gnu-unique-object \
+		--enable-gnu-indirect-function \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -174,8 +175,7 @@ GCC_CONFIGURE:= \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
-		--disable-decimal-float \
-		--with-diagnostics-color=always
+		--with-diagnostics-color=auto
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
 endif

@@ -176,7 +176,7 @@ default_prerm() {
 		ret=$?
 	fi
 
-	local shell="$(which bash)"
+	local shell="$(command -v bash)"
 	for i in $(grep -s "^/etc/init.d/" "$root/usr/lib/opkg/info/${pkgname}.list"); do
 		if [ -n "$root" ]; then
 			${shell:-/bin/sh} "$root/etc/rc.common" "$root$i" disable
@@ -265,7 +265,7 @@ default_postinst() {
 		rm -f /tmp/luci-indexcache
 	fi
 
-	local shell="$(which bash)"
+	local shell="$(command -v bash)"
 	for i in $(grep -s "^/etc/init.d/" "$root$filelist"); do
 		if [ -n "$root" ]; then
 			${shell:-/bin/sh} "$root/etc/rc.common" "$root$i" enable
@@ -283,7 +283,8 @@ default_postinst() {
 include() {
 	local file
 
-	for file in $(ls $1/*.sh 2>/dev/null); do
+	for file in "$1"/*.sh; do
+		[ -e "$file" ] || break
 		. $file
 	done
 }
