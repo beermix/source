@@ -12,6 +12,7 @@ GCC_CONFIGURE += \
 	--disable-libstdcxx-debug \
 	--disable-libstdcxx-pch \
 	--enable-libstdcxx-time \
+	--enable-decimal-float \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 ifndef CONFIG_USE_GLIBC
