@@ -11,7 +11,7 @@ PKG_NAME:=iperf3
 PKG_VERSION:=120b7ef
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/esnet/iperf.git
+PKG_SOURCE_URL:=https://github.com/esnet/iperf
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
