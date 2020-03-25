@@ -40031,3 +40031,125 @@ index 1429e68d58..0266f81e54 100644
  #define BFD_VERSION @bfd_version@
  #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
  #define REPORT_BUGS_TO @report_bugs_to@
+
+commit a560c29ca5a6eeb7f84452f781f838ab35fd844b
+Author: H.J. Lu <hjl.tools@gmail.com>
+Date:   Tue Mar 24 06:58:40 2020 -0700
+
+    bfd: Change num_group to unsigned int
+    
+    elf.c failed with to with GCC 10 as of
+    
+    commit 906b3eb9df6c577d3f6e9c3ea5c9d7e4d1e90536
+    Author: Martin Liska <mliska@suse.cz>
+    Date:   Tue Mar 24 11:40:10 2020 +0100
+    
+        Improve endianess detection.
+    
+                PR lto/94249
+                * plugin-api.h: Add more robust endianess detection.
+    
+    binutils-gdb/bfd/elf.c: In function ‘setup_group’:
+    binutils-gdb/bfd/elf.c:740:35: error: overflow in conversion from ‘unsigned int’ to ‘int’ changes value from ‘num_group = 4294967295’ to ‘-1’ [-Werror=overflow]
+      740 |     elf_tdata (abfd)->num_group = num_group = -1;
+          |                                   ^~~~~~~~~
+    cc1: all warnings being treated as errors
+    make[2]: *** [Makefile:1608: elf.lo] Error 1
+    
+    Change num_group in elf_obj_tdata to unsigned int to compile with GCC 10.
+    
+            PR binutils/25717
+            * elf-bfd.h (elf_obj_tdata): Change num_group to unsigned int.
+    
+    (cherry picked from commit cda7e5603f6efd7c3716e45cc6ea11b70dd8daae)
+
+diff --git a/bfd/ChangeLog b/bfd/ChangeLog
+index fd102a9cfe..f8abe540ba 100644
+--- a/bfd/ChangeLog
++++ b/bfd/ChangeLog
+@@ -1,3 +1,8 @@
++2020-03-24  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR binutils/25717
++	* elf-bfd.h (elf_obj_tdata): Change num_group to unsigned int.
++
+ 2020-03-11  Alan Modra  <amodra@gmail.com>
+ 
+ 	* elf64-ppc.c (ppc64_elf_inline_plt): Do increment rel in for loop.
+diff --git a/bfd/elf-bfd.h b/bfd/elf-bfd.h
+index cbbba153f4..1550a08b31 100644
+--- a/bfd/elf-bfd.h
++++ b/bfd/elf-bfd.h
+@@ -1937,7 +1937,7 @@ struct elf_obj_tdata
+   struct sdt_note *sdt_note_head;
+ 
+   Elf_Internal_Shdr **group_sect_ptr;
+-  int num_group;
++  unsigned int num_group;
+ 
+   /* Index into group_sect_ptr, updated by setup_group when finding a
+      section's group.  Used to optimize subsequent group searches.  */
+
+commit b6520be37fd59993c5b6bed1fe2a185fb7a1f996
+Author: Nick Clifton <nickc@redhat.com>
+Date:   Fri Feb 7 12:49:42 2020 +0000
+
+    Fix dwarf.c build with GCC 10
+    
+    Silcence a compile time warning message building the binutils with
+    gcc-10.
+    
+            * dwarf.c (display_debug_lines_decoded): Force a NUL termination
+            of the truncated file name.
+    
+    (cherry picked from commit e1104d08fe2fbfabcfa98aa00525211e47548bd8)
+
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index 24b0515fd6..fadd317151 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -1,3 +1,8 @@
++2020-03-24  Nick Clifton  <nickc@redhat.com>
++
++	* dwarf.c (display_debug_lines_decoded): Force a NUL termination
++	of the truncated file name.
++
+ 2020-02-25  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	PR binutils/25584
+diff --git a/binutils/dwarf.c b/binutils/dwarf.c
+index 35842f74b2..6ecfab5d5a 100644
+--- a/binutils/dwarf.c
++++ b/binutils/dwarf.c
+@@ -4905,6 +4905,11 @@ display_debug_lines_decoded (struct dwarf_section *  section,
+ 		  strncpy (newFileName,
+ 			   fileName + fileNameLength - MAX_FILENAME_LENGTH,
+ 			   MAX_FILENAME_LENGTH + 1);
++		  /* FIXME: This is to pacify gcc-10 which can warn that the
++		     strncpy above might leave a non-NUL terminated string
++		     in newFileName.  It won't, but gcc's analysis doesn't
++		     quite go far enough to discover this.  */
++		  newFileName[MAX_FILENAME_LENGTH] = 0;
+ 		}
+ 	      else
+ 		{
+
+commit d91a83902d10bea7be77e7cd843dc3f770ea2f1c
+Author: GDB Administrator <gdbadmin@sourceware.org>
+Date:   Wed Mar 25 00:00:27 2020 +0000
+
+    Automatic date update in version.in
+
+diff --git a/bfd/version.h b/bfd/version.h
+index 0266f81e54..d30a67a693 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200324
++#define BFD_VERSION_DATE 20200325
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
