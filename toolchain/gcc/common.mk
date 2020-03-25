@@ -59,7 +59,7 @@ ifeq ($(PKG_VERSION),9.3.0)
 endif
 
 ifeq ($(PKG_VERSION),8.4.0)
-  PKG_HASH:=
+  PKG_HASH:=e30a6e52d10e1f27ed55104ad233c30bd1e99cfb5ff98ab022dc941edd1b2dd4
 endif
 
 ifeq ($(PKG_VERSION),9.3.1)
@@ -164,7 +164,8 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
-		--with-diagnostics-color=auto
+		--with-diagnostics-color=auto \
+		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
 endif
@@ -197,14 +198,6 @@ ifdef CONFIG_sparc
   GCC_CONFIGURE+= \
 		--enable-targets=all \
 		--with-long-double-128
-endif
-
-ifeq ($(LIBC),uClibc)
-  GCC_CONFIGURE+= \
-		--disable-__cxa_atexit
-else
-  GCC_CONFIGURE+= \
-		--enable-__cxa_atexit
 endif
 
 ifneq ($(GCC_ARCH),)
