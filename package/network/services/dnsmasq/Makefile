@@ -14,7 +14,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_UPSTREAM_VERSION).tar.xz
 PKG_SOURCE_URL:=http://thekelleys.org.uk/dnsmasq/release-candidates
-PKG_HASH:=
+PKG_HASH:=0c4770eb05a0dfe5900d54b115f0f085f08b403fef6e96a8000fbcecc7c6edfa
 
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
