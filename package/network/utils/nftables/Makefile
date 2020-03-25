@@ -16,6 +16,8 @@ PKG_HASH:=956b915ce2a7aeaff123e49006be7a0690a0964e96c062703181a36e2e5edb78
 PKG_MAINTAINER:=Steven Barth <steven@midlink.org>
 PKG_LICENSE:=GPL-2.0
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
@@ -28,33 +30,44 @@ CONFIGURE_ARGS += \
         --disable-man-doc \
         --with-mini-gmp \
         --without-cli \
-        --disable-python \
+        --disable-python
 
-define Package/nftables
+define Package/nftables/default
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=Firewall
   TITLE:=nftables packet filtering userspace utility
-  DEPENDS:=+kmod-nft-core +libnftnl +PACKAGE_NFT_WITH_JSON:jansson
+  DEPENDS:=+kmod-nft-core +libnftnl
   URL:=http://netfilter.org/projects/nftables/
+  PROVIDES:=nftables
 endef
 
-define Package/nftables/config
-	config PACKAGE_NFT_WITH_JSON
-		bool "Build nftables with json support"
-		depends on PACKAGE_nftables
-		default n
+define Package/nftables-nojson
+  $(Package/nftables/default)
+  VARIANT:=nojson
+  DEFAULT_VARIANT:=1
 endef
 
-ifeq ($(CONFIG_PACKAGE_NFT_WITH_JSON),y)
-CONFIGURE_ARGS += --with-json
+define Package/nftables-json
+  $(Package/nftables/default)
+  TITLE += with JSON support
+  DEPENDS += +PACKAGE_nftables-json:jansson
+  VARIANT :=withjson
+endef
+
+ifeq ($(BUILD_VARIANT),json)
+  CONFIGURE_ARGS += --with-json
 endif
 
-define Package/nftables/install
+define Package/nftables/default/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/nft $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
 endef
 
-$(eval $(call BuildPackage,nftables))
+Package/nftables-nojson/install = $(Package/nftables/default/install)
+Package/nftables-json/install = $(Package/nftables/default/install)
+
+$(eval $(call BuildPackage,nftables-nojson))
+$(eval $(call BuildPackage,nftables-json))
