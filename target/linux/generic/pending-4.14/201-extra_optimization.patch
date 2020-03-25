@@ -19,7 +19,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  
  ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 -KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
-+KBUILD_CFLAGS	+= -Os -fno-reorder-blocks -fno-tree-ch $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
++KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
  else
  ifdef CONFIG_PROFILE_ALL_BRANCHES
 -KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,)
