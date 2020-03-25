@@ -1,0 +1,71 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Eneas U de Queiroz <cotequeiroz@gmail.com>
+Date: Tue, 24 Mar 2020 22:16:06 -0300
+Subject: [PATCH] Revert "Teach more BIOs how to handle BIO_CTRL_EOF"
+
+This reverts commit 22623e0cc26a11908253206a721873d4101cd466.
+
+diff --git a/crypto/bio/bss_acpt.c b/crypto/bio/bss_acpt.c
+index b38e47a592..f0272ef32f 100644
+--- a/crypto/bio/bss_acpt.c
++++ b/crypto/bio/bss_acpt.c
+@@ -527,12 +527,7 @@ static long acpt_ctrl(BIO *b, int cmd, long num, void *ptr)
+         break;
+     case BIO_CTRL_DUP:
+         break;
+-    case BIO_CTRL_EOF:
+-        if (b->next_bio == NULL)
+-            ret = 0;
+-        else
+-            ret = BIO_ctrl(b->next_bio, cmd, num, ptr);
+-        break;
++
+     default:
+         ret = 0;
+         break;
+diff --git a/crypto/bio/bss_conn.c b/crypto/bio/bss_conn.c
+index dd43a40601..84b9520328 100644
+--- a/crypto/bio/bss_conn.c
++++ b/crypto/bio/bss_conn.c
+@@ -316,8 +316,6 @@ static int conn_read(BIO *b, char *out, int outl)
+         if (ret <= 0) {
+             if (BIO_sock_should_retry(ret))
+                 BIO_set_retry_read(b);
+-            else if (ret == 0)
+-                b->flags |= BIO_FLAGS_IN_EOF;
+         }
+     }
+     return ret;
+@@ -497,9 +495,6 @@ static long conn_ctrl(BIO *b, int cmd, long num, void *ptr)
+             *fptr = data->info_callback;
+         }
+         break;
+-    case BIO_CTRL_EOF:
+-        ret = (b->flags & BIO_FLAGS_IN_EOF) != 0 ? 1 : 0;
+-        break;
+     default:
+         ret = 0;
+         break;
+diff --git a/crypto/bio/bss_fd.c b/crypto/bio/bss_fd.c
+index ccbe1626ba..31d5241e6a 100644
+--- a/crypto/bio/bss_fd.c
++++ b/crypto/bio/bss_fd.c
+@@ -123,8 +123,6 @@ static int fd_read(BIO *b, char *out, int outl)
+         if (ret <= 0) {
+             if (BIO_fd_should_retry(ret))
+                 BIO_set_retry_read(b);
+-            else if (ret == 0)
+-                b->flags |= BIO_FLAGS_IN_EOF;
+         }
+     }
+     return ret;
+@@ -188,9 +186,6 @@ static long fd_ctrl(BIO *b, int cmd, long num, void *ptr)
+     case BIO_CTRL_FLUSH:
+         ret = 1;
+         break;
+-    case BIO_CTRL_EOF:
+-        ret = (b->flags & BIO_FLAGS_IN_EOF) != 0 ? 1 : 0;
+-        break;
+     default:
+         ret = 0;
+         break;

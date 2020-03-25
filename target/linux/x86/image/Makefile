@@ -118,6 +118,10 @@ define Device/Default
   endif
 endef
 
+define Image/Build/gzip
+	gzip -f9n $(BIN_DIR)/$(IMG_ROOTFS)-$(1).img
+endef
+
 $(eval $(call Image/gzip-ext4-padded-squashfs))
 
 ifeq ($(SUBTARGET),64)
@@ -135,6 +139,12 @@ endif
 ifeq ($(SUBTARGET),legacy)
   include legacy.mk
 endif
+
+define Image/Build
+	$(call Image/Build/$(1))
+	$(CP) $(KDIR)/root.$(1) $(BIN_DIR)/$(IMG_ROOTFS)-$(1).img
+	$(call Image/Build/gzip/$(1))
+endef
 
 $(eval $(call BuildImage))
 
