@@ -119,7 +119,8 @@ SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
 TAR_OPTIONS += \
-	--exclude=gcc/ada/*.ad* --exclude=libjava
+	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
+	--exclude=libjava
 
 export libgcc_cv_fixed_point=no
 ifdef CONFIG_INSTALL_GCCGO
