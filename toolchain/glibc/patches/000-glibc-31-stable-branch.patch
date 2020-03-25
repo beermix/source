@@ -2894,3 +2894,208 @@ index 1595866b51..15c040a83e 100644
    CVE-2020-1752: A use-after-free vulnerability in the glob function when
    expanding ~user has been fixed.
  
+
+commit 5810e6d75fffa62cdf8a37592ed1be7f262eac98
+Author: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Date:   Tue Mar 24 15:36:23 2020 -0300
+
+    support/shell-container.c: Return 127 if execve fails
+    
+    Reviewed-by: DJ Delorie <dj@redhat.com>
+    
+    (cherry picked from commit 5fce0e095bc413f908f472074c2235198cd76bf4)
+
+diff --git a/support/shell-container.c b/support/shell-container.c
+index 509e0d69b1..0f4568ed0c 100644
+--- a/support/shell-container.c
++++ b/support/shell-container.c
+@@ -238,7 +238,7 @@ run_command_array (char **argv)
+ 
+       fprintf (stderr, "sh: execing %s failed: %s",
+ 	       argv[0], strerror (errno));
+-      exit (1);
++      exit (127);
+     }
+ 
+   waitpid (pid, &status, 0);
+
+commit 2448ba1d724bec8cd162084fc51aaecea3929727
+Author: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Date:   Tue Mar 24 15:40:36 2020 -0300
+
+    support/shell-container.c: Add builtin exit
+    
+    Reviewed-by: DJ Delorie <dj@redhat.com>
+    
+    (cherry picked from commit 5a5a3a3234bc220a5192d620e0cbc5360da46f14)
+
+diff --git a/support/shell-container.c b/support/shell-container.c
+index 0f4568ed0c..6540f8ac47 100644
+--- a/support/shell-container.c
++++ b/support/shell-container.c
+@@ -135,6 +135,18 @@ copy_func (char **argv)
+ 
+ }
+ 
++/* Emulate the 'exit' builtin.  The exit value is optional.  */
++static int
++exit_func (char **argv)
++{
++  int exit_val = 0;
++
++  if (argv[0] != 0)
++    exit_val = atoi (argv[0]) & 0xff;
++  exit (exit_val);
++  return 0;
++}
++
+ /* This is a list of all the built-in commands we understand.  */
+ static struct {
+   const char *name;
+@@ -143,6 +155,7 @@ static struct {
+   { "true", true_func },
+   { "echo", echo_func },
+   { "cp", copy_func },
++  { "exit", exit_func },
+   { NULL, NULL }
+ };
+ 
+
+commit ad9b0037ccc588804ef4c5e58feeab370543cf5a
+Author: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Date:   Tue Mar 24 15:47:13 2020 -0300
+
+    support/shell-container.c: Add builtin kill
+    
+    No options supported.
+    
+    Reviewed-by: DJ Delorie <dj@redhat.com>
+    
+    (cherry picked from commit 1c17100c43c0913ec94f3bcc966bf3792236c690)
+
+diff --git a/support/shell-container.c b/support/shell-container.c
+index 6540f8ac47..201536d24e 100644
+--- a/support/shell-container.c
++++ b/support/shell-container.c
+@@ -147,6 +147,25 @@ exit_func (char **argv)
+   return 0;
+ }
+ 
++/* Emulate the "/bin/kill" command.  Options are ignored.  */
++static int
++kill_func (char **argv)
++{
++  int signum = SIGTERM;
++  int i;
++
++  for (i = 0; argv[i]; i++)
++    {
++      pid_t pid;
++      if (strcmp (argv[i], "$$") == 0)
++	pid = getpid ();
++      else
++	pid = atoi (argv[i]);
++      kill (pid, signum);
++    }
++  return 0;
++}
++
+ /* This is a list of all the built-in commands we understand.  */
+ static struct {
+   const char *name;
+@@ -156,6 +175,7 @@ static struct {
+   { "echo", echo_func },
+   { "cp", copy_func },
+   { "exit", exit_func },
++  { "kill", kill_func },
+   { NULL, NULL }
+ };
+ 
+@@ -264,6 +284,11 @@ run_command_array (char **argv)
+       if (rv)
+ 	exit (rv);
+     }
++  else if (WIFSIGNALED (status))
++    {
++      int sig = WTERMSIG (status);
++      raise (sig);
++    }
+   else
+     exit (1);
+ }
+
+commit 83d3eec6728d1df6e7c436540671b9747e85079a
+Author: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Date:   Tue Mar 24 15:48:34 2020 -0300
+
+    stdlib: Move tst-system to tests-container
+    
+    Fix some issues with different shell and error messages.
+    
+    Checked on x86_64-linux-gnu and i686-linux-gnu.
+    
+    (cherry picked from commit 4eda036f5b897fa8bc20ddd2099b5a6ed4239dc9)
+
+diff --git a/stdlib/Makefile b/stdlib/Makefile
+index 45214b59e4..4615f6dfe7 100644
+--- a/stdlib/Makefile
++++ b/stdlib/Makefile
+@@ -70,7 +70,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
+ 		   test-canon test-canon2 tst-strtoll tst-environ	    \
+ 		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
+ 		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
+-		   tst-setcontext2 test-a64l tst-qsort tst-system testmb2   \
++		   tst-setcontext2 test-a64l tst-qsort testmb2              \
+ 		   bug-strtod2 tst-atof1 tst-atof2 tst-strtod2		    \
+ 		   tst-rand48-2 tst-makecontext tst-strtod5		    \
+ 		   tst-qsort2 tst-makecontext2 tst-strtod6 tst-unsetenv1    \
+@@ -92,6 +92,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
+ tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
+ 		   tst-tls-atexit tst-tls-atexit-nodelete
+ tests-static	:= tst-secure-getenv
++tests-container := tst-system
+ 
+ ifeq ($(build-hardcoded-path-in-tests),yes)
+ tests += tst-empty-env
+diff --git a/stdlib/tst-system.c b/stdlib/tst-system.c
+index c8c1811349..eddea33f4c 100644
+--- a/stdlib/tst-system.c
++++ b/stdlib/tst-system.c
+@@ -88,7 +88,8 @@ do_test (void)
+ 					 });
+     support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
+ 
+-    char *returnerr = xasprintf ("%s: 1: %s: not found\n",
++    char *returnerr = xasprintf ("%s: execing %s failed: "
++				 "No such file or directory",
+ 				 basename(_PATH_BSHELL), cmd);
+     TEST_COMPARE_STRING (result.err.buffer, returnerr);
+     free (returnerr);
+@@ -106,7 +107,8 @@ do_test (void)
+ 					 });
+     support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
+ 
+-    char *returnerr = xasprintf ("%s: 1: %s: File name too long\n",
++    char *returnerr = xasprintf ("%s: execing %s failed: "
++				 "File name too long",
+ 				 basename(_PATH_BSHELL), cmd);
+     TEST_COMPARE_STRING (result.err.buffer, returnerr);
+     free (returnerr);
+@@ -116,7 +118,7 @@ do_test (void)
+     struct support_capture_subprocess result;
+     result = support_capture_subprocess (call_system,
+ 					 &(struct args) {
+-					   "kill -USR1 $$", 0, SIGUSR1
++					   "kill $$", 0, SIGTERM
+ 					 });
+     support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
+   }
+@@ -136,7 +138,7 @@ do_test (void)
+     support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
+   }
+ 
+-  TEST_COMPARE (system (":"), 0);
++  TEST_COMPARE (system (""), 0);
+ 
+   return 0;
+ }
