@@ -39,15 +39,9 @@ define Package/nano/description
 endef
 
 CONFIGURE_ARGS += \
-	--enable-utf8 \
-	--without-slang \
-	--disable-wrapping \
 	--enable-color \
-	--disable-libmagic \
-	--disable-rpath \
-
-CONFIGURE_VARS += \
-	ac_cv_header_regex_h=no \
+	--enable-nanorc \
+	--enable-multibuffer \
 
 define Package/nano/install
 	$(INSTALL_DIR) $(1)/usr/bin
