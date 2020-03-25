@@ -49,7 +49,6 @@ endef
 CMAKE_OPTIONS += \
 	-DBUILD_SHARED_LIBS=ON \
 	-DBUILD_WITH_LIBNL=OFF \
-	-DCMAKE_BUILD_TYPE=Release \
 
 # grep 'option(DISABLE_' CMakeLists.txt | cut -f2 -d'(' | cut -f1 -d' ' | sort --unique
 CMAKE_OPTIONS += \
