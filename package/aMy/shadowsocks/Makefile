@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev.git
-PKG_SOURCE_VERSION:=f34b362
+PKG_SOURCE_VERSION:=b9ce095
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -65,8 +65,8 @@ CONFIGURE_ARGS += \
 	--disable-assert \
 	--disable-ssp \
 
-# TARGET_CFLAGS += -flto
-# TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+TARGET_CFLAGS += -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 define Package/shadowsocks-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
