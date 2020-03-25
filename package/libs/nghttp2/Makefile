@@ -28,13 +28,7 @@ define Package/libnghttp2/description
 endef
 
 CMAKE_OPTIONS += \
-        -DENABLE_LIB_ONLY=ON \
-        -DENABLE_DEBUG=OFF \
-        -DENABLE_PYTHON_BINDINGS=OFF \
-        -DENABLE_THREADS=ON \
-        -DWITH_JEMALLOC=OFF \
-        -DWITH_LIBXML2=OFF \
-        -DCMAKE_BUILD_TYPE=Release
+        -DENABLE_LIB_ONLY=ON
 
 define Build/InstallDev
 	$(call Build/InstallDev/cmake,$(1))
