@@ -71,7 +71,7 @@
 +
 +		/* workaround warp_clock() on first invocation */
 +		memset(&tz, 0, sizeof(tz));
-+		syscall(SYS_settimeofday, NULL, &tz);
++		syscall(SYS_settimeofday_time32, NULL, &tz);
 +
 +		memset(&tz, 0, sizeof(tz));
 +#ifdef __USE_MISC
@@ -80,7 +80,7 @@
 +		tz.tz_minuteswest = -(tm_time.__tm_gmtoff / 60);
 +#endif
 +
-+		if (syscall(SYS_settimeofday, NULL, &tz))
++		if (syscall(SYS_settimeofday_time32, NULL, &tz))
 +		{
 +			bb_perror_msg("can't set kernel time zone");
 +			return EXIT_FAILURE;

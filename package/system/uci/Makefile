@@ -22,6 +22,7 @@ PKG_LICENSE_FILES:=
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 
+CMAKE_INSTALL:=1
 PKG_BUILD_PARALLEL:=0
 
 include $(INCLUDE_DIR)/package.mk
@@ -61,27 +62,19 @@ CMAKE_OPTIONS = \
 
 define Package/libuci/install
 	$(INSTALL_DIR) $(1)/lib
-	$(CP) $(PKG_BUILD_DIR)/libuci.so* $(1)/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libuci.so* $(1)/lib/
 endef
 
 define Package/libuci-lua/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua
-	$(CP) $(PKG_BUILD_DIR)/lua/uci.so $(1)/usr/lib/lua/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lua/uci.so $(1)/usr/lib/lua/
 endef
 
 define Package/uci/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/uci $(1)/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/uci $(1)/sbin/
 	$(CP) ./files/* $(1)/
-endef
-
-define Build/InstallDev
-	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) $(PKG_BUILD_DIR)/uci{,_config,_blob,map}.h $(1)/usr/include
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_BUILD_DIR)/libuci.so* $(1)/usr/lib
-	$(CP) $(PKG_BUILD_DIR)/libucimap.a $(1)/usr/lib
 endef
 
 $(eval $(call BuildPackage,uci))
