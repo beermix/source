@@ -14,7 +14,7 @@ PKG_VERSION:=744e893
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
+PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_LICENSE:=BSD-3-clause
 
@@ -23,7 +23,7 @@ PKG_BUILD_PARALLEL:=1
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
-export CMAKE_SOURCE_DIR=$(PKG_INSTALL_DIR)/../build
+CMAKE_SOURCE_SUBDIR:=build
 
 CMAKE_OPTIONS += \
 	-DWITH_AESNI=0 \
@@ -38,7 +38,7 @@ CMAKE_OPTIONS += \
 define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
-	DEPENDS:=+libstdcpp +libpthread +librt +libopenssl +boost +boost-system +boost-filesystem \
+	DEPENDS:=+libopenssl +boost +boost-system +boost-filesystem \
 	         +boost-program_options +boost-date_time +libatomic +zlib
 	TITLE:=full-featured C++ implementation of I2P client
 	URL:=https://github.com/PurpleI2P/i2pd
@@ -58,7 +58,7 @@ define Package/i2pd/conffiles
 	/etc/i2pd/tunnels.d/*
 endef
 
-# TARGET_LDFLAGS+=-latomic
+TARGET_LDFLAGS+=-latomic
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
@@ -66,7 +66,7 @@ define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/share/i2pd
 	$(CP) $(PKG_BUILD_DIR)/contrib/certificates  $(1)/usr/share/i2pd
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) ./files/i2pd.config $(1)/etc/config/i2pd
+	$(INSTALL_DATA) ./files/i2pd.config $(1)/etc/config/i2pd
 	$(INSTALL_DIR) $(1)/etc/i2pd
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/contrib/i2pd.conf $(1)/etc/i2pd
 	$(SED) ' \
