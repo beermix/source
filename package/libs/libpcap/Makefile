@@ -34,7 +34,7 @@ define Package/libpcap
   TITLE:=Low-level packet capture library
   URL:=http://www.tcpdump.org/
   MENU:=1
-  ABI_VERSION:=2
+  ABI_VERSION:=1
 endef
 
 define Package/libpcap/description
