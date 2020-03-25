@@ -8,7 +8,8 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=isl
 # PKG_VERSION:=0.16.1
-PKG_VERSION:=0.21
+# PKG_VERSION:=0.21
+PKG_VERSION:=0.22.1
 
 PKG_SOURCE_URL:=http://isl.gforge.inria.fr
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
