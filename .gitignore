@@ -3,6 +3,7 @@
 .*.swp
 /env
 /dl
+/.dl
 /.config.old
 /bin
 /build_dir
