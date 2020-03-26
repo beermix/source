@@ -165,8 +165,6 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-diagnostics-color=auto \
-		--with-linker-hash-style=gnu \
-		--with-default-libstdcxx-abi=gcc4-compatible \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
