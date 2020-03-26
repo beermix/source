@@ -50,7 +50,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 $(filter-out -fno-plt -pipe -fomit-frame-pointer -fno-caller-saves -mstackrealign -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-m32 -O2 -mstackrealign $(filter-out -fno-plt -fomit-frame-pointer -fno-caller-saves -m32 -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -59,10 +59,15 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
+		--with-binutils=$BUILD/toolchain/bin \
 		--disable-profile \
 		--without-gd \
 		--without-cvs \
 		--enable-kernel=4.14 \
+		--enable-bind-now \
+		--enable-lock-elision \
+		--disable-werror \
+		--enable-stack-protector=strong \
 		--disable-debug \
 		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
