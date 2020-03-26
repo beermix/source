@@ -1,0 +1,43 @@
+From 351b28c5adcb7aa9c6a323fe0f572efc911a8476 Mon Sep 17 00:00:00 2001
+From: Thomas Bernard <miniupnp@free.fr>
+Date: Wed, 18 Dec 2019 01:18:56 +0100
+Subject: [PATCH] Fix PCPSendUnsolicitedAnnounce() when IPv6 is not available
+
+IPV6 can be enabled at compile time but unavailable at runtime
+see https://miniupnp.tuxfamily.org/forum/viewtopic.php?t=2395
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+---
+ miniupnpd/pcpserver.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/miniupnpd/pcpserver.c b/miniupnpd/pcpserver.c
+index aee6e45..3ac63d6 100644
+--- a/pcpserver.c
++++ b/pcpserver.c
+@@ -1688,13 +1688,15 @@ void PCPSendUnsolicitedAnnounce(int * sockets, int n_sockets)
+ 		}
+ 	}
+ #ifdef ENABLE_IPV6
+-	memset(&addr6, 0, sizeof(struct sockaddr_in6));
+-	addr6.sin6_family = AF_INET6;
+-	inet_pton(AF_INET6, "FF02::1", &(addr6.sin6_addr));
+-	addr6.sin6_port = htons(5350);
+-	len = sendto_or_schedule(socket6, buff, PCP_MIN_LEN, 0, (struct sockaddr *)&addr6, sizeof(struct sockaddr_in6));
+-	if( len < 0 ) {
+-		syslog(LOG_ERR, "PCPSendUnsolicitedAnnounce() IPv6 sendto(): %m");
++	if (socket6 >= 0) {
++		memset(&addr6, 0, sizeof(struct sockaddr_in6));
++		addr6.sin6_family = AF_INET6;
++		inet_pton(AF_INET6, "FF02::1", &(addr6.sin6_addr));
++		addr6.sin6_port = htons(5350);
++		len = sendto_or_schedule(socket6, buff, PCP_MIN_LEN, 0, (struct sockaddr *)&addr6, sizeof(struct sockaddr_in6));
++		if( len < 0 ) {
++			syslog(LOG_ERR, "PCPSendUnsolicitedAnnounce() IPv6 sendto(): %m");
++		}
+ 	}
+ #endif /* ENABLE_IPV6 */
+ }
+-- 
+2.21.0 (Apple Git-122.2)
+
