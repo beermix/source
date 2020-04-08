@@ -19,17 +19,9 @@ PKG_LICENSE_FILES:=COPYING
 HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
+include $(INCLUDE_DIR)/cmake.mk
 
-define Host/Configure
-endef
-
-define Host/Compile
-	cd $(HOST_BUILD_DIR) && \
-		CXX="$(HOSTCXX)" \
-		CXXFLAGS="$(HOST_CXXFLAGS) $(HOST_CPPFLAGS)" \
-		LDFLAGS="$(HOST_LDFLAGS)" \
-		$(STAGING_DIR_HOST)/bin/$(PYTHON) configure.py --bootstrap
-endef
+CMAKE_OPTIONS += -DCMAKE_BUILD_TYPE=Release \
 
 define Host/Install
 	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/bin/
