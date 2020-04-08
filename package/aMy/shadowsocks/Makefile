@@ -60,7 +60,7 @@ endef
 Package/shadowsocks-libev-server/description = $(Package/shadowsocks-libev/description)
 
 CONFIGURE_ARGS += \
-	--disable-documentation \
+	--disable-documentation --disable-assert --disable-ssp \
 
 TARGET_CFLAGS += -flto -fwhole-program
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
