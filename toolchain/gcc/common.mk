@@ -155,6 +155,7 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--with-tune=generic \
 		--enable-cld \
+		--enable-lto \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
