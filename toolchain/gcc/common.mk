@@ -150,6 +150,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--enable-checking=release \
+		--disable-vtable-verify \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
