@@ -8,14 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=shadowsocks-libev
-PKG_VERSION:=3.3.4
-PKG_RELEASE:=1
+PKG_VERSION:=cc658e4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev.git
-PKG_SOURCE_VERSION:=cc658e4
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_LICENSE:=GPLv3
 PKG_LICENSE_FILES:=LICENSE
@@ -61,11 +60,11 @@ Package/shadowsocks-libev-server/description = $(Package/shadowsocks-libev/descr
 
 CONFIGURE_ARGS += \
 	--disable-documentation \
-	--disable-assert \
-	--disable-ssp \
+	--enable-assert \
+	--enable-ssp \
 
-TARGET_CFLAGS += -flto -fwhole-program
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+# TARGET_CFLAGS += -flto -fwhole-program
+# TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 define Package/shadowsocks-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
