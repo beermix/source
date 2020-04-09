@@ -79,10 +79,10 @@ There are many more header-only libraries supported by Boost.
 See more at http://www.boost.org/doc/libs/1_72_0/
 endef
 
-PKG_BUILD_DEPENDS:=boost/host PACKAGE_python3:python3
+PKG_BUILD_DEPENDS:=boost/host
 
-include ../../lang/python/python3-version.mk
-BOOST_PYTHON3_VER=$(PYTHON3_VERSION)
+#include ../../lang/python/python3-version.mk
+#BOOST_PYTHON3_VER=$(PYTHON3_VERSION)
 
 BOOST_LIBS =
 
@@ -279,10 +279,8 @@ define Package/boost/config
 
 		$(foreach lib,$(BOOST_LIBS), \
 			config PACKAGE_boost-$(lib)
-			prompt "Boost $(lib) $(if $(findstring python3,$(lib)),$(paren_left)v$(BOOST_PYTHON3_VER)$(paren_right) ,)library."
 			default m if ALL
 			$(if $(findstring locale,$(lib)),depends on BUILD_NLS,)\
-			$(if $(findstring python3,$(lib)),depends on PACKAGE_python3,)\
 			$(if $(findstring fiber,$(lib)),depends on !boost-fiber-exclude,)\
 			$(if $(findstring context,$(lib)),depends on !boost-context-exclude,)
 			$(if $(findstring coroutine,$(lib)),depends on !boost-coroutine-exclude,)
@@ -342,7 +340,6 @@ $(eval $(call DefineBoostLibrary,log,system chrono date_time thread filesystem r
 $(eval $(call DefineBoostLibrary,math))
 #$(eval $(call DefineBoostLibrary,mpi,,)) # OpenMPI does no exist in OpenWRT at this time.
 $(eval $(call DefineBoostLibrary,program_options))
-$(eval $(call DefineBoostLibrary,python3,,,PACKAGE_python3))
 $(eval $(call DefineBoostLibrary,random,system))
 $(eval $(call DefineBoostLibrary,regex))
 $(eval $(call DefineBoostLibrary,serialization))
@@ -420,7 +417,6 @@ define Build/Compile
 			$(if $(CONFIG_PACKAGE_boost-test),,--without-test) \
 			--without-python \
 			$(foreach lib,$(BOOST_LIBS), \
-				$(if $(findstring python3,$(lib)),, \
 					$(if $(CONFIG_PACKAGE_boost-$(lib)),, \
 						$(if $(findstring wserialization,$(lib)),,--without-$(lib)) \
 					) \
@@ -432,11 +428,6 @@ define Build/Compile
 			$(if $(CONFIG_PACKAGE_boost-iostreams),-sNO_BZIP2=1 -sZLIB_INCLUDE=$(STAGING_DIR)/usr/include \
 				-sZLIB_LIBPATH=$(STAGING_DIR)/usr/lib) \
 			install ;\
-			$(if $(CONFIG_PACKAGE_boost-python3), \
-				echo "using gcc : $(GCC_VERSION) : $(GNU_TARGET_NAME)-gcc : <compileflags>\"$(TARGET_CFLAGS) -I$(STAGING_DIR)/usr/include/python$(BOOST_PYTHON3_VER)/ \" <cxxflags>\"$(TARGET_CXXFLAGS) $(EXTRA_CXXFLAGS)\" <linkflags>\"$(TARGET_LDFLAGS)\" ;" > \
-					tools/build/src/user-config.jam ; \
-				echo "using python : $(BOOST_PYTHON3_VER) : : $(STAGING_DIR)/usr/include/python$(BOOST_PYTHON3_VER)/ : $(STAGING_DIR)/usr/lib/libpython$(BOOST_PYTHON3_VER).so ;" >> \
-					tools/build/src/user-config.jam; \
 				b2 -a \
 					$(CONFIGURE_ARGS) \
 					--ignore-site-config \
@@ -480,16 +471,15 @@ define Host/Install
 	$(CP) $(HOST_BUILD_DIR)/tools/build/src/engine/b2 $(STAGING_DIR_HOSTPKG)/bin/
 endef
 
-#define Package/boost/Default/install
-#	$(INSTALL_DIR) $(1)/usr/lib
-#	$(CP) $(PKG_INSTALL_DIR)/lib/libboost_$(2)*.a $(1)/usr/lib/
-#endef
+define Package/boost/Default/install
+	$(INSTALL_DIR) $(1)/usr/lib
+endef
 
-#define Package/boost-test/install
-#		$(INSTALL_DIR) $(1)/usr/lib
-		$(CP) $(PKG_INSTALL_DIR)/lib/libboost_unit_test_framework*.a $(1)/usr/lib/
-#		$(CP) $(PKG_INSTALL_DIR)/lib/libboost_prg_exec_monitor*.a $(1)/usr/lib/
-#endef
+define Package/boost-test/install
+		$(INSTALL_DIR) $(1)/usr/lib
+		$(CP) $(PKG_INSTALL_DIR)/lib/libboost_unit_test_framework*.so* $(1)/usr/lib/
+		$(CP) $(PKG_INSTALL_DIR)/lib/libboost_prg_exec_monitor*.so* $(1)/usr/lib/
+endef
 
 define BuildBoostLibrary
   define Package/boost-$(1)/install
