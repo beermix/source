@@ -37,10 +37,12 @@ define Package/gzip/description
 endef
 
 CONFIGURE_VARS += \
+	gl_cv_func_getopt_gnu=yes \
 	ac_cv_path_shell=/bin/sh \
 	gl_cv_func_fflush_stdin=yes
 
 define Package/gzip/install
+	$(SED) 's,/bin/bash,/bin/sh,g' $(PKG_INSTALL_DIR)/usr/bin/{gunzip,zcat}
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 endef
