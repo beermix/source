@@ -46,7 +46,6 @@ HOST_CONFIGURE_ARGS = \
 	--enable-deterministic-archives \
 	--enable-plugins \
 	--disable-multilib \
-	--enable-lto \
 	--disable-werror \
 	--disable-nls \
 	--disable-sim \
