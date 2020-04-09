@@ -22,7 +22,7 @@ ifneq ($(CONFIG_SDK)$(CONFIG_PACKAGE_kmod-b43)$(CONFIG_PACKAGE_b43legacy-firmwar
 endif
 
 tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
-tools-y += m4 libtool autoconf autoconf-archive automake flex bison pkgconf mklibs zlib
+tools-y += m4 libtool autoconf automake flex bison pkgconf mklibs zlib
 tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
 tools-y += firmware-utils patch-image quilt padjffs2
 tools-y += mm-macros missing-macros cmake bc findutils gengetopt patchelf
@@ -44,7 +44,6 @@ tools-$(CONFIG_TARGET_tegra) += cbootimage cbootimage-configs
 $(curdir)/bison/compile := $(curdir)/flex/compile
 $(curdir)/flex/compile := $(curdir)/libtool/compile
 $(curdir)/libtool/compile := $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/automake/compile $(curdir)/missing-macros/compile
-$(curdir)/autoconf-archive/compile := $(curdir)/autoconf/compile
 $(curdir)/squashfs/compile := $(curdir)/lzma-old/compile
 $(curdir)/squashfskit4/compile := $(curdir)/xz/compile $(curdir)/zlib/compile
 $(curdir)/quilt/compile := $(curdir)/autoconf/compile $(curdir)/findutils/compile
@@ -52,7 +51,7 @@ $(curdir)/autoconf/compile := $(curdir)/m4/compile
 $(curdir)/automake/compile := $(curdir)/m4/compile $(curdir)/autoconf/compile $(curdir)/pkgconf/compile $(curdir)/xz/compile
 $(curdir)/gmp/compile := $(curdir)/libtool/compile
 $(curdir)/mpc/compile := $(curdir)/mpfr/compile $(curdir)/gmp/compile
-$(curdir)/mpfr/compile := $(curdir)/gmp/compile $(curdir)/autoconf-archive/compile
+$(curdir)/mpfr/compile := $(curdir)/gmp/compile
 $(curdir)/mtd-utils/compile := $(curdir)/libtool/compile $(curdir)/e2fsprogs/compile $(curdir)/zlib/compile
 $(curdir)/mklibs/compile := $(curdir)/libtool/compile
 $(curdir)/qemu/compile := $(curdir)/e2fsprogs/compile $(curdir)/zlib/compile
