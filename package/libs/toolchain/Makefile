@@ -656,6 +656,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
   ifeq ($(CONFIG_USE_GLIBC),y)
 	$(SED) 's|^\#!.*bash|\#!/usr/bin/sh|g; \
 	s|/lib/ld-linux.so.3|/usr/lib/ld-linux.so.3|g; \
