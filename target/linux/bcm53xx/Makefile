@@ -24,9 +24,9 @@ include $(INCLUDE_DIR)/target.mk
 
 KERNELNAME:=zImage dtbs
 
-DEFAULT_PACKAGES += swconfig nvram \
-	osafeloader oseama otrx \
-	kmod-gpio-button-hotplug \
-	kmod-leds-gpio kmod-ledtrig-default-on kmod-ledtrig-timer
+#DEFAULT_PACKAGES += swconfig nvram \
+#	osafeloader oseama otrx \
+#	kmod-gpio-button-hotplug \
+#	kmod-leds-gpio kmod-ledtrig-default-on kmod-ledtrig-timer
 
 $(eval $(call BuildTarget))
