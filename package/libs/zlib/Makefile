@@ -8,18 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=1.2.11
-PKG_RELEASE:=3
+PKG_VERSION:=ee1c9bc
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@SF/libpng http://www.zlib.net
-PKG_HASH:=4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066
-
-PKG_LICENSE:=Zlib
-PKG_LICENSE_FILES:=README
-PKG_CPE_ID:=cpe:/a:gnu:zlib
-
-PKG_CONFIG_DEPENDS:= CONFIG_ZLIB_OPTIMIZE_SPEED
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -35,7 +30,6 @@ define Package/zlib-dev
   SECTION:=devel
   CATEGORY:=Development
   SUBMENU:=Libraries
-  DEPENDS:=zlib
   TITLE:=Development files for the zlib library
 endef
 
@@ -49,18 +43,13 @@ define Package/zlib-dev/description
  This package includes the development support files.
 endef
 
-define Package/zlib/config
-	source "$(SOURCE)/Config.in"
-endef
-
-TARGET_CFLAGS += $(FPIC)
-
-ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
-	TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
-endif
-
 CMAKE_OPTIONS += \
-	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
+	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DWITH_NEW_STRATEGIES=OFF \
+	-DWITH_SANITIZERS=OFF \
+	-DZLIB_COMPAT=ON \
+	-DWITH_OPTIM=OFF
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
