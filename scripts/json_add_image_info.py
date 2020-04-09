@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
 
-from os import getenv
-from pathlib import Path
-from sys import argv
-import hashlib
 import json
+import os
+import hashlib
 
-if len(argv) != 2:
-    print("ERROR: JSON info script requires output arg")
-    exit(1)
 
-json_path = Path(argv[1])
-bin_dir = Path(getenv("BIN_DIR"))
-image_file = bin_dir / getenv("IMAGE_NAME")
+def e(variable, default=None):
+    return os.environ.get(variable, default)
 
-if not image_file.is_file():
-    print("Skip JSON creation for non existing image ", image_file)
-    exit(0)
+
+json_path = "{}{}{}.json".format(e("BIN_DIR"), os.sep, e("IMAGE_PREFIX"))
+
+with open(os.path.join(e("BIN_DIR"), e("IMAGE_NAME")), "rb") as image_file:
+    image_hash = hashlib.sha256(image_file.read()).hexdigest()
 
 
 def get_titles():
@@ -24,40 +20,36 @@ def get_titles():
     for prefix in ["", "ALT0_", "ALT1_", "ALT2_"]:
         title = {}
         for var in ["vendor", "model", "variant"]:
-            if getenv("DEVICE_{}{}".format(prefix, var.upper())):
-                title[var] = getenv("DEVICE_{}{}".format(prefix, var.upper()))
+            if e("DEVICE_{}{}".format(prefix, var.upper())):
+                title[var] = e("DEVICE_{}{}".format(prefix, var.upper()))
 
         if title:
             titles.append(title)
 
     if not titles:
-        titles.append({"title": getenv("DEVICE_TITLE")})
+        titles.append({"title": e("DEVICE_TITLE")})
 
     return titles
 
 
-device_id = getenv("DEVICE_ID")
-image_hash = hashlib.sha256(image_file.read_bytes()).hexdigest()
+if not os.path.exists(json_path):
+    device_info = {
+        "id": e("DEVICE_ID"),
+        "image_prefix": e("IMAGE_PREFIX"),
+        "images": [],
+        "metadata_version": 1,
+        "supported_devices": e("SUPPORTED_DEVICES").split(),
+        "target": "{}/{}".format(e("TARGET"), e("SUBTARGET", "generic")),
+        "titles": get_titles(),
+        "version_commit": e("VERSION_CODE"),
+        "version_number": e("VERSION_NUMBER"),
+    }
+else:
+    with open(json_path, "r") as json_file:
+        device_info = json.load(json_file)
 
-image_info = {
-    "metadata_version": 1,
-    "target": "{}/{}".format(getenv("TARGET"), getenv("SUBTARGET")),
-    "version_code": getenv("VERSION_CODE"),
-    "version_number": getenv("VERSION_NUMBER"),
-    "profiles": {
-        device_id: {
-            "image_prefix": getenv("IMAGE_PREFIX"),
-            "images": [
-                {
-                    "type": getenv("IMAGE_TYPE"),
-                    "name": getenv("IMAGE_NAME"),
-                    "sha256": image_hash,
-                }
-            ],
-            "supported_devices": getenv("SUPPORTED_DEVICES").split(),
-            "titles": get_titles(),
-        }
-    },
-}
+image_info = {"type": e("IMAGE_TYPE"), "name": e("IMAGE_NAME"), "sha256": image_hash}
+device_info["images"].append(image_info)
 
-json_path.write_text(json.dumps(image_info, separators=(",", ":")))
+with open(json_path, "w") as json_file:
+    json.dump(device_info, json_file, sort_keys=True, indent="  ")
