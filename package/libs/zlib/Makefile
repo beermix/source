@@ -16,6 +16,12 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
+PKG_LICENSE:=Zlib
+PKG_LICENSE_FILES:=README
+PKG_CPE_ID:=cpe:/a:gnu:zlib
+
+PKG_CONFIG_DEPENDS:= CONFIG_ZLIB_OPTIMIZE_SPEED
+
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
@@ -30,6 +36,7 @@ define Package/zlib-dev
   SECTION:=devel
   CATEGORY:=Development
   SUBMENU:=Libraries
+  DEPENDS:=zlib
   TITLE:=Development files for the zlib library
 endef
 
@@ -43,18 +50,26 @@ define Package/zlib-dev/description
  This package includes the development support files.
 endef
 
+define Package/zlib/config
+	source "$(SOURCE)/Config.in"
+endef
+
+TARGET_CFLAGS += $(FPIC)
+
+ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
+	TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
+endif
+
 CMAKE_OPTIONS += \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
 	-DCMAKE_BUILD_TYPE=Release \
-	-DWITH_NEW_STRATEGIES=OFF \
-	-DWITH_SANITIZERS=OFF \
+	-DWITH_NEW_STRATEGIES=ON \
 	-DZLIB_COMPAT=ON \
 	-DWITH_OPTIM=ON \
 	-DHAVE_PCLMULQDQ_INTRIN=0 \
 	-DHAVE_AVX2_INTRIN=0 \
 	-DHAVE_SSE42CRC_INTRIN=0 \
 	-DHAVE_SSE42CRC_INLINE_ASM=0
-	
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
