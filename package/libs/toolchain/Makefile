@@ -290,7 +290,7 @@ define Package/libc/config
 		string
 		prompt "libc shared library files (use wildcards)"
 		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libc
-		default "./lib/ld{*.so*,-linux*.so.*} ./lib/lib{anl,c,cidn,crypt,dl,m,nsl,nss_dns,nss_files,resolv,util}{-*.so,.so.*,.so}"
+		default "./lib/ld{*.so*,-linux*.so.*} ./lib/lib{anl,c,cidn,crypt,dl,m,nsl,nss_dns,nss_files,resolv,util}{-*.so,.so.*}"
 
 	endmenu
 endef
@@ -655,16 +655,13 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/{getent,getconf,sprof,gencat,makedb,pldd,pcprofiledump,xtrace,sotruss,catchsegv,localedef,lddlibc4,ldd} $(1)/usr/bin/
-	mkdir -p $(1)/share/i18n/charmaps
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-* $(1)/share/i18n/charmaps/
-	mkdir -p $(1)/share/i18n/locales
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/ru_* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/en_* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/i18n* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/iso* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/translit_* $(1)/share/i18n/locales/
-	mkdir -p $(1)/lib/locale
+	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
+  ifeq ($(CONFIG_USE_GLIBC),y)
+	$(SED) 's|^\#!.*bash|\#!/usr/bin/sh|g; \
+	s|/lib/ld-linux.so.3|/usr/lib/ld-linux.so.3|g; \
+	s|/lib/ld-linux.so.2|/usr/lib/ld-linux.so.2|g; \
+	s|/lib64/ld-linux-x86-64.so.2|/usr/lib/ld-linux-x86-64.so.2|g' $(1)/usr/bin/ldd
+  endif
   endef
 
   define Package/gconv-modules/install
