@@ -63,6 +63,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-kernel=5.4 \
+		--enable-stack-protector=strong \
 		--enable-bind-now \
 		--enable-lock-elision \
 		--disable-debug \
