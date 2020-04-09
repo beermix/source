@@ -50,7 +50,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-m32 -O2 -mstackrealign $(filter-out -m32 -O2 -Os -fno-caller-saves -fno-plt -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-m32 -O2 -mstackrealign $(filter-out -m32 -O2 -Os -fomit-frame-pointer,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
