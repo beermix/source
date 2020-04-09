@@ -30,13 +30,6 @@ define Package/gcc/Default
   VERSION:=$(LIBGCC_VERSION)-$(PKG_RELEASE)
 endef
 
-define Package/gconv-modules
-$(call Package/gcc/Default)
-  TITLE:=Glibc gconv modules
-  VERSION:=$(LIBC_VERSION)-$(PKG_RELEASE)
-  DEPENDS:=@USE_GLIBC
-endef
-
 define Package/libgcc
 $(call Package/gcc/Default)
   TITLE:=GCC support library
@@ -656,11 +649,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
   endef
 
-  define Package/gconv-modules/install
-	$(INSTALL_DIR) $(1)/lib/gconv
-	$(CP) $(TOOLCHAIN_DIR)/lib/gconv/* $(1)/lib/gconv/
-  endef
-
   define Package/ldconfig/install
 	$(INSTALL_DIR) $(1)/sbin/
 	$(CP) $(TOOLCHAIN_DIR)/sbin/ldconfig $(1)/sbin/
@@ -815,4 +803,3 @@ $(eval $(call BuildPackage,libgfortran))
 $(eval $(call BuildPackage,libgomp))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
-$(eval $(call BuildPackage,gconv-modules))
