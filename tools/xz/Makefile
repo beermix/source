@@ -26,8 +26,7 @@ HOST_CONFIGURE_ARGS += \
 	--enable-static=yes \
 	--enable-shared=no \
 	--disable-doc \
-	--disable-rpath \
-	--enable-werror \
+	--disable-nls \
 	--with-pic
 
 define Host/Install
