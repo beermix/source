@@ -140,14 +140,17 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
-		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--enable-checking=release \
+		--enable-gnu-unique-object \
 		--disable-vtable-verify \
+		--without-cuda-driver \
+		--enable-checking=release \
+		--with-build-config=bootstrap-lto-lean \
+		--disable-werror \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -158,7 +161,6 @@ GCC_CONFIGURE:= \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
-		--disable-decimal-float \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
