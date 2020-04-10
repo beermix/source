@@ -14,7 +14,7 @@ PKG_CPE_ID:=cpe:/a:midnight_commander:midnight_commander
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ftp.midnight-commander.org/
-PKG_HASH:=
+PKG_HASH:=859f1cc070450bf6eb4d319ffcb6a5ac29deb0ac0d81559fb2e71242b1176d46
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf gettext-version
 PKG_BUILD_DEPENDS:=MC_VFS:libtirpc
@@ -65,6 +65,10 @@ CONFIGURE_ARGS += \
 	--disable-doxygen-html \
 	--with-homedir=/etc/mc \
 	--with-screen=ncurses \
+	--disable-mclib \
+	--without-x \
+	--without-libiconv-prefix \
+	--without-libintl-prefix \
 	--enable-silent-rules \
 	--without-x \
 
