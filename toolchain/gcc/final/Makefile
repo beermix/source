@@ -11,6 +11,11 @@ GCC_CONFIGURE += \
 	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
+ifneq ($(CONFIG_USE_UCLIBC),)
+  GCC_CONFIGURE += \
+	--disable-tls
+endif
+
 ifndef CONFIG_USE_GLIBC
   GCC_CONFIGURE += --disable-libsanitizer
 endif
