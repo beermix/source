@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=curl
 PKG_VERSION:=7.69.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://dl.uxnr.de/mirror/curl/ \
@@ -21,9 +21,6 @@ PKG_HASH:=03c7d5e6697f7b7e40ada1b2256e565a555657398e6c1fcfa4cb251ccd819d4f
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:haxx:libcurl
-
-PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=1
 
 PKG_CONFIG_DEPENDS:= \
   CONFIG_IPV6 \
@@ -71,6 +68,7 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_OPENSSL_WITH_NPN)
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/curl/Default
   SECTION:=net
@@ -103,75 +101,63 @@ define Package/libcurl/config
 endef
 
 TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections
-TARGET_CPPFLAGS += $(if $(CONFIG_LIBCURL_NTLM),,-DCURL_DISABLE_NTLM)
 TARGET_LDFLAGS += -Wl,--gc-sections
 
-CONFIGURE_ARGS += \
-	--disable-debug \
-	--disable-ares \
-	--enable-shared \
-	--enable-static \
-	--disable-manual \
-	--without-nss \
-	--without-libmetalink \
-	--without-librtmp \
-	--without-libidn \
-	--without-ca-path \
-	--without-libpsl \
-	--with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
+CMAKE_OPTIONS += \
+	-DBUILD_CURL_EXE=ON \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_TESTING=OFF \
+	-DCMAKE_USE_BEARSSL=OFF \
+	-DCMAKE_USE_GSSAPI=OFF \
+	-DCMAKE_USE_NSS=OFF \
+	-DCURL_BROTLI=OFF \
+	-DCURL_LTO=ON \
+	-DCURL_WERROR=OFF \
+	-DENABLE_ARES=OFF \
+	-DENABLE_CURLDEBUG=OFF \
+	-DENABLE_DEBUG=OFF \
+	-DENABLE_MANUAL=OFF \
+	-DHAVE_POLL_FINE=ON \
+	-DPICKY_COMPILER=OFF \
+	-Duse_ntlm=OFF \
 	\
-	$(call autoconf_bool,CONFIG_IPV6,ipv6) \
+	-DENABLE_IPV6=$(if $(CONFIG_LIBCURL_IPV6),ON,OFF) \
 	\
-	$(if $(CONFIG_LIBCURL_WOLFSSL),--with-wolfssl="$(STAGING_DIR)/usr",--without-wolfssl) \
-	$(if $(CONFIG_LIBCURL_GNUTLS),--with-gnutls="$(STAGING_DIR)/usr",--without-gnutls) \
-	$(if $(CONFIG_LIBCURL_OPENSSL),--with-ssl="$(STAGING_DIR)/usr",--without-ssl) \
-	$(if $(CONFIG_LIBCURL_MBEDTLS),--with-mbedtls="$(STAGING_DIR)/usr",--without-mbedtls) \
+	-DCMAKE_USE_WOLFSSL=$(if $(CONFIG_LIBCURL_WOLFSSL),ON,OFF) \
+	-DCMAKE_USE_OPENSSL=$(if $(CONFIG_LIBCURL_OPENSSL),ON,OFF) \
+	-DCMAKE_USE_MBEDTLS=$(if $(CONFIG_LIBCURL_MBEDTLS),ON,OFF) \
 	\
-	$(if $(CONFIG_LIBCURL_LIBIDN2),--with-libidn2="$(STAGING_DIR)/usr",--without-libidn2) \
-	$(if $(CONFIG_LIBCURL_SSH2),--with-libssh2="$(STAGING_DIR)/usr",--without-libssh2) \
-	$(if $(CONFIG_LIBCURL_ZLIB),--with-zlib="$(STAGING_DIR)/usr",--without-zlib) \
-	$(if $(CONFIG_LIBCURL_NGHTTP2),--with-nghttp2="$(STAGING_DIR)/usr",--without-nghttp2) \
+	-DCMAKE_USE_LIBSSH2=$(if $(CONFIG_LIBCURL_LIBSSH2),ON,OFF) \
+	-DCURL_ZLIB=$(if $(CONFIG_LIBCURL_ZLIB),ON,OFF) \
+	-DUSE_NGHTTP2=$(if $(CONFIG_LIBCURL_NGHTTP2),ON,OFF) \
 	\
-	$(call autoconf_bool,CONFIG_LIBCURL_DICT,dict) \
-	$(call autoconf_bool,CONFIG_LIBCURL_FILE,file) \
-	$(call autoconf_bool,CONFIG_LIBCURL_FTP,ftp) \
-	$(call autoconf_bool,CONFIG_LIBCURL_GOPHER,gopher) \
-	$(call autoconf_bool,CONFIG_LIBCURL_HTTP,http) \
-	$(call autoconf_bool,CONFIG_LIBCURL_IMAP,imap) \
-	$(call autoconf_bool,CONFIG_LIBCURL_LDAP,ldap) \
-	$(call autoconf_bool,CONFIG_LIBCURL_LDAPS,ldaps) \
-	$(call autoconf_bool,CONFIG_LIBCURL_POP3,pop3) \
-	$(call autoconf_bool,CONFIG_LIBCURL_RTSP,rtsp) \
-	$(call autoconf_bool,CONFIG_LIBCURL_SMB,smb) \
-	$(call autoconf_bool,CONFIG_LIBCURL_SMTP,smtp) \
-	$(call autoconf_bool,CONFIG_LIBCURL_TELNET,telnet) \
-	$(call autoconf_bool,CONFIG_LIBCURL_TFTP,tftp) \
+	-DCURL_DISABLE_DICT=$(if $(CONFIG_LIBCURL_DICT),OFF,ON) \
+	-DCURL_DISABLE_FILE=$(if $(CONFIG_LIBCURL_FILE),OFF,ON) \
+	-DCURL_DISABLE_FTP=$(if $(CONFIG_LIBCURL_FTP),OFF,ON) \
+	-DCURL_DISABLE_GOPHER=$(if $(CONFIG_LIBCURL_GOPHER),OFF,ON) \
+	-DCURL_DISABLE_HTTP=$(if $(CONFIG_LIBCURL_HTTP),OFF,ON) \
+	-DCURL_DISABLE_IMAP=$(if $(CONFIG_LIBCURL_IMAP),OFF,ON) \
+	-DCURL_DISABLE_LDAP=$(if $(CONFIG_LIBCURL_LDAP),OFF,ON) \
+	-DCURL_DISABLE_LDAPS=$(if $(CONFIG_LIBCURL_LDAPS),OFF,ON) \
+	-DCURL_DISABLE_POP3=$(if $(CONFIG_LIBCURL_POP3),OFF,ON) \
+	-DCURL_DISABLE_RTSP=$(if $(CONFIG_LIBCURL_RTSP),OFF,ON) \
+	-DCURL_DISABLE_SMB=$(if $(CONFIG_LIBCURL_SMB),OFF,ON) \
+	-DCURL_DISABLE_SMTP=$(if $(CONFIG_LIBCURL_SMTP),OFF,ON) \
+	-DCURL_DISABLE_TELNET=$(if $(CONFIG_LIBCURL_TELNET),OFF,ON) \
+	-DCURL_DISABLE_TFTP=$(if $(CONFIG_LIBCURL_TFTP),OFF,ON) \
 	\
-	$(call autoconf_bool,CONFIG_LIBCURL_COOKIES,cookies) \
-	$(call autoconf_bool,CONFIG_LIBCURL_CRYPTO_AUTH,crypto-auth) \
-	$(call autoconf_bool,CONFIG_LIBCURL_LIBCURL_OPTION,libcurl-option) \
-	$(call autoconf_bool,CONFIG_LIBCURL_PROXY,proxy) \
-	$(call autoconf_bool,CONFIG_LIBCURL_THREADED_RESOLVER,threaded-resolver) \
-	$(call autoconf_bool,CONFIG_LIBCURL_TLS_SRP,tls-srp) \
-	$(call autoconf_bool,CONFIG_LIBCURL_UNIX_SOCKETS,unix-sockets) \
-	$(call autoconf_bool,CONFIG_LIBCURL_VERBOSE,verbose) \
-
-define Build/Compile
-	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
-		DESTDIR="$(PKG_INSTALL_DIR)" \
-		CC="$(TARGET_CC)" \
-		install
-endef
+	-DCURL_DISABLE_COOKIES=$(if $(CONFIG_LIBCURL_COOKIES),OFF,ON) \
+	-DCURL_DISABLE_CRYPTO_AUTH=$(if $(CONFIG_LIBCURL_CRYPTO_AUTH),OFF,ON) \
+	-DCURL_DISABLE_PROXY=$(if $(CONFIG_LIBCURL_PROXY),OFF,ON) \
+	-DENABLE_THREADED_RESOLVER=$(if $(CONFIG_LIBCURL_THREADED_RESOLVER),ON,OFF) \
+	-DUSE_TLS_SRP=$(if $(CONFIG_LIBCURL_TLS_SRP),ON,OFF) \
+	-DENABLE_UNIX_SOCKETS=$(if $(CONFIG_LIBCURL_UNIX_SOCKETS),ON,OFF) \
+	-DCURL_DISABLE_VERBOSE_STRINGS=$(if $(CONFIG_LIBCURL_VERBOSE),OFF,ON)
 
 define Build/InstallDev
-	$(INSTALL_DIR) $(2)/bin $(1)/usr/bin $(1)/usr/include $(1)/usr/lib $(1)/usr/lib/pkgconfig
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/curl-config $(1)/usr/bin/
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/curl $(1)/usr/include/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcurl.{a,so*} $(1)/usr/lib/
-	$(CP) $(PKG_BUILD_DIR)/libcurl.pc $(1)/usr/lib/pkgconfig/
+	$(call Build/InstallDev/cmake,$(1))
 	$(SED) 's,-L$$$${exec_prefix}/lib,,g' $(1)/usr/bin/curl-config
 	[ -n "$(TARGET_LDFLAGS)" ] && $(SED) 's#$(TARGET_LDFLAGS)##g' $(1)/usr/lib/pkgconfig/libcurl.pc || true
-	$(LN) $(STAGING_DIR)/usr/bin/curl-config $(2)/bin/
 endef
 
 define Package/curl/install
@@ -181,7 +167,7 @@ endef
 
 define Package/libcurl/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcurl.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcurl.so* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,curl))
