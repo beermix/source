@@ -553,9 +553,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) ./glibc-files/* $(1)/
 	rm -f $(1)/etc/localtime
 	$(LN) /tmp/localtime $(1)/etc/localtime
-	$(INSTALL_DIR) $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/lib
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
