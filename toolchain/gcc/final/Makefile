@@ -21,7 +21,9 @@ GCC_CONFIGURE += \
 
 #ifneq ($(CONFIG_USE_UCLIBC),)
 #  GCC_CONFIGURE += \
-#	--disable-tls
+#	--disable-threads \
+#	--disable-libitm \
+#	--disable-libatomic
 #endif
 
 ifndef CONFIG_USE_GLIBC
