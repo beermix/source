@@ -13,8 +13,8 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://git.musl-libc.org/git/musl
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_MIRROR_HASH:=f68308e7182300bf7d48fed740785db2d212216c41df1a6ed9a51d8a370f6120
+PKG_SOURCE_VERSION:=33338ebc853d37c80f0f236cc7a92cb0acc6aace
+PKG_MIRROR_HASH:=
 
 LIBC_SO_VERSION:=$(PKG_VERSION)
 PATCH_DIR:=$(PATH_PREFIX)/patches
@@ -38,7 +38,7 @@ MUSL_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
-		--enable-debug \
+		--disable-debug \
 		--enable-optimize
 
 define Host/Configure
