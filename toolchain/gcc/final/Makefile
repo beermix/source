@@ -6,24 +6,10 @@ GCC_CONFIGURE += \
 	--with-headers=$(TOOLCHAIN_DIR)/include \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
-	--enable-__cxa_atexit \
-	--enable-decimal-float \
-	--enable-tls \
-	--enable-c99 \
-	--enable-long-long \
-	--enable-threads=posix \
-	--disable-libstdcxx-pch \
-	--enable-libstdcxx-time \
-	--enable-clocale=gnu \
+	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
+	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
-
-#ifneq ($(CONFIG_USE_UCLIBC),)
-#  GCC_CONFIGURE += \
-#	--disable-threads \
-#	--disable-libitm \
-#	--disable-libatomic
-#endif
 
 ifndef CONFIG_USE_GLIBC
   GCC_CONFIGURE += --disable-libsanitizer
