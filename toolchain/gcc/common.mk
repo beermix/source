@@ -146,8 +146,6 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--enable-gnu-unique-object \
-		--disable-vtable-verify \
 		--without-cuda-driver \
 		--enable-checking=release \
 		--with-build-config=bootstrap-lto-lean \
