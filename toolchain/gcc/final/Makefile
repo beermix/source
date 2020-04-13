@@ -16,7 +16,6 @@ GCC_CONFIGURE += \
 	--enable-libstdcxx-time \
 	--enable-clocale=gnu \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
-	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
 
 #ifneq ($(CONFIG_USE_UCLIBC),)

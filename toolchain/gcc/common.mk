@@ -148,6 +148,8 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--without-cuda-driver \
 		--enable-checking=release \
+		--enable-lto \
+		--with-linker-hash-style=gnu \
 		--with-build-config=bootstrap-lto-lean \
 		--disable-werror \
 		$(GRAPHITE_CONFIGURE) \
