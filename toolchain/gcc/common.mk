@@ -128,13 +128,6 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--with-tune=generic \
-		--enable-checking=release \
-		--disable-libunwind-exceptions \
-		--enable-gnu-unique-object \
-		--enable-linker-build-id \
-		--with-linker-hash-style=gnu \
-		--enable-gnu-indirect-function \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
