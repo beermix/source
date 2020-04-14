@@ -67,6 +67,8 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--disable-debug \
 		--enable-add-ons \
+		--disable-build-nscd \
+		--disable-nscd \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 # export libc_cv_ssp=no
