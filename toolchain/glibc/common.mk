@@ -58,7 +58,6 @@ GLIBC_CONFIGURE:= \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
-		AUTOCONF=false \
 		MAKEINFO=: \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
@@ -69,15 +68,13 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--disable-werror \
 		--enable-kernel=5.4 \
-		--enable-stack-protector=strong \
+		--enable-stack-protector=yes \
 		--disable-debug \
 		--enable-add-ons \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-# export libc_cv_ssp=no
-# export libc_cv_ssp_strong=no
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
+export libc_cv_ssp=no
+export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
