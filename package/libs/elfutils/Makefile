@@ -62,8 +62,8 @@ CONFIGURE_ARGS += --disable-nls
 endif
 
 CONFIGURE_ARGS += \
-	--disable-debuginfod \
 	--program-prefix=eu- \
+	--disable-debuginfod \
 	--without-lzma
 
 TARGET_CFLAGS += -D_GNU_SOURCE -Wno-unused-result -Wno-format-nonliteral
