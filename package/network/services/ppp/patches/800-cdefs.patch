@@ -1,0 +1,10 @@
+--- a/pppd/pppd.h
++++ b/pppd/pppd.h
+@@ -53,6 +53,7 @@
+ #include <stdlib.h>		/* for encrypt */
+ #include <unistd.h>		/* for setkey */
+ #include <limits.h>		/* for NGROUPS_MAX */
++#include <sys/cdefs.h>		/* for __P */
+ #include <sys/param.h>		/* for MAXPATHLEN and BSD4_4, if defined */
+ #include <sys/types.h>		/* for u_int32_t, if defined */
+ #include <sys/time.h>		/* for struct timeval */
