@@ -82,15 +82,13 @@ CONFIGURE_ARGS += \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
 	--enable-widec \
-	--with-build-cppflags=-D_GNU_SOURCE \
 	--with-xterm-kbs=DEL \
-	--enable-colorfgbg \
-	--enable-hard-tabs \
 	--disable-stripping \
 	--disable-wattr-macros \
 	--with-cxx-shared \
 	--with-cxx-binding \
-	--with-ospeed=unsigned
+	--with-cxx \
+	--with-build-cppflags=-D_GNU_SOURCE
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
@@ -98,8 +96,8 @@ CONFIGURE_VARS += \
 HOST_CFLAGS += $(HOST_FPIC)
 
 HOST_CONFIGURE_ARGS += \
-	--without-cxx \
-	--without-cxx-binding \
+	--with-cxx \
+	--with-cxx-binding \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
