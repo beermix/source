@@ -48,28 +48,30 @@ endif
 # "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
+	unset ASFLAGS; \
+	unset LDFLAGS; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 -march=bonnell -mstackrealign $(filter-out -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -m32 -march=bonnell -mstackrealign -g2  -Wl,-z,max-page-size=0x1000 $(filter-out -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
+		AUTOCONF=false \
+		MAKEINFO=: \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--disable-profile \
-		--disable-werror \
-		--disable-sanity-checks \
 		--without-gd \
 		--without-cvs \
+		--disable-werror \
 		--enable-kernel=5.4 \
 		--enable-stack-protector=strong \
 		--disable-debug \
 		--enable-add-ons \
-		--disable-build-nscd \
-		--disable-nscd \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 # export libc_cv_ssp=no
