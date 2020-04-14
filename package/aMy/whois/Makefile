@@ -23,6 +23,7 @@ define Package/whois
   TITLE:=whois
   URL:=https://github.com/rfc1036/whois
   MENU:=1
+  DEPENDS:=+libidn2
 endef
 
 define Package/whois/description
