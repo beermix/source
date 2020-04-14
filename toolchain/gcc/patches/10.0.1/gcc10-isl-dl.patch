@@ -1,5 +1,5 @@
---- gcc/Makefile.in.jj	2015-06-06 10:00:25.000000000 +0200
-+++ gcc/Makefile.in	2015-11-04 14:56:02.643536437 +0100
+--- a/gcc/Makefile.in.jj	2015-06-06 10:00:25.000000000 +0200
++++ b/gcc/Makefile.in	2015-11-04 14:56:02.643536437 +0100
 @@ -1063,7 +1063,7 @@ BUILD_LIBDEPS= $(BUILD_LIBIBERTY)
  # and the system's installed libraries.
  LIBS = @LIBS@ libcommon.a $(CPPLIB) $(LIBINTL) $(LIBICONV) $(LIBBACKTRACE) \
@@ -25,8 +25,8 @@
  #
  # Generate header and source files from the machine description,
  # and compile them.
---- gcc/graphite.h.jj	2016-01-27 12:44:06.000000000 +0100
-+++ gcc/graphite.h	2016-01-27 13:26:38.309876856 +0100
+--- a/gcc/graphite.h.jj	2016-01-27 12:44:06.000000000 +0100
++++ b/gcc/graphite.h	2016-01-27 13:26:38.309876856 +0100
 @@ -39,6 +39,590 @@ along with GCC; see the file COPYING3.
  #include <isl/schedule_node.h>
  #include <isl/id.h>
@@ -625,8 +625,8 @@
 +extern const char *get_isl_version (bool);
  
  #endif
---- gcc/graphite.c.jj	2015-11-04 14:15:32.000000000 +0100
-+++ gcc/graphite.c	2015-11-04 14:56:02.645536409 +0100
+--- a/gcc/graphite.c.jj	2015-11-04 14:15:32.000000000 +0100
++++ b/gcc/graphite.c	2015-11-04 14:56:02.645536409 +0100
 @@ -60,6 +60,35 @@ along with GCC; see the file COPYING3.
  #include "tree-into-ssa.h"
  #include "graphite.h"
@@ -694,8 +694,8 @@
  #else /* If isl is not available: #ifndef HAVE_isl.  */
  
  static void
---- gcc/toplev.c.jj	2017-02-19 13:02:31.000000000 +0100
-+++ gcc/toplev.c	2017-02-19 16:50:25.536301350 +0100
+--- a/gcc/toplev.c.jj	2017-02-19 13:02:31.000000000 +0100
++++ b/gcc/toplev.c	2017-02-19 16:50:25.536301350 +0100
 @@ -94,6 +94,7 @@ along with GCC; see the file COPYING3.
  
  #ifdef HAVE_isl

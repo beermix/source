@@ -14,8 +14,8 @@ libgomp/
 	* target.c (gomp_load_plugin_for_device): If a plugin can't be
 	dlopened, assume it has no devices silently.
 
---- gcc/gcc.c.jj	2017-01-17 10:28:40.000000000 +0100
-+++ gcc/gcc.c	2017-01-20 16:26:29.649962902 +0100
+--- a/gcc/gcc.c.jj	2017-01-17 10:28:40.000000000 +0100
++++ b/gcc/gcc.c	2017-01-20 16:26:29.649962902 +0100
 @@ -290,6 +290,10 @@ static const char *spec_host_machine = D
  
  static char *offload_targets = NULL;
@@ -48,8 +48,8 @@ libgomp/
      }
  
    free (offload_targets);
---- gcc/lto-wrapper.c.jj	2017-01-01 12:45:34.000000000 +0100
-+++ gcc/lto-wrapper.c	2017-01-20 16:34:18.294016997 +0100
+--- a/gcc/lto-wrapper.c.jj	2017-01-01 12:45:34.000000000 +0100
++++ b/gcc/lto-wrapper.c	2017-01-20 16:34:18.294016997 +0100
 @@ -52,6 +52,7 @@ along with GCC; see the file COPYING3.
  /* Environment variable, used for passing the names of offload targets from GCC
     driver to lto-wrapper.  */
@@ -109,8 +109,8 @@ libgomp/
   out:
    free_array_of_ptrs ((void **) names, num_targets);
  }
---- libgomp/target.c.jj	2017-01-01 12:45:52.000000000 +0100
-+++ libgomp/target.c	2017-01-20 20:12:13.756710875 +0100
+--- a/libgomp/target.c.jj	2017-01-01 12:45:52.000000000 +0100
++++ b/libgomp/target.c	2017-01-20 20:12:13.756710875 +0100
 @@ -2356,7 +2356,7 @@ gomp_load_plugin_for_device (struct gomp
  
    void *plugin_handle = dlopen (plugin_name, RTLD_LAZY);
