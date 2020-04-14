@@ -58,8 +58,6 @@ GLIBC_CONFIGURE:= \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
-		AUTOCONF=false \
-		MAKEINFO=: \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
