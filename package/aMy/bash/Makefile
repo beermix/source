@@ -79,7 +79,6 @@ define Package/bash/postinst
 grep -q bash "$${IPKG_INSTROOT}/etc/shells" || {
 	echo /bin/bash >> "$${IPKG_INSTROOT}/etc/shells"
 	echo /bin/rbash >> "$${IPKG_INSTROOT}/etc/shells"
-	echo /bin/sh >> "$${IPKG_INSTROOT}/etc/shells"
 }
 endef
 
@@ -87,7 +86,6 @@ define Package/bash/install
 	$(INSTALL_DIR) $(1)/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/bash $(1)/bin/
 	$(LN) bash $(1)/bin/rbash
-	$(LN) bash $(1)/bin/sh
 endef
 
 $(eval $(call BuildPackage,bash))
