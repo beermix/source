@@ -54,14 +54,24 @@ define Package/zlib/config
 	source "$(SOURCE)/Config.in"
 endef
 
-TARGET_CFLAGS += $(FPIC)
-
 ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
 	TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
 endif
 
 CMAKE_OPTIONS += \
-	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
+	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DWITH_NEW_STRATEGIES=ON \
+	-DZLIB_COMPAT=ON \
+	-DWITH_OPTIM=ON \
+	-DZLIB_ENABLE_TESTS=OFF \
+	-DWITH_SANITIZERS=OFF \
+	-DWITH_MAINTAINER_WARNINGS=ON \
+	-DHAVE_PCLMULQDQ_INTRIN=0 \
+	-DHAVE_AVX2_INTRIN=0 \
+	-DHAVE_SSE42CRC_INTRIN=0 \
+	-DHAVE_SSE42CRC_INLINE_ASM=0 \
+	-DHAVE_SSE2_INTRIN=1
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
