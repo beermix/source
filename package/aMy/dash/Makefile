@@ -7,61 +7,48 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=gzip
-PKG_VERSION:=1.10
-PKG_RELEASE:=2
+PKG_NAME:=dash
+PKG_VERSION:=0.5.10.2
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@GNU/gzip
-PKG_HASH:=8425ccac99872d544d4310305f915f5ea81e04d0f437ef1a230dc9d1c819d7c0
-PKG_LICENSE:=GPL-3.0-or-later
-PKG_CPE_ID:=cpe:/a:gnu:gzip
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=http://gondor.apana.org.au/~herbert/dash
+PKG_HASH:=3c663919dc5c66ec991da14c7cf7e0be8ad00f3db73986a987c118862b5f6071
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/gzip
+define Package/dash
   SECTION:=utils
   CATEGORY:=Utilities
-  SUBMENU:=Compression
-  TITLE:=gzip (GNU zip) is a compression utility.
-  URL:=https://www.gnu.org/software/gzip/
-  MAINTAINER:=Christian Beier <dontmind@freeshell.org>
+  SUBMENU:=Shells
+  TITLE:=dash
+  DEPENDS:=+libedit
 endef
 
-define Package/gzip/description
-	gzip (GNU zip) is a compression utility designed to be a \
+define Package/dash/description
+	dash (GNU zip) is a compression utility designed to be a \
 	replacement for compress.
 endef
 
 CONFIGURE_VARS += \
-	gl_cv_func_getopt_gnu=yes \
-	ac_cv_path_shell=/bin/sh \
-	gl_cv_func_fflush_stdin=yes
+	--exec-prefix="" \
+	--with-libedit
 
-define Package/gzip/install
-	$(SED) 's,/bin/bash,/bin/sh,g' $(PKG_INSTALL_DIR)/usr/bin/{gunzip,zcat}
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-endef
-
-define Package/gzip/postinst
+define Package/bash/postinst
 #!/bin/sh
-for app in gunzip gzip zcat; do
-  ln -sf ../usr/bin/$$app $${IPKG_INSTROOT}/bin/$$app
-done
+grep -q bash "$${IPKG_INSTROOT}/etc/shells" || {
+	echo /bin/dash >> "$${IPKG_INSTROOT}/etc/shells"
+	echo /bin/sh >> "$${IPKG_INSTROOT}/etc/shells"
+}
 endef
 
-define Package/gzip/postrm
-#!/bin/sh
-for app in gunzip gzip zcat; do
-  ln -sf busybox $${IPKG_INSTROOT}/bin/$$app
-  $${IPKG_INSTROOT}/bin/$$app 2>&1 | grep 'applet not found' > /dev/null 2>&1 && rm $${IPKG_INSTROOT}/bin/$$app
-done
-exit 0
+define Package/bash/install
+	$(INSTALL_DIR) $(1)/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/dash $(1)/bin/
+	$(LN) dash $(1)/bin/sh
 endef
 
-$(eval $(call BuildPackage,gzip))
-
+$(eval $(call BuildPackage,dash))
