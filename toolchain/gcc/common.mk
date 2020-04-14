@@ -131,7 +131,6 @@ GCC_CONFIGURE:= \
 		--disable-libunwind-exceptions \
 		--enable-gnu-unique-object \
 		--enable-linker-build-id \
-		--with-gcc-major-version-only \
 		--with-linker-hash-style=gnu \
 		--enable-gnu-indirect-function \
 		$(GRAPHITE_CONFIGURE) \
