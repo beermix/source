@@ -128,6 +128,7 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--with-tune=generic \
 		--enable-checking=release \
 		--disable-libunwind-exceptions \
 		--enable-gnu-unique-object \
