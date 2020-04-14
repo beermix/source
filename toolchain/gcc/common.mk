@@ -139,8 +139,7 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
-		--with-diagnostics-color=always \
-		--enable-__cxa_atexit
+		--with-diagnostics-color=auto-if-env
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
 endif
@@ -173,6 +172,14 @@ ifdef CONFIG_sparc
   GCC_CONFIGURE+= \
 		--enable-targets=all \
 		--with-long-double-128
+endif
+
+ifeq ($(LIBC),uClibc)
+  GCC_CONFIGURE+= \
+		--disable-__cxa_atexit
+else
+  GCC_CONFIGURE+= \
+		--enable-__cxa_atexit
 endif
 
 ifneq ($(GCC_ARCH),)
