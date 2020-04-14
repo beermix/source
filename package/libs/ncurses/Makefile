@@ -82,7 +82,15 @@ CONFIGURE_ARGS += \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
 	--enable-widec \
-	--with-build-cppflags=-D_GNU_SOURCE
+	--with-build-cppflags=-D_GNU_SOURCE \
+	--with-xterm-kbs=DEL \
+	--enable-colorfgbg \
+	--enable-hard-tabs \
+	--disable-stripping \
+	--disable-wattr-macros \
+	--with-cxx-shared \
+	--with-cxx-binding \
+	--with-ospeed=unsigned
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
