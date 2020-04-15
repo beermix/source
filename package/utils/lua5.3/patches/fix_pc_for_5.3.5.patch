@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index e8ffe65..2629841 100644
+--- a/Makefile
++++ b/Makefile
+@@ -50,7 +50,7 @@ TO_PC= lua.pc
+ 
+ # Lua version and release.
+ V= 5.3
+-R= $V.4
++R= $V.5
+ 
+ # Targets start here.
+ all:	$(PLAT)
