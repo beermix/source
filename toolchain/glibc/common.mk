@@ -71,11 +71,11 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--disable-debug \
 		--enable-add-ons \
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-lock-elision \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
-# export libc_cv_ssp=no
-# export libc_cv_ssp_strong=no
-# export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
