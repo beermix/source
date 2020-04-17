@@ -137,7 +137,6 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--with-tune=generic \
 		--enable-checking=release \
-		--with-system-zlib \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
