@@ -137,7 +137,6 @@ GCC_CONFIGURE:= \
 		--disable-nls \
 		--with-tune=generic \
 		--enable-checking=release \
-		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
