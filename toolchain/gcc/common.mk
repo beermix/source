@@ -102,11 +102,11 @@ ifdef CONFIG_INSTALL_GCCGO
   export libgo_cv_c_split_stack_supported=no
 endif
 
-#ifdef CONFIG_GCC_USE_GRAPHITE
-#  GRAPHITE_CONFIGURE:= --with-isl=$(TOPDIR)/staging_dir/host
-#else
-#  GRAPHITE_CONFIGURE:= --without-isl --without-cloog
-#endif
+ifdef CONFIG_GCC_USE_GRAPHITE
+  GRAPHITE_CONFIGURE:= --with-isl=$(TOPDIR)/staging_dir/host
+else
+  GRAPHITE_CONFIGURE:= --without-isl --without-cloog
+endif
 
 GCC_CONFIGURE:= \
 	SHELL="$(BASH)" \
@@ -129,8 +129,8 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--with-system-zlib \
-		--with-isl \
 		--enable-checking=release \
+		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
