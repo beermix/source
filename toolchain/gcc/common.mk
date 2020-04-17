@@ -131,7 +131,7 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--enable-cld \
 		--with-system-zlib \
-		--enable-checking=release \
+		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
