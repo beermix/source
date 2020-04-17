@@ -1,10 +1,10 @@
 src-git packages https://git.openwrt.org/feed/packages.git
-#src-git luci https://git.openwrt.org/project/luci.git
+src-git luci https://git.openwrt.org/project/luci.git
 src-git routing https://git.openwrt.org/feed/routing.git
 #src-git telephony https://git.openwrt.org/feed/telephony.git
 #src-git EDB0 https://github.com/ldir-EDB0/packages
 #src-git luci https://git.openwrt.org/project/luci.git;openwrt-19.07
-src-git luci https://git.openwrt.org/project/luci.git^13dd17fca148965d38f0d4e578b19679a7c4daa2
+#src-git luci https://git.openwrt.org/project/luci.git^13dd17fca148965d38f0d4e578b19679a7c4daa2
 #src-git bismark https://github.com/projectbismark/bismark-packages.git
 #src-git ceropackages https://github.com/dtaht/ceropackages-3.3.git
 #src-git nbd git://nbd.name/packages.git
