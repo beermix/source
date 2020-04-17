@@ -138,7 +138,6 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--enable-checking=release \
 		--with-linker-hash-style=gnu \
-		--enable-offload-targets \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
