@@ -128,6 +128,8 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--with-tune=generic \
+		--enable-cld \
 		--with-system-zlib \
 		--enable-checking=release \
 		--with-linker-hash-style=gnu \
