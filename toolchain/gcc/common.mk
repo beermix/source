@@ -132,7 +132,6 @@ GCC_CONFIGURE:= \
 		--with-isl \
 		--enable-checking=release \
 		--with-linker-hash-style=gnu \
-		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
