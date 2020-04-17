@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nasm
-PKG_VERSION:=2.14
+PKG_VERSION:=2.14.02
 
 PKG_SOURCE_URL:=https://www.nasm.us/pub/nasm/releasebuilds/$(PKG_VERSION)/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
-PKG_HASH:=97c615dbf02ef80e4e2b6c385f7e28368d51efc214daa98e600ca4572500eec0
+PKG_HASH:=e24ade3e928f7253aa8c14aa44726d1edf3f98643f87c9d72ec1df44b26be8f5
 
 HOST_BUILD_PARALLEL:=1
 
@@ -18,7 +18,6 @@ include $(INCLUDE_DIR)/toolchain-build.mk
 
 HOST_CONFIGURE_ARGS+= \
 		--target=$(REAL_GNU_TARGET_NAME) \
-		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--disable-lto \
 		--disable-werror \
 		--disable-gdb \
