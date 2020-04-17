@@ -6,10 +6,7 @@ GCC_CONFIGURE += \
 	--with-headers=$(TOOLCHAIN_DIR)/include \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
-	--enable-threads=posix \
-	--disable-libstdcxx-pch \
-	--enable-libstdcxx-time \
-	--enable-clocale=gnu \
+	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
