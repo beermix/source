@@ -138,7 +138,6 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--enable-checking=release \
 		--with-system-zlib \
-		--with-default-libstdcxx-abi=gcc4-compatible \
 		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
