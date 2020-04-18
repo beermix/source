@@ -69,10 +69,10 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-stack-protector=strong \
 		--enable-kernel=4.14 \
-		--disable-debug \
 		--enable-add-ons \
 		--disable-build-nscd \
 		--disable-nscd \
+		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
