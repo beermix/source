@@ -73,7 +73,6 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--disable-build-nscd \
 		--disable-nscd \
-		--enable-lock-elision=yes \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
 
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
