@@ -72,6 +72,7 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--enable-add-ons \
 		--disable-build-nscd \
+		--enable-static-pie \
 		--disable-nscd \
 		--enable-lock-elision \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
