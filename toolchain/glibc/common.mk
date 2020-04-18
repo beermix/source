@@ -65,16 +65,17 @@ GLIBC_CONFIGURE:= \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \
-		--without-selinux \
 		--without-cvs \
-		--enable-stack-protector=strong \
-		--enable-kernel=4.14 \
 		--enable-add-ons \
+		--enable-stack-protector=strong \
+		--without-selinux \
 		--disable-build-nscd \
 		--disable-nscd \
 		--disable-debug \
-		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp
+		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
+		--enable-kernel=4.14.0
 
+export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
