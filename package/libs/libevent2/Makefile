@@ -111,15 +111,14 @@ define Package/libevent2-pthreads/description
 	threading & locking.
 endef
 
-# TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
-# TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -flto
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -flto
 
 CMAKE_OPTIONS += \
 	-DEVENT__DISABLE_BENCHMARK:BOOL=ON \
 	-DEVENT__DISABLE_DEBUG_MODE:BOOL=ON \
 	-DEVENT__DISABLE_REGRESS:BOOL=ON \
 	-DEVENT__DISABLE_SAMPLES:BOOL=ON \
-	-DEVENT__ENABLE_GCC_FUNCTION_SECTIONS:BOOL=ON \
 	$(if $(CONFIG_PACKAGE_libevent2-openssl),-DEVENT__DISABLE_OPENSSL:BOOL=OFF,-DEVENT__DISABLE_OPENSSL:BOOL=ON) \
 	$(if $(CONFIG_PACKAGE_libevent2-pthreads),-DEVENT__DISABLE_THREAD_SUPPORT:BOOL=OFF,-DEVENT__DISABLE_THREAD_SUPPORT:BOOL=ON) \
 	-DEVENT__DISABLE_TESTS:BOOL=ON \
