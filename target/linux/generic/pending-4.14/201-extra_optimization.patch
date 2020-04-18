@@ -4,7 +4,7 @@ Subject: Upgrade to Linux 2.6.19
 - Includes large parts of the patch from #1021 by dpalffy
 - Includes RB532 NAND driver changes by n0-1
 
-[john@phrozen.org: feix will add this to his upstream queue]
+[john@phrozen.org: feix will add this to his upstream queue]  -fno-reorder-blocks -fno-tree-ch
 
 lede-commit: bff468813f78f81e36ebb2a3f4354de7365e640f
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
@@ -26,7 +26,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
 +KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,) $(EXTRA_OPTIMIZATION)
  else
 -KBUILD_CFLAGS   += -O2
-+KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch $(EXTRA_OPTIMIZATION)
++KBUILD_CFLAGS   += -O2 $(EXTRA_OPTIMIZATION)
  endif
  endif
  
