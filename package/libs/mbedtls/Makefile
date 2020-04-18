@@ -87,7 +87,6 @@ CMAKE_OPTIONS += \
 	-DUSE_SHARED_MBEDTLS_LIBRARY:Bool=ON \
 	-DENABLE_TESTING:Bool=OFF \
 	-DENABLE_PROGRAMS:Bool=ON \
-	-DCMAKE_BUILD_TYPE=Release \
 	-Wno-dev
 
 define Build/Configure
