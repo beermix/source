@@ -1,7 +1,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# http://ftp.midnight-commander.org/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
@@ -66,10 +66,10 @@ CONFIGURE_ARGS += \
 	--with-homedir=/etc/mc \
 	--with-screen=ncurses \
 	--disable-mclib \
-	--without-x \
 	--without-libiconv-prefix \
 	--without-libintl-prefix \
 	--enable-silent-rules \
+	--with-gpm-mouse \
 	--without-x \
 
 CONFIGURE_VARS += \
