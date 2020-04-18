@@ -100,7 +100,7 @@ HOST_STAMP_INSTALLED:=$(HOST_BUILD_PREFIX)/stamp/.gcc_$(GCC_VARIANT)_installed
 SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
-#TAR_OPTIONS += \
+TAR_OPTIONS += \
 	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
 	--exclude=libjava
 
@@ -135,8 +135,7 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
-		--with-tune=generic \
-		--enable-checking=release \
+		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -147,6 +146,7 @@ GCC_CONFIGURE:= \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
+		--disable-decimal-float \
 		--with-diagnostics-color=always
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
