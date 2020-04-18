@@ -69,7 +69,6 @@ CONFIGURE_ARGS += \
 	--without-libiconv-prefix \
 	--without-libintl-prefix \
 	--enable-silent-rules \
-	--with-gpm-mouse \
 	--without-x \
 
 CONFIGURE_VARS += \
