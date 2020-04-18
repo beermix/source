@@ -60,8 +60,6 @@ define Package/ncurses-bin
   URL:=http://www.gnu.org/software/ncurses/
 endef
 
-TARGET_CFLAGS += $(FPIC)
-
 CONFIGURE_ARGS += \
 	--enable-echo \
 	--enable-const \
@@ -81,8 +79,7 @@ CONFIGURE_ARGS += \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
-	--enable-widec \
-	--with-build-cppflags=-D_GNU_SOURCE
+	--enable-widec
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
