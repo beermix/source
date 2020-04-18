@@ -67,8 +67,8 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-selinux \
 		--without-cvs \
-		--enable-stack-protector=yes \
-		--enable-kernel=5.4 \
+		--enable-stack-protector=strong \
+		--enable-kernel=4.14 \
 		--disable-debug \
 		--enable-add-ons \
 		--disable-build-nscd \
