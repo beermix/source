@@ -145,7 +145,7 @@ $(STAGING_DIR)/.prepared: $(TMP_DIR)/.build
 #	ln -snf lib $(STAGING_DIR_HOST)/lib64
 #	touch $@
 #
-#endif
+endif
 
 $(curdir)//prepare = $(STAGING_DIR)/.prepared $(STAGING_DIR_HOST)/.prepared
 $(curdir)//compile = $(STAGING_DIR)/.prepared $(STAGING_DIR_HOST)/.prepared
