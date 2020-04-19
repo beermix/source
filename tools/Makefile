@@ -133,19 +133,19 @@ $(STAGING_DIR)/.prepared: $(TMP_DIR)/.build
 	mkdir -p $(BUILD_DIR)/stamp
 	touch $@
 
-$(STAGING_DIR_HOST)/.prepared: $(TMP_DIR)/.build
-	$(call PrepareStaging,$(STAGING_DIR_HOST))
-	mkdir -p $(BUILD_DIR_HOST)/stamp $(STAGING_DIR_HOST)/include/sys
-	$(INSTALL_DATA) $(TOPDIR)/tools/include/*.h $(STAGING_DIR_HOST)/include/
-	$(INSTALL_DATA) $(TOPDIR)/tools/include/sys/*.h $(STAGING_DIR_HOST)/include/sys/
-ifneq ($(HOST_OS),Linux)
-	mkdir -p $(STAGING_DIR_HOST)/include/asm
-	$(INSTALL_DATA) $(TOPDIR)/tools/include/asm/*.h $(STAGING_DIR_HOST)/include/asm/
-endif
-	ln -snf lib $(STAGING_DIR_HOST)/lib64
-	touch $@
-
-endif
+#$(STAGING_DIR_HOST)/.prepared: $(TMP_DIR)/.build
+#	$(call PrepareStaging,$(STAGING_DIR_HOST))
+#	mkdir -p $(BUILD_DIR_HOST)/stamp $(STAGING_DIR_HOST)/include/sys
+#	$(INSTALL_DATA) $(TOPDIR)/tools/include/*.h $(STAGING_DIR_HOST)/include/
+#	$(INSTALL_DATA) $(TOPDIR)/tools/include/sys/*.h $(STAGING_DIR_HOST)/include/sys/
+#ifneq ($(HOST_OS),Linux)
+#	mkdir -p $(STAGING_DIR_HOST)/include/asm
+#	$(INSTALL_DATA) $(TOPDIR)/tools/include/asm/*.h $(STAGING_DIR_HOST)/include/asm/
+#endif
+#	ln -snf lib $(STAGING_DIR_HOST)/lib64
+#	touch $@
+#
+#endif
 
 $(curdir)//prepare = $(STAGING_DIR)/.prepared $(STAGING_DIR_HOST)/.prepared
 $(curdir)//compile = $(STAGING_DIR)/.prepared $(STAGING_DIR_HOST)/.prepared
