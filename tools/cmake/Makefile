@@ -11,7 +11,7 @@ PKG_VERSION:=3.17.1
 PKG_CPE_ID:=cpe:/a:kitware:cmake
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/Kitware/CMake/releases/download/v$(PKG_VERSION)/ \
+PKG_SOURCE_URL:=https://fossies.org/linux/misc/ \
 		https://cmake.org/files/v3.17/
 PKG_HASH:=3AA9114485DA39CBD9665A0BFE986894A282D5F0882B1DEA960A739496620727
 
