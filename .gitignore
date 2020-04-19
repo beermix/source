@@ -29,4 +29,5 @@ git-src
 .project
 .cproject
 *.tar.xz
+*.tar.zst
 /scripts/config/mconf_check
