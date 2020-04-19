@@ -109,12 +109,13 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
-        --disable-module-dirauth \
+	--disable-unittests \
+	--disable-module-dirauth \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections -flto
+TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
