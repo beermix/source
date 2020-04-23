@@ -136,7 +136,8 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--enable-checking=release \
-		--with-linker-hash-style=gnu \
+		--disable-libunwind-exceptions \
+		--enable-linker-build-id \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
