@@ -1,3 +1,6 @@
+Andrea Corallo (1):
+      aarch64: backport fix for PR target/94530
+
 Bill Schmidt (1):
       rs6000: Fix -mpower9-vector -mno-altivec ICE (PR87560)
 
@@ -19,7 +22,7 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (35):
+GCC Administrator (40):
       Daily bump.
       Daily bump.
       Daily bump.
@@ -55,6 +58,18 @@ GCC Administrator (35):
       Daily bump.
       Daily bump.
       Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+
+H.J. Lu (2):
+      x86: Insert ENDBR if function will be called indirectly
+      x86: Restore the frame pointer in word_mode
+
+Harald Anlauf (1):
+      PR fortran/93364 - ICE in gfc_set_array_spec, at fortran/array.c:879
 
 Iain Buclaw (1):
       d: Fix ICE in add_symbol_to_partition_1, at lto/lto-partition.c:215
@@ -133,10 +148,12 @@ Joseph Myers (1):
 Julian Brown (1):
       Test cases for mixed structured/dynamic data lifetimes with OpenACC [PR92843]
 
-Kewen Lin (3):
+Kewen Lin (5):
       [testsuite] Fix PR94023 to guard case under vect_hw_misalign
       [testsuite] Fix PR94019 to check vector char when vect_hw_misalign
       [testsuite] Fix PR93935 to guard case under vect_hw_misalign
+      Fix PR94043 by making vect_live_op generate lc-phi
+      Fix PR94443 with gsi_insert_seq_before [PR94443]
 
 Kyrylo Tkachov (10):
       aarch64: Extend %R for integer registers
@@ -150,20 +167,23 @@ Kyrylo Tkachov (10):
       aarch64: Fix up aarch64_compare_and_swaphi pattern [PR94368]
       [AArch64] PR target/94518: Fix memmodel index in aarch64_store_exclusive_pair
 
-Marek Polacek (1):
+Marek Polacek (2):
       c++: Fix ICE with lambda in operator function [PR93597]
+      c++: Fix bogus -Wparentheses warning with fold-expression [PR94505]
 
 Mark Eggleston (3):
       fortran: ICE using undeclared symbol in array constructor PR93484
       fortran: ICE equivalence with an element of an array PR94030
       fortran : ICE in gfc_resolve_findloc PR93498
 
-Martin Jambor (1):
+Martin Jambor (2):
       gcc-9 sra: Cap number of sub-access propagations with a param (PR 93435)
+      sra-9: Fix sra_modify_expr handling of partial writes (PR 94482)
 
-Martin Liska (2):
+Martin Liska (3):
       Backport 314b91220a07bd63f13c58e37f1b5b9430a3702b
       Backport 55a7380213a5c16120d5c674fb42b38a3d796b57
+      Backport e9f799d25973fc38022c5ea71ed5a2bca58a847f
 
 Max Filippov (2):
       xtensa: backport fix for PR target/91880
@@ -185,8 +205,9 @@ Richard Biener (4):
 Richard Earnshaw (1):
       arm: correct constraints on movsi_compare0 [PR91913]
 
-Tamar Christina (1):
+Tamar Christina (2):
       AArch64: Break apart paradoxical subregs for VSTRUCT writes (PR target/94052)
+      AArch64: Fix options canonicanization for assembler
 
 Thomas König (1):
       Backport from trunk of the fix for PR 94270.
@@ -197,10 +218,11 @@ Thomas Schwinge (1):
 Tobias Burnus (1):
       [Fortran] Fix result-variable handling of MODULE PROCEDURE (PR94348)
 
-Uros Bizjak (3):
+Uros Bizjak (4):
       i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
       i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
       i386: Require OPTION_MASK_ISA_SSE2 for __builtin_ia32_movq128 [PR94603]
+      i386: Remove unneeded assignments when triggering SSE exceptions
 
 Will Schmidt (2):
       backport PR90763: PowerPC vec_xl_len should take const argument.
@@ -209,6 +231,24 @@ Will Schmidt (2):
 Zackery Spytz (1):
       doc: Fix a typo in the documentation of the copy attribute
 
+diff --git a/ChangeLog b/ChangeLog
+index 9605d767a80..0203aec84ad 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,13 @@
++2020-04-20  Martin Liska  <mliska@suse.cz>
++
++	Backport from mainline
++	2020-04-17  Martin Liska  <mliska@suse.cz>
++		    Jonathan Yong <10walls@gmail.com>
++
++	PR gcov-profile/94570
++	* ltmain.sh: Do not define HAVE_DOS_BASED_FILE_SYSTEM
++	for CYGWIN.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
 diff --git a/gcc/BASE-VER b/gcc/BASE-VER
 index b13d146a7b0..3b74042132a 100644
 --- a/gcc/BASE-VER
@@ -217,10 +257,89 @@ index b13d146a7b0..3b74042132a 100644
 -9.3.0
 +9.3.1
 diff --git a/gcc/ChangeLog b/gcc/ChangeLog
-index d8e53874e68..a7949385573 100644
+index d8e53874e68..4cb1497a61f 100644
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,530 @@
+@@ -1,3 +1,609 @@
++2020-04-21  Martin Jambor  <mjambor@suse.cz>
++
++	Backport from master
++	2020-04-09  Martin Jambor  <mjambor@suse.cz>
++	            Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/94482
++	* tree-sra.c (create_access_replacement): Dump new replacement with
++	TDF_UID.
++	(sra_modify_expr): Fix handling of cases when the original EXPR writes
++	to only part of the replacement.
++	* tree-ssa-forwprop.c (pass_forwprop::execute): Properly verify
++	the first operand of combinations into REAL/IMAGPART_EXPR and
++	BIT_FIELD_REF.
++
++2020-04-20  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from master
++	2020-04-13  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/94556
++	* config/i386/i386.c (ix86_expand_epilogue): Restore the frame
++	pointer in word_mode for eh_return epilogues.
++
++2020-04-20  Andrea Corallo  <andrea.corallo@arm.com>
++
++	Backport from mainline.
++	2020-04-15  Andrea Corallo  <andrea.corallo@arm.com>
++
++	PR target/94530
++	* config/aarch64/falkor-tag-collision-avoidance.c
++	(valid_src_p): Check for aarch64_address_info type before
++	accessing base field.
++
++2020-04-20  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-03  Tamar Christina  <tamar.christina@arm.com>
++
++	PR target/94396
++	* common/config/aarch64/aarch64-common.c
++	(aarch64_get_extension_string_for_isa_flags): Handle default flags.
++
++2020-04-20  Martin Liska  <mliska@suse.cz>
++
++	Backport from mainline
++	2020-04-17  Martin Liska  <mliska@suse.cz>
++		    Jonathan Yong <10walls@gmail.com>
++
++	PR gcov-profile/94570
++	* coverage.c (coverage_init): Use separator properly.
++
++2020-04-17  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from master
++	2020-04-08  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/94417
++	* config/i386/i386.c (rest_of_insert_endbranch): Insert ENDBR at
++	function entry if function will be called indirectly.
++
++2020-04-17  Kewen Lin  <linkw@gcc.gnu.org>
++
++	Backport from mainline
++	2020-04-03  Kewen Lin  <linkw@gcc.gnu.org>
++
++	PR tree-optimization/94443
++	* tree-vect-loop.c (vectorizable_live_operation): Use
++	gsi_insert_seq_before to replace gsi_insert_before.
++
++2020-04-17  Kewen Lin  <linkw@gcc.gnu.org>
++
++	Backport from mainline
++	2020-04-01  Kewen Lin  <linkw@gcc.gnu.org>
++
++	PR tree-optimization/94043
++	* tree-vect-loop.c (vectorizable_live_operation): Generate loop-closed
++	phi for vec_lhs and use it for lane extraction.
++
 +2020-04-16  Michael Meissner  <meissner@linux.ibm.com>
 +
 +	PR target/94557
@@ -1258,6 +1377,34 @@ index 4a27867b82c..0f933bdc758 100644
        /* This symbol is effectively an "extern" declaration now.  */
        TREE_PUBLIC (decl) = 1;
      }
+diff --git a/gcc/common/config/aarch64/aarch64-common.c b/gcc/common/config/aarch64/aarch64-common.c
+index bab3ab3fa36..db9842b1ea6 100644
+--- a/gcc/common/config/aarch64/aarch64-common.c
++++ b/gcc/common/config/aarch64/aarch64-common.c
+@@ -433,7 +433,22 @@ aarch64_get_extension_string_for_isa_flags (unsigned long isa_flags,
+ 	/* We remove all the dependent bits, to prevent them from being turned
+ 	   on twice.  This only works because we assume that all there are
+ 	   individual options to set all bits standalone.  */
+-	isa_flag_bits &= ~opt->flags_on;
++
++	/* PR target/94396.
++
++	   For flags which would already imply a bit that's on by default (e.g
++	   fp16fml which implies +fp,+fp16) we must emit the flags that are not
++	   on by default.  i.e. in Armv8.4-a +fp16fml is default if +fp16.  So
++	   if a user passes armv8.4-a+fp16 (or +fp16fml) then we need to emit
++	   +fp16.  But if +fp16fml is used in an architecture where it is
++	   completely optional we only have to emit the canonical flag.  */
++	uint64_t toggle_bits = opt->flags_on & default_arch_flags;
++	/* Now check to see if the canonical flag is on by default.  If it
++	   is not then enabling it will enable all bits in flags_on.  */
++	if ((opt->flag_canonical & default_arch_flags) == 0)
++	  toggle_bits = opt->flags_on;
++
++	isa_flag_bits &= ~toggle_bits;
+ 	isa_flag_bits |= opt->flag_canonical;
+       }
+     }
 diff --git a/gcc/config/aarch64/aarch64-protos.h b/gcc/config/aarch64/aarch64-protos.h
 index c083cad5327..b9bfb281275 100644
 --- a/gcc/config/aarch64/aarch64-protos.h
@@ -2068,6 +2215,24 @@ index 21f9549e660..73892b339c4 100644
  (define_memory_constraint "Q"
   "A memory address which uses a single base register with no offset."
   (and (match_code "mem")
+diff --git a/gcc/config/aarch64/falkor-tag-collision-avoidance.c b/gcc/config/aarch64/falkor-tag-collision-avoidance.c
+index 779dee81f7f..698d1595d0a 100644
+--- a/gcc/config/aarch64/falkor-tag-collision-avoidance.c
++++ b/gcc/config/aarch64/falkor-tag-collision-avoidance.c
+@@ -537,6 +537,13 @@ valid_src_p (rtx src, rtx_insn *insn, struct loop *loop, bool *pre_post,
+   if (!aarch64_classify_address (&addr, XEXP (x, 0), mode, true))
+     return false;
+ 
++  if (addr.type != ADDRESS_REG_IMM
++      && addr.type != ADDRESS_REG_WB
++      && addr.type != ADDRESS_REG_REG
++      && addr.type != ADDRESS_REG_UXTW
++      && addr.type != ADDRESS_REG_SXTW)
++    return false;
++
+   unsigned regno = REGNO (addr.base);
+   if (global_regs[regno] || fixed_regs[regno])
+     return false;
 diff --git a/gcc/config/aarch64/iterators.md b/gcc/config/aarch64/iterators.md
 index 6caeeac8086..3bc49ea0238 100644
 --- a/gcc/config/aarch64/iterators.md
@@ -2160,10 +2325,49 @@ index 5dedeb2d18b..2f57d19bea2 100644
  /* SSE2 MMX */
  BDESC (OPTION_MASK_ISA_SSE2 | OPTION_MASK_ISA_MMX, 0, CODE_FOR_mmx_addv1di3, "__builtin_ia32_paddq", IX86_BUILTIN_PADDQ, UNKNOWN, (int) V1DI_FTYPE_V1DI_V1DI)
 diff --git a/gcc/config/i386/i386.c b/gcc/config/i386/i386.c
-index 1bca5a7eea6..5d12d82db5b 100644
+index 1bca5a7eea6..efe32f3975e 100644
 --- a/gcc/config/i386/i386.c
 +++ b/gcc/config/i386/i386.c
-@@ -44150,43 +44150,51 @@ emit_reduc_half (rtx dest, rtx src, int i)
+@@ -2535,7 +2535,12 @@ rest_of_insert_endbranch (void)
+       && (!flag_manual_endbr
+ 	  || lookup_attribute ("cf_check",
+ 			       DECL_ATTRIBUTES (cfun->decl)))
+-      && !cgraph_node::get (cfun->decl)->only_called_directly_p ())
++      && (!cgraph_node::get (cfun->decl)->only_called_directly_p ()
++	  || ix86_cmodel == CM_LARGE
++	  || ix86_cmodel == CM_LARGE_PIC
++	  || flag_force_indirect_call
++	  || (TARGET_DLLIMPORT_DECL_ATTRIBUTES
++	      && DECL_DLLIMPORT_P (cfun->decl))))
+     {
+       /* Queue ENDBR insertion to x86_function_profiler.  */
+       if (crtl->profile && flag_fentry)
+@@ -14347,8 +14352,13 @@ ix86_expand_epilogue (int style)
+ 	      t = plus_constant (Pmode, t, m->fs.fp_offset - UNITS_PER_WORD);
+ 	      emit_insn (gen_rtx_SET (sa, t));
+ 
+-	      t = gen_frame_mem (Pmode, hard_frame_pointer_rtx);
+-	      insn = emit_move_insn (hard_frame_pointer_rtx, t);
++	      /* NB: eh_return epilogues must restore the frame pointer
++		 in word_mode since the upper 32 bits of RBP register
++		 can have any values.  */
++	      t = gen_frame_mem (word_mode, hard_frame_pointer_rtx);
++	      rtx frame_reg = gen_rtx_REG (word_mode,
++					   HARD_FRAME_POINTER_REGNUM);
++	      insn = emit_move_insn (frame_reg, t);
+ 
+ 	      /* Note that we use SA as a temporary CFA, as the return
+ 		 address is at the proper place relative to it.  We
+@@ -14363,7 +14373,7 @@ ix86_expand_epilogue (int style)
+ 	      add_reg_note (insn, REG_CFA_DEF_CFA,
+ 			    plus_constant (Pmode, sa, UNITS_PER_WORD));
+ 	      ix86_add_queued_cfa_restore_notes (insn);
+-	      add_reg_note (insn, REG_CFA_RESTORE, hard_frame_pointer_rtx);
++	      add_reg_note (insn, REG_CFA_RESTORE, frame_reg);
+ 	      RTX_FRAME_RELATED_P (insn) = 1;
+ 
+ 	      m->fs.cfa_reg = sa;
+@@ -44150,43 +44160,51 @@ emit_reduc_half (rtx dest, rtx src, int i)
        break;
      case E_V64QImode:
      case E_V32HImode:
@@ -2244,7 +2448,7 @@ index 1bca5a7eea6..5d12d82db5b 100644
        break;
      default:
        gcc_unreachable ();
-@@ -46667,7 +46675,7 @@ expand_vec_perm_pshufb (struct expand_vec_perm_d *d)
+@@ -46667,7 +46685,7 @@ expand_vec_perm_pshufb (struct expand_vec_perm_d *d)
  	      /* vpshufb only works intra lanes, it is not
  		 possible to shuffle bytes in between the lanes.  */
  	      for (i = 0; i < nelt; ++i)
@@ -2815,11 +3019,57 @@ index 362e5ff3c1f..673ddad2eae 100644
    [(set_attr "type"	"arith,load")
     (set_attr "mode"	"SI")
     (set_attr "length"	"3,3")])
+diff --git a/gcc/coverage.c b/gcc/coverage.c
+index 1ffefd5f482..9be446a862d 100644
+--- a/gcc/coverage.c
++++ b/gcc/coverage.c
+@@ -1201,6 +1201,11 @@ coverage_obj_finish (vec<constructor_elt, va_gc> *ctor)
+ void
+ coverage_init (const char *filename)
+ {
++#if HAVE_DOS_BASED_FILE_SYSTEM
++  const char *separator = "\\";
++#else
++  const char *separator = "/";
++#endif
+   int len = strlen (filename);
+   int prefix_len = 0;
+ 
+@@ -1217,11 +1222,6 @@ coverage_init (const char *filename)
+ 	 of filename in order to prevent file path clashing.  */
+       if (profile_data_prefix)
+ 	{
+-#if HAVE_DOS_BASED_FILE_SYSTEM
+-	  const char *separator = "\\";
+-#else
+-	  const char *separator = "/";
+-#endif
+ 	  filename = concat (getpwd (), separator, filename, NULL);
+ 	  filename = mangle_path (filename);
+ 	  len = strlen (filename);
+@@ -1240,7 +1240,7 @@ coverage_init (const char *filename)
+   if (profile_data_prefix)
+     {
+       memcpy (da_file_name, profile_data_prefix, prefix_len);
+-      da_file_name[prefix_len++] = '/';
++      da_file_name[prefix_len++] = *separator;
+     }
+   memcpy (da_file_name + prefix_len, filename, len);
+   strcpy (da_file_name + prefix_len + len, GCOV_DATA_SUFFIX);
 diff --git a/gcc/cp/ChangeLog b/gcc/cp/ChangeLog
-index 6441d647a54..cb49aeccafa 100644
+index 6441d647a54..d81de9d32df 100644
 --- a/gcc/cp/ChangeLog
 +++ b/gcc/cp/ChangeLog
-@@ -1,3 +1,95 @@
+@@ -1,3 +1,104 @@
++2020-04-20  Marek Polacek  <polacek@redhat.com>
++
++	Backported from mainline
++	2020-04-20  Marek Polacek  <polacek@redhat.com>
++
++	PR c++/94505 - bogus -Wparentheses warning with fold-expression.
++	* pt.c (fold_expression): Add warning_sentinel for -Wparentheses
++	before calling build_x_binary_op.
++
 +2020-04-07  Jakub Jelinek  <jakub@redhat.com>
 +
 +	PR c++/94512
@@ -3158,7 +3408,7 @@ index e1c02d7b718..db0276eb04f 100644
  	}
        else if (!flag_openmp)  /* flag_openmp_simd  */
 diff --git a/gcc/cp/pt.c b/gcc/cp/pt.c
-index 4787747b6ff..7f51f70c71a 100644
+index 4787747b6ff..8d437c5072d 100644
 --- a/gcc/cp/pt.c
 +++ b/gcc/cp/pt.c
 @@ -3773,10 +3773,18 @@ find_parameter_packs_r (tree *tp, int *walk_subtrees, void* data)
@@ -3252,7 +3502,15 @@ index 4787747b6ff..7f51f70c71a 100644
    for (int i = 0; i < len; ++i)
      if (!data.seen[i])
        return true;
-@@ -17838,8 +17882,10 @@ tsubst_expr (tree t, tree args, tsubst_flags_t complain, tree in_decl,
+@@ -11824,6 +11868,7 @@ fold_expression (tree t, tree left, tree right, tsubst_flags_t complain)
+   if (FOLD_EXPR_MODIFY_P (t))
+     return build_x_modify_expr (input_location, left, code, right, complain);
+ 
++  warning_sentinel s(warn_parentheses);
+   switch (code)
+     {
+     case COMPOUND_EXPR:
+@@ -17838,8 +17883,10 @@ tsubst_expr (tree t, tree args, tsubst_flags_t complain, tree in_decl,
        add_stmt (t);
        break;
  
@@ -3264,7 +3522,7 @@ index 4787747b6ff..7f51f70c71a 100644
        stmt = push_stmt_list ();
        RECUR (OMP_BODY (t));
        stmt = pop_stmt_list (stmt);
-@@ -27376,10 +27422,13 @@ build_deduction_guide (tree ctor, tree outer_args, tsubst_flags_t complain)
+@@ -27376,10 +27423,13 @@ build_deduction_guide (tree ctor, tree outer_args, tsubst_flags_t complain)
  				     complain, ctor);
  	  if (fparms == error_mark_node)
  	    ok = false;
@@ -3653,10 +3911,17 @@ index c717f24501e..64273c1c6bc 100644
  				    "when distributing negation across "
  				    "division"),
 diff --git a/gcc/fortran/ChangeLog b/gcc/fortran/ChangeLog
-index 8fefea2b63d..1c88bb0efcb 100644
+index 8fefea2b63d..03193c2f9d7 100644
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,58 @@
+@@ -1,3 +1,65 @@
++2020-04-20  Harald Anlauf  <anlauf@gmx.de>
++
++	Backport from mainline.
++	PR fortran/93364
++	* array.c (gfc_set_array_spec): Check for sum of rank and corank
++	not exceeding GFC_MAX_DIMENSIONS.
++
 +2020-04-14  Thomas Koenig  <tkoenig@gcc.gnu.org>
 +
 +	Backport from trunk.
@@ -3715,6 +3980,21 @@ index 8fefea2b63d..1c88bb0efcb 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/fortran/array.c b/gcc/fortran/array.c
+index 4a7f44f3e8b..017334839ed 100644
+--- a/gcc/fortran/array.c
++++ b/gcc/fortran/array.c
+@@ -835,6 +835,10 @@ gfc_set_array_spec (gfc_symbol *sym, gfc_array_spec *as, locus *error_loc)
+       return false;
+     }
+ 
++  /* Check F2018:C822.  */
++  if (sym->as->rank + sym->as->corank > GFC_MAX_DIMENSIONS)
++    goto too_many;
++
+   if (as->corank)
+     {
+       sym->as->cotype = as->cotype;
 diff --git a/gcc/fortran/check.c b/gcc/fortran/check.c
 index 6d37bbb8fd2..adda284ef71 100644
 --- a/gcc/fortran/check.c
@@ -4085,10 +4365,82 @@ index 7916344c584..3e969e52176 100644
  extern void mark_end_of_function_resources (rtx, bool);
  extern void init_resource_info (rtx_insn *);
 diff --git a/gcc/testsuite/ChangeLog b/gcc/testsuite/ChangeLog
-index e132f2657ef..30ac5f5522e 100644
+index e132f2657ef..74a3cdf7b80 100644
 --- a/gcc/testsuite/ChangeLog
 +++ b/gcc/testsuite/ChangeLog
-@@ -1,3 +1,376 @@
+@@ -1,3 +1,448 @@
++2020-04-21  Martin Jambor  <mjambor@suse.cz>
++
++	Backport from master
++	2020-04-09  Martin Jambor  <mjambor@suse.cz>
++
++	PR tree-optimization/94482
++	* gcc.dg/torture/pr94482.c: New test.
++	* gcc.dg/tree-ssa/pr94482-2.c: Likewise.
++
++2020-04-20  Harald Anlauf  <anlauf@gmx.de>
++
++	Backport from mainline.
++	PR fortran/93364
++	* gfortran.dg/pr93364.f90: New test.
++
++2020-04-20  Andrea Corallo  <andrea.corallo@arm.com>
++
++	Backport from mainline.
++	2020-04-09  Andrea Corallo  <andrea.corallo@arm.com
++
++	PR target/94530
++	* gcc.target/aarch64/pr94530.c: New test.
++
++2020-04-20  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-03  Tamar Christina  <tamar.christina@arm.com>
++
++	PR target/94396
++	* gcc.target/aarch64/options_set_11.c: New test.
++	* gcc.target/aarch64/options_set_12.c: New test.
++	* gcc.target/aarch64/options_set_13.c: New test.
++	* gcc.target/aarch64/options_set_14.c: New test.
++	* gcc.target/aarch64/options_set_15.c: New test.
++	* gcc.target/aarch64/options_set_16.c: New test.
++	* gcc.target/aarch64/options_set_17.c: New test.
++	* gcc.target/aarch64/options_set_18.c: New test.
++	* gcc.target/aarch64/options_set_19.c: New test.
++	* gcc.target/aarch64/options_set_20.c: New test.
++	* gcc.target/aarch64/options_set_21.c: New test.
++	* gcc.target/aarch64/options_set_22.c: New test.
++	* gcc.target/aarch64/options_set_23.c: New test.
++	* gcc.target/aarch64/options_set_24.c: New test.
++	* gcc.target/aarch64/options_set_25.c: New test.
++	* gcc.target/aarch64/options_set_26.c: New test.
++
++2020-04-17  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from master
++	2020-04-08  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/94417
++	* gcc.target/i386/pr94417-1.c: New test.
++	* gcc.target/i386/pr94417-2.c: Likewise.
++	* gcc.target/i386/pr94417-3.c: Likewise.
++
++2020-04-17  Kewen Lin  <linkw@gcc.gnu.org>
++
++	Backport from mainline
++	2020-04-03  Kewen Lin  <linkw@gcc.gnu.org>
++
++	PR tree-optimization/94443
++	* gcc.dg/vect/pr94443.c: New test.
++
++2020-04-17  Kewen Lin  <linkw@gcc.gnu.org>
++
++	Backport from mainline
++	2020-04-01  Kewen Lin  <linkw@gcc.gnu.org>
++
++	PR tree-optimization/94043
++	* gfortran.dg/graphite/vect-pr94043.f90: New test.
++
 +2020-04-16  Richard Biener  <rguenther@suse.de>
 +
 +	Backport from mainline
@@ -4733,6 +5085,24 @@ index 00000000000..2fc71de8d95
 +template <typename T> struct S
 +{ template <typename V> S (T, V, long = 0); };
 +using U = decltype(S{0, 4u});
+diff --git a/gcc/testsuite/g++.dg/cpp1z/fold11.C b/gcc/testsuite/g++.dg/cpp1z/fold11.C
+new file mode 100644
+index 00000000000..09a30555eee
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/cpp1z/fold11.C
+@@ -0,0 +1,12 @@
++// PR c++/94505 - bogus -Wparentheses warning with fold-expression.
++// { dg-do compile { target c++17 } }
++// { dg-options "-Wparentheses" }
++
++template <bool... B>
++bool foo () {
++    return ((B && true) || ...); // { dg-bogus "suggest parentheses" }
++}
++
++int main () {
++    foo<true, false, false, true> ();
++}
 diff --git a/gcc/testsuite/g++.dg/debug/pr94459.C b/gcc/testsuite/g++.dg/debug/pr94459.C
 new file mode 100644
 index 00000000000..ebc0cf45cc6
@@ -5580,6 +5950,48 @@ index 00000000000..53285bb4f38
 +struct b e() {
 +    struct b f[] = {{}, "", f, a};
 +}
+diff --git a/gcc/testsuite/gcc.dg/torture/pr94482.c b/gcc/testsuite/gcc.dg/torture/pr94482.c
+new file mode 100644
+index 00000000000..9264842e349
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/torture/pr94482.c
+@@ -0,0 +1,36 @@
++/* { dg-do run } */
++/* { dg-additional-options "-Wno-psabi -w" } */
++/* { dg-additional-options "-msse2" { target sse2_runtime } } */
++
++typedef unsigned V __attribute__ ((__vector_size__ (16)));
++union U
++{
++  V j;
++  unsigned long long i __attribute__ ((__vector_size__ (16)));
++};
++
++static inline __attribute__((always_inline)) V
++foo (unsigned long long a)
++{
++  union U z = { .j = (V) {} };
++  for (unsigned long i = 0; i < 1; i++)
++    z.i[i] = a;
++  return z.j;
++}
++
++static inline __attribute__((always_inline)) V
++bar (V a, unsigned long long i, int q)
++{
++  union U z = { .j = a };
++  z.i[q] = i;
++  return z.j;
++}
++
++int
++main ()
++{
++  union U z = { .j = bar (foo (1729), 2, 1) };
++  if (z.i[0] != 1729)
++    __builtin_abort ();
++  return 0;
++}
 diff --git a/gcc/testsuite/gcc.dg/tree-ssa/pr93435.c b/gcc/testsuite/gcc.dg/tree-ssa/pr93435.c
 new file mode 100644
 index 00000000000..cb8e7495b15
@@ -5792,6 +6204,62 @@ index 00000000000..c339e51f482
 +  bar ();
 +  return 0;
 +}
+diff --git a/gcc/testsuite/gcc.dg/tree-ssa/pr94482-2.c b/gcc/testsuite/gcc.dg/tree-ssa/pr94482-2.c
+new file mode 100644
+index 00000000000..fcac9d5e439
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/tree-ssa/pr94482-2.c
+@@ -0,0 +1,50 @@
++/* { dg-do run } */
++/* { dg-options "-O1" } */
++
++typedef unsigned long V __attribute__ ((__vector_size__ (8)));
++typedef _Complex int Ci;
++typedef _Complex float Cf;
++
++union U
++{
++  Ci ci;
++  Cf cf;
++};
++
++volatile Ci vgi;
++
++Cf foo (Cf c)
++{
++  __real c = 0x1ffp10;
++  return c;
++}
++
++Ci ioo (Ci c)
++{
++  __real c = 50;
++  return c;
++}
++
++
++int main (int argc, char *argv[])
++{
++  union U u;
++
++  __real u.ci = 500;
++  __imag u.ci = 1000;
++  vgi = u.ci;
++
++  u.ci = ioo (u.ci);
++  __imag u.ci = 100;
++
++  if (__real u.ci != 50 || __imag u.ci != 100)
++    __builtin_abort();
++
++  u.cf = foo (u.cf);
++  __imag u.cf = 0x1p3;
++
++  if (__real u.cf != 0x1ffp10 || __imag u.cf != 0x1p3)
++    __builtin_abort();
++
++  return 0;
++}
 diff --git a/gcc/testsuite/gcc.dg/ubsan/pr94423.c b/gcc/testsuite/gcc.dg/ubsan/pr94423.c
 new file mode 100644
 index 00000000000..76f831f26e2
@@ -5840,6 +6308,25 @@ index 00000000000..45c740dbe9e
 +foo (int x, int y)
 +{
 +  return x == 0 ? x : y;
++}
+diff --git a/gcc/testsuite/gcc.dg/vect/pr94443.c b/gcc/testsuite/gcc.dg/vect/pr94443.c
+new file mode 100644
+index 00000000000..f8cbaf1b9ce
+--- /dev/null
++++ b/gcc/testsuite/gcc.dg/vect/pr94443.c
+@@ -0,0 +1,13 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=znver2" { target { x86_64-*-* i?86-*-* } } } */
++
++/* Check it to be compiled successfully without any ICE.  */
++
++int a;
++unsigned *b;
++
++void foo()
++{
++  for (unsigned i; i <= a; ++i, ++b)
++    ;
 +}
 diff --git a/gcc/testsuite/gcc.dg/vect/slp-perm-12.c b/gcc/testsuite/gcc.dg/vect/slp-perm-12.c
 index 4d4c5344402..113223ab0f9 100644
@@ -6040,6 +6527,278 @@ index 8d2ae67dfbe..6daf9b08f5a 100644
  /* { dg-skip-if "" { *-*-* } { "-mcpu=*" } { "" } } */
  
  int
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_11.c b/gcc/testsuite/gcc.target/aarch64/options_set_11.c
+new file mode 100644
+index 00000000000..d083bfdbd5c
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_11.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.2-a+fp" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.2-a\+crc} } } */
++
++ /* FP is default on, no need to pass on to assembler.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_12.c b/gcc/testsuite/gcc.target/aarch64/options_set_12.c
+new file mode 100644
+index 00000000000..58a09fda2c1
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_12.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.2-a+fp16" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.2-a\+crc\+fp16} } } */
++
++ /* fp16 not default, should be emitted.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_13.c b/gcc/testsuite/gcc.target/aarch64/options_set_13.c
+new file mode 100644
+index 00000000000..2a517ecb58f
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_13.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.2-a+fp16+fp" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.2-a\+crc\+fp16} } } */
++
++ /* FP is part of FP16, don't emit it.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_14.c b/gcc/testsuite/gcc.target/aarch64/options_set_14.c
+new file mode 100644
+index 00000000000..c192bf6cb63
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_14.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.2-a+fp16fml" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.2-a\+crc\+fp16fml} } } */
++
++ /* fmp16fml is smallest option to emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_15.c b/gcc/testsuite/gcc.target/aarch64/options_set_15.c
+new file mode 100644
+index 00000000000..32ec3ea4643
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_15.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.2-a+fp16fml+fp" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.2-a\+crc\+fp16fml*} } } */
++
++ /* fp included in fp16fml, only emit latter.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_16.c b/gcc/testsuite/gcc.target/aarch64/options_set_16.c
+new file mode 100644
+index 00000000000..b45c01a915b
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_16.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.2-a+fp16fml+fp16+fp" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.2-a\+crc\+fp16fml} } } */
++
++ /* fp16fml is smallest options to emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_17.c b/gcc/testsuite/gcc.target/aarch64/options_set_17.c
+new file mode 100644
+index 00000000000..c490e1f47a0
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_17.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.2-a+dotprod" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.2-a\+crc\+dotprod} } } */
++
++ /* dotprod needs to be emitted pre armv8.4.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_18.c b/gcc/testsuite/gcc.target/aarch64/options_set_18.c
+new file mode 100644
+index 00000000000..61587dbbd63
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_18.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+dotprod" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc} } } */
++
++ /* dotprod is default in armv8.4-a, don't emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_19.c b/gcc/testsuite/gcc.target/aarch64/options_set_19.c
+new file mode 100644
+index 00000000000..72b58126182
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_19.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+fp" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc} } } */
++
++ /* fp default, don't emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_20.c b/gcc/testsuite/gcc.target/aarch64/options_set_20.c
+new file mode 100644
+index 00000000000..b383e0aced2
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_20.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+fp16" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc\+fp16} } } */
++
++ /* fp16 smallest set to emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_21.c b/gcc/testsuite/gcc.target/aarch64/options_set_21.c
+new file mode 100644
+index 00000000000..19fcd6fda6e
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_21.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+fp16+fp" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc\+fp16} } } */
++
++ /* fp16 smallest set to emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_22.c b/gcc/testsuite/gcc.target/aarch64/options_set_22.c
+new file mode 100644
+index 00000000000..77ae4089f39
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_22.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+fp16fml" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc\+fp16} } } */
++
++ /* fp16 smallest set to emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_23.c b/gcc/testsuite/gcc.target/aarch64/options_set_23.c
+new file mode 100644
+index 00000000000..dee637c5d2c
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_23.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+fp16fml+fp" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc\+fp16} } } */
++
++ /* fp16 smallest set to emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_24.c b/gcc/testsuite/gcc.target/aarch64/options_set_24.c
+new file mode 100644
+index 00000000000..54b0e3d4a83
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_24.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+fp16fml+fp16" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc\+fp16} } } */
++
++ /* fp16 smallest set to emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_25.c b/gcc/testsuite/gcc.target/aarch64/options_set_25.c
+new file mode 100644
+index 00000000000..a3b2d63c06e
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_25.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+fp16fml+fp+fp16" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc\+fp16} } } */
++
++ /* fp16 smallest set to emit.  */
+diff --git a/gcc/testsuite/gcc.target/aarch64/options_set_26.c b/gcc/testsuite/gcc.target/aarch64/options_set_26.c
+new file mode 100644
+index 00000000000..b383e0aced2
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/options_set_26.c
+@@ -0,0 +1,11 @@
++/* { dg-do compile } */
++/* { dg-additional-options "-march=armv8.4-a+fp16" } */
++
++int main ()
++{
++  return 0;
++}
++
++/* { dg-final { scan-assembler {\.arch armv8\.4-a\+crc\+fp16} } } */
++
++ /* fp16 smallest set to emit.  */
 diff --git a/gcc/testsuite/gcc.target/aarch64/pr94435.c b/gcc/testsuite/gcc.target/aarch64/pr94435.c
 new file mode 100644
 index 00000000000..5713c14d5f9
@@ -6070,6 +6829,21 @@ index 00000000000..5713c14d5f9
 +	}
 +      __sync_val_compare_and_swap (&g, -1, f);
 +    }
++}
+diff --git a/gcc/testsuite/gcc.target/aarch64/pr94530.c b/gcc/testsuite/gcc.target/aarch64/pr94530.c
+new file mode 100644
+index 00000000000..1f98201c50a
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/aarch64/pr94530.c
+@@ -0,0 +1,9 @@
++/* { dg-do compile } */
++/* { dg-options "-Os -mcpu=falkor -mpc-relative-literal-loads -mcmodel=large" } */
++
++extern void bar(const char *);
++
++void foo(void) {
++  for (;;)
++    bar("");
 +}
 diff --git a/gcc/testsuite/gcc.target/aarch64/sync-comp-swap.c b/gcc/testsuite/gcc.target/aarch64/sync-comp-swap.c
 index e571b2f13b3..f56415f3354 100644
@@ -6307,6 +7081,84 @@ index 00000000000..4982f7d01d7
 +/* { dg-options "-O3 -fcompare-debug -mavx2" } */
 +
 +#include "../../gcc.dg/fold-bopcond-1.c"
+diff --git a/gcc/testsuite/gcc.target/i386/pr94417-1.c b/gcc/testsuite/gcc.target/i386/pr94417-1.c
+new file mode 100644
+index 00000000000..5bbe057fa8f
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/i386/pr94417-1.c
+@@ -0,0 +1,20 @@
++/* { dg-do compile } */
++/* { dg-require-effective-target lp64 } */
++/* { dg-options "-O2 -fcf-protection -mcmodel=large" } */
++/* { dg-final { scan-assembler-times {\mendbr} 2 } } */
++
++extern void ext (void);
++
++__attribute((noclone, noinline))
++static
++void
++foo (void)
++{
++  ext ();
++}
++
++void
++bar (void)
++{
++  foo ();
++}
+diff --git a/gcc/testsuite/gcc.target/i386/pr94417-2.c b/gcc/testsuite/gcc.target/i386/pr94417-2.c
+new file mode 100644
+index 00000000000..9e9c277e07f
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/i386/pr94417-2.c
+@@ -0,0 +1,21 @@
++/* { dg-do compile } */
++/* { dg-require-effective-target lp64 } */
++/* { dg-require-effective-target fpic } */
++/* { dg-options "-O2 -fpic -mcmodel=large -fcf-protection" } */
++/* { dg-final { scan-assembler-times {\mendbr} 4 } } */
++
++extern void ext (void);
++
++__attribute((noclone, noinline))
++static
++void
++foo (void)
++{
++  ext ();
++}
++
++void
++bar (void)
++{
++  foo ();
++}
+diff --git a/gcc/testsuite/gcc.target/i386/pr94417-3.c b/gcc/testsuite/gcc.target/i386/pr94417-3.c
+new file mode 100644
+index 00000000000..07c451796c2
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/i386/pr94417-3.c
+@@ -0,0 +1,19 @@
++/* { dg-do compile } */
++/* { dg-options "-O2 -fcf-protection -mforce-indirect-call" } */
++/* { dg-final { scan-assembler-times {\mendbr} 2 } } */
++
++extern void ext (void);
++
++__attribute((noclone, noinline))
++static
++void
++foo (void)
++{
++  ext ();
++}
++
++void
++bar (void)
++{
++  foo ();
++}
 diff --git a/gcc/testsuite/gcc.target/i386/pr94494.c b/gcc/testsuite/gcc.target/i386/pr94494.c
 new file mode 100644
 index 00000000000..ba0171e59f8
@@ -6889,6 +7741,30 @@ index 00000000000..bab08b2d5c3
 +end structure
 +
 +end
+diff --git a/gcc/testsuite/gfortran.dg/graphite/vect-pr94043.f90 b/gcc/testsuite/gfortran.dg/graphite/vect-pr94043.f90
+new file mode 100644
+index 00000000000..744c0f3042e
+--- /dev/null
++++ b/gcc/testsuite/gfortran.dg/graphite/vect-pr94043.f90
+@@ -0,0 +1,18 @@
++! { dg-do compile }
++! { dg-additional-options "-O3 -ftree-parallelize-loops=2 -fno-tree-dce" }
++
++! As PR94043, test it to be compiled successfully without ICE.
++
++program yw
++      integer :: hx(6, 6)
++      integer :: ps = 1, e2 = 1
++
++      do ps = 1, 6
++        do e2 = 1, 6
++            hx(e2, ps) = 0
++            if (ps >= 5 .and. e2 >= 5) then
++                hx(e2, ps) = hx(1, 1)
++            end if
++        end do
++      end do
++end program
 diff --git a/gcc/testsuite/gfortran.dg/module_procedure_3.f90 b/gcc/testsuite/gfortran.dg/module_procedure_3.f90
 new file mode 100644
 index 00000000000..50a83d9e5b1
@@ -6933,6 +7809,25 @@ index 00000000000..7d5477ac0c3
 +! { dg-options "-std=legacy -Ofast --param max-cse-insns=0 -fno-schedule-insns -fsanitize=null" }
 +
 +include 'string_ctor_1.f90'
+diff --git a/gcc/testsuite/gfortran.dg/pr93364.f90 b/gcc/testsuite/gfortran.dg/pr93364.f90
+new file mode 100644
+index 00000000000..61d7fa149a6
+--- /dev/null
++++ b/gcc/testsuite/gfortran.dg/pr93364.f90
+@@ -0,0 +1,13 @@
++! { dg-do compile }
++! { dg-options "-fcoarray=single" }
++!
++! PR fortran/93364 - check fix for ICE in gfc_set_array_spec
++
++type(t) function f()
++  codimension :: t[1,2,1,2,1,2,1,*]
++  dimension :: t(1,2,1,2,1,2,1,2)
++end
++
++! { dg-error "has not been declared" " " { target *-*-* } 6 }
++! { dg-error "is of type 't'" " " { target *-*-* } 6 }
++! { dg-error "rank \\+ corank of" " " { target *-*-* } 8 }
 diff --git a/gcc/testsuite/gfortran.dg/pr93484_1.f90 b/gcc/testsuite/gfortran.dg/pr93484_1.f90
 new file mode 100644
 index 00000000000..3b6dbc9ad79
@@ -7446,7 +8341,7 @@ index 9f593289666..41697e77994 100644
  extern void percent_K_format (text_info *, location_t, tree);
  extern void pp_tree_identifier (pretty_printer *, tree);
 diff --git a/gcc/tree-sra.c b/gcc/tree-sra.c
-index fd51a3d0323..0a5c24a183a 100644
+index fd51a3d0323..805839cac50 100644
 --- a/gcc/tree-sra.c
 +++ b/gcc/tree-sra.c
 @@ -291,6 +291,9 @@ static object_allocator<assign_link> assign_link_pool ("SRA links");
@@ -7459,6 +8354,15 @@ index fd51a3d0323..0a5c24a183a 100644
  /* Candidate hash table helpers.  */
  
  struct uid_decl_hasher : nofree_ptr_hash <tree_node>
+@@ -2326,7 +2329,7 @@ create_access_replacement (struct access *access, tree reg_type = NULL_TREE)
+ 	  print_generic_expr (dump_file, access->base);
+ 	  fprintf (dump_file, " offset: %u, size: %u: ",
+ 		   (unsigned) access->offset, (unsigned) access->size);
+-	  print_generic_expr (dump_file, repl);
++	  print_generic_expr (dump_file, repl, TDF_UID);
+ 	  fprintf (dump_file, "\n");
+ 	}
+     }
 @@ -2670,6 +2673,32 @@ subtree_mark_written_and_enqueue (struct access *access)
      subtree_mark_written_and_enqueue (child);
  }
@@ -7518,6 +8422,61 @@ index fd51a3d0323..0a5c24a183a 100644
  }
  
  /* Go through all accesses collected throughout the (intraprocedural) analysis
+@@ -3155,6 +3187,7 @@ sra_modify_expr (tree *expr, gimple_stmt_iterator *gsi, bool write)
+   location_t loc;
+   struct access *access;
+   tree type, bfr, orig_expr;
++  bool partial_cplx_access = false;
+ 
+   if (TREE_CODE (*expr) == BIT_FIELD_REF)
+     {
+@@ -3165,7 +3198,10 @@ sra_modify_expr (tree *expr, gimple_stmt_iterator *gsi, bool write)
+     bfr = NULL_TREE;
+ 
+   if (TREE_CODE (*expr) == REALPART_EXPR || TREE_CODE (*expr) == IMAGPART_EXPR)
+-    expr = &TREE_OPERAND (*expr, 0);
++    {
++      expr = &TREE_OPERAND (*expr, 0);
++      partial_cplx_access = true;
++    }
+   access = get_access_for_expr (*expr);
+   if (!access)
+     return false;
+@@ -3193,13 +3229,32 @@ sra_modify_expr (tree *expr, gimple_stmt_iterator *gsi, bool write)
+          be accessed as a different type too, potentially creating a need for
+          type conversion (see PR42196) and when scalarized unions are involved
+          in assembler statements (see PR42398).  */
+-      if (!useless_type_conversion_p (type, access->type))
++      if (!bfr && !useless_type_conversion_p (type, access->type))
+ 	{
+ 	  tree ref;
+ 
+ 	  ref = build_ref_for_model (loc, orig_expr, 0, access, gsi, false);
+ 
+-	  if (write)
++	  if (partial_cplx_access)
++	    {
++	    /* VIEW_CONVERT_EXPRs in partial complex access are always fine in
++	       the case of a write because in such case the replacement cannot
++	       be a gimple register.  In the case of a load, we have to
++	       differentiate in between a register an non-register
++	       replacement.  */
++	      tree t = build1 (VIEW_CONVERT_EXPR, type, repl);
++	      gcc_checking_assert (!write || access->grp_partial_lhs);
++	      if (!access->grp_partial_lhs)
++		{
++		  tree tmp = make_ssa_name (type);
++		  gassign *stmt = gimple_build_assign (tmp, t);
++		  /* This is always a read. */
++		  gsi_insert_before (gsi, stmt, GSI_SAME_STMT);
++		  t = tmp;
++		}
++	      *expr = t;
++	    }
++	  else if (write)
+ 	    {
+ 	      gassign *stmt;
+ 
 diff --git a/gcc/tree-ssa-dse.c b/gcc/tree-ssa-dse.c
 index efe5b31cc0a..26376ecf8de 100644
 --- a/gcc/tree-ssa-dse.c
@@ -7575,6 +8534,20 @@ index efe5b31cc0a..26376ecf8de 100644
  }
  
  /* STMT is builtin call that writes bytes in bitmap ORIG, some bytes are dead
+diff --git a/gcc/tree-ssa-forwprop.c b/gcc/tree-ssa-forwprop.c
+index bbfa1bc6fae..ca5443b79b3 100644
+--- a/gcc/tree-ssa-forwprop.c
++++ b/gcc/tree-ssa-forwprop.c
+@@ -2357,7 +2357,8 @@ pass_forwprop::execute (function *fun)
+ 		    continue;
+ 		  if (!is_gimple_assign (use_stmt)
+ 		      || (gimple_assign_rhs_code (use_stmt) != REALPART_EXPR
+-			  && gimple_assign_rhs_code (use_stmt) != IMAGPART_EXPR))
++			  && gimple_assign_rhs_code (use_stmt) != IMAGPART_EXPR)
++		      || TREE_OPERAND (gimple_assign_rhs1 (use_stmt), 0) != lhs)
+ 		    {
+ 		      rewrite = false;
+ 		      break;
 diff --git a/gcc/tree-ssa-phiopt.c b/gcc/tree-ssa-phiopt.c
 index 19b37b43b8e..47227dc16dc 100644
 --- a/gcc/tree-ssa-phiopt.c
@@ -7722,6 +8695,86 @@ index 255575f1198..4f42817f7de 100644
  	   && (non_ass_var = independent_of_stmt_p (op0, stmt, call,
  						    to_move)))
      ;
+diff --git a/gcc/tree-vect-loop.c b/gcc/tree-vect-loop.c
+index 0308b26b808..ed6586753c5 100644
+--- a/gcc/tree-vect-loop.c
++++ b/gcc/tree-vect-loop.c
+@@ -7942,6 +7942,25 @@ vectorizable_live_operation (stmt_vec_info stmt_info,
+       bitstart = int_const_binop (MINUS_EXPR, vec_bitsize, bitsize);
+     }
+ 
++  /* Ensure the VEC_LHS for lane extraction stmts satisfy loop-closed PHI
++     requirement, insert one phi node for it.  It looks like:
++	 loop;
++       BB:
++	 # lhs' = PHI <lhs>
++     ==>
++	 loop;
++       BB:
++	 # vec_lhs' = PHI <vec_lhs>
++	 new_tree = lane_extract <vec_lhs', ...>;
++	 lhs' = new_tree;  */
++
++  basic_block exit_bb = single_exit (loop)->dest;
++  gcc_assert (single_pred_p (exit_bb));
++
++  tree vec_lhs_phi = copy_ssa_name (vec_lhs);
++  gimple *phi = create_phi_node (vec_lhs_phi, exit_bb);
++  SET_PHI_ARG_DEF (phi, single_exit (loop)->dest_idx, vec_lhs);
++
+   gimple_seq stmts = NULL;
+   tree new_tree;
+   if (LOOP_VINFO_FULLY_MASKED_P (loop_vinfo))
+@@ -7954,10 +7973,10 @@ vectorizable_live_operation (stmt_vec_info stmt_info,
+ 	 the loop mask for the final iteration.  */
+       gcc_assert (ncopies == 1 && !slp_node);
+       tree scalar_type = TREE_TYPE (STMT_VINFO_VECTYPE (stmt_info));
+-      tree mask = vect_get_loop_mask (gsi, &LOOP_VINFO_MASKS (loop_vinfo),
+-				      1, vectype, 0);
+-      tree scalar_res = gimple_build (&stmts, CFN_EXTRACT_LAST,
+-				      scalar_type, mask, vec_lhs);
++      tree mask = vect_get_loop_mask (gsi, &LOOP_VINFO_MASKS (loop_vinfo), 1,
++				      vectype, 0);
++      tree scalar_res = gimple_build (&stmts, CFN_EXTRACT_LAST, scalar_type,
++				      mask, vec_lhs_phi);
+ 
+       /* Convert the extracted vector element to the required scalar type.  */
+       new_tree = gimple_convert (&stmts, lhs_type, scalar_res);
+@@ -7967,13 +7986,32 @@ vectorizable_live_operation (stmt_vec_info stmt_info,
+       tree bftype = TREE_TYPE (vectype);
+       if (VECTOR_BOOLEAN_TYPE_P (vectype))
+ 	bftype = build_nonstandard_integer_type (tree_to_uhwi (bitsize), 1);
+-      new_tree = build3 (BIT_FIELD_REF, bftype, vec_lhs, bitsize, bitstart);
++      new_tree = build3 (BIT_FIELD_REF, bftype, vec_lhs_phi, bitsize, bitstart);
+       new_tree = force_gimple_operand (fold_convert (lhs_type, new_tree),
+ 				       &stmts, true, NULL_TREE);
+     }
+ 
+   if (stmts)
+-    gsi_insert_seq_on_edge_immediate (single_exit (loop), stmts);
++    {
++      gimple_stmt_iterator exit_gsi = gsi_after_labels (exit_bb);
++      gsi_insert_seq_before (&exit_gsi, stmts, GSI_SAME_STMT);
++
++      /* Remove existing phi from lhs and create one copy from new_tree.  */
++      tree lhs_phi = NULL_TREE;
++      gimple_stmt_iterator gsi;
++      for (gsi = gsi_start_phis (exit_bb); !gsi_end_p (gsi); gsi_next (&gsi))
++	{
++	  gimple *phi = gsi_stmt (gsi);
++	  if ((gimple_phi_arg_def (phi, 0) == lhs))
++	    {
++	      remove_phi_node (&gsi, false);
++	      lhs_phi = gimple_phi_result (phi);
++	      gimple *copy = gimple_build_assign (lhs_phi, new_tree);
++	      gsi_insert_before (&exit_gsi, copy, GSI_SAME_STMT);
++	      break;
++	    }
++	}
++    }
+ 
+   /* Replace use of lhs with newly computed result.  If the use stmt is a
+      single arg PHI, just replace all uses of PHI result.  It's necessary
 diff --git a/gcc/varasm.c b/gcc/varasm.c
 index 8f006dcff67..8d87e28cc7c 100644
 --- a/gcc/varasm.c
@@ -7753,11 +8806,95 @@ index 8f006dcff67..8d87e28cc7c 100644
    unsigned HOST_WIDE_INT fieldsize
      = int_size_in_bytes (TREE_TYPE (local->type));
  
+diff --git a/include/ChangeLog b/include/ChangeLog
+index 1811056c182..e8e301dd8e7 100644
+--- a/include/ChangeLog
++++ b/include/ChangeLog
+@@ -1,3 +1,13 @@
++2020-04-20  Martin Liska  <mliska@suse.cz>
++
++	Backport from mainline
++	2020-04-17  Martin Liska  <mliska@suse.cz>
++		    Jonathan Yong <10walls@gmail.com>
++
++	PR gcov-profile/94570
++	* filenames.h (defined): Do not define HAVE_DOS_BASED_FILE_SYSTEM
++	for CYGWIN.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/include/filenames.h b/include/filenames.h
+index 1bcfddb87ac..790a27db873 100644
+--- a/include/filenames.h
++++ b/include/filenames.h
+@@ -32,7 +32,8 @@ Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
+ extern "C" {
+ #endif
+ 
+-#if defined(__MSDOS__) || defined(_WIN32) || defined(__OS2__) || defined (__CYGWIN__)
++#if defined(__MSDOS__) || (defined(_WIN32) && ! defined(__CYGWIN__)) || \
++    defined(__OS2__)
+ #  ifndef HAVE_DOS_BASED_FILE_SYSTEM
+ #    define HAVE_DOS_BASED_FILE_SYSTEM 1
+ #  endif
+diff --git a/libatomic/ChangeLog b/libatomic/ChangeLog
+index 5c0aa2db0c8..93ba72ae5ef 100644
+--- a/libatomic/ChangeLog
++++ b/libatomic/ChangeLog
+@@ -1,3 +1,8 @@
++2020-04-19  Uroš Bizjak  <ubizjak@gmail.com>
++
++	* config/x86/fenv.c (__atomic_feraiseexcept) [__SSE_MATH__]:
++	Remove unneeded assignments to volatile memory.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/libatomic/config/x86/fenv.c b/libatomic/config/x86/fenv.c
+index 9b8a3bd9308..b4c7edc249e 100644
+--- a/libatomic/config/x86/fenv.c
++++ b/libatomic/config/x86/fenv.c
+@@ -57,9 +57,7 @@ __atomic_feraiseexcept (int excepts)
+     {
+       float f = 0.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       asm volatile ("%vdivss\t{%0, %d0|%d0, %0}" : "+x" (f));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       asm volatile ("fdiv\t{%y0, %0|%0, %y0}" : "+t" (f));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
+@@ -77,9 +75,7 @@ __atomic_feraiseexcept (int excepts)
+     {
+       float f = 1.0f, g = 0.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       asm volatile ("%vdivss\t{%1, %d0|%d0, %1}" : "+x" (f) : "xm" (g));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       asm volatile ("fdivs\t%1" : "+t" (f) : "m" (g));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
+@@ -105,9 +101,7 @@ __atomic_feraiseexcept (int excepts)
+     {
+       float f = 1.0f, g = 3.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       asm volatile ("%vdivss\t{%1, %d0|%d0, %1}" : "+x" (f) : "xm" (g));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       asm volatile ("fdivs\t%1" : "+t" (f) : "m" (g));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
 diff --git a/libgcc/ChangeLog b/libgcc/ChangeLog
-index a5c30516ff8..3dbc003ecbd 100644
+index a5c30516ff8..9a9d19814d8 100644
 --- a/libgcc/ChangeLog
 +++ b/libgcc/ChangeLog
-@@ -1,3 +1,33 @@
+@@ -1,3 +1,38 @@
++2020-04-19  Uroš Bizjak  <ubizjak@gmail.com>
++
++	* config/i386/sfp-exceptions.c (__sfp_handle_exceptions) [__SSE_MATH__]:
++	Remove unneeded assignments to volatile memory.
++
 +2020-04-01  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
 +
 +	Backport from mainline
@@ -8193,6 +9330,40 @@ index 00000000000..fe3868dacbf
 +
 +$(LSE_OBJS): $(srcdir)/config/aarch64/lse.S
 +	$(gcc_compile) -DL_$(PAT_BASE) -DSIZE=$(PAT_N) -DMODEL=$(PAT_M) -c $<
+diff --git a/libgcc/config/i386/sfp-exceptions.c b/libgcc/config/i386/sfp-exceptions.c
+index a6c56392acd..de4a2e06102 100644
+--- a/libgcc/config/i386/sfp-exceptions.c
++++ b/libgcc/config/i386/sfp-exceptions.c
+@@ -48,9 +48,7 @@ __sfp_handle_exceptions (int _fex)
+     {
+       float f = 0.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       asm volatile ("%vdivss\t{%0, %d0|%d0, %0}" : "+x" (f));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       asm volatile ("fdiv\t{%y0, %0|%0, %y0}" : "+t" (f));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
+@@ -68,9 +66,7 @@ __sfp_handle_exceptions (int _fex)
+     {
+       float f = 1.0f, g = 0.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       asm volatile ("%vdivss\t{%1, %d0|%d0, %1}" : "+x" (f) : "xm" (g));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       asm volatile ("fdivs\t%1" : "+t" (f) : "m" (g));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
+@@ -96,9 +92,7 @@ __sfp_handle_exceptions (int _fex)
+     {
+       float f = 1.0f, g = 3.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       asm volatile ("%vdivss\t{%1, %d0|%d0, %1}" : "+x" (f) : "xm" (g));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       asm volatile ("fdivs\t%1" : "+t" (f) : "m" (g));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
 diff --git a/libgcc/configure b/libgcc/configure
 old mode 100644
 new mode 100755
@@ -8315,6 +9486,53 @@ index 8e96cafdf8b..0762d77a801 100644
  AC_HEADER_STDC
  
  # Check for decimal float support.
+diff --git a/libgfortran/ChangeLog b/libgfortran/ChangeLog
+index 01aa551b914..946c9f0100b 100644
+--- a/libgfortran/ChangeLog
++++ b/libgfortran/ChangeLog
+@@ -1,3 +1,8 @@
++2020-04-19  Uroš Bizjak  <ubizjak@gmail.com>
++
++	* config/fpu-387.h (local_feraiseexcept) [__SSE_MATH__]:
++	Remove unneeded assignments to volatile memory.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/libgfortran/config/fpu-387.h b/libgfortran/config/fpu-387.h
+index a2f4281d0c5..bf4d78586c9 100644
+--- a/libgfortran/config/fpu-387.h
++++ b/libgfortran/config/fpu-387.h
+@@ -103,9 +103,7 @@ local_feraiseexcept (int excepts)
+     {
+       float f = 0.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       __asm__ __volatile__ ("%vdivss\t{%0, %d0|%d0, %0}" : "+x" (f));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       __asm__ __volatile__ ("fdiv\t{%y0, %0|%0, %y0}" : "+t" (f));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
+@@ -123,9 +121,7 @@ local_feraiseexcept (int excepts)
+     {
+       float f = 1.0f, g = 0.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       __asm__ __volatile__ ("%vdivss\t{%1, %d0|%d0, %1}" : "+x" (f) : "xm" (g));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       __asm__ __volatile__ ("fdivs\t%1" : "+t" (f) : "m" (g));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
+@@ -151,9 +147,7 @@ local_feraiseexcept (int excepts)
+     {
+       float f = 1.0f, g = 3.0f;
+ #ifdef __SSE_MATH__
+-      volatile float r __attribute__ ((unused));
+       __asm__ __volatile__ ("%vdivss\t{%1, %d0|%d0, %1}" : "+x" (f) : "xm" (g));
+-      r = f; /* Needed to trigger exception.   */
+ #else
+       __asm__ __volatile__ ("fdivs\t%1" : "+t" (f) : "m" (g));
+       /* No need for fwait, exception is triggered by emitted fstp.  */
 diff --git a/libgomp/ChangeLog b/libgomp/ChangeLog
 index 0156d5f7bc9..2926096bb7c 100644
 --- a/libgomp/ChangeLog
@@ -10485,6 +11703,21 @@ index e1feef99582..0f00a94da42 100644
    char** endptr = 0;
    int base = 0;
  
+diff --git a/ltmain.sh b/ltmain.sh
+index 79f9ba89af5..70990740b6c 100644
+--- a/ltmain.sh
++++ b/ltmain.sh
+@@ -3425,8 +3425,8 @@ int setenv (const char *, const char *, int);
+ # define PATH_SEPARATOR ':'
+ #endif
+ 
+-#if defined (_WIN32) || defined (__MSDOS__) || defined (__DJGPP__) || \
+-  defined (__OS2__)
++#if (defined (_WIN32) && ! defined(__CYGWIN__)) || defined (__MSDOS__) || \
++  defined (__DJGPP__) || defined (__OS2__)
+ # define HAVE_DOS_BASED_FILE_SYSTEM
+ # define FOPEN_WB "wb"
+ # ifndef DIR_SEPARATOR_2
 diff --git a/maintainer-scripts/ChangeLog b/maintainer-scripts/ChangeLog
 index b1a9be6f5b2..039f7381af5 100644
 --- a/maintainer-scripts/ChangeLog
