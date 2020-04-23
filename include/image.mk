@@ -10,6 +10,7 @@ include $(INCLUDE_DIR)/prereq.mk
 include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/version.mk
 include $(INCLUDE_DIR)/image-commands.mk
+include $(INCLUDE_DIR)/kernel-defaults.mk
 
 ifndef IB
   ifdef CONFIG_TARGET_PER_DEVICE_ROOTFS
@@ -461,13 +462,25 @@ define merge_packages
   )
 endef
 
+define set_rootfs_packages
+  ROOTFS_ID/$(1) := $$(call mkfs_packages_id,$(2))
+  PACKAGES_$$(ROOTFS_ID/$(1)) := $(2)
+endef
+
+define set_initramfs_packages
+  PKGID := $$(call mkfs_packages_id,$(2))
+  KERNEL_INITRAMFS_NAME := $$(strip $$(KERNEL_INITRAMFS_NAME)+pkg=$$(PKGID))
+  PACKAGES_$$(PKGID) := $(2)
+endef
+
 define Device/Check/Common
   _PROFILE_SET = $$(strip $$(foreach profile,$$(PROFILES) DEVICE_$(1),$$(call DEVICE_CHECK_PROFILE,$$(profile))))
   DEVICE_PACKAGES += $$(call extra_packages,$$(DEVICE_PACKAGES))
+  $$(if $$(_PROFILE_SET),$$(eval $$(foreach image,$$(IMAGES),$$(if $$(IMAGE_PACKAGES/$$(image)),$$(call set_rootfs_packages,$(1)/$$(image),$$(IMAGE_PACKAGES/$$(image)))))))
+  $$(if $$(_PROFILE_SET)$$(KERNEL_INITRAMFS)$$(IMAGE_PACKAGES/initramfs),$$(eval $$(call set_initramfs_packages,$(1),$$(IMAGE_PACKAGES/initramfs))))
   ifdef TARGET_PER_DEVICE_ROOTFS
-    $$(eval $$(call merge_packages,_PACKAGES,$$(DEVICE_PACKAGES) $$(call DEVICE_EXTRA_PACKAGES,$(1))))
-    ROOTFS_ID/$(1) := $$(if $$(_PROFILE_SET),$$(call mkfs_packages_id,$$(_PACKAGES)))
-    PACKAGES_$$(ROOTFS_ID/$(1)) := $$(_PACKAGES)
+    $$(if $$(_PROFILE_SET),$$(eval $$(call merge_packages,_PACKAGES,$$(DEVICE_PACKAGES) $$(call DEVICE_EXTRA_PACKAGES,$(1)))))
+    $$(if $$(_PROFILE_SET),$$(call set_rootfs_packages,$(1),$$(_PACKAGES)))
   endif
 endef
 
@@ -482,10 +495,13 @@ endef
 
 ifndef IB
 define Device/Build/initramfs
+  PKGID := $(param_get,pkg,$(subst +,$(space),$$(KERNEL_INITRAMFS_NAME)))
   $(call Device/Export,$(KDIR)/tmp/$$(KERNEL_INITRAMFS_IMAGE),$(1))
   $$(_TARGET): $$(if $$(KERNEL_INITRAMFS),$(BIN_DIR)/$$(KERNEL_INITRAMFS_IMAGE))
 
-  $(KDIR)/$$(KERNEL_INITRAMFS_NAME):: image_prepare
+  $(KDIR)/$$(KERNEL_INITRAMFS_NAME):: $$(if $$(PKGID),target-dir-$$(PKGID)) image_prepare
+	$$(call Kernel/CompileImage/Initramfs,$(if $$(PKGID),$(KDIR)/target-dir-$$(PKGID),$(TARGET_DIR)))
+
   $(BIN_DIR)/$$(KERNEL_INITRAMFS_IMAGE): $(KDIR)/tmp/$$(KERNEL_INITRAMFS_IMAGE)
 	cp $$^ $$@
 
@@ -547,16 +563,17 @@ define Device/Build/image
 	  $(BIN_DIR)/$(call IMAGE_NAME,$(1),$(2))$$(GZ_SUFFIX))
   $(eval $(call Device/Export,$(KDIR)/tmp/$(call IMAGE_NAME,$(1),$(2)),$(1)))
 
-  ROOTFS/$(1)/$(3) := \
+  PKGID := $$(if $$(ROOTFS_ID/$(3)/$(2)),$$(ROOTFS_ID/$(3)/$(2)),$(if $(TARGET_PER_DEVICE_ROOTFS),$$(ROOTFS_ID/$(3))))
+  ROOTFS/$(1)/$(3)/$(2) := \
 	$(KDIR)/root.$(1)$$(strip \
 		$$(if $$(FS_OPTIONS/$(1)),+fs=$$(call param_mangle,$$(FS_OPTIONS/$(1)))) \
 	)$$(strip \
-		$(if $(TARGET_PER_DEVICE_ROOTFS),+pkg=$$(ROOTFS_ID/$(3))) \
+		$$(if $$(PKGID),+pkg=$$(PKGID)) \
 	)
   ifndef IB
-    $$(ROOTFS/$(1)/$(3)): $(if $(TARGET_PER_DEVICE_ROOTFS),target-dir-$$(ROOTFS_ID/$(3)))
+    $$(ROOTFS/$(1)/$(3)/$(2)): $$(if $$(PKGID),target-dir-$$(PKGID))
   endif
-  $(KDIR)/tmp/$(call IMAGE_NAME,$(1),$(2)): $$(KDIR_KERNEL_IMAGE) $$(ROOTFS/$(1)/$(3))
+  $(KDIR)/tmp/$(call IMAGE_NAME,$(1),$(2)): $$(KDIR_KERNEL_IMAGE) $$(ROOTFS/$(1)/$(3)/$(2))
 	@rm -f $$@
 	[ -f $$(word 1,$$^) -a -f $$(word 2,$$^) ]
 	$$(call concat_cmd,$(if $(IMAGE/$(2)/$(1)),$(IMAGE/$(2)/$(1)),$(IMAGE/$(2))))
