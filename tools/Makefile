@@ -135,6 +135,12 @@ $(STAGING_DIR)/.prepared: $(TMP_DIR)/.build
 
 $(STAGING_DIR_HOST)/.prepared: $(TMP_DIR)/.build
 	$(call PrepareStaging,$(STAGING_DIR_HOST))
+ifneq ($(HOST_OS),Linux)
+	mkdir -p $(STAGING_DIR_HOST)/include/asm
+endif
+	ln -snf lib $(STAGING_DIR_HOST)/lib64
+	touch $@
+
 endif
 
 $(curdir)//prepare = $(STAGING_DIR)/.prepared $(STAGING_DIR_HOST)/.prepared

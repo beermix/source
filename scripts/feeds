@@ -48,7 +48,7 @@ sub parse_file($$) {
 	my $line = 0;
 	my $fh;
 
-	open $fh, '<', $fname or return;
+	open $fh, $fname or return undef;
 	while (<$fh>) {
 		chomp;
 		s/#.+$//;
@@ -57,12 +57,10 @@ sub parse_file($$) {
 
 		my ($type, $flags, $name, $urls) = m!^src-([\w\-]+)((?:\s+--\w+(?:=\S+)?)*)\s+(\w+)(?:\s+(\S.*))?$!;
 		unless ($type && $name) {
-			close $fh;
 			die "Syntax error in $fname, line $line\n";
 		}
 
 		if ($existing->{$name}++) {
-			close $fh;
 			die "Duplicate feed name '$name' in '$fname' line: $line\n";
 		}
 
@@ -93,7 +91,6 @@ sub parse_config() {
 	parse_file("feeds.conf", \%name) or
 	    parse_file("feeds.conf.default", \%name)  or
 	    die "Unable to open feeds configuration";
-	return 0;
 }
 
 sub update_location($$)
@@ -104,7 +101,7 @@ sub update_location($$)
 
 	-d "./feeds/$name.tmp" or mkdir "./feeds/$name.tmp" or return 1;
 
-	if( open LOC, '<', "./feeds/$name.tmp/location" )
+	if( open LOC, "< ./feeds/$name.tmp/location" )
 	{
 		chomp($old_url = readline LOC);
 		close LOC;
@@ -112,7 +109,7 @@ sub update_location($$)
 
 	if( !$old_url || $old_url ne $url )
 	{
-		if( open LOC, '>', "./feeds/$name.tmp/location" )
+		if( open LOC, "> ./feeds/$name.tmp/location" )
 		{
 			print LOC $url, "\n";
 			close LOC;
@@ -268,7 +265,6 @@ sub get_feed($) {
 	$feed_src = $feed_cache{$feed}->[1];
 	$feed_target = $feed_cache{$feed}->[2];
 	$feed_vpackage = $feed_cache{$feed}->[3];
-	return 0;
 }
 
 sub get_installed() {
@@ -278,7 +274,6 @@ sub get_installed() {
 	%installed_pkg = %vpackage;
 	%installed = %srcpackage;
 	%installed_targets = get_targets("./tmp/.targetinfo");
-	return 0;
 }
 
 sub search_feed {
@@ -336,9 +331,8 @@ sub search {
 
 	getopt('r:', \%opts);
 	foreach my $feed (@feeds) {
-		search_feed($feed->[1], @ARGV) if (not defined($opts{r}) or $opts{r} eq $feed->[1]);
+		search_feed($feed->[1], @ARGV) if (!defined($opts{r}) or $opts{r} eq $feed->[1]);
 	}
-	return 0;
 }
 
 sub list_feed {
@@ -408,7 +402,7 @@ sub list {
 		return 0;
 	}
 	foreach my $feed (@feeds) {
-		list_feed($feed->[1], @ARGV) if (not defined($opts{r}) or $opts{r} eq $feed->[1]);
+		list_feed($feed->[1], @ARGV) if (!defined($opts{r}) or $opts{r} eq $feed->[1]);
 	}
 	return 0;
 }
@@ -648,7 +642,6 @@ sub refresh_config {
 	} else {
 		system("$mk defconfig Config.in >/dev/null 2>/dev/null");
 	}
-	return 0;
 }
 
 sub install {
@@ -676,7 +669,7 @@ sub install {
 
 	if($opts{a}) {
 		foreach my $f (@feeds) {
-			if (not defined($opts{p}) or $opts{p} eq $f->[1]) {
+			if (!defined($opts{p}) or $opts{p} eq $f->[1]) {
 				printf "Installing all packages from feed %s.\n", $f->[1];
 				get_feed($f->[1]);
 				foreach my $name (sort { lc($a) cmp lc($b) } keys %$feed_src) {
@@ -710,7 +703,6 @@ sub uninstall_target($) {
 	return unless $dest =~ /..\/..\/feeds/;
 	warn "Uninstalling target '$name'\n";
 	unlink "$dir";
-	return 0;
 }
 
 sub uninstall {

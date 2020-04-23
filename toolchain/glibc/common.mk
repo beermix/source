@@ -69,13 +69,10 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
 		--without-selinux \
-		--disable-build-nscd \
-		--disable-nscd \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
 
-export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
