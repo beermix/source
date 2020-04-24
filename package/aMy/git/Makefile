@@ -68,7 +68,7 @@ define Package/git-gitweb/conffiles
 /etc/gitweb.conf
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto=4
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 MAKE_FLAGS := \
