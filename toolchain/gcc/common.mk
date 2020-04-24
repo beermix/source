@@ -115,7 +115,7 @@ else
   GRAPHITE_CONFIGURE:= --without-isl --without-cloog
 endif
 
-GCC_CONFIGURE:= \
+#GCC_CONFIGURE:= \
 	SHELL="$(BASH)" \
 	$(if $(shell gcc --version 2>&1 | grep -E "Apple.(LLVM|clang)"), \
 		CFLAGS="-O2 -fbracket-depth=512 -pipe" \
@@ -220,8 +220,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
