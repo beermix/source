@@ -63,14 +63,13 @@ GLIBC_CONFIGURE:= \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
+		--enable-stack-protector=strong \
 		--enable-add-ons \
 		--without-selinux \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
 
-export libc_cv_ssp=no
-export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
