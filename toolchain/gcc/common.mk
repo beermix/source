@@ -135,6 +135,7 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--disable-vtable-verify \
 		--enable-checking=release \
 		--with-linker-hash-style=gnu \
 		--disable-libunwind-exceptions \
