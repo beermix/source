@@ -28,7 +28,7 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
-# include ../../devel/meson/meson.mk
+include ../meson/meson.mk
 
 define Package/glib2
   SECTION:=libs
