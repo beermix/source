@@ -14960,19 +14960,3 @@ index 79f9ba89af5..70990740b6c 100644
  # define HAVE_DOS_BASED_FILE_SYSTEM
  # define FOPEN_WB "wb"
  # ifndef DIR_SEPARATOR_2
-diff --git a/maintainer-scripts/ChangeLog b/maintainer-scripts/ChangeLog
-index b1a9be6f5b2..039f7381af5 100644
---- a/maintainer-scripts/ChangeLog
-+++ b/maintainer-scripts/ChangeLog
-@@ -1,3 +1,11 @@
-+2020-03-17  Jakub Jelinek  <jakub@redhat.com>
-+
-+	Backported from mainline
-+	2020-03-12  Jakub Jelinek  <jakub@redhat.com>
-+
-+	* gcc_release (upload_files): Without -l, pass -m 755 to the mkdir
-+	command invoked through ssh.
-+
- 2020-03-12  Release Manager
- 
- 	* GCC 9.3.0 released.

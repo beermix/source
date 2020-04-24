@@ -100,7 +100,7 @@ HOST_STAMP_INSTALLED:=$(HOST_BUILD_PREFIX)/stamp/.gcc_$(GCC_VARIANT)_installed
 SEP:=,
 TARGET_LANGUAGES:="c,c++$(if $(CONFIG_INSTALL_GFORTRAN),$(SEP)fortran)$(if $(CONFIG_INSTALL_GCCGO),$(SEP)go)"
 
-TAR_OPTIONS += \
+#TAR_OPTIONS += \
 	--exclude-from='$(CURDIR)/../exclude-testsuite' --exclude=gcc/ada/*.ad* \
 	--exclude=libjava
 
@@ -115,7 +115,7 @@ else
   GRAPHITE_CONFIGURE:= --without-isl --without-cloog
 endif
 
-#GCC_CONFIGURE:= \
+GCC_CONFIGURE:= \
 	SHELL="$(BASH)" \
 	$(if $(shell gcc --version 2>&1 | grep -E "Apple.(LLVM|clang)"), \
 		CFLAGS="-O2 -fbracket-depth=512 -pipe" \
