@@ -68,11 +68,7 @@ CONFIGURE_ARGS+= \
 	--with-curses \
 	--without-bash-malloc \
 	--bindir=/bin \
-	--disable-rpath \
-	--enable-direxpand-default \
-	--enable-job-control \
-	--enable-readline \
-	--with-installed-readline
+	--enable-readline
 
 define Package/bash/postinst
 #!/bin/sh
