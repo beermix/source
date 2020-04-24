@@ -136,7 +136,6 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--disable-vtable-verify \
-		--with-system-zlib \
 		--disable-libunwind-exceptions \
 		--enable-linker-build-id \
 		$(GRAPHITE_CONFIGURE) \
