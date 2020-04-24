@@ -136,8 +136,6 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--disable-libstdcxx-debug \
-		--disable-libmpx \
-		--disable-libmudflap \
 		--with-tune=generic \
 		--enable-cld \
 		$(GRAPHITE_CONFIGURE) \
