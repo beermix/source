@@ -136,6 +136,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		--disable-vtable-verify \
+		--with-system-zlib \
 		--enable-checking=release \
 		--disable-libunwind-exceptions \
 		--enable-linker-build-id \
