@@ -68,10 +68,15 @@ define Package/git-gitweb/conffiles
 /etc/gitweb.conf
 endef
 
+#TARGET_CFLAGS
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections
+#TARGET_CFLAGS="-Os $(filter-out -O2,$(call qstrip,$(TARGET_CFLAGS)))" \
+
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS) -Os -ffunction-sections -fdata-sections" \
-	CPPFLAGS="$(TARGET_CPPFLAGS) -Wl,--gc-sections" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	NO_EXPAT="YesPlease" \
 	NO_MKSTEMPS="YesPlease" \
