@@ -218,8 +218,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
