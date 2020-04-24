@@ -3010,7 +3010,7 @@ CONFIG_PACKAGE_kmod-nls-utf8=y
 # Netfilter Extensions
 #
 # CONFIG_PACKAGE_kmod-arptables is not set
-CONFIG_PACKAGE_kmod-br-netfilter=y
+# CONFIG_PACKAGE_kmod-br-netfilter is not set
 # CONFIG_PACKAGE_kmod-ebtables is not set
 # CONFIG_PACKAGE_kmod-ebtables-ipv4 is not set
 # CONFIG_PACKAGE_kmod-ebtables-watchers is not set
@@ -3038,10 +3038,10 @@ CONFIG_PACKAGE_kmod-ipt-iface=y
 CONFIG_PACKAGE_kmod-ipt-ipmark=y
 CONFIG_PACKAGE_kmod-ipt-ipopt=y
 # CONFIG_PACKAGE_kmod-ipt-ipp2p is not set
-CONFIG_PACKAGE_kmod-ipt-iprange=y
+# CONFIG_PACKAGE_kmod-ipt-iprange is not set
 # CONFIG_PACKAGE_kmod-ipt-ipsec is not set
 CONFIG_PACKAGE_kmod-ipt-ipset=y
-CONFIG_PACKAGE_kmod-ipt-ipv4options=y
+# CONFIG_PACKAGE_kmod-ipt-ipv4options is not set
 # CONFIG_PACKAGE_kmod-ipt-led is not set
 # CONFIG_PACKAGE_kmod-ipt-length2 is not set
 # CONFIG_PACKAGE_kmod-ipt-logmark is not set
@@ -3053,10 +3053,10 @@ CONFIG_PACKAGE_kmod-ipt-nat-extra=y
 # CONFIG_PACKAGE_kmod-ipt-nflog is not set
 CONFIG_PACKAGE_kmod-ipt-nfqueue=y
 # CONFIG_PACKAGE_kmod-ipt-offload is not set
-CONFIG_PACKAGE_kmod-ipt-physdev=y
-CONFIG_PACKAGE_kmod-ipt-proto=y
-CONFIG_PACKAGE_kmod-ipt-psd=y
-CONFIG_PACKAGE_kmod-ipt-quota2=y
+# CONFIG_PACKAGE_kmod-ipt-physdev is not set
+# CONFIG_PACKAGE_kmod-ipt-proto is not set
+# CONFIG_PACKAGE_kmod-ipt-psd is not set
+# CONFIG_PACKAGE_kmod-ipt-quota2 is not set
 CONFIG_PACKAGE_kmod-ipt-raw=y
 # CONFIG_PACKAGE_kmod-ipt-rpfilter is not set
 # CONFIG_PACKAGE_kmod-ipt-sysrq is not set
@@ -3080,7 +3080,7 @@ CONFIG_PACKAGE_kmod-nfnetlink=y
 CONFIG_PACKAGE_kmod-nfnetlink-queue=y
 # CONFIG_PACKAGE_kmod-nft-arp is not set
 # CONFIG_PACKAGE_kmod-nft-bridge is not set
-CONFIG_PACKAGE_kmod-nft-core=y
+# CONFIG_PACKAGE_kmod-nft-core is not set
 # CONFIG_PACKAGE_kmod-nft-fib is not set
 # CONFIG_PACKAGE_kmod-nft-nat is not set
 # CONFIG_PACKAGE_kmod-nft-netdev is not set
@@ -3180,7 +3180,7 @@ CONFIG_PACKAGE_kmod-iptunnel=y
 # CONFIG_PACKAGE_kmod-misdn is not set
 # CONFIG_PACKAGE_kmod-mpls is not set
 # CONFIG_PACKAGE_kmod-netem is not set
-CONFIG_PACKAGE_kmod-netlink-diag=y
+# CONFIG_PACKAGE_kmod-netlink-diag is not set
 # CONFIG_PACKAGE_kmod-nlmon is not set
 # CONFIG_PACKAGE_kmod-nsh is not set
 # CONFIG_PACKAGE_kmod-openvswitch is not set
@@ -4838,7 +4838,7 @@ CONFIG_PACKAGE_libnetfilter-queue=y
 # CONFIG_PACKAGE_libnettle is not set
 # CONFIG_PACKAGE_libnewt is not set
 CONFIG_PACKAGE_libnfnetlink=y
-CONFIG_PACKAGE_libnftnl=y
+# CONFIG_PACKAGE_libnftnl is not set
 CONFIG_PACKAGE_libnghttp2=y
 # CONFIG_PACKAGE_libnl is not set
 # CONFIG_PACKAGE_libnl-core is not set
@@ -5575,7 +5575,7 @@ CONFIG_PACKAGE_curl=y
 # CONFIG_PACKAGE_fwknopd is not set
 CONFIG_PACKAGE_iptables=y
 # CONFIG_IPTABLES_CONNLABEL is not set
-CONFIG_IPTABLES_NFTABLES=y
+# CONFIG_IPTABLES_NFTABLES is not set
 # CONFIG_PACKAGE_iptables-mod-account is not set
 # CONFIG_PACKAGE_iptables-mod-chaos is not set
 # CONFIG_PACKAGE_iptables-mod-checksum is not set
@@ -5595,9 +5595,9 @@ CONFIG_PACKAGE_iptables-mod-iface=y
 CONFIG_PACKAGE_iptables-mod-ipmark=y
 CONFIG_PACKAGE_iptables-mod-ipopt=y
 # CONFIG_PACKAGE_iptables-mod-ipp2p is not set
-CONFIG_PACKAGE_iptables-mod-iprange=y
+# CONFIG_PACKAGE_iptables-mod-iprange is not set
 # CONFIG_PACKAGE_iptables-mod-ipsec is not set
-CONFIG_PACKAGE_iptables-mod-ipv4options=y
+# CONFIG_PACKAGE_iptables-mod-ipv4options is not set
 # CONFIG_PACKAGE_iptables-mod-led is not set
 # CONFIG_PACKAGE_iptables-mod-length2 is not set
 # CONFIG_PACKAGE_iptables-mod-logmark is not set
@@ -5606,10 +5606,10 @@ CONFIG_PACKAGE_iptables-mod-ipv4options=y
 CONFIG_PACKAGE_iptables-mod-nat-extra=y
 # CONFIG_PACKAGE_iptables-mod-nflog is not set
 CONFIG_PACKAGE_iptables-mod-nfqueue=y
-CONFIG_PACKAGE_iptables-mod-physdev=y
-CONFIG_PACKAGE_iptables-mod-proto=y
-CONFIG_PACKAGE_iptables-mod-psd=y
-CONFIG_PACKAGE_iptables-mod-quota2=y
+# CONFIG_PACKAGE_iptables-mod-physdev is not set
+# CONFIG_PACKAGE_iptables-mod-proto is not set
+# CONFIG_PACKAGE_iptables-mod-psd is not set
+# CONFIG_PACKAGE_iptables-mod-quota2 is not set
 # CONFIG_PACKAGE_iptables-mod-rpfilter is not set
 # CONFIG_PACKAGE_iptables-mod-sysrq is not set
 # CONFIG_PACKAGE_iptables-mod-tarpit is not set
@@ -5618,14 +5618,13 @@ CONFIG_PACKAGE_iptables-mod-tproxy=y
 # CONFIG_PACKAGE_iptables-mod-trace is not set
 # CONFIG_PACKAGE_iptables-mod-u32 is not set
 # CONFIG_PACKAGE_iptables-mod-ulog is not set
-# CONFIG_PACKAGE_iptables-nft is not set
 # CONFIG_PACKAGE_iptaccount is not set
 # CONFIG_PACKAGE_iptgeoip is not set
 # CONFIG_PACKAGE_miniupnpc is not set
 CONFIG_PACKAGE_miniupnpd=y
 # CONFIG_PACKAGE_natpmpc is not set
 # CONFIG_PACKAGE_nftables-json is not set
-CONFIG_PACKAGE_nftables-nojson=y
+# CONFIG_PACKAGE_nftables-nojson is not set
 # CONFIG_PACKAGE_shorewall is not set
 # CONFIG_PACKAGE_shorewall-core is not set
 # CONFIG_PACKAGE_shorewall-lite is not set
@@ -5849,7 +5848,7 @@ CONFIG_PACKAGE_unbound-daemon=y
 # CONFIG_PACKAGE_dcwapd is not set
 # CONFIG_PACKAGE_devlink is not set
 # CONFIG_PACKAGE_frr is not set
-CONFIG_PACKAGE_genl=y
+# CONFIG_PACKAGE_genl is not set
 # CONFIG_PACKAGE_igmpproxy is not set
 # CONFIG_PACKAGE_ip-bridge is not set
 CONFIG_PACKAGE_ip-full=y
@@ -5865,7 +5864,7 @@ CONFIG_PACKAGE_nstat=y
 # CONFIG_PACKAGE_rdma is not set
 # CONFIG_PACKAGE_relayd is not set
 # CONFIG_PACKAGE_smcroute is not set
-CONFIG_PACKAGE_ss=y
+# CONFIG_PACKAGE_ss is not set
 # CONFIG_PACKAGE_sslh is not set
 # CONFIG_PACKAGE_tc is not set
 # CONFIG_PACKAGE_tcpproxy is not set
