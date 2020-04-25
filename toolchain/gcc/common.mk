@@ -139,6 +139,7 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--enable-cld \
 		--enable-checking=release \
+		--disable-libunwind-exceptions \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
