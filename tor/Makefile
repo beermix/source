@@ -3,27 +3,22 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/torproject/tor/tree/release-0.4.2
-# https://github.com/torproject/tor/tree/release-0.4.3
-# https://github.com/torproject/tor/tree/maint-0.3.5
-# https://archive.torproject.org/tor-package-archive/?C=M;O=D
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
+PKG_VERSION:=0.4.2.7
+PKG_RELEASE:=1
 
-PKG_VERSION:=71e72ce
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/torproject/tor
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-
-#PKG_VERSION:=0.4.2.7
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-#PKG_SOURCE_URL:=https://dist.torproject.org/ \#
-#	https://archive.torproject.org/tor-package-archive
-#PKG_HASH:=06a1d835ddf382f6bca40a62e8fb40b71b2f73d56f0d53523c8bd5caf9b3026d
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://dist.torproject.org/ \
+	https://archive.torproject.org/tor-package-archive
+PKG_HASH:=06a1d835ddf382f6bca40a62e8fb40b71b2f73d56f0d53523c8bd5caf9b3026d
+PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
+		Peter Wagner <tripolar@gmx.at>
+PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:torproject:tor
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
@@ -107,11 +102,10 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
-	--disable-module-dirauth \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-TARGET_CFLAGS += -O3 -ffunction-sections -fdata-sections -flto
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
