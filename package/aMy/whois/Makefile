@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=whois
-PKG_VERSION:=b0a43f5
+PKG_VERSION:=v5.5.6
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rfc1036/whois
@@ -28,6 +28,10 @@ endef
 
 define Package/whois/description
   intelligent WHOIS client
+endef
+
+define Build/Compile
+	$(MAKE) -C $(PKG_BUILD_DIR) CONFIG_FILE=/etc/whois.conf CFLAGS="-march=bonnell -O2" HAVE_ICONV=1
 endef
 
 define Package/whois/install
