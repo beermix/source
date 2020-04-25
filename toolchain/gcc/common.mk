@@ -142,7 +142,6 @@ GCC_CONFIGURE:= \
 		--enable-checking=release \
 		--disable-fixed-point \
 		--disable-libstdcxx-pch \
-		--with-system-zlib \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
