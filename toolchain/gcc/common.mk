@@ -140,7 +140,6 @@ GCC_CONFIGURE:= \
 		--enable-cld \
 		--disable-libmudflap \
 		--enable-checking=release \
-		--disable-fixed-point \
 		--disable-libstdcxx-pch \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
