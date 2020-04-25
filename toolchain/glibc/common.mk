@@ -65,7 +65,6 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
-		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
 
