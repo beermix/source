@@ -13,6 +13,7 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/whois
@@ -26,13 +27,6 @@ endef
 
 define Package/whois/description
   intelligent WHOIS client
-endef
-
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) \
-		DESTDIR="$(PKG_INSTALL_DIR)" \
-		CC="$(TARGET_CC)" \
-		CONFIG_FILE=/etc/whois.conf HAVE_ICONV=0
 endef
 
 define Package/whois/install
