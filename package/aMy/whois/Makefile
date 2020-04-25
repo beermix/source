@@ -5,15 +5,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=whois
-PKG_VERSION:=v5.5.6
+PKG_VERSION:=b0a43f5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rfc1036/whois
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-
-#PKG_BUILD_DEPENDS:=gettext-full/host
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -31,7 +29,10 @@ define Package/whois/description
 endef
 
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) CONFIG_FILE=/etc/whois.conf CFLAGS="-march=bonnell -O2" HAVE_ICONV=1
+	$(MAKE) -C $(PKG_BUILD_DIR) \
+		DESTDIR="$(PKG_INSTALL_DIR)" \
+		CC="$(TARGET_CC)" \
+		CONFIG_FILE=/etc/whois.conf HAVE_ICONV=0
 endef
 
 define Package/whois/install
