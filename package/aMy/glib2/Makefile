@@ -33,7 +33,7 @@ include ../../../feeds/packages/devel/meson/meson.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+zlib +libpthread +libffi +libattr @!USE_UCLIBC
+  DEPENDS:=+zlib +libpthread +libffi +libattr
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
@@ -42,7 +42,7 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto=4
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
