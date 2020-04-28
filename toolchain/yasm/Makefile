@@ -17,12 +17,41 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/toolchain-build.mk
-include $(INCLUDE_DIR)/cmake.mk
 
-CMAKE_OPTIONS += \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DENABLE_NLS=OFF \
-	-DBUILD_SHARED_LIBS=OFF
+HOST_BUILD_PARALLEL:=1
+
+include $(INCLUDE_DIR)/toolchain-build.mk
+
+YASM_CONFIGURE:= \
+	./configure \
+		--prefix=$(TOOLCHAIN_DIR) \
+		--build=$(GNU_HOST_NAME) \
+		--host=$(GNU_HOST_NAME) \
+		--target=$(REAL_GNU_TARGET_NAME) \
+		--with-sysroot=$(TOOLCHAIN_DIR) \
+		--disable-multilib \
+		--disable-werror \
+		--disable-nls \
+		--disable-sim \
+		--disable-gdb \
+		$(SOFT_FLOAT_CONFIG_OPTION) \
+
+define Host/Prepare
+	$(call Host/Prepare/Default)
+	ln -snf $(notdir $(HOST_BUILD_DIR)) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
+	$(CP) $(SCRIPT_DIR)/config.{guess,sub} $(HOST_BUILD_DIR)/
+endef
+
+define Host/Configure
+	(cd $(HOST_BUILD_DIR); \
+	./autogen.sh \
+		$(YASM_CONFIGURE) \
+	);
+endef
+
+define Host/Compile
+	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
+endef
 
 define Host/Install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
