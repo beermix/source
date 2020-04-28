@@ -4,19 +4,19 @@
 # Copyright (C) 2016-2017 Dan Luedtke <mail@danrl.com>
 #
 # This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
+# See /LICENSE for more information. https://git.zx2c4.com/wireguard-linux-compat/
 
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=wireguard
 
-PKG_VERSION:=1.0.20200413
+PKG_VERSION:=1.0.20200426
 PKG_RELEASE:=1
 
 PKG_SOURCE:=wireguard-linux-compat-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://git.zx2c4.com/wireguard-linux-compat/snapshot/
-PKG_HASH:=cf166348fbb67419528e73049ce001d29131aea367fa6aef9d3e223f7251e116
+PKG_HASH:=
 
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
