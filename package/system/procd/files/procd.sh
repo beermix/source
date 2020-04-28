@@ -196,8 +196,6 @@ _procd_add_jail() {
 		ronly)	json_add_boolean "ronly" "1";;
 		requirejail)	json_add_boolean "requirejail" "1";;
 		netns)	json_add_boolean "netns" "1";;
-		userns)	json_add_boolean "userns" "1";;
-		cgroupsns)	json_add_boolean "cgroupsns" "1";;
 		esac
 	done
 	json_add_object "mount"
@@ -260,8 +258,7 @@ _procd_set_param() {
 		reload_signal)
 			json_add_int "$type" $(kill -l "$1")
 		;;
-		pidfile|user|group|seccomp|capabilities|facility|\
-		extroot|overlaydir|tmpoverlaysize)
+		pidfile|user|group|seccomp|capabilities|facility)
 			json_add_string "$type" "$1"
 		;;
 		stdout|stderr|no_new_privs)
