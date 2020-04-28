@@ -1052,86 +1052,7 @@ index 7916344c584..3e969e52176 100644
  extern void incr_ticks_for_insn (rtx_insn *);
  extern void mark_end_of_function_resources (rtx, bool);
  extern void init_resource_info (rtx_insn *);
-diff --git a/gcc/testsuite/ChangeLog b/gcc/testsuite/ChangeLog
-index e132f2657ef..71686c72a33 100644
-diff --git a/gcc/testsuite/g++.dg/cpp0x/lambda/lambda-variadic10.C b/gcc/testsuite/g++.dg/cpp0x/lambda/lambda-variadic10.C
-new file mode 100644
-index 00000000000..052283e6caa
-diff --git a/gcc/testsuite/g++.dg/cpp0x/variadic178.C b/gcc/testsuite/g++.dg/cpp0x/variadic178.C
-new file mode 100644
-index 00000000000..f0e65958de3
-diff --git a/gcc/testsuite/g++.dg/cpp1z/class-deduction71.C b/gcc/testsuite/g++.dg/cpp1z/class-deduction71.C
-new file mode 100644
-index 00000000000..2fc71de8d95
-diff --git a/gcc/testsuite/g++.dg/guality/pr93888.C b/gcc/testsuite/g++.dg/guality/pr93888.C
-new file mode 100644
-index 00000000000..d54a4dcc8cc
-diff --git a/gcc/testsuite/g++.dg/lookup/pr84733.C b/gcc/testsuite/g++.dg/lookup/pr84733.C
-new file mode 100644
-index 00000000000..d0394eab891
-diff --git a/gcc/testsuite/g++.dg/template/dependent-name14.C b/gcc/testsuite/g++.dg/template/dependent-name14.C
-new file mode 100644
-index 00000000000..52d2e72be35
-diff --git a/gcc/testsuite/g++.target/aarch64/pr94052.C b/gcc/testsuite/g++.target/aarch64/pr94052.C
-new file mode 100644
-index 00000000000..d36c9bdc158
-diff --git a/gcc/testsuite/gcc.c-torture/execute/pr94130.c b/gcc/testsuite/gcc.c-torture/execute/pr94130.c
-new file mode 100644
-index 00000000000..044e578d373
-diff --git a/gcc/testsuite/gcc.c-torture/execute/pr94134.c b/gcc/testsuite/gcc.c-torture/execute/pr94134.c
-new file mode 100644
-index 00000000000..b1b44c3b184
-diff --git a/gcc/testsuite/gcc.dg/dfp/pr94111.c b/gcc/testsuite/gcc.dg/dfp/pr94111.c
-new file mode 100644
-index 00000000000..ea3a132270a
-diff --git a/gcc/testsuite/gcc.dg/pr93399.c b/gcc/testsuite/gcc.dg/pr93399.c
-new file mode 100644
-index 00000000000..3d9299018be
-diff --git a/gcc/testsuite/gcc.dg/pr94001.c b/gcc/testsuite/gcc.dg/pr94001.c
-new file mode 100644
-index 00000000000..f83873fa2bd
-diff --git a/gcc/testsuite/gcc.dg/pr94114.c b/gcc/testsuite/gcc.dg/pr94114.c
-new file mode 100644
-index 00000000000..8d6d0eb5c2a
-diff --git a/gcc/testsuite/gcc.dg/pr94121.c b/gcc/testsuite/gcc.dg/pr94121.c
-new file mode 100644
-index 00000000000..2a4261ae02d
-diff --git a/gcc/testsuite/gcc.dg/pr94167.c b/gcc/testsuite/gcc.dg/pr94167.c
-new file mode 100644
-index 00000000000..4b819d3a869
-diff --git a/gcc/testsuite/gcc.dg/pr94189.c b/gcc/testsuite/gcc.dg/pr94189.c
-new file mode 100644
-index 00000000000..f927d55279a
-diff --git a/gcc/testsuite/gcc.dg/tree-ssa/pr94125.c b/gcc/testsuite/gcc.dg/tree-ssa/pr94125.c
-new file mode 100644
-index 00000000000..c339e51f482
-diff --git a/gcc/testsuite/gcc.dg/vect/bb-slp-over-widen-2.c b/gcc/testsuite/gcc.dg/vect/bb-slp-over-widen-2.c
-index 3750fb79c12..042b7e9ea1b 100644
-diff --git a/gcc/testsuite/gcc.dg/vect/slp-perm-12.c b/gcc/testsuite/gcc.dg/vect/slp-perm-12.c
-index 4d4c5344402..113223ab0f9 100644
-diff --git a/gcc/testsuite/gcc.dg/vect/vect-over-widen-17.c b/gcc/testsuite/gcc.dg/vect/vect-over-widen-17.c
-index 04482607b04..333d74ac3e7 100644
-diff --git a/gcc/testsuite/gcc.target/powerpc/p9-minmax-3.c b/gcc/testsuite/gcc.target/powerpc/p9-minmax-3.c
-new file mode 100644
-index 00000000000..141603e05b4
-diff --git a/gcc/testsuite/gcc.target/powerpc/pr90763.c b/gcc/testsuite/gcc.target/powerpc/pr90763.c
-new file mode 100644
-index 00000000000..55f1d461e82
-diff --git a/gcc/testsuite/gcc.target/powerpc/pr93800.c b/gcc/testsuite/gcc.target/powerpc/pr93800.c
-new file mode 100644
-index 00000000000..f8dfbe7c082
-diff --git a/gcc/testsuite/gfortran.dg/module_procedure_3.f90 b/gcc/testsuite/gfortran.dg/module_procedure_3.f90
-new file mode 100644
-index 00000000000..50a83d9e5b1
-diff --git a/gcc/testsuite/gfortran.dg/pr91913.f90 b/gcc/testsuite/gfortran.dg/pr91913.f90
-new file mode 100644
-index 00000000000..7d5477ac0c3
-diff --git a/gcc/testsuite/gfortran.dg/pr93484_1.f90 b/gcc/testsuite/gfortran.dg/pr93484_1.f90
-new file mode 100644
-index 00000000000..3b6dbc9ad79
-diff --git a/gcc/testsuite/gfortran.dg/pr93484_2.f90 b/gcc/testsuite/gfortran.dg/pr93484_2.f90
-new file mode 100644
-index 00000000000..4a7f4330ed9
+
 diff --git a/gcc/tree-inline.c b/gcc/tree-inline.c
 index d115fcb1a5b..7a41f64bcc3 100644
 --- a/gcc/tree-inline.c
@@ -2384,7 +2305,3 @@ index e1feef99582..0f00a94da42 100644
    char** endptr = 0;
    int base = 0;
  
-diff --git a/maintainer-scripts/ChangeLog b/maintainer-scripts/ChangeLog
-index b1a9be6f5b2..039f7381af5 100644
-diff --git a/maintainer-scripts/gcc_release b/maintainer-scripts/gcc_release
-index 74cce1af18d..2456908d716 100755
