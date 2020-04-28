@@ -104,10 +104,8 @@ CONFIGURE_ARGS += \
 	--disable-asciidoc \
 	--disable-seccomp \
 	--disable-libscrypt \
-	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
-	--disable-module-dirauth \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
