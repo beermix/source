@@ -224,13 +224,13 @@ comment "Compiler"
 
 source "toolchain/gcc/Config.in"
 
-config NASM
+config YASM
 	bool
 	depends on ( i386 || x86_64 )
-	prompt "Build nasm" if TOOLCHAINOPTS
+	prompt "Build yasm" if TOOLCHAINOPTS
 	default y
 	help
-	  Enable if you want to build nasm
+	  Enable if you want to build yasm
 
 comment "C Library"
 	depends on TOOLCHAINOPTS
