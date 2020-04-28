@@ -666,12 +666,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/iso* $(1)/share/i18n/locales/
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/translit_* $(1)/share/i18n/locales/
 	mkdir -p $(1)/lib/locale
-  ifeq ($(CONFIG_USE_GLIBC),y)
-	$(SED) 's|^\#!.*bash|\#!/usr/bin/sh|g; \
-	s|/lib/ld-linux.so.3|/usr/lib/ld-linux.so.3|g; \
-	s|/lib/ld-linux.so.2|/usr/lib/ld-linux.so.2|g; \
-	s|/lib64/ld-linux-x86-64.so.2|/usr/lib/ld-linux-x86-64.so.2|g' $(1)/usr/bin/ldd
-  endif
   endef
 
   define Package/gconv-modules/install
