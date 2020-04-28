@@ -30,13 +30,6 @@ define Package/gcc/Default
   VERSION:=$(LIBGCC_VERSION)-$(PKG_RELEASE)
 endef
 
-define Package/gconv-modules
-$(call Package/gcc/Default)
-  TITLE:=Glibc gconv modules
-  VERSION:=$(LIBC_VERSION)-$(PKG_RELEASE)
-  DEPENDS:=@USE_GLIBC
-endef
-
 define Package/libgcc
 $(call Package/gcc/Default)
   TITLE:=GCC support library
