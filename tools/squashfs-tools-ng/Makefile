@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=squashfs-tools-ng
-PKG_VERSION:=0.9
-PKG_RELEASE:=1
-
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://codeload.github.com/AgentD/squashfs-tools-ng/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=da94cadbfa0c8e7cb9af7482e499ed1c51cb38cfd1e6eee63afbae7debec8a61
+PKG_VERSION:=6a0d2f0
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/AgentD/squashfs-tools-ng
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_FIXUP:=autoreconf
 
