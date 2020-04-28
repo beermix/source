@@ -7,46 +7,22 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=yasm
-PKG_VERSION:=1.3.0
-
-PKG_SOURCE_URL:=http://www.tortall.net/projects/yasm/releases/
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-
-PKG_HASH:=3dce6601b495f5b3d45b59f7d2492a340ee7e84b5beca17e48f862502bd5603f
+PKG_VERSION:=ea8f239
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/yasm/yasm
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/toolchain-build.mk
+include $(INCLUDE_DIR)/cmake.mk
 
-YASM_CONFIGURE:= \
-	./configure \
-		--prefix=$(TOOLCHAIN_DIR) \
-		--build=$(GNU_HOST_NAME) \
-		--host=$(GNU_HOST_NAME) \
-		--target=$(REAL_GNU_TARGET_NAME) \
-		--with-sysroot=$(TOOLCHAIN_DIR) \
-		--disable-multilib \
-		--disable-werror \
-		--disable-nls \
-		--disable-sim \
-		--disable-gdb \
-		$(SOFT_FLOAT_CONFIG_OPTION) \
-
-define Host/Prepare
-	$(call Host/Prepare/Default)
-	ln -snf $(notdir $(HOST_BUILD_DIR)) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
-	$(CP) $(SCRIPT_DIR)/config.{guess,sub} $(HOST_BUILD_DIR)/
-endef
-
-define Host/Configure
-	(cd $(HOST_BUILD_DIR); \
-		$(YASM_CONFIGURE) \
-	);
-endef
-
-define Host/Compile
-	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
-endef
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DENABLE_NLS=OFF \
+	-DBUILD_SHARED_LIBS=OFF
 
 define Host/Install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
