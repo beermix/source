@@ -15,7 +15,6 @@
 /files
 /overlay
 /package/feeds
-/package/openwrt-packages
 /*.patch
 key-build*
 *.orig
@@ -30,4 +29,3 @@ git-src
 .cproject
 *.tar.xz
 *.tar.zst
-/scripts/config/mconf_check
