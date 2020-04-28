@@ -45,18 +45,18 @@ GEN_CONFIG=$(SCRIPT_DIR)/kconfig.pl -n \
 			$(if $(CONFIG_MIPS64_ABI),.$(subst ",,$(CONFIG_MIPS64_ABI)), \
 			$(if $(CONFIG_HAS_SPE_FPU),$(if $(wildcard $(CONFIG_DIR)/$(ARCH).e500),.e500))))))
 
-#CPU_CFLAGS = \
-#	-funsigned-char -fno-builtin -fno-asm \
-#	--std=gnu99 -ffunction-sections -fdata-sections \
-#	-Wno-unused-but-set-variable \
-#	$(TARGET_CFLAGS) -ggdb
+CPU_CFLAGS = \
+	-funsigned-char -fno-builtin -fno-asm \
+	--std=gnu99 -ffunction-sections -fdata-sections \
+	-Wno-unused-but-set-variable \
+	$(TARGET_CFLAGS) -ggdb
 
 UCLIBC_MAKE = PATH='$(TOOLCHAIN_DIR)/initial/bin:$(TARGET_PATH)' $(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) \
 	$(TARGET_CONFIGURE_OPTS) \
 	DEVEL_PREFIX=/ \
 	RUNTIME_PREFIX=/ \
 	HOSTCC="$(HOSTCC)" \
-	CPU_CFLAGS="$(TARGET_CFLAGS)" \
+	CPU_CFLAGS="$(CPU_CFLAGS)" \
 	ARCH="$(CONFIG_ARCH)" \
 	LIBGCC="$(subst libgcc.a,libgcc_initial.a,$(shell $(TARGET_CC) -print-libgcc-file-name))" \
 	DOSTRIP=""
