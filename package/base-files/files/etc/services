@@ -7936,6 +7936,7 @@ mtsserver        4602/tcp
 menandmice-upg   4603/tcp
 irp              4604/tcp
 sixchat          4605/tcp
+sixid            4606/tcp
 ventoso          4621/udp
 dots-signal      4646/tcp
 dots-signal      4646/udp
