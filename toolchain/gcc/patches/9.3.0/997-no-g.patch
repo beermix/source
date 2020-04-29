@@ -914,5 +914,3 @@ index 8fdcab96d..fee933392 100755
    else
      CFLAGS="-g"
    fi
-diff --git a/zlib/configure b/zlib/configure
-index 7a8b49b0b..46f918042 100755
