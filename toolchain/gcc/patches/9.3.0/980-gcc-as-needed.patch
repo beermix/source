@@ -1,8 +1,8 @@
 # DP: On linux targets pass --as-needed by default to the linker, but always
 # DP: link the sanitizer libraries with --no-as-needed.
 
---- a/src/gcc/gcc.c
-+++ b/src/gcc/gcc.c
+--- a/gcc/gcc.c
++++ b/gcc/gcc.c
 @@ -710,8 +710,11 @@ proper position among the other output f
  #ifdef LIBASAN_EARLY_SPEC
  #define LIBASAN_SPEC STATIC_LIBASAN_LIBS
@@ -59,8 +59,8 @@
  		     STATIC_LIBUBSAN_LIBS
  #else
  #define LIBUBSAN_SPEC "-lubsan" STATIC_LIBUBSAN_LIBS
---- a/src/gcc/config/gnu-user.h
-+++ b/src/gcc/config/gnu-user.h
+--- a/gcc/config/gnu-user.h
++++ b/gcc/config/gnu-user.h
 @@ -136,17 +136,17 @@ see the files COPYING3 and COPYING.RUNTI
  #define LIBASAN_EARLY_SPEC "%{!shared:libasan_preinit%O%s} " \
    "%{static-libasan:%{!shared:" \
@@ -82,8 +82,8 @@
  #endif
  
  #undef TARGET_F951_OPTIONS
---- a/src/gcc/config/aarch64/aarch64-linux.h
-+++ b/src/gcc/config/aarch64/aarch64-linux.h
+--- a/gcc/config/aarch64/aarch64-linux.h
++++ b/gcc/config/aarch64/aarch64-linux.h
 @@ -36,6 +36,7 @@
  
  #define LINUX_TARGET_LINK_SPEC  "%{h*}		\
@@ -92,8 +92,8 @@
     %{static:-Bstatic}				\
     %{shared:-shared}				\
     %{symbolic:-Bsymbolic}			\
---- a/src/gcc/config/ia64/linux.h
-+++ b/src/gcc/config/ia64/linux.h
+--- a/gcc/config/ia64/linux.h
++++ b/gcc/config/ia64/linux.h
 @@ -58,7 +58,7 @@ do {						\
  #define GLIBC_DYNAMIC_LINKER "/lib/ld-linux-ia64.so.2"
  
@@ -103,8 +103,8 @@
    %{shared:-shared} \
    %{!shared: \
      %{!static: \
---- a/src/gcc/config/sparc/linux.h
-+++ b/src/gcc/config/sparc/linux.h
+--- a/gcc/config/sparc/linux.h
++++ b/gcc/config/sparc/linux.h
 @@ -87,7 +87,7 @@ extern const char *host_detect_local_cpu
  #define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
  
@@ -114,8 +114,8 @@
    %{!mno-relax:%{!r:-relax}} \
    %{!shared: \
      %{!static: \
---- a/src/gcc/config/s390/linux.h
-+++ b/src/gcc/config/s390/linux.h
+--- a/gcc/config/s390/linux.h
++++ b/gcc/config/s390/linux.h
 @@ -77,7 +77,7 @@ along with GCC; see the file COPYING3.
  
  #undef  LINK_SPEC
@@ -125,8 +125,8 @@
     %{shared:-shared} \
     %{!shared: \
        %{static:-static} \
---- a/src/gcc/config/rs6000/linux64.h
-+++ b/src/gcc/config/rs6000/linux64.h
+--- a/gcc/config/rs6000/linux64.h
++++ b/gcc/config/rs6000/linux64.h
 @@ -461,13 +461,13 @@ extern int dot_symbols;
  					   " -m elf64ppc")
  #endif
@@ -143,8 +143,8 @@
    %{!static-pie: \
      %{rdynamic:-export-dynamic} \
      -dynamic-linker " GNU_USER_DYNAMIC_LINKER64 "}}} \
---- a/src/gcc/config/rs6000/sysv4.h
-+++ b/src/gcc/config/rs6000/sysv4.h
+--- a/gcc/config/rs6000/sysv4.h
++++ b/gcc/config/rs6000/sysv4.h
 @@ -790,7 +790,7 @@ GNU_USER_TARGET_CC1_SPEC
  #define GNU_USER_DYNAMIC_LINKER GLIBC_DYNAMIC_LINKER
  #endif
@@ -154,8 +154,8 @@
    %{rdynamic:-export-dynamic} \
    -dynamic-linker " GNU_USER_DYNAMIC_LINKER "}}"
  
---- a/src/gcc/config/i386/gnu-user64.h
-+++ b/src/gcc/config/i386/gnu-user64.h
+--- a/gcc/config/i386/gnu-user64.h
++++ b/gcc/config/i386/gnu-user64.h
 @@ -57,6 +57,7 @@ see the files COPYING3 and COPYING.RUNTI
                     %{" SPEC_32 ":-m " GNU_USER_LINK_EMULATION32 "} \
                     %{" SPEC_X32 ":-m " GNU_USER_LINK_EMULATIONX32 "} \
@@ -164,8 +164,8 @@
    %{shared:-shared} \
    %{!shared: \
      %{!static: \
---- a/src/gcc/config/i386/gnu-user.h
-+++ b/src/gcc/config/i386/gnu-user.h
+--- a/gcc/config/i386/gnu-user.h
++++ b/gcc/config/i386/gnu-user.h
 @@ -74,7 +74,7 @@ along with GCC; see the file COPYING3.
    { "link_emulation", GNU_USER_LINK_EMULATION },\
    { "dynamic_linker", GNU_USER_DYNAMIC_LINKER }
@@ -175,8 +175,8 @@
    %{!shared: \
      %{!static: \
        %{!static-pie: \
---- a/src/gcc/config/alpha/linux-elf.h
-+++ b/src/gcc/config/alpha/linux-elf.h
+--- a/gcc/config/alpha/linux-elf.h
++++ b/gcc/config/alpha/linux-elf.h
 @@ -37,7 +37,7 @@ along with GCC; see the file COPYING3.
  
  #define ELF_DYNAMIC_LINKER	GNU_USER_DYNAMIC_LINKER
@@ -186,8 +186,8 @@
    %{O*:-O3} %{!O*:-O1}						\
    %{shared:-shared}						\
    %{!shared:							\
---- a/src/gcc/config/arm/linux-elf.h
-+++ b/src/gcc/config/arm/linux-elf.h
+--- a/gcc/config/arm/linux-elf.h
++++ b/gcc/config/arm/linux-elf.h
 @@ -71,6 +71,7 @@
       %{!shared:-dynamic-linker " GNU_USER_DYNAMIC_LINKER "}} \
     -X \
@@ -196,8 +196,8 @@
     %{mbig-endian:-EB} %{mlittle-endian:-EL}" \
     SUBTARGET_EXTRA_LINK_SPEC
  
---- a/src/gcc/config/mips/gnu-user.h
-+++ b/src/gcc/config/mips/gnu-user.h
+--- a/gcc/config/mips/gnu-user.h
++++ b/gcc/config/mips/gnu-user.h
 @@ -55,6 +55,7 @@ along with GCC; see the file COPYING3.
  #undef GNU_USER_TARGET_LINK_SPEC
  #define GNU_USER_TARGET_LINK_SPEC "\
@@ -206,8 +206,8 @@
    %{!shared: \
      %{!static: \
        %{rdynamic:-export-dynamic} \
---- a/src/gcc/config/riscv/linux.h
-+++ b/src/gcc/config/riscv/linux.h
+--- a/gcc/config/riscv/linux.h
++++ b/gcc/config/riscv/linux.h
 @@ -59,6 +59,7 @@ along with GCC; see the file COPYING3.
  
  #define LINK_SPEC "\
