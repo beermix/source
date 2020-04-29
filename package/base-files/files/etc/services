@@ -1,4 +1,4 @@
-# Full data: https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
+# Full data: /usr/share/iana-etc/port-numbers.iana
 
 tcpmux              1/tcp
 tcpmux              1/udp
