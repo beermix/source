@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bash
-PKG_VERSION:=6c6454c
+PKG_VERSION:=9e49d34
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/bminor/bash
@@ -33,6 +33,11 @@ define Package/bash/description
   Bash is an sh-compatible command language interpreter that executes
   commands read from the standard input or from a file. Bash also
   incorporates useful features from the Korn and C shells (ksh and csh).
+endef
+
+define Package/bash/conffiles
+/etc/bash.bashrc
+/etc/bash.bash_logout
 endef
 
 # Bash detects and enables certain features by runtest simple piece of code
@@ -68,6 +73,9 @@ CONFIGURE_ARGS+= \
 	--with-curses \
 	--without-bash-malloc \
 	--bindir=/bin \
+	--disable-rpath \
+	--enable-direxpand-default \
+	--enable-job-control \
 	--enable-readline
 
 define Package/bash/postinst
@@ -82,6 +90,7 @@ define Package/bash/install
 	$(INSTALL_DIR) $(1)/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/bash $(1)/bin/
 	$(LN) bash $(1)/bin/rbash
+	$(CP) ./files/* $(1)/
 endef
 
 $(eval $(call BuildPackage,bash))

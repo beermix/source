@@ -6,7 +6,7 @@ diff -Naur p7zip-16.02-orig/makefile.machine p7zip-16.02/makefile.machine
  
 -# OPTFLAGS=-O3 -flto -march=westmere -funroll-loops -s
 -OPTFLAGS=-O -s
-+OPTFLAGS=-m32 -Ofast -march=bonnell -flto -funroll-loops
++OPTFLAGS=-O3 -march=bonnell -funroll-loops
 +#OPTFLAGS=-O -s
  
  # use "-m32" to have a 32bits executable
