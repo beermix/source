@@ -35,7 +35,7 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/mc
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+glib2 +libncurses +libmount +MC_VFS:libssh2 $(ICONV_DEPENDS)
+	DEPENDS:=+glib2 +libncurses +libmount
 	TITLE:=Midnight Commander - a powerful visual file manager
 	URL:=https://www.midnight-commander.org/
 	MENU:=1
@@ -56,6 +56,7 @@ endef
 CONFIGURE_ARGS += \
 	--enable-silent-rules \
 	--disable-tests \
+	--disable-aspell \
 	--disable-doxygen-doc \
 	--disable-doxygen-rtf \
 	--disable-doxygen-xml \
@@ -68,7 +69,11 @@ CONFIGURE_ARGS += \
 	--disable-mclib \
 	--without-libiconv-prefix \
 	--without-libintl-prefix \
-	--enable-silent-rules \
+	--enable-vfs-extfs \
+	--enable-vfs-ftp \
+	--disable-vfs-sftp \
+	--enable-vfs-tar \
+	--enable-vfs-cpio \
 	--without-x \
 
 CONFIGURE_VARS += \
