@@ -39,7 +39,7 @@ endef
 
 define Host/Configure
 	(cd $(HOST_BUILD_DIR); \
-	./autogen.sh \
+	autoreconf --verbose --install --force -I m4 \
 		$(YASM_CONFIGURE) \
 	);
 endef
