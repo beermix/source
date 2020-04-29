@@ -42,8 +42,8 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-#TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-#TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto=6
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
 	-Dselinux=disabled \
