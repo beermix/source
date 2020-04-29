@@ -28,12 +28,7 @@ YASM_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
-		--with-sysroot=$(TOOLCHAIN_DIR) \
-		--disable-multilib \
-		--disable-werror \
 		--disable-nls \
-		--disable-sim \
-		--disable-gdb \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 
 define Host/Prepare
