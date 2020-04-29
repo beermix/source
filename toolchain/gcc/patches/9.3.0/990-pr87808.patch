@@ -1,7 +1,7 @@
 # DP: Fix PR jit/87808.
 
---- a/src/gcc/jit/Make-lang.in
-+++ b/src/gcc/jit/Make-lang.in
+--- a/gcc/jit/Make-lang.in
++++ b/gcc/jit/Make-lang.in
 @@ -84,6 +84,9 @@
  	jit/jit-spec.o \
  	gcc.o
@@ -12,8 +12,8 @@
  # Use strict warnings for this front end.
  jit-warn = $(STRICT_WARN)
  
---- a/src/gcc/jit/jit-playback.c
-+++ b/src/gcc/jit/jit-playback.c
+--- a/gcc/jit/jit-playback.c
++++ b/gcc/jit/jit-playback.c
 @@ -39,6 +39,7 @@
  #include "opt-suggestions.h"
  #include "gcc.h"
