@@ -33,7 +33,7 @@ include ../../../feeds/packages/devel/meson/meson.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+zlib +libpthread +libffi
+  DEPENDS:=+zlib +libpthread +libffi 
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
@@ -42,7 +42,7 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto=4
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
@@ -58,8 +58,10 @@ COMP_ARGS= \
 	-Dfam=false \
 	-Dinstalled_tests=false \
 	-Dnls=disabled \
-	-Dxattr=false \
 	-Doss_fuzz=disabled
+
+MESON_HOST_ARGS += $(COMP_ARGS) -Dxattr=false
+MESON_ARGS += $(COMP_ARGS) -Dxattr=false
 
 # hack to compile static libraries
 define Build/Compile

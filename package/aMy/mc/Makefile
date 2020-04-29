@@ -67,8 +67,6 @@ CONFIGURE_ARGS += \
 	--with-homedir=/etc/mc \
 	--with-screen=ncurses \
 	--disable-mclib \
-	--without-libiconv-prefix \
-	--without-libintl-prefix \
 	--enable-vfs-extfs \
 	--enable-vfs-ftp \
 	--disable-vfs-sftp \
