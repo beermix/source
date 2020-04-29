@@ -59,7 +59,7 @@ GLIBC_CONFIGURE:= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
-		--with-binutils=$(TOOLCHAIN_DIR)/bin \
+		--with-binutils=$(TOOLCHAIN_DIR)/$(REAL_GNU_TARGET_NAME)/bin \
 		--disable-profile \
 		--disable-werror \
 		--without-gd \

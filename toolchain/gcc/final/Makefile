@@ -7,6 +7,8 @@ GCC_CONFIGURE += \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
 	--enable-threads \
+	--disable-libstdcxx-debug \
+	--disable-libstdcxx-pch \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto
 
