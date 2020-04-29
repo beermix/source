@@ -142,7 +142,7 @@ ifneq ($(HOST_OS),Linux)
 	mkdir -p $(STAGING_DIR_HOST)/include/asm
 	$(INSTALL_DATA) $(TOPDIR)/tools/include/asm/*.h $(STAGING_DIR_HOST)/include/asm/
 endif
-	ln -snf lib $(STAGING_DIR_HOST)/lib64
+	#ln -snf lib $(STAGING_DIR_HOST)/lib64
 	touch $@
 
 endif
