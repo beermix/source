@@ -142,23 +142,4 @@
    %{shared:-shared} \
    %{!shared: \
      %{!static: \
---- a/src/config/aarch64/aarch64-linux.h
-+++ b/gcc/config/aarch64/aarch64-linux.h
-@@ -35,6 +35,7 @@
- #define CPP_SPEC "%{pthread:-D_REENTRANT}"
- 
- #define LINUX_TARGET_LINK_SPEC  "%{h*}		\
-+   --hash-style=gnu				\
-    %{static:-Bstatic}				\
-    %{shared:-shared}				\
-    %{symbolic:-Bsymbolic}			\
---- a/src/config/riscv/linux.h
-+++ b/gcc/config/riscv/linux.h
-@@ -58,6 +58,7 @@ along with GCC; see the file COPYING3.
-   "%{mabi=ilp32:_ilp32}"
- 
- #define LINK_SPEC "\
-+-hash-style=gnu \
- -melf" XLEN_SPEC "lriscv" LD_EMUL_SUFFIX " \
- %{mno-relax:--no-relax} \
- %{shared} \
+-

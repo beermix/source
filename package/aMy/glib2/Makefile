@@ -23,7 +23,7 @@ PKG_CPE_ID:=cpe:/a:gnome:glib
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=meson/host
-HOST_BUILD_DEPENDS:=meson/host libffi/host libiconv/host
+HOST_BUILD_DEPENDS:=meson/host libffi/host
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
@@ -33,7 +33,7 @@ include ../../../feeds/packages/devel/meson/meson.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+zlib +libpthread +libffi 
+  DEPENDS:=+zlib +libpthread +libffi +libpcre
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
@@ -42,13 +42,12 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections
+#TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+#TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
 	-Dselinux=disabled \
 	-Dlibmount=disabled \
-	-Dinternal_pcre=true \
 	-Dman=false \
 	-Ddtrace=false \
 	-Dsystemtap=false \
@@ -57,11 +56,12 @@ COMP_ARGS= \
 	-Dforce_posix_threads=true \
 	-Dfam=false \
 	-Dinstalled_tests=false \
+	-Dxattr=false \
 	-Dnls=disabled \
 	-Doss_fuzz=disabled
 
-MESON_HOST_ARGS += $(COMP_ARGS) -Dxattr=false
-MESON_ARGS += $(COMP_ARGS) -Dxattr=false
+MESON_HOST_ARGS += $(COMP_ARGS) -Dinternal_pcre=true
+MESON_ARGS += $(COMP_ARGS) -Dinternal_pcre=false
 
 # hack to compile static libraries
 define Build/Compile
