@@ -21,7 +21,7 @@ ifneq ($(CONFIG_SDK)$(CONFIG_PACKAGE_kmod-b43)$(CONFIG_PACKAGE_b43legacy-firmwar
   BUILD_B43_TOOLS = y
 endif
 
-tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc expat
+tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
 tools-y += m4 libtool autoconf automake flex bison pkgconf mklibs zlib
 tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
 tools-y += firmware-utils patch-image quilt padjffs2
@@ -59,6 +59,7 @@ $(curdir)/upslug2/compile := $(curdir)/libtool/compile
 $(curdir)/mm-macros/compile := $(curdir)/libtool/compile
 $(curdir)/missing-macros/compile := $(curdir)/autoconf/compile
 $(curdir)/e2fsprogs/compile := $(curdir)/libtool/compile
+$(curdir)/libelf/compile := $(curdir)/libtool/compile
 $(curdir)/sdcc/compile := $(curdir)/bison/compile
 $(curdir)/b43-tools/compile := $(curdir)/bison/compile
 $(curdir)/padjffs2/compile := $(curdir)/findutils/compile
@@ -141,7 +142,7 @@ ifneq ($(HOST_OS),Linux)
 	mkdir -p $(STAGING_DIR_HOST)/include/asm
 	$(INSTALL_DATA) $(TOPDIR)/tools/include/asm/*.h $(STAGING_DIR_HOST)/include/asm/
 endif
-	#ln -snf lib $(STAGING_DIR_HOST)/lib64
+	ln -snf lib $(STAGING_DIR_HOST)/lib64
 	touch $@
 
 endif

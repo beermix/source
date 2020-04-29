@@ -42,6 +42,9 @@ GLIBC_CONFIGURE:= \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
 		BASH_SHELL=/bin/sh \
+		ac_cv_path_PERL=no \
+		ac_cv_prog_MAKEINFO= \
+		--disable-sanity-checks \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
@@ -53,9 +56,15 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
 		--disable-debug \
+		--disable-build-nscd \
+		--disable-nscd \
+		--enable-lock-elision \
+		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=5.4.0
+		--enable-kernel=5.4
 
+export libc_cv_forced_unwind=yes
+export libc_cv_c_cleanup=yes
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
