@@ -61,6 +61,7 @@ GLIBC_CONFIGURE:= \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--disable-profile \
 		--disable-werror \
+		--disable-sanity-checks \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
