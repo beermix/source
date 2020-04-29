@@ -3,9 +3,8 @@
 .*.swp
 /env
 /dl
-/.dl
 /.config.old
-/bin*
+/bin
 /build_dir
 /staging_dir
 /tmp
@@ -15,6 +14,7 @@
 /files
 /overlay
 /package/feeds
+/package/openwrt-packages
 /*.patch
 key-build*
 *.orig
@@ -27,5 +27,3 @@ TAGS*~
 git-src
 .project
 .cproject
-*.tar.xz
-*.tar.zst
