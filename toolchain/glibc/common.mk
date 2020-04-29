@@ -55,7 +55,6 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--disable-build-nscd \
 		--disable-nscd \
-		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
 
