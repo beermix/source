@@ -557,14 +557,20 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
+		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
+		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
-	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
+	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil libuargp; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
 			if [ -e "$$$$file" ]; then \
 				$(CP) $$$$file $(1)/lib/; \
 			fi; \
 		done; \
 	done
+ifneq ($(CONFIG_TARGET_x86_64),)
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/opt/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/opt/lib
+endif
   endef
 
   define Package/uClibc/install
@@ -577,8 +583,12 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		$(TOOLCHAIN_DIR)/lib/libc.so.* \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-$(LIBC_SO_VERSION).so \
 		$(1)/lib/
+	for file in libuargp libcrypt libdl libm libutil libnsl libresolv; do \
+		$(1)/lib/
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
+		$(PKG_BUILD_DIR)/libm-* \
+		$(PKG_BUILD_DIR)/libcrypt-* \
 		$(1)/lib/
   endef
 
@@ -647,6 +657,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/getent $(1)/usr/bin/
   endef
 
   define Package/ldconfig/install
