@@ -50,7 +50,7 @@ ifeq ($(PKG_VERSION),9.3.1)
 #  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
 #  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-  PKG_REV:=89da649
+  PKG_REV:=1242741
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
   PKG_SOURCE_VERSION:=$(PKG_REV)
@@ -135,9 +135,9 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--enable-checking=release \
 		--with-tune=generic \
 		--enable-cld \
-		--with-linker-hash-style=gnu \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \

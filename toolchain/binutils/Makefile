@@ -43,14 +43,13 @@ HOST_CONFIGURE_ARGS = \
 	--host=$(GNU_HOST_NAME) \
 	--target=$(REAL_GNU_TARGET_NAME) \
 	--with-sysroot=$(TOOLCHAIN_DIR) \
-	--disable-deterministic-archives \
+	--enable-deterministic-archives \
 	--enable-plugins \
 	--disable-multilib \
 	--disable-werror \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
-	--with-linker-hash-style=gnu  \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
