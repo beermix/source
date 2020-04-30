@@ -488,9 +488,6 @@ LIBGCC_SO=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so.*))
 define Build/Compile/uClibc
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-*.so \
-		$(TOOLCHAIN_DIR)/lib/libcrypt-*.so \
-		$(TOOLCHAIN_DIR)/lib/libm-*.so \
-		$(TOOLCHAIN_DIR)/lib/libpthread-*.so \
 		$(PKG_BUILD_DIR)/
 endef
 ifneq ($(LIBGCC_SO),)
