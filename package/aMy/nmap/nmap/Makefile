@@ -100,7 +100,7 @@ endef
 
 define Package/ndiff
 $(call Package/nmap/default)
-  #DEPENDS:=+python3-light +python3-xml
+  DEPENDS:=+python3-light +python3-xml
   TITLE:=Utility to compare the results of Nmap scans
 endef
 
@@ -145,8 +145,8 @@ endif
 CONFIGURE_VARS += \
 	ac_cv_dnet_bsd_bpf=no
 
-#PYTHON3_PKG_SETUP_DIR:=ndiff
-#PYTHON3_PKG_SETUP_ARGS:=
+PYTHON3_PKG_SETUP_DIR:=ndiff
+PYTHON3_PKG_SETUP_ARGS:=
 
 define Build/Compile
 	$(call Build/Compile/Default,)
