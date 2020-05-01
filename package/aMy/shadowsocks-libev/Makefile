@@ -13,7 +13,7 @@ include $(TOPDIR)/rules.mk
 # - check if default mode has changed from being tcp_only
 #
 PKG_NAME:=shadowsocks-libev
-PKG_VERSION:=aa9fe8cceb462eaa2c62d638fb73d1ae5a3621f0
+PKG_VERSION:=bc77b6189c048ff1e0420583c0efcd5996ab209d
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev
@@ -120,7 +120,6 @@ endef
 CONFIGURE_ARGS += \
 	--disable-documentation \
 	--disable-silent-rules \
-	--disable-assert \
 	--disable-ssp \
 
 TARGET_CFLAGS += -ffat-lto-objects -flto
