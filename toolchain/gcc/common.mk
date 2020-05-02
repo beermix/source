@@ -53,7 +53,7 @@ ifeq ($(PKG_VERSION),8.4.1)
 endif
 
 ifeq ($(PKG_VERSION),9.3.1)
-  PKG_REV:=9-20200501
+  PKG_REV:=9-20200408
   PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -218,8 +218,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -pipe -fhonour-copts -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro  -Wl,-z,max-page-size=0x1000" \
-		CXXFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -pipe -fhonour-copts -Wl,-z,max-page-size=0x1000" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -Wl,-z,max-page-size=0x1000" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo

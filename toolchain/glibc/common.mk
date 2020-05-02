@@ -47,8 +47,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign  -Wl,-z,max-page-size=0x1000 $(filter-out -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
-	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -63,10 +62,9 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
-		--without-selinux \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=5.4.0
+		--enable-kernel=5.4
 
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
