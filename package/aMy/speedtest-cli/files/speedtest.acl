@@ -1,3 +1,0 @@
-rpc /speedtest start x
-rpc /speedtest status x
-rpc /speedtest stop x
