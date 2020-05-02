@@ -1,9 +1,0 @@
-Package: whois
-Version: 5.5.6
-Depends: libc, librt, libpthread
-Source: package/aMy/whois
-SourceName: whois
-Section: net
-Architecture: i386_pentium4
-Installed-Size: 29127
-Description:  intelligent WHOIS client
