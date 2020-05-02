@@ -63,6 +63,10 @@ define Package/ncurses-bin
 endef
 
 CONFIGURE_ARGS += \
+	--enable-echo \
+	--enable-const \
+	--enable-overwrite \
+	--enable-pc-files \
 	--disable-rpath \
 	--without-ada \
 	--without-debug \
@@ -71,23 +75,14 @@ CONFIGURE_ARGS += \
 	--with-progs \
 	--without-tests \
 	--disable-big-core \
-	--enable-colorfgbg \
-	--enable-hard-tabs \
-	--enable-overwrite \
-	--enable-pc-files \
-	--enable-xmc-glitch \
-	--disable-stripping \
-	--disable-wattr-macros \
-	--with-cxx-shared \
-	--with-ospeed=unsigned \
-	--with-pkg-config-libdir=/usr/lib/pkgconfig \
+	--disable-home-terminfo \
+	--with-normal \
 	--with-shared \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
-	--with-termlib=tinfo \
-	--with-ticlib=tic \
-	--with-xterm-kbs=DEL \
-	--without-ada
+	--with-pkg-config-libdir=/usr/lib/pkgconfig \
+	--enable-widec \
+	--with-build-cppflags=-D_GNU_SOURCE
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
