@@ -1,8 +1,6 @@
-diff --git a/Makefile.am b/Makefile.am
-index 2f7098033..7c5957bbf 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -189,7 +189,7 @@ CLEANFILES = $(VC6_LIBDSP) $(VC6_SRCDSP) $(VC7_LIBVCPROJ) $(VC7_SRCVCPROJ) \
+@@ -189,7 +189,7 @@ CLEANFILES = $(VC6_LIBDSP) $(VC6_SRCDSP)
  bin_SCRIPTS = curl-config
  
  SUBDIRS = lib src
@@ -14,7 +12,7 @@ index 2f7098033..7c5957bbf 100644
 @@ -300,8 +300,8 @@ cygwinbin:
  # We extend the standard install with a custom hook:
  install-data-hook:
- 	(cd include && $(MAKE) install)
+	(cd include && $(MAKE) install)
 -	(cd docs && $(MAKE) install)
 -	(cd docs/libcurl && $(MAKE) install)
 +	#(cd docs && $(MAKE) install)
