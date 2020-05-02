@@ -23,6 +23,10 @@ ifeq ($(PKG_VERSION),2.23)
   PKG_HASH:=f39f068ce7d749608ff15182b7da28627dd129eaba2687e28bec876d26135629
 endif
 
+ifeq ($(PKG_VERSION),2.25)
+  PKG_HASH:=94a7a5d7a0094de5b358b340e9b55806f2fe544bc556f3057b6c88a6460fe681
+endif
+
 ifeq ($(PKG_VERSION),2.27)
   PKG_HASH:=e49c919c83579984f7c2442243861d04227e8dc831a08d7bf60cdacfdcd08797
 endif
@@ -76,7 +80,6 @@ GLIBC_CONFIGURE:= \
 		--disable-werror \
 		--without-gd \
 		--without-cvs \
-		--enable-stack-protector=strong \
 		--enable-add-ons \
 		--disable-debug \
 		--enable-obsolete-nsl \
@@ -85,6 +88,8 @@ GLIBC_CONFIGURE:= \
 		--enable-lock-elision=yes \
 		--enable-kernel=5.4
 
+export libc_cv_ssp=no
+export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 

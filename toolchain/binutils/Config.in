@@ -7,6 +7,10 @@ choice
 	help
 	  Select the version of binutils you wish to use.
 
+	config BINUTILS_USE_VERSION_2_27
+		bool "Binutils 2.27"
+		select BINUTILS_VERSION_2_27
+
 	config BINUTILS_USE_VERSION_2_29_1
 		depends on !arc
 		bool "Binutils 2.29.1"
