@@ -156,8 +156,6 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--with-diagnostics-color=always \
 		--with-linker-hash-style=gnu \
-		--without-cuda-driver \
-		--with-tune=generic \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
@@ -221,8 +219,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3  -Wl,-z,max-page-size=0x1000" \
+		CFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -pipe -fhonour-copts -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro  -Wl,-z,max-page-size=0x1000" \
+		CXXFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -pipe -fhonour-copts -Wl,-z,max-page-size=0x1000" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
