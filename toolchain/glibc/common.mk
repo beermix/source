@@ -44,7 +44,6 @@ endif
 # only -O2 tested by upstream changeset
 # "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
-	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fno-plt -fomit-frame-pointer -fno-caller-saves -fno-plt -march=bonnell -O2 -m32 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
@@ -66,10 +65,8 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--disable-build-nscd \
 		--disable-nscd \
-		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
 
-export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
