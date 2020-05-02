@@ -120,7 +120,6 @@ endef
 CONFIGURE_ARGS += \
 	--disable-documentation \
 	--disable-silent-rules \
-	--disable-ssp \
 
 TARGET_CFLAGS += -ffat-lto-objects -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed

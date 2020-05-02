@@ -12,17 +12,17 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
 
-#PKG_VERSION:=a56d990
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/torproject/tor
-#PKG_SOURCE_VERSION:=$(PKG_VERSION)
-#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_VERSION:=a56d990
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/torproject/tor
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_VERSION:=0.4.2.7
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org/
-PKG_HASH:=
+#PKG_VERSION:=0.4.2.7
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+#PKG_SOURCE_URL:=https://dist.torproject.org/
+#PKG_HASH:=
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
@@ -106,6 +106,7 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
+	--disable-module-dirauth \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
