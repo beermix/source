@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.0
-PKG_RELEASE:=7
+PKG_VERSION:=6.1-20191109
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_HASH:=f551c24b30ce8bfb6e96d9f59b42fbea30fa3a6123384172f9e7284bcf647260
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tgz
+PKG_SOURCE_URL:=https://dl.dropboxusercontent.com/s/gdjek8bnmvl63z2
+PKG_HASH:=
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
@@ -95,8 +95,7 @@ CONFIGURE_VARS += \
 HOST_CFLAGS += $(HOST_FPIC)
 
 HOST_CONFIGURE_ARGS += \
-	--without-cxx \
-	--without-cxx-binding \
+	--with-cxx-shared \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
