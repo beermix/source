@@ -1,0 +1,6 @@
+mkpasswd.o: mkpasswd.c config.h version.h utils.h
+simple_recode.o: simple_recode.c utils.h simple_recode.h
+utils.o: utils.c utils.h
+whois.o: whois.c config.h version.h data.h ip_del_recovered.h ip_del.h \
+ ip6_del.h as_del.h as32_del.h new_gtlds.h tld_serv.h nic_handles.h \
+ whois.h utils.h

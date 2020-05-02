@@ -46,7 +46,6 @@ define Build/Configure
 	$(if $(CONFIG_BWMNG_LIBNCURSES),--with,--without)-ncurses \
 	$(if $(CONFIG_BWMNG_TIME),--with,--without)-time \
 	$(if $(CONFIG_BWMNG_GETOPT_LONG),--with,--without)-getopt_long \
-	--with-strip \
 	--with-procnetdev \
 	--with-getifaddrs \
 	--with-sysctl \
