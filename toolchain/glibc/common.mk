@@ -47,9 +47,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	unset ASFLAGS; \
 	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign  -Wl,-z,max-page-size=0x1000 $(filter-out -fno-plt -fomit-frame-pointer -fno-caller-saves -fno-plt -march=bonnell -O2 -m32 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
-	unset LDFLAGS; \
 	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
