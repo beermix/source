@@ -1,0 +1,14 @@
+--- a/whois.conf
++++ b/whois.conf
+@@ -9,3 +9,9 @@
+ # Eg: 
+ # \.nz$ nz.whois-servers.net
+ #
++\.com\.ru$ whois.nic.ru
++\.net\.ru$ whois.nic.ru
++\.org\.ru$ whois.nic.ru
++\.pp\.ru$  whois.nic.ru
++\.msk\.ru$ whois.nic.ru
++\.spb\.ru$ whois.nic.ru
+--- a/config.h
++++ b/config.h
