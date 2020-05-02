@@ -157,9 +157,7 @@ GCC_CONFIGURE:= \
 		--with-diagnostics-color=always \
 		--disable-libunwind-exceptions \
 		--enable-gnu-unique-object \
-		--enable-linker-build-id \
 		--with-linker-hash-style=gnu \
-		--enable-initfini-array \
 		--without-cuda-driver \
 		--enable-gnu-indirect-function \
 		--with-tune=generic \
