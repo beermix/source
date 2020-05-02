@@ -140,7 +140,7 @@ $(STAGING_DIR_HOST)/.prepared: $(TMP_DIR)/.build
 	#$(INSTALL_DATA) $(TOPDIR)/tools/include/sys/*.h $(STAGING_DIR_HOST)/include/sys/
 ifneq ($(HOST_OS),Linux)
 	mkdir -p $(STAGING_DIR_HOST)/include/asm
-	$(INSTALL_DATA) $(TOPDIR)/tools/include/asm/*.h $(STAGING_DIR_HOST)/include/asm/
+	#$(INSTALL_DATA) $(TOPDIR)/tools/include/asm/*.h $(STAGING_DIR_HOST)/include/asm/
 endif
 	ln -snf lib $(STAGING_DIR_HOST)/lib64
 	touch $@
