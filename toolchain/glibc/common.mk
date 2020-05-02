@@ -83,7 +83,6 @@ GLIBC_CONFIGURE:= \
 		--disable-build-nscd \
 		--disable-nscd \
 		--enable-lock-elision=yes \
-		--enable-all-warnings \
 		--enable-kernel=5.4
 
 export ac_cv_header_cpuid_h=yes
