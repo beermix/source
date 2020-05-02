@@ -7,14 +7,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=yasm
-PKG_VERSION:=ea8f239
+PKG_VERSION:=e256985
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/yasm/yasm
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-HOST_BUILD_PARALLEL:=1
+HOST_BUILD_PARALLEL:=0
 
 include $(INCLUDE_DIR)/toolchain-build.mk
 
@@ -25,6 +25,7 @@ YASM_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-nls \
+		--disable-debug \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 
 define Host/Prepare
