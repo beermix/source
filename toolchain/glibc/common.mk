@@ -13,15 +13,33 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.31
-PKG_SOURCE_URL:=@GNU/glibc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_VERSION:=$(call qstrip,$(CONFIG_GLIBC_VERSION))
 
+PKG_SOURCE_URL:=@GNU/glibc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+GLIBC_PATH:=
+
+ifeq ($(PKG_VERSION),2.23)
+  PKG_HASH:=f39f068ce7d749608ff15182b7da28627dd129eaba2687e28bec876d26135629
+endif
+
+ifeq ($(PKG_VERSION),2.25)
+  PKG_HASH:=94a7a5d7a0094de5b358b340e9b55806f2fe544bc556f3057b6c88a6460fe681
+endif
+
+ifeq ($(PKG_VERSION),2.27)
+  PKG_HASH:=e49c919c83579984f7c2442243861d04227e8dc831a08d7bf60cdacfdcd08797
+endif
+
+ifeq ($(PKG_VERSION),2.31)
+  PKG_HASH:=9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
+endif
+
+PATCH_DIR:=$(PATH_PREFIX)/patches/$(PKG_VERSION)
+
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
-PATCH_DIR:=$(PATH_PREFIX)/patches
 
 include $(INCLUDE_DIR)/toolchain-build.mk
 
@@ -42,12 +60,7 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-
-# -Os miscompiles w. 2.24 gcc5/gcc6
-# only -O2 tested by upstream changeset
-# "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
-	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fno-plt -fomit-frame-pointer -fno-caller-saves -fno-plt -march=bonnell -O2 -m32 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
@@ -66,8 +79,7 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--enable-add-ons \
 		--disable-debug \
-		--enable-obsolete-nsl \
-		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
+		$(if $(CONFIG_GLIBC_USE_VERSION_2_31),--enable-obsolete-nsl,) \
 		--enable-kernel=5.4.0
 
 export ac_cv_header_cpuid_h=yes
@@ -82,7 +94,7 @@ endef
 
 define Host/Configure
 	[ -f $(HOST_BUILD_DIR)/.autoconf ] || { \
-		cd $(HOST_BUILD_DIR)/; \
+		cd $(HOST_BUILD_DIR)/$(GLIBC_PATH); \
 		autoconf --force && \
 		touch $(HOST_BUILD_DIR)/.autoconf; \
 	}
@@ -94,6 +106,9 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
+	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
+		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
+	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 

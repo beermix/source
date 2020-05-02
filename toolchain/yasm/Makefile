@@ -15,6 +15,7 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_PARALLEL:=1
+
 include $(INCLUDE_DIR)/toolchain-build.mk
 
 YASM_CONFIGURE:= \
@@ -34,7 +35,7 @@ endef
 
 define Host/Configure
 	(cd $(HOST_BUILD_DIR); \
-	bash autogen.sh \
+	./autogen.sh \
 		$(YASM_CONFIGURE) \
 	);
 endef
