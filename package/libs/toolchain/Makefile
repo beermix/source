@@ -568,8 +568,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		done; \
 	done
 ifneq ($(CONFIG_TARGET_x86_64),)
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/opt/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/opt/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/lib
 endif
   endef
 

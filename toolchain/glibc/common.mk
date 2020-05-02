@@ -83,14 +83,15 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--disable-debug \
 		--enable-obsolete-nsl \
+		--enable-stack-protector=strong \
 		--disable-build-nscd \
 		--disable-nscd \
-		--enable-lock-elision=yes \
+		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
 
-export libc_cv_ssp=no
-export libc_cv_ssp_strong=no
-export ac_cv_header_cpuid_h=yes
+# export libc_cv_ssp=no
+# export libc_cv_ssp_strong=no
+# export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
@@ -114,9 +115,6 @@ endef
 
 define Host/Prepare
 	$(call Host/Prepare/Default)
-	for f in $(PATCH_DIR).$(ARCH)/*.patch; do \
-		patch -p1 -d $(HOST_BUILD_DIR) <  $$$$f; \
-	done; \
 	ln -snf $(PKG_SOURCE_SUBDIR) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 endef
 
