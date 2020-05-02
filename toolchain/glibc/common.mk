@@ -28,7 +28,7 @@ ifeq ($(PKG_VERSION),2.27)
 endif
 
 ifeq ($(PKG_VERSION),2.28)
-  PKG_HASH:=
+  PKG_HASH:=b1900051afad76f7a4f73e71413df4826dce085ef8ddb785a945b66d7d513082
 endif
 
 ifeq ($(PKG_VERSION),2.31)
