@@ -10,8 +10,8 @@ these notes only confer that there is no other annobin markup.
 	* Makefile.in (LIBGCC2_CFLAGS, CRTSTUFF_CFLAGS): Add
 	-Wa,--generate-missing-build-notes=yes.
 
---- libgcc/Makefile.in	2018-01-13 13:05:41.000000000 +0100
-+++ libgcc/Makefile.in	2018-07-25 13:15:02.036226940 +0200
+--- a/libgcc/Makefile.in	2018-01-13 13:05:41.000000000 +0100
++++ b/libgcc/Makefile.in	2018-07-25 13:15:02.036226940 +0200
 @@ -244,6 +244,7 @@
  LIBGCC2_CFLAGS = -O2 $(LIBGCC2_INCLUDES) $(GCC_CFLAGS) $(HOST_LIBGCC2_CFLAGS) \
  		 $(LIBGCC2_DEBUG_CFLAGS) -DIN_LIBGCC2 \
