@@ -13,7 +13,7 @@ pc-engines-apu|pc-engines-apu2|pc-engines-apu3)
 	ucidef_set_interfaces_lan_wan "eth1 eth2" "eth0"
 	;;
 traverse-technologies-geos)
-	ucidef_set_interface_lan "eth0 eth1 eth2"
+	ucidef_set_interface_lan "eth0 eth1"
 	ucidef_add_atm_bridge "0" "35" "llc" "bridged"
 	ucidef_set_interface_wan "nas0" "dhcp"
 	macaddr="$(cat /sys/class/net/eth0/address)" 2>/dev/null
