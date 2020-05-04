@@ -221,7 +221,7 @@ endif
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
-		CFLAGS="$(HOST_CFLAGS) -g1 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
+		CFLAGS="$(HOST_CFLAGS) -g1" \
 		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
 		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -Wl,-z,max-page-size=0x1000" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
