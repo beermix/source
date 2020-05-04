@@ -1,0 +1,37 @@
+From 786af021adacaf819769b464b2910bbb5d0c68b3 Mon Sep 17 00:00:00 2001
+From: Rosen Penev <rosenp@gmail.com>
+Date: Thu, 19 Mar 2020 19:58:14 -0700
+Subject: [PATCH] procd/rcS: cast format string to int64_t
+
+musl 1.2.0 turns time_t into a 64-bit value, even on 32-bit. This makes it
+compatible.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ rcS.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/rcS.c b/rcS.c
+index c2e1abb..2851fae 100644
+--- a/rcS.c
++++ b/rcS.c
+@@ -18,6 +18,7 @@
+ 
+ #include <libubox/uloop.h>
+ #include <libubox/runqueue.h>
++#include <inttypes.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <unistd.h>
+@@ -118,7 +119,7 @@ static void q_initd_complete(struct runqueue *q, struct runqueue_task *p)
+ 		ts_res.tv_nsec += 1000000000;
+ 	}
+ 
+-	DEBUG(2, "stop %s %s - took %lu.%09lus\n", s->file, s->param, ts_res.tv_sec, ts_res.tv_nsec);
++	DEBUG(2, "stop %s %s - took %" PRId64 ".%09" PRId64 "s\n", s->file, s->param, (int64_t)ts_res.tv_sec, (int64_t)ts_res.tv_nsec);
+ 	ustream_free(&s->fd.stream);
+ 	close(s->fd.fd.fd);
+ 	free(s);
+-- 
+2.25.1
+

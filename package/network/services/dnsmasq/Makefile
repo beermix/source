@@ -89,7 +89,6 @@ endef
 define Package/dnsmasq/conffiles
 /etc/config/dhcp
 /etc/dnsmasq.conf
-/etc/dnsmasq.d/
 endef
 
 define Package/dnsmasq-full/config
