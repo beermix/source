@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=squashfs-tools-ng
-PKG_VERSION:=6a0d2f0
+PKG_VERSION:=v0.9.1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/AgentD/squashfs-tools-ng
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
