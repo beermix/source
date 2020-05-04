@@ -1,4 +1,4 @@
-# Full data: https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xml
+# Full data: /usr/share/iana-etc/protocol-numbers.iana
 
 hopopt         0 HOPOPT
 icmp           1 ICMP
