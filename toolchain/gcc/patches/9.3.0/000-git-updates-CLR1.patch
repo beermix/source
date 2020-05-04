@@ -1,0 +1,2198 @@
+Bill Schmidt (1):
+      rs6000: Fix -mpower9-vector -mno-altivec ICE (PR87560)
+
+Bin Cheng (1):
+      backport PR94125: Update post order number for merged SCC.
+
+Eric Botcazou (2):
+      Fix incorrect filling of delay slots in branchy code at -O2
+      Fix wrong year in ChangeLog.
+
+GCC Administrator (19):
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+
+Iain Sandoe (1):
+      Darwin: Fix i686 bootstrap when the assembler supports GOTOFF in data.
+
+Jakub Jelinek (15):
+      Bump BASE-VER to 9.3.1.
+      tailcall: Fix up process_assignment [PR94001]
+      inliner: Copy DECL_BY_REFERENCE in copy_decl_to_var [PR93888]
+      print-rtl: Fix printing of CONST_STRING in DEBUG_INSNs [PR93399]
+      ldist: Further fixes for -ftrapv [PR94114]
+      dfp: Fix decimal_to_binary [PR94111]
+      aarch64: Fix ICE in aarch64_add_offset_1 [PR94121]
+      pdp11: Fix handling of common (local and global) vars [PR94134]
+      tree-dse: Fix mem* head trimming if call has lhs [PR94130]
+      doc: Fix up ASM_OUTPUT_ALIGNED_DECL_LOCAL description
+      maintainer-scripts: Fix up gcc_release without -l, where mkdir was using umask 077 after migration
+      aarch64: Fix another bug in aarch64_add_offset_1 [PR94121]
+      tree-nested: Fix handling of *reduction clauses with C array sections [PR93566]
+      tree-inline: Fix a -fcompare-debug issue in the inliner [PR94167]
+      expand: Don't depend on warning flags in code generation of strnlen [PR94189]
+
+Jason Merrill (3):
+      c++: Fix CTAD with multiple-arg ctor template [93248].
+      c++: Fix ICE-after-error on partial spec [92068]
+      c++: Find parameter pack in typedef in lambda [92909].
+
+Jiufu Guo (1):
+      rs6000: Check -+0 and NaN for smax/smin generation
+
+John David Anglin (1):
+      Define __BIG_ENDIAN__
+
+Jonathan Wakely (7):
+      libstdc++: Ensure root-dir converted to forward slash (PR93244)
+      libstdc++: Fix FS-dependent filesystem tests
+      libstdc++: Fix test failure due to -Wnonnull warnings
+      libstdc++: Fix name of macro in #undef directive
+      libstdc++: Handle type-changing path concatenations (PR 94063)
+      libstdc++: Add default constructor to net::service_already_exists (PR 94199)
+      doc: Note that some warnings depend on optimizations (PR 92757)
+
+Joseph Myers (1):
+      Remove wrongly committed file.
+
+Kewen Lin (3):
+      [testsuite] Fix PR94023 to guard case under vect_hw_misalign
+      [testsuite] Fix PR94019 to check vector char when vect_hw_misalign
+      [testsuite] Fix PR93935 to guard case under vect_hw_misalign
+
+Mark Eggleston (1):
+      fortran: ICE using undeclared symbol in array constructor PR93484
+
+Martin Liska (1):
+      Backport 314b91220a07bd63f13c58e37f1b5b9430a3702b
+
+Nathan Sidwell (1):
+      c++: Fix ICE popping local scope [pr84733]
+
+Richard Biener (1):
+      tree-optimization/94163 constrain alignment set by PRE
+
+Richard Earnshaw (1):
+      arm: correct constraints on movsi_compare0 [PR91913]
+
+Tamar Christina (1):
+      AArch64: Break apart paradoxical subregs for VSTRUCT writes (PR target/94052)
+
+Tobias Burnus (1):
+      [Fortran] Fix result-variable handling of MODULE PROCEDURE (PR94348)
+
+Will Schmidt (1):
+      backport PR90763: PowerPC vec_xl_len should take const argument.
+
+diff --git a/gcc/ChangeLog b/gcc/ChangeLog
+index d8e53874e68..040c48d0829 100644
+--- a/gcc/ChangeLog
++++ b/gcc/ChangeLog
+@@ -1,3 +1,189 @@
++2020-03-24  John David Anglin  <danglin@gcc.gnu.org>
++
++	PR lto/94249
++	* config/pa/pa.h (TARGET_CPU_CPP_BUILTINS): Define __BIG_ENDIAN__.
++
++2020-03-24  Tamar Christina  <tamar.christina@arm.com>
++
++	PR target/94052
++	* config/aarch64/aarch64-simd.md (mov<mode>): Remove paradoxical
++	subregs of VSTRUCT modes.
++
++2020-03-24  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	Backport from mainline
++	2020-03-16  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	PR tree-optimization/94125
++	* tree-loop-distribution.c
++	(loop_distribution::break_alias_scc_partitions): Update post order
++	number for merged scc.
++
++2020-03-23  Will Schmidt  <will_schmidt@vnet.ibm.com>
++
++	Backport from mainline
++	2020-03-10  Will Schmidt  <will_schmidt@vnet.ibm.com>
++
++	PR target/90763
++	    * config/rs6000/rs6000-c.c (altivec_resolve_overloaded_builtin):
++	    Add clause to handle P9V_BUILTIN_VEC_LXVL with const arguments.
++
++2020-03-23  Iain Sandoe  <iain@sandoe.co.uk>
++
++	Backport from master.
++	2020-03-22  Iain Sandoe  <iain@sandoe.co.uk>
++
++	* config/i386/darwin.h (JUMP_TABLES_IN_TEXT_SECTION): Remove
++	references to Darwin.
++	* config/i386/i386.h (JUMP_TABLES_IN_TEXT_SECTION): Define this
++	unconditionally and comment on why.
++
++2020-03-19  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backport from mainline
++	2020-01-13  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR driver/92757
++	* doc/invoke.texi (Warning Options): Add caveat about some warnings
++	depending on optimization settings.
++
++2020-03-19  Jiufu Guo  <guojiufu@linux.ibm.com>
++
++	PR target/93709
++	* gcc/config/rs6000/rs6000.c (rs6000_emit_p9_fp_minmax): Check
++	NAN and SIGNED_ZEROR for smax/smin.
++
++2020-03-17  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/94189
++	* builtins.c (expand_builtin_strnlen): Do return NULL_RTX if we would
++	emit a warning if it was enabled and don't depend on TREE_NO_WARNING
++	for code-generation.
++
++	Backported from mainline
++	2020-03-16  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/94167
++	* tree-inline.c (insert_init_stmt): Don't gimple_regimplify_operands
++	DEBUG_STMTs.
++
++	2020-03-14  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/93566
++	* tree-nested.c (convert_nonlocal_omp_clauses,
++	convert_local_omp_clauses): Handle {,in_,task_}reduction clauses
++	with C/C++ array sections.
++
++	2020-03-13  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94121
++	* config/aarch64/aarch64.c (aarch64_add_offset_1): Use gen_int_mode
++	instead of GEN_INT.
++
++	2020-03-12  Jakub Jelinek  <jakub@redhat.com>
++
++	* doc/tm.texi.in (ASM_OUTPUT_ALIGNED_DECL_LOCAL): Change
++	ASM_OUTPUT_ALIGNED_DECL in description to ASM_OUTPUT_ALIGNED_LOCAL
++	and ASM_OUTPUT_DECL to ASM_OUTPUT_LOCAL.
++	* doc/tm.texi: Regenerated.
++
++	PR tree-optimization/94130
++	* tree-ssa-dse.c: Include gimplify.h.
++	(increment_start_addr): If stmt has lhs, drop the lhs from call and
++	set it after the call to the original value of the first argument.
++	Formatting fixes.
++	(decrement_count): Formatting fix.
++
++	2020-03-11  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94134
++	* config/pdp11/pdp11.c (pdp11_asm_output_var): Call switch_to_section
++	at the start to switch to data section.  Don't print extra newline if
++	.globl directive has not been emitted.
++
++	PR target/94121
++	* config/aarch64/aarch64.c (aarch64_add_offset_1): Use absu_hwi
++	instead of abs_hwi, change moffset type to unsigned HOST_WIDE_INT.
++
++	PR middle-end/94111
++	* dfp.c (decimal_to_binary): Only use decimal128ToString if from->cl
++	is rvc_normal, otherwise use real_to_decimal to print the number to
++	string.
++
++	PR tree-optimization/94114
++	* tree-loop-distribution.c (generate_memset_builtin): Call
++	rewrite_to_non_trapping_overflow even on mem.
++	(generate_memcpy_builtin): Call rewrite_to_non_trapping_overflow even
++	on dest and src.
++
++	2020-03-05  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/93399
++	* tree-pretty-print.h (pretty_print_string): Declare.
++	* tree-pretty-print.c (pretty_print_string): Remove forward
++	declaration, no longer static.  Change nbytes parameter type
++	from unsigned to size_t.
++	* print-rtl.c (print_value) <case CONST_STRING>: Use
++	pretty_print_string and for shrink way too long strings.
++
++	2020-03-04  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/93888
++	* tree-inline.c (copy_decl_to_var): Copy DECL_BY_REFERENCE flag.
++
++	PR tree-optimization/94001
++	* tree-tailcall.c (process_assignment): Before comparing op1 to
++	*ass_var, verify *ass_var is non-NULL.
++
++2020-03-13  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/94163
++	* tree-ssa-pre.c (create_expression_by_pieces): Check
++	whether alignment would be zero.
++
++2020-03-13  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR rtl-optimization/94119
++	* resource.h (clear_hashed_info_until_next_barrier): Declare.
++	* resource.c (clear_hashed_info_until_next_barrier): New function.
++	* reorg.c (add_to_delay_list): Fix formatting.
++	(relax_delay_slots): Call clear_hashed_info_until_next_barrier on
++	the next instruction after removing a BARRIER.
++
++2020-03-12  Bill Schmidt  <wschmidt@linux.ibm.com>
++
++	Backport from master
++	2020-03-02  Bill Schmidt  <wschmidt@linux.ibm.com>
++
++	PR target/87560
++	* rs6000-cpus.def (OTHER_ALTIVEC_MASKS): New #define.
++	* rs6000.c (rs6000_disable_incompatible_switches): Add table entry
++	for OPTION_MASK_ALTIVEC.
++
++2020-03-12  Richard Earnshaw  <rearnsha@arm.com>
++
++	Backport from master
++	2020-02-10  Richard Earnshaw  <rearnsha@arm.com>
++
++	PR target/91913
++	* config/arm/arm.md (movsi_compare0): Allow SP as a source register
++	in Thumb state and also as a destination in Arm state.  Add T16
++	variants.
++
++2020-03-12  Martin Liska  <mliska@suse.cz>
++
++	Backport from mainline
++	2020-03-09  Martin Liska  <mliska@suse.cz>
++
++	PR target/93800
++	* config/rs6000/rs6000.c (rs6000_option_override_internal):
++	Remove set of str_align_loops and str_align_jumps as these
++	should be set in previous 2 conditions in the function.
++
++2020-03-12  Jakub Jelinek  <jakub@redhat.com>
++
++	* BASE-VER: Set to 9.3.1.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/gcc/builtins.c b/gcc/builtins.c
+index ed11f79ff0b..e8e43f53ec6 100644
+--- a/gcc/builtins.c
++++ b/gcc/builtins.c
+@@ -3112,27 +3112,25 @@ expand_builtin_strnlen (tree exp, rtx target, machine_mode target_mode)
+ 	    return NULL_RTX;
+ 	}
+ 
+-      if (lendata.decl
+-	  && !TREE_NO_WARNING (exp)
+-	  && ((tree_int_cst_lt (len, bound))
+-	      || !exact))
++      if (lendata.decl && (tree_int_cst_lt (len, bound) || !exact))
+ 	{
+ 	  location_t warnloc
+ 	    = expansion_point_location_if_in_system_header (loc);
+ 
+-	  if (warning_at (warnloc, OPT_Wstringop_overflow_,
+-			  exact
+-			  ? G_("%K%qD specified bound %E exceeds the size %E "
+-			       "of unterminated array")
+-			  : G_("%K%qD specified bound %E may exceed the size "
+-			       "of at most %E of unterminated array"),
+-			  exp, func, bound, len))
++	  if (!TREE_NO_WARNING (exp)
++	      && warning_at (warnloc, OPT_Wstringop_overflow_,
++			     exact
++			     ? G_("%K%qD specified bound %E exceeds the size "
++				  "%E of unterminated array")
++			     : G_("%K%qD specified bound %E may exceed the "
++				  "size of at most %E of unterminated array"),
++			     exp, func, bound, len))
+ 	    {
+ 	      inform (DECL_SOURCE_LOCATION (lendata.decl),
+ 		      "referenced argument declared here");
+ 	      TREE_NO_WARNING (exp) = true;
+-	      return NULL_RTX;
+ 	    }
++	  return NULL_RTX;
+ 	}
+ 
+       if (!len)
+diff --git a/gcc/config/aarch64/aarch64-simd.md b/gcc/config/aarch64/aarch64-simd.md
+index e3852c5d182..0b09fd8320d 100644
+--- a/gcc/config/aarch64/aarch64-simd.md
++++ b/gcc/config/aarch64/aarch64-simd.md
+@@ -5214,6 +5214,26 @@
+       if (GET_CODE (operands[0]) != REG)
+ 	operands[1] = force_reg (<MODE>mode, operands[1]);
+     }
++
++  /* If we have a paradoxical subreg trying to write to <MODE> from and the
++     registers don't overlap then we need to break it apart.  What it's trying
++     to do is give two kind of information at the same time.  It's trying to
++     convey liveness information by saying that the entire register will be
++     written to eventually, but it also only wants to write a single part of the
++     register.  Hence the paradoxical subreg.
++
++     Instead of allowing this we will split the two concerns.  The liveness
++     information will be conveyed using a clobber and then we break apart the
++     paradoxical subreg into just a normal write of the part that it wanted to
++     write originally.  */
++
++  if (REG_P (operands[0]) && paradoxical_subreg_p (operands[1]))
++    {
++      if (!reg_overlap_mentioned_p (operands[0], operands[1]))
++	emit_clobber (operands[0]);
++      operands[1] = SUBREG_REG (operands[1]);
++      operands[0] = gen_lowpart (GET_MODE (operands[1]), operands[0]);
++    }
+ })
+ 
+ 
+diff --git a/gcc/config/aarch64/aarch64.c b/gcc/config/aarch64/aarch64.c
+index b452a53af99..2b09f317978 100644
+--- a/gcc/config/aarch64/aarch64.c
++++ b/gcc/config/aarch64/aarch64.c
+@@ -2818,7 +2818,7 @@ aarch64_add_offset_1 (scalar_int_mode mode, rtx dest,
+   gcc_assert (emit_move_imm || temp1 != NULL_RTX);
+   gcc_assert (temp1 == NULL_RTX || !reg_overlap_mentioned_p (temp1, src));
+ 
+-  HOST_WIDE_INT moffset = abs_hwi (offset);
++  unsigned HOST_WIDE_INT moffset = absu_hwi (offset);
+   rtx_insn *insn;
+ 
+   if (!moffset)
+@@ -2862,7 +2862,8 @@ aarch64_add_offset_1 (scalar_int_mode mode, rtx dest,
+   if (emit_move_imm)
+     {
+       gcc_assert (temp1 != NULL_RTX || can_create_pseudo_p ());
+-      temp1 = aarch64_force_temporary (mode, temp1, GEN_INT (moffset));
++      temp1 = aarch64_force_temporary (mode, temp1,
++				       gen_int_mode (moffset, mode));
+     }
+   insn = emit_insn (offset < 0
+ 		    ? gen_sub3_insn (dest, src, temp1)
+diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
+index 53e54874c12..bfb03f1b96d 100644
+--- a/gcc/config/arm/arm.md
++++ b/gcc/config/arm/arm.md
+@@ -6362,16 +6362,21 @@
+ 
+ (define_insn "*movsi_compare0"
+   [(set (reg:CC CC_REGNUM)
+-	(compare:CC (match_operand:SI 1 "s_register_operand" "0,r")
++	(compare:CC (match_operand:SI 1 "s_register_operand" "0,0,l,rk,rk")
+ 		    (const_int 0)))
+-   (set (match_operand:SI 0 "s_register_operand" "=r,r")
++   (set (match_operand:SI 0 "s_register_operand" "=l,rk,l,r,rk")
+ 	(match_dup 1))]
+   "TARGET_32BIT"
+   "@
+    cmp%?\\t%0, #0
++   cmp%?\\t%0, #0
++   subs%?\\t%0, %1, #0
++   subs%?\\t%0, %1, #0
+    subs%?\\t%0, %1, #0"
+   [(set_attr "conds" "set")
+-   (set_attr "type" "alus_imm,alus_imm")]
++   (set_attr "arch" "t2,*,t2,t2,a")
++   (set_attr "type" "alus_imm")
++   (set_attr "length" "2,4,2,4,4")]
+ )
+ 
+ ;; Subroutine to store a half word from a register into memory.
+diff --git a/gcc/config/i386/darwin.h b/gcc/config/i386/darwin.h
+index bdb36f00959..c099a6238d8 100644
+--- a/gcc/config/i386/darwin.h
++++ b/gcc/config/i386/darwin.h
+@@ -239,6 +239,16 @@ along with GCC; see the file COPYING3.  If not see
+ #undef TARGET_ASM_OUTPUT_IDENT
+ #define TARGET_ASM_OUTPUT_IDENT default_asm_output_ident_directive
+ 
++/* We always want jump tables in the text section:
++   * for PIC code, we need the subtracted symbol to be defined at
++     assembly-time.
++   * for mdynamic-no-pic, we cannot support jump tables in the .const
++     section for weak functions, this looks to ld64 like direct access
++     to the weak symbol from an anonymous atom.  */
++
++#undef JUMP_TABLES_IN_TEXT_SECTION
++#define JUMP_TABLES_IN_TEXT_SECTION 1
++
+ /* Darwin profiling -- call mcount.  */
+ #undef FUNCTION_PROFILER
+ #define FUNCTION_PROFILER(FILE, LABELNO)				\
+diff --git a/gcc/config/i386/i386.h b/gcc/config/i386/i386.h
+index 14e5a392f62..441213eebb8 100644
+--- a/gcc/config/i386/i386.h
++++ b/gcc/config/i386/i386.h
+@@ -2232,11 +2232,10 @@ extern int const svr4_dbx_register_map[FIRST_PSEUDO_REGISTER];
+ 
+ /* Under some conditions we need jump tables in the text section,
+    because the assembler cannot handle label differences between
+-   sections.  This is the case for x86_64 on Mach-O for example.  */
++   sections.  */
+ 
+ #define JUMP_TABLES_IN_TEXT_SECTION \
+-  (flag_pic && ((TARGET_MACHO && TARGET_64BIT) \
+-   || (!TARGET_64BIT && !HAVE_AS_GOTOFF_IN_DATA)))
++  (flag_pic && !(TARGET_64BIT || HAVE_AS_GOTOFF_IN_DATA))
+ 
+ /* Switch to init or fini section via SECTION_OP, emit a call to FUNC,
+    and switch back.  For x86 we do this only to save a few bytes that
+diff --git a/gcc/config/pa/pa.h b/gcc/config/pa/pa.h
+index 24739e56f97..3c9f249c920 100644
+--- a/gcc/config/pa/pa.h
++++ b/gcc/config/pa/pa.h
+@@ -171,6 +171,7 @@ do {								\
+      builtin_assert("machine=hppa");				\
+      builtin_define("__hppa");					\
+      builtin_define("__hppa__");				\
++     builtin_define("__BIG_ENDIAN__");				\
+      if (TARGET_PA_20)						\
+        builtin_define("_PA_RISC2_0");				\
+      else if (TARGET_PA_11)					\
+diff --git a/gcc/config/pdp11/pdp11.c b/gcc/config/pdp11/pdp11.c
+index 5f530a43000..1be79e1964c 100644
+--- a/gcc/config/pdp11/pdp11.c
++++ b/gcc/config/pdp11/pdp11.c
+@@ -744,6 +744,7 @@ void
+ pdp11_asm_output_var (FILE *file, const char *name, int size,
+ 		      int align, bool global)
+ {
++  switch_to_section (data_section);
+   if (align > 8)
+     fprintf (file, "\t.even\n");
+   if (TARGET_DEC_ASM)
+@@ -764,8 +765,8 @@ pdp11_asm_output_var (FILE *file, const char *name, int size,
+ 	{
+ 	  fprintf (file, ".globl ");
+ 	  assemble_name (file, name);
++	  fprintf (file, "\n");
+ 	}
+-      fprintf (file, "\n");
+       assemble_name (file, name);
+       fputs (":", file);
+       ASM_OUTPUT_SKIP (file, size);
+diff --git a/gcc/config/rs6000/rs6000-c.c b/gcc/config/rs6000/rs6000-c.c
+index 7c28d4d8176..1ec38db0908 100644
+--- a/gcc/config/rs6000/rs6000-c.c
++++ b/gcc/config/rs6000/rs6000-c.c
+@@ -6853,6 +6853,19 @@ altivec_resolve_overloaded_builtin (location_t loc, tree fndecl,
+ 	  arg = fold_convert (type, arg);
+ 	}
+ 
++      /* For P9V_BUILTIN_VEC_LXVL, convert any const * to its non constant
++	 equivalent to simplify the overload matching below.  */
++      if (fcode == P9V_BUILTIN_VEC_LXVL)
++	{
++	  if (POINTER_TYPE_P (type)
++	      && TYPE_READONLY (TREE_TYPE (type)))
++	    {
++	      type = build_pointer_type (build_qualified_type (
++						TREE_TYPE (type),0));
++	      arg = fold_convert (type, arg);
++	    }
++	}
++
+       args[n] = arg;
+       types[n] = type;
+     }
+diff --git a/gcc/config/rs6000/rs6000-cpus.def b/gcc/config/rs6000/rs6000-cpus.def
+index d0d69beafd4..47a5d0576d0 100644
+--- a/gcc/config/rs6000/rs6000-cpus.def
++++ b/gcc/config/rs6000/rs6000-cpus.def
+@@ -88,6 +88,10 @@
+ 				 | OPTION_MASK_FLOAT128_KEYWORD		\
+ 				 | OPTION_MASK_P8_VECTOR)
+ 
++/* Flags that need to be turned off if -mno-altivec.  */
++#define OTHER_ALTIVEC_MASKS	(OTHER_VSX_VECTOR_MASKS			\
++				 | OPTION_MASK_VSX)
++
+ #define POWERPC_7400_MASK	(OPTION_MASK_PPC_GFXOPT | OPTION_MASK_ALTIVEC)
+ 
+ /* Deal with ports that do not have -mstrict-align.  */
+diff --git a/gcc/config/rs6000/rs6000.c b/gcc/config/rs6000/rs6000.c
+index 87d60078bb0..5ec2b339df6 100644
+--- a/gcc/config/rs6000/rs6000.c
++++ b/gcc/config/rs6000/rs6000.c
+@@ -4715,11 +4715,6 @@ rs6000_option_override_internal (bool global_init_p)
+ 		  str_align_loops = "16";
+ 		}
+ 	    }
+-
+-	  if (flag_align_jumps && !str_align_jumps)
+-	    str_align_jumps = "16";
+-	  if (flag_align_loops && !str_align_loops)
+-	    str_align_loops = "16";
+ 	}
+ 
+       /* Arrange to save and restore machine status around nested functions.  */
+@@ -23092,7 +23087,11 @@ rs6000_emit_p9_fp_minmax (rtx dest, rtx op, rtx true_cond, rtx false_cond)
+   if (rtx_equal_p (op0, true_cond) && rtx_equal_p (op1, false_cond))
+     ;
+ 
+-  else if (rtx_equal_p (op1, true_cond) && rtx_equal_p (op0, false_cond))
++  /* Only when NaNs and signed-zeros are not in effect, smax could be
++     used for `op0 < op1 ? op1 : op0`, and smin could be used for
++     `op0 > op1 ? op1 : op0`.  */
++  else if (rtx_equal_p (op1, true_cond) && rtx_equal_p (op0, false_cond)
++	   && !HONOR_NANS (compare_mode) && !HONOR_SIGNED_ZEROS (compare_mode))
+     max_p = !max_p;
+ 
+   else
+@@ -37399,6 +37398,7 @@ rs6000_disable_incompatible_switches (void)
+     { OPTION_MASK_P9_VECTOR,	OTHER_P9_VECTOR_MASKS,	"power9-vector"	},
+     { OPTION_MASK_P8_VECTOR,	OTHER_P8_VECTOR_MASKS,	"power8-vector"	},
+     { OPTION_MASK_VSX,		OTHER_VSX_VECTOR_MASKS,	"vsx"		},
++    { OPTION_MASK_ALTIVEC,	OTHER_ALTIVEC_MASKS,	"altivec"	},
+   };
+ 
+   for (i = 0; i < ARRAY_SIZE (flags); i++)
+diff --git a/gcc/cp/ChangeLog b/gcc/cp/ChangeLog
+index 6441d647a54..91c01f543a5 100644
+--- a/gcc/cp/ChangeLog
++++ b/gcc/cp/ChangeLog
+@@ -1,3 +1,26 @@
++2020-03-27  Nathan Sidwell  <nathan@acm.org>
++
++	PR c++/84733
++	* name-lookup.c (do_pushdecl): Look through cleanp levels.
++
++2020-03-14  Jason Merrill  <jason@redhat.com>
++
++	PR c++/92909
++	* pt.c (find_parameter_packs_r): [DECL_EXPR]: Walk
++	DECL_ORIGINAL_TYPE of a typedef.
++
++2020-03-14  Jason Merrill  <jason@redhat.com>
++
++	PR c++/92068
++	* pt.c (process_partial_specialization): Error rather than crash on
++	extra pack expansion.
++
++2020-03-14  Jason Merrill  <jason@redhat.com>
++
++	PR c++/93248
++	* pt.c (build_deduction_guide): Clear cp_unevaluated_operand for
++	substituting DECL_ARGUMENTS.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/gcc/cp/name-lookup.c b/gcc/cp/name-lookup.c
+index 8999c5ad4a7..8298ee171e0 100644
+--- a/gcc/cp/name-lookup.c
++++ b/gcc/cp/name-lookup.c
+@@ -2988,7 +2988,8 @@ do_pushdecl (tree decl, bool is_friend)
+   /* The binding level we will be pushing into.  During local class
+      pushing, we want to push to the containing scope.  */
+   cp_binding_level *level = current_binding_level;
+-  while (level->kind == sk_class)
++  while (level->kind == sk_class
++	 || level->kind == sk_cleanup)
+     level = level->level_chain;
+ 
+   /* An anonymous namespace has a NULL DECL_NAME, but we still want to
+diff --git a/gcc/cp/pt.c b/gcc/cp/pt.c
+index 4787747b6ff..3e4fc235f7a 100644
+--- a/gcc/cp/pt.c
++++ b/gcc/cp/pt.c
+@@ -3773,10 +3773,18 @@ find_parameter_packs_r (tree *tp, int *walk_subtrees, void* data)
+       return NULL_TREE;
+ 
+     case DECL_EXPR:
+-      /* Ignore the declaration of a capture proxy for a parameter pack.  */
+-      if (is_capture_proxy (DECL_EXPR_DECL (t)))
+-	*walk_subtrees = 0;
+-      return NULL_TREE;
++      {
++	tree decl = DECL_EXPR_DECL (t);
++	/* Ignore the declaration of a capture proxy for a parameter pack.  */
++	if (is_capture_proxy (decl))
++	  *walk_subtrees = 0;
++	if (is_typedef_decl (decl) && TYPE_ALIAS_P (TREE_TYPE (decl)))
++	  /* Since we stop at aliases above, we need to look through them at
++	     the point of the DECL_EXPR.  */
++	  cp_walk_tree (&DECL_ORIGINAL_TYPE (decl),
++			&find_parameter_packs_r, ppd, ppd->visited);
++	return NULL_TREE;
++      }
+ 
+     case RECORD_TYPE:
+       if (TYPE_PTRMEMFUNC_P (t))
+@@ -4877,6 +4885,14 @@ process_partial_specialization (tree decl)
+       return decl;
+     }
+ 
++  else if (nargs > DECL_NTPARMS (maintmpl))
++    {
++      error ("too many arguments for partial specialization %qT", type);
++      inform (DECL_SOURCE_LOCATION (maintmpl), "primary template here");
++      /* Avoid crash below.  */
++      return decl;
++    }
++
+   /* If we aren't in a dependent class, we can actually try deduction.  */
+   else if (tpd.level == 1
+ 	   /* FIXME we should be able to handle a partial specialization of a
+@@ -4903,7 +4919,6 @@ process_partial_specialization (tree decl)
+ 
+      Also, we verify that pack expansions only occur at the
+      end of the argument list.  */
+-  gcc_assert (nargs == DECL_NTPARMS (maintmpl));
+   tpd2.parms = 0;
+   for (i = 0; i < nargs; ++i)
+     {
+@@ -27376,10 +27391,13 @@ build_deduction_guide (tree ctor, tree outer_args, tsubst_flags_t complain)
+ 				     complain, ctor);
+ 	  if (fparms == error_mark_node)
+ 	    ok = false;
+-	  fargs = tsubst (fargs, tsubst_args, complain, ctor);
+ 	  if (ci)
+ 	    ci = tsubst_constraint_info (ci, tsubst_args, complain, ctor);
+ 
++	  /* Parms are to have DECL_CHAIN tsubsted, which would be skipped if
++	     cp_unevaluated_operand.  */
++	  cp_evaluated ev;
++	  fargs = tsubst (fargs, tsubst_args, complain, ctor);
+ 	  current_template_parms = save_parms;
+ 	}
+ 
+diff --git a/gcc/dfp.c b/gcc/dfp.c
+index 65d5fcb0845..599f37ea9da 100644
+--- a/gcc/dfp.c
++++ b/gcc/dfp.c
+@@ -342,9 +342,13 @@ decimal_to_binary (REAL_VALUE_TYPE *to, const REAL_VALUE_TYPE *from,
+ 		   const real_format *fmt)
+ {
+   char string[256];
+-  const decimal128 *const d128 = (const decimal128 *) from->sig;
+-
+-  decimal128ToString (d128, string);
++  if (from->cl == rvc_normal)
++    {
++      const decimal128 *const d128 = (const decimal128 *) from->sig;
++      decimal128ToString (d128, string);
++    }
++  else
++    real_to_decimal (string, from, sizeof (string), 0, 1);
+   real_from_string3 (to, string, fmt);
+ }
+ 
+diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+index 0ab6c9c6449..0f6247caf51 100644
+--- a/gcc/doc/invoke.texi
++++ b/gcc/doc/invoke.texi
+@@ -4313,6 +4313,11 @@ are being produced.  This allows the use of new @option{-Wno-} options
+ with old compilers, but if something goes wrong, the compiler
+ warns that an unrecognized option is present.
+ 
++The effectiveness of some warnings depends on optimizations also being
++enabled. For example @option{-Wsuggest-final-types} is more effective
++with link-time optimization and @option{-Wmaybe-uninitialized} will not
++warn at all unless optimization is enabled.
++
+ @table @gcctabopt
+ @item -Wpedantic
+ @itemx -pedantic
+diff --git a/gcc/doc/tm.texi b/gcc/doc/tm.texi
+index 8c8978bb13a..7f5c370d97a 100644
+--- a/gcc/doc/tm.texi
++++ b/gcc/doc/tm.texi
+@@ -8330,11 +8330,11 @@ as the number of bits.
+ @end defmac
+ 
+ @defmac ASM_OUTPUT_ALIGNED_DECL_LOCAL (@var{stream}, @var{decl}, @var{name}, @var{size}, @var{alignment})
+-Like @code{ASM_OUTPUT_ALIGNED_DECL} except that @var{decl} of the
++Like @code{ASM_OUTPUT_ALIGNED_LOCAL} except that @var{decl} of the
+ variable to be output, if there is one, or @code{NULL_TREE} if there
+ is no corresponding variable.  If you define this macro, GCC will use it
+-in place of both @code{ASM_OUTPUT_DECL} and
+-@code{ASM_OUTPUT_ALIGNED_DECL}.  Define this macro when you need to see
++in place of both @code{ASM_OUTPUT_LOCAL} and
++@code{ASM_OUTPUT_ALIGNED_LOCAL}.  Define this macro when you need to see
+ the variable's decl in order to chose what to output.
+ @end defmac
+ 
+diff --git a/gcc/doc/tm.texi.in b/gcc/doc/tm.texi.in
+index fe1194ef91a..44a15dda240 100644
+--- a/gcc/doc/tm.texi.in
++++ b/gcc/doc/tm.texi.in
+@@ -5403,11 +5403,11 @@ as the number of bits.
+ @end defmac
+ 
+ @defmac ASM_OUTPUT_ALIGNED_DECL_LOCAL (@var{stream}, @var{decl}, @var{name}, @var{size}, @var{alignment})
+-Like @code{ASM_OUTPUT_ALIGNED_DECL} except that @var{decl} of the
++Like @code{ASM_OUTPUT_ALIGNED_LOCAL} except that @var{decl} of the
+ variable to be output, if there is one, or @code{NULL_TREE} if there
+ is no corresponding variable.  If you define this macro, GCC will use it
+-in place of both @code{ASM_OUTPUT_DECL} and
+-@code{ASM_OUTPUT_ALIGNED_DECL}.  Define this macro when you need to see
++in place of both @code{ASM_OUTPUT_LOCAL} and
++@code{ASM_OUTPUT_ALIGNED_LOCAL}.  Define this macro when you need to see
+ the variable's decl in order to chose what to output.
+ @end defmac
+ 
+diff --git a/gcc/fortran/ChangeLog b/gcc/fortran/ChangeLog
+index 8fefea2b63d..99106cc39a0 100644
+--- a/gcc/fortran/ChangeLog
++++ b/gcc/fortran/ChangeLog
+@@ -1,3 +1,21 @@
++2020-03-28  Tobias Burnus  <tobias@codesourcery.com>
++
++	Backport from mainline
++	2020-03-28  Tobias Burnus  <tobias@codesourcery.com>
++
++	PR fortran/94348
++	* decl.c (gfc_match_submod_proc): Add result var to the
++	proc's namespace.
++
++2020-03-25  Mark Eggleston <markeggleston@gcc.gnu.org>
++
++	Backport from master
++	2020-03-25  Mark Eggleston <markeggleston@gcc.gnu.org>
++
++	PR fortran/93484
++	* match.c (gfc_match_type_spec): Replace gfc_match_init_expr with
++	gfc_match_expr. Return m if m is MATCH_NO or MATCH_ERROR.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/gcc/fortran/decl.c b/gcc/fortran/decl.c
+index abff4af9f67..0291e248bb3 100644
+--- a/gcc/fortran/decl.c
++++ b/gcc/fortran/decl.c
+@@ -9602,13 +9602,20 @@ gfc_match_submod_proc (void)
+   if (get_proc_name (name, &sym, false))
+     return MATCH_ERROR;
+ 
+-  /* Make sure that the result field is appropriately filled, even though
+-     the result symbol will be replaced later on.  */
++  /* Make sure that the result field is appropriately filled.  */
+   if (sym->tlink && sym->tlink->attr.function)
+     {
+-      if (sym->tlink->result
+-	  && sym->tlink->result != sym->tlink)
+-	sym->result= sym->tlink->result;
++      if (sym->tlink->result && sym->tlink->result != sym->tlink)
++	{
++	  sym->result = sym->tlink->result;
++	  if (!sym->result->attr.use_assoc)
++	    {
++	      gfc_symtree *st = gfc_new_symtree (&gfc_current_ns->sym_root,
++						 sym->result->name);
++	      st->n.sym = sym->result;
++	      sym->result->refs++;
++	    }
++	}
+       else
+ 	sym->result = sym;
+     }
+diff --git a/gcc/fortran/match.c b/gcc/fortran/match.c
+index 088b69f8ec9..f4ae9e9dfe7 100644
+--- a/gcc/fortran/match.c
++++ b/gcc/fortran/match.c
+@@ -2200,9 +2200,9 @@ gfc_match_type_spec (gfc_typespec *ts)
+ 
+ found:
+ 
+-      m = gfc_match_init_expr (&e);
++      m = gfc_match_expr (&e);
+       if (m == MATCH_NO || m == MATCH_ERROR)
+-	return MATCH_NO;
++	return m;
+ 
+       /* If a comma appears, it is an intrinsic subprogram. */
+       gfc_gobble_whitespace ();
+diff --git a/gcc/print-rtl.c b/gcc/print-rtl.c
+index fbb108568b3..819b8473d9d 100644
+--- a/gcc/print-rtl.c
++++ b/gcc/print-rtl.c
+@@ -1678,7 +1678,9 @@ print_value (pretty_printer *pp, const_rtx x, int verbose)
+       pp_string (pp, tmp);
+       break;
+     case CONST_STRING:
+-      pp_printf (pp, "\"%s\"", XSTR (x, 0));
++      pp_string (pp, "\"");
++      pretty_print_string (pp, XSTR (x, 0), strlen (XSTR (x, 0)));
++      pp_string (pp, "\"");
+       break;
+     case SYMBOL_REF:
+       pp_printf (pp, "`%s'", XSTR (x, 0));
+diff --git a/gcc/reorg.c b/gcc/reorg.c
+index 81349382b81..a93cf90e0ab 100644
+--- a/gcc/reorg.c
++++ b/gcc/reorg.c
+@@ -577,8 +577,9 @@ add_to_delay_list (rtx_insn *insn, vec<rtx_insn *> *delay_list)
+ {
+   /* If INSN has its block number recorded, clear it since we may
+      be moving the insn to a new block.  */
+-      clear_hashed_info_for_insn (insn);
+-      delay_list->safe_push (insn);
++  clear_hashed_info_for_insn (insn);
++
++  delay_list->safe_push (insn);
+ }
+ 
+ /* Delete INSN from the delay slot of the insn that it is in, which may
+@@ -3221,7 +3222,14 @@ relax_delay_slots (rtx_insn *first)
+ 
+ 	      if (invert_jump (jump_insn, label, 1))
+ 		{
+-		  delete_related_insns (next);
++		  rtx_insn *from = delete_related_insns (next);
++
++		  /* We have just removed a BARRIER, which means that the block
++		     number of the next insns has effectively been changed (see
++		     find_basic_block in resource.c), so clear it.  */
++		  if (from)
++		    clear_hashed_info_until_next_barrier (from);
++
+ 		  next = jump_insn;
+ 		}
+ 
+@@ -3494,18 +3502,22 @@ relax_delay_slots (rtx_insn *first)
+ 
+ 	      if (invert_jump (delay_jump_insn, label, 1))
+ 		{
+-		  int i;
+-
+ 		  /* Must update the INSN_FROM_TARGET_P bits now that
+ 		     the branch is reversed, so that mark_target_live_regs
+ 		     will handle the delay slot insn correctly.  */
+-		  for (i = 1; i < XVECLEN (PATTERN (insn), 0); i++)
++		  for (int i = 1; i < XVECLEN (PATTERN (insn), 0); i++)
+ 		    {
+ 		      rtx slot = XVECEXP (PATTERN (insn), 0, i);
+ 		      INSN_FROM_TARGET_P (slot) = ! INSN_FROM_TARGET_P (slot);
+ 		    }
+ 
+-		  delete_related_insns (next);
++		  /* We have just removed a BARRIER, which means that the block
++		     number of the next insns has effectively been changed (see
++		     find_basic_block in resource.c), so clear it.  */
++		  rtx_insn *from = delete_related_insns (next);
++		  if (from)
++		    clear_hashed_info_until_next_barrier (from);
++
+ 		  next = insn;
+ 		}
+ 
+diff --git a/gcc/resource.c b/gcc/resource.c
+index c4bcfd7dc71..164b55e561b 100644
+--- a/gcc/resource.c
++++ b/gcc/resource.c
+@@ -1311,7 +1311,26 @@ clear_hashed_info_for_insn (rtx_insn *insn)
+ 	tinfo->block = -1;
+     }
+ }
+-
++
++/* Clear any hashed information that we have stored for instructions
++   between INSN and the next BARRIER that follow a JUMP or a LABEL.  */
++
++void
++clear_hashed_info_until_next_barrier (rtx_insn *insn)
++{
++  while (insn && !BARRIER_P (insn))
++    {
++      if (JUMP_P (insn) || LABEL_P (insn))
++	{
++	  rtx_insn *next = next_active_insn (insn);
++	  if (next)
++	    clear_hashed_info_for_insn (next);
++	}
++
++      insn = next_nonnote_insn (insn);
++    }
++}
++
+ /* Increment the tick count for the basic block that contains INSN.  */
+ 
+ void
+diff --git a/gcc/resource.h b/gcc/resource.h
+index 7916344c584..3e969e52176 100644
+--- a/gcc/resource.h
++++ b/gcc/resource.h
+@@ -46,6 +46,7 @@ extern void mark_set_resources (rtx, struct resources *, int,
+ 				enum mark_resource_type);
+ extern void mark_referenced_resources (rtx, struct resources *, bool);
+ extern void clear_hashed_info_for_insn (rtx_insn *);
++extern void clear_hashed_info_until_next_barrier (rtx_insn *);
+ extern void incr_ticks_for_insn (rtx_insn *);
+ extern void mark_end_of_function_resources (rtx, bool);
+ extern void init_resource_info (rtx_insn *);
+diff --git a/gcc/tree-inline.c b/gcc/tree-inline.c
+index d115fcb1a5b..7a41f64bcc3 100644
+--- a/gcc/tree-inline.c
++++ b/gcc/tree-inline.c
+@@ -3213,10 +3213,10 @@ insert_init_stmt (copy_body_data *id, basic_block bb, gimple *init_stmt)
+ 	  gimple_assign_set_rhs1 (init_stmt, rhs);
+ 	}
+       gsi_insert_after (&si, init_stmt, GSI_NEW_STMT);
+-      gimple_regimplify_operands (init_stmt, &si);
+-
+       if (!is_gimple_debug (init_stmt))
+ 	{
++	  gimple_regimplify_operands (init_stmt, &si);
++
+ 	  tree def = gimple_assign_lhs (init_stmt);
+ 	  insert_init_debug_bind (id, bb, def, def, init_stmt);
+ 	}
+@@ -5698,6 +5698,7 @@ copy_decl_to_var (tree decl, copy_body_data *id)
+   TREE_READONLY (copy) = TREE_READONLY (decl);
+   TREE_THIS_VOLATILE (copy) = TREE_THIS_VOLATILE (decl);
+   DECL_GIMPLE_REG_P (copy) = DECL_GIMPLE_REG_P (decl);
++  DECL_BY_REFERENCE (copy) = DECL_BY_REFERENCE (decl);
+ 
+   return copy_decl_for_dup_finish (id, decl, copy);
+ }
+diff --git a/gcc/tree-loop-distribution.c b/gcc/tree-loop-distribution.c
+index 8959f52a67b..3e9b220ffb7 100644
+--- a/gcc/tree-loop-distribution.c
++++ b/gcc/tree-loop-distribution.c
+@@ -1004,7 +1004,7 @@ generate_memset_builtin (struct loop *loop, partition *partition)
+   nb_bytes = rewrite_to_non_trapping_overflow (builtin->size);
+   nb_bytes = force_gimple_operand_gsi (&gsi, nb_bytes, true, NULL_TREE,
+ 				       false, GSI_CONTINUE_LINKING);
+-  mem = builtin->dst_base;
++  mem = rewrite_to_non_trapping_overflow (builtin->dst_base);
+   mem = force_gimple_operand_gsi (&gsi, mem, true, NULL_TREE,
+ 				  false, GSI_CONTINUE_LINKING);
+ 
+@@ -1056,8 +1056,8 @@ generate_memcpy_builtin (struct loop *loop, partition *partition)
+   nb_bytes = rewrite_to_non_trapping_overflow (builtin->size);
+   nb_bytes = force_gimple_operand_gsi (&gsi, nb_bytes, true, NULL_TREE,
+ 				       false, GSI_CONTINUE_LINKING);
+-  dest = builtin->dst_base;
+-  src = builtin->src_base;
++  dest = rewrite_to_non_trapping_overflow (builtin->dst_base);
++  src = rewrite_to_non_trapping_overflow (builtin->src_base);
+   if (partition->kind == PKIND_MEMCPY
+       || ! ptr_derefs_may_alias_p (dest, src))
+     kind = BUILT_IN_MEMCPY;
+@@ -2364,14 +2364,11 @@ break_alias_scc_partitions (struct graph *rdg,
+ 	      if (cbdata.vertices_component[k] != i)
+ 		continue;
+ 
+-	      /* Update postorder number so that merged reduction partition is
+-		 sorted after other partitions.  */
+-	      if (!partition_reduction_p (first)
+-		  && partition_reduction_p (partition))
+-		{
+-		  gcc_assert (pg->vertices[k].post < pg->vertices[j].post);
+-		  pg->vertices[j].post = pg->vertices[k].post;
+-		}
++	      /* Update to the minimal postordeer number of vertices in scc so
++		 that merged partition is sorted correctly against others.  */
++	      if (pg->vertices[j].post > pg->vertices[k].post)
++		pg->vertices[j].post = pg->vertices[k].post;
++
+ 	      partition_merge_into (NULL, first, partition, FUSE_SAME_SCC);
+ 	      (*partitions)[k] = NULL;
+ 	      partition_free (partition);
+diff --git a/gcc/tree-nested.c b/gcc/tree-nested.c
+index 3fe23cc2b22..e7c1026cf85 100644
+--- a/gcc/tree-nested.c
++++ b/gcc/tree-nested.c
+@@ -1178,7 +1178,7 @@ convert_nonlocal_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ {
+   struct nesting_info *const info = (struct nesting_info *) wi->info;
+   bool need_chain = false, need_stmts = false;
+-  tree clause, decl;
++  tree clause, decl, *pdecl;
+   int dummy;
+   bitmap new_suppress;
+ 
+@@ -1187,6 +1187,7 @@ convert_nonlocal_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ 
+   for (clause = *pclauses; clause ; clause = OMP_CLAUSE_CHAIN (clause))
+     {
++      pdecl = NULL;
+       switch (OMP_CLAUSE_CODE (clause))
+ 	{
+ 	case OMP_CLAUSE_REDUCTION:
+@@ -1194,6 +1195,15 @@ convert_nonlocal_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ 	case OMP_CLAUSE_TASK_REDUCTION:
+ 	  if (OMP_CLAUSE_REDUCTION_PLACEHOLDER (clause))
+ 	    need_stmts = true;
++	  if (TREE_CODE (OMP_CLAUSE_DECL (clause)) == MEM_REF)
++	    {
++	      pdecl = &TREE_OPERAND (OMP_CLAUSE_DECL (clause), 0);
++	      if (TREE_CODE (*pdecl) == POINTER_PLUS_EXPR)
++		pdecl = &TREE_OPERAND (*pdecl, 0);
++	      if (TREE_CODE (*pdecl) == INDIRECT_REF
++		  || TREE_CODE (*pdecl) == ADDR_EXPR)
++		pdecl = &TREE_OPERAND (*pdecl, 0);
++	    }
+ 	  goto do_decl_clause;
+ 
+ 	case OMP_CLAUSE_LASTPRIVATE:
+@@ -1219,7 +1229,9 @@ convert_nonlocal_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ 	case OMP_CLAUSE_USE_DEVICE_PTR:
+ 	case OMP_CLAUSE_IS_DEVICE_PTR:
+ 	do_decl_clause:
+-	  decl = OMP_CLAUSE_DECL (clause);
++	  if (pdecl == NULL)
++	    pdecl = &OMP_CLAUSE_DECL (clause);
++	  decl = *pdecl;
+ 	  if (VAR_P (decl)
+ 	      && (TREE_STATIC (decl) || DECL_EXTERNAL (decl)))
+ 	    break;
+@@ -1228,7 +1240,7 @@ convert_nonlocal_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ 	      if (OMP_CLAUSE_CODE (clause) == OMP_CLAUSE_SHARED)
+ 		OMP_CLAUSE_SHARED_READONLY (clause) = 0;
+ 	      bitmap_set_bit (new_suppress, DECL_UID (decl));
+-	      OMP_CLAUSE_DECL (clause) = get_nonlocal_debug_decl (info, decl);
++	      *pdecl = get_nonlocal_debug_decl (info, decl);
+ 	      if (OMP_CLAUSE_CODE (clause) != OMP_CLAUSE_PRIVATE)
+ 		need_chain = true;
+ 	    }
+@@ -1894,7 +1906,7 @@ convert_local_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ {
+   struct nesting_info *const info = (struct nesting_info *) wi->info;
+   bool need_frame = false, need_stmts = false;
+-  tree clause, decl;
++  tree clause, decl, *pdecl;
+   int dummy;
+   bitmap new_suppress;
+ 
+@@ -1903,6 +1915,7 @@ convert_local_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ 
+   for (clause = *pclauses; clause ; clause = OMP_CLAUSE_CHAIN (clause))
+     {
++      pdecl = NULL;
+       switch (OMP_CLAUSE_CODE (clause))
+ 	{
+ 	case OMP_CLAUSE_REDUCTION:
+@@ -1910,6 +1923,15 @@ convert_local_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ 	case OMP_CLAUSE_TASK_REDUCTION:
+ 	  if (OMP_CLAUSE_REDUCTION_PLACEHOLDER (clause))
+ 	    need_stmts = true;
++	  if (TREE_CODE (OMP_CLAUSE_DECL (clause)) == MEM_REF)
++	    {
++	      pdecl = &TREE_OPERAND (OMP_CLAUSE_DECL (clause), 0);
++	      if (TREE_CODE (*pdecl) == POINTER_PLUS_EXPR)
++		pdecl = &TREE_OPERAND (*pdecl, 0);
++	      if (TREE_CODE (*pdecl) == INDIRECT_REF
++		  || TREE_CODE (*pdecl) == ADDR_EXPR)
++		pdecl = &TREE_OPERAND (*pdecl, 0);
++	    }
+ 	  goto do_decl_clause;
+ 
+ 	case OMP_CLAUSE_LASTPRIVATE:
+@@ -1935,7 +1957,9 @@ convert_local_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ 	case OMP_CLAUSE_USE_DEVICE_PTR:
+ 	case OMP_CLAUSE_IS_DEVICE_PTR:
+ 	do_decl_clause:
+-	  decl = OMP_CLAUSE_DECL (clause);
++	  if (pdecl == NULL)
++	    pdecl = &OMP_CLAUSE_DECL (clause);
++	  decl = *pdecl;
+ 	  if (VAR_P (decl)
+ 	      && (TREE_STATIC (decl) || DECL_EXTERNAL (decl)))
+ 	    break;
+@@ -1948,8 +1972,7 @@ convert_local_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
+ 		  if (OMP_CLAUSE_CODE (clause) == OMP_CLAUSE_SHARED)
+ 		    OMP_CLAUSE_SHARED_READONLY (clause) = 0;
+ 		  bitmap_set_bit (new_suppress, DECL_UID (decl));
+-		  OMP_CLAUSE_DECL (clause)
+-		    = get_local_debug_decl (info, decl, field);
++		  *pdecl = get_local_debug_decl (info, decl, field);
+ 		  need_frame = true;
+ 		}
+ 	    }
+diff --git a/gcc/tree-pretty-print.c b/gcc/tree-pretty-print.c
+index ae0a6c12072..b06b595d151 100644
+--- a/gcc/tree-pretty-print.c
++++ b/gcc/tree-pretty-print.c
+@@ -37,7 +37,6 @@ along with GCC; see the file COPYING3.  If not see
+ 
+ /* Local functions, macros and variables.  */
+ static const char *op_symbol (const_tree);
+-static void pretty_print_string (pretty_printer *, const char*, unsigned);
+ static void newline_and_indent (pretty_printer *, int);
+ static void maybe_init_pretty_print (FILE *);
+ static void print_struct_decl (pretty_printer *, const_tree, int, dump_flags_t);
+@@ -4021,8 +4020,8 @@ print_call_name (pretty_printer *pp, tree node, dump_flags_t flags)
+ /* Print the first N characters in the array STR, replacing non-printable
+    characters (including embedded nuls) with unambiguous escape sequences.  */
+ 
+-static void
+-pretty_print_string (pretty_printer *pp, const char *str, unsigned n)
++void
++pretty_print_string (pretty_printer *pp, const char *str, size_t n)
+ {
+   if (str == NULL)
+     return;
+diff --git a/gcc/tree-pretty-print.h b/gcc/tree-pretty-print.h
+index 9f593289666..41697e77994 100644
+--- a/gcc/tree-pretty-print.h
++++ b/gcc/tree-pretty-print.h
+@@ -47,6 +47,7 @@ extern void print_declaration (pretty_printer *, tree, int, dump_flags_t);
+ extern int op_code_prio (enum tree_code);
+ extern int op_prio (const_tree);
+ extern const char *op_symbol_code (enum tree_code);
++extern void pretty_print_string (pretty_printer *, const char *, size_t);
+ extern void print_call_name (pretty_printer *, tree, dump_flags_t);
+ extern void percent_K_format (text_info *, location_t, tree);
+ extern void pp_tree_identifier (pretty_printer *, tree);
+diff --git a/gcc/tree-ssa-dse.c b/gcc/tree-ssa-dse.c
+index efe5b31cc0a..26376ecf8de 100644
+--- a/gcc/tree-ssa-dse.c
++++ b/gcc/tree-ssa-dse.c
+@@ -36,6 +36,7 @@ along with GCC; see the file COPYING3.  If not see
+ #include "params.h"
+ #include "alias.h"
+ #include "tree-ssa-loop.h"
++#include "gimplify.h"
+ 
+ /* This file implements dead store elimination.
+ 
+@@ -394,29 +395,38 @@ decrement_count (gimple *stmt, int decrement)
+   gcc_assert (TREE_CODE (*countp) == INTEGER_CST);
+   *countp = wide_int_to_tree (TREE_TYPE (*countp), (TREE_INT_CST_LOW (*countp)
+ 						    - decrement));
+-
+ }
+ 
+ static void
+ increment_start_addr (gimple *stmt, tree *where, int increment)
+ {
++  if (tree lhs = gimple_call_lhs (stmt))
++    if (where == gimple_call_arg_ptr (stmt, 0))
++      {
++	gassign *newop = gimple_build_assign (lhs, unshare_expr (*where));
++	gimple_stmt_iterator gsi = gsi_for_stmt (stmt);
++	gsi_insert_after (&gsi, newop, GSI_SAME_STMT);
++	gimple_call_set_lhs (stmt, NULL_TREE);
++	update_stmt (stmt);
++      }
++
+   if (TREE_CODE (*where) == SSA_NAME)
+     {
+       tree tem = make_ssa_name (TREE_TYPE (*where));
+       gassign *newop
+-        = gimple_build_assign (tem, POINTER_PLUS_EXPR, *where,
++	= gimple_build_assign (tem, POINTER_PLUS_EXPR, *where,
+ 			       build_int_cst (sizetype, increment));
+       gimple_stmt_iterator gsi = gsi_for_stmt (stmt);
+       gsi_insert_before (&gsi, newop, GSI_SAME_STMT);
+       *where = tem;
+-      update_stmt (gsi_stmt (gsi));
++      update_stmt (stmt);
+       return;
+     }
+ 
+   *where = build_fold_addr_expr (fold_build2 (MEM_REF, char_type_node,
+-                                             *where,
+-                                             build_int_cst (ptr_type_node,
+-                                                            increment)));
++					      *where,
++					      build_int_cst (ptr_type_node,
++							     increment)));
+ }
+ 
+ /* STMT is builtin call that writes bytes in bitmap ORIG, some bytes are dead
+diff --git a/gcc/tree-ssa-pre.c b/gcc/tree-ssa-pre.c
+index 8bd17b82368..7b171bc4e8f 100644
+--- a/gcc/tree-ssa-pre.c
++++ b/gcc/tree-ssa-pre.c
+@@ -2810,7 +2810,8 @@ create_expression_by_pieces (basic_block block, pre_expr expr,
+ 	      unsigned HOST_WIDE_INT hmisalign
+ 		= args.length () == 3 ? tree_to_uhwi (args[2]) : 0;
+ 	      if ((halign & (halign - 1)) == 0
+-		  && (hmisalign & ~(halign - 1)) == 0)
++		  && (hmisalign & ~(halign - 1)) == 0
++		  && (unsigned int)halign != 0)
+ 		set_ptr_info_alignment (get_ptr_info (forcedname),
+ 					halign, hmisalign);
+ 	    }
+diff --git a/gcc/tree-tailcall.c b/gcc/tree-tailcall.c
+index 255575f1198..4f42817f7de 100644
+--- a/gcc/tree-tailcall.c
++++ b/gcc/tree-tailcall.c
+@@ -327,7 +327,8 @@ process_assignment (gassign *stmt,
+ 	   && (non_ass_var = independent_of_stmt_p (op1, stmt, call,
+ 						    to_move)))
+     ;
+-  else if (op1 == *ass_var
++  else if (*ass_var
++	   && op1 == *ass_var
+ 	   && (non_ass_var = independent_of_stmt_p (op0, stmt, call,
+ 						    to_move)))
+     ;
+diff --git a/libgomp/ChangeLog b/libgomp/ChangeLog
+index 0156d5f7bc9..f4aa8c63481 100644
+--- a/libgomp/ChangeLog
++++ b/libgomp/ChangeLog
+@@ -1,3 +1,11 @@
++2020-03-17  Jakub Jelinek  <jakub@redhat.com>
++
++	Backported from mainline
++	2020-03-14  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/93566
++	* testsuite/libgomp.c/pr93566.c: New test.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/libgomp/testsuite/libgomp.c/pr93566.c b/libgomp/testsuite/libgomp.c/pr93566.c
+new file mode 100644
+index 00000000000..3334bd571f6
+--- /dev/null
++++ b/libgomp/testsuite/libgomp.c/pr93566.c
+@@ -0,0 +1,113 @@
++/* PR middle-end/93566 */
++/* { dg-additional-options "-std=c99" } */
++
++extern void abort (void);
++
++void
++foo (int *x)
++{
++  void nest (void) {
++    #pragma omp parallel for reduction(+:x[:10])
++    for (int i = 0; i < 1024; i++)
++      for (int j = 0; j < 10; j++)
++	x[j] += j * i;
++  }
++  nest ();
++  for (int i = 0; i < 10; i++)
++    if (x[i] != 1023 * 1024 / 2 * i)
++      abort ();
++}
++
++void
++bar (void)
++{
++  int x[10] = {};
++  void nest (void) {
++    #pragma omp parallel for reduction(+:x[:10])
++    for (int i = 0; i < 1024; i++)
++      for (int j = 0; j < 10; j++)
++	x[j] += j * i;
++  }
++  nest ();
++  for (int i = 0; i < 10; i++)
++    if (x[i] != 1023 * 1024 / 2 * i)
++      abort ();
++}
++
++void
++baz (void)
++{
++  int x[10] = {};
++  void nest (void) {
++    #pragma omp parallel for reduction(+:x[2:5])
++    for (int i = 0; i < 1024; i++)
++      for (int j = 2; j < 7; j++)
++	x[j] += j * i;
++  }
++  nest ();
++  for (int i = 2; i < 7; i++)
++    if (x[i] != 1023 * 1024 / 2 * i)
++      abort ();
++}
++
++void
++qux (int *x)
++{
++  void nest (void) { x++; }
++  nest ();
++  #pragma omp parallel for reduction(+:x[:9])
++  for (int i = 0; i < 1024; i++)
++    for (int j = 0; j < 9; j++)
++      x[j] += j * i;
++  nest ();
++  for (int i = 0; i < 9; i++)
++    if (x[i - 1] != 1023 * 1024 / 2 * i)
++      abort ();
++}
++
++void
++quux (void)
++{
++  int x[10];
++  void nest (void) { for (int i = 0; i < 10; i++) x[i] = 0; }
++  int nest2 (int i) { return x[i]; }
++  nest ();
++  #pragma omp parallel for reduction(+:x[:7])
++  for (int i = 0; i < 1024; i++)
++    for (int j = 0; j < 7; j++)
++      x[j] += j * i;
++  for (int i = 0; i < 7; i++)
++    if (nest2 (i) != 1023 * 1024 / 2 * i)
++      abort ();
++}
++
++void
++corge (void)
++{
++  int x[10];
++  void nest (void) { for (int i = 0; i < 10; i++) x[i] = 0; }
++  int nest2 (int i) { return x[i]; }
++  nest ();
++  #pragma omp parallel for reduction(+:x[2:4])
++  for (int i = 0; i < 1024; i++)
++    for (int j = 2; j < 6; j++)
++      x[j] += j * i;
++  for (int i = 2; i < 6; i++)
++    if (nest2 (i) != 1023 * 1024 / 2 * i)
++      abort ();
++}
++
++int
++main ()
++{
++  int a[10] = {};
++  foo (a);
++  bar ();
++  baz ();
++  for (int i = 0; i < 10; i++)
++    a[i] = 0;
++  qux (a);
++  quux ();
++  corge ();
++  return 0;
++}
+diff --git a/libstdc++-v3/ChangeLog b/libstdc++-v3/ChangeLog
+index 45847172291..8e11c6df5a7 100644
+--- a/libstdc++-v3/ChangeLog
++++ b/libstdc++-v3/ChangeLog
+@@ -1,3 +1,56 @@
++2020-03-16  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backport from mainline
++	2020-03-16  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/94199
++	* include/experimental/executor (service_already_exists): Add default
++	constructor. Declare make_service to be a friend.
++	* testsuite/experimental/net/execution_context/make_service.cc: New
++	test.
++
++2020-03-12  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backport from mainline
++	2020-03-09  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/94063
++	* src/c++17/fs_path.cc (path::operator+=(const path&)): Add kluge to
++	handle concatenations that change the type of the first component.
++	(path::operator+=(basic_string_view<value_type>)): Likewise.
++	* testsuite/27_io/filesystem/path/concat/94063.cc: New test.
++
++	Backport from mainline
++	2020-02-04  Jonathan Wakely  <jwakely@redhat.com>
++
++	* include/std/functional (_GLIBCXX_NOT_FN_CALL_OP): Un-define after
++	use.
++
++	Backport from mainline
++	2020-03-12  Jonathan Wakely  <jwakely@redhat.com>
++
++	* testsuite/tr1/8_c_compatibility/cstdlib/functions.cc: Do not pass
++	a null pointer to functions with nonnull(1) attribute.
++
++	Backport from mainline
++	2020-02-28  Jonathan Wakely  <jwakely@redhat.com>
++
++	* testsuite/27_io/filesystem/operations/last_write_time.cc: Fixes for
++	filesystems that silently truncate timestamps.
++	* testsuite/experimental/filesystem/operations/last_write_time.cc:
++	Likewise.
++
++	Backport from mainline
++	2020-01-13  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/93244
++	* include/bits/fs_path.h (path::generic_string<C,A>)
++	[_GLIBCXX_FILESYSTEM_IS_WINDOWS]: Convert root-dir to forward-slash.
++	* testsuite/27_io/filesystem/path/generic/generic_string.cc: Check
++	root-dir is converted to forward slash in generic pathname.
++	* testsuite/27_io/filesystem/path/generic/utf.cc: New test.
++	* testsuite/27_io/filesystem/path/generic/wchar_t.cc: New test.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/libstdc++-v3/include/bits/fs_path.h b/libstdc++-v3/include/bits/fs_path.h
+index 5dc624dbb1e..6b39c46ac6e 100644
+--- a/libstdc++-v3/include/bits/fs_path.h
++++ b/libstdc++-v3/include/bits/fs_path.h
+@@ -1073,6 +1073,13 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
+ 	  bool __add_slash = false;
+ 	  for (auto& __elem : *this)
+ 	    {
++#ifdef _GLIBCXX_FILESYSTEM_IS_WINDOWS
++	      if (__elem._M_type() == _Type::_Root_dir)
++		{
++		  __str += __slash;
++		  continue;
++		}
++#endif
+ 	      if (__add_slash)
+ 		__str += __slash;
+ 	      __str += __elem._M_pathname;
+diff --git a/libstdc++-v3/include/experimental/executor b/libstdc++-v3/include/experimental/executor
+index 266a2487899..15f28de9b9d 100644
+--- a/libstdc++-v3/include/experimental/executor
++++ b/libstdc++-v3/include/experimental/executor
+@@ -127,7 +127,14 @@ inline namespace v1
+   /// An extensible, type-safe, polymorphic set of services.
+   class execution_context;
+ 
+-  class service_already_exists : public logic_error { };
++  class service_already_exists : public logic_error
++  {
++    template<typename _Service, typename... _Args>
++      friend _Service&
++      make_service(execution_context&, _Args&&...);
++
++    service_already_exists() : logic_error("service already exists") { }
++  };
+ 
+   template<typename _Tp> struct is_executor;
+ 
+diff --git a/libstdc++-v3/include/std/functional b/libstdc++-v3/include/std/functional
+index 528452fed40..4b9c3449383 100644
+--- a/libstdc++-v3/include/std/functional
++++ b/libstdc++-v3/include/std/functional
+@@ -974,7 +974,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+       _GLIBCXX_NOT_FN_CALL_OP( const & )
+       _GLIBCXX_NOT_FN_CALL_OP( && )
+       _GLIBCXX_NOT_FN_CALL_OP( const && )
+-#undef _GLIBCXX_NOT_FN_CALL
++#undef _GLIBCXX_NOT_FN_CALL_OP
+ 
+     private:
+       _Fn _M_fn;
+diff --git a/libstdc++-v3/src/c++17/fs_path.cc b/libstdc++-v3/src/c++17/fs_path.cc
+index 54bef75efd8..a6be0e03a78 100644
+--- a/libstdc++-v3/src/c++17/fs_path.cc
++++ b/libstdc++-v3/src/c++17/fs_path.cc
+@@ -845,6 +845,26 @@ path::operator+=(const path& p)
+       return *this;
+     }
+ 
++#if _GLIBCXX_FILESYSTEM_IS_WINDOWS
++  if (_M_type() == _Type::_Root_name
++      || (_M_type() == _Type::_Filename && _M_pathname.size() == 1))
++    {
++      // Handle path("C") += path(":") and path("C:") += path("/x")
++      // FIXME: do this more efficiently
++      *this = path(_M_pathname + p._M_pathname);
++      return *this;
++    }
++#endif
++#if SLASHSLASH_IS_ROOTNAME
++  if (_M_type() == _Type::_Root_dir)
++    {
++      // Handle path("/") += path("/x") and path("//") += path("x")
++      // FIXME: do this more efficiently
++      *this = path(_M_pathname + p._M_pathname);
++      return *this;
++    }
++#endif
++
+   const auto orig_pathlen = _M_pathname.length();
+   const auto orig_type = _M_type();
+   const auto orig_size = _M_cmpts.size();
+@@ -1031,6 +1051,26 @@ path::_M_concat(basic_string_view<value_type> s)
+       return;
+     }
+ 
++#if _GLIBCXX_FILESYSTEM_IS_WINDOWS
++  if (_M_type() == _Type::_Root_name
++      || (_M_type() == _Type::_Filename && _M_pathname.size() == 1))
++    {
++      // Handle path("C") += ":" and path("C:") += "/x"
++      // FIXME: do this more efficiently
++      *this = path(_M_pathname + string_type(s));
++      return;
++    }
++#endif
++#if SLASHSLASH_IS_ROOTNAME
++  if (_M_type() == _Type::_Root_dir)
++    {
++      // Handle path("/") += "/x" and path("//") += "x"
++      // FIXME: do this more efficiently
++      *this = path(_M_pathname + string_type(s));
++      return;
++    }
++#endif
++
+   const auto orig_pathlen = _M_pathname.length();
+   const auto orig_type = _M_type();
+   const auto orig_size = _M_cmpts.size();
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/operations/last_write_time.cc b/libstdc++-v3/testsuite/27_io/filesystem/operations/last_write_time.cc
+index 3f31375f51b..5d6e62c421a 100644
+--- a/libstdc++-v3/testsuite/27_io/filesystem/operations/last_write_time.cc
++++ b/libstdc++-v3/testsuite/27_io/filesystem/operations/last_write_time.cc
+@@ -32,9 +32,12 @@
+ #if _GLIBCXX_HAVE_UTIME_H
+ # include <utime.h>
+ #endif
++#include <stdio.h>
+ 
+ using time_type = std::filesystem::file_time_type;
+ 
++namespace chrono = std::chrono;
++
+ void
+ test01()
+ {
+@@ -67,10 +70,15 @@ test01()
+ 
+   auto end_of_time = time_type::duration::max();
+   auto last_second
+-    = std::chrono::duration_cast<std::chrono::seconds>(end_of_time).count();
++    = chrono::duration_cast<chrono::seconds>(end_of_time).count();
+   if (last_second > std::numeric_limits<std::time_t>::max())
+-    return; // can't test overflow
++  {
++    puts("Range of time_t is smaller than range of chrono::file_clock, "
++	 "can't test for overflow on this target.");
++    return;
++  }
+ 
++  // Set mtime to a date past the maximum possible file_time_type:
+ #if _GLIBCXX_USE_UTIMENSAT
+   struct ::timespec ts[2];
+   ts[0].tv_sec = 0;
+@@ -84,25 +92,34 @@ test01()
+   times.actime = std::numeric_limits<std::time_t>::max() - 1;
+   VERIFY( !::utime(p.string().c_str(), &times) );
+ #else
++  puts("No utimensat or utime, giving up.");
+   return;
+ #endif
+ 
++  // Try to read back the impossibly-large mtime:
+   mtime = last_write_time(p, ec);
+-  VERIFY( ec );
+-  VERIFY( ec == std::make_error_code(std::errc::value_too_large) );
+-  VERIFY( mtime == time_type::min() );
++  // Some filesystems (e.g. XFS) silently truncate distant times to
++  // the time_t epochalypse, Jan 19 2038, so we won't get an error when
++  // reading it back:
++  if (ec)
++  {
++    VERIFY( ec == std::make_error_code(std::errc::value_too_large) );
++    VERIFY( mtime == time_type::min() );
++  }
++  else
++    puts("No overflow error, filesystem may not support 64-bit time_t.");
+ 
+ #if __cpp_exceptions
+-  caught = false;
++  // Once more, with exceptions:
+   try {
+-    mtime = last_write_time(p);
+-  } catch (std::system_error const& e) {
+-    caught = true;
+-    ec = e.code();
++    auto mtime2 = last_write_time(p);
++    // If it didn't throw, expect to have read back the same value:
++    VERIFY( mtime2 == mtime );
++  } catch (std::filesystem::filesystem_error const& e) {
++    // If it did throw, expect the error_code to be the same:
++    VERIFY( e.code() == ec );
++    VERIFY( e.path1() == p );
+   }
+-  VERIFY( caught );
+-  VERIFY( ec );
+-  VERIFY( ec == std::make_error_code(std::errc::value_too_large) );
+ #endif
+ }
+ 
+@@ -111,7 +128,7 @@ bool approx_equal(time_type file_time, time_type expected)
+   auto delta = expected - file_time;
+   if (delta < delta.zero())
+     delta = -delta;
+-  return delta < std::chrono::seconds(1);
++  return delta < chrono::seconds(1);
+ }
+ 
+ void
+@@ -124,20 +141,20 @@ test02()
+   std::error_code ec;
+   time_type time;
+ 
+-  time = last_write_time(f.path);
+   ec = bad_ec;
++  time = last_write_time(f.path);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+ 
+   ec = bad_ec;
+-  time -= std::chrono::milliseconds(1000 * 60 * 10 + 15);
++  time -= chrono::milliseconds(1000 * 60 * 10 + 15);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+ 
+   ec = bad_ec;
+-  time += std::chrono::milliseconds(1000 * 60 * 20 + 15);
++  time += chrono::milliseconds(1000 * 60 * 20 + 15);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+@@ -146,6 +163,28 @@ test02()
+       < std::numeric_limits<std::int64_t>::max())
+     return; // file clock's epoch is out of range for 32-bit time_t
+ 
++  using sys_time_32b
++    = chrono::time_point<chrono::system_clock, chrono::duration<std::int32_t>>;
++  auto duration_until_2038 = sys_time_32b::max() - sys_time_32b::clock::now();
++  auto file_time_2038 = time_type::clock::now() + duration_until_2038;
++
++  ec = bad_ec;
++  time = file_time_2038 - chrono::seconds(1);
++  // Assume all filesystems can store times that fit in 32-bit time_t
++  // (i.e. up to Jan 19 2038)
++  last_write_time(f.path, time, ec);
++  VERIFY( !ec );
++  VERIFY( approx_equal(last_write_time(f.path), time) );
++
++  // Check whether the filesystem supports times larger than 32-bit time_t:
++  time += chrono::seconds(60);
++  last_write_time(f.path, time, ec);
++  if (ec || !approx_equal(last_write_time(f.path), time))
++  {
++    puts("Filesystem seems to truncate times past Jan 19 2038, giving up.");
++    return; // Tests below will fail on this filesystem
++  }
++
+   ec = bad_ec;
+   // The file clock's epoch:
+   time = time_type();
+@@ -155,14 +194,14 @@ test02()
+ 
+   ec = bad_ec;
+   // A time after the epoch
+-  time += std::chrono::milliseconds(1000 * 60 * 10 + 15);
++  time += chrono::milliseconds(1000 * 60 * 10 + 15);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+ 
+   ec = bad_ec;
+   // A time before than the epoch
+-  time -= std::chrono::milliseconds(1000 * 60 * 20 + 15);
++  time -= chrono::milliseconds(1000 * 60 * 20 + 15);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/path/concat/94063.cc b/libstdc++-v3/testsuite/27_io/filesystem/path/concat/94063.cc
+new file mode 100644
+index 00000000000..9f4c9c0aa08
+--- /dev/null
++++ b/libstdc++-v3/testsuite/27_io/filesystem/path/concat/94063.cc
+@@ -0,0 +1,111 @@
++// Copyright (C) 2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// { dg-options "-std=gnu++17" }
++// { dg-do run { target { *-*-*mingw* || *-*-cygwin } } }
++// { dg-require-effective-target c++17 }
++
++#include <filesystem>
++#include <testsuite_hooks.h>
++
++void
++test01()
++{
++  using std::filesystem::path;
++  path p;
++
++  // PR libstdc++/94063
++#ifdef _GLIBCXX_FILESYSTEM_IS_WINDOWS
++  p = L"C";
++  p += path(L":");
++  VERIFY( p.has_root_name() );
++  VERIFY( p.root_name() == p );
++  p += path(L"\\");
++  VERIFY( p.has_root_name() );
++  VERIFY( p.has_root_directory() );
++  VERIFY( p.root_name() == L"C:" );
++  VERIFY( p.root_directory() == L"\\" );
++
++  p = L"C";
++  p += L':';
++  VERIFY( p.has_root_name() );
++  VERIFY( p.root_name() == p );
++  p += L'\\';
++  VERIFY( p.has_root_name() );
++  VERIFY( p.has_root_directory() );
++  VERIFY( p.root_name() == L"C:" );
++  VERIFY( p.root_directory() == L"\\" );
++
++  p = L"C:";
++  p += path(L"/foo");
++  VERIFY( p.has_root_name() );
++  VERIFY( p.has_root_directory() );
++  VERIFY( p.root_name() == L"C:" );
++  VERIFY( p.root_directory() == L"/" );
++  VERIFY( p.filename() == L"foo" );
++
++  p = L"C:";
++  p += L"/foo";
++  VERIFY( p.has_root_name() );
++  VERIFY( p.has_root_directory() );
++  VERIFY( p.root_name() == L"C:" );
++  VERIFY( p.root_directory() == L"/" );
++  VERIFY( p.filename() == L"foo" );
++
++  p = L"C";
++  p += path(L":/foo");
++  VERIFY( p.has_root_name() );
++  VERIFY( p.has_root_directory() );
++  VERIFY( p.root_name() == L"C:" );
++  VERIFY( p.root_directory() == L"/" );
++  VERIFY( p.filename() == L"foo" );
++
++  p = L"C";
++  p += L":/foo";
++  VERIFY( p.has_root_name() );
++  VERIFY( p.has_root_directory() );
++  VERIFY( p.root_name() == L"C:" );
++  VERIFY( p.root_directory() == L"/" );
++  VERIFY( p.filename() == L"foo" );
++#elif defined __CYGWIN__
++  p = "/";
++  p += path("/x");
++  VERIFY( p.has_root_name() );
++  VERIFY( p.root_name() == p );
++
++  p = "/";
++  p += "/x";
++  VERIFY( p.has_root_name() );
++  VERIFY( p.root_name() == p );
++
++  p = "/";
++  p += path("/");
++  VERIFY( !p.has_root_name() );
++  VERIFY( p.has_root_directory() );
++
++  p = "/";
++  p += "/";
++  VERIFY( !p.has_root_name() );
++  VERIFY( p.has_root_directory() );
++#endif
++}
++
++int
++main()
++{
++  test01();
++}
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/path/generic/generic_string.cc b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/generic_string.cc
+index 5a0c24c25c3..5caf079ed9b 100644
+--- a/libstdc++-v3/testsuite/27_io/filesystem/path/generic/generic_string.cc
++++ b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/generic_string.cc
+@@ -1,7 +1,7 @@
+ // { dg-options "-std=gnu++17" }
+ // { dg-do run { target c++17 } }
+ 
+-// Copyright (C) 2017-2019 Free Software Foundation, Inc.
++// Copyright (C) 2017-2020 Free Software Foundation, Inc.
+ //
+ // This file is part of the GNU ISO C++ Library.  This library is free
+ // software; you can redistribute it and/or modify it under the
+@@ -46,8 +46,20 @@ test01()
+   VERIFY( path("/a//b//.").generic_string() == "/a/b/." );
+ }
+ 
++void
++test02()
++{
++  if constexpr (path::preferred_separator == L'\\')
++  {
++    // PR libstdc++/93244
++    VERIFY( path("C:\\foo\\bar").generic_string() == "C:/foo/bar" );
++    VERIFY( path("C://foo//bar").generic_string() == "C:/foo/bar" );
++  }
++}
++
+ int
+ main()
+ {
+   test01();
++  test02();
+ }
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/path/generic/utf.cc b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/utf.cc
+new file mode 100644
+index 00000000000..52afdb4497b
+--- /dev/null
++++ b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/utf.cc
+@@ -0,0 +1,65 @@
++// { dg-options "-std=gnu++17" }
++// { dg-do run { target c++17 } }
++
++// Copyright (C) 2017-2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// C++17 30.10.7.4.7 path generic format observers [fs.path.generic.obs]
++
++#include <filesystem>
++#include <testsuite_hooks.h>
++
++using std::filesystem::path;
++
++void
++test01()
++{
++  VERIFY( path().generic_u32string() == U"" );
++  VERIFY( path("/").generic_u32string() == U"/" );
++  VERIFY( path("////").generic_u32string() == U"/" );
++#ifdef __CYGWIN__
++  VERIFY( path("//a").generic_u32string() == U"//a" );
++  VERIFY( path("//a/").generic_u32string() == U"//a/" );
++  VERIFY( path("//a/b").generic_u32string() == U"//a/b" );
++#else
++  VERIFY( path("//a").generic_u32string() == U"/a" );
++  VERIFY( path("//a/").generic_u32string() == U"/a/" );
++  VERIFY( path("//a/b").generic_u32string() == U"/a/b" );
++#endif
++  VERIFY( path("/a//b").generic_u32string() == U"/a/b" );
++  VERIFY( path("/a//b/").generic_u32string() == U"/a/b/" );
++  VERIFY( path("/a//b//").generic_u32string() == U"/a/b/" );
++  VERIFY( path("/a//b//.").generic_u32string() == U"/a/b/." );
++}
++
++void
++test02()
++{
++  if constexpr (path::preferred_separator == L'\\')
++  {
++    // PR libstdc++/93244
++    VERIFY( path("C:\\foo\\bar").generic_u32string() == U"C:/foo/bar" );
++    VERIFY( path("C://foo//bar").generic_u32string() == U"C:/foo/bar" );
++  }
++}
++
++int
++main()
++{
++  test01();
++  test02();
++}
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/path/generic/wchar_t.cc b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/wchar_t.cc
+new file mode 100644
+index 00000000000..7bb2f643043
+--- /dev/null
++++ b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/wchar_t.cc
+@@ -0,0 +1,65 @@
++// { dg-options "-std=gnu++17" }
++// { dg-do run { target c++17 } }
++
++// Copyright (C) 2017-2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// C++17 30.10.7.4.7 path generic format observers [fs.path.generic.obs]
++
++#include <filesystem>
++#include <testsuite_hooks.h>
++
++using std::filesystem::path;
++
++void
++test01()
++{
++  VERIFY( path().generic_wstring() == L"" );
++  VERIFY( path("/").generic_wstring() == L"/" );
++  VERIFY( path("////").generic_wstring() == L"/" );
++#ifdef __CYGWIN__
++  VERIFY( path("//a").generic_wstring() == L"//a" );
++  VERIFY( path("//a/").generic_wstring() == L"//a/" );
++  VERIFY( path("//a/b").generic_wstring() == L"//a/b" );
++#else
++  VERIFY( path("//a").generic_wstring() == L"/a" );
++  VERIFY( path("//a/").generic_wstring() == L"/a/" );
++  VERIFY( path("//a/b").generic_wstring() == L"/a/b" );
++#endif
++  VERIFY( path("/a//b").generic_wstring() == L"/a/b" );
++  VERIFY( path("/a//b/").generic_wstring() == L"/a/b/" );
++  VERIFY( path("/a//b//").generic_wstring() == L"/a/b/" );
++  VERIFY( path("/a//b//.").generic_wstring() == L"/a/b/." );
++}
++
++void
++test02()
++{
++  if constexpr (path::preferred_separator == L'\\')
++  {
++    // PR libstdc++/93244
++    VERIFY( path("C:\\foo\\bar").generic_wstring() == L"C:/foo/bar" );
++    VERIFY( path("C://foo//bar").generic_wstring() == L"C:/foo/bar" );
++  }
++}
++
++int
++main()
++{
++  test01();
++  test02();
++}
+diff --git a/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc b/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc
+index 1bbc37408c3..82061f9e7e9 100644
+--- a/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc
++++ b/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc
+@@ -22,6 +22,7 @@
+ // 15.25 Permissions [fs.op.last_write_time]
+ 
+ #include <experimental/filesystem>
++#include <limits>
+ #include <testsuite_fs.h>
+ #include <testsuite_hooks.h>
+ 
+@@ -31,9 +32,12 @@
+ #if _GLIBCXX_HAVE_UTIME_H
+ # include <utime.h>
+ #endif
++#include <stdio.h>
+ 
+ using time_type = std::experimental::filesystem::file_time_type;
+ 
++namespace chrono = std::chrono;
++
+ void
+ test01()
+ {
+@@ -66,10 +70,15 @@ test01()
+ 
+   auto end_of_time = time_type::duration::max();
+   auto last_second
+-    = std::chrono::duration_cast<std::chrono::seconds>(end_of_time).count();
++    = chrono::duration_cast<chrono::seconds>(end_of_time).count();
+   if (last_second > std::numeric_limits<std::time_t>::max())
+-    return; // can't test overflow
++  {
++    puts("Range of time_t is smaller than range of chrono::file_clock, "
++	 "can't test for overflow on this target.");
++    return;
++  }
+ 
++  // Set mtime to a date past the maximum possible file_time_type:
+ #if _GLIBCXX_USE_UTIMENSAT
+   struct ::timespec ts[2];
+   ts[0].tv_sec = 0;
+@@ -83,25 +92,34 @@ test01()
+   times.actime = std::numeric_limits<std::time_t>::max() - 1;
+   VERIFY( !::utime(p.string().c_str(), &times) );
+ #else
++  puts("No utimensat or utime, giving up.");
+   return;
+ #endif
+ 
++  // Try to read back the impossibly-large mtime:
+   mtime = last_write_time(p, ec);
+-  VERIFY( ec );
+-  VERIFY( ec == std::make_error_code(std::errc::value_too_large) );
+-  VERIFY( mtime == time_type::min() );
++  // Some filesystems (e.g. XFS) silently truncate distant times to
++  // the time_t epochalypse, Jan 19 2038, so we won't get an error when
++  // reading it back:
++  if (ec)
++  {
++    VERIFY( ec == std::make_error_code(std::errc::value_too_large) );
++    VERIFY( mtime == time_type::min() );
++  }
++  else
++    puts("No overflow error, filesystem may not support 64-bit time_t.");
+ 
+ #if __cpp_exceptions
+-  caught = false;
++  // Once more, with exceptions:
+   try {
+-    mtime = last_write_time(p);
+-  } catch (std::system_error const& e) {
+-    caught = true;
+-    ec = e.code();
++    auto mtime2 = last_write_time(p);
++    // If it didn't throw, expect to have read back the same value:
++    VERIFY( mtime2 == mtime );
++  } catch (std::experimental::filesystem::filesystem_error const& e) {
++    // If it did throw, expect the error_code to be the same:
++    VERIFY( e.code() == ec );
++    VERIFY( e.path1() == p );
+   }
+-  VERIFY( caught );
+-  VERIFY( ec );
+-  VERIFY( ec == std::make_error_code(std::errc::value_too_large) );
+ #endif
+ }
+ 
+@@ -110,7 +128,7 @@ bool approx_equal(time_type file_time, time_type expected)
+   auto delta = expected - file_time;
+   if (delta < delta.zero())
+     delta = -delta;
+-  return delta < std::chrono::seconds(1);
++  return delta < chrono::seconds(1);
+ }
+ 
+ void
+@@ -118,31 +136,37 @@ test02()
+ {
+   // write times
+ 
++  const std::error_code bad_ec = make_error_code(std::errc::invalid_argument);
+   __gnu_test::scoped_file f;
+   std::error_code ec;
+   time_type time;
+ 
++  ec = bad_ec;
+   time = last_write_time(f.path);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+ 
+-  time -= std::chrono::milliseconds(1000 * 60 * 10 + 15);
++  ec = bad_ec;
++  time -= chrono::milliseconds(1000 * 60 * 10 + 15);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+ 
+-  time += std::chrono::milliseconds(1000 * 60 * 20 + 15);
++  ec = bad_ec;
++  time += chrono::milliseconds(1000 * 60 * 20 + 15);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+ 
++  ec = bad_ec;
+   time = time_type();
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+ 
+-  time -= std::chrono::milliseconds(1000 * 60 * 10 + 15);
++  ec = bad_ec;
++  time -= chrono::milliseconds(1000 * 60 * 10 + 15);
+   last_write_time(f.path, time, ec);
+   VERIFY( !ec );
+   VERIFY( approx_equal(last_write_time(f.path), time) );
+diff --git a/libstdc++-v3/testsuite/experimental/net/execution_context/make_service.cc b/libstdc++-v3/testsuite/experimental/net/execution_context/make_service.cc
+new file mode 100644
+index 00000000000..f134add48b5
+--- /dev/null
++++ b/libstdc++-v3/testsuite/experimental/net/execution_context/make_service.cc
+@@ -0,0 +1,36 @@
++// Copyright (C) 2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// { dg-do compile { target c++14 } }
++
++#include <experimental/executor>
++
++namespace net = std::experimental::net;
++
++struct S : net::execution_context::service
++{
++  using key_type = S;
++
++  S(net::execution_context&);
++
++  void shutdown() noexcept override { }
++};
++
++void test01(net::execution_context& c)
++{
++  net::make_service<S>(c);
++}
+diff --git a/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc b/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc
+index e1feef99582..0f00a94da42 100644
+--- a/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc
++++ b/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc
+@@ -30,7 +30,7 @@ void test01()
+ #if _GLIBCXX_USE_C99_STDLIB
+ 
+   long long i = 0;
+-  const char* s = 0;
++  const char* s = "";
+   char** endptr = 0;
+   int base = 0;
+ 
