@@ -67,7 +67,7 @@ LDFLAGS="-Wl,-z,max-page-size=0x1000" \
 		--enable-stack-protector=strong \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=4.14
+		--enable-kernel=5.4
 
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
