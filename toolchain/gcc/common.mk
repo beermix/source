@@ -157,12 +157,7 @@ GCC_CONFIGURE:= \
 		--enable-checking=release \
 		--with-tune=generic \
 		--enable-cld \
-		--disable-libunwind-exceptions \
-		--enable-gnu-unique-object \
-		--enable-linker-build-id \
 		--with-linker-hash-style=gnu \
-		--without-cuda-driver \
-		--enable-gnu-indirect-function \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
