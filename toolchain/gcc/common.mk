@@ -155,6 +155,16 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-diagnostics-color=always \
+		--enable-checking=release \
+		--with-tune=generic \
+		--enable-cld \
+		--disable-libunwind-exceptions \
+		--enable-gnu-unique-object \
+		--enable-linker-build-id \
+		--with-linker-hash-style=gnu \
+		--without-cuda-driver \
+		--enable-gnu-indirect-function \
+		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
