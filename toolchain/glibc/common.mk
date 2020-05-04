@@ -66,6 +66,7 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
 		--disable-debug \
+		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
 
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
