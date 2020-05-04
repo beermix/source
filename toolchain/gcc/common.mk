@@ -154,13 +154,13 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
+		--enable-checking=release \
 		--with-tune=generic \
 		--enable-cld \
 		--disable-libunwind-exceptions \
 		--enable-gnu-unique-object \
 		--enable-linker-build-id \
 		--with-linker-hash-style=gnu \
-		--enable-initfini-array \
 		--without-cuda-driver \
 		--enable-gnu-indirect-function \
 		--with-diagnostics-color=always \
