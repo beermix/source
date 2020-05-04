@@ -19,6 +19,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=BSD-3-Clause
 
+PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
@@ -45,7 +46,6 @@ $(call Package/iperf3/default)
   DEPENDS:= +libopenssl
 endef
 
-# TARGET_CFLAGS += -D_GNU_SOURCE
 CONFIGURE_ARGS += --disable-shared
 
 ifeq ($(BUILD_VARIANT),ssl)

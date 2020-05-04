@@ -1,0 +1,29 @@
+Description: SCTP workaround for kfreebsd
+ Freebsd has SCTP in the kernel but no sctp library is available,
+ then iperf3 fails to compile because the lack of the library.
+Author: Roberto Lumbreras <rover@debian.org>
+Forwarded: no
+Index: iperf3-3.7/configure.ac
+===================================================================
+--- iperf3-3.7.orig/configure.ac	2020-01-14 08:44:20.435148206 +0100
++++ iperf3-3.7/configure.ac	2020-01-14 08:49:44.421237619 +0100
+@@ -91,9 +91,10 @@
+ 
+ # Check for SCTP support
+ AC_CHECK_HEADERS([sys/socket.h])
++AC_SEARCH_LIBS(sctp_bindx, [sctp])
++if test "x$ac_cv_search_sctp_bindx" != "xno"; then
+ AC_CHECK_HEADERS([netinet/sctp.h],
+ 		 AC_DEFINE([HAVE_SCTP], [1], [Have SCTP support.])
+-		 AC_SEARCH_LIBS(sctp_bindx, [sctp])
+ 		 AC_CHECK_TYPES([struct sctp_assoc_value], [], [],
+ 				[[#include <netinet/sctp.h>]]),
+ 		 [],
+@@ -101,6 +102,7 @@
+ #include <sys/socket.h>
+ #endif
+ ])
++fi
+ 
+ AC_CHECK_HEADER([endian.h],
+ 		AC_DEFINE([HAVE_ENDIAN_H], [1], [Define to 1 if you have the <endian.h> header file.]),
