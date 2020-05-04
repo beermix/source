@@ -160,7 +160,7 @@ GCC_CONFIGURE:= \
 		--enable-gnu-unique-object \
 		--enable-linker-build-id \
 		--without-cuda-driver \
-		--enable-gnu-indirect-function \
+		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
