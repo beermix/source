@@ -50,7 +50,7 @@ GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign  -Wl,-z,max-page-size=0x1000 $(filter-out -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
-LDFLAGS="-Wl,-z,max-page-size=0x1000" \
+	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -66,10 +66,9 @@ LDFLAGS="-Wl,-z,max-page-size=0x1000" \
 		--enable-add-ons \
 		--enable-stack-protector=strong \
 		--disable-debug \
-		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
 
-export ac_cv_header_cpuid_h=yes
+# export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo

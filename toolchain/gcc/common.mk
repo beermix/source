@@ -156,9 +156,6 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--enable-checking=release \
 		--with-tune=generic \
-		--disable-libunwind-exceptions \
-		--enable-gnu-unique-object \
-		--enable-linker-build-id \
 		--without-cuda-driver \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
@@ -225,8 +222,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -O3 -Wl,-z,max-page-size=0x1000" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -O3 -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -O3 -Wl,-z,max-page-size=0x1000" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
