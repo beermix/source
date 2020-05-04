@@ -50,8 +50,6 @@ HOST_CONFIGURE_ARGS = \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
-	--enable-compressed-debug-sections=all \
-	--enable-generate-build-notes=no \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
