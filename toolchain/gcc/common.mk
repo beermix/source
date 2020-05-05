@@ -157,7 +157,7 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--enable-gnu-indirect-function \
 		--disable-vtable-verify \
-		--enable-checking=release
+		--enable-checking=release \
 		--enable-clocale=gnu \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
