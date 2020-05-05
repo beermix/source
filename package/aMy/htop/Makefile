@@ -36,8 +36,11 @@ define Package/htop/description
  see all processes and their full command lines.
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections
+#TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+#TARGET_LDFLAGS += -Wl,--gc-sections
+
+# TARGET_CFLAGS += -ffat-lto-objects -flto
+# TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 CONFIGURE_ARGS += \
 	--enable-cgroup \
@@ -45,9 +48,9 @@ CONFIGURE_ARGS += \
 	--enable-unicode \
 	--enable-vserver
 
-#CONFIGURE_VARS += \
-#	ac_cv_file__proc_stat=yes \
-#	ac_cv_file__proc_meminfo=yes
+CONFIGURE_VARS += \
+	ac_cv_file__proc_stat=yes \
+	ac_cv_file__proc_meminfo=yes
 
 define Package/htop/install
 	$(INSTALL_DIR) $(1)/usr/bin
