@@ -158,7 +158,6 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--without-cuda-driver \
 		--disable-vtable-verify \
-		--disable-libunwind-exceptions \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
