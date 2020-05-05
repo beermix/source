@@ -1,7 +1,11 @@
+commit 472acdb6dd0d30e0642b9134a6fb2c1de4c18f35
+Author: Egmont Koblinger <egmont@gmail.com>
+Date:   Fri Feb 14 22:14:19 2020 +0100
+
+    Ticket #3954: Fix mouse handling with newer terminfo entries
+
 diff --git a/lib/tty/key.c b/lib/tty/key.c
 index 1706755f3..96cd69517 100644
-Index: lib/tty/key.c
-===================================================================
 --- a/lib/tty/key.c
 +++ b/lib/tty/key.c
 @@ -2127,8 +2127,12 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
@@ -21,8 +25,6 @@ Index: lib/tty/key.c
      else if (c == MCKEY_BRACKETED_PASTING_START)
 diff --git a/lib/tty/mouse.c b/lib/tty/mouse.c
 index e7616a74f..bfc94ed70 100644
-Index: lib/tty/mouse.c
-===================================================================
 --- a/lib/tty/mouse.c
 +++ b/lib/tty/mouse.c
 @@ -90,8 +90,14 @@ init_mouse (void)
@@ -44,8 +46,6 @@ Index: lib/tty/mouse.c
      default:
 diff --git a/lib/tty/tty.c b/lib/tty/tty.c
 index 611a80b89..a02c004c3 100644
-Index: lib/tty/tty.c
-===================================================================
 --- a/lib/tty/tty.c
 +++ b/lib/tty/tty.c
 @@ -361,9 +361,17 @@ tty_init_xterm_support (gboolean is_xterm)
