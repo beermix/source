@@ -64,7 +64,6 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-lock-elision \
 		--enable-stack-protector=strong \
-		--enable-static-pie \
 		--without-selinux \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
