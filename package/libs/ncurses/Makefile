@@ -62,6 +62,9 @@ define Package/ncurses-bin
   URL:=http://www.gnu.org/software/ncurses/
 endef
 
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections
+
 CONFIGURE_ARGS += \
 	--enable-echo \
 	--enable-const \
@@ -83,9 +86,6 @@ CONFIGURE_ARGS += \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
 	--enable-widec \
 	--with-build-cppflags=-D_GNU_SOURCE
-
-CONFIGURE_VARS += \
-	cf_try_fPIC=no
 
 HOST_CFLAGS += $(HOST_FPIC)
 
