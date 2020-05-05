@@ -70,7 +70,7 @@ endef
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS) -Os -ffunction-sections -fdata-sections -flto" \
+	CFLAGS="$(TARGET_CFLAGS) -Os -ffunction-sections -fdata-sections" \
 	CPPFLAGS="$(TARGET_CPPFLAGS) -Wl,--gc-sections" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	NO_EXPAT="YesPlease" \

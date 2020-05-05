@@ -25,7 +25,7 @@ define Package/htop
   SECTION:=admin
   CATEGORY:=Administration
   TITLE:=Interactive processes viewer
-  DEPENDS:=+libncurses +libnl +lm-sensors
+  DEPENDS:=+libncurses
   URL:=http://htop.sourceforge.net/
   MAINTAINER:=Etienne CHAMPETIER <champetier.etienne@gmail.com>
 endef
@@ -36,17 +36,15 @@ define Package/htop/description
  see all processes and their full command lines.
 endef
 
-#TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-#TARGET_LDFLAGS += -Wl,--gc-sections
-
-# TARGET_CFLAGS += -ffat-lto-objects -flto
-# TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+TARGET_CFLAGS += -fno-common
 
 CONFIGURE_ARGS += \
-	--enable-cgroup \
-	--enable-delayacct \
-	--enable-unicode \
-	--enable-vserver
+	--disable-unicode \
+	--disable-hwloc \
+	--enable-proc \
+	--enable-taskstats \
+	--enable-linux-affinity \
+	--enable-cgroup
 
 CONFIGURE_VARS += \
 	ac_cv_file__proc_stat=yes \
