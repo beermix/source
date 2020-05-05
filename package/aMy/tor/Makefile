@@ -110,11 +110,8 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
-# TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-# TARGET_LDFLAGS += -Wl,--gc-sections -flto
-
-TARGET_CFLAGS += -ffat-lto-objects -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
