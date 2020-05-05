@@ -157,7 +157,6 @@ GCC_CONFIGURE:= \
 		--enable-gnu-indirect-function \
 		--disable-vtable-verify \
 		--enable-clocale=gnu \
-		--enable-checking=release \
 		--with-tune=generic \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
