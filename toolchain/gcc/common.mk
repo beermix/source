@@ -154,8 +154,11 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
+		--enable-gnu-indirect-function \
+		--disable-vtable-verify \
+		--enable-clocale=gnu \
+		--enable-checking=release \
 		--with-tune=generic \
-		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
