@@ -18,6 +18,7 @@
 /*.patch
 key-build*
 *.orig
+*.zst
 *.rej
 *~
 .#*
