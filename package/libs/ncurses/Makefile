@@ -20,6 +20,7 @@ PKG_LICENSE_FILES:=README
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
+HOST_BUILD_PARALLEL:=1
 
 PKG_BUILD_DEPENDS:=ncurses/host
 
@@ -61,9 +62,6 @@ define Package/ncurses-bin
   TITLE:=Terminal-related programs
   URL:=http://www.gnu.org/software/ncurses/
 endef
-
-TARGET_CFLAGS += -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
 
 CONFIGURE_ARGS += \
 	--enable-echo \
