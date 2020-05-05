@@ -36,6 +36,9 @@ define Package/htop/description
  see all processes and their full command lines.
 endef
 
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections
+
 CONFIGURE_ARGS += \
 	--enable-cgroup \
 	--enable-delayacct \
