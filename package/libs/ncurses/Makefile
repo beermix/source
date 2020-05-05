@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.0
-PKG_RELEASE:=7
+PKG_VERSION:=6.2
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_HASH:=f551c24b30ce8bfb6e96d9f59b42fbea30fa3a6123384172f9e7284bcf647260
+PKG_HASH:=30306e0c76e0f9f1f0de987cf1c82a5c21e1ce6568b9227f7da5b71cbea86c9d
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
@@ -62,7 +62,7 @@ define Package/ncurses-bin
   URL:=http://www.gnu.org/software/ncurses/
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 CONFIGURE_ARGS += \
@@ -86,6 +86,9 @@ CONFIGURE_ARGS += \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
 	--enable-widec \
 	--with-build-cppflags=-D_GNU_SOURCE
+
+CONFIGURE_VARS += \
+	cf_try_fPIC=no
 
 HOST_CFLAGS += $(HOST_FPIC)
 
