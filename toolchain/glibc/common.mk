@@ -65,6 +65,7 @@ GLIBC_CONFIGURE:= \
 		--enable-lock-elision \
 		--enable-stack-protector=strong \
 		--enable-static-pie \
+		--without-selinux \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
