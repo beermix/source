@@ -58,7 +58,6 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--disable-profile \
-		--disable-werror \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
