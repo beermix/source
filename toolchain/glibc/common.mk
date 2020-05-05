@@ -63,15 +63,14 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-lock-elision \
+		--enable-lock-elision=yes \
 		--enable-stack-protector=strong \
-		--without-selinux \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=4.19
 
-# export libc_cv_ssp=no
-# export libc_cv_ssp_strong=no
+export libc_cv_forced_unwind=yes
+export libc_cv_c_cleanup=yes
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
