@@ -156,8 +156,9 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--with-tune=generic \
 		--enable-gnu-indirect-function \
+		--disable-libunwind-exceptions \
+		--enable-linker-build-id \
 		--disable-vtable-verify \
-		--enable-checking=release \
 		--enable-clocale=gnu \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
