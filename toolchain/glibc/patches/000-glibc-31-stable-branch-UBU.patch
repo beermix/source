@@ -1,8 +1,10 @@
+GIT update of https://sourceware.org/git/glibc.git/release/2.31/master from glibc-2.31
+
 diff --git a/NEWS b/NEWS
-index 292fbc595a..15c040a83e 100644
+index 292fbc595a..472cba8cda 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -4,6 +4,30 @@ See the end for copying conditions.
+@@ -4,6 +4,23 @@ See the end for copying conditions.
  
  Please send GNU C library bug reports via <https://sourceware.org/bugzilla/>
  using `glibc' in the "product" field.
@@ -16,19 +18,12 @@ index 292fbc595a..15c040a83e 100644
 +  [25623] test-sysvmsg, test-sysvsem, test-sysvshm fail with 2.31 on 32 bit and
 +    old kernel
 +  [25635] arm: Wrong sysdep order selection for soft-fp
-+  [25715] system() returns wrong errors when posix_spawn fails
 +
 +Security related changes:
 +
 +  CVE-2020-10029: Trigonometric functions on x86 targets suffered from stack
 +  corruption when they were passed a pseudo-zero argument.  Reported by Guido
 +  Vranken / ForAllSecure Mayhem.
-+
-+  CVE-2020-1751: A defect in the PowerPC backtrace function could cause an
-+  out-of-bounds write when executed in a signal frame context.
-+
-+  CVE-2020-1752: A use-after-free vulnerability in the glob function when
-+  expanding ~user has been fixed.
 +
  
  Version 2.31
@@ -59,29 +54,6 @@ index 49b900c1ed..e20034f301 100644
      libc_cv_ld_gnu_indirect_function=yes
    }
  fi
-diff --git a/debug/backtrace.c b/debug/backtrace.c
-index cc4b9a5c90..69cf4c23c8 100644
---- a/debug/backtrace.c
-+++ b/debug/backtrace.c
-@@ -23,6 +23,7 @@
- #include <gnu/lib-names.h>
- #include <stdlib.h>
- #include <unwind.h>
-+#include <unwind-arch.h>
- 
- struct trace_arg
- {
-@@ -78,6 +79,10 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
-   if (arg->cnt != -1)
-     {
-       arg->array[arg->cnt] = (void *) unwind_getip (ctx);
-+      if (arg->cnt > 0)
-+	arg->array[arg->cnt]
-+	  = unwind_arch_adjustment (arg->array[arg->cnt - 1],
-+				    arg->array[arg->cnt]);
- 
-       /* Check whether we make any progress.  */
-       _Unwind_Word cfa = unwind_getcfa (ctx);
 diff --git a/malloc/tst-mallocfork2.c b/malloc/tst-mallocfork2.c
 index 0602a94895..fc1fd64b21 100644
 --- a/malloc/tst-mallocfork2.c
@@ -194,287 +166,6 @@ index 0602a94895..fc1fd64b21 100644
    printf ("info: signals received during fork: %u\n", fork_signals);
    printf ("info: signals received during free: %u\n", free_signals);
    printf ("info: signals received during malloc: %u\n", malloc_signals);
-diff --git a/posix/glob.c b/posix/glob.c
-index cba9cd1819..4580cefb9f 100644
---- a/posix/glob.c
-+++ b/posix/glob.c
-@@ -827,31 +827,32 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
- 	      {
- 		size_t home_len = strlen (p->pw_dir);
- 		size_t rest_len = end_name == NULL ? 0 : strlen (end_name);
--		char *d;
-+		char *d, *newp;
-+		bool use_alloca = glob_use_alloca (alloca_used,
-+						   home_len + rest_len + 1);
- 
--		if (__glibc_unlikely (malloc_dirname))
--		  free (dirname);
--		malloc_dirname = 0;
--
--		if (glob_use_alloca (alloca_used, home_len + rest_len + 1))
--		  dirname = alloca_account (home_len + rest_len + 1,
--					    alloca_used);
-+		if (use_alloca)
-+		  newp = alloca_account (home_len + rest_len + 1, alloca_used);
- 		else
- 		  {
--		    dirname = malloc (home_len + rest_len + 1);
--		    if (dirname == NULL)
-+		    newp = malloc (home_len + rest_len + 1);
-+		    if (newp == NULL)
- 		      {
- 			scratch_buffer_free (&pwtmpbuf);
- 			retval = GLOB_NOSPACE;
- 			goto out;
- 		      }
--		    malloc_dirname = 1;
- 		  }
--		d = mempcpy (dirname, p->pw_dir, home_len);
-+		d = mempcpy (newp, p->pw_dir, home_len);
- 		if (end_name != NULL)
- 		  d = mempcpy (d, end_name, rest_len);
- 		*d = '\0';
- 
-+		if (__glibc_unlikely (malloc_dirname))
-+		  free (dirname);
-+		dirname = newp;
-+		malloc_dirname = !use_alloca;
-+
- 		dirlen = home_len + rest_len;
- 		dirname_modified = 1;
- 	      }
-diff --git a/stdlib/Makefile b/stdlib/Makefile
-index 45214b59e4..4615f6dfe7 100644
---- a/stdlib/Makefile
-+++ b/stdlib/Makefile
-@@ -70,7 +70,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
- 		   test-canon test-canon2 tst-strtoll tst-environ	    \
- 		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
- 		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
--		   tst-setcontext2 test-a64l tst-qsort tst-system testmb2   \
-+		   tst-setcontext2 test-a64l tst-qsort testmb2              \
- 		   bug-strtod2 tst-atof1 tst-atof2 tst-strtod2		    \
- 		   tst-rand48-2 tst-makecontext tst-strtod5		    \
- 		   tst-qsort2 tst-makecontext2 tst-strtod6 tst-unsetenv1    \
-@@ -92,6 +92,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
- tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
- 		   tst-tls-atexit tst-tls-atexit-nodelete
- tests-static	:= tst-secure-getenv
-+tests-container := tst-system
- 
- ifeq ($(build-hardcoded-path-in-tests),yes)
- tests += tst-empty-env
-diff --git a/stdlib/tst-system.c b/stdlib/tst-system.c
-index b6c5aea08f..eddea33f4c 100644
---- a/stdlib/tst-system.c
-+++ b/stdlib/tst-system.c
-@@ -17,14 +17,130 @@
-    <https://www.gnu.org/licenses/>.  */
- 
- #include <stdlib.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <signal.h>
-+#include <paths.h>
- 
-+#include <support/capture_subprocess.h>
-+#include <support/check.h>
-+#include <support/temp_file.h>
-+#include <support/support.h>
-+
-+static char *tmpdir;
-+static long int namemax;
-+
-+static void
-+do_prepare (int argc, char *argv[])
-+{
-+  tmpdir = support_create_temp_directory ("tst-system-");
-+  /* Include the last '/0'.  */
-+  namemax = pathconf (tmpdir, _PC_NAME_MAX) + 1;
-+  TEST_VERIFY_EXIT (namemax != -1);
-+}
-+#define PREPARE do_prepare
-+
-+struct args
-+{
-+  const char *command;
-+  int exit_status;
-+  int term_sig;
-+  const char *path;
-+};
-+
-+static void
-+call_system (void *closure)
-+{
-+  struct args *args = (struct args *) closure;
-+  int ret;
-+
-+  if (args->path != NULL)
-+    TEST_COMPARE (setenv ("PATH", args->path, 1), 0);
-+  ret = system (args->command);
-+  if (args->term_sig == 0)
-+    {
-+      /* Expect regular termination.  */
-+      TEST_VERIFY (WIFEXITED (ret) != 0);
-+      TEST_COMPARE (WEXITSTATUS (ret), args->exit_status);
-+    }
-+  else
-+    {
-+      /* status_or_signal < 0.  Expect termination by signal.  */
-+      TEST_VERIFY (WIFSIGNALED (ret) != 0);
-+      TEST_COMPARE (WTERMSIG (ret), args->term_sig);
-+    }
-+}
- 
- static int
- do_test (void)
- {
--  return system (":");
--}
-+  TEST_VERIFY (system (NULL) != 0);
- 
-+  {
-+    char cmd[namemax];
-+    memset (cmd, 'a', sizeof(cmd));
-+    cmd[sizeof(cmd) - 1] = '\0';
-+
-+    struct support_capture_subprocess result;
-+    result = support_capture_subprocess (call_system,
-+					 &(struct args) {
-+					   cmd, 127, 0, tmpdir
-+					 });
-+    support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
-+
-+    char *returnerr = xasprintf ("%s: execing %s failed: "
-+				 "No such file or directory",
-+				 basename(_PATH_BSHELL), cmd);
-+    TEST_COMPARE_STRING (result.err.buffer, returnerr);
-+    free (returnerr);
-+  }
-+
-+  {
-+    char cmd[namemax + 1];
-+    memset (cmd, 'a', sizeof(cmd));
-+    cmd[sizeof(cmd) - 1] = '\0';
-+
-+    struct support_capture_subprocess result;
-+    result = support_capture_subprocess (call_system,
-+					 &(struct args) {
-+					   cmd, 127, 0, tmpdir
-+					 });
-+    support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
-+
-+    char *returnerr = xasprintf ("%s: execing %s failed: "
-+				 "File name too long",
-+				 basename(_PATH_BSHELL), cmd);
-+    TEST_COMPARE_STRING (result.err.buffer, returnerr);
-+    free (returnerr);
-+  }
-+
-+  {
-+    struct support_capture_subprocess result;
-+    result = support_capture_subprocess (call_system,
-+					 &(struct args) {
-+					   "kill $$", 0, SIGTERM
-+					 });
-+    support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
-+  }
-+
-+  {
-+    struct support_capture_subprocess result;
-+    result = support_capture_subprocess (call_system,
-+					 &(struct args) { "echo ...", 0 });
-+    support_capture_subprocess_check (&result, "system", 0, sc_allow_stdout);
-+    TEST_COMPARE_STRING (result.out.buffer, "...\n");
-+  }
-+
-+  {
-+    struct support_capture_subprocess result;
-+    result = support_capture_subprocess (call_system,
-+					 &(struct args) { "exit 1", 1 });
-+    support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
-+  }
-+
-+  TEST_COMPARE (system (""), 0);
-+
-+  return 0;
-+}
- 
--#define TEST_FUNCTION do_test ()
--#include "../test-skeleton.c"
-+#include <support/test-driver.c>
-diff --git a/support/shell-container.c b/support/shell-container.c
-index 509e0d69b1..201536d24e 100644
---- a/support/shell-container.c
-+++ b/support/shell-container.c
-@@ -135,6 +135,37 @@ copy_func (char **argv)
- 
- }
- 
-+/* Emulate the 'exit' builtin.  The exit value is optional.  */
-+static int
-+exit_func (char **argv)
-+{
-+  int exit_val = 0;
-+
-+  if (argv[0] != 0)
-+    exit_val = atoi (argv[0]) & 0xff;
-+  exit (exit_val);
-+  return 0;
-+}
-+
-+/* Emulate the "/bin/kill" command.  Options are ignored.  */
-+static int
-+kill_func (char **argv)
-+{
-+  int signum = SIGTERM;
-+  int i;
-+
-+  for (i = 0; argv[i]; i++)
-+    {
-+      pid_t pid;
-+      if (strcmp (argv[i], "$$") == 0)
-+	pid = getpid ();
-+      else
-+	pid = atoi (argv[i]);
-+      kill (pid, signum);
-+    }
-+  return 0;
-+}
-+
- /* This is a list of all the built-in commands we understand.  */
- static struct {
-   const char *name;
-@@ -143,6 +174,8 @@ static struct {
-   { "true", true_func },
-   { "echo", echo_func },
-   { "cp", copy_func },
-+  { "exit", exit_func },
-+  { "kill", kill_func },
-   { NULL, NULL }
- };
- 
-@@ -238,7 +271,7 @@ run_command_array (char **argv)
- 
-       fprintf (stderr, "sh: execing %s failed: %s",
- 	       argv[0], strerror (errno));
--      exit (1);
-+      exit (127);
-     }
- 
-   waitpid (pid, &status, 0);
-@@ -251,6 +284,11 @@ run_command_array (char **argv)
-       if (rv)
- 	exit (rv);
-     }
-+  else if (WIFSIGNALED (status))
-+    {
-+      int sig = WTERMSIG (status);
-+      raise (sig);
-+    }
-   else
-     exit (1);
- }
 diff --git a/sysdeps/arm/be/nofpu/Implies b/sysdeps/arm/be/nofpu/Implies
 new file mode 100644
 index 0000000000..c90dd7fd5c
@@ -489,42 +180,6 @@ index 0000000000..c90dd7fd5c
 +++ b/sysdeps/arm/le/nofpu/Implies
 @@ -0,0 +1 @@
 +arm/nofpu
-diff --git a/sysdeps/generic/unwind-arch.h b/sysdeps/generic/unwind-arch.h
-new file mode 100644
-index 0000000000..d712e5e11d
---- /dev/null
-+++ b/sysdeps/generic/unwind-arch.h
-@@ -0,0 +1,30 @@
-+/* Return backtrace of current program state.  Arch-specific bits.
-+   Copyright (C) 2020 Free Software Foundation, Inc.
-+   This file is part of the GNU C Library.
-+
-+   The GNU C Library is free software; you can redistribute it and/or
-+   modify it under the terms of the GNU Lesser General Public
-+   License as published by the Free Software Foundation; either
-+   version 2.1 of the License, or (at your option) any later version.
-+
-+   The GNU C Library is distributed in the hope that it will be useful,
-+   but WITHOUT ANY WARRANTY; without even the implied warranty of
-+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+   Lesser General Public License for more details.
-+
-+   You should have received a copy of the GNU Lesser General Public
-+   License along with the GNU C Library; if not, see
-+   <https://www.gnu.org/licenses/>.  */
-+
-+#ifndef _UNWIND_ARCH_H
-+#define _UNWIND_ARCH_H
-+
-+#include <unwind.h>
-+
-+static inline void *
-+unwind_arch_adjustment (void *prev, void *addr)
-+{
-+  return addr;
-+}
-+
-+#endif
 diff --git a/sysdeps/i386/sysdep.h b/sysdeps/i386/sysdep.h
 index b4bcd8fb6c..6094af8fec 100644
 --- a/sysdeps/i386/sysdep.h
@@ -632,51 +287,6 @@ index 0000000000..f59b97769d
 +}
 +
 +#include <support/test-driver.c>
-diff --git a/sysdeps/posix/system.c b/sysdeps/posix/system.c
-index e613e6a344..a03f478fc7 100644
---- a/sysdeps/posix/system.c
-+++ b/sysdeps/posix/system.c
-@@ -101,7 +101,8 @@ cancel_handler (void *arg)
- static int
- do_system (const char *line)
- {
--  int status;
-+  int status = -1;
-+  int ret;
-   pid_t pid;
-   struct sigaction sa;
- #ifndef _LIBC_REENTRANT
-@@ -144,14 +145,14 @@ do_system (const char *line)
-   __posix_spawnattr_setflags (&spawn_attr,
- 			      POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK);
- 
--  status = __posix_spawn (&pid, SHELL_PATH, 0, &spawn_attr,
--			  (char *const[]){ (char*) SHELL_NAME,
--					   (char*) "-c",
--					   (char *) line, NULL },
--			  __environ);
-+  ret = __posix_spawn (&pid, SHELL_PATH, 0, &spawn_attr,
-+		       (char *const[]){ (char *) SHELL_NAME,
-+					(char *) "-c",
-+					(char *) line, NULL },
-+		       __environ);
-   __posix_spawnattr_destroy (&spawn_attr);
- 
--  if (status == 0)
-+  if (ret == 0)
-     {
-       /* Cancellation results in cleanup handlers running as exceptions in
- 	 the block where they were installed, so it is safe to reference
-@@ -186,6 +187,9 @@ do_system (const char *line)
-     }
-   DO_UNLOCK ();
- 
-+  if (ret != 0)
-+    __set_errno (ret);
-+
-   return status;
- }
- 
 diff --git a/sysdeps/unix/sysv/linux/aarch64/arch-syscall.h b/sysdeps/unix/sysv/linux/aarch64/arch-syscall.h
 index 9378387747..c8471947b9 100644
 --- a/sysdeps/unix/sysv/linux/aarch64/arch-syscall.h
@@ -1770,79 +1380,6 @@ index cdfc0b1b58..a4cf1540fe 100644
      if (err)								\
        _ret = -_ret;							\
      _ret;								\
-diff --git a/sysdeps/unix/sysv/linux/mips/unwind-arch.h b/sysdeps/unix/sysv/linux/mips/unwind-arch.h
-new file mode 100644
-index 0000000000..a009899983
---- /dev/null
-+++ b/sysdeps/unix/sysv/linux/mips/unwind-arch.h
-@@ -0,0 +1,67 @@
-+/* Return backtrace of current program state.  Arch-specific bits.
-+   Copyright (C) 2020 Free Software Foundation, Inc.
-+   This file is part of the GNU C Library.
-+
-+   The GNU C Library is free software; you can redistribute it and/or
-+   modify it under the terms of the GNU Lesser General Public
-+   License as published by the Free Software Foundation; either
-+   version 2.1 of the License, or (at your option) any later version.
-+
-+   The GNU C Library is distributed in the hope that it will be useful,
-+   but WITHOUT ANY WARRANTY; without even the implied warranty of
-+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+   Lesser General Public License for more details.
-+
-+   You should have received a copy of the GNU Lesser General Public
-+   License along with the GNU C Library; if not, see
-+   <https://www.gnu.org/licenses/>.  */
-+
-+#ifndef _UNWIND_ARCH_H
-+#define _UNWIND_ARCH_H
-+
-+#include <stdint.h>
-+
-+/* MIPS fallback code handle a frame where its FDE can not be obtained
-+   (for instance a signal frame) by reading the kernel allocated signal frame
-+   and adding '2' to the value of 'sc_pc' [1].  The added value is used to
-+   recognize an end of an EH region on mips16 [2].
-+
-+   The idea here is to adjust the obtained signal frame ADDR value and remove
-+   the libgcc added value by checking if the previous frame is a signal frame
-+   one.
-+
-+   [1] libgcc/config/mips/linux-unwind.h from gcc code.
-+   [2] gcc/config/mips/mips.h from gcc code.  */
-+
-+static inline void *
-+unwind_arch_adjustment (void *prev, void *addr)
-+{
-+  uint32_t *pc = (uint32_t *) prev;
-+
-+  if (pc == NULL)
-+    return addr;
-+
-+  /* For MIPS16 or microMIPS frame libgcc makes no adjustment.  */
-+  if ((uintptr_t) pc & 0x3)
-+    return addr;
-+
-+  /* The vDSO containes either
-+
-+     24021061 li v0, 0x1061 (rt_sigreturn)
-+     0000000c syscall
-+	or
-+     24021017 li v0, 0x1017 (sigreturn)
-+     0000000c syscall  */
-+  if (pc[1] != 0x0000000c)
-+    return addr;
-+#if _MIPS_SIM == _ABIO32
-+  if (pc[0] == (0x24020000 | __NR_sigreturn))
-+    return (void *) ((uintptr_t) addr - 2);
-+#endif
-+  if (pc[0] == (0x24020000 | __NR_rt_sigreturn))
-+    return (void *) ((uintptr_t) addr - 2);
-+
-+  return addr;
-+}
-+
-+#endif
 diff --git a/sysdeps/unix/sysv/linux/msgctl.c b/sysdeps/unix/sysv/linux/msgctl.c
 index 27879e76cd..fd46aec1a0 100644
 --- a/sysdeps/unix/sysv/linux/msgctl.c
