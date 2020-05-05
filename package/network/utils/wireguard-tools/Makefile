@@ -4,7 +4,7 @@
 # Copyright (C) 2016-2017 Dan Luedtke <mail@danrl.com>
 #
 # This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information. https://git.zx2c4.com/wireguard-tools/
+# See /LICENSE for more information.
 
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
@@ -33,7 +33,7 @@ MAKE_VARS += PLATFORM=linux
 define Package/wireguard-tools
   $(call Package/wireguard/Default)
   TITLE:=WireGuard userspace control program (wg)
-  DEPENDS:=+ip +libmnl
+  DEPENDS:=+ip
 endef
 
 define Package/wireguard-tools/description
