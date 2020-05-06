@@ -45,11 +45,11 @@ endif
 # "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
-	unset ASFLAGS; \
-	unset LDFLAGS; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign -Wl,-z,max-page-size=0x1000 $(filter-out -fno-caller-saves -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	unset ASFLAGS; \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign -g2  -Wl,-z,max-page-size=0x1000 $(filter-out -fno-caller-saves -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	unset LDFLAGS; \
 	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
@@ -60,6 +60,7 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--disable-profile \
+		--disable-werror \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
@@ -67,11 +68,11 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=4.19
+		--enable-kernel=5.4
 
-export libc_cv_forced_unwind=yes
-export libc_cv_c_cleanup=yes
-export ac_cv_header_cpuid_h=yes
+# export libc_cv_forced_unwind=yes
+# export libc_cv_c_cleanup=yes
+# export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
 define Host/SetToolchainInfo
