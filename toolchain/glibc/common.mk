@@ -67,7 +67,7 @@ GLIBC_CONFIGURE:= \
 		--enable-stack-protector=strong \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=5.4
+		--enable-kernel=4.19
 
 export libc_cv_forced_unwind=yes
 export libc_cv_c_cleanup=yes
