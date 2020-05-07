@@ -149,6 +149,7 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
+		--with-default-libstdcxx-abi=new \
 		--with-tune=haswell \
 		--with-arch=$(CONFIG_CPU_TYPE) \
 		--with-diagnostics-color=always \
