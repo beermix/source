@@ -150,6 +150,10 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-tune=generic \
+		--disable-vtable-verify \
+		--disable-werror \
+		--without-cuda-driver \
+		--enable-checking=release \
 		--with-arch=$(CONFIG_CPU_TYPE) \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
