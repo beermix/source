@@ -12,17 +12,17 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
 
-#PKG_VERSION:=a56d990
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/torproject/tor
-#PKG_SOURCE_VERSION:=$(PKG_VERSION)
-#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_VERSION:=ab92fd5
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/torproject/tor
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_VERSION:=0.4.2.7
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org/
-PKG_HASH:=
+#PKG_VERSION:=0.4.2.7
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+#PKG_SOURCE_URL:=https://dist.torproject.org/
+#PKG_HASH:=
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
@@ -148,7 +148,6 @@ define Package/tor-geoip/install
 	$(INSTALL_DIR) $(1)/usr/share/tor
 	$(INSTALL_DATA) \
 	  $(PKG_INSTALL_DIR)/usr/share/tor/geoip \
-	  $(PKG_INSTALL_DIR)/usr/share/tor/geoip6 \
 	$(1)/usr/share/tor/
 endef
 
