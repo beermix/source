@@ -1,0 +1,13 @@
+diff --git a/gcc/config/rs6000/rs6000.c b/gcc/config/rs6000/rs6000.c
+index 07f7cf516..792df3dcf 100644
+--- a/gcc/config/rs6000/rs6000.c
++++ b/gcc/config/rs6000/rs6000.c
+@@ -4344,7 +4344,7 @@ rs6000_option_override_internal (bool global_init_p)
+ 
+ 
+       /* Set branch target alignment, if not optimizing for size.  */
+-      if (!optimize_size)
++      if (1)
+ 	{
+ 	  /* Cell wants to be aligned 8byte for dual issue.  Titan wants to be
+ 	     aligned 8byte to avoid misprediction by the branch predictor.  */
