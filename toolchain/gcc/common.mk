@@ -143,6 +143,7 @@ GCC_CONFIGURE:= \
 		--disable-libmpx \
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
+		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
@@ -150,11 +151,9 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-tune=generic \
-		--disable-libunwind-exceptions \
+		--with-arch=$(CONFIG_CPU_TYPE) \
 		--disable-vtable-verify \
 		--disable-werror \
-		--without-cuda-driver \
-		--with-arch=$(CONFIG_CPU_TYPE) \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
