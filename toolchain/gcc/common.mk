@@ -151,6 +151,7 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--with-tune=generic \
 		--with-arch=$(CONFIG_CPU_TYPE) \
+		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
