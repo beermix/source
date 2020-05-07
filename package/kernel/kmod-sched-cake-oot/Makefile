@@ -29,10 +29,21 @@ define KernelPackage/sched-cake-oot
   DEPENDS:=@LINUX_4_14 +kmod-sched-core +kmod-ipt-conntrack
 endef
 
+define KernelPackage/sched-cake-virtual
+  SUBMENU:=Network Support
+  TITLE:=Virtual package for sched-cake
+  URL:=https://github.com/dtaht/sch_cake
+  DEPENDS:=+!LINUX_4_14:kmod-sched-cake +LINUX_4_14:kmod-sched-cake-oot
+endef
+
 include $(INCLUDE_DIR)/kernel-defaults.mk
 
-define KernelPackage/sched-cake/description
+define KernelPackage/sched-cake-oot/description
   O(ut) O(f) T(ree) Common Applications Kept Enhanced fq_codel/blue derived shaper
+endef
+
+define KernelPackage/sched-cake-virtual/description
+  Virtual package for resolving sch_cake dependencies
 endef
 
 define Build/Compile
@@ -40,3 +51,4 @@ define Build/Compile
 endef
 
 $(eval $(call KernelPackage,sched-cake-oot))
+$(eval $(call KernelPackage,sched-cake-virtual))
