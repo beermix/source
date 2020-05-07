@@ -153,9 +153,7 @@ GCC_CONFIGURE:= \
 		--disable-vtable-verify \
 		--disable-werror \
 		--without-cuda-driver \
-		--enable-checking=release \
 		--with-arch=$(CONFIG_CPU_TYPE) \
-		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
