@@ -149,8 +149,8 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
-		--with-tune=generic \
-		--with-arch=bonnell \
+		--with-tune=haswell \
+		--with-arch=$(CONFIG_CPU_TYPE) \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
