@@ -150,6 +150,7 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-tune=generic \
+		--disable-libunwind-exceptions \
 		--disable-vtable-verify \
 		--disable-werror \
 		--without-cuda-driver \
