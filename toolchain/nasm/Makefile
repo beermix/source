@@ -13,7 +13,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_HASH:=e24ade3e928f7253aa8c14aa44726d1edf3f98643f87c9d72ec1df44b26be8f5
 
 HOST_BUILD_PARALLEL:=1
-HOST_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/toolchain-build.mk
 
@@ -32,6 +31,7 @@ endef
 
 define Host/Configure
 	(cd $(HOST_BUILD_DIR); \
+		./autogen.sh \
 	);
 	$(call Host/Configure/Default)
 endef

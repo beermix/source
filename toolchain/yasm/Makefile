@@ -1,6 +1,4 @@
 #
-# Copyright (C) 2016 Daniel Golle <daniel@makrotopia.org>
-#
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
@@ -15,15 +13,10 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_PARALLEL:=1
-HOST_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/toolchain-build.mk
 
-YASM_CONFIGURE:= \
-	./configure \
-		--prefix=$(TOOLCHAIN_DIR) \
-		--build=$(GNU_HOST_NAME) \
-		--host=$(GNU_HOST_NAME) \
+HOST_CONFIGURE_ARGS+= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-nls \
 		--disable-debug \
@@ -37,16 +30,14 @@ endef
 
 define Host/Configure
 	(cd $(HOST_BUILD_DIR); \
-		$(YASM_CONFIGURE) \
+		./autogen.sh \
 	);
-endef
-
-define Host/Compile
-	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) all
+	$(call Host/Configure/Default)
 endef
 
 define Host/Install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
+		$(HOST_MAKE_FLAGS) \
 		prefix=$(TOOLCHAIN_DIR) \
 		install
 endef
