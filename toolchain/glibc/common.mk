@@ -34,7 +34,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign  -Wl,-z,max-page-size=0x1000 $(filter-out -fno-caller-saves -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign -Wl,-z,max-page-size=0x1000 $(filter-out -fno-caller-saves -fno-plt -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
