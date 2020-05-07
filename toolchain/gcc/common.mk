@@ -67,6 +67,10 @@ ifeq ($(PKG_VERSION),9.3.1)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
+ifeq ($(PKG_VERSION),10.1.0)
+  PKG_HASH:=
+endif
+
 ifeq ($(PKG_VERSION),10.0.1)
   PKG_VERSION:=10.0.1
   PKG_REV:=10.0.1-20200501
