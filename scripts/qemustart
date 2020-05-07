@@ -261,7 +261,7 @@ start_qemu_x86() {
 		fi
 	}
 	#
-	# generic: 32-bit, pentium4 (CONFIG_MPENTIUM4), kvm guest, virtio
+	# generic: 32-bit, bonnell (CONFIG_MPENTIUM4), kvm guest, virtio
 	# legacy: 32-bit, i486 (CONFIG_M486)
 	# 64: 64-bit, kvm guest, virtio
 	#
