@@ -30,7 +30,6 @@ PKG_CONFIG_DEPENDS := \
 	CONFIG_MC_VFS
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/nls.mk
 
 define Package/mc
 	SECTION:=utils
