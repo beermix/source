@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.2
+PKG_VERSION:=6.2-20200502
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_HASH:=30306e0c76e0f9f1f0de987cf1c82a5c21e1ce6568b9227f7da5b71cbea86c9d
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tgz
+PKG_SOURCE_URL:=https://invisible-mirror.net/archives/ncurses/current
+PKG_HASH:=
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
@@ -81,8 +81,7 @@ CONFIGURE_ARGS += \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
-	--enable-widec \
-	--with-build-cppflags=-D_GNU_SOURCE
+	--enable-widec
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
