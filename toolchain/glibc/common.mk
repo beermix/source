@@ -58,10 +58,10 @@ GLIBC_CONFIGURE:= \
 		--host=$(REAL_GNU_TARGET_NAME) \
 		--with-headers=$(TOOLCHAIN_DIR)/include \
 		--disable-profile \
-		--disable-werror \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--enable-lock-elision \
 		--enable-stack-protector=strong \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
