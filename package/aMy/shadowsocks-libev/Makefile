@@ -123,7 +123,7 @@ CONFIGURE_ARGS += \
 	--disable-assert \
 	--disable-ssp \
 
-TARGET_CFLAGS += -ffat-lto-objects -flto
+TARGET_CFLAGS += -ffat-lto-objects -flto -fPIE
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 $(eval $(call BuildPackage,shadowsocks-libev-config))
