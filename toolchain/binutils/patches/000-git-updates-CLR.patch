@@ -7,11 +7,18 @@ Andre Vieira (1):
 Andrea Corallo (1):
       aarch64: backport fix for PR target/94530
 
+Andreas Krebbel (4):
+      PR94613: Fix vec_sel builtin for IBM Z
+      S/390: Fix PR94666
+      Add missing changelog entries
+      IBM Z: vec_store_len_r/vec_load_len_r fix
+
 Bill Schmidt (1):
       rs6000: Fix -mpower9-vector -mno-altivec ICE (PR87560)
 
-Bin Cheng (1):
+Bin Cheng (2):
       backport PR94125: Update post order number for merged SCC.
+      Add unsigned type iv_cand for iv_use with non mode-precision type
 
 Carl Love (3):
       rs6000: Add command line and builtin compatibility check
@@ -21,15 +28,20 @@ Carl Love (3):
 Claudiu Zissulescu (1):
       arc: Allow more ABIs in GLIBC_DYNAMIC_LINKER
 
-Eric Botcazou (2):
+Eric Botcazou (3):
       Fix incorrect filling of delay slots in branchy code at -O2
       Fix wrong year in ChangeLog.
+      Fix Ada bootstrap on Cygwin64
 
 Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (50):
+GCC Administrator (54):
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -153,7 +165,7 @@ Jiufu Guo (1):
 John David Anglin (1):
       Define __BIG_ENDIAN__
 
-Jonathan Wakely (22):
+Jonathan Wakely (23):
       libstdc++: Ensure root-dir converted to forward slash (PR93244)
       libstdc++: Fix FS-dependent filesystem tests
       libstdc++: Fix test failure due to -Wnonnull warnings
@@ -176,6 +188,7 @@ Jonathan Wakely (22):
       libstdc++: Define __cpp_lib_execution feature test
       libstdc++: Make net::service_already_exists default constructible
       libstdc++: Fix type-erasure in experimental::net::executor (PR 94203)
+      libstdc++: Fix broken link to SGI STL FAQ
 
 Joseph Myers (1):
       Remove wrongly committed file.
@@ -262,8 +275,9 @@ Thomas Rodgers (3):
 Thomas Schwinge (1):
       Rename 'libgomp.oacc-c-c++-common/static-dynamic-lifetimes-*' to 'libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-*' [PR92843]
 
-Tobias Burnus (1):
+Tobias Burnus (2):
       [Fortran] Fix result-variable handling of MODULE PROCEDURE (PR94348)
+      ICE in gfc_get_dataptr_offset, at fortran/trans-array.c:6951
 
 Uros Bizjak (4):
       i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
@@ -297,10 +311,54 @@ index 9605d767a80..0203aec84ad 100644
  
  	* GCC 9.3.0 released.
 diff --git a/gcc/ChangeLog b/gcc/ChangeLog
-index d8e53874e68..e8b3131e7df 100644
+index d8e53874e68..25100b8e9c7 100644
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,637 @@
+@@ -1,3 +1,681 @@
++2020-05-05  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	Backport from mainline
++	2020-04-30  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	* config/s390/constraints.md ("j>f", "jb4"): New constraints.
++	* config/s390/vecintrin.h (vec_load_len_r, vec_store_len_r): Fix
++	macro definitions.
++	* config/s390/vx-builtins.md ("vlrlrv16qi", "vstrlrv16qi"): Add a
++	separate expander.
++	("*vlrlrv16qi", "*vstrlrv16qi"): Add alternative for vl/vst.
++	Change constraint for vlrl/vstrl to jb4.
++
++2020-05-04  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	Backport from mainline
++	2020-04-20  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	* config/s390/vector.md ("popcountv8hi2_vx", "popcountv4si2_vx")
++	("popcountv2di2_vx"): Use simplify_gen_subreg.
++
++2020-05-04  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	Backport from mainline
++	2020-04-20  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	PR target/94613
++	* config/s390/s390-builtin-types.def: Add 3 new function modes.
++	* config/s390/s390-builtins.def: Add mode dependent low-level
++	builtin and map the overloaded builtins to these.
++	* config/s390/vx-builtins.md ("vec_selV_HW"): Rename to ...
++	("vsel<V_HW"): ... this and rewrite the pattern with bitops.
++
++2020-05-04  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	PR tree-optimization/93674
++	Backport from master
++	2020-04-09  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	* tree-ssa-loop-ivopts.c (langhooks.h): New include.
++	(add_iv_candidate_for_use): For iv_use of non integer or pointer type,
++	or non-mode precision type, add candidate in unsigned type with the
++	same precision.
++
 +2020-05-01  Alan Modra	 <amodra@gmail.com>
 +
 +	PR target/94145
@@ -938,6 +996,31 @@ index d8e53874e68..e8b3131e7df 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/ada/ChangeLog b/gcc/ada/ChangeLog
+index a819f57a2bf..41ba2db6a07 100644
+--- a/gcc/ada/ChangeLog
++++ b/gcc/ada/ChangeLog
+@@ -1,3 +1,8 @@
++2020-05-04  Mikael Pettersson  <mikpelinux@gmail.com>
++
++	PR bootstrap/94918
++	* mingw32.h: Prevent windows.h from including emmintrin.h on Cygwin64.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+diff --git a/gcc/ada/mingw32.h b/gcc/ada/mingw32.h
+index fe6464fd601..3dbf7974a67 100644
+--- a/gcc/ada/mingw32.h
++++ b/gcc/ada/mingw32.h
+@@ -56,6 +56,7 @@
+ /* Note: windows.h on cygwin-64 includes x86intrin.h which uses malloc.
+    That fails to compile, if malloc is poisoned, i.e. if !IN_RTS.  */
+ #define _X86INTRIN_H_INCLUDED
++#define _EMMINTRIN_H_INCLUDED
+ #endif
+ #include <windows.h>
+ 
 diff --git a/gcc/builtins.c b/gcc/builtins.c
 index ed11f79ff0b..e8e43f53ec6 100644
 --- a/gcc/builtins.c
@@ -3112,6 +3195,341 @@ index 607c0cd33f2..43dd3cba641 100644
  (define_insn_and_split "*vsx_extract_<mode>_<VS_scalar>mode_var"
    [(set (match_operand:<VS_scalar> 0 "gpc_reg_operand" "=r,r,r")
  	(zero_extend:<VS_scalar>
+diff --git a/gcc/config/s390/constraints.md b/gcc/config/s390/constraints.md
+index 4055cbc7c68..ec2a13499e7 100644
+--- a/gcc/config/s390/constraints.md
++++ b/gcc/config/s390/constraints.md
+@@ -38,6 +38,8 @@
+ ;;              matching K constraint
+ ;;         jm6: An integer operand with the lowest order 6 bits all ones.
+ ;;         jdd: A constant operand that fits into the data section.
++;;         j>f: An integer operand whose lower 32 bits are greater than or equal to 15
++;;         jb4: An unsigned constant 4 bit operand.
+ ;;    t -- Access registers 36 and 37.
+ ;;    v -- Vector registers v0-v31.
+ ;;    C -- A signed 8-bit constant (-128..127)
+@@ -413,7 +415,7 @@
+ 
+ 
+ ;;
+-;; Vector constraints follow.
++;; Vector and scalar constraints for constant values follow.
+ ;;
+ 
+ (define_constraint "j00"
+@@ -450,6 +452,16 @@
+   "@internal An integer operand with the lowest order 6 bits all ones."
+   (match_operand 0 "const_int_6bitset_operand"))
+ 
++(define_constraint "j>f"
++  "@internal An integer operand whose lower 32 bits are greater than or equal to 15."
++  (and (match_code "const_int")
++       (match_test "(unsigned int)(ival & 0xffffffff) >= 15")))
++
++(define_constraint "jb4"
++  "@internal Constant unsigned integer 4 bit value"
++  (and (match_code "const_int")
++       (match_test "ival >= 0 && ival <= 15")))
++
+ ;;
+ ;; Memory constraints follow.
+ ;;
+diff --git a/gcc/config/s390/s390-builtin-types.def b/gcc/config/s390/s390-builtin-types.def
+index 53398a98e9e..9e868b7c818 100644
+--- a/gcc/config/s390/s390-builtin-types.def
++++ b/gcc/config/s390/s390-builtin-types.def
+@@ -301,6 +301,7 @@ DEF_FN_TYPE_3 (BT_FN_UV16QI_UV2DI_UV2DI_UV16QI, BT_UV16QI, BT_UV2DI, BT_UV2DI, B
+ DEF_FN_TYPE_3 (BT_FN_UV16QI_UV8HI_UV8HI_INTPTR, BT_UV16QI, BT_UV8HI, BT_UV8HI, BT_INTPTR)
+ DEF_FN_TYPE_3 (BT_FN_UV2DI_UV2DI_ULONGLONG_INT, BT_UV2DI, BT_UV2DI, BT_ULONGLONG, BT_INT)
+ DEF_FN_TYPE_3 (BT_FN_UV2DI_UV2DI_UV2DI_INT, BT_UV2DI, BT_UV2DI, BT_UV2DI, BT_INT)
++DEF_FN_TYPE_3 (BT_FN_UV2DI_UV2DI_UV2DI_UV2DI, BT_UV2DI, BT_UV2DI, BT_UV2DI, BT_UV2DI)
+ DEF_FN_TYPE_3 (BT_FN_UV2DI_UV4SI_UV4SI_UV2DI, BT_UV2DI, BT_UV4SI, BT_UV4SI, BT_UV2DI)
+ DEF_FN_TYPE_3 (BT_FN_UV4SI_UV2DI_UV2DI_INTPTR, BT_UV4SI, BT_UV2DI, BT_UV2DI, BT_INTPTR)
+ DEF_FN_TYPE_3 (BT_FN_UV4SI_UV4SI_UINT_INT, BT_UV4SI, BT_UV4SI, BT_UINT, BT_INT)
+@@ -322,6 +323,7 @@ DEF_FN_TYPE_3 (BT_FN_V2DF_V2DF_DBL_INT, BT_V2DF, BT_V2DF, BT_DBL, BT_INT)
+ DEF_FN_TYPE_3 (BT_FN_V2DF_V2DF_UCHAR_UCHAR, BT_V2DF, BT_V2DF, BT_UCHAR, BT_UCHAR)
+ DEF_FN_TYPE_3 (BT_FN_V2DF_V2DF_UINT_UINT, BT_V2DF, BT_V2DF, BT_UINT, BT_UINT)
+ DEF_FN_TYPE_3 (BT_FN_V2DF_V2DF_V2DF_INT, BT_V2DF, BT_V2DF, BT_V2DF, BT_INT)
++DEF_FN_TYPE_3 (BT_FN_V2DF_V2DF_V2DF_UV2DI, BT_V2DF, BT_V2DF, BT_V2DF, BT_UV2DI)
+ DEF_FN_TYPE_3 (BT_FN_V2DF_V2DF_V2DF_V2DF, BT_V2DF, BT_V2DF, BT_V2DF, BT_V2DF)
+ DEF_FN_TYPE_3 (BT_FN_V2DI_UV2DI_UV2DI_INTPTR, BT_V2DI, BT_UV2DI, BT_UV2DI, BT_INTPTR)
+ DEF_FN_TYPE_3 (BT_FN_V2DI_V2DF_INT_INTPTR, BT_V2DI, BT_V2DF, BT_INT, BT_INTPTR)
+@@ -332,6 +334,7 @@ DEF_FN_TYPE_3 (BT_FN_V4SF_V2DF_INT_INT, BT_V4SF, BT_V2DF, BT_INT, BT_INT)
+ DEF_FN_TYPE_3 (BT_FN_V4SF_V4SF_FLT_INT, BT_V4SF, BT_V4SF, BT_FLT, BT_INT)
+ DEF_FN_TYPE_3 (BT_FN_V4SF_V4SF_UCHAR_UCHAR, BT_V4SF, BT_V4SF, BT_UCHAR, BT_UCHAR)
+ DEF_FN_TYPE_3 (BT_FN_V4SF_V4SF_V4SF_INT, BT_V4SF, BT_V4SF, BT_V4SF, BT_INT)
++DEF_FN_TYPE_3 (BT_FN_V4SF_V4SF_V4SF_UV4SI, BT_V4SF, BT_V4SF, BT_V4SF, BT_UV4SI)
+ DEF_FN_TYPE_3 (BT_FN_V4SF_V4SF_V4SF_V4SF, BT_V4SF, BT_V4SF, BT_V4SF, BT_V4SF)
+ DEF_FN_TYPE_3 (BT_FN_V4SI_UV4SI_UV4SI_INTPTR, BT_V4SI, BT_UV4SI, BT_UV4SI, BT_INTPTR)
+ DEF_FN_TYPE_3 (BT_FN_V4SI_V2DI_V2DI_INTPTR, BT_V4SI, BT_V2DI, BT_V2DI, BT_INTPTR)
+diff --git a/gcc/config/s390/s390-builtins.def b/gcc/config/s390/s390-builtins.def
+index 3f39b9d3b88..b31abc6af9b 100644
+--- a/gcc/config/s390/s390-builtins.def
++++ b/gcc/config/s390/s390-builtins.def
+@@ -687,36 +687,41 @@ B_DEF      (s390_vsceg,                 vec_scatter_elementv2di,0,
+ 
+ /* First two operands are swapped in s390-c.c */
+ OB_DEF     (s390_vec_sel,               s390_vec_sel_b8_a,  s390_vec_sel_dbl_b, B_VX,               BT_FN_OV4SI_OV4SI_OV4SI_OV4SI)
+-OB_DEF_VAR (s390_vec_sel_b8_a,          s390_vsel,          0,                  0,                  BT_OV_BV16QI_BV16QI_BV16QI_UV16QI)
+-OB_DEF_VAR (s390_vec_sel_b8_b,          s390_vsel,          0,                  0,                  BT_OV_BV16QI_BV16QI_BV16QI_BV16QI)
+-OB_DEF_VAR (s390_vec_sel_s8_a,          s390_vsel,          0,                  0,                  BT_OV_V16QI_V16QI_V16QI_UV16QI)
+-OB_DEF_VAR (s390_vec_sel_s8_b,          s390_vsel,          0,                  0,                  BT_OV_V16QI_V16QI_V16QI_BV16QI)
+-OB_DEF_VAR (s390_vec_sel_u8_a,          s390_vsel,          0,                  0,                  BT_OV_UV16QI_UV16QI_UV16QI_UV16QI)
+-OB_DEF_VAR (s390_vec_sel_u8_b,          s390_vsel,          0,                  0,                  BT_OV_UV16QI_UV16QI_UV16QI_BV16QI)
+-OB_DEF_VAR (s390_vec_sel_b16_a,         s390_vsel,          0,                  0,                  BT_OV_BV8HI_BV8HI_BV8HI_UV8HI)
+-OB_DEF_VAR (s390_vec_sel_b16_b,         s390_vsel,          0,                  0,                  BT_OV_BV8HI_BV8HI_BV8HI_BV8HI)
+-OB_DEF_VAR (s390_vec_sel_s16_a,         s390_vsel,          0,                  0,                  BT_OV_V8HI_V8HI_V8HI_UV8HI)
+-OB_DEF_VAR (s390_vec_sel_s16_b,         s390_vsel,          0,                  0,                  BT_OV_V8HI_V8HI_V8HI_BV8HI)
+-OB_DEF_VAR (s390_vec_sel_u16_a,         s390_vsel,          0,                  0,                  BT_OV_UV8HI_UV8HI_UV8HI_UV8HI)
+-OB_DEF_VAR (s390_vec_sel_u16_b,         s390_vsel,          0,                  0,                  BT_OV_UV8HI_UV8HI_UV8HI_BV8HI)
+-OB_DEF_VAR (s390_vec_sel_b32_a,         s390_vsel,          0,                  0,                  BT_OV_BV4SI_BV4SI_BV4SI_UV4SI)
+-OB_DEF_VAR (s390_vec_sel_b32_b,         s390_vsel,          0,                  0,                  BT_OV_BV4SI_BV4SI_BV4SI_BV4SI)
+-OB_DEF_VAR (s390_vec_sel_s32_a,         s390_vsel,          0,                  0,                  BT_OV_V4SI_V4SI_V4SI_UV4SI)
+-OB_DEF_VAR (s390_vec_sel_s32_b,         s390_vsel,          0,                  0,                  BT_OV_V4SI_V4SI_V4SI_BV4SI)
+-OB_DEF_VAR (s390_vec_sel_u32_a,         s390_vsel,          0,                  0,                  BT_OV_UV4SI_UV4SI_UV4SI_UV4SI)
+-OB_DEF_VAR (s390_vec_sel_u32_b,         s390_vsel,          0,                  0,                  BT_OV_UV4SI_UV4SI_UV4SI_BV4SI)
+-OB_DEF_VAR (s390_vec_sel_b64_a,         s390_vsel,          0,                  0,                  BT_OV_BV2DI_BV2DI_BV2DI_UV2DI)
+-OB_DEF_VAR (s390_vec_sel_b64_b,         s390_vsel,          0,                  0,                  BT_OV_BV2DI_BV2DI_BV2DI_BV2DI)
+-OB_DEF_VAR (s390_vec_sel_s64_a,         s390_vsel,          0,                  0,                  BT_OV_V2DI_V2DI_V2DI_UV2DI)
+-OB_DEF_VAR (s390_vec_sel_s64_b,         s390_vsel,          0,                  0,                  BT_OV_V2DI_V2DI_V2DI_BV2DI)
+-OB_DEF_VAR (s390_vec_sel_u64_a,         s390_vsel,          0,                  0,                  BT_OV_UV2DI_UV2DI_UV2DI_UV2DI)
+-OB_DEF_VAR (s390_vec_sel_u64_b,         s390_vsel,          0,                  0,                  BT_OV_UV2DI_UV2DI_UV2DI_BV2DI)
+-OB_DEF_VAR (s390_vec_sel_flt_a,         s390_vsel,          B_VXE,              0,                  BT_OV_V4SF_V4SF_V4SF_UV4SI)
+-OB_DEF_VAR (s390_vec_sel_flt_b,         s390_vsel,          B_VXE,              0,                  BT_OV_V4SF_V4SF_V4SF_BV4SI)
+-OB_DEF_VAR (s390_vec_sel_dbl_a,         s390_vsel,          0,                  0,                  BT_OV_V2DF_V2DF_V2DF_UV2DI)
+-OB_DEF_VAR (s390_vec_sel_dbl_b,         s390_vsel,          0,                  0,                  BT_OV_V2DF_V2DF_V2DF_BV2DI)
+-
+-B_DEF      (s390_vsel,                  vec_selv16qi,       0,                  B_VX,               0,                  BT_FN_UV16QI_UV16QI_UV16QI_UV16QI)
++OB_DEF_VAR (s390_vec_sel_b8_a,          s390_vselb,         0,                  0,                  BT_OV_BV16QI_BV16QI_BV16QI_UV16QI)
++OB_DEF_VAR (s390_vec_sel_b8_b,          s390_vselb,         0,                  0,                  BT_OV_BV16QI_BV16QI_BV16QI_BV16QI)
++OB_DEF_VAR (s390_vec_sel_s8_a,          s390_vselb,         0,                  0,                  BT_OV_V16QI_V16QI_V16QI_UV16QI)
++OB_DEF_VAR (s390_vec_sel_s8_b,          s390_vselb,         0,                  0,                  BT_OV_V16QI_V16QI_V16QI_BV16QI)
++OB_DEF_VAR (s390_vec_sel_u8_a,          s390_vselb,         0,                  0,                  BT_OV_UV16QI_UV16QI_UV16QI_UV16QI)
++OB_DEF_VAR (s390_vec_sel_u8_b,          s390_vselb,         0,                  0,                  BT_OV_UV16QI_UV16QI_UV16QI_BV16QI)
++OB_DEF_VAR (s390_vec_sel_b16_a,         s390_vselh,         0,                  0,                  BT_OV_BV8HI_BV8HI_BV8HI_UV8HI)
++OB_DEF_VAR (s390_vec_sel_b16_b,         s390_vselh,         0,                  0,                  BT_OV_BV8HI_BV8HI_BV8HI_BV8HI)
++OB_DEF_VAR (s390_vec_sel_s16_a,         s390_vselh,         0,                  0,                  BT_OV_V8HI_V8HI_V8HI_UV8HI)
++OB_DEF_VAR (s390_vec_sel_s16_b,         s390_vselh,         0,                  0,                  BT_OV_V8HI_V8HI_V8HI_BV8HI)
++OB_DEF_VAR (s390_vec_sel_u16_a,         s390_vselh,         0,                  0,                  BT_OV_UV8HI_UV8HI_UV8HI_UV8HI)
++OB_DEF_VAR (s390_vec_sel_u16_b,         s390_vselh,         0,                  0,                  BT_OV_UV8HI_UV8HI_UV8HI_BV8HI)
++OB_DEF_VAR (s390_vec_sel_b32_a,         s390_vself,         0,                  0,                  BT_OV_BV4SI_BV4SI_BV4SI_UV4SI)
++OB_DEF_VAR (s390_vec_sel_b32_b,         s390_vself,         0,                  0,                  BT_OV_BV4SI_BV4SI_BV4SI_BV4SI)
++OB_DEF_VAR (s390_vec_sel_s32_a,         s390_vself,         0,                  0,                  BT_OV_V4SI_V4SI_V4SI_UV4SI)
++OB_DEF_VAR (s390_vec_sel_s32_b,         s390_vself,         0,                  0,                  BT_OV_V4SI_V4SI_V4SI_BV4SI)
++OB_DEF_VAR (s390_vec_sel_u32_a,         s390_vself,         0,                  0,                  BT_OV_UV4SI_UV4SI_UV4SI_UV4SI)
++OB_DEF_VAR (s390_vec_sel_u32_b,         s390_vself,         0,                  0,                  BT_OV_UV4SI_UV4SI_UV4SI_BV4SI)
++OB_DEF_VAR (s390_vec_sel_b64_a,         s390_vselg,         0,                  0,                  BT_OV_BV2DI_BV2DI_BV2DI_UV2DI)
++OB_DEF_VAR (s390_vec_sel_b64_b,         s390_vselg,         0,                  0,                  BT_OV_BV2DI_BV2DI_BV2DI_BV2DI)
++OB_DEF_VAR (s390_vec_sel_s64_a,         s390_vselg,         0,                  0,                  BT_OV_V2DI_V2DI_V2DI_UV2DI)
++OB_DEF_VAR (s390_vec_sel_s64_b,         s390_vselg,         0,                  0,                  BT_OV_V2DI_V2DI_V2DI_BV2DI)
++OB_DEF_VAR (s390_vec_sel_u64_a,         s390_vselg,         0,                  0,                  BT_OV_UV2DI_UV2DI_UV2DI_UV2DI)
++OB_DEF_VAR (s390_vec_sel_u64_b,         s390_vselg,         0,                  0,                  BT_OV_UV2DI_UV2DI_UV2DI_BV2DI)
++OB_DEF_VAR (s390_vec_sel_flt_a,         s390_vself_flt,     B_VXE,              0,                  BT_OV_V4SF_V4SF_V4SF_UV4SI)
++OB_DEF_VAR (s390_vec_sel_flt_b,         s390_vself_flt,     B_VXE,              0,                  BT_OV_V4SF_V4SF_V4SF_BV4SI)
++OB_DEF_VAR (s390_vec_sel_dbl_a,         s390_vselg_dbl,     0,                  0,                  BT_OV_V2DF_V2DF_V2DF_UV2DI)
++OB_DEF_VAR (s390_vec_sel_dbl_b,         s390_vselg_dbl,     0,                  0,                  BT_OV_V2DF_V2DF_V2DF_BV2DI)
++
++B_DEF      (s390_vselb,                 vselv16qi,          0,                  B_VX,               0,                  BT_FN_UV16QI_UV16QI_UV16QI_UV16QI)
++B_DEF      (s390_vselh,                 vselv8hi,           0,                  B_VX,               0,                  BT_FN_UV8HI_UV8HI_UV8HI_UV8HI)
++B_DEF      (s390_vself,                 vselv4si,           0,                  B_VX,               0,                  BT_FN_UV4SI_UV4SI_UV4SI_UV4SI)
++B_DEF      (s390_vselg,                 vselv2di,           0,                  B_VX,               0,                  BT_FN_UV2DI_UV2DI_UV2DI_UV2DI)
++B_DEF      (s390_vself_flt,             vselv4sf,           0,                  B_VXE,              0,                  BT_FN_V4SF_V4SF_V4SF_UV4SI)
++B_DEF      (s390_vselg_dbl,             vselv2df,           0,                  B_VX,               0,                  BT_FN_V2DF_V2DF_V2DF_UV2DI)
+ 
+ OB_DEF     (s390_vec_extend_s64,        s390_vec_extend_s64_s8,s390_vec_extend_s64_s32,B_VX,        BT_FN_OV4SI_OV4SI)
+ OB_DEF_VAR (s390_vec_extend_s64_s8,     s390_vsegb,         0,                  0,                  BT_OV_V2DI_V16QI)
+diff --git a/gcc/config/s390/vecintrin.h b/gcc/config/s390/vecintrin.h
+index 21375970c91..d7a4ae64c36 100644
+--- a/gcc/config/s390/vecintrin.h
++++ b/gcc/config/s390/vecintrin.h
+@@ -111,8 +111,10 @@ __lcbb(const void *ptr, int bndry)
+ #define vec_round(X)  __builtin_s390_vfi((X), 4, 4)
+ #define vec_doublee(X) __builtin_s390_vfll((X))
+ #define vec_floate(X) __builtin_s390_vflr((X), 0, 0)
+-#define vec_load_len_r(X,Y) __builtin_s390_vlrl((Y),(X))
+-#define vec_store_len_r(X,Y) __builtin_s390_vstrl((Y),(X))
++#define vec_load_len_r(X,L)				\
++  (__vector unsigned char)__builtin_s390_vlrlr((L),(X))
++#define vec_store_len_r(X,Y,L) \
++  __builtin_s390_vstrlr((__vector signed char)(X),(L),(Y))
+ 
+ #define vec_all_nan(a)						\
+   __extension__ ({						\
+diff --git a/gcc/config/s390/vector.md b/gcc/config/s390/vector.md
+index 6ca503b0d44..7c1edf03027 100644
+--- a/gcc/config/s390/vector.md
++++ b/gcc/config/s390/vector.md
+@@ -855,7 +855,7 @@
+ 
+ (define_expand "popcountv8hi2_vx"
+   [(set (match_dup 2)
+-	(unspec:V16QI [(subreg:V16QI (match_operand:V8HI 1 "register_operand" "v") 0)]
++	(unspec:V16QI [(match_operand:V8HI 1 "register_operand" "v")]
+ 		      UNSPEC_POPCNT))
+    ; Make a copy of the result
+    (set (match_dup 3) (match_dup 2))
+@@ -887,6 +887,8 @@
+ ]
+   "TARGET_VX && !TARGET_VXE"
+ {
++  operands[1] = simplify_gen_subreg (V16QImode, operands[1],
++				     V8HImode, 0);
+   operands[2] = gen_reg_rtx (V16QImode);
+   operands[3] = gen_reg_rtx (V16QImode);
+   operands[4] = gen_reg_rtx (V16QImode);
+@@ -895,20 +897,21 @@
+ 
+ (define_expand "popcountv4si2_vx"
+   [(set (match_dup 2)
+-	(unspec:V16QI [(subreg:V16QI (match_operand:V4SI 1 "register_operand" "v") 0)]
++	(unspec:V16QI [(match_operand:V4SI 1 "register_operand" "v")]
+ 		      UNSPEC_POPCNT))
+    (set (match_operand:V4SI 0 "register_operand" "=v")
+ 	(unspec:V4SI [(match_dup 2) (match_dup 3)]
+ 		     UNSPEC_VEC_VSUM))]
+   "TARGET_VX && !TARGET_VXE"
+ {
++  operands[1] = simplify_gen_subreg (V16QImode, operands[1], V4SImode, 0);
+   operands[2] = gen_reg_rtx (V16QImode);
+   operands[3] = force_reg (V16QImode, CONST0_RTX (V16QImode));
+ })
+ 
+ (define_expand "popcountv2di2_vx"
+   [(set (match_dup 2)
+-	(unspec:V16QI [(subreg:V16QI (match_operand:V2DI 1 "register_operand" "v") 0)]
++	(unspec:V16QI [(match_operand:V2DI 1 "register_operand" "v")]
+ 		      UNSPEC_POPCNT))
+    (set (match_dup 3)
+ 	(unspec:V4SI [(match_dup 2) (match_dup 4)]
+@@ -918,6 +921,7 @@
+ 		     UNSPEC_VEC_VSUMG))]
+   "TARGET_VX && !TARGET_VXE"
+ {
++  operands[1] = simplify_gen_subreg (V16QImode, operands[1], V2DImode, 0);
+   operands[2] = gen_reg_rtx (V16QImode);
+   operands[3] = gen_reg_rtx (V4SImode);
+   operands[4] = force_reg (V16QImode, CONST0_RTX (V16QImode));
+diff --git a/gcc/config/s390/vx-builtins.md b/gcc/config/s390/vx-builtins.md
+index 5ec3fb4fe58..5b6246adc9f 100644
+--- a/gcc/config/s390/vx-builtins.md
++++ b/gcc/config/s390/vx-builtins.md
+@@ -202,16 +202,34 @@
+   "vlbb\t%v0,%1,%2"
+   [(set_attr "op_type" "VRX")])
+ 
+-(define_insn "vlrlrv16qi"
+-  [(set (match_operand:V16QI              0 "register_operand"  "=v,v")
+-	(unspec:V16QI [(match_operand:BLK 2 "memory_operand"     "Q,Q")
+-		       (match_operand:SI  1 "nonmemory_operand"  "d,C")]
++; Vector load rightmost with length
++
++(define_expand "vlrlrv16qi"
++  [(set (match_operand:V16QI              0 "register_operand"  "")
++	(unspec:V16QI [(match_operand:BLK 2 "memory_operand"    "")
++		       (match_operand:SI  1 "nonmemory_operand" "")]
++		      UNSPEC_VEC_LOAD_LEN_R))]
++  "TARGET_VXE"
++{
++  /* vlrlr sets all length values beyond 15 to 15.  Emulate the same
++     behavior for immediate length operands.  vlrl would trigger a
++     SIGILL for too large immediate operands.  */
++  if (CONST_INT_P (operands[1])
++      && (UINTVAL (operands[1]) & 0xffffffff) > 15)
++    operands[1] = GEN_INT (15);
++})
++
++(define_insn "*vlrlrv16qi"
++  [(set (match_operand:V16QI              0 "register_operand"  "=v,  v,  v")
++	(unspec:V16QI [(match_operand:BLK 2 "memory_operand"     "Q,  R,  Q")
++		       (match_operand:SI  1 "nonmemory_operand"  "d,j>f,jb4")]
+ 		      UNSPEC_VEC_LOAD_LEN_R))]
+   "TARGET_VXE"
+   "@
+    vlrlr\t%v0,%1,%2
++   vl\t%v0,%2%A2
+    vlrl\t%v0,%2,%1"
+-  [(set_attr "op_type" "VRS,VSI")])
++  [(set_attr "op_type" "VRS,VRX,VSI")])
+ 
+ 
+ ; FIXME: The following two patterns might using vec_merge. But what is
+@@ -499,23 +517,22 @@
+ 
+ ; Vector select
+ 
+-; Operand 3 selects bits from either OP1 (0) or OP2 (1)
++; for all b in bits op0[b] = op3[b] == 0 ? op2[b] : op1[b]
++; implemented as: op0 = (op1 & op3) | (op2 & ~op3)
+ 
+-; Comparison operator should not matter as long as we always use the same ?!
++; Used to expand the vec_sel builtin. Operands op1 and op2 already got
++; swapped in s390-c.c when we get here.
+ 
+-; Operands 1 and 2 are swapped in order to match the altivec builtin.
+-; If operand 3 is a const_int bitmask this would be vec_merge
+-(define_expand "vec_sel<mode>"
+-  [(set (match_operand:V_HW 0 "register_operand" "")
+-	(if_then_else:V_HW
+-	 (eq (match_operand:<tointvec> 3 "register_operand"  "")
+-	     (match_dup 4))
+-	 (match_operand:V_HW 2 "register_operand"  "")
+-	 (match_operand:V_HW 1 "register_operand"  "")))]
++(define_insn "vsel<mode>"
++  [(set (match_operand:V_HW                      0 "register_operand" "=v")
++	(ior:V_HW
++	 (and:V_HW (match_operand:V_HW           1 "register_operand"  "v")
++		   (match_operand:V_HW           3 "register_operand"  "v"))
++	 (and:V_HW (not:V_HW (match_dup 3))
++		   (match_operand:V_HW           2 "register_operand"  "v"))))]
+   "TARGET_VX"
+-{
+-  operands[4] = CONST0_RTX (<tointvec>mode);
+-})
++  "vsel\t%v0,%1,%2,%3"
++  [(set_attr "op_type" "VRR")])
+ 
+ 
+ ; Vector sign extend to doubleword
+@@ -546,16 +563,32 @@
+ 
+ ; Vector store rightmost with length
+ 
+-(define_insn "vstrlrv16qi"
+-  [(set (match_operand:BLK                2 "memory_operand"    "=Q,Q")
+-	(unspec:BLK [(match_operand:V16QI 0 "register_operand"   "v,v")
+-		     (match_operand:SI    1 "nonmemory_operand"  "d,C")]
++(define_expand "vstrlrv16qi"
++  [(set (match_operand:BLK                2 "memory_operand"    "")
++	(unspec:BLK [(match_operand:V16QI 0 "register_operand"  "")
++		     (match_operand:SI    1 "nonmemory_operand" "")]
++		    UNSPEC_VEC_STORE_LEN_R))]
++  "TARGET_VXE"
++{
++  /* vstrlr sets all length values beyond 15 to 15.  Emulate the same
++     behavior for immediate length operands.  vstrl would trigger a
++     SIGILL for too large immediate operands.  */
++  if (CONST_INT_P (operands[1])
++      && (UINTVAL (operands[1]) & 0xffffffff) > 15)
++    operands[1] = GEN_INT (15);
++})
++
++(define_insn "*vstrlrv16qi"
++  [(set (match_operand:BLK                2 "memory_operand"    "=Q,  R,  Q")
++	(unspec:BLK [(match_operand:V16QI 0 "register_operand"   "v,  v,  v")
++		     (match_operand:SI    1 "nonmemory_operand"  "d,j>f,jb4")]
+ 		    UNSPEC_VEC_STORE_LEN_R))]
+   "TARGET_VXE"
+   "@
+-   vstrlr\t%v0,%2,%1
+-   vstrl\t%v0,%1,%2"
+-  [(set_attr "op_type" "VRS,VSI")])
++   vstrlr\t%v0,%1,%2
++   vst\t%v0,%2%A2
++   vstrl\t%v0,%2,%1"
++  [(set_attr "op_type" "VRS,VRX,VSI")])
+ 
+ 
+ 
 diff --git a/gcc/config/xtensa/xtensa.c b/gcc/config/xtensa/xtensa.c
 index ee5612441e2..2527468d57d 100644
 --- a/gcc/config/xtensa/xtensa.c
@@ -4428,10 +4846,21 @@ index c717f24501e..64273c1c6bc 100644
  				    "when distributing negation across "
  				    "division"),
 diff --git a/gcc/fortran/ChangeLog b/gcc/fortran/ChangeLog
-index 8fefea2b63d..c2032eccac9 100644
+index 8fefea2b63d..21f8b1afa79 100644
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,81 @@
+@@ -1,3 +1,92 @@
++2020-05-04  Tobias Burnus  <tobias@codesourcery.com>
++
++	Backport from mainline.
++	2020-03-08  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/93581
++	* resolve.c (gfc_resolve_ref): Modify array refs to be elements
++	if the ref chain ends in INQUIRY_LEN.
++	* trans-array.c (gfc_get_dataptr_offset): Provide the offsets
++	for INQUIRY_RE and INQUIRY_IM.
++
 +2020-04-27  Thomas Koenig  <tkoenig@gcc.gnu.org>
 +
 +	PR fortran/93956
@@ -4665,10 +5094,78 @@ index 088b69f8ec9..f4ae9e9dfe7 100644
        /* If a comma appears, it is an intrinsic subprogram. */
        gfc_gobble_whitespace ();
 diff --git a/gcc/fortran/resolve.c b/gcc/fortran/resolve.c
-index a4ad26efffc..a3df534180c 100644
+index a4ad26efffc..c041d8df96d 100644
 --- a/gcc/fortran/resolve.c
 +++ b/gcc/fortran/resolve.c
-@@ -16510,7 +16510,8 @@ resolve_equivalence (gfc_equiv *eq)
+@@ -5094,8 +5094,8 @@ gfc_resolve_substring_charlen (gfc_expr *e)
+ static bool
+ resolve_ref (gfc_expr *expr)
+ {
+-  int current_part_dimension, n_components, seen_part_dimension;
+-  gfc_ref *ref, **prev;
++  int current_part_dimension, n_components, seen_part_dimension, dim;
++  gfc_ref *ref, **prev, *array_ref;
+   bool equal_length;
+ 
+   for (ref = expr->ref; ref; ref = ref->next)
+@@ -5141,12 +5141,14 @@ resolve_ref (gfc_expr *expr)
+   current_part_dimension = 0;
+   seen_part_dimension = 0;
+   n_components = 0;
++  array_ref = NULL;
+ 
+   for (ref = expr->ref; ref; ref = ref->next)
+     {
+       switch (ref->type)
+ 	{
+ 	case REF_ARRAY:
++	  array_ref = ref;
+ 	  switch (ref->u.ar.type)
+ 	    {
+ 	    case AR_FULL:
+@@ -5162,6 +5164,7 @@ resolve_ref (gfc_expr *expr)
+ 	      break;
+ 
+ 	    case AR_ELEMENT:
++	      array_ref = NULL;
+ 	      current_part_dimension = 0;
+ 	      break;
+ 
+@@ -5201,7 +5204,33 @@ resolve_ref (gfc_expr *expr)
+ 	  break;
+ 
+ 	case REF_SUBSTRING:
++	  break;
++
+ 	case REF_INQUIRY:
++	  /* Implement requirement in note 9.7 of F2018 that the result of the
++	     LEN inquiry be a scalar.  */
++	  if (ref->u.i == INQUIRY_LEN && array_ref)
++	    {
++	      array_ref->u.ar.type = AR_ELEMENT;
++	      expr->rank = 0;
++	      /* INQUIRY_LEN is not evaluated from the the rest of the expr
++		 but directly from the string length. This means that setting
++		 the array indices to one does not matter but might trigger
++		 a runtime bounds error. Suppress the check.  */
++	      expr->no_bounds_check = 1;
++	      for (dim = 0; dim < array_ref->u.ar.dimen; dim++)
++		{
++		  array_ref->u.ar.dimen_type[dim] = DIMEN_ELEMENT;
++		  if (array_ref->u.ar.start[dim])
++		    gfc_free_expr (array_ref->u.ar.start[dim]);
++		  array_ref->u.ar.start[dim]
++			= gfc_get_int_expr (gfc_default_integer_kind, NULL, 1);
++		  if (array_ref->u.ar.end[dim])
++		    gfc_free_expr (array_ref->u.ar.end[dim]);
++		  if (array_ref->u.ar.stride[dim])
++		    gfc_free_expr (array_ref->u.ar.stride[dim]);
++		}
++	    }
+ 	  break;
+ 	}
+ 
+@@ -16510,7 +16539,8 @@ resolve_equivalence (gfc_equiv *eq)
  	  && !gfc_notify_std (GFC_STD_GNU, msg, sym->name, &e->where))
  		continue;
  
@@ -4678,7 +5175,7 @@ index a4ad26efffc..a3df534180c 100644
        last_ts =&sym->ts;
        last_where = &e->where;
  
-@@ -16518,8 +16519,7 @@ resolve_equivalence (gfc_equiv *eq)
+@@ -16518,8 +16548,7 @@ resolve_equivalence (gfc_equiv *eq)
  	continue;
  
        /* Shall not be an automatic array.  */
@@ -4688,6 +5185,35 @@ index a4ad26efffc..a3df534180c 100644
  	{
  	  gfc_error ("Array %qs at %L with non-constant bounds cannot be "
  		     "an EQUIVALENCE object", sym->name, &e->where);
+diff --git a/gcc/fortran/trans-array.c b/gcc/fortran/trans-array.c
+index 2e5eb4f468f..572455e0d59 100644
+--- a/gcc/fortran/trans-array.c
++++ b/gcc/fortran/trans-array.c
+@@ -6945,6 +6945,24 @@ gfc_get_dataptr_offset (stmtblock_t *block, tree parm, tree desc, tree offset,
+ 	      tmp = gfc_build_array_ref (tmp, index, NULL);
+ 	      break;
+ 
++	    case REF_INQUIRY:
++	      switch (ref->u.i)
++		{
++		case INQUIRY_RE:
++		  tmp = fold_build1_loc (input_location, REALPART_EXPR,
++					 TREE_TYPE (TREE_TYPE (tmp)), tmp);
++		  break;
++
++		case INQUIRY_IM:
++		  tmp = fold_build1_loc (input_location, IMAGPART_EXPR,
++					 TREE_TYPE (TREE_TYPE (tmp)), tmp);
++		  break;
++
++		default:
++		  break;
++		}
++	      break;
++
+ 	    default:
+ 	      gcc_unreachable ();
+ 	      break;
 diff --git a/gcc/fortran/trans-decl.c b/gcc/fortran/trans-decl.c
 index 71f751de76f..ff85fd9da96 100644
 --- a/gcc/fortran/trans-decl.c
@@ -5400,6 +5926,43 @@ index bbfa1bc6fae..ca5443b79b3 100644
  		    {
  		      rewrite = false;
  		      break;
+diff --git a/gcc/tree-ssa-loop-ivopts.c b/gcc/tree-ssa-loop-ivopts.c
+index 01423dee883..ecfa569259c 100644
+--- a/gcc/tree-ssa-loop-ivopts.c
++++ b/gcc/tree-ssa-loop-ivopts.c
+@@ -109,6 +109,9 @@ along with GCC; see the file COPYING3.  If not see
+ #include "builtins.h"
+ #include "tree-vectorizer.h"
+ 
++/* For lang_hooks.types.type_for_mode.  */
++#include "langhooks.h"
++
+ /* FIXME: Expressions are expanded to RTL in this pass to determine the
+    cost of different addressing modes.  This should be moved to a TBD
+    interface between the GIMPLE and RTL worlds.  */
+@@ -3490,8 +3493,21 @@ add_iv_candidate_for_use (struct ivopts_data *data, struct iv_use *use)
+ {
+   poly_uint64 offset;
+   tree base;
+-  tree basetype;
+   struct iv *iv = use->iv;
++  tree basetype = TREE_TYPE (iv->base);
++
++  /* Don't add candidate for iv_use with non integer, pointer or non-mode
++     precision types, instead, add candidate for the corresponding scev in
++     unsigned type with the same precision.  See PR93674 for more info.  */
++  if ((TREE_CODE (basetype) != INTEGER_TYPE && !POINTER_TYPE_P (basetype))
++      || !type_has_mode_precision_p (basetype))
++    {
++      basetype = lang_hooks.types.type_for_mode (TYPE_MODE (basetype),
++						 TYPE_UNSIGNED (basetype));
++      add_candidate (data, fold_convert (basetype, iv->base),
++		     fold_convert (basetype, iv->step), false, NULL);
++      return;
++    }
+ 
+   add_candidate (data, iv->base, iv->step, false, use);
+ 
 diff --git a/gcc/tree-ssa-phiopt.c b/gcc/tree-ssa-phiopt.c
 index 19b37b43b8e..47227dc16dc 100644
 --- a/gcc/tree-ssa-phiopt.c
@@ -7832,10 +8395,15 @@ index 76e4460550d..9fc89270d48 100644
              {
                  timestruc_t st_atim;
 diff --git a/libstdc++-v3/ChangeLog b/libstdc++-v3/ChangeLog
-index 45847172291..ceadacbba8d 100644
+index 45847172291..042ed7ed014 100644
 --- a/libstdc++-v3/ChangeLog
 +++ b/libstdc++-v3/ChangeLog
-@@ -1,3 +1,244 @@
+@@ -1,3 +1,249 @@
++2020-05-04  Jonathan Wakely  <jwakely@redhat.com>
++
++	* doc/xml/faq.xml: Use working link for SGI STL FAQ.
++	* doc/html/*: Regenerate.
++
 +2020-04-24  Jonathan Wakely  <jwakely@redhat.com>
 +
 +	Backport from mainline
@@ -8106,6 +8674,110 @@ index 1058d5c3cc8..9bde1026804 100644
  	${xml_dir}/manual/status_cxxtr1.xml \
  	${xml_dir}/manual/status_cxxtr24733.xml \
  	${xml_dir}/manual/strings.xml \
+diff --git a/libstdc++-v3/doc/html/faq.html b/libstdc++-v3/doc/html/faq.html
+index ac99835acf2..18407225d7a 100644
+--- a/libstdc++-v3/doc/html/faq.html
++++ b/libstdc++-v3/doc/html/faq.html
+@@ -194,7 +194,7 @@
+     information is available on the homepage (including how to browse
+     the list archives); to send a message to the list,
+     use <code class="email">&lt;<a class="email" href="mailto:libstdc++@gcc.gnu.org">libstdc++@gcc.gnu.org</a>&gt;</code>.
+-    </p><p> 
++    </p><p>
+     If you have a question that you think should be included
+     here, or if you have a question <span class="emphasis"><em>about</em></span> a question/answer
+     here, please send email to the libstdc++ mailing list, as above.
+@@ -246,8 +246,8 @@
+     development tools. It may be necessary to install extra
+     development packages to get the headers, or the documentation, or
+     the source: please consult your vendor for details.
+-    </p><p> 
+-    To build and install from the GNU GCC sources, please consult the 
++    </p><p>
++    To build and install from the GNU GCC sources, please consult the
+     <a class="link" href="manual/setup.html" title="Chapter 2. Setup">setup
+     documentation</a> for detailed
+     instructions. You may wish to browse those files ahead
+@@ -268,7 +268,7 @@
+     </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-how_to_test"></a></td><td align="left" valign="top"><p>
+     Libstdc++ comes with its own validation testsuite, which includes
+     conformance testing, regression testing, ABI testing, and
+-    performance testing. Please consult the 
++    performance testing. Please consult the
+     <a class="link" href="http://gcc.gnu.org/install/test.html" target="_top">testing
+     documentation</a> for GCC and
+     <a class="link" href="manual/test.html" title="Testing">Testing</a> in the libstdc++
+@@ -424,12 +424,12 @@
+     </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-solaris_long_long"></a></td><td align="left" valign="top"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>This answer is old and probably no longer be relevant.</p></div><p>
+     By default we try to support the C99 <span class="type">long long</span> type.
+     This requires that certain functions from your C library be present.
+-    </p><p> 
++    </p><p>
+     Up through release 3.0.2 the platform-specific tests performed by
+     libstdc++ were too general, resulting in a conservative approach
+     to enabling the <span class="type">long long</span> code paths. The most
+     commonly reported platform affected was Solaris.
+-    </p><p> 
++    </p><p>
+     This has been fixed for libstdc++ releases greater than 3.0.3.
+     </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.predefined"></a><a id="q-predefined"></a><p><strong>4.3.</strong></p></td><td align="left" valign="top"><p>
+       <code class="constant">_XOPEN_SOURCE</code> and <code class="constant">_GNU_SOURCE</code> are always defined?
+@@ -484,7 +484,7 @@
+     and later.  A patch went in just after the 3.3 release to
+     make mips* use the generic implementation instead.  You can also
+     configure for mipsel-elf as a workaround.
+-    </p><p>    
++    </p><p>
+     The mips*-*-linux* port continues to use the MIPS II routines, and more
+     work in this area is expected.
+     </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.linux_glibc"></a><a id="q-linux_glibc"></a><p><strong>4.7.</strong></p></td><td align="left" valign="top"><p>
+@@ -510,7 +510,7 @@
+     enable <span class="type">wchar_t</span> and C++ library structures
+     like <code class="classname">wstring</code> were present. This impacted Solaris,
+     Darwin, and BSD variants, and is fixed in libstdc++ versions post 4.1.0.
+-    </p><p> 
++    </p><p>
+     </p></td></tr><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>5.1. <a href="faq.html#faq.what_works">
+       What works already?
+     </a></dt><dt>5.2. <a href="faq.html#faq.standard_bugs">
+@@ -526,8 +526,8 @@
+     platforms. Also dependent on the underlying platform is support
+     for <span class="type">wchar_t</span> and <span class="type">long long</span> specializations,
+     and details of thread support.
+-    </p><p>    
+-    Long answer: See the implementation status pages for 
++    </p><p>
++    Long answer: See the implementation status pages for
+     <a class="link" href="manual/status.html#status.iso.1998" title="C++ 1998/2003">C++98</a>,
+     <a class="link" href="manual/status.html#status.iso.tr1" title="C++ TR1">TR1</a>,
+     <a class="link" href="manual/status.html#status.iso.2011" title="C++ 2011">C++11</a>,
+@@ -536,7 +536,7 @@
+     </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.standard_bugs"></a><a id="q-standard_bugs"></a><p><strong>5.2.</strong></p></td><td align="left" valign="top"><p>
+       Bugs in the ISO C++ language or library specification
+     </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-standard_bugs"></a></td><td align="left" valign="top"><p>
+-    Unfortunately, there are some. 
++    Unfortunately, there are some.
+     </p><p>
+     For those people who are not part of the ISO Library Group
+     (i.e., nearly all of us needing to read this page in the first
+@@ -560,7 +560,7 @@
+     or an older version of the GNU compilers. Third, you can find more
+     information on the libstdc++ and the GCC mailing lists: search
+     these lists with terms describing your issue.
+-    </p><p> 
++    </p><p>
+     Before reporting a bug, please examine the
+     <a class="link" href="https://gcc.gnu.org/bugs/" target="_top">bugs database</a>, with the
+     component set to <span class="quote">“<span class="quote">c++</span>”</span>.
+@@ -813,7 +813,7 @@
+     and <a class="link" href="manual/backwards.html" title="Backwards Compatibility">backwards
+     compatibility</a> documentation.
+     </p><p>
+-    The <a class="link" href="https://web.archive.org/web/20171225062613/http://www.sgi.com/tech/stl/FAQ.html" target="_top">FAQ</a>
++    The <a class="link" href="https://web.archive.org/web/20171104092813/http://www.sgi.com/tech/stl/FAQ.html" target="_top">FAQ</a>
+     for SGI's STL is still recommended reading.
+     </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.extensions_and_backwards_compat"></a><a id="q-extensions_and_backwards_compat"></a><p><strong>7.4.</strong></p></td><td align="left" valign="top"><p>
+       Extensions and Backward Compatibility
 diff --git a/libstdc++-v3/doc/html/manual/status.html b/libstdc++-v3/doc/html/manual/status.html
 index 440b8671e0c..26793d9fa83 100644
 --- a/libstdc++-v3/doc/html/manual/status.html
@@ -8344,6 +9016,434 @@ index 440b8671e0c..26793d9fa83 100644
  	<a class="link" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0258r2.html" target="_top">
  	P0258R2
  	</a>
+diff --git a/libstdc++-v3/doc/xml/faq.xml b/libstdc++-v3/doc/xml/faq.xml
+index aff6c8d6004..cf8684e1cea 100644
+--- a/libstdc++-v3/doc/xml/faq.xml
++++ b/libstdc++-v3/doc/xml/faq.xml
+@@ -2,9 +2,9 @@
+ 
+ <article xml:id="faq" xreflabel="Frequently Asked Questions">
+ <?dbhtml filename="faq.html"?>
+- 
++
+ <info><title>Frequently Asked Questions</title>
+-  
++
+   <copyright>
+     <year>
+       2008-2018
+@@ -36,7 +36,7 @@
+      exactly how far the project has come, or just want the latest
+      bleeding-edge code, the up-to-date source can be cloned via
+      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://gcc.gnu.org/git.html">Git</link>.
+-    </para> 
++    </para>
+ 
+     <para>
+     N.B. The library is called libstdc++ <emphasis>not</emphasis> stdlibc++.
+@@ -58,7 +58,7 @@
+     (as the Draft Standard used to say) <quote>incomplet and
+     incorrekt</quote>, and many suffered from limitations of the compilers
+     that used them.
+-    </para> 
++    </para>
+     <para>
+     The GNU compiler collection
+     (<command>gcc</command>, <command>g++</command>, etc) is widely
+@@ -68,7 +68,7 @@
+     the rapid development and near-legendary
+     <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://gcc.gnu.org/buildstat.html">portability</link>
+     that are the hallmarks of an open-source project are applied to libstdc++.
+-    </para> 
++    </para>
+     <para>
+     All of the standard classes and functions from C++98/C++03, C++11 and C++14
+     (such as <classname>string</classname>,
+@@ -100,7 +100,7 @@
+     archives, is open to everyone.  You can read instructions for
+     doing so on the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://gcc.gnu.org/lists.html">GCC mailing lists</link> page.
+     If you have questions, ideas, code, or are just curious, sign up!
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -115,7 +115,7 @@
+     Nathan Myers gave the best of all possible answers, responding to
+     a Usenet article asking this question: <emphasis>Sooner, if you
+     help.</emphasis>
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -135,7 +135,7 @@
+     anybody who is willing to help write documentation, for example,
+     or has found a bug in code that we all thought was working and is
+     willing to provide details, is more than welcome!
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -152,7 +152,7 @@
+     being developed.</quote>
+     It should not be used for new projects, and won't even compile with
+     recent releases of GCC (or most other C++ compilers).
+-    </para> 
++    </para>
+     <para>
+     More information can be found in the
+     <link linkend="manual.appendix.porting.backwards">Backwards
+@@ -175,13 +175,13 @@
+     information is available on the homepage (including how to browse
+     the list archives); to send a message to the list,
+     use <email>libstdc++@gcc.gnu.org</email>.
+-    </para> 
++    </para>
+ 
+-    <para> 
++    <para>
+     If you have a question that you think should be included
+     here, or if you have a question <emphasis>about</emphasis> a question/answer
+     here, please send email to the libstdc++ mailing list, as above.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -201,7 +201,7 @@
+     <para>
+     See <link linkend="manual.intro.status.license">our license description</link>
+     for these and related questions.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -215,7 +215,7 @@
+     <para>
+      No. The special exception permits use of the library in
+      proprietary applications.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -235,7 +235,7 @@
+      are expanded inside the code that uses the library.  So to allow people
+      to replace the library code, someone using the library would have to
+      distribute their own source, rendering the LGPL equivalent to the GPL.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -249,7 +249,7 @@
+     <para>
+       None.  We encourage such programs to be released as free software,
+      but we won't punish you or sue you if you choose otherwise.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -271,14 +271,14 @@
+     development tools. It may be necessary to install extra
+     development packages to get the headers, or the documentation, or
+     the source: please consult your vendor for details.
+-    </para> 
+-    <para> 
+-    To build and install from the GNU GCC sources, please consult the 
++    </para>
++    <para>
++    To build and install from the GNU GCC sources, please consult the
+     <link linkend="manual.intro.setup">setup
+     documentation</link> for detailed
+     instructions. You may wish to browse those files ahead
+     of time to get a feel for what's required.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -313,12 +313,12 @@
+     <para>
+     Libstdc++ comes with its own validation testsuite, which includes
+     conformance testing, regression testing, ABI testing, and
+-    performance testing. Please consult the 
++    performance testing. Please consult the
+     <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/install/test.html">testing
+     documentation</link> for GCC and
+     <link linkend="manual.intro.setup.test">Testing</link> in the libstdc++
+     manual for more details.
+-    </para> 
++    </para>
+     <para>
+     If you find bugs in the testsuite programs themselves, or if you
+     think of a new test program that should be added to the suite,
+@@ -432,7 +432,7 @@
+       using anything from the rest of the library, such as IOStreams
+       or vectors, then you'll still need pieces from
+       <filename class="libraryfile">libstdc++.a</filename>.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -465,7 +465,7 @@
+     is only possible to a certain extent; the object files in question contain
+     template classes and template functions, pre-instantiated, and
+     splitting those up causes severe maintenance headaches.
+-    </para> 
++    </para>
+     <para>
+     On supported platforms, libstdc++ takes advantage of garbage
+     collection in the GNU linker to get a result similar to separating
+@@ -495,12 +495,12 @@
+   <answer xml:id="a-other_compilers">
+     <para>
+     Perhaps.
+-    </para> 
++    </para>
+     <para>
+     Since the goal of ISO Standardization is for all C++
+     implementations to be able to share code, libstdc++ should be
+     usable under any ISO-compliant compiler, at least in theory.
+-    </para> 
++    </para>
+     <para>
+     However, the reality is that libstdc++ is targeted and optimized
+     for GCC/G++. This means that often libstdc++ uses specific,
+@@ -515,7 +515,7 @@
+     been known to work with versions of the EDG C++ compiler, and
+     vendor-specific proprietary C++ compilers such as the Intel ICC
+     C++ compiler.
+-    </para> 
++    </para>
+ 
+   </answer>
+ </qandaentry>
+@@ -533,16 +533,16 @@
+     <para>
+     By default we try to support the C99 <type>long long</type> type.
+     This requires that certain functions from your C library be present.
+-    </para> 
+-    <para> 
++    </para>
++    <para>
+     Up through release 3.0.2 the platform-specific tests performed by
+     libstdc++ were too general, resulting in a conservative approach
+     to enabling the <type>long long</type> code paths. The most
+     commonly reported platform affected was Solaris.
+-    </para> 
+-    <para> 
++    </para>
++    <para>
+     This has been fixed for libstdc++ releases greater than 3.0.3.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -651,10 +651,10 @@
+     make mips* use the generic implementation instead.  You can also
+     configure for mipsel-elf as a workaround.
+     </para>
+-    <para>    
++    <para>
+     The mips*-*-linux* port continues to use the MIPS II routines, and more
+     work in this area is expected.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -700,9 +700,9 @@
+     enable <type>wchar_t</type> and C++ library structures
+     like <classname>wstring</classname> were present. This impacted Solaris,
+     Darwin, and BSD variants, and is fixed in libstdc++ versions post 4.1.0.
+-    </para> 
+-    <para> 
+-    </para> 
++    </para>
++    <para>
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -728,14 +728,14 @@
+     for <type>wchar_t</type> and <type>long long</type> specializations,
+     and details of thread support.
+     </para>
+-    <para>    
+-    Long answer: See the implementation status pages for 
++    <para>
++    Long answer: See the implementation status pages for
+     <link linkend="status.iso.1998">C++98</link>,
+     <link linkend="status.iso.tr1">TR1</link>,
+     <link linkend="status.iso.2011">C++11</link>,
+     <link linkend="status.iso.2014">C++14</link>, and
+     <link linkend="status.iso.2017">C++17</link>.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -747,7 +747,7 @@
+   </question>
+   <answer xml:id="a-standard_bugs">
+     <para>
+-    Unfortunately, there are some. 
++    Unfortunately, there are some.
+     </para>
+     <para>
+     For those people who are not part of the ISO Library Group
+@@ -758,7 +758,7 @@
+     website</link>.
+     Many of these issues have resulted in
+     <link linkend="manual.intro.status.bugs.iso">code changes in libstdc++</link>.
+-    </para> 
++    </para>
+     <para>
+     If you think you've discovered a new bug that is not listed,
+     please post a message describing your problem to the author of
+@@ -784,12 +784,12 @@
+     or an older version of the GNU compilers. Third, you can find more
+     information on the libstdc++ and the GCC mailing lists: search
+     these lists with terms describing your issue.
+-    </para> 
+-    <para> 
++    </para>
++    <para>
+     Before reporting a bug, please examine the
+     <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://gcc.gnu.org/bugs/">bugs database</link>, with the
+     component set to <quote>c++</quote>.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -824,7 +824,7 @@
+     fs.close();
+     fs.open("a_new_file");
+     </programlisting>
+-    
++
+     <para>
+     All operations on the re-opened <varname>fs</varname> would fail, or at
+     least act very strangely, especially if <varname>fs</varname> reached the
+@@ -840,7 +840,7 @@
+     of <link linkend="manual.bugs.dr409">DR #409</link> and
+     <function>open()</function>
+     now calls <function>clear()</function> on success.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -859,7 +859,7 @@
+     necessarily trying to be OO. The option also enforces outdated guidelines
+     from old editions of the books, and the advice isn't all relevant to
+     modern C++ (especially C++11 and later).
+-    </para> 
++    </para>
+     <para>
+     We do, however, try to have libstdc++ sources as clean as possible. If
+     you see some simple changes that pacify <option>-Weffc++</option>
+@@ -889,7 +889,7 @@
+     <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/libstdc++/2001-01/msg00247.html">sums
+       things up here</link>.  The collisions with vector/string iterator
+     types have been fixed for 3.1.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -947,7 +947,7 @@
+     checks, is available in the
+     <link linkend="std.diagnostics.concept_checking">Diagnostics</link>.
+     chapter of the manual.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -1013,7 +1013,7 @@
+     want to test the library for memory leaks please read
+     <link linkend="debug.memory">Tips for memory leak hunting</link>
+     first.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -1028,7 +1028,7 @@
+     See
+     the <link linkend="std.containers">Containers</link>
+     chapter.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -1056,7 +1056,7 @@
+     fixes.  Bugs have a way of being reintroduced; if an old bug
+     creeps back in, it will be caught immediately by the testsuite -
+     but only if such a test exists.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -1150,9 +1150,9 @@
+     compatibility</link> documentation.
+     </para>
+     <para>
+-    The <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://web.archive.org/web/20171225062613/http://www.sgi.com/tech/stl/FAQ.html">FAQ</link>
++    The <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://web.archive.org/web/20171104092813/http://www.sgi.com/tech/stl/FAQ.html">FAQ</link>
+     for SGI's STL is still recommended reading.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -1165,7 +1165,7 @@
+   <answer xml:id="a-extensions_and_backwards_compat">
+     <para>
+       See the <link linkend="manual.appendix.porting.backwards">link</link> on backwards compatibility and <link linkend="appendix.porting.api">link</link> on evolution.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -1206,7 +1206,7 @@
+     <para>
+     Please refer to the <link linkend="appendix.contrib">Contributing</link>
+     section in our manual.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -1272,7 +1272,7 @@
+     so they may later be changed.  Deciding which, and implementing
+     the decisions, must happen before you can reasonably document a
+     candidate C++ ABI that encompasses the standard library.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
+@@ -1302,7 +1302,7 @@
+     <para>
+     See <link linkend="strings.string.shrink">Shrink-to-fit
+     strings</link> for a similar solution for strings.
+-    </para> 
++    </para>
+   </answer>
+ </qandaentry>
+ 
 diff --git a/libstdc++-v3/doc/xml/manual/status_cxx1998.xml b/libstdc++-v3/doc/xml/manual/status_cxx1998.xml
 index 44a042c2724..df3b2c80d20 100644
 --- a/libstdc++-v3/doc/xml/manual/status_cxx1998.xml
