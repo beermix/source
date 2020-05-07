@@ -51,7 +51,6 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-lock-elision \
 		--enable-stack-protector=strong \
-		--enable-static-pie \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
