@@ -153,6 +153,7 @@ GCC_CONFIGURE:= \
 		--disable-vtable-verify \
 		--disable-werror \
 		--without-cuda-driver \
+		--with-linker-hash-style=gnu \
 		--with-arch=$(CONFIG_CPU_TYPE) \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
