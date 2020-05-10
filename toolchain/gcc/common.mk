@@ -157,6 +157,7 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--with-arch=$(CONFIG_CPU_TYPE) \
 		--disable-werror \
+		--with-tune=generic \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
