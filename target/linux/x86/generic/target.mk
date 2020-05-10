@@ -1,5 +1,5 @@
 BOARDNAME:=Generic
-CPU_TYPE :=bonnell
+CPU_TYPE :=pentium4
 FEATURES += pci pcie
 
 define Target/Description
