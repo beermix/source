@@ -156,7 +156,8 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--disable-werror \
 		--with-tune=generic \
-		--with-linker-hash-style=gnu \
+		--disable-libstdcxx-debug \
+		--disable-libstdcxx-pch \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
