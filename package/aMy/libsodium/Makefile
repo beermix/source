@@ -54,7 +54,6 @@ endef
 
 CONFIGURE_ARGS+= \
 	--disable-ssp \
-	--with-pthreads \
 	$(if $(CONFIG_LIBSODIUM_MINIMAL),--enable,--disable)-minimal
 
 define Build/InstallDev
