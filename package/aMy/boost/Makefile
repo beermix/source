@@ -472,7 +472,7 @@ define Build/InstallDev
 
 	$(INSTALL_DIR) $(1)/usr/lib
 	# copies all cmake files, compiled archive and shared object files
-	$(CP) -v $(PKG_INSTALL_DIR)/lib/{*.{a,cmake}} $(1)/usr/lib/ || :
+	$(CP) -v $(PKG_INSTALL_DIR)/lib/*.a $(1)/usr/lib/ || :
 endef
 
 define Host/Install
