@@ -1,7 +1,7 @@
 # DP: Search $(builddir)/sys-include for the asm header files
 
---- a/src/configure.ac
-+++ b/src/configure.ac
+--- a/configure.ac
++++ b/configure.ac
 @@ -3318,7 +3318,7 @@ fi
  # being built; programs in there won't even run.
  if test "${build}" = "${host}" && test -d ${srcdir}/gcc; then
