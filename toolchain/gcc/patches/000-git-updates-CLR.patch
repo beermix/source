@@ -1,10 +1,310 @@
-# DP: updates from the 9 branch upto 20200507 (fadd5926292).
+Alan Modra (1):
+      [RS6000] PR94145, make PLT loads volatile
 
-LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	4212a6a3e44f870412d9025eeb323fd4f50a61da fadd59262921825b135b8e018ac8510e97dee92a \
-	| awk '/^diff .*\.texi/ {skip=1; next} /^diff / { skip=0 } skip==0' \
-	| grep -v -E '^(diff|index)'
+Andre Vieira (1):
+      aarch64: Fix bootstrap with old binutils [PR93053]
 
+Andrea Corallo (1):
+      aarch64: backport fix for PR target/94530
+
+Andreas Krebbel (4):
+      PR94613: Fix vec_sel builtin for IBM Z
+      S/390: Fix PR94666
+      Add missing changelog entries
+      IBM Z: vec_store_len_r/vec_load_len_r fix
+
+Bill Schmidt (1):
+      rs6000: Fix -mpower9-vector -mno-altivec ICE (PR87560)
+
+Bin Cheng (2):
+      backport PR94125: Update post order number for merged SCC.
+      Add unsigned type iv_cand for iv_use with non mode-precision type
+
+Carl Love (3):
+      rs6000: Add command line and builtin compatibility check
+      rs6000: vec_rlnm fix to make builtin work according to ABI
+      rs6000, Fix header comment for intrinsic function _mm_movemask_epi8
+
+Claudiu Zissulescu (1):
+      arc: Allow more ABIs in GLIBC_DYNAMIC_LINKER
+
+Eric Botcazou (4):
+      Fix incorrect filling of delay slots in branchy code at -O2
+      Fix wrong year in ChangeLog.
+      Fix Ada bootstrap on Cygwin64
+      Update the baseline symbols for SPARC64/Linux
+
+Fritz Reese (2):
+      Fix fortran/85982 ICE in resolve_component.
+      Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
+
+GCC Administrator (56):
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+
+H.J. Lu (3):
+      x86: Insert ENDBR if function will be called indirectly
+      x86: Restore the frame pointer in word_mode
+      x86: Allow -fcf-protection with external thunk
+
+Harald Anlauf (1):
+      PR fortran/93364 - ICE in gfc_set_array_spec, at fortran/array.c:879
+
+Iain Buclaw (3):
+      d: Fix ICE in add_symbol_to_partition_1, at lto/lto-partition.c:215
+      libphobos: Fix struct layout of stat32_t on sparc-*-solaris*
+      libphobos: Fix struct layout of addrinfo on sparc-*-solaris*
+
+Iain Sandoe (1):
+      Darwin: Fix i686 bootstrap when the assembler supports GOTOFF in data.
+
+Jakub Jelinek (40):
+      Bump BASE-VER to 9.3.1.
+      tailcall: Fix up process_assignment [PR94001]
+      inliner: Copy DECL_BY_REFERENCE in copy_decl_to_var [PR93888]
+      print-rtl: Fix printing of CONST_STRING in DEBUG_INSNs [PR93399]
+      ldist: Further fixes for -ftrapv [PR94114]
+      dfp: Fix decimal_to_binary [PR94111]
+      aarch64: Fix ICE in aarch64_add_offset_1 [PR94121]
+      pdp11: Fix handling of common (local and global) vars [PR94134]
+      tree-dse: Fix mem* head trimming if call has lhs [PR94130]
+      doc: Fix up ASM_OUTPUT_ALIGNED_DECL_LOCAL description
+      maintainer-scripts: Fix up gcc_release without -l, where mkdir was using umask 077 after migration
+      aarch64: Fix another bug in aarch64_add_offset_1 [PR94121]
+      tree-nested: Fix handling of *reduction clauses with C array sections [PR93566]
+      tree-inline: Fix a -fcompare-debug issue in the inliner [PR94167]
+      expand: Don't depend on warning flags in code generation of strnlen [PR94189]
+      aarch64: Fix ICE due to aarch64_gen_compare_reg_maybe_ze [PR94435]
+      i386: Fix emit_reduc_half on V{64Q,32H}Imode [PR94500]
+      c++: Fix parsing of invalid enum specifiers [PR90995]
+      c: Handle C_TYPE_INCOMPLETE_VARS even for ENUMERAL_TYPEs [PR94172]
+      phiopt: Avoid -fcompare-debug bug in phiopt [PR94211]
+      c++: Fix up handling of captured vars in lambdas in OpenMP clauses [PR93931]
+      c: Fix up cfun->function_end_locus from the C FE [PR94029]
+      c: Fix up cfun->function_end_locus on invalid function bodies [PR94239]
+      cgraphunit: Avoid code generation differences based on -w/TREE_NO_WARNING [PR94277]
+      if-conv: Fix -fcompare-debug bugs in ifcvt_local_dce [PR94283]
+      if-conv: Delete dead stmts backwards in ifcvt_local_dce [PR94283]
+      varasm: Fix output_constructor where a RANGE_EXPR index needs to skip some elts [PR94303]
+      reassoc: Fix -fcompare-debug bug in reassociate_bb [PR94329]
+      Fix vextract* masked patterns [PR93069]
+      c++: Fix handling of internal fn calls in statement expressions [PR94385]
+      fold-const: Fix division folding with vector operands [PR94412]
+      objsz: Don't call replace_uses_by on SSA_NAME_OCCURS_IN_ABNORMAL_PHI [PR94423]
+      i386: Fix vph{add,subs?}[wd] 256-bit AVX2 RTL patterns [PR94460]
+      openmp: Fix ICE on #pragma omp parallel master in template [PR94477]
+      debug: Improve debug info of c++14 deduced return type [PR94459]
+      aarch64: Fix {ash[lr],lshr}<mode>3 expanders [PR94488]
+      openmp: Fix parallel master error recovery [PR94512]
+      i386: Fix V{64QI,32HI}mode constant permutations [PR94509]
+      libstdc++: Update {x86_64,i?86,powerpc64,s390x,aarch64}-linux baselines for GCC 10.1
+      testsuite: Improve g++.dg/ext/attr-parm-1.C testcase [PR94946]
+
+Jason Merrill (8):
+      c++: Fix CTAD with multiple-arg ctor template [93248].
+      c++: Fix ICE-after-error on partial spec [92068]
+      c++: Find parameter pack in typedef in lambda [92909].
+      c++: Fix comparison of fn() and ns::fn() [PR90711]
+      c++: alias template and parameter packs (PR91966).
+      c++: Fix reuse of class constants [PR94453]
+      c++: Mangling of dependent conversions [PR91377]
+      c++: Avoid ICE with dependent attribute on type.
+
+Jiufu Guo (1):
+      rs6000: Check -+0 and NaN for smax/smin generation
+
+John David Anglin (1):
+      Define __BIG_ENDIAN__
+
+Jonathan Wakely (24):
+      libstdc++: Ensure root-dir converted to forward slash (PR93244)
+      libstdc++: Fix FS-dependent filesystem tests
+      libstdc++: Fix test failure due to -Wnonnull warnings
+      libstdc++: Fix name of macro in #undef directive
+      libstdc++: Handle type-changing path concatenations (PR 94063)
+      libstdc++: Add default constructor to net::service_already_exists (PR 94199)
+      doc: Note that some warnings depend on optimizations (PR 92757)
+      libstdc++: Fix std::to_address for debug iterators (PR 93960)
+      libstdc++: Document correct feature test macro, __cpp_lib_is_invocable
+      libstdc++: Update __cpp_lib_erase_if macro (P1115R3)
+      libstdc++: Improve C++14 status docs
+      libstdc++: Add __cpp_lib_unwrap_ref feature test macro
+      libstdc++: Fix some missing/incorrect feature test macros
+      Fix <version> header for freestanding
+      libstdc++: Define __cpp_lib_constexpr_complex macro
+      libstdc++: Define missing __cpp_lib_int_pow2 macro
+      libstdc++: Add comments to non-standard feature test macros
+      libstdc++: Add missing feature test macros
+      libstdc++: Update __cpp_lib_array_constexpr and __cpp_lib_string_view
+      libstdc++: Define __cpp_lib_execution feature test
+      libstdc++: Make net::service_already_exists default constructible
+      libstdc++: Fix type-erasure in experimental::net::executor (PR 94203)
+      libstdc++: Fix broken link to SGI STL FAQ
+      libstdc++: Document library versioning for 9.[123] and 10.1
+
+Joseph Myers (1):
+      Remove wrongly committed file.
+
+Julian Brown (1):
+      Test cases for mixed structured/dynamic data lifetimes with OpenACC [PR92843]
+
+Kewen Lin (5):
+      [testsuite] Fix PR94023 to guard case under vect_hw_misalign
+      [testsuite] Fix PR94019 to check vector char when vect_hw_misalign
+      [testsuite] Fix PR93935 to guard case under vect_hw_misalign
+      Fix PR94043 by making vect_live_op generate lc-phi
+      Fix PR94443 with gsi_insert_seq_before [PR94443]
+
+Kyrylo Tkachov (10):
+      aarch64: Extend %R for integer registers
+      aarch64: Implement TImode compare-and-swap
+      aarch64: Tidy aarch64_split_compare_and_swap
+      aarch64: Add out-of-line functions for LSE atomics
+      aarch64: Implement -moutline-atomics
+      [AArch64] Fix shrinkwrapping interactions with atomics (PR92692)
+      aarch64: Fix store-exclusive in load-operate LSE helpers
+      aarch64: Configure for sys/auxv.h in libgcc for lse-init.c
+      aarch64: Fix up aarch64_compare_and_swaphi pattern [PR94368]
+      [AArch64] PR target/94518: Fix memmodel index in aarch64_store_exclusive_pair
+
+Marek Polacek (2):
+      c++: Fix ICE with lambda in operator function [PR93597]
+      c++: Fix bogus -Wparentheses warning with fold-expression [PR94505]
+
+Mark Eggleston (3):
+      fortran: ICE using undeclared symbol in array constructor PR93484
+      fortran: ICE equivalence with an element of an array PR94030
+      fortran : ICE in gfc_resolve_findloc PR93498
+
+Martin Jambor (2):
+      gcc-9 sra: Cap number of sub-access propagations with a param (PR 93435)
+      sra-9: Fix sra_modify_expr handling of partial writes (PR 94482)
+
+Martin Liska (3):
+      Backport 314b91220a07bd63f13c58e37f1b5b9430a3702b
+      Backport 55a7380213a5c16120d5c674fb42b38a3d796b57
+      Backport e9f799d25973fc38022c5ea71ed5a2bca58a847f
+
+Martin Sebor (1):
+      c++: reject scalar array initialization with nullptr [PR94510]
+
+Max Filippov (2):
+      xtensa: backport fix for PR target/91880
+      xtensa: backport fix for PR target/94584
+
+Michael Meissner (2):
+      Backport PR target/93932 (variable vec_extract) to GCC 9
+      Fix target/94557 PowerPC regression on GCC 9 (variable vec_extract)
+
+Nathan Sidwell (2):
+      c++: Fix ICE popping local scope [pr84733]
+      c++: QT overload regression with attribute [PR94946]
+
+Rainer Orth (1):
+      libstdc++: Update Solaris baselines for GCC 9.4
+
+Richard Biener (4):
+      tree-optimization/94163 constrain alignment set by PRE
+      middle-end/94206 fix memset folding to avoid types with padding
+      tree-optimization/94103 avoid CSE of loads with padding
+      middle-end/94479 - fix gimplification of address
+
+Richard Earnshaw (1):
+      arm: correct constraints on movsi_compare0 [PR91913]
+
+Tamar Christina (2):
+      AArch64: Break apart paradoxical subregs for VSTRUCT writes (PR target/94052)
+      AArch64: Fix options canonicanization for assembler
+
+Thomas Koenig (1):
+      Revert patch for PR fortran/93956.
+
+Thomas König (2):
+      Backport from trunk of the fix for PR 94270.
+      Fix PR 93956, wrong pointer when returned via function.
+
+Thomas Rodgers (3):
+      libstdc++: Fix PSTL tests to run correctly with newer Thread Building Blocks
+      libstdc++: Fix date of changelog entry
+      libstdc++: Mark experimental::net::system_context ctor deleted
+
+Thomas Schwinge (1):
+      Rename 'libgomp.oacc-c-c++-common/static-dynamic-lifetimes-*' to 'libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-*' [PR92843]
+
+Tobias Burnus (2):
+      [Fortran] Fix result-variable handling of MODULE PROCEDURE (PR94348)
+      ICE in gfc_get_dataptr_offset, at fortran/trans-array.c:6951
+
+Uros Bizjak (5):
+      i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
+      i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
+      i386: Require OPTION_MASK_ISA_SSE2 for __builtin_ia32_movq128 [PR94603]
+      i386: Remove unneeded assignments when triggering SSE exceptions
+      alpha: Implement the PR94780 fix for alpha.
+
+Will Schmidt (2):
+      backport PR90763: PowerPC vec_xl_len should take const argument.
+      rs6000 pragma fix backport from mainline to gcc-9
+
+Zackery Spytz (1):
+      doc: Fix a typo in the documentation of the copy attribute
+
+diff --git a/ChangeLog b/ChangeLog
+index 9605d767a80..0203aec84ad 100644
 --- a/ChangeLog
 +++ b/ChangeLog
 @@ -1,3 +1,13 @@
@@ -21,9 +321,17 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/ChangeLog b/gcc/ChangeLog
+index d8e53874e68..3fad79c3706 100644
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,677 @@
+@@ -1,3 +1,687 @@
++2020-05-07  Uroš Bizjak  <ubizjak@gmail.com>
++
++	* config/alpha/alpha.c (alpha_atomic_assign_expand_fenv): Use
++	TARGET_EXPR instead of MODIFY_EXPR for the first assignments to
++	fenv_var and new_fenv_var.
++
 +2020-05-05  Andreas Krebbel  <krebbel@linux.ibm.com>
 +
 +	Backport from mainline
@@ -698,14 +1006,15 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +	Remove set of str_align_loops and str_align_jumps as these
 +	should be set in previous 2 conditions in the function.
 +
++2020-03-12  Jakub Jelinek  <jakub@redhat.com>
++
++	* BASE-VER: Set to 9.3.1.
++
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
---- a/gcc/DATESTAMP
-+++ b/gcc/DATESTAMP
-@@ -1 +1 @@
--20200312
-+20200507
+diff --git a/gcc/ada/ChangeLog b/gcc/ada/ChangeLog
+index a819f57a2bf..41ba2db6a07 100644
 --- a/gcc/ada/ChangeLog
 +++ b/gcc/ada/ChangeLog
 @@ -1,3 +1,8 @@
@@ -717,6 +1026,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/ada/mingw32.h b/gcc/ada/mingw32.h
+index fe6464fd601..3dbf7974a67 100644
 --- a/gcc/ada/mingw32.h
 +++ b/gcc/ada/mingw32.h
 @@ -56,6 +56,7 @@
@@ -727,6 +1038,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  #endif
  #include <windows.h>
  
+diff --git a/gcc/builtins.c b/gcc/builtins.c
+index ed11f79ff0b..e8e43f53ec6 100644
 --- a/gcc/builtins.c
 +++ b/gcc/builtins.c
 @@ -3112,27 +3112,25 @@ expand_builtin_strnlen (tree exp, rtx target, machine_mode target_mode)
@@ -767,6 +1080,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	}
  
        if (!len)
+diff --git a/gcc/c/ChangeLog b/gcc/c/ChangeLog
+index c38f1d73605..3439f6d4e65 100644
 --- a/gcc/c/ChangeLog
 +++ b/gcc/c/ChangeLog
 @@ -1,3 +1,49 @@
@@ -819,6 +1134,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/c/c-decl.c b/gcc/c/c-decl.c
+index 859a6241258..caa2b75ac6d 100644
 --- a/gcc/c/c-decl.c
 +++ b/gcc/c/c-decl.c
 @@ -3272,7 +3272,8 @@ pushdecl (tree x)
@@ -933,6 +1250,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
    /* Finalize the ELF visibility for the function.  */
    c_determine_visibility (fndecl);
+diff --git a/gcc/c/c-parser.c b/gcc/c/c-parser.c
+index aafe8d1740b..d0139ab4b86 100644
 --- a/gcc/c/c-parser.c
 +++ b/gcc/c/c-parser.c
 @@ -1402,8 +1402,8 @@ static struct c_expr c_parser_braced_init (c_parser *, tree, bool,
@@ -1147,6 +1466,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  }
  
  #include "gt-c-c-parser.h"
+diff --git a/gcc/c/c-tree.h b/gcc/c/c-tree.h
+index 7e35ab1f0bc..4642d682452 100644
 --- a/gcc/c/c-tree.h
 +++ b/gcc/c/c-tree.h
 @@ -38,9 +38,12 @@ along with GCC; see the file COPYING3.  If not see
@@ -1184,6 +1505,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  extern tree finish_struct (location_t, tree, tree, tree,
  			   struct c_struct_parse_info *);
  extern struct c_arg_info *build_arg_info (void);
+diff --git a/gcc/c/c-typeck.c b/gcc/c/c-typeck.c
+index c0582a54c93..24106c126cd 100644
 --- a/gcc/c/c-typeck.c
 +++ b/gcc/c/c-typeck.c
 @@ -14965,7 +14965,8 @@ c_build_qualified_type (tree type, int type_quals, tree orig_qual_type,
@@ -1196,6 +1519,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        && TYPE_MAIN_VARIANT (var_type) != var_type)
      C_TYPE_INCOMPLETE_VARS (var_type) = 0;
    return var_type;
+diff --git a/gcc/cgraphunit.c b/gcc/cgraphunit.c
+index 4a27867b82c..0f933bdc758 100644
 --- a/gcc/cgraphunit.c
 +++ b/gcc/cgraphunit.c
 @@ -967,15 +967,15 @@ check_global_declaration (symtab_node *snode)
@@ -1220,6 +1545,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        /* This symbol is effectively an "extern" declaration now.  */
        TREE_PUBLIC (decl) = 1;
      }
+diff --git a/gcc/common/config/aarch64/aarch64-common.c b/gcc/common/config/aarch64/aarch64-common.c
+index bab3ab3fa36..db9842b1ea6 100644
 --- a/gcc/common/config/aarch64/aarch64-common.c
 +++ b/gcc/common/config/aarch64/aarch64-common.c
 @@ -433,7 +433,22 @@ aarch64_get_extension_string_for_isa_flags (unsigned long isa_flags,
@@ -1246,6 +1573,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	isa_flag_bits |= opt->flag_canonical;
        }
      }
+diff --git a/gcc/config/aarch64/aarch64-protos.h b/gcc/config/aarch64/aarch64-protos.h
+index c083cad5327..b9bfb281275 100644
 --- a/gcc/config/aarch64/aarch64-protos.h
 +++ b/gcc/config/aarch64/aarch64-protos.h
 @@ -644,4 +644,17 @@ poly_uint64 aarch64_regmode_natural_size (machine_mode);
@@ -1266,6 +1595,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +extern const atomic_ool_names aarch64_ool_ldeor_names;
 +
  #endif /* GCC_AARCH64_PROTOS_H */
+diff --git a/gcc/config/aarch64/aarch64-simd.md b/gcc/config/aarch64/aarch64-simd.md
+index e3852c5d182..f413575cfc9 100644
 --- a/gcc/config/aarch64/aarch64-simd.md
 +++ b/gcc/config/aarch64/aarch64-simd.md
 @@ -1012,31 +1012,17 @@
@@ -1422,6 +1753,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  })
  
  
+diff --git a/gcc/config/aarch64/aarch64.c b/gcc/config/aarch64/aarch64.c
+index b452a53af99..78acd7ecfdb 100644
 --- a/gcc/config/aarch64/aarch64.c
 +++ b/gcc/config/aarch64/aarch64.c
 @@ -1879,10 +1879,33 @@ emit_set_insn (rtx x, rtx y)
@@ -1747,6 +2080,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    /* Emit any final barrier needed for a __sync operation.  */
    if (is_mm_sync (model))
      aarch64_emit_post_barrier (model);
+diff --git a/gcc/config/aarch64/aarch64.opt b/gcc/config/aarch64/aarch64.opt
+index 3c6d1cc90ad..f474a28eb92 100644
 --- a/gcc/config/aarch64/aarch64.opt
 +++ b/gcc/config/aarch64/aarch64.opt
 @@ -255,3 +255,6 @@ user-land code.
@@ -1756,6 +2091,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +moutline-atomics
 +Target Report Mask(OUTLINE_ATOMICS) Save
 +Generate local calls to out-of-line atomic operations.
+diff --git a/gcc/config/aarch64/atomics.md b/gcc/config/aarch64/atomics.md
+index 0f357662ac3..e7f3dad652f 100644
 --- a/gcc/config/aarch64/atomics.md
 +++ b/gcc/config/aarch64/atomics.md
 @@ -22,10 +22,10 @@
@@ -2028,6 +2365,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  (define_expand "mem_thread_fence"
    [(match_operand:SI 0 "const_int_operand" "")]
    ""
+diff --git a/gcc/config/aarch64/constraints.md b/gcc/config/aarch64/constraints.md
+index 21f9549e660..73892b339c4 100644
 --- a/gcc/config/aarch64/constraints.md
 +++ b/gcc/config/aarch64/constraints.md
 @@ -220,6 +220,13 @@
@@ -2044,6 +2383,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  (define_memory_constraint "Q"
   "A memory address which uses a single base register with no offset."
   (and (match_code "mem")
+diff --git a/gcc/config/aarch64/falkor-tag-collision-avoidance.c b/gcc/config/aarch64/falkor-tag-collision-avoidance.c
+index 779dee81f7f..698d1595d0a 100644
 --- a/gcc/config/aarch64/falkor-tag-collision-avoidance.c
 +++ b/gcc/config/aarch64/falkor-tag-collision-avoidance.c
 @@ -537,6 +537,13 @@ valid_src_p (rtx src, rtx_insn *insn, struct loop *loop, bool *pre_post,
@@ -2060,6 +2401,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    unsigned regno = REGNO (addr.base);
    if (global_regs[regno] || fixed_regs[regno])
      return false;
+diff --git a/gcc/config/aarch64/iterators.md b/gcc/config/aarch64/iterators.md
+index 6caeeac8086..3bc49ea0238 100644
 --- a/gcc/config/aarch64/iterators.md
 +++ b/gcc/config/aarch64/iterators.md
 @@ -29,6 +29,9 @@
@@ -2072,6 +2415,34 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  ;; Iterator for QI and HI modes
  (define_mode_iterator SHORT [QI HI])
  
+diff --git a/gcc/config/alpha/alpha.c b/gcc/config/alpha/alpha.c
+index 524379d3763..614a426e989 100644
+--- a/gcc/config/alpha/alpha.c
++++ b/gcc/config/alpha/alpha.c
+@@ -9909,8 +9909,8 @@ alpha_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
+     = build_fn_decl ("__ieee_set_fp_control",
+ 		     build_function_type_list (void_type_node, NULL));
+   mask = build_int_cst (long_unsigned_type_node, ~SWCR_STATUS_MASK);
+-  ld_fenv = build2 (MODIFY_EXPR, long_unsigned_type_node,
+-		    fenv_var, build_call_expr (get_fpscr, 0));
++  ld_fenv = build4 (TARGET_EXPR, long_unsigned_type_node, fenv_var,
++		    build_call_expr (get_fpscr, 0), NULL_TREE, NULL_TREE);
+   masked_fenv = build2 (BIT_AND_EXPR, long_unsigned_type_node, fenv_var, mask);
+   hold_fnclex = build_call_expr (set_fpscr, 1, masked_fenv);
+   *hold = build2 (COMPOUND_EXPR, void_type_node,
+@@ -9931,8 +9931,8 @@ alpha_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
+        __atomic_feraiseexcept (new_fenv_var);  */
+ 
+   new_fenv_var = create_tmp_var_raw (long_unsigned_type_node);
+-  reload_fenv = build2 (MODIFY_EXPR, long_unsigned_type_node, new_fenv_var,
+-			build_call_expr (get_fpscr, 0));
++  reload_fenv = build4 (TARGET_EXPR, long_unsigned_type_node, new_fenv_var,
++			build_call_expr (get_fpscr, 0), NULL_TREE, NULL_TREE);
+   restore_fnenv = build_call_expr (set_fpscr, 1, fenv_var);
+   atomic_feraiseexcept = builtin_decl_implicit (BUILT_IN_ATOMIC_FERAISEEXCEPT);
+   update_call
+diff --git a/gcc/config/arc/linux.h b/gcc/config/arc/linux.h
+index 270ca907d87..7d07adc4257 100644
 --- a/gcc/config/arc/linux.h
 +++ b/gcc/config/arc/linux.h
 @@ -29,7 +29,8 @@ along with GCC; see the file COPYING3.  If not see
@@ -2084,6 +2455,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  #define UCLIBC_DYNAMIC_LINKER  "/lib/ld-uClibc.so.0"
  
  /* Note that the default is to link against dynamic libraries, if they are
+diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
+index 53e54874c12..bfb03f1b96d 100644
 --- a/gcc/config/arm/arm.md
 +++ b/gcc/config/arm/arm.md
 @@ -6362,16 +6362,21 @@
@@ -2111,6 +2484,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  )
  
  ;; Subroutine to store a half word from a register into memory.
+diff --git a/gcc/config/i386/darwin.h b/gcc/config/i386/darwin.h
+index bdb36f00959..c099a6238d8 100644
 --- a/gcc/config/i386/darwin.h
 +++ b/gcc/config/i386/darwin.h
 @@ -239,6 +239,16 @@ along with GCC; see the file COPYING3.  If not see
@@ -2130,6 +2505,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  /* Darwin profiling -- call mcount.  */
  #undef FUNCTION_PROFILER
  #define FUNCTION_PROFILER(FILE, LABELNO)				\
+diff --git a/gcc/config/i386/i386-builtin.def b/gcc/config/i386/i386-builtin.def
+index 5dedeb2d18b..2f57d19bea2 100644
 --- a/gcc/config/i386/i386-builtin.def
 +++ b/gcc/config/i386/i386-builtin.def
 @@ -799,7 +799,7 @@ BDESC (OPTION_MASK_ISA_SSE2, 0, CODE_FOR_sse2_pshufhw, "__builtin_ia32_pshufhw",
@@ -2141,6 +2518,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  /* SSE2 MMX */
  BDESC (OPTION_MASK_ISA_SSE2 | OPTION_MASK_ISA_MMX, 0, CODE_FOR_mmx_addv1di3, "__builtin_ia32_paddq", IX86_BUILTIN_PADDQ, UNKNOWN, (int) V1DI_FTYPE_V1DI_V1DI)
+diff --git a/gcc/config/i386/i386.c b/gcc/config/i386/i386.c
+index 1bca5a7eea6..ae5046ee6a0 100644
 --- a/gcc/config/i386/i386.c
 +++ b/gcc/config/i386/i386.c
 @@ -2535,7 +2535,12 @@ rest_of_insert_endbranch (void)
@@ -2290,6 +2669,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  		  return false;
  	    }
  	}
+diff --git a/gcc/config/i386/i386.h b/gcc/config/i386/i386.h
+index 14e5a392f62..441213eebb8 100644
 --- a/gcc/config/i386/i386.h
 +++ b/gcc/config/i386/i386.h
 @@ -2232,11 +2232,10 @@ extern int const svr4_dbx_register_map[FIRST_PSEUDO_REGISTER];
@@ -2306,6 +2687,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  /* Switch to init or fini section via SECTION_OP, emit a call to FUNC,
     and switch back.  For x86 we do this only to save a few bytes that
+diff --git a/gcc/config/i386/sse.md b/gcc/config/i386/sse.md
+index 18cc39ae521..cbcbe3846ca 100644
 --- a/gcc/config/i386/sse.md
 +++ b/gcc/config/i386/sse.md
 @@ -2625,8 +2625,8 @@
@@ -2428,6 +2811,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	    (vec_concat:V2SI
  	      (plusminus:SI
  		(vec_select:SI (match_dup 2) (parallel [(const_int 4)]))
+diff --git a/gcc/config/pa/pa.h b/gcc/config/pa/pa.h
+index 24739e56f97..3c9f249c920 100644
 --- a/gcc/config/pa/pa.h
 +++ b/gcc/config/pa/pa.h
 @@ -171,6 +171,7 @@ do {								\
@@ -2438,6 +2823,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
       if (TARGET_PA_20)						\
         builtin_define("_PA_RISC2_0");				\
       else if (TARGET_PA_11)					\
+diff --git a/gcc/config/pdp11/pdp11.c b/gcc/config/pdp11/pdp11.c
+index 5f530a43000..1be79e1964c 100644
 --- a/gcc/config/pdp11/pdp11.c
 +++ b/gcc/config/pdp11/pdp11.c
 @@ -744,6 +744,7 @@ void
@@ -2458,6 +2845,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        assemble_name (file, name);
        fputs (":", file);
        ASM_OUTPUT_SKIP (file, size);
+diff --git a/gcc/config/rs6000/altivec.h b/gcc/config/rs6000/altivec.h
+index d66ae7ca2c7..dbe5b7a1909 100644
 --- a/gcc/config/rs6000/altivec.h
 +++ b/gcc/config/rs6000/altivec.h
 @@ -180,7 +180,7 @@
@@ -2469,6 +2858,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  #define vec_rsqrt __builtin_vec_rsqrt
  #define vec_rsqrte __builtin_vec_rsqrte
  #define vec_signed __builtin_vec_vsigned
+diff --git a/gcc/config/rs6000/emmintrin.h b/gcc/config/rs6000/emmintrin.h
+index 30975090a2d..32c5fa0cb08 100644
 --- a/gcc/config/rs6000/emmintrin.h
 +++ b/gcc/config/rs6000/emmintrin.h
 @@ -2033,7 +2033,8 @@ _mm_min_epu8 (__m128i __A, __m128i __B)
@@ -2481,6 +2872,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  extern __inline int __attribute__((__gnu_inline__, __always_inline__, __artificial__))
  _mm_movemask_epi8 (__m128i __A)
  {
+diff --git a/gcc/config/rs6000/rs6000-c.c b/gcc/config/rs6000/rs6000-c.c
+index 7c28d4d8176..1ec38db0908 100644
 --- a/gcc/config/rs6000/rs6000-c.c
 +++ b/gcc/config/rs6000/rs6000-c.c
 @@ -6853,6 +6853,19 @@ altivec_resolve_overloaded_builtin (location_t loc, tree fndecl,
@@ -2503,6 +2896,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        args[n] = arg;
        types[n] = type;
      }
+diff --git a/gcc/config/rs6000/rs6000-cpus.def b/gcc/config/rs6000/rs6000-cpus.def
+index d0d69beafd4..47a5d0576d0 100644
 --- a/gcc/config/rs6000/rs6000-cpus.def
 +++ b/gcc/config/rs6000/rs6000-cpus.def
 @@ -88,6 +88,10 @@
@@ -2516,6 +2911,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  #define POWERPC_7400_MASK	(OPTION_MASK_PPC_GFXOPT | OPTION_MASK_ALTIVEC)
  
  /* Deal with ports that do not have -mstrict-align.  */
+diff --git a/gcc/config/rs6000/rs6000.c b/gcc/config/rs6000/rs6000.c
+index 87d60078bb0..8043cbc8752 100644
 --- a/gcc/config/rs6000/rs6000.c
 +++ b/gcc/config/rs6000/rs6000.c
 @@ -4099,6 +4099,14 @@ rs6000_option_override_internal (bool global_init_p)
@@ -2665,6 +3062,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    };
  
    for (i = 0; i < ARRAY_SIZE (flags); i++)
+diff --git a/gcc/config/rs6000/rs6000.md b/gcc/config/rs6000/rs6000.md
+index a768f5dd511..c8740bfdee8 100644
 --- a/gcc/config/rs6000/rs6000.md
 +++ b/gcc/config/rs6000/rs6000.md
 @@ -152,7 +152,6 @@
@@ -2698,6 +3097,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    "TARGET_PLTSEQ"
  {
    return rs6000_pltseq_template (operands, 2);
+diff --git a/gcc/config/rs6000/vsx.md b/gcc/config/rs6000/vsx.md
+index 607c0cd33f2..43dd3cba641 100644
 --- a/gcc/config/rs6000/vsx.md
 +++ b/gcc/config/rs6000/vsx.md
 @@ -3292,14 +3292,14 @@
@@ -2837,6 +3238,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  (define_insn_and_split "*vsx_extract_<mode>_<VS_scalar>mode_var"
    [(set (match_operand:<VS_scalar> 0 "gpc_reg_operand" "=r,r,r")
  	(zero_extend:<VS_scalar>
+diff --git a/gcc/config/s390/constraints.md b/gcc/config/s390/constraints.md
+index 4055cbc7c68..ec2a13499e7 100644
 --- a/gcc/config/s390/constraints.md
 +++ b/gcc/config/s390/constraints.md
 @@ -38,6 +38,8 @@
@@ -2874,6 +3277,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  ;;
  ;; Memory constraints follow.
  ;;
+diff --git a/gcc/config/s390/s390-builtin-types.def b/gcc/config/s390/s390-builtin-types.def
+index 53398a98e9e..9e868b7c818 100644
 --- a/gcc/config/s390/s390-builtin-types.def
 +++ b/gcc/config/s390/s390-builtin-types.def
 @@ -301,6 +301,7 @@ DEF_FN_TYPE_3 (BT_FN_UV16QI_UV2DI_UV2DI_UV16QI, BT_UV16QI, BT_UV2DI, BT_UV2DI, B
@@ -2900,6 +3305,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  DEF_FN_TYPE_3 (BT_FN_V4SF_V4SF_V4SF_V4SF, BT_V4SF, BT_V4SF, BT_V4SF, BT_V4SF)
  DEF_FN_TYPE_3 (BT_FN_V4SI_UV4SI_UV4SI_INTPTR, BT_V4SI, BT_UV4SI, BT_UV4SI, BT_INTPTR)
  DEF_FN_TYPE_3 (BT_FN_V4SI_V2DI_V2DI_INTPTR, BT_V4SI, BT_V2DI, BT_V2DI, BT_INTPTR)
+diff --git a/gcc/config/s390/s390-builtins.def b/gcc/config/s390/s390-builtins.def
+index 3f39b9d3b88..b31abc6af9b 100644
 --- a/gcc/config/s390/s390-builtins.def
 +++ b/gcc/config/s390/s390-builtins.def
 @@ -687,36 +687,41 @@ B_DEF      (s390_vsceg,                 vec_scatter_elementv2di,0,
@@ -2974,6 +3381,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  OB_DEF     (s390_vec_extend_s64,        s390_vec_extend_s64_s8,s390_vec_extend_s64_s32,B_VX,        BT_FN_OV4SI_OV4SI)
  OB_DEF_VAR (s390_vec_extend_s64_s8,     s390_vsegb,         0,                  0,                  BT_OV_V2DI_V16QI)
+diff --git a/gcc/config/s390/vecintrin.h b/gcc/config/s390/vecintrin.h
+index 21375970c91..d7a4ae64c36 100644
 --- a/gcc/config/s390/vecintrin.h
 +++ b/gcc/config/s390/vecintrin.h
 @@ -111,8 +111,10 @@ __lcbb(const void *ptr, int bndry)
@@ -2989,6 +3398,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  #define vec_all_nan(a)						\
    __extension__ ({						\
+diff --git a/gcc/config/s390/vector.md b/gcc/config/s390/vector.md
+index 6ca503b0d44..7c1edf03027 100644
 --- a/gcc/config/s390/vector.md
 +++ b/gcc/config/s390/vector.md
 @@ -855,7 +855,7 @@
@@ -3041,6 +3452,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    operands[2] = gen_reg_rtx (V16QImode);
    operands[3] = gen_reg_rtx (V4SImode);
    operands[4] = force_reg (V16QImode, CONST0_RTX (V16QImode));
+diff --git a/gcc/config/s390/vx-builtins.md b/gcc/config/s390/vx-builtins.md
+index 5ec3fb4fe58..5b6246adc9f 100644
 --- a/gcc/config/s390/vx-builtins.md
 +++ b/gcc/config/s390/vx-builtins.md
 @@ -202,16 +202,34 @@
@@ -3160,6 +3573,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  
  
+diff --git a/gcc/config/xtensa/xtensa.c b/gcc/config/xtensa/xtensa.c
+index ee5612441e2..2527468d57d 100644
 --- a/gcc/config/xtensa/xtensa.c
 +++ b/gcc/config/xtensa/xtensa.c
 @@ -4235,7 +4235,9 @@ hwloop_optimize (hwloop_info loop)
@@ -3181,6 +3596,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        while (DEBUG_INSN_P (entry_after)
               || (NOTE_P (entry_after)
  		 && NOTE_KIND (entry_after) != NOTE_INSN_BASIC_BLOCK))
+diff --git a/gcc/config/xtensa/xtensa.md b/gcc/config/xtensa/xtensa.md
+index 362e5ff3c1f..673ddad2eae 100644
 --- a/gcc/config/xtensa/xtensa.md
 +++ b/gcc/config/xtensa/xtensa.md
 @@ -538,7 +538,7 @@
@@ -3210,6 +3627,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    [(set_attr "type"	"arith,load")
     (set_attr "mode"	"SI")
     (set_attr "length"	"3,3")])
+diff --git a/gcc/coverage.c b/gcc/coverage.c
+index 1ffefd5f482..9be446a862d 100644
 --- a/gcc/coverage.c
 +++ b/gcc/coverage.c
 @@ -1201,6 +1201,11 @@ coverage_obj_finish (vec<constructor_elt, va_gc> *ctor)
@@ -3245,6 +3664,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
      }
    memcpy (da_file_name + prefix_len, filename, len);
    strcpy (da_file_name + prefix_len + len, GCOV_DATA_SUFFIX);
+diff --git a/gcc/cp/ChangeLog b/gcc/cp/ChangeLog
+index 6441d647a54..1b0b35c0ff2 100644
 --- a/gcc/cp/ChangeLog
 +++ b/gcc/cp/ChangeLog
 @@ -1,3 +1,132 @@
@@ -3380,6 +3801,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/cp/constexpr.c b/gcc/cp/constexpr.c
+index bab5935a4eb..b349919b434 100644
 --- a/gcc/cp/constexpr.c
 +++ b/gcc/cp/constexpr.c
 @@ -5602,7 +5602,7 @@ maybe_constant_value (tree t, tree decl, bool manifestly_const_eval)
@@ -3391,6 +3814,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	  protected_set_expr_location (r, EXPR_LOCATION (t));
  	}
        return r;
+diff --git a/gcc/cp/cp-gimplify.c b/gcc/cp/cp-gimplify.c
+index 4be45abca88..0e15b1c8147 100644
 --- a/gcc/cp/cp-gimplify.c
 +++ b/gcc/cp/cp-gimplify.c
 @@ -2192,12 +2192,17 @@ cxx_omp_finish_clause (tree c, gimple_seq *)
@@ -3417,6 +3842,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  }
  
  /* Fold expression X which is used as an rvalue if RVAL is true.  */
+diff --git a/gcc/cp/cp-tree.h b/gcc/cp/cp-tree.h
+index f7c3eea4cdf..1f013c172ce 100644
 --- a/gcc/cp/cp-tree.h
 +++ b/gcc/cp/cp-tree.h
 @@ -6492,6 +6492,7 @@ extern tree grokfield (const cp_declarator *, cp_decl_specifier_seq *,
@@ -3455,6 +3882,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  /* in ptree.c */
  extern void cxx_print_xnode			(FILE *, tree, int);
+diff --git a/gcc/cp/decl.c b/gcc/cp/decl.c
+index 39d55589ef3..bf00583e29f 100644
 --- a/gcc/cp/decl.c
 +++ b/gcc/cp/decl.c
 @@ -5826,9 +5826,6 @@ reshape_init_array_1 (tree elt_type, tree max_index, reshape_iter *d,
@@ -3517,6 +3946,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	}
  
        inner_declarator = declarator->declarator;
+diff --git a/gcc/cp/decl2.c b/gcc/cp/decl2.c
+index a46cbce08f4..a15bb3c45cc 100644
 --- a/gcc/cp/decl2.c
 +++ b/gcc/cp/decl2.c
 @@ -1208,7 +1208,7 @@ is_late_template_attribute (tree attr, tree decl)
@@ -3528,6 +3959,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  splice_template_attributes (tree *attr_p, tree decl)
  {
    tree *p = attr_p;
+diff --git a/gcc/cp/expr.c b/gcc/cp/expr.c
+index 9160043ed11..5a60da36025 100644
 --- a/gcc/cp/expr.c
 +++ b/gcc/cp/expr.c
 @@ -195,11 +195,23 @@ mark_use (tree expr, bool rvalue_p, bool read_p,
@@ -3559,6 +3992,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	  return expr;
  	}
        gcc_fallthrough();
+diff --git a/gcc/cp/mangle.c b/gcc/cp/mangle.c
+index 6f194375261..bab9fdadfb7 100644
 --- a/gcc/cp/mangle.c
 +++ b/gcc/cp/mangle.c
 @@ -2856,6 +2856,7 @@ write_expression (tree expr)
@@ -3621,6 +4056,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
    /* Strip a conversion added by convert_nontype_argument.  */
    if (TREE_CODE (node) == IMPLICIT_CONV_EXPR)
+diff --git a/gcc/cp/name-lookup.c b/gcc/cp/name-lookup.c
+index 8999c5ad4a7..f5535ba50bc 100644
 --- a/gcc/cp/name-lookup.c
 +++ b/gcc/cp/name-lookup.c
 @@ -2988,7 +2988,8 @@ do_pushdecl (tree decl, bool is_friend)
@@ -3648,6 +4085,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	return;
  
        bindings = tree_cons (fnname, fns, bindings);
+diff --git a/gcc/cp/parser.c b/gcc/cp/parser.c
+index e1c02d7b718..db0276eb04f 100644
 --- a/gcc/cp/parser.c
 +++ b/gcc/cp/parser.c
 @@ -18705,9 +18705,7 @@ cp_parser_enum_specifier (cp_parser* parser)
@@ -3773,6 +4212,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	  return stmt;
  	}
        else if (!flag_openmp)  /* flag_openmp_simd  */
+diff --git a/gcc/cp/pt.c b/gcc/cp/pt.c
+index 4787747b6ff..a4bbcb4e5d5 100644
 --- a/gcc/cp/pt.c
 +++ b/gcc/cp/pt.c
 @@ -3773,10 +3773,18 @@ find_parameter_packs_r (tree *tp, int *walk_subtrees, void* data)
@@ -3948,6 +4389,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	  current_template_parms = save_parms;
  	}
  
+diff --git a/gcc/cp/semantics.c b/gcc/cp/semantics.c
+index 4bfb5d15293..559e38dbc14 100644
 --- a/gcc/cp/semantics.c
 +++ b/gcc/cp/semantics.c
 @@ -380,7 +380,8 @@ add_stmt (tree t)
@@ -3960,6 +4403,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
      }
  
    if (code == LABEL_EXPR || code == CASE_LABEL_EXPR)
+diff --git a/gcc/cp/tree.c b/gcc/cp/tree.c
+index 3f3583c825d..1614f346a59 100644
 --- a/gcc/cp/tree.c
 +++ b/gcc/cp/tree.c
 @@ -2402,6 +2402,8 @@ is_overloaded_fn (tree x)
@@ -4108,6 +4553,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  #if defined ENABLE_TREE_CHECKING && (GCC_VERSION >= 2007)
  /* Complain that some language-specific thing hanging off a tree
     node has been accessed improperly.  */
+diff --git a/gcc/d/ChangeLog b/gcc/d/ChangeLog
+index f8268e87d4d..9cc59c8ad1d 100644
 --- a/gcc/d/ChangeLog
 +++ b/gcc/d/ChangeLog
 @@ -1,3 +1,15 @@
@@ -4126,6 +4573,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/d/typeinfo.cc b/gcc/d/typeinfo.cc
+index bbd3961181d..0b19bcf7f34 100644
 --- a/gcc/d/typeinfo.cc
 +++ b/gcc/d/typeinfo.cc
 @@ -324,9 +324,29 @@ class TypeInfoVisitor : public Visitor
@@ -4233,6 +4682,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    d->accept (&v);
    return v.result ();
  }
+diff --git a/gcc/dfp.c b/gcc/dfp.c
+index 65d5fcb0845..599f37ea9da 100644
 --- a/gcc/dfp.c
 +++ b/gcc/dfp.c
 @@ -342,9 +342,13 @@ decimal_to_binary (REAL_VALUE_TYPE *to, const REAL_VALUE_TYPE *from,
@@ -4252,6 +4703,141 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    real_from_string3 (to, string, fmt);
  }
  
+diff --git a/gcc/doc/extend.texi b/gcc/doc/extend.texi
+index f5becf988d2..51ebb90e32d 100644
+--- a/gcc/doc/extend.texi
++++ b/gcc/doc/extend.texi
+@@ -2760,7 +2760,7 @@ the same type as the target function.  As a result of the @code{copy}
+ attribute the alias also shares the same attributes as the target.
+ 
+ @smallexample
+-#define StrongAlias(TagetFunc, AliasDecl)   \
++#define StrongAlias(TargetFunc, AliasDecl)  \
+   extern __typeof__ (TargetFunc) AliasDecl  \
+     __attribute__ ((alias (#TargetFunc), copy (TargetFunc)));
+ 
+diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+index 0ab6c9c6449..5e6d240dc5d 100644
+--- a/gcc/doc/invoke.texi
++++ b/gcc/doc/invoke.texi
+@@ -637,7 +637,8 @@ Objective-C and Objective-C++ Dialects}.
+ -march=@var{name}  -mcpu=@var{name}  -mtune=@var{name}  @gol
+ -moverride=@var{string}  -mverbose-cost-dump @gol
+ -mstack-protector-guard=@var{guard} -mstack-protector-guard-reg=@var{sysreg} @gol
+--mstack-protector-guard-offset=@var{offset} -mtrack-speculation }
++-mstack-protector-guard-offset=@var{offset} -mtrack-speculation @gol
++-moutline-atomics }
+ 
+ @emph{Adapteva Epiphany Options}
+ @gccoptlist{-mhalf-reg-file  -mprefer-short-insn-regs @gol
+@@ -4313,6 +4314,11 @@ are being produced.  This allows the use of new @option{-Wno-} options
+ with old compilers, but if something goes wrong, the compiler
+ warns that an unrecognized option is present.
+ 
++The effectiveness of some warnings depends on optimizations also being
++enabled. For example @option{-Wsuggest-final-types} is more effective
++with link-time optimization and @option{-Wmaybe-uninitialized} will not
++warn at all unless optimization is enabled.
++
+ @table @gcctabopt
+ @item -Wpedantic
+ @itemx -pedantic
+@@ -11792,6 +11798,11 @@ speed
+ (@option{sra-max-scalarization-size-Ospeed}) or size
+ (@option{sra-max-scalarization-size-Osize}) respectively.
+ 
++@item sra-max-propagations
++The maximum number of artificial accesses that Scalar Replacement of
++Aggregates (SRA) will track, per one local variable, in order to
++facilitate copy propagation.
++
+ @item tm-max-aggregate-size
+ When making copies of thread-local variables in a transaction, this
+ parameter specifies the size in bytes after which variables are
+@@ -15777,6 +15788,19 @@ be used by the compiler when expanding calls to
+ @code{__builtin_speculation_safe_copy} to permit a more efficient code
+ sequence to be generated.
+ 
++@item -moutline-atomics
++@itemx -mno-outline-atomics
++Enable or disable calls to out-of-line helpers to implement atomic operations.
++These helpers will, at runtime, determine if the LSE instructions from
++ARMv8.1-A can be used; if not, they will use the load/store-exclusive
++instructions that are present in the base ARMv8.0 ISA.
++
++This option is only applicable when compiling for the base ARMv8.0
++instruction set.  If using a later revision, e.g. @option{-march=armv8.1-a}
++or @option{-march=armv8-a+lse}, the ARMv8.1-Atomics instructions will be
++used directly.  The same applies when using @option{-mcpu=} when the
++selected cpu supports the @samp{lse} feature.
++
+ @item -march=@var{name}
+ @opindex march
+ Specify the name of the target architecture and, optionally, one or
+@@ -28711,9 +28735,9 @@ Note that @option{-mcmodel=large} is incompatible with
+ @option{-mindirect-branch=thunk-extern} since the thunk function may
+ not be reachable in the large code model.
+ 
+-Note that @option{-mindirect-branch=thunk-extern} is incompatible with
+-@option{-fcf-protection=branch} since the external thunk cannot be modified
+-to disable control-flow check.
++Note that @option{-mindirect-branch=thunk-extern} is compatible with
++@option{-fcf-protection=branch} since the external thunk can be made
++to enable control-flow check.
+ 
+ @item -mfunction-return=@var{choice}
+ @opindex mfunction-return
+@@ -28726,6 +28750,10 @@ object file.  You can control this behavior for a specific function by
+ using the function attribute @code{function_return}.
+ @xref{Function Attributes}.
+ 
++Note that @option{-mindirect-return=thunk-extern} is compatible with
++@option{-fcf-protection=branch} since the external thunk can be made
++to enable control-flow check.
++
+ Note that @option{-mcmodel=large} is incompatible with
+ @option{-mfunction-return=thunk} and
+ @option{-mfunction-return=thunk-extern} since the thunk function may
+diff --git a/gcc/doc/tm.texi b/gcc/doc/tm.texi
+index 8c8978bb13a..7f5c370d97a 100644
+--- a/gcc/doc/tm.texi
++++ b/gcc/doc/tm.texi
+@@ -8330,11 +8330,11 @@ as the number of bits.
+ @end defmac
+ 
+ @defmac ASM_OUTPUT_ALIGNED_DECL_LOCAL (@var{stream}, @var{decl}, @var{name}, @var{size}, @var{alignment})
+-Like @code{ASM_OUTPUT_ALIGNED_DECL} except that @var{decl} of the
++Like @code{ASM_OUTPUT_ALIGNED_LOCAL} except that @var{decl} of the
+ variable to be output, if there is one, or @code{NULL_TREE} if there
+ is no corresponding variable.  If you define this macro, GCC will use it
+-in place of both @code{ASM_OUTPUT_DECL} and
+-@code{ASM_OUTPUT_ALIGNED_DECL}.  Define this macro when you need to see
++in place of both @code{ASM_OUTPUT_LOCAL} and
++@code{ASM_OUTPUT_ALIGNED_LOCAL}.  Define this macro when you need to see
+ the variable's decl in order to chose what to output.
+ @end defmac
+ 
+diff --git a/gcc/doc/tm.texi.in b/gcc/doc/tm.texi.in
+index fe1194ef91a..44a15dda240 100644
+--- a/gcc/doc/tm.texi.in
++++ b/gcc/doc/tm.texi.in
+@@ -5403,11 +5403,11 @@ as the number of bits.
+ @end defmac
+ 
+ @defmac ASM_OUTPUT_ALIGNED_DECL_LOCAL (@var{stream}, @var{decl}, @var{name}, @var{size}, @var{alignment})
+-Like @code{ASM_OUTPUT_ALIGNED_DECL} except that @var{decl} of the
++Like @code{ASM_OUTPUT_ALIGNED_LOCAL} except that @var{decl} of the
+ variable to be output, if there is one, or @code{NULL_TREE} if there
+ is no corresponding variable.  If you define this macro, GCC will use it
+-in place of both @code{ASM_OUTPUT_DECL} and
+-@code{ASM_OUTPUT_ALIGNED_DECL}.  Define this macro when you need to see
++in place of both @code{ASM_OUTPUT_LOCAL} and
++@code{ASM_OUTPUT_ALIGNED_LOCAL}.  Define this macro when you need to see
+ the variable's decl in order to chose what to output.
+ @end defmac
+ 
+diff --git a/gcc/dwarf2out.c b/gcc/dwarf2out.c
+index 30c4c7007ee..9ea109b3b61 100644
 --- a/gcc/dwarf2out.c
 +++ b/gcc/dwarf2out.c
 @@ -23011,11 +23011,22 @@ gen_subprogram_die (tree decl, dw_die_ref context_die)
@@ -4279,6 +4865,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	      if (die == auto_die || die == decltype_auto_die)
  		add_type_attribute (subr_die, TREE_TYPE (TREE_TYPE (decl)),
  				    TYPE_UNQUALIFIED, false, context_die);
+diff --git a/gcc/fold-const.c b/gcc/fold-const.c
+index c717f24501e..64273c1c6bc 100644
 --- a/gcc/fold-const.c
 +++ b/gcc/fold-const.c
 @@ -10376,11 +10376,11 @@ fold_binary_loc (location_t loc, enum tree_code code, tree type,
@@ -4309,6 +4897,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	    fold_overflow_warning (("assuming signed overflow does not occur "
  				    "when distributing negation across "
  				    "division"),
+diff --git a/gcc/fortran/ChangeLog b/gcc/fortran/ChangeLog
+index 8fefea2b63d..21f8b1afa79 100644
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
 @@ -1,3 +1,92 @@
@@ -4404,6 +4994,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/fortran/array.c b/gcc/fortran/array.c
+index 4a7f44f3e8b..017334839ed 100644
 --- a/gcc/fortran/array.c
 +++ b/gcc/fortran/array.c
 @@ -835,6 +835,10 @@ gfc_set_array_spec (gfc_symbol *sym, gfc_array_spec *as, locus *error_loc)
@@ -4417,6 +5009,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    if (as->corank)
      {
        sym->as->cotype = as->cotype;
+diff --git a/gcc/fortran/check.c b/gcc/fortran/check.c
+index 6d37bbb8fd2..adda284ef71 100644
 --- a/gcc/fortran/check.c
 +++ b/gcc/fortran/check.c
 @@ -3384,6 +3384,10 @@ gfc_check_findloc (gfc_actual_arglist *ap)
@@ -4430,6 +5024,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	 
    d = ap->next->next->expr;
    m = ap->next->next->next->expr;
+diff --git a/gcc/fortran/decl.c b/gcc/fortran/decl.c
+index abff4af9f67..86226b63ecc 100644
 --- a/gcc/fortran/decl.c
 +++ b/gcc/fortran/decl.c
 @@ -668,6 +668,10 @@ gfc_match_data (void)
@@ -4533,6 +5129,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        else
  	sym->result = sym;
      }
+diff --git a/gcc/fortran/match.c b/gcc/fortran/match.c
+index 088b69f8ec9..f4ae9e9dfe7 100644
 --- a/gcc/fortran/match.c
 +++ b/gcc/fortran/match.c
 @@ -2200,9 +2200,9 @@ gfc_match_type_spec (gfc_typespec *ts)
@@ -4547,6 +5145,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
        /* If a comma appears, it is an intrinsic subprogram. */
        gfc_gobble_whitespace ();
+diff --git a/gcc/fortran/resolve.c b/gcc/fortran/resolve.c
+index a4ad26efffc..c041d8df96d 100644
 --- a/gcc/fortran/resolve.c
 +++ b/gcc/fortran/resolve.c
 @@ -5094,8 +5094,8 @@ gfc_resolve_substring_charlen (gfc_expr *e)
@@ -4637,6 +5237,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	{
  	  gfc_error ("Array %qs at %L with non-constant bounds cannot be "
  		     "an EQUIVALENCE object", sym->name, &e->where);
+diff --git a/gcc/fortran/trans-array.c b/gcc/fortran/trans-array.c
+index 2e5eb4f468f..572455e0d59 100644
 --- a/gcc/fortran/trans-array.c
 +++ b/gcc/fortran/trans-array.c
 @@ -6945,6 +6945,24 @@ gfc_get_dataptr_offset (stmtblock_t *block, tree parm, tree desc, tree offset,
@@ -4664,6 +5266,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	    default:
  	      gcc_unreachable ();
  	      break;
+diff --git a/gcc/fortran/trans-decl.c b/gcc/fortran/trans-decl.c
+index 71f751de76f..ff85fd9da96 100644
 --- a/gcc/fortran/trans-decl.c
 +++ b/gcc/fortran/trans-decl.c
 @@ -6011,7 +6011,7 @@ generate_local_decl (gfc_symbol * sym)
@@ -4675,6 +5279,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	    {
  	      if (warn_unused_dummy_argument)
  		gfc_warning (OPT_Wunused_dummy_argument,
+diff --git a/gcc/gimple-fold.c b/gcc/gimple-fold.c
+index d00f1e2b035..408b93b2200 100644
 --- a/gcc/gimple-fold.c
 +++ b/gcc/gimple-fold.c
 @@ -1242,12 +1242,18 @@ gimple_fold_builtin_memset (gimple_stmt_iterator *gsi, tree c, tree len)
@@ -4696,6 +5302,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    if (integer_zerop (c))
      cval = 0;
    else
+diff --git a/gcc/gimplify.c b/gcc/gimplify.c
+index bd8bd6d7e06..e103e76b466 100644
 --- a/gcc/gimplify.c
 +++ b/gcc/gimplify.c
 @@ -6086,7 +6086,9 @@ gimplify_addr_expr (tree *expr_p, gimple_seq *pre_p, gimple_seq *post_p)
@@ -4709,6 +5317,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	goto do_indirect_ref;
  
        mark_addressable (TREE_OPERAND (expr, 0));
+diff --git a/gcc/ipa-icf-gimple.c b/gcc/ipa-icf-gimple.c
+index 25284936bc3..38e0ac12f7e 100644
 --- a/gcc/ipa-icf-gimple.c
 +++ b/gcc/ipa-icf-gimple.c
 @@ -37,6 +37,7 @@ along with GCC; see the file COPYING3.  If not see
@@ -4729,6 +5339,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    tree chain1 = gimple_call_chain (s1);
    tree chain2 = gimple_call_chain (s2);
    if ((chain1 && !chain2)
+diff --git a/gcc/params.def b/gcc/params.def
+index 8e4887e50a2..e23a4530bfa 100644
 --- a/gcc/params.def
 +++ b/gcc/params.def
 @@ -1081,6 +1081,13 @@ DEFPARAM (PARAM_SRA_MAX_SCALARIZATION_SIZE_SIZE,
@@ -4745,6 +5357,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  DEFPARAM (PARAM_IPA_CP_VALUE_LIST_SIZE,
  	  "ipa-cp-value-list-size",
  	  "Maximum size of a list of values associated with each parameter for "
+diff --git a/gcc/print-rtl.c b/gcc/print-rtl.c
+index fbb108568b3..819b8473d9d 100644
 --- a/gcc/print-rtl.c
 +++ b/gcc/print-rtl.c
 @@ -1678,7 +1678,9 @@ print_value (pretty_printer *pp, const_rtx x, int verbose)
@@ -4758,6 +5372,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        break;
      case SYMBOL_REF:
        pp_printf (pp, "`%s'", XSTR (x, 0));
+diff --git a/gcc/reorg.c b/gcc/reorg.c
+index 81349382b81..a93cf90e0ab 100644
 --- a/gcc/reorg.c
 +++ b/gcc/reorg.c
 @@ -577,8 +577,9 @@ add_to_delay_list (rtx_insn *insn, vec<rtx_insn *> *delay_list)
@@ -4815,6 +5431,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  		  next = insn;
  		}
  
+diff --git a/gcc/resource.c b/gcc/resource.c
+index c4bcfd7dc71..164b55e561b 100644
 --- a/gcc/resource.c
 +++ b/gcc/resource.c
 @@ -1311,7 +1311,26 @@ clear_hashed_info_for_insn (rtx_insn *insn)
@@ -4845,6 +5463,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  /* Increment the tick count for the basic block that contains INSN.  */
  
  void
+diff --git a/gcc/resource.h b/gcc/resource.h
+index 7916344c584..3e969e52176 100644
 --- a/gcc/resource.h
 +++ b/gcc/resource.h
 @@ -46,6 +46,7 @@ extern void mark_set_resources (rtx, struct resources *, int,
@@ -4855,123 +5475,8 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  extern void incr_ticks_for_insn (rtx_insn *);
  extern void mark_end_of_function_resources (rtx, bool);
  extern void init_resource_info (rtx_insn *);
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
-new file mode 100644
+diff --git a/gcc/tree-if-conv.c b/gcc/tree-if-conv.c
+index 2780a4b243f..699b48b8124 100644
 --- a/gcc/tree-if-conv.c
 +++ b/gcc/tree-if-conv.c
 @@ -2913,9 +2913,12 @@ ifcvt_local_dce (basic_block bb)
@@ -5034,6 +5539,8 @@ new file mode 100644
      }
  }
  
+diff --git a/gcc/tree-inline.c b/gcc/tree-inline.c
+index d115fcb1a5b..7a41f64bcc3 100644
 --- a/gcc/tree-inline.c
 +++ b/gcc/tree-inline.c
 @@ -3213,10 +3213,10 @@ insert_init_stmt (copy_body_data *id, basic_block bb, gimple *init_stmt)
@@ -5057,6 +5564,8 @@ new file mode 100644
  
    return copy_decl_for_dup_finish (id, decl, copy);
  }
+diff --git a/gcc/tree-loop-distribution.c b/gcc/tree-loop-distribution.c
+index 8959f52a67b..3e9b220ffb7 100644
 --- a/gcc/tree-loop-distribution.c
 +++ b/gcc/tree-loop-distribution.c
 @@ -1004,7 +1004,7 @@ generate_memset_builtin (struct loop *loop, partition *partition)
@@ -5099,6 +5608,8 @@ new file mode 100644
  	      partition_merge_into (NULL, first, partition, FUSE_SAME_SCC);
  	      (*partitions)[k] = NULL;
  	      partition_free (partition);
+diff --git a/gcc/tree-nested.c b/gcc/tree-nested.c
+index 3fe23cc2b22..e7c1026cf85 100644
 --- a/gcc/tree-nested.c
 +++ b/gcc/tree-nested.c
 @@ -1178,7 +1178,7 @@ convert_nonlocal_omp_clauses (tree *pclauses, struct walk_stmt_info *wi)
@@ -5208,6 +5719,8 @@ new file mode 100644
  		  need_frame = true;
  		}
  	    }
+diff --git a/gcc/tree-object-size.c b/gcc/tree-object-size.c
+index 25c5ced57b7..6450cae371d 100644
 --- a/gcc/tree-object-size.c
 +++ b/gcc/tree-object-size.c
 @@ -1369,7 +1369,10 @@ pass_object_sizes::execute (function *fun)
@@ -5222,6 +5735,8 @@ new file mode 100644
  	}
      }
  
+diff --git a/gcc/tree-pretty-print.c b/gcc/tree-pretty-print.c
+index ae0a6c12072..b06b595d151 100644
 --- a/gcc/tree-pretty-print.c
 +++ b/gcc/tree-pretty-print.c
 @@ -37,7 +37,6 @@ along with GCC; see the file COPYING3.  If not see
@@ -5243,6 +5758,8 @@ new file mode 100644
  {
    if (str == NULL)
      return;
+diff --git a/gcc/tree-pretty-print.h b/gcc/tree-pretty-print.h
+index 9f593289666..41697e77994 100644
 --- a/gcc/tree-pretty-print.h
 +++ b/gcc/tree-pretty-print.h
 @@ -47,6 +47,7 @@ extern void print_declaration (pretty_printer *, tree, int, dump_flags_t);
@@ -5253,6 +5770,8 @@ new file mode 100644
  extern void print_call_name (pretty_printer *, tree, dump_flags_t);
  extern void percent_K_format (text_info *, location_t, tree);
  extern void pp_tree_identifier (pretty_printer *, tree);
+diff --git a/gcc/tree-sra.c b/gcc/tree-sra.c
+index fd51a3d0323..805839cac50 100644
 --- a/gcc/tree-sra.c
 +++ b/gcc/tree-sra.c
 @@ -291,6 +291,9 @@ static object_allocator<assign_link> assign_link_pool ("SRA links");
@@ -5388,6 +5907,8 @@ new file mode 100644
  	    {
  	      gassign *stmt;
  
+diff --git a/gcc/tree-ssa-dse.c b/gcc/tree-ssa-dse.c
+index efe5b31cc0a..26376ecf8de 100644
 --- a/gcc/tree-ssa-dse.c
 +++ b/gcc/tree-ssa-dse.c
 @@ -36,6 +36,7 @@ along with GCC; see the file COPYING3.  If not see
@@ -5443,6 +5964,8 @@ new file mode 100644
  }
  
  /* STMT is builtin call that writes bytes in bitmap ORIG, some bytes are dead
+diff --git a/gcc/tree-ssa-forwprop.c b/gcc/tree-ssa-forwprop.c
+index bbfa1bc6fae..ca5443b79b3 100644
 --- a/gcc/tree-ssa-forwprop.c
 +++ b/gcc/tree-ssa-forwprop.c
 @@ -2357,7 +2357,8 @@ pass_forwprop::execute (function *fun)
@@ -5455,6 +5978,8 @@ new file mode 100644
  		    {
  		      rewrite = false;
  		      break;
+diff --git a/gcc/tree-ssa-loop-ivopts.c b/gcc/tree-ssa-loop-ivopts.c
+index 01423dee883..ecfa569259c 100644
 --- a/gcc/tree-ssa-loop-ivopts.c
 +++ b/gcc/tree-ssa-loop-ivopts.c
 @@ -109,6 +109,9 @@ along with GCC; see the file COPYING3.  If not see
@@ -5490,6 +6015,8 @@ new file mode 100644
  
    add_candidate (data, iv->base, iv->step, false, use);
  
+diff --git a/gcc/tree-ssa-phiopt.c b/gcc/tree-ssa-phiopt.c
+index 19b37b43b8e..47227dc16dc 100644
 --- a/gcc/tree-ssa-phiopt.c
 +++ b/gcc/tree-ssa-phiopt.c
 @@ -1040,7 +1040,7 @@ value_replacement (basic_block cond_bb, basic_block middle_bb,
@@ -5537,6 +6064,8 @@ new file mode 100644
  	 >= 3 * estimate_num_insns (cond, &eni_time_weights))
      return 0;
  
+diff --git a/gcc/tree-ssa-pre.c b/gcc/tree-ssa-pre.c
+index 8bd17b82368..7b171bc4e8f 100644
 --- a/gcc/tree-ssa-pre.c
 +++ b/gcc/tree-ssa-pre.c
 @@ -2810,7 +2810,8 @@ create_expression_by_pieces (basic_block block, pre_expr expr,
@@ -5549,6 +6078,8 @@ new file mode 100644
  		set_ptr_info_alignment (get_ptr_info (forcedname),
  					halign, hmisalign);
  	    }
+diff --git a/gcc/tree-ssa-reassoc.c b/gcc/tree-ssa-reassoc.c
+index 6794fbde29e..9bb04d65387 100644
 --- a/gcc/tree-ssa-reassoc.c
 +++ b/gcc/tree-ssa-reassoc.c
 @@ -5872,8 +5872,11 @@ reassociate_bb (basic_block bb)
@@ -5583,6 +6114,8 @@ new file mode 100644
  		    }
  		}
  	      continue;
+diff --git a/gcc/tree-ssa-sccvn.c b/gcc/tree-ssa-sccvn.c
+index 32f45c95cdf..262bfff9f11 100644
 --- a/gcc/tree-ssa-sccvn.c
 +++ b/gcc/tree-ssa-sccvn.c
 @@ -4124,13 +4124,22 @@ visit_reference_op_load (tree lhs, tree op, gimple *stmt)
@@ -5615,6 +6148,8 @@ new file mode 100644
        /* When building the conversion fails avoid inserting the reference
           again.  */
        if (!result)
+diff --git a/gcc/tree-tailcall.c b/gcc/tree-tailcall.c
+index 255575f1198..4f42817f7de 100644
 --- a/gcc/tree-tailcall.c
 +++ b/gcc/tree-tailcall.c
 @@ -327,7 +327,8 @@ process_assignment (gassign *stmt,
@@ -5627,6 +6162,8 @@ new file mode 100644
  	   && (non_ass_var = independent_of_stmt_p (op0, stmt, call,
  						    to_move)))
      ;
+diff --git a/gcc/tree-vect-loop.c b/gcc/tree-vect-loop.c
+index 0308b26b808..ed6586753c5 100644
 --- a/gcc/tree-vect-loop.c
 +++ b/gcc/tree-vect-loop.c
 @@ -7942,6 +7942,25 @@ vectorizable_live_operation (stmt_vec_info stmt_info,
@@ -5705,6 +6242,8 @@ new file mode 100644
  
    /* Replace use of lhs with newly computed result.  If the use stmt is a
       single arg PHI, just replace all uses of PHI result.  It's necessary
+diff --git a/gcc/varasm.c b/gcc/varasm.c
+index 8f006dcff67..8d87e28cc7c 100644
 --- a/gcc/varasm.c
 +++ b/gcc/varasm.c
 @@ -5136,6 +5136,26 @@ struct oc_local_state {
@@ -5734,6 +6273,8 @@ new file mode 100644
    unsigned HOST_WIDE_INT fieldsize
      = int_size_in_bytes (TREE_TYPE (local->type));
  
+diff --git a/include/ChangeLog b/include/ChangeLog
+index 1811056c182..e8e301dd8e7 100644
 --- a/include/ChangeLog
 +++ b/include/ChangeLog
 @@ -1,3 +1,13 @@
@@ -5750,6 +6291,8 @@ new file mode 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/include/filenames.h b/include/filenames.h
+index 1bcfddb87ac..790a27db873 100644
 --- a/include/filenames.h
 +++ b/include/filenames.h
 @@ -32,7 +32,8 @@ Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
@@ -5762,6 +6305,8 @@ new file mode 100644
  #  ifndef HAVE_DOS_BASED_FILE_SYSTEM
  #    define HAVE_DOS_BASED_FILE_SYSTEM 1
  #  endif
+diff --git a/libatomic/ChangeLog b/libatomic/ChangeLog
+index 5c0aa2db0c8..93ba72ae5ef 100644
 --- a/libatomic/ChangeLog
 +++ b/libatomic/ChangeLog
 @@ -1,3 +1,8 @@
@@ -5773,6 +6318,8 @@ new file mode 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/libatomic/config/x86/fenv.c b/libatomic/config/x86/fenv.c
+index 9b8a3bd9308..b4c7edc249e 100644
 --- a/libatomic/config/x86/fenv.c
 +++ b/libatomic/config/x86/fenv.c
 @@ -57,9 +57,7 @@ __atomic_feraiseexcept (int excepts)
@@ -5805,6 +6352,8 @@ new file mode 100644
  #else
        asm volatile ("fdivs\t%1" : "+t" (f) : "m" (g));
        /* No need for fwait, exception is triggered by emitted fstp.  */
+diff --git a/libgcc/ChangeLog b/libgcc/ChangeLog
+index a5c30516ff8..74d3b8599c4 100644
 --- a/libgcc/ChangeLog
 +++ b/libgcc/ChangeLog
 @@ -1,3 +1,55 @@
@@ -5863,6 +6412,8 @@ new file mode 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/libgcc/config.host b/libgcc/config.host
+index 0f15fda3612..18e306b48a5 100644
 --- a/libgcc/config.host
 +++ b/libgcc/config.host
 @@ -347,23 +347,27 @@ aarch64*-*-elf | aarch64*-*-rtems*)
@@ -5893,6 +6444,8 @@ new file mode 100644
  	tmake_file="${tmake_file} ${cpu_type}/t-softfp t-softfp t-crtfm"
  	;;
  alpha*-*-linux*)
+diff --git a/libgcc/config.in b/libgcc/config.in
+index d634af9d949..5be5321d258 100644
 --- a/libgcc/config.in
 +++ b/libgcc/config.in
 @@ -10,6 +10,9 @@
@@ -5927,7 +6480,9 @@ new file mode 100644
  /* Number of bits in a file offset, on hosts where this is settable. */
  #undef _FILE_OFFSET_BITS
  
+diff --git a/libgcc/config/aarch64/lse-init.c b/libgcc/config/aarch64/lse-init.c
 new file mode 100644
+index 00000000000..1a8f4c55213
 --- /dev/null
 +++ b/libgcc/config/aarch64/lse-init.c
 @@ -0,0 +1,47 @@
@@ -5978,7 +6533,9 @@ new file mode 100644
 +
 +# endif /* HWCAP */
 +#endif /* inhibit_libc */
+diff --git a/libgcc/config/aarch64/lse.S b/libgcc/config/aarch64/lse.S
 new file mode 100644
+index 00000000000..f7f1c19587b
 --- /dev/null
 +++ b/libgcc/config/aarch64/lse.S
 @@ -0,0 +1,276 @@
@@ -6258,7 +6815,9 @@ new file mode 100644
 +
 +ENDFN	NAME(LDNM)
 +#endif
+diff --git a/libgcc/config/aarch64/t-lse b/libgcc/config/aarch64/t-lse
 new file mode 100644
+index 00000000000..fe3868dacbf
 --- /dev/null
 +++ b/libgcc/config/aarch64/t-lse
 @@ -0,0 +1,44 @@
@@ -6306,6 +6865,8 @@ new file mode 100644
 +
 +$(LSE_OBJS): $(srcdir)/config/aarch64/lse.S
 +	$(gcc_compile) -DL_$(PAT_BASE) -DSIZE=$(PAT_N) -DMODEL=$(PAT_M) -c $<
+diff --git a/libgcc/config/i386/sfp-exceptions.c b/libgcc/config/i386/sfp-exceptions.c
+index a6c56392acd..de4a2e06102 100644
 --- a/libgcc/config/i386/sfp-exceptions.c
 +++ b/libgcc/config/i386/sfp-exceptions.c
 @@ -48,9 +48,7 @@ __sfp_handle_exceptions (int _fex)
@@ -6338,8 +6899,10 @@ new file mode 100644
  #else
        asm volatile ("fdivs\t%1" : "+t" (f) : "m" (g));
        /* No need for fwait, exception is triggered by emitted fstp.  */
+diff --git a/libgcc/configure b/libgcc/configure
 old mode 100644
 new mode 100755
+index 36dbbc1f699..8ceec1d047f
 --- a/libgcc/configure
 +++ b/libgcc/configure
 @@ -674,6 +674,7 @@ infodir
@@ -6492,6 +7055,8 @@ new mode 100755
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for init priority support" >&5
  $as_echo_n "checking for init priority support... " >&6; }
  if ${libgcc_cv_init_priority+:} false; then :
+diff --git a/libgcc/configure.ac b/libgcc/configure.ac
+index 8e96cafdf8b..61356d0721d 100644
 --- a/libgcc/configure.ac
 +++ b/libgcc/configure.ac
 @@ -207,7 +207,7 @@ AC_SUBST(long_double_type_size)
@@ -6529,6 +7094,8 @@ new mode 100755
  dnl Check if as supports RTM instructions.
  AC_CACHE_CHECK(for init priority support, libgcc_cv_init_priority, [
  AC_COMPILE_IFELSE([AC_LANG_PROGRAM(,
+diff --git a/libgfortran/ChangeLog b/libgfortran/ChangeLog
+index 01aa551b914..946c9f0100b 100644
 --- a/libgfortran/ChangeLog
 +++ b/libgfortran/ChangeLog
 @@ -1,3 +1,8 @@
@@ -6540,6 +7107,8 @@ new mode 100755
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/libgfortran/config/fpu-387.h b/libgfortran/config/fpu-387.h
+index a2f4281d0c5..bf4d78586c9 100644
 --- a/libgfortran/config/fpu-387.h
 +++ b/libgfortran/config/fpu-387.h
 @@ -103,9 +103,7 @@ local_feraiseexcept (int excepts)
@@ -6572,6 +7141,8 @@ new mode 100755
  #else
        __asm__ __volatile__ ("fdivs\t%1" : "+t" (f) : "m" (g));
        /* No need for fwait, exception is triggered by emitted fstp.  */
+diff --git a/libgomp/ChangeLog b/libgomp/ChangeLog
+index 0156d5f7bc9..2926096bb7c 100644
 --- a/libgomp/ChangeLog
 +++ b/libgomp/ChangeLog
 @@ -1,3 +1,124 @@
@@ -6699,7 +7270,9 @@ new mode 100755
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/libgomp/testsuite/libgomp.c++/pr93931.C b/libgomp/testsuite/libgomp.c++/pr93931.C
 new file mode 100644
+index 00000000000..4d4232ef340
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.c++/pr93931.C
 @@ -0,0 +1,120 @@
@@ -6823,7 +7396,9 @@ new file mode 100644
 +    abort ();
 +  garply ();
 +}
+diff --git a/libgomp/testsuite/libgomp.c/pr93566.c b/libgomp/testsuite/libgomp.c/pr93566.c
 new file mode 100644
+index 00000000000..3334bd571f6
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.c/pr93566.c
 @@ -0,0 +1,113 @@
@@ -6940,14 +7515,18 @@ new file mode 100644
 +  corge ();
 +  return 0;
 +}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-1-lib.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-1-lib.c
 new file mode 100644
+index 00000000000..8fa87777f1a
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-1-lib.c
 @@ -0,0 +1,3 @@
 +/* { dg-skip-if "" { *-*-* } { "-DACC_MEM_SHARED=1" } } */
 +/* { dg-additional-options "-DOPENACC_API" } */
 +#include "structured-dynamic-lifetimes-1.c"
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-1.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-1.c
 new file mode 100644
+index 00000000000..0d6b4159ad0
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-1.c
 @@ -0,0 +1,161 @@
@@ -7112,14 +7691,18 @@ new file mode 100644
 +  f4 ();
 +  return 0;
 +}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-2-lib.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-2-lib.c
 new file mode 100644
+index 00000000000..365df8d7f7d
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-2-lib.c
 @@ -0,0 +1,3 @@
 +/* { dg-skip-if "" { *-*-* } { "-DACC_MEM_SHARED=1" } } */
 +/* { dg-additional-options "-DOPENACC_API" } */
 +#include "structured-dynamic-lifetimes-2.c"
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-2.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-2.c
 new file mode 100644
+index 00000000000..726942c76fd
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-2.c
 @@ -0,0 +1,166 @@
@@ -7289,14 +7872,18 @@ new file mode 100644
 +  f5 ();
 +  return 0;
 +}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-3-lib.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-3-lib.c
 new file mode 100644
+index 00000000000..469b35b76f1
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-3-lib.c
 @@ -0,0 +1,3 @@
 +/* { dg-skip-if "" { *-*-* } { "-DACC_MEM_SHARED=1" } } */
 +/* { dg-additional-options "-DOPENACC_API" } */
 +#include "structured-dynamic-lifetimes-3.c"
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-3.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-3.c
 new file mode 100644
+index 00000000000..c13f3c56584
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-3.c
 @@ -0,0 +1,183 @@
@@ -7483,14 +8070,18 @@ new file mode 100644
 +  f5 ();
 +  return 0;
 +}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-4-lib.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-4-lib.c
 new file mode 100644
+index 00000000000..8e88b97b2ce
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-4-lib.c
 @@ -0,0 +1,3 @@
 +/* { dg-skip-if "" { *-*-* } { "-DACC_MEM_SHARED=1" } } */
 +/* { dg-additional-options "-DOPENACC_API" } */
 +#include "structured-dynamic-lifetimes-4.c"
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-4.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-4.c
 new file mode 100644
+index 00000000000..e9a6510ace8
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-4.c
 @@ -0,0 +1,64 @@
@@ -7558,14 +8149,18 @@ new file mode 100644
 +
 +  return 0;
 +}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-5-lib.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-5-lib.c
 new file mode 100644
+index 00000000000..59ef5626bd0
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-5-lib.c
 @@ -0,0 +1,3 @@
 +/* { dg-skip-if "" { *-*-* } { "-DACC_MEM_SHARED=1" } } */
 +/* { dg-additional-options "-DOPENACC_API" } */
 +#include "structured-dynamic-lifetimes-5.c"
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-5.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-5.c
 new file mode 100644
+index 00000000000..9807076d3f4
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-5.c
 @@ -0,0 +1,56 @@
@@ -7625,14 +8220,18 @@ new file mode 100644
 +
 +  return 0;
 +}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-6-lib.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-6-lib.c
 new file mode 100644
+index 00000000000..0401f73966f
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-6-lib.c
 @@ -0,0 +1,3 @@
 +/* { dg-skip-if "" { *-*-* } { "-DACC_MEM_SHARED=1" } } */
 +/* { dg-additional-options "-DOPENACC_API" } */
 +#include "structured-dynamic-lifetimes-6.c"
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-6.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-6.c
 new file mode 100644
+index 00000000000..9250b4af3ed
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-6.c
 @@ -0,0 +1,43 @@
@@ -7679,14 +8278,18 @@ new file mode 100644
 +
 +  return 0;
 +}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-7-lib.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-7-lib.c
 new file mode 100644
+index 00000000000..07caefbd082
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-7-lib.c
 @@ -0,0 +1,3 @@
 +/* { dg-skip-if "" { *-*-* } { "-DACC_MEM_SHARED=1" } } */
 +/* { dg-additional-options "-DOPENACC_API" } */
 +#include "structured-dynamic-lifetimes-7.c"
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-7.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-7.c
 new file mode 100644
+index 00000000000..52e8d4c9959
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-7.c
 @@ -0,0 +1,44 @@
@@ -7734,14 +8337,18 @@ new file mode 100644
 +
 +  return 0;
 +}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-8-lib.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-8-lib.c
 new file mode 100644
+index 00000000000..1c2479ad96f
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-8-lib.c
 @@ -0,0 +1,3 @@
 +/* { dg-skip-if "" { *-*-* } { "-DACC_MEM_SHARED=1" } } */
 +/* { dg-additional-options "-DOPENACC_API" } */
 +#include "structured-dynamic-lifetimes-8.c"
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-8.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-8.c
 new file mode 100644
+index 00000000000..919ee02b725
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-8.c
 @@ -0,0 +1,47 @@
@@ -7792,6 +8399,8 @@ new file mode 100644
 +
 +  return 0;
 +}
+diff --git a/libphobos/ChangeLog b/libphobos/ChangeLog
+index 569a3c91ab2..67d02036def 100644
 --- a/libphobos/ChangeLog
 +++ b/libphobos/ChangeLog
 @@ -1,3 +1,15 @@
@@ -7810,6 +8419,8 @@ new file mode 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/libphobos/libdruntime/core/sys/posix/netdb.d b/libphobos/libdruntime/core/sys/posix/netdb.d
+index 327387f68ea..f1251839b16 100644
 --- a/libphobos/libdruntime/core/sys/posix/netdb.d
 +++ b/libphobos/libdruntime/core/sys/posix/netdb.d
 @@ -743,9 +743,7 @@ else version (Solaris)
@@ -7823,6 +8434,8 @@ new file mode 100644
              int _ai_pad;
  
          socklen_t ai_addrlen;
+diff --git a/libphobos/libdruntime/core/sys/posix/sys/stat.d b/libphobos/libdruntime/core/sys/posix/sys/stat.d
+index 76e4460550d..9fc89270d48 100644
 --- a/libphobos/libdruntime/core/sys/posix/sys/stat.d
 +++ b/libphobos/libdruntime/core/sys/posix/sys/stat.d
 @@ -1314,7 +1314,6 @@ else version (Solaris)
@@ -7833,6 +8446,8 @@ new file mode 100644
              union
              {
                  timestruc_t st_atim;
+diff --git a/libstdc++-v3/ChangeLog b/libstdc++-v3/ChangeLog
+index 45847172291..a1d06b6fff1 100644
 --- a/libstdc++-v3/ChangeLog
 +++ b/libstdc++-v3/ChangeLog
 @@ -1,3 +1,285 @@
@@ -8121,6 +8736,8 @@ new file mode 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/libstdc++-v3/config/abi/post/aarch64-linux-gnu/baseline_symbols.txt b/libstdc++-v3/config/abi/post/aarch64-linux-gnu/baseline_symbols.txt
+index 53c87f115e0..089537d5ddf 100644
 --- a/libstdc++-v3/config/abi/post/aarch64-linux-gnu/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/aarch64-linux-gnu/baseline_symbols.txt
 @@ -2062,16 +2062,20 @@ FUNC:_ZNSt12__basic_fileIcED1Ev@@GLIBCXX_3.4
@@ -8212,6 +8829,8 @@ new file mode 100644
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIcEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIwEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1115messages_bynameIcEE@@GLIBCXX_3.4.21
+diff --git a/libstdc++-v3/config/abi/post/i386-linux-gnu/baseline_symbols.txt b/libstdc++-v3/config/abi/post/i386-linux-gnu/baseline_symbols.txt
+index e488ada5c72..f9eca6c7b0e 100644
 --- a/libstdc++-v3/config/abi/post/i386-linux-gnu/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/i386-linux-gnu/baseline_symbols.txt
 @@ -2062,16 +2062,20 @@ FUNC:_ZNSt12__basic_fileIcED1Ev@@GLIBCXX_3.4
@@ -8303,6 +8922,8 @@ new file mode 100644
  OBJECT:8:_ZTINSt6locale5facetE@@GLIBCXX_3.4
  OBJECT:8:_ZTINSt6thread6_StateE@@GLIBCXX_3.4.22
  OBJECT:8:_ZTISt10ctype_base@@GLIBCXX_3.4
+diff --git a/libstdc++-v3/config/abi/post/i386-solaris2.10/amd64/baseline_symbols.txt b/libstdc++-v3/config/abi/post/i386-solaris2.10/amd64/baseline_symbols.txt
+index dc1a34fa9f5..52d4a38a024 100644
 --- a/libstdc++-v3/config/abi/post/i386-solaris2.10/amd64/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/i386-solaris2.10/amd64/baseline_symbols.txt
 @@ -2968,12 +2968,18 @@ FUNC:_ZNSt3_V214error_categoryD1Ev@@GLIBCXX_3.4.21
@@ -8365,6 +8986,8 @@ new file mode 100644
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIcEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIwEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1115messages_bynameIcEE@@GLIBCXX_3.4.21
+diff --git a/libstdc++-v3/config/abi/post/i386-solaris2.10/baseline_symbols.txt b/libstdc++-v3/config/abi/post/i386-solaris2.10/baseline_symbols.txt
+index c097965d4b2..ae23c0d8d6e 100644
 --- a/libstdc++-v3/config/abi/post/i386-solaris2.10/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/i386-solaris2.10/baseline_symbols.txt
 @@ -2968,12 +2968,18 @@ FUNC:_ZNSt3_V214error_categoryD1Ev@@GLIBCXX_3.4.21
@@ -8427,6 +9050,8 @@ new file mode 100644
  OBJECT:8:_ZTINSt6locale5facetE@@GLIBCXX_3.4
  OBJECT:8:_ZTINSt6thread6_StateE@@GLIBCXX_3.4.22
  OBJECT:8:_ZTISt10ctype_base@@GLIBCXX_3.4
+diff --git a/libstdc++-v3/config/abi/post/i386-solaris2.11/amd64/baseline_symbols.txt b/libstdc++-v3/config/abi/post/i386-solaris2.11/amd64/baseline_symbols.txt
+index 2a8f88bac7b..2aa9e2639ab 100644
 --- a/libstdc++-v3/config/abi/post/i386-solaris2.11/amd64/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/i386-solaris2.11/amd64/baseline_symbols.txt
 @@ -2968,12 +2968,18 @@ FUNC:_ZNSt3_V214error_categoryD1Ev@@GLIBCXX_3.4.21
@@ -8489,6 +9114,8 @@ new file mode 100644
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIcEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIwEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1115messages_bynameIcEE@@GLIBCXX_3.4.21
+diff --git a/libstdc++-v3/config/abi/post/i386-solaris2.11/baseline_symbols.txt b/libstdc++-v3/config/abi/post/i386-solaris2.11/baseline_symbols.txt
+index 85796b3689b..3500f8a76ca 100644
 --- a/libstdc++-v3/config/abi/post/i386-solaris2.11/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/i386-solaris2.11/baseline_symbols.txt
 @@ -2968,12 +2968,18 @@ FUNC:_ZNSt3_V214error_categoryD1Ev@@GLIBCXX_3.4.21
@@ -8551,6 +9178,8 @@ new file mode 100644
  OBJECT:8:_ZTINSt6locale5facetE@@GLIBCXX_3.4
  OBJECT:8:_ZTINSt6thread6_StateE@@GLIBCXX_3.4.22
  OBJECT:8:_ZTISt10ctype_base@@GLIBCXX_3.4
+diff --git a/libstdc++-v3/config/abi/post/i486-linux-gnu/baseline_symbols.txt b/libstdc++-v3/config/abi/post/i486-linux-gnu/baseline_symbols.txt
+index e488ada5c72..f9eca6c7b0e 100644
 --- a/libstdc++-v3/config/abi/post/i486-linux-gnu/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/i486-linux-gnu/baseline_symbols.txt
 @@ -2062,16 +2062,20 @@ FUNC:_ZNSt12__basic_fileIcED1Ev@@GLIBCXX_3.4
@@ -8642,6 +9271,8 @@ new file mode 100644
  OBJECT:8:_ZTINSt6locale5facetE@@GLIBCXX_3.4
  OBJECT:8:_ZTINSt6thread6_StateE@@GLIBCXX_3.4.22
  OBJECT:8:_ZTISt10ctype_base@@GLIBCXX_3.4
+diff --git a/libstdc++-v3/config/abi/post/powerpc64-linux-gnu/baseline_symbols.txt b/libstdc++-v3/config/abi/post/powerpc64-linux-gnu/baseline_symbols.txt
+index 65ee06d5c2a..58c11a5972b 100644
 --- a/libstdc++-v3/config/abi/post/powerpc64-linux-gnu/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/powerpc64-linux-gnu/baseline_symbols.txt
 @@ -2208,16 +2208,20 @@ FUNC:_ZNSt12__basic_fileIcED1Ev@@GLIBCXX_3.4
@@ -8733,6 +9364,8 @@ new file mode 100644
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIcEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIwEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1115messages_bynameIcEE@@GLIBCXX_3.4.21
+diff --git a/libstdc++-v3/config/abi/post/s390x-linux-gnu/baseline_symbols.txt b/libstdc++-v3/config/abi/post/s390x-linux-gnu/baseline_symbols.txt
+index 65ee06d5c2a..58c11a5972b 100644
 --- a/libstdc++-v3/config/abi/post/s390x-linux-gnu/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/s390x-linux-gnu/baseline_symbols.txt
 @@ -2208,16 +2208,20 @@ FUNC:_ZNSt12__basic_fileIcED1Ev@@GLIBCXX_3.4
@@ -8824,6 +9457,8 @@ new file mode 100644
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIcEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIwEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1115messages_bynameIcEE@@GLIBCXX_3.4.21
+diff --git a/libstdc++-v3/config/abi/post/sparc-solaris2.10/baseline_symbols.txt b/libstdc++-v3/config/abi/post/sparc-solaris2.10/baseline_symbols.txt
+index b4b39e3fbae..1c3b84cd9fc 100644
 --- a/libstdc++-v3/config/abi/post/sparc-solaris2.10/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/sparc-solaris2.10/baseline_symbols.txt
 @@ -2968,12 +2968,18 @@ FUNC:_ZNSt3_V214error_categoryD1Ev@@GLIBCXX_3.4.21
@@ -8886,6 +9521,8 @@ new file mode 100644
  OBJECT:8:_ZTINSt6locale5facetE@@GLIBCXX_3.4
  OBJECT:8:_ZTINSt6thread6_StateE@@GLIBCXX_3.4.22
  OBJECT:8:_ZTISt10ctype_base@@GLIBCXX_3.4
+diff --git a/libstdc++-v3/config/abi/post/sparc-solaris2.10/sparcv9/baseline_symbols.txt b/libstdc++-v3/config/abi/post/sparc-solaris2.10/sparcv9/baseline_symbols.txt
+index 769d83c53bb..965ee3d8e27 100644
 --- a/libstdc++-v3/config/abi/post/sparc-solaris2.10/sparcv9/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/sparc-solaris2.10/sparcv9/baseline_symbols.txt
 @@ -2968,12 +2968,18 @@ FUNC:_ZNSt3_V214error_categoryD1Ev@@GLIBCXX_3.4.21
@@ -8948,6 +9585,8 @@ new file mode 100644
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIcEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIwEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1115messages_bynameIcEE@@GLIBCXX_3.4.21
+diff --git a/libstdc++-v3/config/abi/post/sparc-solaris2.11/baseline_symbols.txt b/libstdc++-v3/config/abi/post/sparc-solaris2.11/baseline_symbols.txt
+index ceb8f02d402..d1ea64e17ab 100644
 --- a/libstdc++-v3/config/abi/post/sparc-solaris2.11/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/sparc-solaris2.11/baseline_symbols.txt
 @@ -2968,12 +2968,18 @@ FUNC:_ZNSt3_V214error_categoryD1Ev@@GLIBCXX_3.4.21
@@ -9010,6 +9649,8 @@ new file mode 100644
  OBJECT:8:_ZTINSt6locale5facetE@@GLIBCXX_3.4
  OBJECT:8:_ZTINSt6thread6_StateE@@GLIBCXX_3.4.22
  OBJECT:8:_ZTISt10ctype_base@@GLIBCXX_3.4
+diff --git a/libstdc++-v3/config/abi/post/sparc-solaris2.11/sparcv9/baseline_symbols.txt b/libstdc++-v3/config/abi/post/sparc-solaris2.11/sparcv9/baseline_symbols.txt
+index b8a89bb1ef4..7596acb3013 100644
 --- a/libstdc++-v3/config/abi/post/sparc-solaris2.11/sparcv9/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/sparc-solaris2.11/sparcv9/baseline_symbols.txt
 @@ -2968,12 +2968,18 @@ FUNC:_ZNSt3_V214error_categoryD1Ev@@GLIBCXX_3.4.21
@@ -9072,6 +9713,8 @@ new file mode 100644
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIcEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIwEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1115messages_bynameIcEE@@GLIBCXX_3.4.21
+diff --git a/libstdc++-v3/config/abi/post/sparc64-linux-gnu/32/baseline_symbols.txt b/libstdc++-v3/config/abi/post/sparc64-linux-gnu/32/baseline_symbols.txt
+index 31c73b03659..77c65db856f 100644
 --- a/libstdc++-v3/config/abi/post/sparc64-linux-gnu/32/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/sparc64-linux-gnu/32/baseline_symbols.txt
 @@ -338,7 +338,9 @@ FUNC:_ZNKSt10filesystem16filesystem_error4whatEv@@GLIBCXX_3.4.26
@@ -9383,6 +10026,8 @@ new file mode 100644
  OBJECT:8:_ZTTSt13basic_ostreamIwSt11char_traitsIwEE@@GLIBCXX_3.4
 +TLS:4:_ZSt11__once_call@@GLIBCXX_3.4.11
 +TLS:4:_ZSt15__once_callable@@GLIBCXX_3.4.11
+diff --git a/libstdc++-v3/config/abi/post/sparc64-linux-gnu/baseline_symbols.txt b/libstdc++-v3/config/abi/post/sparc64-linux-gnu/baseline_symbols.txt
+index d56b39c9337..f0bdad20607 100644
 --- a/libstdc++-v3/config/abi/post/sparc64-linux-gnu/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/sparc64-linux-gnu/baseline_symbols.txt
 @@ -338,7 +338,9 @@ FUNC:_ZNKSt10filesystem16filesystem_error4whatEv@@GLIBCXX_3.4.26
@@ -9688,6 +10333,8 @@ new file mode 100644
  OBJECT:8:_ZNSt7codecvtIDsc11__mbstate_tE2idE@@GLIBCXX_3.4.21
  OBJECT:8:_ZNSt7codecvtIcc11__mbstate_tE2idE@@GLIBCXX_3.4
  OBJECT:8:_ZNSt7codecvtIwc11__mbstate_tE2idE@@GLIBCXX_3.4
+diff --git a/libstdc++-v3/config/abi/post/x86_64-linux-gnu/32/baseline_symbols.txt b/libstdc++-v3/config/abi/post/x86_64-linux-gnu/32/baseline_symbols.txt
+index e488ada5c72..f9eca6c7b0e 100644
 --- a/libstdc++-v3/config/abi/post/x86_64-linux-gnu/32/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/x86_64-linux-gnu/32/baseline_symbols.txt
 @@ -2062,16 +2062,20 @@ FUNC:_ZNSt12__basic_fileIcED1Ev@@GLIBCXX_3.4
@@ -9779,6 +10426,8 @@ new file mode 100644
  OBJECT:8:_ZTINSt6locale5facetE@@GLIBCXX_3.4
  OBJECT:8:_ZTINSt6thread6_StateE@@GLIBCXX_3.4.22
  OBJECT:8:_ZTISt10ctype_base@@GLIBCXX_3.4
+diff --git a/libstdc++-v3/config/abi/post/x86_64-linux-gnu/baseline_symbols.txt b/libstdc++-v3/config/abi/post/x86_64-linux-gnu/baseline_symbols.txt
+index a403f4b660a..ab2e0951c31 100644
 --- a/libstdc++-v3/config/abi/post/x86_64-linux-gnu/baseline_symbols.txt
 +++ b/libstdc++-v3/config/abi/post/x86_64-linux-gnu/baseline_symbols.txt
 @@ -2062,16 +2062,20 @@ FUNC:_ZNSt12__basic_fileIcED1Ev@@GLIBCXX_3.4
@@ -9870,6 +10519,8 @@ new file mode 100644
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIcEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1114collate_bynameIwEE@@GLIBCXX_3.4.21
  OBJECT:56:_ZTVNSt7__cxx1115messages_bynameIcEE@@GLIBCXX_3.4.21
+diff --git a/libstdc++-v3/doc/Makefile.am b/libstdc++-v3/doc/Makefile.am
+index 4427e5da6ad..bd88bdaa8c5 100644
 --- a/libstdc++-v3/doc/Makefile.am
 +++ b/libstdc++-v3/doc/Makefile.am
 @@ -342,6 +342,8 @@ xml_sources_manual = \
@@ -9881,6 +10532,8 @@ new file mode 100644
  	${xml_dir}/manual/status_cxxtr1.xml \
  	${xml_dir}/manual/status_cxxtr24733.xml \
  	${xml_dir}/manual/strings.xml \
+diff --git a/libstdc++-v3/doc/Makefile.in b/libstdc++-v3/doc/Makefile.in
+index 1058d5c3cc8..9bde1026804 100644
 --- a/libstdc++-v3/doc/Makefile.in
 +++ b/libstdc++-v3/doc/Makefile.in
 @@ -483,6 +483,8 @@ xml_sources_manual = \
@@ -9892,6 +10545,8 @@ new file mode 100644
  	${xml_dir}/manual/status_cxxtr1.xml \
  	${xml_dir}/manual/status_cxxtr24733.xml \
  	${xml_dir}/manual/strings.xml \
+diff --git a/libstdc++-v3/doc/html/faq.html b/libstdc++-v3/doc/html/faq.html
+index ac99835acf2..18407225d7a 100644
 --- a/libstdc++-v3/doc/html/faq.html
 +++ b/libstdc++-v3/doc/html/faq.html
 @@ -194,7 +194,7 @@
@@ -9994,6 +10649,8 @@ new file mode 100644
      for SGI's STL is still recommended reading.
      </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.extensions_and_backwards_compat"></a><a id="q-extensions_and_backwards_compat"></a><p><strong>7.4.</strong></p></td><td align="left" valign="top"><p>
        Extensions and Backward Compatibility
+diff --git a/libstdc++-v3/doc/html/manual/abi.html b/libstdc++-v3/doc/html/manual/abi.html
+index 96383c33112..8ed8de64b32 100644
 --- a/libstdc++-v3/doc/html/manual/abi.html
 +++ b/libstdc++-v3/doc/html/manual/abi.html
 @@ -110,7 +110,7 @@ compatible.
@@ -10014,6 +10671,8 @@ new file mode 100644
      __GXX_ABI_VERSION. This macro is defined as the version of the
      compiler v3 ABI, with g++ 3.0 being version 100. This macro will
      be automatically defined whenever g++ is used (the curious can
+diff --git a/libstdc++-v3/doc/html/manual/status.html b/libstdc++-v3/doc/html/manual/status.html
+index 440b8671e0c..26793d9fa83 100644
 --- a/libstdc++-v3/doc/html/manual/status.html
 +++ b/libstdc++-v3/doc/html/manual/status.html
 @@ -5,7 +5,7 @@
@@ -10250,6 +10909,8 @@ new file mode 100644
  	<a class="link" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0258r2.html" target="_top">
  	P0258R2
  	</a>
+diff --git a/libstdc++-v3/doc/xml/faq.xml b/libstdc++-v3/doc/xml/faq.xml
+index aff6c8d6004..cf8684e1cea 100644
 --- a/libstdc++-v3/doc/xml/faq.xml
 +++ b/libstdc++-v3/doc/xml/faq.xml
 @@ -2,9 +2,9 @@
@@ -10676,6 +11337,8 @@ new file mode 100644
    </answer>
  </qandaentry>
  
+diff --git a/libstdc++-v3/doc/xml/manual/abi.xml b/libstdc++-v3/doc/xml/manual/abi.xml
+index 969edd7c834..7aec810d45f 100644
 --- a/libstdc++-v3/doc/xml/manual/abi.xml
 +++ b/libstdc++-v3/doc/xml/manual/abi.xml
 @@ -267,10 +267,11 @@ compatible.
@@ -10706,6 +11369,8 @@ new file mode 100644
      </itemizedlist>
      </listitem>
  
+diff --git a/libstdc++-v3/doc/xml/manual/status_cxx1998.xml b/libstdc++-v3/doc/xml/manual/status_cxx1998.xml
+index 44a042c2724..df3b2c80d20 100644
 --- a/libstdc++-v3/doc/xml/manual/status_cxx1998.xml
 +++ b/libstdc++-v3/doc/xml/manual/status_cxx1998.xml
 @@ -18,7 +18,7 @@ This status table is based on the table of contents of ISO/IEC 14882:2003.
@@ -10717,6 +11382,8 @@ new file mode 100644
  </para>
  
  <!-- Status is Yes or No, Broken/Partial-->
+diff --git a/libstdc++-v3/doc/xml/manual/status_cxx2011.xml b/libstdc++-v3/doc/xml/manual/status_cxx2011.xml
+index 568102823b0..431eb02bb6b 100644
 --- a/libstdc++-v3/doc/xml/manual/status_cxx2011.xml
 +++ b/libstdc++-v3/doc/xml/manual/status_cxx2011.xml
 @@ -27,7 +27,11 @@ presence of the required flag.
@@ -10921,6 +11588,8 @@ new file mode 100644
        <entry/>
      </row>
  
+diff --git a/libstdc++-v3/doc/xml/manual/status_cxx2014.xml b/libstdc++-v3/doc/xml/manual/status_cxx2014.xml
+index 7b604307c8e..f0872f6f8d0 100644
 --- a/libstdc++-v3/doc/xml/manual/status_cxx2014.xml
 +++ b/libstdc++-v3/doc/xml/manual/status_cxx2014.xml
 @@ -1,4 +1,4 @@
@@ -12598,6 +13267,8 @@ new file mode 100644
  
  <table frame="all" xml:id="table.ts_status">
  <title>C++ Technical Specifications Implementation Status</title>
+diff --git a/libstdc++-v3/doc/xml/manual/status_cxx2017.xml b/libstdc++-v3/doc/xml/manual/status_cxx2017.xml
+index e1513142415..898b029e66b 100644
 --- a/libstdc++-v3/doc/xml/manual/status_cxx2017.xml
 +++ b/libstdc++-v3/doc/xml/manual/status_cxx2017.xml
 @@ -468,7 +468,7 @@ Feature-testing recommendations for C++</link>.
@@ -12609,6 +13280,8 @@ new file mode 100644
      </row>
  
      <row>
+diff --git a/libstdc++-v3/include/bits/erase_if.h b/libstdc++-v3/include/bits/erase_if.h
+index 4641dbebd85..523bbecfab3 100644
 --- a/libstdc++-v3/include/bits/erase_if.h
 +++ b/libstdc++-v3/include/bits/erase_if.h
 @@ -39,7 +39,7 @@ namespace std
@@ -12620,6 +13293,8 @@ new file mode 100644
  #endif
  
    namespace __detail
+diff --git a/libstdc++-v3/include/bits/fs_path.h b/libstdc++-v3/include/bits/fs_path.h
+index 5dc624dbb1e..6b39c46ac6e 100644
 --- a/libstdc++-v3/include/bits/fs_path.h
 +++ b/libstdc++-v3/include/bits/fs_path.h
 @@ -1073,6 +1073,13 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
@@ -12636,6 +13311,8 @@ new file mode 100644
  	      if (__add_slash)
  		__str += __slash;
  	      __str += __elem._M_pathname;
+diff --git a/libstdc++-v3/include/bits/ptr_traits.h b/libstdc++-v3/include/bits/ptr_traits.h
+index c90a35080f1..80ecf5b420d 100644
 --- a/libstdc++-v3/include/bits/ptr_traits.h
 +++ b/libstdc++-v3/include/bits/ptr_traits.h
 @@ -34,6 +34,11 @@
@@ -12666,6 +13343,8 @@ new file mode 100644
  
    /**
     * @brief Obtain address referenced by a pointer to an object
+diff --git a/libstdc++-v3/include/bits/stl_iterator.h b/libstdc++-v3/include/bits/stl_iterator.h
+index e9d90fa01f4..11dd9b0fd4c 100644
 --- a/libstdc++-v3/include/bits/stl_iterator.h
 +++ b/libstdc++-v3/include/bits/stl_iterator.h
 @@ -69,8 +69,8 @@
@@ -12679,6 +13358,8 @@ new file mode 100644
  #endif
  
  namespace std _GLIBCXX_VISIBILITY(default)
+diff --git a/libstdc++-v3/include/bits/stl_map.h b/libstdc++-v3/include/bits/stl_map.h
+index 322d0a8290a..a87bba83c0d 100644
 --- a/libstdc++-v3/include/bits/stl_map.h
 +++ b/libstdc++-v3/include/bits/stl_map.h
 @@ -892,7 +892,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
@@ -12690,6 +13371,8 @@ new file mode 100644
        /**
         *  @brief Attempts to insert or assign a std::pair into the %map.
         *  @param __k    Key to use for finding a possibly existing pair in
+diff --git a/libstdc++-v3/include/bits/unordered_map.h b/libstdc++-v3/include/bits/unordered_map.h
+index b8243a73445..9959c39d083 100644
 --- a/libstdc++-v3/include/bits/unordered_map.h
 +++ b/libstdc++-v3/include/bits/unordered_map.h
 @@ -657,7 +657,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
@@ -12701,6 +13384,8 @@ new file mode 100644
        /**
         *  @brief Attempts to insert a std::pair into the %unordered_map.
         *  @param __k    Key to use for finding a possibly existing pair in
+diff --git a/libstdc++-v3/include/experimental/executor b/libstdc++-v3/include/experimental/executor
+index 266a2487899..7e2a97fd8ec 100644
 --- a/libstdc++-v3/include/experimental/executor
 +++ b/libstdc++-v3/include/experimental/executor
 @@ -127,7 +127,13 @@ inline namespace v1
@@ -13042,6 +13727,8 @@ new file mode 100644
    /// Swap two executor objects.
    inline void swap(executor& __a, executor& __b) noexcept { __a.swap(__b); }
  
+diff --git a/libstdc++-v3/include/experimental/socket b/libstdc++-v3/include/experimental/socket
+index e80626528ce..cea17312dbd 100644
 --- a/libstdc++-v3/include/experimental/socket
 +++ b/libstdc++-v3/include/experimental/socket
 @@ -79,6 +79,20 @@ inline namespace v1
@@ -13076,6 +13763,8 @@ new file mode 100644
  _GLIBCXX_END_NAMESPACE_VERSION
  } // namespace std
  
+diff --git a/libstdc++-v3/include/std/bit b/libstdc++-v3/include/std/bit
+index c753e39b64a..c4af1cfcb4d 100644
 --- a/libstdc++-v3/include/std/bit
 +++ b/libstdc++-v3/include/std/bit
 @@ -250,6 +250,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -13096,6 +13785,8 @@ new file mode 100644
    template<typename _Tp>
      constexpr _If_is_unsigned_integer<_Tp, bool>
      ispow2(_Tp __x) noexcept
+diff --git a/libstdc++-v3/include/std/complex b/libstdc++-v3/include/std/complex
+index 45450e8ca01..d156d3249a7 100644
 --- a/libstdc++-v3/include/std/complex
 +++ b/libstdc++-v3/include/std/complex
 @@ -47,6 +47,10 @@
@@ -13109,6 +13800,8 @@ new file mode 100644
  namespace std _GLIBCXX_VISIBILITY(default)
  {
  _GLIBCXX_BEGIN_NAMESPACE_VERSION
+diff --git a/libstdc++-v3/include/std/deque b/libstdc++-v3/include/std/deque
+index ed4927e13b7..b940dacb848 100644
 --- a/libstdc++-v3/include/std/deque
 +++ b/libstdc++-v3/include/std/deque
 @@ -95,7 +95,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
@@ -13120,6 +13813,8 @@ new file mode 100644
  
    template<typename _Tp, typename _Alloc, typename _Predicate>
      inline typename deque<_Tp, _Alloc>::size_type
+diff --git a/libstdc++-v3/include/std/execution b/libstdc++-v3/include/std/execution
+index 2d821e5c624..9f941c5e2f4 100644
 --- a/libstdc++-v3/include/std/execution
 +++ b/libstdc++-v3/include/std/execution
 @@ -50,6 +50,7 @@
@@ -13130,6 +13825,8 @@ new file mode 100644
  
  #endif // C++17
  
+diff --git a/libstdc++-v3/include/std/forward_list b/libstdc++-v3/include/std/forward_list
+index 9d6cc40593b..4b319f93a61 100644
 --- a/libstdc++-v3/include/std/forward_list
 +++ b/libstdc++-v3/include/std/forward_list
 @@ -66,7 +66,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
@@ -13141,6 +13838,8 @@ new file mode 100644
  
    template<typename _Tp, typename _Alloc, typename _Predicate>
      inline typename forward_list<_Tp, _Alloc>::size_type 
+diff --git a/libstdc++-v3/include/std/functional b/libstdc++-v3/include/std/functional
+index 528452fed40..4b9c3449383 100644
 --- a/libstdc++-v3/include/std/functional
 +++ b/libstdc++-v3/include/std/functional
 @@ -974,7 +974,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -13152,6 +13851,8 @@ new file mode 100644
  
      private:
        _Fn _M_fn;
+diff --git a/libstdc++-v3/include/std/list b/libstdc++-v3/include/std/list
+index 8d6ac198c9a..6fb5ea8dcc4 100644
 --- a/libstdc++-v3/include/std/list
 +++ b/libstdc++-v3/include/std/list
 @@ -90,7 +90,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
@@ -13163,6 +13864,8 @@ new file mode 100644
  
    template<typename _Tp, typename _Alloc, typename _Predicate>
      inline typename list<_Tp, _Alloc>::size_type
+diff --git a/libstdc++-v3/include/std/memory b/libstdc++-v3/include/std/memory
+index b6950c76089..cb8be4dc129 100644
 --- a/libstdc++-v3/include/std/memory
 +++ b/libstdc++-v3/include/std/memory
 @@ -157,6 +157,7 @@ inline pointer_safety
@@ -13173,6 +13876,8 @@ new file mode 100644
    /// Inform the compiler that a pointer is aligned.
    template<size_t _Align, class _Tp>
      [[nodiscard,__gnu__::__always_inline__]]
+diff --git a/libstdc++-v3/include/std/memory_resource b/libstdc++-v3/include/std/memory_resource
+index 7ff5d17afe7..5b6ec60268a 100644
 --- a/libstdc++-v3/include/std/memory_resource
 +++ b/libstdc++-v3/include/std/memory_resource
 @@ -61,6 +61,7 @@ namespace pmr
@@ -13183,6 +13888,8 @@ new file mode 100644
    template<typename _Tp = std::byte>
      class polymorphic_allocator;
  #endif
+diff --git a/libstdc++-v3/include/std/string b/libstdc++-v3/include/std/string
+index 6ccc06f337a..506cb78313e 100644
 --- a/libstdc++-v3/include/std/string
 +++ b/libstdc++-v3/include/std/string
 @@ -118,7 +118,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
@@ -13194,6 +13901,8 @@ new file mode 100644
  
    template<typename _CharT, typename _Traits, typename _Alloc,
  	   typename _Predicate>
+diff --git a/libstdc++-v3/include/std/string_view b/libstdc++-v3/include/std/string_view
+index 42822cc41ab..4d90438e6be 100644
 --- a/libstdc++-v3/include/std/string_view
 +++ b/libstdc++-v3/include/std/string_view
 @@ -47,7 +47,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
@@ -13213,6 +13922,8 @@ new file mode 100644
        constexpr bool
        starts_with(basic_string_view __x) const noexcept
        { return this->substr(0, __x.size()) == __x; }
+diff --git a/libstdc++-v3/include/std/type_traits b/libstdc++-v3/include/std/type_traits
+index 9bad55829ce..18bcac824c3 100644
 --- a/libstdc++-v3/include/std/type_traits
 +++ b/libstdc++-v3/include/std/type_traits
 @@ -1362,6 +1362,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -13249,6 +13960,8 @@ new file mode 100644
    /// Unwrap a reference_wrapper
    template<typename _Tp>
      struct unwrap_reference { using type = _Tp; };
+diff --git a/libstdc++-v3/include/std/vector b/libstdc++-v3/include/std/vector
+index e5e13ab3ef7..1c1e2fd60e7 100644
 --- a/libstdc++-v3/include/std/vector
 +++ b/libstdc++-v3/include/std/vector
 @@ -105,7 +105,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
@@ -13260,6 +13973,8 @@ new file mode 100644
  
    template<typename _Tp, typename _Alloc, typename _Predicate>
      inline typename vector<_Tp, _Alloc>::size_type
+diff --git a/libstdc++-v3/include/std/version b/libstdc++-v3/include/std/version
+index 3c288301952..0f704c054cf 100644
 --- a/libstdc++-v3/include/std/version
 +++ b/libstdc++-v3/include/std/version
 @@ -35,7 +35,9 @@
@@ -13462,6 +14177,8 @@ new file mode 100644
  #endif // C++2a
  #endif // C++17
  #endif // C++14
+diff --git a/libstdc++-v3/src/c++17/fs_path.cc b/libstdc++-v3/src/c++17/fs_path.cc
+index 54bef75efd8..a6be0e03a78 100644
 --- a/libstdc++-v3/src/c++17/fs_path.cc
 +++ b/libstdc++-v3/src/c++17/fs_path.cc
 @@ -845,6 +845,26 @@ path::operator+=(const path& p)
@@ -13518,6 +14235,8 @@ new file mode 100644
    const auto orig_pathlen = _M_pathname.length();
    const auto orig_type = _M_type();
    const auto orig_size = _M_cmpts.size();
+diff --git a/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc b/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc
+index 0954ac7b458..092413e6581 100644
 --- a/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc
 +++ b/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc
 @@ -17,7 +17,7 @@
@@ -13529,7 +14248,9 @@ new file mode 100644
  
  #include <memory>
  
+diff --git a/libstdc++-v3/testsuite/20_util/to_address/debug.cc b/libstdc++-v3/testsuite/20_util/to_address/debug.cc
 new file mode 100644
+index 00000000000..4555284416d
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/20_util/to_address/debug.cc
 @@ -0,0 +1,36 @@
@@ -13569,6 +14290,8 @@ new file mode 100644
 +{
 +  test01();
 +}
+diff --git a/libstdc++-v3/testsuite/20_util/unwrap_reference/1.cc b/libstdc++-v3/testsuite/20_util/unwrap_reference/1.cc
+index 243526725a0..3c04028bb6e 100644
 --- a/libstdc++-v3/testsuite/20_util/unwrap_reference/1.cc
 +++ b/libstdc++-v3/testsuite/20_util/unwrap_reference/1.cc
 @@ -20,6 +20,12 @@
@@ -13584,7 +14307,9 @@ new file mode 100644
  template<typename T, typename U> struct expect_same;
  template<typename T> struct expect_same<T, T> : std::true_type { };
  
+diff --git a/libstdc++-v3/testsuite/20_util/unwrap_reference/3.cc b/libstdc++-v3/testsuite/20_util/unwrap_reference/3.cc
 new file mode 100644
+index 00000000000..3ea9cd18a05
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/20_util/unwrap_reference/3.cc
 @@ -0,0 +1,27 @@
@@ -13615,6 +14340,8 @@ new file mode 100644
 +#elif __cpp_lib_unwrap_ref != 201811L
 +# error "Feature-test macro for unwrap_reference has wrong value in <version>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/21_strings/basic_string/erasure.cc b/libstdc++-v3/testsuite/21_strings/basic_string/erasure.cc
+index 873dd0cbf0f..a00faf94180 100644
 --- a/libstdc++-v3/testsuite/21_strings/basic_string/erasure.cc
 +++ b/libstdc++-v3/testsuite/21_strings/basic_string/erasure.cc
 @@ -21,6 +21,12 @@
@@ -13630,7 +14357,9 @@ new file mode 100644
  void
  test01()
  {
+diff --git a/libstdc++-v3/testsuite/23_containers/array/element_access/constexpr_c++17.cc b/libstdc++-v3/testsuite/23_containers/array/element_access/constexpr_c++17.cc
 new file mode 100644
+index 00000000000..dd69645833f
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/23_containers/array/element_access/constexpr_c++17.cc
 @@ -0,0 +1,55 @@
@@ -13689,6 +14418,8 @@ new file mode 100644
 +}
 +
 +static_assert( test02() == (55 + 66 + 0 + 2) );
+diff --git a/libstdc++-v3/testsuite/23_containers/array/requirements/constexpr_iter.cc b/libstdc++-v3/testsuite/23_containers/array/requirements/constexpr_iter.cc
+index 208078c3b5a..7ede36073e1 100644
 --- a/libstdc++-v3/testsuite/23_containers/array/requirements/constexpr_iter.cc
 +++ b/libstdc++-v3/testsuite/23_containers/array/requirements/constexpr_iter.cc
 @@ -1,5 +1,5 @@
@@ -13715,6 +14446,8 @@ new file mode 100644
  constexpr int
  test()
  {
+diff --git a/libstdc++-v3/testsuite/23_containers/deque/erasure.cc b/libstdc++-v3/testsuite/23_containers/deque/erasure.cc
+index 39ea6deecc2..da5330b300a 100644
 --- a/libstdc++-v3/testsuite/23_containers/deque/erasure.cc
 +++ b/libstdc++-v3/testsuite/23_containers/deque/erasure.cc
 @@ -22,9 +22,9 @@
@@ -13730,6 +14463,8 @@ new file mode 100644
  #endif
  
  void
+diff --git a/libstdc++-v3/testsuite/23_containers/forward_list/erasure.cc b/libstdc++-v3/testsuite/23_containers/forward_list/erasure.cc
+index 724a720f654..50b35719471 100644
 --- a/libstdc++-v3/testsuite/23_containers/forward_list/erasure.cc
 +++ b/libstdc++-v3/testsuite/23_containers/forward_list/erasure.cc
 @@ -22,9 +22,9 @@
@@ -13745,6 +14480,8 @@ new file mode 100644
  #endif
  
  void
+diff --git a/libstdc++-v3/testsuite/23_containers/list/erasure.cc b/libstdc++-v3/testsuite/23_containers/list/erasure.cc
+index a9927b484e1..ff849808fd9 100644
 --- a/libstdc++-v3/testsuite/23_containers/list/erasure.cc
 +++ b/libstdc++-v3/testsuite/23_containers/list/erasure.cc
 @@ -22,9 +22,9 @@
@@ -13760,6 +14497,8 @@ new file mode 100644
  #endif
  
  void
+diff --git a/libstdc++-v3/testsuite/23_containers/map/erasure.cc b/libstdc++-v3/testsuite/23_containers/map/erasure.cc
+index d8a57160865..8e5955ffbd1 100644
 --- a/libstdc++-v3/testsuite/23_containers/map/erasure.cc
 +++ b/libstdc++-v3/testsuite/23_containers/map/erasure.cc
 @@ -22,9 +22,9 @@
@@ -13775,6 +14514,8 @@ new file mode 100644
  #endif
  
  auto is_odd_pair = [](const std::pair<const int, std::string>& p)
+diff --git a/libstdc++-v3/testsuite/23_containers/set/erasure.cc b/libstdc++-v3/testsuite/23_containers/set/erasure.cc
+index 2412d69f75c..494d6315ea7 100644
 --- a/libstdc++-v3/testsuite/23_containers/set/erasure.cc
 +++ b/libstdc++-v3/testsuite/23_containers/set/erasure.cc
 @@ -22,9 +22,9 @@
@@ -13790,6 +14531,8 @@ new file mode 100644
  #endif
  
  auto is_odd = [](const int i) { return i % 2 != 0; };
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_map/erasure.cc b/libstdc++-v3/testsuite/23_containers/unordered_map/erasure.cc
+index 35190a0d19e..1bfc53201dd 100644
 --- a/libstdc++-v3/testsuite/23_containers/unordered_map/erasure.cc
 +++ b/libstdc++-v3/testsuite/23_containers/unordered_map/erasure.cc
 @@ -22,9 +22,9 @@
@@ -13805,6 +14548,8 @@ new file mode 100644
  #endif
  
  auto is_odd_pair = [](const std::pair<const int, std::string>& p)
+diff --git a/libstdc++-v3/testsuite/23_containers/unordered_set/erasure.cc b/libstdc++-v3/testsuite/23_containers/unordered_set/erasure.cc
+index 5ffabf538bd..97aa24c4834 100644
 --- a/libstdc++-v3/testsuite/23_containers/unordered_set/erasure.cc
 +++ b/libstdc++-v3/testsuite/23_containers/unordered_set/erasure.cc
 @@ -22,9 +22,9 @@
@@ -13820,6 +14565,8 @@ new file mode 100644
  #endif
  
  void
+diff --git a/libstdc++-v3/testsuite/23_containers/vector/erasure.cc b/libstdc++-v3/testsuite/23_containers/vector/erasure.cc
+index 0a23c3f0d12..ec479053cf1 100644
 --- a/libstdc++-v3/testsuite/23_containers/vector/erasure.cc
 +++ b/libstdc++-v3/testsuite/23_containers/vector/erasure.cc
 @@ -22,9 +22,9 @@
@@ -13835,7 +14582,9 @@ new file mode 100644
  #endif
  
  void
+diff --git a/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-2.cc b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-2.cc
 new file mode 100644
+index 00000000000..3e74f89bc41
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-2.cc
 @@ -0,0 +1,27 @@
@@ -13866,7 +14615,9 @@ new file mode 100644
 +#elif __cpp_lib_parallel_algorithm != 201603L
 +# error "Feature-test macro for parallel algorithms has wrong value in <numeric>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-3.cc b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-3.cc
 new file mode 100644
+index 00000000000..4d75a186211
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-3.cc
 @@ -0,0 +1,35 @@
@@ -13905,7 +14656,9 @@ new file mode 100644
 +#elif __cpp_lib_parallel_algorithm != 201603L
 +# error "Feature-test macro for parallel algorithms has wrong value in <execution>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-4.cc b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-4.cc
 new file mode 100644
+index 00000000000..e7bbf920499
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-4.cc
 @@ -0,0 +1,33 @@
@@ -13942,7 +14695,9 @@ new file mode 100644
 +#elif __cpp_lib_execution != 201902L
 +# error "Feature-test macro for parallel algorithms has wrong value in <version>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-5.cc b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-5.cc
 new file mode 100644
+index 00000000000..2d991958e75
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test-5.cc
 @@ -0,0 +1,28 @@
@@ -13974,6 +14729,8 @@ new file mode 100644
 +#elif __cpp_lib_parallel_algorithm != 201603L
 +# error "Feature-test macro for parallel algorithms has wrong value in <memory>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test.cc b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test.cc
+index d9d558b9dea..c6408f523e0 100644
 --- a/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test.cc
 +++ b/libstdc++-v3/testsuite/25_algorithms/pstl/feature_test.cc
 @@ -21,31 +21,7 @@
@@ -14009,7 +14766,9 @@ new file mode 100644
 -#if __cpp_lib_parallel_algorithm != 201603L
 -# error "Feature-test macro for parallel algorithms has wrong value in <execution>"
 -#endif
+diff --git a/libstdc++-v3/testsuite/26_numerics/bit/header-2.cc b/libstdc++-v3/testsuite/26_numerics/bit/header-2.cc
 new file mode 100644
+index 00000000000..f67a1cdcac1
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/26_numerics/bit/header-2.cc
 @@ -0,0 +1,27 @@
@@ -14040,7 +14799,9 @@ new file mode 100644
 +#elif __cpp_lib_bitops < 201907L
 +# error "Feature test macro for bitops has wrong value in <version>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/26_numerics/bit/header.cc b/libstdc++-v3/testsuite/26_numerics/bit/header.cc
 new file mode 100644
+index 00000000000..824ee002e96
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/26_numerics/bit/header.cc
 @@ -0,0 +1,27 @@
@@ -14071,7 +14832,9 @@ new file mode 100644
 +#elif __cpp_lib_bitops < 201907L
 +# error "Feature test macro for bitops has wrong value in <bit>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/26_numerics/complex/1.cc b/libstdc++-v3/testsuite/26_numerics/complex/1.cc
 new file mode 100644
+index 00000000000..e3e6c22c5f4
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/26_numerics/complex/1.cc
 @@ -0,0 +1,27 @@
@@ -14102,7 +14865,9 @@ new file mode 100644
 +#elif __cpp_lib_constexpr_complex < 201711L
 +# error "Feature test macro for constexpr complex has wrong value in <complex>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/26_numerics/complex/2.cc b/libstdc++-v3/testsuite/26_numerics/complex/2.cc
 new file mode 100644
+index 00000000000..e84e92c62ae
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/26_numerics/complex/2.cc
 @@ -0,0 +1,27 @@
@@ -14133,6 +14898,8 @@ new file mode 100644
 +#elif __cpp_lib_constexpr_complex < 201711L
 +# error "Feature test macro for constexpr complex has wrong value in <version>"
 +#endif
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/operations/last_write_time.cc b/libstdc++-v3/testsuite/27_io/filesystem/operations/last_write_time.cc
+index 3f31375f51b..5d6e62c421a 100644
 --- a/libstdc++-v3/testsuite/27_io/filesystem/operations/last_write_time.cc
 +++ b/libstdc++-v3/testsuite/27_io/filesystem/operations/last_write_time.cc
 @@ -32,9 +32,12 @@
@@ -14291,7 +15058,9 @@ new file mode 100644
    last_write_time(f.path, time, ec);
    VERIFY( !ec );
    VERIFY( approx_equal(last_write_time(f.path), time) );
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/path/concat/94063.cc b/libstdc++-v3/testsuite/27_io/filesystem/path/concat/94063.cc
 new file mode 100644
+index 00000000000..9f4c9c0aa08
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/27_io/filesystem/path/concat/94063.cc
 @@ -0,0 +1,111 @@
@@ -14406,6 +15175,8 @@ new file mode 100644
 +{
 +  test01();
 +}
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/path/generic/generic_string.cc b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/generic_string.cc
+index 5a0c24c25c3..5caf079ed9b 100644
 --- a/libstdc++-v3/testsuite/27_io/filesystem/path/generic/generic_string.cc
 +++ b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/generic_string.cc
 @@ -1,7 +1,7 @@
@@ -14438,7 +15209,9 @@ new file mode 100644
    test01();
 +  test02();
  }
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/path/generic/utf.cc b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/utf.cc
 new file mode 100644
+index 00000000000..52afdb4497b
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/utf.cc
 @@ -0,0 +1,65 @@
@@ -14507,7 +15280,9 @@ new file mode 100644
 +  test01();
 +  test02();
 +}
+diff --git a/libstdc++-v3/testsuite/27_io/filesystem/path/generic/wchar_t.cc b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/wchar_t.cc
 new file mode 100644
+index 00000000000..7bb2f643043
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/27_io/filesystem/path/generic/wchar_t.cc
 @@ -0,0 +1,65 @@
@@ -14576,6 +15351,8 @@ new file mode 100644
 +  test01();
 +  test02();
 +}
+diff --git a/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc b/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc
+index 1bbc37408c3..82061f9e7e9 100644
 --- a/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc
 +++ b/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc
 @@ -22,6 +22,7 @@
@@ -14713,7 +15490,9 @@ new file mode 100644
    last_write_time(f.path, time, ec);
    VERIFY( !ec );
    VERIFY( approx_equal(last_write_time(f.path), time) );
+diff --git a/libstdc++-v3/testsuite/experimental/net/execution_context/make_service.cc b/libstdc++-v3/testsuite/experimental/net/execution_context/make_service.cc
 new file mode 100644
+index 00000000000..0898d12927a
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/experimental/net/execution_context/make_service.cc
 @@ -0,0 +1,39 @@
@@ -14756,7 +15535,9 @@ new file mode 100644
 +
 +static_assert(std::is_default_constructible<net::service_already_exists>(),
 +	      "LWG 3414. service_already_exists has no usable constructors");
+diff --git a/libstdc++-v3/testsuite/experimental/net/executor/1.cc b/libstdc++-v3/testsuite/experimental/net/executor/1.cc
 new file mode 100644
+index 00000000000..cd0af4b7737
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/experimental/net/executor/1.cc
 @@ -0,0 +1,100 @@
@@ -14860,6 +15641,8 @@ new file mode 100644
 +  test02();
 +  test03();
 +}
+diff --git a/libstdc++-v3/testsuite/lib/libstdc++.exp b/libstdc++-v3/testsuite/lib/libstdc++.exp
+index 1ab896d3deb..a616227ae7b 100644
 --- a/libstdc++-v3/testsuite/lib/libstdc++.exp
 +++ b/libstdc++-v3/testsuite/lib/libstdc++.exp
 @@ -1623,7 +1623,8 @@ proc check_effective_target_tbb-backend { } {
@@ -14872,6 +15655,8 @@ new file mode 100644
          file delete $src
  
          if [string match "" $lines] {
+diff --git a/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc b/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc
+index e1feef99582..0f00a94da42 100644
 --- a/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc
 +++ b/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc
 @@ -30,7 +30,7 @@ void test01()
@@ -14883,6 +15668,8 @@ new file mode 100644
    char** endptr = 0;
    int base = 0;
  
+diff --git a/ltmain.sh b/ltmain.sh
+index 79f9ba89af5..70990740b6c 100644
 --- a/ltmain.sh
 +++ b/ltmain.sh
 @@ -3425,8 +3425,8 @@ int setenv (const char *, const char *, int);
