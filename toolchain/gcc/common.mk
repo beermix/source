@@ -157,7 +157,6 @@ GCC_CONFIGURE:= \
 		--with-tune=generic \
 		--disable-libstdcxx-debug \
 		--disable-libstdcxx-pch \
-		--enable-lto \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
