@@ -1,0 +1,1509 @@
+From patchwork Sun May 10 14:47:45 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287196
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=agJ+Bjyd;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn5S3b2zz9sPB
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:49:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-Id:Date:To
+ :From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+ Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+ List-Owner; bh=SNgnvE5sgUEmLMXpFoG9EPqN/FHQpm7DgkKywLBn2Dg=; b=agJ+BjydsX0Jf7
+ Q2A8LQF5dtC6fc030t8FatHxqNnDD2lD8FioPqJoTU0oOZ/k9mDmvXny2RFAWRyoagHlzc7m/f5g5
+ r7FANkGXidfA4D44IqaIiNGMoK5/svsRz/ceR8ZyaocjBtjq3l5f1p5Rm5iB6LFD65nsu0J0yFGG3
+ Qm179B5Q+tNtqFKmriFPD/b/QklfLX2yZetoUIeqR0lyz5zct7K8zjQgQUZ52xXpQVJHzKOUukHKU
+ irjCahm95cMXwsL9gH4URfZcg3kc9svwDvcIacM6++93O9B2qZ35SUELcvKwg0394dpVGhrlNe/eg
+ NnPAU6f612zRAhG7vMQQ==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnGR-0006bc-3U; Sun, 10 May 2020 14:49:11 +0000
+Received: from mout.kundenserver.de ([212.227.126.134])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG5-0006CJ-D0
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:52 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1M2fDr-1jXWfl3lh1-004GFC for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:43 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:45 +0200
+Message-Id: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:ftqMx6clXMuYMiTlYL5zyM0njKudBD5qLuQx3T+/3dU1k14WMRk
+ 88uCP01Zb2CA4A1N4rEw0wQER41B6Pp3Zo1QvkaIPu9SdCRmCffSR7anYQpN3EZeax2+bYH
+ bJIS3bY7GI2eia0kIUx0nYPd+Cn+bn1WS5Ng1SZMXUVuwZv5QbNhMdNPPwkxhQhIeP4QGID
+ cBxm8Sk8jJ8I8KgigL+7A==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vQAyh131LFg=:/XM5MoytUx9LgLKcq4liUW
+ BawP3JBknYbtmPZ61O4ek0w5A/h1I7W3/8C2aeZ0WD5uUycp2M2jadtHHx/puvS90nMkjWN8z
+ sXGRJ2dKc+rI/PpaNpRrevEMFk8ONHfZRYlISYpLOKUoiobTBGL/tzBWovJFiTcpaE37SnSM7
+ 3JN8nzY6zdKM5f6fPiS5O6Yo+sFt0f9X5ZW0KgP754ZUbyOZU+PwsPT1c2p+pR4Jc+hC1RPwg
+ 0b0JXnrhIlSBardWY9YyVfcYCrgImP/0/94DivH0KCo49TFKNEHp8KaNhgn+ZVRgvepAo9pjC
+ k1m3KuBFtBW3GusFkbODbu3SyU4ANhQZ+yrdyjowRkrD/9pB3kgcMWlJxjPN/Jnfe/We4qcyg
+ PbPZDQ28YnkmEHMETnLEmU9293eFJ4OdSe123RX/QEQ4N6liA6pRmB6oVVTp1L1XNPQpa5Dtb
+ qH9+GvsROCkDjLNHufrytuE3W03dhJy7hTFN/k7Q1zunrFUEGgZLriIhzUcjhYOb5eGLa40+v
+ qZwgu4CSnO/oUt1LN3dIFmQul73a7veveHDMm7vb4Qw4S5FtHu7mdRG69fGMSt+dbjR21rEHD
+ PAqLXfDSakZ0YKMTJJBFG7nUeJkIFysdiQmb79LRJt9KT7QkwPLmC2wjqkMznMmsYpp8o1hFZ
+ CIM5n8GngDI7LDT1jPod2ZYIlT5OA+gWQtgnaKND1J48YixgTBoLwupVWYnCT6FGncbgkV8WB
+ ZX3AHpiDhkG69vrFLrb2scEpH0eDiZYR3QnCnV3lbF4fR3Tv8QlqNlUbedQAxc07mDwvJJy1H
+ Wd7HAuyqqarZDlfIeFDEkwCxRiEDM5TLnw+x5HnB2BsAeWDrW11UilV/HxwVvsPPisSZ7zC
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074849_749509_79814033 
+X-CRM114-Status: UNSURE (   7.33  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_MSPIKE_H3      RBL: Good reputation (+3)
+ [212.227.126.134 listed in wl.mailspike.net]
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.134 listed in list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+ -0.0 RCVD_IN_MSPIKE_WL      Mailspike good senders
+Subject: [OpenWrt-Devel] [PATCH 01/10] ltq-vdsl-app: replace backticks by
+ $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ package/network/config/ltq-vdsl-app/files/dsl_cpe_pipe.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/network/config/ltq-vdsl-app/files/dsl_cpe_pipe.sh b/package/network/config/ltq-vdsl-app/files/dsl_cpe_pipe.sh
+index 30393b281e..9002b7b316 100755
+--- a/package/network/config/ltq-vdsl-app/files/dsl_cpe_pipe.sh
++++ b/package/network/config/ltq-vdsl-app/files/dsl_cpe_pipe.sh
+@@ -12,7 +12,7 @@ esac
+ #echo "Call dsl_pipe with $*"
+ lock /var/lock/dsl_pipe
+ echo $* > /tmp/pipe/dsl_cpe${pipe_no}_cmd
+-result=`cat /tmp/pipe/dsl_cpe${pipe_no}_ack`
++result=$(cat /tmp/pipe/dsl_cpe${pipe_no}_ack)
+ lock -u /var/lock/dsl_pipe
+ 
+ echo "$result"
+
+From patchwork Sun May 10 14:47:46 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287198
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=ky7GVkaJ;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn5l2sjgz9sPB
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:49:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=4mO95ZauM7R5GvEBocAemWoIPuSivY+tH3L3/18UYk4=; b=ky7GVkaJnDcn0eOcfEitpTLhAP
+ Nv3XRxCcnx4hgSTTJ+4vPZu6xuqkMIrTqoTSn24xIG7mWzztiT+d+8a+Dw5uYoHtcy3Ymivud/8ze
+ aqnkIOsEx8m/DhCEhlWKSw1gZv+ByqlCZqgOrK6GXDLq0fRLAXM3Yc43uUBzhr8jwY7m5OJehhCTs
+ ABXS/kztLpqYBq7MgTCiOkiJZfFTd981sl6iqduChnH7v/MYsEq4RA7tPWtcGecJtQYZ8hygd9vMS
+ VKWkOVtHY8mbr0Hxgw6lR23g2xBD4SGuSMFg/eYbXqf9ntI3qZz8AvWmjDzP22doolEdzao+8AS2A
+ vkmiK/IQ==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnGj-00076F-B7; Sun, 10 May 2020 14:49:29 +0000
+Received: from mout.kundenserver.de ([212.227.126.134])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG5-0006CI-GI
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:53 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MbRXd-1iwooE0JgH-00bwIi for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:43 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:46 +0200
+Message-Id: <20200510144754.10751-2-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:eYG0GQO868z7grgsqCiZhDw/JPTRQ5BFmK8Mf0siKjBA37EZ5YU
+ oOKJZRPD1S8yjdxHL0vqragFu3n6ed1ERNNPrH5soYRj0/rVVNvTQv91x6KY85b/hvlBjwo
+ lxCQ1utLHxdRk1BpwM07rE+KkzlhHwB/PNmgzY/rhLjDGI9NRfWuXUX4J3yFp8yKE9OG9s9
+ 1UHSseNLoc7n76VTdTF6A==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:K39KUufq3UI=:vKmr9w7025TEtm8whRbKOI
+ 6faPTgwNxGOz5YlJBid2Y/r0otm1I/Tq1qBYPyvtHU9muBD+NQs2YT0+bH5zL22PRE8KpCDtD
+ jBr2XRnnNZgQbzcqKvudwzrFKXh4+qK5bXlceympi1+v9PPoKcIQrE2a0TuvPIkvAKkXTYPpH
+ adTD57S5oKsCTgbGFpm0lAz8qwRn+acpP5HProfggWqVLWQb2uXx9ktF9JeFfZCmsU5YbPiUn
+ fDBIKIGEfUzImp3Zp7f9NLlAB1B3RfOKLWwUDRboqqtpuzVNfK/uZIY1WG8u/qlsFTvAGERp0
+ 4IFekF+9q98meEsShCAhFwpOjfbhMhEuxQvbJLFg+XGigOevfpN1VrwjngrIPyRq44RNw3bbL
+ +rpyUVGd+qqYI0qhZl9Gqfrf4/q66tYDZ+JKRKgUCYfyyP68GPcn+nSiZquzFvBEXJFykjj5b
+ n8gYpkEzJrdOoPhbvHR2BwdzvqJuWIpOgaJ6+iSRmJZ7/5E1plb0vDSkZfHXDyGHnZVuqqrXr
+ +/I4/ZiB0PqYevj/oeHo5qiEmHp3cPzdBuUnVOc2HpjJt0+M01azBPZ6AgWjlRXBCOndRyaeB
+ ml5BhlUe7M33vDKMj1DW50u7XWXX1xhq6kGF09aFIvedfvL9n7dRNpniPiDGOzhjZ8BmrWk9j
+ P/W+svYyN1qorUY68Mvabslji5PLcJ0Wa37JyEM4RRq8h9rEEJ20JKxLKN2+ZGOe1TYySv97N
+ YcPaf25ZAYrhp+2TcFvh+M4hUguHUIQSP+SPD69EXHjS2tHMd4e/TMJ6EkbKLQJ41b+5qPwrd
+ jdQPWOVO+38iarQcg8DWhs2NXzunvDvB5AeKmWuUFTSrzLXdDbyOpBauppd1k7kyF8YVJLt
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074849_871833_11BC2449 
+X-CRM114-Status: GOOD (  10.69  )
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_MSPIKE_H3      RBL: Good reputation (+3)
+ [212.227.126.134 listed in wl.mailspike.net]
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.134 listed in list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+ -0.0 RCVD_IN_MSPIKE_WL      Mailspike good senders
+Subject: [OpenWrt-Devel] [PATCH 02/10] base-files: replace backticks by $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ package/base-files/files/bin/board_detect        |  2 +-
+ .../files/etc/uci-defaults/13_fix-group-user     |  2 +-
+ .../files/lib/preinit/30_failsafe_wait           |  2 +-
+ package/base-files/files/lib/upgrade/nand.sh     |  8 ++++----
+ package/base-files/files/sbin/pkg_check          | 16 ++++++++--------
+ 5 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/package/base-files/files/bin/board_detect b/package/base-files/files/bin/board_detect
+index 441db6a08f..840bd0178d 100755
+--- a/package/base-files/files/bin/board_detect
++++ b/package/base-files/files/bin/board_detect
+@@ -5,7 +5,7 @@ CFG=$1
+ [ -n "$CFG" ] || CFG=/etc/board.json
+ 
+ [ -d "/etc/board.d/" -a ! -s "$CFG" ] && {
+-	for a in `ls /etc/board.d/*`; do
++	for a in $(ls /etc/board.d/*); do
+ 		[ -x $a ] || continue;
+ 		$(. $a)
+ 	done
+diff --git a/package/base-files/files/etc/uci-defaults/13_fix-group-user b/package/base-files/files/etc/uci-defaults/13_fix-group-user
+index bf9febdfe4..74f501e8f7 100644
+--- a/package/base-files/files/etc/uci-defaults/13_fix-group-user
++++ b/package/base-files/files/etc/uci-defaults/13_fix-group-user
+@@ -1,6 +1,6 @@
+ . /lib/functions.sh
+ 
+-for file in `grep -sl Require-User /usr/lib/opkg/info/*.control`; do
++for file in $(grep -sl Require-User /usr/lib/opkg/info/*.control); do
+ 	file="${file##*/}"
+ 	file="${file%.control}"
+ 	add_group_and_user "${file}"
+diff --git a/package/base-files/files/lib/preinit/30_failsafe_wait b/package/base-files/files/lib/preinit/30_failsafe_wait
+index 85dca398fa..a2c2c386aa 100644
+--- a/package/base-files/files/lib/preinit/30_failsafe_wait
++++ b/package/base-files/files/lib/preinit/30_failsafe_wait
+@@ -91,7 +91,7 @@ failsafe_wait() {
+ 	grep -q 'failsafe=' /proc/cmdline && FAILSAFE=true && export FAILSAFE
+ 	if [ "$FAILSAFE" != "true" ]; then
+ 		fs_wait_for_key f 'to enter failsafe mode' $fs_failsafe_wait_timeout && FAILSAFE=true
+-		[ -f "/tmp/failsafe_button" ] && FAILSAFE=true && echo "- failsafe button "`cat /tmp/failsafe_button`" was pressed -"
++		[ -f "/tmp/failsafe_button" ] && FAILSAFE=true && echo "- failsafe button "$(cat /tmp/failsafe_button)" was pressed -"
+ 		[ "$FAILSAFE" = "true" ] && export FAILSAFE && touch /tmp/failsafe
+ 	fi
+ }
+diff --git a/package/base-files/files/lib/upgrade/nand.sh b/package/base-files/files/lib/upgrade/nand.sh
+index e7d7bf8d13..3ae06c6199 100644
+--- a/package/base-files/files/lib/upgrade/nand.sh
++++ b/package/base-files/files/lib/upgrade/nand.sh
+@@ -231,7 +231,7 @@ nand_upgrade_ubinized() {
+ 
+ # Write the UBIFS image to UBI volume
+ nand_upgrade_ubifs() {
+-	local rootfs_length=`(cat $1 | wc -c) 2> /dev/null`
++	local rootfs_length=$((cat $1 | wc -c) 2> /dev/null)
+ 
+ 	nand_upgrade_prepare_ubi "$rootfs_length" "ubifs" "0" "0"
+ 
+@@ -249,8 +249,8 @@ nand_upgrade_tar() {
+ 	local board_dir=$(tar tf $tar_file | grep -m 1 '^sysupgrade-.*/$')
+ 	board_dir=${board_dir%/}
+ 
+-	local kernel_length=`(tar xf $tar_file ${board_dir}/kernel -O | wc -c) 2> /dev/null`
+-	local rootfs_length=`(tar xf $tar_file ${board_dir}/root -O | wc -c) 2> /dev/null`
++	local kernel_length=$((tar xf $tar_file ${board_dir}/kernel -O | wc -c) 2> /dev/null)
++	local rootfs_length=$((tar xf $tar_file ${board_dir}/root -O | wc -c) 2> /dev/null)
+ 
+ 	local rootfs_type="$(identify_tar "$tar_file" ${board_dir}/root)"
+ 
+@@ -307,7 +307,7 @@ nand_do_upgrade() {
+ nand_do_platform_check() {
+ 	local board_name="$1"
+ 	local tar_file="$2"
+-	local control_length=`(tar xf $tar_file sysupgrade-$board_name/CONTROL -O | wc -c) 2> /dev/null`
++	local control_length=$((tar xf $tar_file sysupgrade-$board_name/CONTROL -O | wc -c) 2> /dev/null)
+ 	local file_type="$(identify $2)"
+ 
+ 	[ "$control_length" = 0 -a "$file_type" != "ubi" -a "$file_type" != "ubifs" ] && {
+diff --git a/package/base-files/files/sbin/pkg_check b/package/base-files/files/sbin/pkg_check
+index 9968c9b78e..775e401b26 100755
+--- a/package/base-files/files/sbin/pkg_check
++++ b/package/base-files/files/sbin/pkg_check
+@@ -72,14 +72,14 @@ while [ "$1" ]; do
+ 	fi
+ 	[ $QUIET = yes ] || echo " * Checking package $1:"
+ 	ERR=""
+-	CHECK="`sha256sum -c /usr/lib/opkg/info/$1.files-sha256sum 2> /dev/null`"
++	CHECK="$(sha256sum -c /usr/lib/opkg/info/$1.files-sha256sum 2> /dev/null)"
+ 
+ 	# Are the changed files config files?
+-	if [ $? -ne 0 ] && [ "`cat "/usr/lib/opkg/info/$1.files-sha256sum"`" ]; then
+-		NEWCHECK="`echo "$CHECK" | grep '^.*: OK$'`"
+-		for i in `echo "$CHECK" | sed -n 's|^\(.*\): FAILED$|\1|p'`; do
+-			if [ "`grep "^$i\$" "/usr/lib/opkg/info/$1.conffiles" 2> /dev/null`" ] || \
+-			   [ "`echo "$i" | grep "^/etc/uci-defaults/"`" ]; then
++	if [ $? -ne 0 ] && [ "$(cat "/usr/lib/opkg/info/$1.files-sha256sum")" ]; then
++		NEWCHECK="$(echo "$CHECK" | grep '^.*: OK$')"
++		for i in $(echo "$CHECK" | sed -n 's|^\(.*\): FAILED$|\1|p'); do
++			if [ "$(grep "^$i\$" "/usr/lib/opkg/info/$1.conffiles" 2> /dev/null)" ] || \
++			   [ "$(echo "$i" | grep "^/etc/uci-defaults/")" ]; then
+ 				NEWCHECK="${NEWCHECK}${NL}${i}: CONFIGURED"
+ 			else
+ 				NEWCHECK="${NEWCHECK}${NL}${i}: FAILED"
+@@ -91,7 +91,7 @@ while [ "$1" ]; do
+ 
+ 	# Do we have changed files or not?
+ 	if [ -z "$ERR" ]; then
+-		[ $QUIET = yes ] || [ -z "`cat "/usr/lib/opkg/info/$1.files-sha256sum"`" ] || echo "$CHECK" | sed 's|^|   - |'
++		[ $QUIET = yes ] || [ -z "$(cat "/usr/lib/opkg/info/$1.files-sha256sum")" ] || echo "$CHECK" | sed 's|^|   - |'
+ 		[ $QUIET = yes ] || echo " * Package $1 is ok"
+ 		[ $QUIET = yes ] || echo
+ 	else
+@@ -107,7 +107,7 @@ while [ "$1" ]; do
+ 			echo "Exiting on first change found!"
+ 			exit 1
+ 		fi
+-		for i in `echo "$CHECK" | sed -n 's|^\(.*\): FAILED$|\1|p'`; do
++		for i in $(echo "$CHECK" | sed -n 's|^\(.*\): FAILED$|\1|p'); do
+ 			SUMMARY="${SUMMARY}${NL} - $1: $i"
+ 		done
+ 		echo
+
+From patchwork Sun May 10 14:47:47 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287203
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=D+s/qRPR;
+ dkim=fail reason="signature verification failed" (2048-bit key;
+ unprotected) header.d=infradead.org header.i=@infradead.org
+ header.a=rsa-sha256 header.s=merlin.20170209 header.b=ZA2/s+0K;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn6k2sSqz9sPB
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:50:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=TimO8ZP3G1tYfbgfC2K/xIDsM+AOu1SWC9YVdqG39Dg=; b=D+s/qRPRW5p2Qqn/xTHR+3xh2h
+ kodtCnJolo8r7zmLl9d6V2s0K7dwgR1CYw5WamVqJk8YjCZYFc+1PQHBu+wKz5u8vGq0UDJOK3qJE
+ kbtoCYIpxCS0OHzKYuXWDiO+5HowOQ5HESxkvSf+1z1mDkVbI8L2CLiSTL9jhw2ko2eNk2/4B1j8x
+ K6tBW7HAaHu87x92eq1xXZWe1NQnt1LwnpIrrBdbLkviiRuFYimaFGWbXDAHBHMmONXRDmD1WQrT5
+ 7VKWSFfOa+wEZN7i6A6OtYdiQzAytrz0hI14w4x7lh7w6ecScAsY7aqQ4D7eRZBG+4PuGQzB4Tpig
+ 6LEp2awg==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnHV-0008OL-DI; Sun, 10 May 2020 14:50:17 +0000
+Received: from merlin.infradead.org ([2001:8b0:10b:1231::1])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnGC-0006Ge-UR
+ for openwrt-devel@bombadil.infradead.org; Sun, 10 May 2020 14:48:56 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+ References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
+ Content-Type:Content-ID:Content-Description;
+ bh=GbuDzj8ywVwnzGWaewzplupySAM6kTfAH0em2KimWhE=; b=ZA2/s+0KH8IhPmBNA3PtwGwxmF
+ LLMszKmfJmuMOtWRQfKj5aBm/kg0ggEppPB+PkHIey+Dn3nQpv6/0Yl3f1uHNy4XezjJ2P77mRoP4
+ o1ZSB7qcVZIa7D4M6MVKyg7+hwQUkVMGkoQSC7ei1EBfbWBtLmMKRjqvjfcjSZYNmAoaG6kOu1S7f
+ HKBPjvMrwGCgQvTG8/4FkiYN6sC5aNZDHzoVT58lm4upBo4+Qv3t+HslT76vT2+9zTsLni2ISxVGk
+ QPr4ckFK8L4H9VkMpBTI4wPLXRMJWodjXiPrjn3ac0oxNEYP5ATuD4bMj7qYe4aLB6WKdEL4kToAs
+ tatT1uyQ==;
+Received: from mout.kundenserver.de ([212.227.126.135])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG9-0000w1-Pq
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:55 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MDhpf-1jQx6i0r1L-00AolC for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:43 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:47 +0200
+Message-Id: <20200510144754.10751-3-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:Owjid0EU7nb5SrVs3c2My8CW7Ll6Q9Y9zEB3KOsdxfwTiq1rU/U
+ KmaK+14BhrVtM1lHNRmFXkbcDGBsUm6zAFD/gAuCFgREyW9aS5TTrA4jUG+Bl4lguA5+LJV
+ vi4jG4CVXxj84eVyEo3FwczTpnQcxEb0nkN1GPwGyIQ3rxfQupD0e8FJsOHsx7IKWgqY+5B
+ K5sXxPhQAMSm1I0qc7ycg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HDazCa4aM78=:K5MOXOlz21YXkEErOiwLwS
+ yigpODMy/jGNdnJnSLGRFxtD7RcOlgfK7JOyRdeP/mHwp96tXFqhE7tMo6E3pjXtgvwEpohuL
+ O8XWJ7ylSh7QPOimtrgEeO8ehgZFxrdKzSEbnXKi77GkWssCOI5nqaVMuSLdwc0BLdf7XzfSn
+ M7ZGltOTLj/ZJ/BLLpr5zjAZ9EDcoADG9kkqder2Nfi41h665y7JO/uy8khauBEmxH8Ps9hiN
+ sLL1K/s/k5Z4vigO+d1ApW3u7xLbwXIiDCn4kolkpRgPRPOIwDqaUxCSFSGUtqJpVVrQdrOzA
+ tCrlNPQ3vfYM5tyq+WWPrJppYvvpjWlqbuoFl4tyCJXxk9f5Tr4AtQdfAJ0SoFSpitPJAFTJU
+ 7b0uqD9XwWXCDJQozR0c0r2ieuPZAybZ3F8+UBB36motRYcnxiR7LGGPOt+mKz7NSRIyDMfWq
+ hUyUyXWPksVa6JofQUg1EVGwZuZ39JQYGKkM7H9nyWMBWOQi03VND/gdhIW0+gwbaj68PdpD8
+ TmZ8H9YcSNAF1k8NsiPF41Nwk8HZRbq7r/VDahBQFyj7Kb0t4WpbImkngLRslounCld2IB37L
+ F+tPCXcrtikfuJCQ9tonlQz7XdSAZvFXXhC2x1IdpxXOzD3hhRR3FGm0CfeAGaJlxhle86k7f
+ iYfTmecdY57W9j3qGSpo9DnJhiq3rHrowEQMpg9wUn4bHMGOuXzha7I+c+MLt8UgoPb3rN2RU
+ MUq9jwi8/j6UHu4/QI+fZVmtFywK1zcTUkyJK+OZZB3YnLCHmtzNdX0ex2yoT4LtGZDHvSCRu
+ bRvBlsdGIb50JzQWSrlKn1KHf1OOoUHsy3gVLBXz8wXFuD8yeJigL61Ib0oXszvwAyJEwxI
+X-Spam-Note: CRM114 invocation failed
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on merlin.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.135 listed in list.dnswl.org]
+ -0.0 RCVD_IN_MSPIKE_H2      RBL: Average reputation (+2)
+ [212.227.126.135 listed in wl.mailspike.net]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+Subject: [OpenWrt-Devel] [PATCH 03/10] ltq-vdsl-fw: replace backticks by $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ package/kernel/lantiq/ltq-vdsl-fw/src/vdsl_fw_install.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/package/kernel/lantiq/ltq-vdsl-fw/src/vdsl_fw_install.sh b/package/kernel/lantiq/ltq-vdsl-fw/src/vdsl_fw_install.sh
+index e372e95c57..3d3e5aebee 100755
+--- a/package/kernel/lantiq/ltq-vdsl-fw/src/vdsl_fw_install.sh
++++ b/package/kernel/lantiq/ltq-vdsl-fw/src/vdsl_fw_install.sh
+@@ -25,7 +25,7 @@ MD5_DSL="655442e31deaa42c9c68944869361ec0"
+ 	[ $? -eq 0 -a -f "${FW}" ] || exit 1
+ }
+ 
+-F=`md5sum -b ${FW} | cut -d" " -f1`
++F=$(md5sum -b ${FW} | cut -d" " -f1)
+ [ "$F" = "${MD5_FW}" ] || {
+ 	echo "Failed to verify Firmware MD5"
+ 	exit 1
+@@ -37,8 +37,8 @@ echo "Unpack and decompress w921v Firmware"
+ w921v_fw_cutter
+ [ $? -eq 0 ] || exit 1
+ 
+-T=`md5sum -b ${FW_TAPI} | cut -d" " -f1`
+-D=`md5sum -b ${FW_DSL} | cut -d" " -f1`
++T=$(md5sum -b ${FW_TAPI} | cut -d" " -f1)
++D=$(md5sum -b ${FW_DSL} | cut -d" " -f1)
+ 
+ [ "$T" = "${MD5_TAPI}" -a "$D" = "${MD5_DSL}" ] || {
+ 	echo "Failed to verify MD5"
+
+From patchwork Sun May 10 14:47:48 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287199
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=gvSP0mjD;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn5y0JDrz9sPB
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:49:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=tFwHT88k1y3hoYv3s/trV8fXoh2dsqmI8VXiGUB8aN0=; b=gvSP0mjDU6oQmd71xjF2Vq0LlF
+ c0u3uhsqLtzTiMUgt/KIf40dbYRIMiltLb1Oz/2RQKymyIdv4+/VpLaP4dgfSC8EAst+EeZcAfwKN
+ 0cZUWQe1n8UEmfhYWJKkPYEh8jD9GAwm4p+dUXEMKrvXuaLLJmW91NtGdMrq9jm4/mDL1nO2Lte2h
+ zyBqWMU3IuOT5EBWclvpOOUcIGc9yOB5mte/6aDLw2hej2+V7/InTUME16JcEuLo5cfKegrmhDtIp
+ 2nFODVf7jgMVl2A64hxXc9XZJlbsPFvUecGTJxTqo+q5BBgqJZxJdShh0xjRqblndj0CfRXs6X0Hc
+ /SCk7QGw==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnGs-0007Li-So; Sun, 10 May 2020 14:49:38 +0000
+Received: from mout.kundenserver.de ([212.227.126.187])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG5-0006CK-HI
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:53 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1N0o3Z-1jDM8E1NlV-00wkPU for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:43 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:48 +0200
+Message-Id: <20200510144754.10751-4-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:qxXnBrkYd53sqBWAAVd2+kdtXWZ5dovFy+9JhhGwOr+uDP0vfIy
+ IuHQZSkxpmWLV51PLnHhui1nInfRTTgVn85et21P+WyXehxzL2c0TZN3R36Fg6Y5pBFcHoB
+ 8Ghhe8hKgdFl0WMEjotGaw7gUTgR8tN1Q2E6GZkHZkKRnyns4tO3QRJAJUrYF830fuj48Tr
+ 2xDGl+foYto9d2mBRJr0Q==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IumUyHFtkJg=:JaAHnewUF7YF3AotMLY0QT
+ PgkrLZ1TsA1wrsCnZS4fjSFrUfrZIsbsHp6wVQF7Q6zHk8nj4jFue/xkMwpfZ4QLbnoSjq2Nt
+ MZUI4c5bjZ75O79/4SSwhDgAl2XHOeIt6lZ8U7Wmc6sIXhdLuXYV/N5NPwerT48AcmXmkov/c
+ c2U7mPlxI1yQsDGLc1CgSIyn3OSMPL9nlz+PYbao8TyrcOV1k1bsTdP96ZKhKXCqeuf0Pdsky
+ ba8Ge6gFKby0c2MFiXZTo4lqecZ/CdgbYsgZQEAT8f+tx760gNn2e7Bhasf9lVdq/0REHSZDL
+ Zk6T17yOauHJYmNgXFF9FlZBCsLJS29JbPYOFtXbMQd6lhASrFUyLYCsZhFjRi0XX+xbcJk9W
+ p6JyGPHrbChBJNLXZWOIM/d/NiTBmL6wKeV3mI0qo3tuqGFVweDf20/9yiKvJ4XijUtyKkDJA
+ 0GlFhRXnPr+rZ6mdaVXOfv7ginxeY5ribEdcsMIVw+DUXbf/AfqNSmZFYxEIfeUxXP4wmA7M9
+ RFa3wjkP7ll2hzE65Ukat7tE0Qq68T0xMmLzNueUaWH7MM6L7rYLnEcVE4hF97VYSUT0jznaM
+ C/TEZhfeMKUjkGJBZ8OSyDMLV9L7goMkSf5z8KNp3368p5nIyVEXQK5YQYjWFv5JBm8KGFwKT
+ m8Wc/WgFnFFVyjI1E6VP0q/fUPxkuPaBytMcFsKGsKmowszjzTS9faatXXYLoDxhT5IJrNRa/
+ Lg+X8S5MLiKrvMCFXsLVTErim+HxGtHiX3gid9nwfxDiGZDgah27PGrClV+xyeYXTr9g5KgbI
+ Rpe8KBuh+NopZhwwQVKoLTqQcfr7BKrWl5ZFJWjWPsW4navNEp1YNhBcQMkXjfGDqdHVkQ6
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074849_869903_BD012C05 
+X-CRM114-Status: UNSURE (   9.61  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.187 listed in list.dnswl.org]
+ -0.0 RCVD_IN_MSPIKE_H2      RBL: Average reputation (+2)
+ [212.227.126.187 listed in wl.mailspike.net]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+Subject: [OpenWrt-Devel] [PATCH 04/10] mac80211: replace backticks by $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh | 2 +-
+ package/kernel/mac80211/scripts/import-backports.sh           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh b/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
+index 88751ce3cc..7ca138c68c 100644
+--- a/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
++++ b/package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
+@@ -1040,7 +1040,7 @@ list_phy_interfaces() {
+ drv_mac80211_teardown() {
+ 	wireless_process_kill_all
+ 
+-	for phy in `ls /sys/class/ieee80211/`; do
++	for phy in $(ls /sys/class/ieee80211/); do
+ 		mac80211_interface_cleanup "$phy"
+ 		uci -q -P /var/state revert wireless._${phy}
+ 	done
+diff --git a/package/kernel/mac80211/scripts/import-backports.sh b/package/kernel/mac80211/scripts/import-backports.sh
+index d056eb6d04..35aa411e6c 100755
+--- a/package/kernel/mac80211/scripts/import-backports.sh
++++ b/package/kernel/mac80211/scripts/import-backports.sh
+@@ -70,7 +70,7 @@ get_next() {
+ 	done | tail -n1
+ }
+ 
+-CUR=`get_next`
++CUR=$(get_next)
+ CUR="${CUR:-$BASE}"
+ 
+ while [ -n "$1" ]; do
+
+From patchwork Sun May 10 14:47:49 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287202
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=A15E29Xc;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn6Z2Brxz9sPB
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:50:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=jduhwXxG7HJmNE3xOstNgjYpYLNzHbvpeBZAQA+nb/o=; b=A15E29Xcj5NnQ0Tm1QQ7SPeZ9P
+ KNdr+J1KV7hkoNBBVWcJslEk9DuvNsZnaqR+QV/L1qvsahOyy+AJbzMs/yasDvVczTvRncbawCahR
+ pRbv9PtJtTeBOUe1CiqBQEeAfvdF+Yye45zGrsdQwMpE7SuUJZBpn1syLmmXqXjAdqega4nWeWEPh
+ +eAf2MUO7/WhblyJJcj1R6Pt89HG4DqMvBn8Y/ZxvsV/B8AHlGqCfhw85tOPyvF/IP/+jzhL9t99S
+ b1Omnt/to83v+GARbqW1iB6d50GAS6GRqZ+hgGoJGtoQl/3r44du0Vz5bbJYE+8Qgv6F9IRw7PX5g
+ H3wm8jbg==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnHM-00085b-58; Sun, 10 May 2020 14:50:08 +0000
+Received: from mout.kundenserver.de ([212.227.126.133])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG8-0006CQ-EZ
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:55 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1Ma1wa-1jdNIF1vZU-00VtzB for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:43 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:49 +0200
+Message-Id: <20200510144754.10751-5-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:adgHjo6CXUau2SFDoelTltCOGvOerDOCdWKv4WfrM7p71MIOMI9
+ K8E88i6BN1TK1vJTW3Cp0/Nup8OrmUexmNOJlFpftKZ6imKjWj0bsiQaYc5Uc+SyIHdKCQq
+ C/AwKQbTfxVs8nTvASaC2BeZPVeAFQbfO+hwgD9PvOfysc5PlEjr+YiFhsKAWMu3S6heRmG
+ 7Bx79n6Tm1Ti4a+FillhA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iweKk7RgxCg=:egpx3ULiQl5m6vawwTcrxl
+ 4wf4yJ5JRkuLzLwefSF9sab74Jqiol17tl6Dd1gZ2gftcSugwRm7ADSSTmUoc0YT13gEzFECr
+ 2GABf+nvQJknWT/xy+eq+od8IosdIzILQLEX6ZmtxvizlK7+1JgQg+/HAH7rUeemRWqJs5GSA
+ Vt8S4tJYVc9AQAdmXPG5RSPbxOIZPPx0AYR7brl9lo1ldCsa+uNRvwZRYBX8KtzJi2fZiz3Cm
+ ydhufFCZZ9YvEvPpWGwumtW+2GKxqexusgQdsmMPrLFovV75gQljMxudGBdENdAbTzSNHgieR
+ UBm0cmrjL+Wzx5uSltps96Su3ZN0XKZJWtsDmD0xVrdyBv4hI/gJ7aO8PzRfam1/chOiT7Kqm
+ vDq1sHNyTbABYqWV4On/c5BnRY49t9IlHks6A9ldSqNg0qTNM5RoN3mW2zVLRa7eDTvN1OEco
+ 6+4JuNRmJS5hB1YQZYhNUxWBSZoZNplMYkAiuoQ3o5zMM9wuOnlPWchfAl3Veng+ZFr2r6P6+
+ 2ndxdVBLA479TtgZcq9eB7b5qt7JfdX349JRO8ShZgjRbN4Q4pZrF8ES4QOX6+58cho3bK1La
+ TeVGWDB/e4iH1q3ifn+lLY1JUHKpGv1NgaAeKvJgQUJ14yRdCq/z7ox0MaH2By6or8pU3UZGe
+ GSPI7NAvSY6+LFgdVCFBKe/bO+X5IgNO5fCjrhtCSjuJhoC5YoZR6s6pMRL1euBiT2v2T1Uij
+ ofUa8LZh4AxA/ZwoY7A6M6K4kkzAAZfHK57zhxbQMQdDvSqluv4UaNcP5jDFs9wmm/0JYVfdA
+ 6YGzQ111q9xRllL8UUas7l862wjx+CzJT0fUZJExntTvkqjGY2gCQTjlLlEJhW2/E3V9An0
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074852_800529_061E643C 
+X-CRM114-Status: UNSURE (   9.62  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_MSPIKE_H2      RBL: Average reputation (+2)
+ [212.227.126.133 listed in wl.mailspike.net]
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.133 listed in list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+Subject: [OpenWrt-Devel] [PATCH 05/10] netifd: replace backticks by $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ .../netifd/files/etc/hotplug.d/net/20-smp-packet-steering       | 2 +-
+ package/network/config/netifd/files/lib/network/config.sh       | 2 +-
+ package/network/config/netifd/files/sbin/ifup                   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/package/network/config/netifd/files/etc/hotplug.d/net/20-smp-packet-steering b/package/network/config/netifd/files/etc/hotplug.d/net/20-smp-packet-steering
+index 9d7aaae0ac..ce5e76096a 100644
+--- a/package/network/config/netifd/files/etc/hotplug.d/net/20-smp-packet-steering
++++ b/package/network/config/netifd/files/etc/hotplug.d/net/20-smp-packet-steering
+@@ -14,7 +14,7 @@ find_irq_cpu() {
+ 	[ -n "$match" ] && {
+ 		set -- $match
+ 		shift
+-		for cur in `seq 1 $NPROCS`; do
++		for cur in $(seq 1 $NPROCS); do
+ 			[ "$1" -gt 0 ] && {
+ 				cpu=$(($cur - 1))
+ 				break
+diff --git a/package/network/config/netifd/files/lib/network/config.sh b/package/network/config/netifd/files/lib/network/config.sh
+index 2a1aa65fe0..4cd28e4ce1 100755
+--- a/package/network/config/netifd/files/lib/network/config.sh
++++ b/package/network/config/netifd/files/lib/network/config.sh
+@@ -6,7 +6,7 @@
+ find_config() {
+ 	local device="$1"
+ 	local ifdev ifl3dev ifobj
+-	for ifobj in `ubus list network.interface.\*`; do
++	for ifobj in $(ubus list network.interface.\*); do
+ 		interface="${ifobj##network.interface.}"
+ 		(
+ 			json_load "$(ifstatus $interface)"
+diff --git a/package/network/config/netifd/files/sbin/ifup b/package/network/config/netifd/files/sbin/ifup
+index 5515b91f76..15be535bbf 100755
+--- a/package/network/config/netifd/files/sbin/ifup
++++ b/package/network/config/netifd/files/sbin/ifup
+@@ -37,7 +37,7 @@ done
+ 
+ [ "$modes" = "down up" ] && ubus call network reload
+ if [ -n "$ifup_all" ]; then
+-	for interface in `ubus -S list 'network.interface.*'`; do
++	for interface in $(ubus -S list 'network.interface.*'); do
+ 		if_call "${interface##network.interface.}"
+ 	done
+ 	[ -n "$setup_wifi" ] && /sbin/wifi up
+
+From patchwork Sun May 10 14:47:50 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287195
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=jxlFs2CY;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn5D5k33z9sPF
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:49:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=xj28o8ABDjy237jK+WxbrvcgmsPdx2xVo/bkEJXBpwY=; b=jxlFs2CYbGQxfweoi/2GFEp3AY
+ G+vina4HbNon4bYcw4S5tNXWODxEk2n63HshhEhwdkuaYJ6tDVKOSkXRiPA8aTqGF2drr1YjMolFz
+ s85QQLVq3J80iihbiBdPJz1KRvsWOi2NHIli6iq4r8KiARebNThny/NKooaOJtfl31WXo2nuG3og9
+ rZnuu6jcLSSngT2o/HgjLNeuT40TxARmzc2SbBKuj/2pXaj8dSEgJ/iVkeOcfoz5Zez823Uj6P356
+ J2ps+a+7zPFf6abOIxB2PTUNuY5gDEh/22KcDMZsQnu8VNuAmzeEFgrSPf9PvY7h26K9+/KRQIkSs
+ v39KEMwQ==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG9-0006E5-6Q; Sun, 10 May 2020 14:48:53 +0000
+Received: from mout.kundenserver.de ([212.227.126.133])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG5-0006CP-Cx
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:51 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MWiYi-1ja5VD2SPA-00X0Rt for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:43 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:50 +0200
+Message-Id: <20200510144754.10751-6-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:mmFJQFvx02uKBHW0d9uvbK1wvMhrmIJcx/J2d/ykWxCyLUryLum
+ HXx6qOn8x46p5Bxf1j12BP6pfji1BxsTIzoIypERM+hyaP7tzFI1KW6ZeJdrrylrQp4kJLw
+ a0yw/gUrzt3Fhn/3Ua/V5HmqnuBK4AlgIZ3nm/cFLojzBzLwqy4Xa9bsnacUgka4Y3TyWZL
+ jZlrqmwG3UylTPTwvxF8g==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EDjW6FMQzQs=:IDgNsQxAzJZ9H3+XzKg1kw
+ RN7m2TtVl+3jmE9W7c2UPUg+QhApKPo+iLETqyz9XPPgxO3yr9N4KQGX262Hb2LxGx24HF3V3
+ JXYYDF0k/SYs53uyHNfeCJb8Lt8doOnqF/D25C2+l9VlEc0pJVDFJUS9Q27LlsxZBtid5koer
+ qJem9YrqaZbbgSbK2tKlfI1Gl7hGFzLBz8FH/+8tYGjEvio2TQfQSiRTtdUP02jUmSHXbckUN
+ CpWiysjvTY7LhvrLYujzuzSUh0wWn0DzlPo0KFT2WZ/ExdS14+mXptXnZATkUzzmg4+3yS7Wj
+ KkbNZ1zTm9Ur34dKLCp6S3AKlKlf3bdHfJ/QoHNBtxoU3AUl3/myMX9Xidz/FePzcvgPBXrT1
+ MKORGqXm2fxpm7wnCRHCOKSl8IklU2XJrrda33iJgqeEQiV/oywhJkHQPrfy3NPBHc1C3hPra
+ ejT7e1yhCyaaMjhYgK/ULsO1KQpXGdRj3LUQ5oT0hvu87YFBL8blWKPctk9KjhwzVzVtbHco3
+ BV/5JIFP/WhzC+9b/uoGLYuGrRs+mbqcReVuAxJqdicpfNscZUJZUVJoHsk6Bgd/rI/iwDM/6
+ 1lG67me2RkN7xemBPtqbnO7O4OTlCQPw/Om0j1DbU7F+SOT4FWy+jPp15rIjR2bnS6NcLtIFF
+ PizCm7PxJQnOo9ZE0oPlkfHZlQYns6PZULydbut2DKHUZjpy7mpWfIw/lIjoUvcYqiP3d6CCY
+ fmCkGCf7MJFeHXcQiJPdxxvYvA4pl+jrArLNpGa+FVoTZ+Hb/lYWup11157n9Uw5HZNeQhBGv
+ 8/2L3i9kV4QMSWrjWfZEuq40skJwFdm8YQQjMGbz3pjalie4ldg6OKjc7KY+sICHwZdJpKh
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074849_745469_F1FB5AFF 
+X-CRM114-Status: UNSURE (   8.27  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_MSPIKE_H2      RBL: Average reputation (+2)
+ [212.227.126.133 listed in wl.mailspike.net]
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.133 listed in list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+Subject: [OpenWrt-Devel] [PATCH 06/10] comgt: replace backticks by $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ package/network/utils/comgt/files/ncm.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/package/network/utils/comgt/files/ncm.sh b/package/network/utils/comgt/files/ncm.sh
+index 9aaaa25f37..f5bed7d5e1 100644
+--- a/package/network/utils/comgt/files/ncm.sh
++++ b/package/network/utils/comgt/files/ncm.sh
+@@ -34,7 +34,7 @@ proto_ncm_setup() {
+ 
+ 	[ -n "$profile" ] || profile=1
+ 
+-	pdptype=`echo "$pdptype" | awk '{print toupper($0)}'`
++	pdptype=$(echo "$pdptype" | awk '{print toupper($0)}')
+ 	[ "$pdptype" = "IP" -o "$pdptype" = "IPV6" -o "$pdptype" = "IPV4V6" ] || pdptype="IP"
+ 
+ 	[ -n "$ctl_device" ] && device=$ctl_device
+@@ -73,7 +73,7 @@ proto_ncm_setup() {
+ 
+ 	[ -n "$delay" ] && sleep "$delay"
+ 
+-	manufacturer=`gcom -d "$device" -s /etc/gcom/getcardinfo.gcom | awk 'NF && $0 !~ /AT\+CGMI/ { sub(/\+CGMI: /,""); print tolower($1); exit; }'`
++	manufacturer=$(gcom -d "$device" -s /etc/gcom/getcardinfo.gcom | awk 'NF && $0 !~ /AT\+CGMI/ { sub(/\+CGMI: /,""); print tolower($1); exit; }')
+ 	[ $? -ne 0 ] && {
+ 		echo "Failed to get modem information"
+ 		proto_notify_error "$interface" GETINFO_FAILED
+
+From patchwork Sun May 10 14:47:51 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287200
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=s9qOIqLs;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn686p6Mz9sPB
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:49:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=TsqBo+RCR4krni/4g0j2PsHM1oYFAJgMgNKprCPUz3s=; b=s9qOIqLsGLt4N5AFld/fAZBWkh
+ MYwxFKyjathbjE4+D/3baEQz47diZzIJTu6CSw8t/uMX5pKYIUWvzvCWa5qR2sQWNZ53Y5FcMwycU
+ LyBwlCN0u21L1MYor1X/ahxiJXSZSOECwEpwBmZC2cY6J0cxZtPQk9ijJYBQkZrH9EWQ91+zgmlqQ
+ Vge+jK3ktyGLgLwPDBgu44iAOiIl2xt8P/MGVFLUnH+y0FKVFR5xRWlKHPZiEvEJ01LFeSg14gOM/
+ IfRLEQNEwkVLm+e2zgD1Mf7msg4CC1dexSjLpSmFUFLr8pCP2/pdEXUTIedfws1muU65vd9kQGfTe
+ fNfTxSWQ==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnH4-0007cA-KQ; Sun, 10 May 2020 14:49:50 +0000
+Received: from mout.kundenserver.de ([212.227.126.130])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG8-0006CN-Ei
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:54 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MUok5-1jgyK22xtp-00Qguu for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:43 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:51 +0200
+Message-Id: <20200510144754.10751-7-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:wxOqa6K7Gt1Kq5FO3nCGKt9LaxfBgAX/z39Hjokm5MEH+Uq/0qP
+ dgRf7Ye801oAI6Yx5Vtxx0+7uJzmLvql2oHKtviMpgMsLc6NF6mdutvYlrF0VOuBkvD75hh
+ evA4+1084NgGZi2gQjjSjDuukOhW5qHfRkcxdG0nGlaPMItkgCIU3nFl6tFJQHQx+iDAu+d
+ ooftJTZUClivv3zZe9zPQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sEi4tKTcrgs=:MBcZt4bx+vqY81bFQ8r494
+ /uukVQniIsVrBtoCuRXiaUeU0WPp2zY4MlI7eFyfAxO/ThDHEb0GqMKKOZMj06F73VqxUB3H6
+ 5Ogug9TMUfetdF8Y+MbmOqJVVQakB9Ha2ugvNWoWdiwyeZL13PB+luL3qOZLWJkpHHkVvvl/n
+ tW5jsHaP+4RmcC4V7p6A6sFMTY87P2eyJTLbszQGGqI099xubZwccnoCOz0xU6rqUzK4tsMw7
+ 6Swh1etbycXSPkjXpvdV4RWub6GOSKLA8hcxC8R2ASs6BqZn/eP0d+w8jLsBtdD9SgSo6vTE+
+ VWCFs7R3LlHRhGAm5p0G5aEAdLt/ZsTHVl7kG6KQrbMuNZsh1DtP3Ef6QmtAcM22BkSec9e+P
+ QXFAeoJlxYlqSUlrUe3C4D2/GBwLkKokxAECxW9lGgLCVd6hqlRWPEfsdbIJVOcgD1uwhyusp
+ OZopwicg9j5f/ZLacPUg1rLiy/A/DkujYvU1GF0RLQIBprtqfdklcX/HJFLzOu6ot4GZv45QJ
+ 1jWIAqiaTrPqFRxQtFkTvlk3gJyyEhjhFvgkr+9xRq/OwcsBoeAvw1lqc2ETFjAhLVQkkjrs8
+ l+HpFuLP6wr4sTGHhdv7/XV2sUnJ5NW/IvJfNbKJAg9MqnvoncaLUgvcZ+6tq8/oaW3rnTiDQ
+ AfrA99km5rVpQK98UrWar62L4ZZ/jRgSOXRaDXEwYlWcdMHYatEkx4s+kNv5UFko3y3bEUPSC
+ okl9jx8PqlWiAiqTh3qm+k83tGgbGS6QCFDH97TN5aBTAdF7Lkqn33JchBXaBL9iHrjln1Dt5
+ 4uCeyrckXqonyiA9Sm3eNXsyQqQCvqyeul7uX/819mcIMJ7gD+eRfdncIpgaNtXC1UCX/jo
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074852_793900_B23FFBFA 
+X-CRM114-Status: UNSURE (   7.39  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_MSPIKE_H2      RBL: Average reputation (+2)
+ [212.227.126.130 listed in wl.mailspike.net]
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.130 listed in list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+Subject: [OpenWrt-Devel] [PATCH 07/10] wireguard-tools: replace backticks by
+ $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ .../utils/wireguard-tools/files/wireguard_watchdog        | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/package/network/utils/wireguard-tools/files/wireguard_watchdog b/package/network/utils/wireguard-tools/files/wireguard_watchdog
+index 5fbbeafec1..c0a5a0aa33 100644
+--- a/package/network/utils/wireguard-tools/files/wireguard_watchdog
++++ b/package/network/utils/wireguard-tools/files/wireguard_watchdog
+@@ -27,7 +27,7 @@ check_peer_activity() {
+   config_get public_key "${cfg}" "public_key"
+   config_get endpoint_host "${cfg}" "endpoint_host"
+   config_get endpoint_port "${cfg}" "endpoint_port"
+-  persistent_keepalive=`wg show ${iface} persistent-keepalive | grep ${public_key} | awk '{print $2}'`
++  persistent_keepalive=$(wg show ${iface} persistent-keepalive | grep ${public_key} | awk '{print $2}')
+ 
+   # only process peers with endpoints and keepalive set
+   [ -z ${endpoint_host} ] && return 0;
+@@ -42,16 +42,16 @@ check_peer_activity() {
+   [ -n "${IPV4}" -o -n "${IPV6}" ] && return 0;
+ 
+   # re-resolve endpoint hostname if not responding for too long
+-  last_handshake=`wg show ${iface} latest-handshakes | grep ${public_key} | awk '{print $2}'`
++  last_handshake=$(wg show ${iface} latest-handshakes | grep ${public_key} | awk '{print $2}')
+   [ -z ${last_handshake} ] && return 0;
+-  idle_seconds=$((`date +%s`-${last_handshake}))
++  idle_seconds=$(($(date +%s)-${last_handshake}))
+   [ ${idle_seconds} -lt 150 ] && return 0;
+   logger -t "wireguard_monitor" "${iface} endpoint ${endpoint_host}:${endpoint_port} is not responding for ${idle_seconds} seconds, trying to re-resolve hostname"
+   wg set ${iface} peer ${public_key} endpoint "${endpoint_host}:${endpoint_port}"
+ }
+ 
+ # query ubus for all active wireguard interfaces
+-wg_ifaces=`ubus -S call network.interface dump | jsonfilter -e '@.interface[@.up=true]' | jsonfilter -a -e '@[@.proto="wireguard"].interface' | tr "\n" " "`
++wg_ifaces=$(ubus -S call network.interface dump | jsonfilter -e '@.interface[@.up=true]' | jsonfilter -a -e '@[@.proto="wireguard"].interface' | tr "\n" " ")
+ 
+ # check every peer in every active wireguard interface
+ config_load network
+
+From patchwork Sun May 10 14:47:52 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287201
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=M+5U2MWE;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn6M3gGSz9sPB
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:50:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=iIcHByFDPSRSSCET4+RxkcpOPy6v5ByP8BXDRnfLrU8=; b=M+5U2MWEYSSgEJa7zbwOmnw3Rr
+ 4olfSiM2xSMrFomPcnUFYo4y+zASUoJucLLEsj2tXdMvVWmlBapUkAtbXpRroB8lVSAOzNfhLgetI
+ SlrGe1arPvyJc7BuGuzxEgJWMGFLyegEr3ZV9HjpoyLMK5/DFbwGN1QkaRj9nBo+RpZLxjHY4tngh
+ lw391vnBtJidg/U7poZxGGOh779n3aEJ6V/BrGzci2Np1k6kysNnZVCtEvF7cnKWgfyd5md54FzxH
+ k3hP/xzAxfEglfaGAOKsCCAcM630QEec8rYcUe+VSwFErprYH+W9u8i0xB6M+0WZ4u7dhW7NFmZN+
+ 5hfA2C4A==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnHC-0007qM-Ur; Sun, 10 May 2020 14:49:58 +0000
+Received: from mout.kundenserver.de ([212.227.126.130])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG8-0006CM-EQ
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:54 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MS3r9-1jfKgy3W03-00TS4g for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:43 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:52 +0200
+Message-Id: <20200510144754.10751-8-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:UPVVDsktHmQ1jB7C4ULA9SCZOimgQfpMr2GgHayg3LTSIEc2247
+ BJMMrpM/1jtwlriA5EaorSx1G7tjsMy522BiD63pfUhaPmOPDUtrYE/TW2Wh0fdVKyEDA2I
+ +aXQ+OO0/BmpoezR9gogjYAvEA8BE4mULXlA6Gof5DvVqqd0vKVfkXYIxaplJTr5ODR4zCu
+ vgOcyWrwLuWonK58Lmung==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6h9NcQiCPkk=:gbby8W1wVssCg6Ydfzyl/d
+ I6u5rbuRu6NzuipBhNqJBRZ343a1/ao+BOCGRK0riKuhQAKVNe9xg9DPKiYAW3dSMVR3LGZad
+ gFqzB6ZUCljsbm1E/JuU5deevEcMuvLBZ6onnqh4s5wq3/+XEqxDwPp+ycDC+V21/xJh3AeQy
+ 08GRMrHC3O8WQZf6xfEKep6LlKXpSL/fq6z0GTTqwimWULI8XIMHOjxFWF/ST5t8uH9VSfJOB
+ WU9Rp+/q5lxNkXg78TmQaz6YYt7NZzdqRWUGqfqfabzZPKVYVywFSKIm65kyZQKffjnBixPHN
+ IE6f8NlyCzOrW5jLL7b36bikJofyGGMbvp9ZQ+zLVpf5qoMYP8ivFbJmjyV7S15sc2FUQQa5v
+ sTwPU/wNRt84fReD9lZbGhol3JkjRTKOs39bJ2VNJXVgn+DAZlmx+5KD42iP9qVBu4h3sT+h3
+ zpvLfYf+FLDnSnuarW/8X9cbkHGTZ8yWw9iPM58Kigs0vpPr3eyAobLpA2ni2XUKe+2bObaPD
+ pz1YkqzlXEtQxHg+Map5XX/NI5xTqpYjeBFQ68UcgmRHfJ+MjhUSjyeaTbxWicLwIfww4mNbY
+ fxu+nkuiwzL6mc/6jQ1gEBnQE3KAEz6ZgZI+yv2Udj9ozzVjjTW2yVK3CKjpVbh0czR5iIAHk
+ EIeutRWBJPSovgUECm8fNjj9G+ENaFrqSadd9WAutEDMXvuY/1FPGH9X5exKeJaf+ybn5xyGa
+ 2fknec0mMA6yhIpDgEk907dpiJqWIAKdZAp5nHvDDxHMotf9iVWN8FpWooNSGRVMKg7w8Rcsy
+ 9euYO+mNFL1NaiZRT3XSSwIUNJOqHtPecMwHR4jbPM/tp824esgJUOK8fj9k/SJn4vIS3jN
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074852_799519_FE6B5C70 
+X-CRM114-Status: UNSURE (   8.53  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_MSPIKE_H2      RBL: Average reputation (+2)
+ [212.227.126.130 listed in wl.mailspike.net]
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.130 listed in list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+Subject: [OpenWrt-Devel] [PATCH 08/10] wwan: replace backticks by $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ package/network/utils/wwan/files/wwan.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/network/utils/wwan/files/wwan.sh b/package/network/utils/wwan/files/wwan.sh
+index 1ffb94a92b..9907195e6c 100755
+--- a/package/network/utils/wwan/files/wwan.sh
++++ b/package/network/utils/wwan/files/wwan.sh
+@@ -58,7 +58,7 @@ proto_wwan_setup() {
+ 		fi
+ 	else
+ 		echo "wwan[$$]" "Searching for a valid wwan usb device..."
+-		for a in `ls /sys/bus/usb/devices`; do
++		for a in $(ls /sys/bus/usb/devices); do
+ 			local vendor product
+ 			[ -z "$usb" -a -f /sys/bus/usb/devices/$a/idVendor -a  -f /sys/bus/usb/devices/$a/idProduct ] || continue
+ 			vendor=$(cat /sys/bus/usb/devices/$a/idVendor)
+
+From patchwork Sun May 10 14:47:53 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287194
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=CO+/K5rV;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn5F1jBDz9sRK
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:49:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=TqEeScZZr9G3BqB9bqZ5s18fcUQZlQu17nW7AtEq/MQ=; b=CO+/K5rVZQHxWk3eTO9SKgS1ft
+ 2rI+naVGnZIADxxCAmKV9747ZLnWqfizmG6Mvy0kcAekqLVYgTZ4fygClP36b42W0o5IsW7VxQ8VF
+ 3oJeIQBbSx3P8katA8KqXDfFIgK3qcwCdUpwcr8mz9dPb0ndN54+ZTFjFDidc6Ms2xivWTjY6/1Bz
+ X+91p6I9IqlnCt1zezekq0T9MxX9ElSFD+eU59/UZBSZVR41hl0lLdE6lJVD/2WodoHsIMWqtRBsR
+ +drBbWVyMfwdNy8pSMONW61mNkTruIqA2PGorSJyvrOgZuT2VRVu6TbXN79wX+KAfD8KySiuI0iC6
+ 0UQxiPPA==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnGH-0006MN-J1; Sun, 10 May 2020 14:49:01 +0000
+Received: from mout.kundenserver.de ([212.227.126.134])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG5-0006CL-D1
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:51 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1N3Kc6-1j8Bjd49K6-010Imh for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:44 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:53 +0200
+Message-Id: <20200510144754.10751-9-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:BIqdmHvYc+pCNZ0OguPP2y0AX0kwUmgV43010H4HX0yJObdb9Wm
+ ZbzibK09wxztHleqgT7hFM8k6lQnX6wDUjN8xwc0ohh+7pInxoKQwzzf39xW4ffc8Gu5JYL
+ DVYie+ks5nu5xAPrJO2HQqdoWbEfDmr1OX/fB6Aq6L9JsOa8XVpE1uXmGWeK5IxiIIXBhVF
+ 1B6I75ZloFkC3lZp2Eo1g==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Vu7/OHMU28Q=:HFnXUxPQwsGf8ceyoeZBp2
+ KRjzqm6MWyWhpaCEPMhsduyWsGYS4OufEcnJjcOHFJgIFUH02EWHbHZrV13MWMQJyv8nZtwhU
+ H1gdcbG5v39catsf+Yi1gg7qpy675NrcY4ba0pVsUTAV7DT4QN+AlsnVYxzbP6eePMkTQbs+I
+ z79HBYOxb6sXG+4xpj3mu8E+1St+9fr0Mmjp25n/+0VEDzvTF1tvziIERRey8rnihpczgMzZO
+ 1vUuhp1thjUU5B6n84ML7BMDCAD4k+EeNkGSLJwZUsYt7hmivDRoWV2JWlzZuzdk22fSEmSHz
+ Vl7SruVg8KEpq5pBB3kBKLBthCiOv3ziN1V7tgKjbR4/uPDKQuRl6sFYzK8a/WjcVbH60LwAN
+ bvmXKL/8AZF0Ss0Ly0b1TYjn2PREFOWboyUuHT6uKndeVD1yS02NERRupczHzxcHSeJ+dqfqE
+ p+HoFT7k3CfNLYvnu1tue7U3ghM/xABJ1QrNcNNMlkXwV6W8o1exaV42rhfyyWe5aaW5MaEv6
+ /nyLI1j106/0TQvmZG1rb6P5NKPYr9SQ65AMSDLR42Op6FQDjLVMf3oRjF8wbZ6rpad9UC63V
+ GiR75zLNNw49pIwRCsBCManveb2exNXJZ5sMPswbanu+cE0r2DM8DLFQaZMqkEC/RXPMTkvm4
+ sBs9Q3rIMgswRJxXrWT4HniS20iFQI0522MfAh/ZpXFi2sj3a1yyXA5YiCyv3NTH1/gURZOeS
+ iH6AfDBw17qUScxRNGWsTOhlTT9KDaJqIdKd2srm/aZubyLMR98cttP6F12acdDg+9e/VrSni
+ THROR4BzWAa9OJGhoaAy6dLUHC5olNv9zYjAtJHa1F+JIUBdtIKNogLgnCCfwRd1KbpLPPF
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074849_740814_A0E8DC61 
+X-CRM114-Status: UNSURE (   8.70  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_MSPIKE_H3      RBL: Good reputation (+3)
+ [212.227.126.134 listed in wl.mailspike.net]
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.134 listed in list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+ -0.0 RCVD_IN_MSPIKE_WL      Mailspike good senders
+Subject: [OpenWrt-Devel] [PATCH 09/10] procd: replace backticks by $(...)
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This replaces deprecated backticks by more versatile $(...) syntax.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ package/system/procd/files/procd.sh      | 4 ++--
+ package/system/procd/files/reload_config | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/package/system/procd/files/procd.sh b/package/system/procd/files/procd.sh
+index 25a9f049cb..b8605396e9 100644
+--- a/package/system/procd/files/procd.sh
++++ b/package/system/procd/files/procd.sh
+@@ -528,10 +528,10 @@ uci_validate_section()
+ 	local _result
+ 	local _error
+ 	shift; shift; shift
+-	_result=`/sbin/validate_data "$_package" "$_type" "$_name" "$@" 2> /dev/null`
++	_result=$(/sbin/validate_data "$_package" "$_type" "$_name" "$@" 2> /dev/null)
+ 	_error=$?
+ 	eval "$_result"
+-	[ "$_error" = "0" ] || `/sbin/validate_data "$_package" "$_type" "$_name" "$@" 1> /dev/null`
++	[ "$_error" = "0" ] || $(/sbin/validate_data "$_package" "$_type" "$_name" "$@" 1> /dev/null)
+ 	return $_error
+ }
+ 
+diff --git a/package/system/procd/files/reload_config b/package/system/procd/files/reload_config
+index 8d1cdb1378..3ae0de96a3 100644
+--- a/package/system/procd/files/reload_config
++++ b/package/system/procd/files/reload_config
+@@ -7,7 +7,7 @@ for config in /etc/config/*; do
+ done
+ MD5FILE=/var/run/config.md5
+ [ -f $MD5FILE ] && {
+-	for c in `md5sum -c $MD5FILE 2>/dev/null| grep FAILED | cut -d: -f1`; do
++	for c in $(md5sum -c $MD5FILE 2>/dev/null| grep FAILED | cut -d: -f1); do
+ 		ubus call service event "{ \"type\": \"config.change\", \"data\": { \"package\": \"$(basename $c)\" }}"
+ 	done
+ }
+
+From patchwork Sun May 10 14:47:54 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+X-Patchwork-Id: 1287197
+Return-Path: <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2607:7c80:54:e::133; helo=bombadil.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=adrianschmutzler.de
+Authentication-Results: ozlabs.org; dkim=pass (2048-bit key;
+ unprotected) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=bombadil.20170209 header.b=heZI4nvU;
+ dkim-atps=neutral
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [IPv6:2607:7c80:54:e::133])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by ozlabs.org (Postfix) with ESMTPS id 49Kn5Z6Ppzz9sPB
+ for <incoming@patchwork.ozlabs.org>; Mon, 11 May 2020 00:49:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+ Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+ List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:References:
+ In-Reply-To:Message-Id:Date:To:From:Reply-To:Cc:Content-ID:
+ Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+ :Resent-Message-ID:List-Owner;
+ bh=W4d9Mf4gN/tc2CtB6R9mtEI1+F4lg/s8ralk2/Ksocg=; b=heZI4nvUj74scF5ylXq/ctvBNJ
+ tagb1nGkyjbfuQOI0EuTQFMqbn/JkmYMTMsQ191mDdDqdDdDxrxWfAr3wk4SXDNGg2W3Fw+xfMVft
+ AZYB3vzPS0Ipmk4ZK4ocBGrzXvTJMrnJG0S+IlGL/WPgjLBI1D5GwNo8RXRnARp/3wcQAx0fBM0Xk
+ GmnW23AeWS89kxDs7Wb92cORJsdMXg+/wcmh/GA0ZKoAdwjOUTRFljxJluaSFLtzsIuwlRYdeUdYq
+ yX8gMlxesmAHM3sJrppyJM9vZpl4Q98NbGB7WGA2rRqFwrgyuwh8ALky2infrDwGIiWG099jaEzjT
+ H1l0rtEw==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnGZ-0006ph-WF; Sun, 10 May 2020 14:49:20 +0000
+Received: from mout.kundenserver.de ([212.227.126.130])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXnG5-0006CO-Cz
+ for openwrt-devel@lists.openwrt.org; Sun, 10 May 2020 14:48:53 +0000
+Received: from buildfff.adridolf.com ([178.26.243.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MyseA-1jCXJm0Ugk-00vv3z for <openwrt-devel@lists.openwrt.org>; Sun, 10
+ May 2020 16:48:44 +0200
+From: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+To: openwrt-devel@lists.openwrt.org
+Date: Sun, 10 May 2020 16:47:54 +0200
+Message-Id: <20200510144754.10751-10-freifunk@adrianschmutzler.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+References: <20200510144754.10751-1-freifunk@adrianschmutzler.de>
+MIME-Version: 1.0
+X-Provags-ID: V03:K1:KDcpOA2TKplufDjabBdWoOMVJWKdkfRhdaj9SQR+wxABGkIPFSW
+ t10gp0QFEBmxEEX8Qhq9JCQTnCVs2uhEdrijB9BQN0jiEdVxqVWhR0bxPwBAodjuC1xZRqj
+ CDfFWyv47YDIFDpAidutyq8L4D3hwbk0TQezc/pROpVBmB6FGN0x77GeiBNEohN8U6tbXxe
+ unR8BDV+X73tcu3nJQvvg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4G83bEGTus4=:lc6lpVS+S5KQ9iNkbDBi6Y
+ UzmToZaQTFJNDGe1f9riGC+howzrGdvjsp5v0jplXf8bHLn8gmmblkhw/ml2j/njv4ndLA82D
+ qKtl2vLl4GKl4Tk8i9jU7dD0vH1NTFRLEV3dqTrIilmULOyd41vrNzEXNL/j/7SL4mbTFmizZ
+ 5n38ah4nq7wEhSL7UJTz48+z0NKtittlT3kWR4+qst4QWuye3E6r4S4Ze94iKBLMmU5BKGoRx
+ DEkVmT7XYqyun41B08H8SEZ3U/nJOI2wd1QXYz1Ul8KEb/7ZS77kvbdrT2oopF8VqUQhUvBlr
+ XKtGD8pjqoYgzKkQGYoX5N0YuE9Kh/yYZOsPbOv709d+f9PFlnCXE35fsu8xzlqj/vMGu0xC7
+ gq4UHUCUgen1xpr4tQVD5UZO9ZiVD2lvgg+Pgu1b9xWSlb0Vw/TwbI0C9eFCJZZOWQJ/S3wXC
+ rDdWXfQjVtD94M9VCMYDpSgX5QYi89c+pn5c9XglC2KUAWvNVdAz7FJ8GXgG9cY7c1qTik1x1
+ N7LObgHcqTv9hxmWpwonM4DAswfmHWWgn30csNKt1xi1eFoBFs36KpcR7lGjl5UiJYeQcP8Ip
+ a/mWQ16A05e2+QSKp0UFp7AkAOPLpVvE7ZfN4FTBVcXWw4VfBMOJiIAZGb7p/RQ1PQL9hkk47
+ VckVJdmZt32lrMaiTOABNT8NK1t8GRX6dBq+gxQusCZfD78T/PxKJkETnIQIGBExtsZrjx0Pv
+ MQ7K9tUQLVp9iPwGJUG9vbUDHHcXk7vDCapXMsmKqYTBG74TJvVzeH7u0VBVCUCydC4RTepx3
+ DaONT+iaga/w2hcfDZ0BLXmJDmXjMJBx+FsW6tMfrb/Pnj9qESO0SzLFaVwecmhaUNEof4r
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200510_074849_753217_1CE71712 
+X-CRM114-Status: UNSURE (   8.92  )
+X-CRM114-Notice: Please train this message.
+X-Spam-Score: -0.0 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on bombadil.infradead.org summary:
+ Content analysis details:   (-0.0 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [212.227.126.130 listed in list.dnswl.org]
+ -0.0 RCVD_IN_MSPIKE_H2      RBL: Average reputation (+2)
+ [212.227.126.130 listed in wl.mailspike.net]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+Subject: [OpenWrt-Devel] [PATCH 10/10] base-files: remove useless cat
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/openwrt-devel>, 
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+Check file contents directly instead of using cat.
+
+Signed-off-by: Adrian Schmutzler <freifunk@adrianschmutzler.de>
+---
+ package/base-files/files/sbin/pkg_check | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/package/base-files/files/sbin/pkg_check b/package/base-files/files/sbin/pkg_check
+index 775e401b26..28e87925ae 100755
+--- a/package/base-files/files/sbin/pkg_check
++++ b/package/base-files/files/sbin/pkg_check
+@@ -91,7 +91,7 @@ while [ "$1" ]; do
+ 
+ 	# Do we have changed files or not?
+ 	if [ -z "$ERR" ]; then
+-		[ $QUIET = yes ] || [ -z "$(cat "/usr/lib/opkg/info/$1.files-sha256sum")" ] || echo "$CHECK" | sed 's|^|   - |'
++		[ $QUIET = yes ] || [ ! -s "/usr/lib/opkg/info/$1.files-sha256sum" ] || echo "$CHECK" | sed 's|^|   - |'
+ 		[ $QUIET = yes ] || echo " * Package $1 is ok"
+ 		[ $QUIET = yes ] || echo
+ 	else
