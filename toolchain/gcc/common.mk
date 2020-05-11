@@ -155,6 +155,7 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--disable-werror \
+		--enable-checking=release \
 		--with-tune=generic \
 		--disable-libstdcxx-debug \
 		--disable-libstdcxx-pch \
