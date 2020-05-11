@@ -20,7 +20,7 @@ extzone=$(uci get upnpd.config.external_zone)
 [ -z "$extiface" ] && {
   # manual external zone (if dynamically find interfaces
   # belonging to it) overrides network_find_wan*
-  [ -n "$extzone"  ] && ifname=$(fw3 -q zone "$extzone" | head -1)
+  [ -n "$extzone" ] && ifname=$(fw3 -q zone "$extzone" | head -1)
   [ -z "$extiface" ] && network_find_wan extiface
   [ -z "$extiface" ] && network_find_wan6 extiface
 }
