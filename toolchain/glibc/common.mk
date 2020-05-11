@@ -11,10 +11,13 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
 PKG_VERSION:=2.31
-PKG_SOURCE_URL:=@GNU/glibc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
+
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=54ba2541b3a76441a9cbe5dd14c963bf874fd5e9
+PKG_MIRROR_HASH:=a98b8b221cfe732dc7c19ae1d22665002e254c96
+PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_SOURCE_SUBDIR)
 CUR_BUILD_DIR:=$(HOST_BUILD_DIR)-$(VARIANT)
@@ -52,7 +55,7 @@ GLIBC_CONFIGURE:= \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
-		BASH_SHELL=/bin/bash \
+		BASH_SHELL=/bin/sh \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
