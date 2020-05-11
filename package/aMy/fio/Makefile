@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://brick.kernel.dk/snaps/?C=M;O=D +libaio 
+# https://brick.kernel.dk/snaps/?C=M;O=D 
 
 include $(TOPDIR)/rules.mk
 
@@ -28,7 +28,7 @@ define Package/fio
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Disc
-  DEPENDS:=+zlib
+  DEPENDS:=+zlib +libaio
   TITLE:=I/O testing and benchmarking tool
   URL:=https://github.com/axboe/fio
 endef
