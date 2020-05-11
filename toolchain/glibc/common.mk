@@ -65,7 +65,11 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-lock-elision \
+		--enable-lock-elision=yes \
+		--enable-bind-now \
+		--enable-tunables \
+		--enable-obsolete-nsl \
+		--without-selinux \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=5.4
