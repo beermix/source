@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=miniupnpd
 PKG_VERSION:=2.1.20200510
-PKG_RELEASE:=5
+PKG_RELEASE:=4
 
 PKG_SOURCE_URL:=https://miniupnp.tuxfamily.org/files
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -45,8 +45,10 @@ TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 MAKE_FLAGS += \
 	TARGET_OPENWRT=1 TEST=0 LIBS="" \
-	CC="$(TARGET_CC) -DIPTABLES_143 -lip4tc -luuid
-	CONFIG_OPTIONS="--portinuse --leasefile --igd2
+	CC="$(TARGET_CC) -DIPTABLES_143 -lip4tc -luuid \
+		$(if $(CONFIG_IPV6),-lip6tc)" \
+	CONFIG_OPTIONS="--portinuse --leasefile --igd2 \
+		$(if $(CONFIG_IPV6),--ipv6)" \
 	-f Makefile.linux miniupnpd
 
 define Package/miniupnpd/install
