@@ -63,7 +63,7 @@ GLIBC_CONFIGURE:= \
 		--disable-nscd \
 		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=5.4
+		--enable-kernel=4.14
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
