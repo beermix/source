@@ -45,8 +45,8 @@ proto_6in4_setup() {
 	local iface="$2"
 	local link="6in4-$cfg"
 
-	local mtu ttl tos ipaddr peeraddr ip6addr ip6prefix ip6prefixes tunlink tunnelid username password updatekey
-	json_get_vars mtu ttl tos ipaddr peeraddr ip6addr tunlink tunnelid username password updatekey
+	local mtu ttl tos ipaddr peeraddr ip6addr ip6prefix ip6prefixes tunlink tunnelid username password updatekey maxtry
+	json_get_vars mtu ttl tos ipaddr peeraddr ip6addr tunlink tunnelid username password updatekey maxtry
 	json_for_each_item proto_6in4_add_prefix ip6prefix ip6prefixes
 
 	[ -z "$peeraddr" ] && {
@@ -117,7 +117,7 @@ proto_6in4_setup() {
 		}
 
 		local try=0
-		local max=3
+		local max="${maxtry:-3}"
 
 		(
 			set -o pipefail
@@ -153,6 +153,7 @@ proto_6in4_init_config() {
 	proto_config_add_string "username"
 	proto_config_add_string "password"
 	proto_config_add_string "updatekey"
+	proto_config_add_int "maxtry"
 	proto_config_add_int "mtu"
 	proto_config_add_int "ttl"
 	proto_config_add_string "tos"
