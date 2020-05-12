@@ -321,13 +321,6 @@ index 9605d767a80..0203aec84ad 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
-diff --git a/gcc/BASE-VER b/gcc/BASE-VER
-index b13d146a7b0..3b74042132a 100644
---- a/gcc/BASE-VER
-+++ b/gcc/BASE-VER
-@@ -1 +1 @@
--9.3.0
-+9.3.1
 diff --git a/gcc/ChangeLog b/gcc/ChangeLog
 index d8e53874e68..3fad79c3706 100644
 --- a/gcc/ChangeLog
