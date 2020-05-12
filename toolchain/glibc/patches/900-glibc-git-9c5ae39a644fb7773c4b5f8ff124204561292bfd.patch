@@ -1,0 +1,103 @@
+diff --git a/sysdeps/unix/sysv/linux/Makefile b/sysdeps/unix/sysv/linux/Makefile
+index f12b7b1a2d..62f1642732 100644
+--- a/sysdeps/unix/sysv/linux/Makefile
++++ b/sysdeps/unix/sysv/linux/Makefile
+@@ -60,7 +60,8 @@ sysdep_routines += adjtimex clone umount umount2 readahead \
+ 		   setfsuid setfsgid epoll_pwait signalfd \
+ 		   eventfd eventfd_read eventfd_write prlimit \
+ 		   personality epoll_wait tee vmsplice splice \
+-		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get
++		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get \
++		   process_vm_readv process_vm_writev
+ 
+ CFLAGS-gethostid.c = -fexceptions
+ CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables
+diff --git a/sysdeps/unix/sysv/linux/process_vm_readv.c b/sysdeps/unix/sysv/linux/process_vm_readv.c
+new file mode 100644
+index 0000000000..e1377f7e50
+--- /dev/null
++++ b/sysdeps/unix/sysv/linux/process_vm_readv.c
+@@ -0,0 +1,32 @@
++/* process_vm_readv - Linux specific syscall.
++   Copyright (C) 2020 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <unistd.h>
++#include <sysdep.h>
++#include <errno.h>
++#include <sys/uio.h>
++
++ssize_t
++process_vm_readv (pid_t pid, const struct iovec *local_iov,
++		  unsigned long int liovcnt,
++		  const struct iovec *remote_iov,
++		  unsigned long int riovcnt, unsigned long int flags)
++{
++  return INLINE_SYSCALL_CALL (process_vm_readv, pid, local_iov,
++			      liovcnt, remote_iov, riovcnt, flags);
++}
+diff --git a/sysdeps/unix/sysv/linux/process_vm_writev.c b/sysdeps/unix/sysv/linux/process_vm_writev.c
+new file mode 100644
+index 0000000000..944ab9b7f1
+--- /dev/null
++++ b/sysdeps/unix/sysv/linux/process_vm_writev.c
+@@ -0,0 +1,32 @@
++/* process_vm_writev - Linux specific syscall.
++   Copyright (C) 2020 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <unistd.h>
++#include <sysdep.h>
++#include <errno.h>
++#include <sys/uio.h>
++
++ssize_t
++process_vm_writev (pid_t pid, const struct iovec *local_iov,
++		   unsigned long int liovcnt,
++		   const struct iovec *remote_iov,
++		   unsigned long int riovcnt, unsigned long int flags)
++{
++  return INLINE_SYSCALL_CALL (process_vm_writev, pid, local_iov,
++			      liovcnt, remote_iov, riovcnt, flags);
++}
+diff --git a/sysdeps/unix/sysv/linux/syscalls.list b/sysdeps/unix/sysv/linux/syscalls.list
+index 76dd308d82..5bb66d5481 100644
+--- a/sysdeps/unix/sysv/linux/syscalls.list
++++ b/sysdeps/unix/sysv/linux/syscalls.list
+@@ -102,8 +102,6 @@ name_to_handle_at EXTRA	name_to_handle_at i:isppi name_to_handle_at
+ 
+ setns		EXTRA	setns		i:ii	setns
+ 
+-process_vm_readv EXTRA	process_vm_readv i:ipipii process_vm_readv
+-process_vm_writev EXTRA	process_vm_writev i:ipipii process_vm_writev
+ memfd_create    EXTRA	memfd_create	i:si    memfd_create
+ pkey_alloc	EXTRA	pkey_alloc	i:ii	pkey_alloc
+ pkey_free	EXTRA	pkey_free	i:i	pkey_free
