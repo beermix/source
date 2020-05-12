@@ -14,7 +14,7 @@ PKG_VERSION:=2.31
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=a98b8b221cfe732dc7c19ae1d22665002e254c96
+PKG_SOURCE_VERSION:=glibc-2.31
 PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
@@ -29,18 +29,6 @@ HOST_STAMP_PREPARED:=$(HOST_BUILD_DIR)/.prepared
 HOST_STAMP_CONFIGURED:=$(CUR_BUILD_DIR)/.configured
 HOST_STAMP_BUILT:=$(CUR_BUILD_DIR)/.built
 HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
-
-ifeq ($(ARCH),mips64)
-  ifdef CONFIG_MIPS64_ABI_N64
-    TARGET_CFLAGS += -mabi=64
-  endif
-  ifdef CONFIG_MIPS64_ABI_N32
-    TARGET_CFLAGS += -mabi=n32
-  endif
-  ifdef CONFIG_MIPS64_ABI_O32
-    TARGET_CFLAGS += -mabi=32
-  endif
-endif
 
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
@@ -69,8 +57,6 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-lock-elision=yes \
 		--enable-bind-now \
-		--enable-tunables \
-		--enable-obsolete-nsl \
 		--without-selinux \
 		--disable-debug \
 		--disable-build-nscd \
