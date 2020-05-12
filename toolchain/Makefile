@@ -23,13 +23,13 @@
 #    build & install the final gcc
 # 8) toolchain/libc/utils/compile
 #    build & install libc utilities
-#
+# autoconf-lean
 # For musl, steps 2 and 4 are skipped, and step 3 is done after 5
 
 curdir:=toolchain
 
 # subdirectories to descend into
-$(curdir)/builddirs := $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_EXTERNAL_TOOLCHAIN),wrapper,kernel-headers binutils gcc/initial gcc/final $(LIBC))  $(if $(CONFIG_NASM),nasm) $(if $(CONFIG_YASM),yasm) autoconf-lean
+$(curdir)/builddirs := $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_EXTERNAL_TOOLCHAIN),wrapper,kernel-headers binutils gcc/initial gcc/final $(LIBC))  $(if $(CONFIG_NASM),nasm) $(if $(CONFIG_YASM),yasm)
 ifdef CONFIG_USE_UCLIBC
   $(curdir)/builddirs += $(LIBC)/utils
 endif
