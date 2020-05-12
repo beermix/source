@@ -82,8 +82,8 @@ define Build/Configure
 	$(MAKE) -C $(PKG_BUILD_DIR) DESTDIR="$(PKG_INSTALL_DIR)" prep
 endef
 
-TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += $(FPIC) -Wl,--gc-sections -flto
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections
+TARGET_LDFLAGS += $(FPIC) -Wl,--gc-sections
 
 define Package/zsh/postinst
 #!/bin/sh
