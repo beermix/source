@@ -108,16 +108,17 @@ CONFIGURE_ARGS += \
 	--disable-zstd \
 	--disable-module-dirauth \
 	--with-tor-user=tor \
-	--with-tor-group=tor
+	--with-tor-group=tor \
+	--disable-gcc-hardening
 
 #TARGET_CFLAGS += -O3
 
-ifneq ($(CONFIG_SSP_SUPPORT),y)
-	CONFIGURE_ARGS += \
-		--disable-gcc-hardening
-else
+#ifneq ($(CONFIG_SSP_SUPPORT),y)
+#	CONFIGURE_ARGS += \
+#		--disable-gcc-hardening
+#else
 	EXTRA_CFLAGS += $(FPIC)
-endif
+#endif
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
