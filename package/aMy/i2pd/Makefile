@@ -32,6 +32,7 @@ CMAKE_OPTIONS += \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DBoost_USE_STATIC_LIBS=1 \
 	-DBoost_USE_STATIC_RUNTIME=1 \
+	-WITH_STATIC=1 \
 	-DWITH_UPNP=0
 
 define Package/i2pd
