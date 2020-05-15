@@ -14,7 +14,7 @@ PKG_VERSION:=2.31
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=109474122400ca7d60782b131dc867a5c1f2fe55
-PKG_MIRROR_HASH:=
+PKG_MIRROR_HASH:=5a04a24e69eace9eb892f0b48b869d31d4900ad656099064b6a9d8a342c13d8c
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -65,11 +65,8 @@ GLIBC_CONFIGURE:= \
 		--without-cvs \
 		--enable-add-ons \
 		--disable-debug \
-		--disable-build-nscd \
-		--disable-nscd \
-		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=4.14
+		--enable-kernel=4.14.0
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
