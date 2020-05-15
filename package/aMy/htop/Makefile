@@ -36,8 +36,6 @@ define Package/htop/description
  see all processes and their full command lines.
 endef
 
-TARGET_CFLAGS += -fno-common
-
 CONFIGURE_ARGS += \
 	--disable-unicode \
 	--disable-hwloc \
