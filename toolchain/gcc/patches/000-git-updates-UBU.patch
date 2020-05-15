@@ -1,7 +1,7 @@
-# DP: updates from the 9 branch upto 20200507 (fadd5926292).
+# DP: updates from the 9 branch upto 20200515 (aa237c6dcee).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	4212a6a3e44f870412d9025eeb323fd4f50a61da fadd59262921825b135b8e018ac8510e97dee92a \
+	4212a6a3e44f870412d9025eeb323fd4f50a61da aa237c6dceeeab1455d83a9063ab87afb4a18082 \
 	| awk '/^diff .*\.texi/ {skip=1; next} /^diff / { skip=0 } skip==0' \
 	| grep -v -E '^(diff|index)'
 
@@ -23,7 +23,78 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	* GCC 9.3.0 released.
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,677 @@
+@@ -1,3 +1,748 @@
++2020-05-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backport from mainline.
++	2020-04-30  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	PR target/94748
++	* config/aarch64/aarch64-bti-insert.c (rest_of_insert_bti): Remove
++	the check for NOTE_INSN_DELETED_LABEL.
++
++2020-05-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backport from mainline.
++	2020-04-23  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	PR target/94697
++	* config/aarch64/aarch64-bti-insert.c (rest_of_insert_bti): Swap
++	bti c and bti j handling.
++
++2020-05-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backport from mainline.
++	2020-04-27  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	PR target/94515
++	* dwarf2cfi.c (struct GTY): Add ra_mangled.
++	(cfi_row_equal_p): Check ra_mangled.
++	(dwarf2out_frame_debug_cfa_window_save): Remove the argument,
++	this only handles the sparc logic now.
++	(dwarf2out_frame_debug_cfa_toggle_ra_mangle): New function for
++	the aarch64 specific logic.
++	(dwarf2out_frame_debug): Update to use the new subroutines.
++	(change_cfi_row): Check ra_mangled.
++
++2020-05-12  David Edelsohn  <dje.gcc@gmail.com>
++
++	Backport from mainline
++	2020-04-08  Clement Chigot  <clement.chigot@atos.net>
++
++        * config/rs6000/aix61.h (LIB_SPEC): Add -lc128 with -mlong-double-128.
++        * config/rs6000/aix71.h (LIB_SPEC): Likewise.
++        * config/rs6000/aix72.h (LIB_SPEC): Likewise.
++
++2020-05-12  David Edelsohn  <dje.gcc@gmail.com>
++
++	Backport from mainline
++	2020-05-04  Clement Chigot  <clement.chigot@atos.net>
++		    David Edelsohn  <dje.gcc@gmail.com>
++
++	* config/rs6000/rs6000.c (rs6000_init_builtins): Override explicit
++	for fmodl, frexpl, ldexpl and modfl builtins.
++
++2020-05-11  Xiong Hu Luo  <luoxhu@linux.ibm.com>
++
++	Backport from master.
++	2020-04-27  Xiong Hu Luo  <luoxhu@linux.ibm.com>
++
++	PR target/91518
++	* config/rs6000/rs6000.c (frame_pointer_needed_indeed):
++	New variable.
++	(rs6000_emit_prologue_components):
++	Check with frame_pointer_needed_indeed.
++	(rs6000_emit_epilogue_components): Likewise.
++	(rs6000_emit_prologue): Likewise.
++	(rs6000_emit_epilogue): Set frame_pointer_needed_indeed.
++
++2020-05-07 Uroš Bizjak  <ubizjak@gmail.com>
++
++	* config/alpha/alpha.c (alpha_atomic_assign_expand_fenv): Use
++	TARGET_EXPR instead of MODIFY_EXPR for the first assignments to
++	fenv_var and new_fenv_var.
++
 +2020-05-05  Andreas Krebbel  <krebbel@linux.ibm.com>
 +
 +	Backport from mainline
@@ -705,7 +776,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20200507
++20200515
 --- a/gcc/ada/ChangeLog
 +++ b/gcc/ada/ChangeLog
 @@ -1,3 +1,8 @@
@@ -1246,6 +1317,71 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	isa_flag_bits |= opt->flag_canonical;
        }
      }
+--- a/gcc/config/aarch64/aarch64-bti-insert.c
++++ b/gcc/config/aarch64/aarch64-bti-insert.c
+@@ -130,22 +130,6 @@ rest_of_insert_bti (void)
+   rtx_insn *insn;
+   basic_block bb;
+ 
+-  /* Since a Branch Target Exception can only be triggered by an indirect call,
+-     we exempt function that are only called directly.  We also exempt
+-     functions that are already protected by Return Address Signing (PACIASP/
+-     PACIBSP).  For all other cases insert a BTI C at the beginning of the
+-     function.  */
+-  if (!cgraph_node::get (cfun->decl)->only_called_directly_p ())
+-    {
+-      bb = ENTRY_BLOCK_PTR_FOR_FN (cfun)->next_bb;
+-      insn = BB_HEAD (bb);
+-      if (!aarch64_pac_insn_p (get_first_nonnote_insn ()))
+-	{
+-	  bti_insn = gen_bti_c ();
+-	  emit_insn_before (bti_insn, insn);
+-	}
+-    }
+-
+   bb = 0;
+   FOR_EACH_BB_FN (bb, cfun)
+     {
+@@ -153,14 +137,10 @@ rest_of_insert_bti (void)
+ 	   insn = NEXT_INSN (insn))
+ 	{
+ 	  /* If a label is marked to be preserved or can be a non-local goto
+-	     target, it must be protected with a BTI J.  The same applies to
+-	     NOTE_INSN_DELETED_LABEL since they are basically labels that might
+-	     be referenced via variables or constant pool.  */
+-	  if ((LABEL_P (insn)
++	     target, it must be protected with a BTI J.  */
++	  if (LABEL_P (insn)
+ 	       && (LABEL_PRESERVE_P (insn)
+ 		   || bb->flags & BB_NON_LOCAL_GOTO_TARGET))
+-	      || (NOTE_P (insn)
+-		  && NOTE_KIND (insn) == NOTE_INSN_DELETED_LABEL))
+ 	    {
+ 	      bti_insn = gen_bti_j ();
+ 	      emit_insn_after (bti_insn, insn);
+@@ -201,6 +181,22 @@ rest_of_insert_bti (void)
+ 	}
+     }
+ 
++  /* Since a Branch Target Exception can only be triggered by an indirect call,
++     we exempt function that are only called directly.  We also exempt
++     functions that are already protected by Return Address Signing (PACIASP/
++     PACIBSP).  For all other cases insert a BTI C at the beginning of the
++     function.  */
++  if (!cgraph_node::get (cfun->decl)->only_called_directly_p ())
++    {
++      bb = ENTRY_BLOCK_PTR_FOR_FN (cfun)->next_bb;
++      insn = BB_HEAD (bb);
++      if (!aarch64_pac_insn_p (get_first_nonnote_insn ()))
++	{
++	  bti_insn = gen_bti_c ();
++	  emit_insn_before (bti_insn, insn);
++	}
++    }
++
+   timevar_pop (TV_MACH_DEP);
+   return 0;
+ }
 --- a/gcc/config/aarch64/aarch64-protos.h
 +++ b/gcc/config/aarch64/aarch64-protos.h
 @@ -644,4 +644,17 @@ poly_uint64 aarch64_regmode_natural_size (machine_mode);
@@ -2072,6 +2208,30 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  ;; Iterator for QI and HI modes
  (define_mode_iterator SHORT [QI HI])
  
+--- a/gcc/config/alpha/alpha.c
++++ b/gcc/config/alpha/alpha.c
+@@ -9909,8 +9909,8 @@ alpha_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
+     = build_fn_decl ("__ieee_set_fp_control",
+ 		     build_function_type_list (void_type_node, NULL));
+   mask = build_int_cst (long_unsigned_type_node, ~SWCR_STATUS_MASK);
+-  ld_fenv = build2 (MODIFY_EXPR, long_unsigned_type_node,
+-		    fenv_var, build_call_expr (get_fpscr, 0));
++  ld_fenv = build4 (TARGET_EXPR, long_unsigned_type_node, fenv_var,
++		    build_call_expr (get_fpscr, 0), NULL_TREE, NULL_TREE);
+   masked_fenv = build2 (BIT_AND_EXPR, long_unsigned_type_node, fenv_var, mask);
+   hold_fnclex = build_call_expr (set_fpscr, 1, masked_fenv);
+   *hold = build2 (COMPOUND_EXPR, void_type_node,
+@@ -9931,8 +9931,8 @@ alpha_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
+        __atomic_feraiseexcept (new_fenv_var);  */
+ 
+   new_fenv_var = create_tmp_var_raw (long_unsigned_type_node);
+-  reload_fenv = build2 (MODIFY_EXPR, long_unsigned_type_node, new_fenv_var,
+-			build_call_expr (get_fpscr, 0));
++  reload_fenv = build4 (TARGET_EXPR, long_unsigned_type_node, new_fenv_var,
++			build_call_expr (get_fpscr, 0), NULL_TREE, NULL_TREE);
+   restore_fnenv = build_call_expr (set_fpscr, 1, fenv_var);
+   atomic_feraiseexcept = builtin_decl_implicit (BUILT_IN_ATOMIC_FERAISEEXCEPT);
+   update_call
 --- a/gcc/config/arc/linux.h
 +++ b/gcc/config/arc/linux.h
 @@ -29,7 +29,8 @@ along with GCC; see the file COPYING3.  If not see
@@ -2458,6 +2618,36 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        assemble_name (file, name);
        fputs (":", file);
        ASM_OUTPUT_SKIP (file, size);
+--- a/gcc/config/rs6000/aix61.h
++++ b/gcc/config/rs6000/aix61.h
+@@ -154,6 +154,7 @@ do {									\
+    %{!maix64:%{!shared:%{g*:-lg}}}\
+    %{fprofile-arcs|fprofile-generate*|coverage:-lpthreads}\
+    %{mpe:-L%R/usr/lpp/ppe.poe/lib -lmpi -lvtd}\
++   %{mlong-double-128:-lc128}\
+    %{pthread:-lpthreads} -lc"
+ 
+ #undef LINK_SPEC
+--- a/gcc/config/rs6000/aix71.h
++++ b/gcc/config/rs6000/aix71.h
+@@ -162,6 +162,7 @@ do {									\
+    %{!maix64:%{!shared:%{g*:-lg}}}\
+    %{fprofile-arcs|fprofile-generate*|coverage:-lpthreads}\
+    %{mpe:-L%R/usr/lpp/ppe.poe/lib -lmpi -lvtd}\
++   %{mlong-double-128:-lc128}\
+    %{pthread:-lpthreads} -lc"
+ 
+ #undef LINK_SPEC
+--- a/gcc/config/rs6000/aix72.h
++++ b/gcc/config/rs6000/aix72.h
+@@ -163,6 +163,7 @@ do {									\
+    %{!maix64:%{!shared:%{g*:-lg}}}\
+    %{fprofile-arcs|fprofile-generate*|coverage:-lpthreads}\
+    %{mpe:-L%R/usr/lpp/ppe.poe/lib -lmpi -lvtd}\
++   %{mlong-double-128:-lc128}\
+    %{pthread:-lpthreads} -lc"
+ 
+ #undef LINK_SPEC
 --- a/gcc/config/rs6000/altivec.h
 +++ b/gcc/config/rs6000/altivec.h
 @@ -180,7 +180,7 @@
@@ -2574,7 +2764,40 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
  	  element_offset = base_tmp;
  	}
-@@ -17056,7 +17066,6 @@ altivec_init_builtins (void)
+@@ -17019,10 +17029,28 @@ rs6000_init_builtins (void)
+   def_builtin ("__builtin_cpu_is", ftype, RS6000_BUILTIN_CPU_IS);
+   def_builtin ("__builtin_cpu_supports", ftype, RS6000_BUILTIN_CPU_SUPPORTS);
+ 
+-  /* AIX libm provides clog as __clog.  */
+-  if (TARGET_XCOFF &&
+-      (tdecl = builtin_decl_explicit (BUILT_IN_CLOG)) != NULL_TREE)
+-    set_user_assembler_name (tdecl, "__clog");
++  if (TARGET_XCOFF)
++    {
++      /* AIX libm provides clog as __clog.  */
++      if ((tdecl = builtin_decl_explicit (BUILT_IN_CLOG)) != NULL_TREE)
++	set_user_assembler_name (tdecl, "__clog");
++
++      /* When long double is 64 bit, some long double builtins of libc
++	 functions (like __builtin_frexpl) must call the double version
++	 (frexp) not the long double version (frexpl) that expects a 128 bit
++	 argument.  */
++      if (! TARGET_LONG_DOUBLE_128)
++	{
++	  if ((tdecl = builtin_decl_explicit (BUILT_IN_FMODL)) != NULL_TREE)
++	    set_user_assembler_name (tdecl, "fmod");
++	  if ((tdecl = builtin_decl_explicit (BUILT_IN_FREXPL)) != NULL_TREE)
++	    set_user_assembler_name (tdecl, "frexp");
++	  if ((tdecl = builtin_decl_explicit (BUILT_IN_LDEXPL)) != NULL_TREE)
++	    set_user_assembler_name (tdecl, "ldexp");
++	  if ((tdecl = builtin_decl_explicit (BUILT_IN_MODFL)) != NULL_TREE)
++	    set_user_assembler_name (tdecl, "modf");
++	}
++    }
+ 
+ #ifdef SUBTARGET_INIT_BUILTINS
+   SUBTARGET_INIT_BUILTINS;
+@@ -17056,7 +17084,6 @@ altivec_init_builtins (void)
    size_t i;
    tree ftype;
    tree decl;
@@ -2582,7 +2805,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
    tree pvoid_type_node = build_pointer_type (void_type_node);
  
-@@ -17418,17 +17427,8 @@ altivec_init_builtins (void)
+@@ -17418,17 +17445,8 @@ altivec_init_builtins (void)
    d = bdesc_dst;
    for (i = 0; i < ARRAY_SIZE (bdesc_dst); i++, d++)
      {
@@ -2600,7 +2823,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        def_builtin (d->name, void_ftype_pcvoid_int_int, d->code);
      }
  
-@@ -17438,15 +17438,6 @@ altivec_init_builtins (void)
+@@ -17438,15 +17456,6 @@ altivec_init_builtins (void)
      {
        machine_mode mode1;
        tree type;
@@ -2616,7 +2839,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
        if (rs6000_overloaded_builtin_p (d->code))
  	mode1 = VOIDmode;
-@@ -17493,15 +17484,6 @@ altivec_init_builtins (void)
+@@ -17493,15 +17502,6 @@ altivec_init_builtins (void)
      {
        machine_mode mode0;
        tree type;
@@ -2632,7 +2855,17 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  
        /* Cannot define builtin if the instruction is disabled.  */
        gcc_assert (d->icode != CODE_FOR_nothing);
-@@ -23092,7 +23074,11 @@ rs6000_emit_p9_fp_minmax (rtx dest, rtx op, rtx true_cond, rtx false_cond)
+@@ -20926,6 +20926,9 @@ rs6000_got_register (rtx value ATTRIBUTE_UNUSED)
+ 
+ static rs6000_stack_t stack_info;
+ 
++/* Set if HARD_FRAM_POINTER_REGNUM is really needed.  */
++static bool frame_pointer_needed_indeed = false;
++
+ /* Function to init struct machine_function.
+    This will be called, via a pointer variable,
+    from push_function_context.  */
+@@ -23092,7 +23095,11 @@ rs6000_emit_p9_fp_minmax (rtx dest, rtx op, rtx true_cond, rtx false_cond)
    if (rtx_equal_p (op0, true_cond) && rtx_equal_p (op1, false_cond))
      ;
  
@@ -2645,7 +2878,63 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
      max_p = !max_p;
  
    else
-@@ -33063,8 +33049,9 @@ rs6000_longcall_ref (rtx call_ref, rtx arg)
+@@ -26856,9 +26863,9 @@ static void
+ rs6000_emit_prologue_components (sbitmap components)
+ {
+   rs6000_stack_t *info = rs6000_stack_info ();
+-  rtx ptr_reg = gen_rtx_REG (Pmode, frame_pointer_needed
+-			     ? HARD_FRAME_POINTER_REGNUM
+-			     : STACK_POINTER_REGNUM);
++  rtx ptr_reg = gen_rtx_REG (Pmode, frame_pointer_needed_indeed
++				      ? HARD_FRAME_POINTER_REGNUM
++				      : STACK_POINTER_REGNUM);
+ 
+   machine_mode reg_mode = Pmode;
+   int reg_size = TARGET_32BIT ? 4 : 8;
+@@ -26936,9 +26943,9 @@ static void
+ rs6000_emit_epilogue_components (sbitmap components)
+ {
+   rs6000_stack_t *info = rs6000_stack_info ();
+-  rtx ptr_reg = gen_rtx_REG (Pmode, frame_pointer_needed
+-			     ? HARD_FRAME_POINTER_REGNUM
+-			     : STACK_POINTER_REGNUM);
++  rtx ptr_reg = gen_rtx_REG (Pmode, frame_pointer_needed_indeed
++				      ? HARD_FRAME_POINTER_REGNUM
++				      : STACK_POINTER_REGNUM);
+ 
+   machine_mode reg_mode = Pmode;
+   int reg_size = TARGET_32BIT ? 4 : 8;
+@@ -27116,7 +27123,10 @@ rs6000_emit_prologue (void)
+                            && (lookup_attribute ("no_split_stack",
+                                                  DECL_ATTRIBUTES (cfun->decl))
+                                == NULL));
+- 
++
++  frame_pointer_needed_indeed
++    = frame_pointer_needed && df_regs_ever_live_p (HARD_FRAME_POINTER_REGNUM);
++
+   /* Offset to top of frame for frame_reg and sp respectively.  */
+   HOST_WIDE_INT frame_off = 0;
+   HOST_WIDE_INT sp_off = 0;
+@@ -27778,7 +27788,7 @@ rs6000_emit_prologue (void)
+     }
+ 
+   /* Set frame pointer, if needed.  */
+-  if (frame_pointer_needed)
++  if (frame_pointer_needed_indeed)
+     {
+       insn = emit_move_insn (gen_rtx_REG (Pmode, HARD_FRAME_POINTER_REGNUM),
+ 			     sp_reg_rtx);
+@@ -28622,7 +28632,7 @@ rs6000_emit_epilogue (int sibcall)
+     }
+   /* If we have a frame pointer, we can restore the old stack pointer
+      from it.  */
+-  else if (frame_pointer_needed)
++  else if (frame_pointer_needed_indeed)
+     {
+       frame_reg_rtx = sp_reg_rtx;
+       if (DEFAULT_ABI == ABI_V4)
+@@ -33063,8 +33073,9 @@ rs6000_longcall_ref (rtx call_ref, rtx arg)
        rtx reg = gen_rtx_REG (Pmode, regno);
        rtx hi = gen_rtx_UNSPEC (Pmode, gen_rtvec (3, base, call_ref, arg),
  			       UNSPEC_PLT16_HA);
@@ -2657,7 +2946,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        emit_insn (gen_rtx_SET (reg, hi));
        emit_insn (gen_rtx_SET (reg, lo));
        return reg;
-@@ -37399,6 +37386,7 @@ rs6000_disable_incompatible_switches (void)
+@@ -37399,6 +37410,7 @@ rs6000_disable_incompatible_switches (void)
      { OPTION_MASK_P9_VECTOR,	OTHER_P9_VECTOR_MASKS,	"power9-vector"	},
      { OPTION_MASK_P8_VECTOR,	OTHER_P8_VECTOR_MASKS,	"power8-vector"	},
      { OPTION_MASK_VSX,		OTHER_VSX_VECTOR_MASKS,	"vsx"		},
@@ -4252,6 +4541,100 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    real_from_string3 (to, string, fmt);
  }
  
+--- a/gcc/dwarf2cfi.c
++++ b/gcc/dwarf2cfi.c
+@@ -71,6 +71,9 @@ struct GTY(()) dw_cfi_row
+ 
+   /* True if the register window is saved.  */
+   bool window_save;
++
++  /* True if the return address is in a mangled state.  */
++  bool ra_mangled;
+ };
+ 
+ /* The caller's ORIG_REG is saved in SAVED_IN_REG.  */
+@@ -772,6 +775,9 @@ cfi_row_equal_p (dw_cfi_row *a, dw_cfi_row *b)
+   if (a->window_save != b->window_save)
+     return false;
+ 
++  if (a->ra_mangled != b->ra_mangled)
++    return false;
++
+   return true;
+ }
+ 
+@@ -1370,20 +1376,33 @@ dwarf2out_frame_debug_cfa_restore (rtx reg)
+ }
+ 
+ /* A subroutine of dwarf2out_frame_debug, process a REG_CFA_WINDOW_SAVE.
+-   FAKE is true if this is not really a window save but something else.
+ 
+    ??? Perhaps we should note in the CIE where windows are saved (instead
+    of assuming 0(cfa)) and what registers are in the window.  */
+ 
+ static void
+-dwarf2out_frame_debug_cfa_window_save (bool fake)
++dwarf2out_frame_debug_cfa_window_save (void)
+ {
+   dw_cfi_ref cfi = new_cfi ();
+ 
+   cfi->dw_cfi_opc = DW_CFA_GNU_window_save;
+   add_cfi (cfi);
+-  if (!fake)
+-    cur_row->window_save = true;
++  cur_row->window_save = true;
++}
++
++/* A subroutine of dwarf2out_frame_debug, process a REG_CFA_TOGGLE_RA_MANGLE.
++   Note: DW_CFA_GNU_window_save dwarf opcode is reused for toggling RA mangle
++   state, this is a target specific operation on AArch64 and can only be used
++   on other targets if they don't use the window save operation otherwise.  */
++
++static void
++dwarf2out_frame_debug_cfa_toggle_ra_mangle (void)
++{
++  dw_cfi_ref cfi = new_cfi ();
++
++  cfi->dw_cfi_opc = DW_CFA_GNU_window_save;
++  add_cfi (cfi);
++  cur_row->ra_mangled = !cur_row->ra_mangled;
+ }
+ 
+ /* Record call frame debugging information for an expression EXPR,
+@@ -2143,13 +2162,12 @@ dwarf2out_frame_debug (rtx_insn *insn)
+ 	break;
+ 
+       case REG_CFA_TOGGLE_RA_MANGLE:
+-	/* This uses the same DWARF opcode as the next operation.  */
+-	dwarf2out_frame_debug_cfa_window_save (true);
++	dwarf2out_frame_debug_cfa_toggle_ra_mangle ();
+ 	handled_one = true;
+ 	break;
+ 
+       case REG_CFA_WINDOW_SAVE:
+-	dwarf2out_frame_debug_cfa_window_save (false);
++	dwarf2out_frame_debug_cfa_window_save ();
+ 	handled_one = true;
+ 	break;
+ 
+@@ -2218,6 +2236,17 @@ change_cfi_row (dw_cfi_row *old_row, dw_cfi_row *new_row)
+     {
+       dw_cfi_ref cfi = new_cfi ();
+ 
++      gcc_assert (!old_row->ra_mangled && !new_row->ra_mangled);
++      cfi->dw_cfi_opc = DW_CFA_GNU_window_save;
++      add_cfi (cfi);
++    }
++
++  if (old_row->ra_mangled != new_row->ra_mangled)
++    {
++      dw_cfi_ref cfi = new_cfi ();
++
++      gcc_assert (!old_row->window_save && !new_row->window_save);
++      /* DW_CFA_GNU_window_save is reused for toggling RA mangle state.  */
+       cfi->dw_cfi_opc = DW_CFA_GNU_window_save;
+       add_cfi (cfi);
+     }
 --- a/gcc/dwarf2out.c
 +++ b/gcc/dwarf2out.c
 @@ -23011,11 +23011,22 @@ gen_subprogram_die (tree decl, dw_die_ref context_die)
@@ -4311,7 +4694,34 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  				    "division"),
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,92 @@
+@@ -1,3 +1,119 @@
++2020-05-13  Mark Eggleston  <markeggleston@gcc.gnu.org>
++
++	Backported from master
++	2020-05-13  Steven G. Kargl  <kargl@gcc.gnu.org>
++
++	PR fortran/93497
++	* decl.c (char_len_param_value): Check whether character
++	length expression is of type EXPR_OP and if so simplify it.
++	* resolve.c (resolve_charlen): Reject length if it has a
++	rank.
++
++2020-05-11  Mark Eggleston  <markeggleston@gcc.gnu.org>
++
++	Backported from mainline
++	2020-05-11  Janus Weil  <janus@gcc.gnu.org>
++		    Dominique d'Humieres  <dominiq@lps.ens.fr>
++
++	PR fortran/59107
++	* gfortran.h: Rename field resolved as resolve_symbol_called
++	and assign two 2 bits instead of 1.
++	* interface.c (gfc_find_typebound_dtio_proc): Use new field name.
++	* resolve.c (gfc_resolve_intrinsic): Replace check of the formal
++	field with resolve_symbol_called is at least 2, if it is not
++	set the field to 2.  (resolve_typebound_procedure): Use new field
++	name.  (resolve_symbol): Use new field name and check whether it
++	is at least 1, if it is not set the field to 1.
++
 +2020-05-04  Tobias Burnus  <tobias@codesourcery.com>
 +
 +	Backport from mainline.
@@ -4443,7 +4853,19 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	  ref = e->ref;
  	  if (e->symtree->n.sym->ts.type == BT_DERIVED
  	      && e->symtree->n.sym->attr.pointer
-@@ -5339,15 +5343,19 @@ match_attr_spec (void)
+@@ -1029,6 +1033,11 @@ char_len_param_value (gfc_expr **expr, bool *deferred)
+   if (!gfc_expr_check_typed (*expr, gfc_current_ns, false))
+     return MATCH_ERROR;
+ 
++  /* If gfortran gets an EXPR_OP, try to simplifiy it.  This catches things
++     like CHARACTER(([1])).   */
++  if ((*expr)->expr_type == EXPR_OP)
++    gfc_simplify_expr (*expr, 1);
++
+   if ((*expr)->expr_type == EXPR_FUNCTION)
+     {
+       if ((*expr)->ts.type == BT_INTEGER
+@@ -5339,15 +5348,19 @@ match_attr_spec (void)
        if (d == DECL_STATIC && seen[DECL_SAVE])
  	continue;
  
@@ -4466,7 +4888,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  		{
  		  m = MATCH_ERROR;
  		  goto cleanup;
-@@ -5355,8 +5363,11 @@ match_attr_spec (void)
+@@ -5355,8 +5368,11 @@ match_attr_spec (void)
  	    }
  	  else if (d == DECL_KIND)
  	    {
@@ -4480,7 +4902,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  		{
  		  m = MATCH_ERROR;
  		  goto cleanup;
-@@ -5379,8 +5390,11 @@ match_attr_spec (void)
+@@ -5379,8 +5395,11 @@ match_attr_spec (void)
  	    }
  	  else if (d == DECL_LEN)
  	    {
@@ -4494,7 +4916,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  		{
  		  m = MATCH_ERROR;
  		  goto cleanup;
-@@ -5403,8 +5417,10 @@ match_attr_spec (void)
+@@ -5403,8 +5422,10 @@ match_attr_spec (void)
  	    }
  	  else
  	    {
@@ -4507,7 +4929,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	      m = MATCH_ERROR;
  	      goto cleanup;
  	    }
-@@ -9602,13 +9618,20 @@ gfc_match_submod_proc (void)
+@@ -9602,13 +9623,20 @@ gfc_match_submod_proc (void)
    if (get_proc_name (name, &sym, false))
      return MATCH_ERROR;
  
@@ -4533,6 +4955,32 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        else
  	sym->result = sym;
      }
+--- a/gcc/fortran/gfortran.h
++++ b/gcc/fortran/gfortran.h
+@@ -1602,7 +1602,10 @@ typedef struct gfc_symbol
+   /* Set if the symbol is used in a function result specification .  */
+   unsigned fn_result_spec:1;
+   /* Used to avoid multiple resolutions of a single symbol.  */
+-  unsigned resolved:1;
++  /* = 2 if this has already been resolved as an intrinsic,
++       in gfc_resolve_intrinsic,
++     = 1 if it has been resolved in resolve_symbol.  */
++  unsigned resolve_symbol_called:2;
+   /* Set if this is a module function or subroutine with the
+      abreviated declaration in a submodule.  */
+   unsigned abr_modproc_decl:1;
+--- a/gcc/fortran/interface.c
++++ b/gcc/fortran/interface.c
+@@ -4979,7 +4979,8 @@ gfc_find_typebound_dtio_proc (gfc_symbol *derived, bool write, bool formatted)
+   gfc_symtree *tb_io_st = NULL;
+   bool t = false;
+ 
+-  if (!derived || !derived->resolved || derived->attr.flavor != FL_DERIVED)
++  if (!derived || !derived->resolve_symbol_called
++      || derived->attr.flavor != FL_DERIVED)
+     return NULL;
+ 
+   /* Try to find a typebound DTIO binding.  */
 --- a/gcc/fortran/match.c
 +++ b/gcc/fortran/match.c
 @@ -2200,9 +2200,9 @@ gfc_match_type_spec (gfc_typespec *ts)
@@ -4549,7 +4997,20 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        gfc_gobble_whitespace ();
 --- a/gcc/fortran/resolve.c
 +++ b/gcc/fortran/resolve.c
-@@ -5094,8 +5094,8 @@ gfc_resolve_substring_charlen (gfc_expr *e)
+@@ -1754,9 +1754,11 @@ gfc_resolve_intrinsic (gfc_symbol *sym, locus *loc)
+   gfc_intrinsic_sym* isym = NULL;
+   const char* symstd;
+ 
+-  if (sym->formal)
++  if (sym->resolve_symbol_called >= 2)
+     return true;
+ 
++  sym->resolve_symbol_called = 2;
++
+   /* Already resolved.  */
+   if (sym->from_intmod && sym->ts.type != BT_UNKNOWN)
+     return true;
+@@ -5094,8 +5096,8 @@ gfc_resolve_substring_charlen (gfc_expr *e)
  static bool
  resolve_ref (gfc_expr *expr)
  {
@@ -4560,7 +5021,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
    bool equal_length;
  
    for (ref = expr->ref; ref; ref = ref->next)
-@@ -5141,12 +5141,14 @@ resolve_ref (gfc_expr *expr)
+@@ -5141,12 +5143,14 @@ resolve_ref (gfc_expr *expr)
    current_part_dimension = 0;
    seen_part_dimension = 0;
    n_components = 0;
@@ -4575,7 +5036,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	  switch (ref->u.ar.type)
  	    {
  	    case AR_FULL:
-@@ -5162,6 +5164,7 @@ resolve_ref (gfc_expr *expr)
+@@ -5162,6 +5166,7 @@ resolve_ref (gfc_expr *expr)
  	      break;
  
  	    case AR_ELEMENT:
@@ -4583,7 +5044,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	      current_part_dimension = 0;
  	      break;
  
-@@ -5201,7 +5204,33 @@ resolve_ref (gfc_expr *expr)
+@@ -5201,7 +5206,33 @@ resolve_ref (gfc_expr *expr)
  	  break;
  
  	case REF_SUBSTRING:
@@ -4617,7 +5078,37 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  	  break;
  	}
  
-@@ -16510,7 +16539,8 @@ resolve_equivalence (gfc_equiv *eq)
+@@ -12000,7 +12031,7 @@ resolve_charlen (gfc_charlen *cl)
+ 	}
+ 
+       /* cl->length has been resolved.  It should have an integer type.  */
+-      if (cl->length->ts.type != BT_INTEGER)
++      if (cl->length->ts.type != BT_INTEGER || cl->length->rank != 0)
+ 	{
+ 	  gfc_error ("Scalar INTEGER expression expected at %L",
+ 		     &cl->length->where);
+@@ -13541,7 +13572,7 @@ resolve_typebound_procedure (gfc_symtree* stree)
+     {
+       /* If proc has not been resolved at this point, proc->name may
+ 	 actually be a USE associated entity. See PR fortran/89647. */
+-      if (!proc->resolved
++      if (!proc->resolve_symbol_called
+ 	  && proc->attr.function == 0 && proc->attr.subroutine == 0)
+ 	{
+ 	  gfc_symbol *tmp;
+@@ -14791,9 +14822,9 @@ resolve_symbol (gfc_symbol *sym)
+   gfc_array_spec *as;
+   bool saved_specification_expr;
+ 
+-  if (sym->resolved)
++  if (sym->resolve_symbol_called >= 1)
+     return;
+-  sym->resolved = 1;
++  sym->resolve_symbol_called = 1;
+ 
+   /* No symbol will ever have union type; only components can be unions.
+      Union type declaration symbols have type BT_UNKNOWN but flavor FL_UNION
+@@ -16510,7 +16541,8 @@ resolve_equivalence (gfc_equiv *eq)
  	  && !gfc_notify_std (GFC_STD_GNU, msg, sym->name, &e->where))
  		continue;
  
@@ -4627,7 +5118,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
        last_ts =&sym->ts;
        last_where = &e->where;
  
-@@ -16518,8 +16548,7 @@ resolve_equivalence (gfc_equiv *eq)
+@@ -16518,8 +16550,7 @@ resolve_equivalence (gfc_equiv *eq)
  	continue;
  
        /* Shall not be an automatic array.  */
@@ -4855,6 +5346,13 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  extern void incr_ticks_for_insn (rtx_insn *);
  extern void mark_end_of_function_resources (rtx, bool);
  extern void init_resource_info (rtx_insn *);
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
 new file mode 100644
 new file mode 100644
 new file mode 100644
@@ -5807,7 +6305,16 @@ new file mode 100644
        /* No need for fwait, exception is triggered by emitted fstp.  */
 --- a/libgcc/ChangeLog
 +++ b/libgcc/ChangeLog
-@@ -1,3 +1,55 @@
+@@ -1,3 +1,64 @@
++2020-05-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backport from mainline.
++	2020-04-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	PR target/94514
++	* config/aarch64/aarch64-unwind.h (aarch64_frob_update_context):
++	Update context->flags accroding to the frame state.
++
 +2020-04-22  Andre Vieira  <andre.simoesdiasvieira@arm.com>
 +
 +	Backport from mainline.
@@ -5927,6 +6434,17 @@ new file mode 100644
  /* Number of bits in a file offset, on hosts where this is settable. */
  #undef _FILE_OFFSET_BITS
  
+--- a/libgcc/config/aarch64/aarch64-unwind.h
++++ b/libgcc/config/aarch64/aarch64-unwind.h
+@@ -80,6 +80,8 @@ aarch64_frob_update_context (struct _Unwind_Context *context,
+   if (fs->regs.reg[DWARF_REGNUM_AARCH64_RA_STATE].loc.offset & 0x1)
+     /* The flag is used for re-authenticating EH handler's address.  */
+     context->flags |= RA_A_SIGNED_BIT;
++  else
++    context->flags &= ~RA_A_SIGNED_BIT;
+ 
+   return;
+ }
 new file mode 100644
 --- /dev/null
 +++ b/libgcc/config/aarch64/lse-init.c
@@ -7835,7 +8353,17 @@ new file mode 100644
                  timestruc_t st_atim;
 --- a/libstdc++-v3/ChangeLog
 +++ b/libstdc++-v3/ChangeLog
-@@ -1,3 +1,285 @@
+@@ -1,3 +1,295 @@
++2020-05-12  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backport from mainline
++	2020-05-04  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/94906
++	* src/c++17/memory_resource.cc
++	(monotonic_buffer_resource::_Chunk::release): Use size_t for shift
++	operands.
++
 +2020-05-07  Eric Botcazou  <ebotcazou@adacore.com>
 +
 +	* config/abi/post/sparc64-linux-gnu/baseline_symbols.txt: Update.
@@ -13518,6 +14046,19 @@ new file mode 100644
    const auto orig_pathlen = _M_pathname.length();
    const auto orig_type = _M_type();
    const auto orig_size = _M_cmpts.size();
+--- a/libstdc++-v3/src/c++17/memory_resource.cc
++++ b/libstdc++-v3/src/c++17/memory_resource.cc
+@@ -228,8 +228,8 @@ namespace pmr
+ 	  if (__ch->_M_canary != (__ch->_M_size | __ch->_M_align))
+ 	    return; // buffer overflow detected!
+ 
+-	  size_t __size = (1u << __ch->_M_size);
+-	  size_t __align = (1u << __ch->_M_align);
++	  size_t __size = (size_t)1 << __ch->_M_size;
++	  size_t __align = (size_t)1 << __ch->_M_align;
+ 	  void* __start = (char*)(__ch + 1) - __size;
+ 	  __r->deallocate(__start, __size, __align);
+ 	}
 --- a/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc
 +++ b/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc
 @@ -17,7 +17,7 @@
