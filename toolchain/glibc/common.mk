@@ -48,8 +48,6 @@ endif
 GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
-	unset ASFLAGS; \
-	unset LDFLAGS; \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign -Wl,-z,max-page-size=0x1000 $(filter-out -fomit-frame-pointer -fno-plt -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
@@ -74,8 +72,6 @@ GLIBC_CONFIGURE:= \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=4.14
 
-# export libc_cv_ssp=no
-# export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
