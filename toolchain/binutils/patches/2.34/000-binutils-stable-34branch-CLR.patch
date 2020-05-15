@@ -1,33 +1,12 @@
+# DP: updates from the binutils-2.34 branch
+
+# git diff d7f734bc7e9e5fb6c33b433973b57e1eed3a7e9f 11327a1bc2e2970eb85cd5e49ddd3a646c3fa250
+
 diff --git a/bfd/ChangeLog b/bfd/ChangeLog
-index dd2c11d918..ca87f744a3 100644
+index dd2c11d918..062b7ec873 100644
 --- a/bfd/ChangeLog
 +++ b/bfd/ChangeLog
-@@ -1,6 +1,224 @@
-+2020-04-21  Tamar Christina  <tamar.christina@arm.com>
-+
-+	Backport from mainline.
-+	2020-04-21  Tamar Christina  <tamar.christina@arm.com>
-+
-+	PR binutils/24753
-+	* compress.c (bfd_get_full_section_contents): Exclude sections with no
-+	content.
-+
-+2020-04-08  Tamar Christina  <tamar.christina@arm.com>
-+
-+	Backport from mainline.
-+	2020-04-01  Tamar Christina  <tamar.christina@arm.com>
-+
-+	PR ld/16017
-+	* elf32-arm.c (elf32_arm_populate_plt_entry): Set LSB of the PLT0
-+	address in the GOT if in thumb only mode.
-+
-+2020-04-08  Tamar Christina  <tamar.christina@arm.com>
-+
-+	Backport from mainline.
-+	2020-04-01  Tamar Christina  <tamar.christina@arm.com>
-+
-+	* elf32-arm.c (elf32_thumb2_plt_entry): Fix PC-rel offset.
-+
+@@ -1,6 +1,199 @@
 +2020-03-30  Alan Modra  <amodra@gmail.com>
 +
 +	PR 25745
@@ -244,20 +223,6 @@ index 2bfcf1a6b1..3ddd2d89a8 100644
        if (!_bfd_coff_free_symbols (abfd))
  	return FALSE;
      }
-diff --git a/bfd/compress.c b/bfd/compress.c
-index ce6bb2beae..728ba39dfb 100644
---- a/bfd/compress.c
-+++ b/bfd/compress.c
-@@ -255,6 +255,9 @@ bfd_get_full_section_contents (bfd *abfd, sec_ptr sec, bfd_byte **ptr)
- 	      /* PR 24753: Linker created sections can be larger than
- 		 the file size, eg if they are being used to hold stubs.  */
- 	      && (bfd_section_flags (sec) & SEC_LINKER_CREATED) == 0
-+	      /* PR 24753: Sections which have no content should also be
-+		 excluded as they contain no size on disk.  */
-+	      && (bfd_section_flags (sec) & SEC_HAS_CONTENTS) != 0
- 	      /* The MMO file format supports its own special compression
- 		 technique, but it uses COMPRESS_SECTION_NONE when loading
- 		 a section's contents.  */
 diff --git a/bfd/configure b/bfd/configure
 index 9cba071955..bc576b7894 100755
 --- a/bfd/configure
@@ -387,34 +352,6 @@ index a8d98a60f4..f02b7249dd 100644
  	}
  
        /* Check that all sections are in a PT_LOAD segment.
-diff --git a/bfd/elf32-arm.c b/bfd/elf32-arm.c
-index faf8376f20..cb8370c39d 100644
---- a/bfd/elf32-arm.c
-+++ b/bfd/elf32-arm.c
-@@ -2453,8 +2453,8 @@ static const bfd_vma elf32_thumb2_plt_entry [] =
-   0x0c00f240,		/* movw	   ip, #0xNNNN	  */
-   0x0c00f2c0,		/* movt	   ip, #0xNNNN	  */
-   0xf8dc44fc,		/* add	   ip, pc	  */
--  0xe7fdf000		/* ldr.w   pc, [ip]	  */
--			/* b      .-2		  */
-+  0xe7fcf000		/* ldr.w   pc, [ip]	  */
-+			/* b      .-4		  */
- };
- 
- /* The format of the first entry in the procedure linkage table
-@@ -9993,6 +9993,12 @@ elf32_arm_populate_plt_entry (bfd *output_bfd, struct bfd_link_info *info,
- 	      rel.r_info = ELF32_R_INFO (dynindx, R_ARM_JUMP_SLOT);
- 	      initial_got_entry = (splt->output_section->vma
- 				   + splt->output_offset);
-+
-+	      /* PR ld/16017
-+		 When thumb only we need to set the LSB for any address that
-+		 will be used with an interworking branch instruction.  */
-+	      if (using_thumb_only (htab))
-+		initial_got_entry |= 1;
- 	    }
- 	}
- 
 diff --git a/bfd/elf32-msp430.c b/bfd/elf32-msp430.c
 index 184f01d4ee..784c32ed02 100644
 --- a/bfd/elf32-msp430.c
@@ -1385,6 +1322,19 @@ index 128cf19145..8a8b74f3f9 100644
      }
    else
      return '?';
+diff --git a/bfd/version.h b/bfd/version.h
+index c54e28f89a..91798ce4e2 100644
+--- a/bfd/version.h
++++ b/bfd/version.h
+@@ -16,7 +16,7 @@
+ 
+    In releases, the date is not included in either version strings or
+    sonames.  */
+-#define BFD_VERSION_DATE 20200201
++#define BFD_VERSION_DATE 20200407
+ #define BFD_VERSION @bfd_version@
+ #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
+ #define REPORT_BUGS_TO @report_bugs_to@
 diff --git a/bfd/version.m4 b/bfd/version.m4
 index 697d7097e6..367775a83a 100644
 --- a/bfd/version.m4
@@ -1527,19 +1477,10 @@ index 35842f74b2..6ecfab5d5a 100644
  	      else
  		{
 diff --git a/gas/ChangeLog b/gas/ChangeLog
-index 25d49fd4c4..3ebb0aa53e 100644
+index 25d49fd4c4..4ad599ae79 100644
 --- a/gas/ChangeLog
 +++ b/gas/ChangeLog
-@@ -1,6 +1,64 @@
-+2020-04-21  Tamar Christina  <tamar.christina@arm.com>
-+
-+	Backport from mainline.
-+	2020-04-21  Tamar Christina  <tamar.christina@arm.com>
-+
-+	PR binutils/24753
-+	* testsuite/gas/arm/pr24753.d: New test.
-+	* testsuite/gas/arm/pr24753.s: New test.
-+
+@@ -1,6 +1,55 @@
 +2020-03-13  Andre Vieira  <andre.simoesdiasvieira@arm.com>
 +
 +	Backport from mainline.
@@ -2104,37 +2045,6 @@ index 0000000000..50b12a0d5d
 +[^>]*> ee30 0a06 	vaddle.f32	s0, s0, s12
 +[^>]*> ee30 0b41 	vsuble.f64	d0, d0, d1
 +#...
-diff --git a/gas/testsuite/gas/arm/pr24753.d b/gas/testsuite/gas/arm/pr24753.d
-new file mode 100644
-index 0000000000..01990d1ff5
---- /dev/null
-+++ b/gas/testsuite/gas/arm/pr24753.d
-@@ -0,0 +1,7 @@
-+#skip: *-*-pe *-*-wince *-*-vxworks
-+#objdump: -d
-+#name: PR24753: Don't error on sections with no content size mismatch with file
-+
-+.*: +file format .*arm.*
-+
-+#...
-diff --git a/gas/testsuite/gas/arm/pr24753.s b/gas/testsuite/gas/arm/pr24753.s
-new file mode 100644
-index 0000000000..5ba33fd29c
---- /dev/null
-+++ b/gas/testsuite/gas/arm/pr24753.s
-@@ -0,0 +1,12 @@
-+.text
-+.global _start
-+_start:
-+	nop
-+
-+.section .text2, "ax", %progbits
-+_func:
-+	nop
-+
-+.bss
-+.fill 0x8000
-+
 diff --git a/gas/testsuite/gas/i386/i386.exp b/gas/testsuite/gas/i386/i386.exp
 index 9be9c1a22e..a9b1d0c3b9 100644
 --- a/gas/testsuite/gas/i386/i386.exp
@@ -2451,28 +2361,10 @@ index 09e1202df0..e317d78478 100644
  
  /* The plugin transfer vector.  */
 diff --git a/ld/ChangeLog b/ld/ChangeLog
-index ea75ff6f00..f26bea4fcf 100644
+index ea75ff6f00..35e6ccbcd7 100644
 --- a/ld/ChangeLog
 +++ b/ld/ChangeLog
-@@ -1,6 +1,66 @@
-+2020-04-08  Tamar Christina  <tamar.christina@arm.com>
-+
-+	Backport from mainline.
-+	2020-04-01  Tamar Christina  <tamar.christina@arm.com>
-+
-+	PR ld/16017
-+	* testsuite/ld-arm/arm-elf.exp (thumb-plt-got): New.
-+	* testsuite/ld-arm/thumb-plt-got.d: New test.
-+
-+2020-04-08  Tamar Christina  <tamar.christina@arm.com>
-+
-+	Backport from mainline.
-+	2020-04-01  Tamar Christina  <tamar.christina@arm.com>
-+
-+	* testsuite/ld-arm/arm-elf.exp (thumb-plt): New.
-+	* testsuite/ld-arm/thumb-plt.d: New test.
-+	* testsuite/ld-arm/thumb-plt.s: New test.
-+
+@@ -1,6 +1,48 @@
 +2020-03-25  H.J. Lu  <hongjiu.lu@intel.com>
 +
 +	* testsuite/ld-plugin/lto.exp (lto_link_tests): Run PR ld/25355
@@ -2708,104 +2600,6 @@ index adaedf47c3..ca899b11da 100644
    sym->resolution = LDPR_UNKNOWN;
    sym->name = malloc (colon1 - str + 1);
    if (!sym->name)
-diff --git a/ld/testsuite/ld-arm/arm-elf.exp b/ld/testsuite/ld-arm/arm-elf.exp
-index 44e599f4be..0163e73832 100644
---- a/ld/testsuite/ld-arm/arm-elf.exp
-+++ b/ld/testsuite/ld-arm/arm-elf.exp
-@@ -1261,3 +1261,9 @@ set arm_unwind_tests {
-      "unwind-mix"}
- }
- run_ld_link_tests $arm_unwind_tests
-+
-+if { ![istarget "arm*-*-nacl*"] } {
-+    run_dump_test "thumb-plt"
-+    run_dump_test "thumb-plt-got"
-+}
-+
-diff --git a/ld/testsuite/ld-arm/thumb-plt-got.d b/ld/testsuite/ld-arm/thumb-plt-got.d
-new file mode 100644
-index 0000000000..e65aba9e2f
---- /dev/null
-+++ b/ld/testsuite/ld-arm/thumb-plt-got.d
-@@ -0,0 +1,14 @@
-+#source: thumb-plt.s
-+#name: Thumb only PLT and GOT LSB Symbol
-+#ld: -shared -e0
-+#readelf: -rx .got
-+#skip: *-*-pe *-*-wince *-*-vxworks armeb-*-* *-*-gnueabihf
-+
-+Relocation section '.rel.plt' at offset 0x108 contains 1 entry:
-+ Offset     Info    Type            Sym.Value  Sym. Name
-+000101c4  00000116 R_ARM_JUMP_SLOT   00000000   foo
-+
-+Hex dump of section '.got':
-+ NOTE: This section has relocations against it, but these have NOT been applied to this dump.
-+  0x000101b8 40010100 00000000 00000000 11010000 @...............
-+
-diff --git a/ld/testsuite/ld-arm/thumb-plt.d b/ld/testsuite/ld-arm/thumb-plt.d
-new file mode 100644
-index 0000000000..441325b21d
---- /dev/null
-+++ b/ld/testsuite/ld-arm/thumb-plt.d
-@@ -0,0 +1,34 @@
-+#source: thumb-plt.s
-+#name: Thumb only PLT and GOT
-+#ld: -shared -e0
-+#objdump: -dr
-+#skip: *-*-pe *-*-wince *-*-vxworks armeb-*-* *-*-gnueabihf
-+
-+.*: +file format .*arm.*
-+
-+
-+Disassembly of section \.plt:
-+
-+00000110 <\.plt>:
-+ 110:	b500      	push	{lr}
-+ 112:	f8df e008 	ldr.w	lr, \[pc, #8\]	; 11c <\.plt\+0xc>
-+ 116:	44fe      	add	lr, pc
-+ 118:	f85e ff08 	ldr.w	pc, \[lr, #8\]!
-+ 11c:	0001009c 	\.word	0x0001009c
-+
-+00000120 <foo@plt>:
-+ 120:	f240 0c98 	movw	ip, #152	; 0x98
-+ 124:	f2c0 0c01 	movt	ip, #1
-+ 128:	44fc      	add	ip, pc
-+ 12a:	f8dc f000 	ldr.w	pc, \[ip\]
-+ 12e:	e7fc      	b.n	12a <foo@plt\+0xa>
-+
-+Disassembly of section .text:
-+
-+00000130 <bar>:
-+ 130:	b580      	push	{r7, lr}
-+ 132:	af00      	add	r7, sp, #0
-+ 134:	f7ff fff4 	bl	120 <foo@plt>
-+ 138:	4603      	mov	r3, r0
-+ 13a:	4618      	mov	r0, r3
-+ 13c:	bd80      	pop	{r7, pc}
-diff --git a/ld/testsuite/ld-arm/thumb-plt.s b/ld/testsuite/ld-arm/thumb-plt.s
-new file mode 100644
-index 0000000000..e3fd80f0f1
---- /dev/null
-+++ b/ld/testsuite/ld-arm/thumb-plt.s
-@@ -0,0 +1,18 @@
-+	.cpu cortex-m3
-+	.text
-+	.align	1
-+	.global	bar
-+	.arch armv7-m
-+	.syntax unified
-+	.thumb
-+	.thumb_func
-+	.fpu softvfp
-+	.type	bar, %function
-+bar:
-+	push	{r7, lr}
-+	add	r7, sp, #0
-+	bl	foo(PLT)
-+	mov	r3, r0
-+	mov	r0, r3
-+	pop	{r7, pc}
-+	.size	bar, .-bar
 diff --git a/ld/testsuite/ld-plugin/lto.exp b/ld/testsuite/ld-plugin/lto.exp
 index 9b03b7b397..3f1d804223 100644
 --- a/ld/testsuite/ld-plugin/lto.exp
