@@ -70,7 +70,7 @@ GLIBC_CONFIGURE:= \
 		--disable-build-nscd \
 		--disable-nscd \
 		--disable-timezone-tools \
-		--enable-stack-protector=yes \
+		--enable-stack-protector=strong \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=4.14
 
