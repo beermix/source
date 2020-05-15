@@ -20,20 +20,6 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
-
-CMAKE_SOURCE_SUBDIR:=build
-
-CMAKE_OPTIONS += \
-	-DWITH_AESNI=0 \
-	-DWITH_AVX=0 \
-	-DWITH_HARDENING=0 \
-	-DWITH_LIBRARY=0 \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DBoost_USE_STATIC_LIBS=1 \
-	-DBoost_USE_STATIC_RUNTIME=1 \
-	-WITH_STATIC=1 \
-	-DWITH_UPNP=0
 
 define Package/i2pd
 	SECTION:=net
@@ -58,6 +44,7 @@ define Package/i2pd/conffiles
 endef
 
 TARGET_LDFLAGS+=-latomic
+MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
