@@ -37,6 +37,7 @@ tools-y += lzma squashfskit4 zip
 tools-$(BUILD_B43_TOOLS) += b43-tools
 tools-$(BUILD_ISL) += isl
 tools-$(CONFIG_USE_SPARSE) += sparse
+tools-$(CONFIG_COLLECT_KERNEL_DEBUG) += zstd
 tools-$(CONFIG_TARGET_apm821xx)$(CONFIG_TARGET_gemini) += genext2fs
 tools-$(CONFIG_TARGET_tegra) += cbootimage cbootimage-configs
 
