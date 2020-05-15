@@ -68,10 +68,11 @@ GLIBC_CONFIGURE:= \
 		--disable-build-nscd \
 		--disable-nscd \
 		--disable-timezone-tools \
-		--enable-stack-protector=strong \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=4.14
 
+export libc_cv_ssp=no
+export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
