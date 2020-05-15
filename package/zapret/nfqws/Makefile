@@ -12,7 +12,9 @@ define Package/nfqws
 	CATEGORY:=Network
 	TITLE:=nfqws
 	SUBMENU:=Zapret
- 	DEPENDS:=+libnetfilter-queue +libcap +zlib +iptables-mod-extra +iptables-mod-nfqueue +iptables-mod-filter +iptables-mod-ipopt +iptables-mod-conntrack-extra +iptables-mod-tproxy
+ 	DEPENDS:=+libnetfilter-queue +libcap +zlib +iptables-mod-extra \
+ 	+iptables-mod-nfqueue +iptables-mod-filter +iptables-mod-ipopt \
+ 	+iptables-mod-conntrack-extra +iptables-mod-tproxy
 endef
 
 define Build/Prepare
