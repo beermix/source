@@ -141,6 +141,7 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
+		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
@@ -150,6 +151,9 @@ GCC_CONFIGURE:= \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
 		$(call qstrip,$(CONFIG_EXTRA_GCC_CONFIG_OPTIONS)) \
+		$(if $(CONFIG_mips64)$(CONFIG_mips64el),--with-arch=mips64 \
+			--with-abi=$(call qstrip,$(CONFIG_MIPS64_ABI))) \
+		$(if $(CONFIG_arc),--with-cpu=$(CONFIG_CPU_TYPE)) \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
@@ -221,8 +225,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -fhonour-copts -Wl,-z,max-page-size=0x1000" \
-		CXXFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -fhonour-copts -Wl,-z,max-page-size=0x1000" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
