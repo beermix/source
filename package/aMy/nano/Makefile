@@ -41,7 +41,6 @@ endef
 CONFIGURE_ARGS += \
 	--enable-color \
 	--enable-nanorc \
-	--enable-multibuffer \
 
 define Package/nano/install
 	$(INSTALL_DIR) $(1)/usr/bin
