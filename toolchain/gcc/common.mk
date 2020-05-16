@@ -225,8 +225,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -pipe -fhonour-copts -Wl,-z,max-page-size=0x1000" \
+		CXXFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -pipe -fhonour-copts -Wl,-z,max-page-size=0x1000" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
