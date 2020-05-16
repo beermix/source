@@ -562,7 +562,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
 		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
 		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
-		$(1)/opt/lib/
+		$(1)/lib
 	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
 			if [ -e "$$$$file" ]; then \
@@ -571,8 +571,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		done; \
 	done
 ifneq ($(CONFIG_TARGET_x86_64),)
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/opt/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/opt/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/lib
 endif
   endef
 
@@ -783,8 +783,8 @@ else
 		$(CP) $(call qstrip,$(CONFIG_LDD_ROOT_DIR))/$$$$file $(1)/$$$$dir/ ; \
 	done ; \
 	$(SED) 's!/bin/bash!/bin/sh!g' $(1)/usr/bin/ldd ; \
-	$(SED) 's!/lib/ld-linux.so.3!/opt/lib/ld-linux.so.3!g' $(1)/usr/bin/ldd ; \
-	$(SED) 's!/lib/ld-linux.so.2!/opt/lib/ld-linux.so.2!g' $(1)/usr/bin/ldd ; \
+	$(SED) 's!/lib/ld-linux.so.3!/lib/ld-linux.so.3!g' $(1)/usr/bin/ldd ; \
+	$(SED) 's!/lib/ld-linux.so.2!/lib/ld-linux.so.2!g' $(1)/usr/bin/ldd ; \
 	exit 0
   endef
 
