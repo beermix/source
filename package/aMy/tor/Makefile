@@ -19,14 +19,14 @@ PKG_NAME:=tor
 #PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 #PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_VERSION:=0.4.3.4-rc
+PKG_VERSION:=0.4.3.5
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://dist.torproject.org/
-#PKG_HASH:=
+PKG_HASH:=616a0e4ae688d0e151d46e3e4258565da4d443d1ddbd316db0b90910e2d5d868
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=1
+PKG_BUILD_PARALLEL:=0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -108,17 +108,17 @@ CONFIGURE_ARGS += \
 	--disable-zstd \
 	--disable-module-dirauth \
 	--with-tor-user=tor \
-	--with-tor-group=tor \
-	--disable-gcc-hardening
+	--with-tor-group=tor
 
-#TARGET_CFLAGS += -O3
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
-#ifneq ($(CONFIG_SSP_SUPPORT),y)
-#	CONFIGURE_ARGS += \
-#		--disable-gcc-hardening
-#else
+ifneq ($(CONFIG_SSP_SUPPORT),y)
+	CONFIGURE_ARGS += \
+		--disable-gcc-hardening
+else
 	EXTRA_CFLAGS += $(FPIC)
-#endif
+endif
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"

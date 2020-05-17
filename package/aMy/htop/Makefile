@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#  +libnl
+# +libnl +libsensors
 
 include $(TOPDIR)/rules.mk
 
@@ -35,8 +35,6 @@ define Package/htop/description
  it allows to scroll the list vertically and horizontally to
  see all processes and their full command lines.
 endef
-
-TARGET_CFLAGS += -fno-common
 
 CONFIGURE_ARGS += \
 	--disable-unicode \
