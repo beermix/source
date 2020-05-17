@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 ARCH:=arc
 BOARD:=arc770
 BOARDNAME:=Synopsys DesignWare ARC 770D
+MAINTAINER:=Alexey Brodkin <abrodkin@synopsys.com>
 SUBTARGETS:=generic
 
 KERNEL_PATCHVER:=4.14

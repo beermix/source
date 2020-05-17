@@ -14,12 +14,10 @@
 		serial0 = &uart;
 		led-boot = &led_lan;
 		led-failsafe = &led_lan;
-		label-mac-device = &eth0;
 	};
 
 	leds {
 		compatible = "gpio-leds";
-
 		pinctrl-names = "default";
 		pinctrl-0 = <&switch_led_disable_pins>;
 
@@ -43,7 +41,8 @@
 	};
 
 	keys {
-		compatible = "gpio-keys";
+		compatible = "gpio-keys-polled";
+		poll-interval = <20>;
 
 		reset {
 			label = "reset";
@@ -109,13 +108,12 @@
 };
 
 &spi {
-	status = "okay";
-
 	num-chipselects = <1>;
+	status = "okay";
 
 	flash@0 {
 		compatible = "jedec,spi-nor";
-		spi-max-frequency = <50000000>;
+		spi-max-frequency = <104000000>;
 		reg = <0>;
 
 		partitions {
@@ -158,13 +156,11 @@
 
 &eth1 {
 	status = "okay";
-
 	compatible = "syscon", "simple-mfd";
 };
 
 &wmac {
 	status = "okay";
-
 	mtd-cal-data = <&art 0x1000>;
 	mtd-mac-address = <&uboot 0x1fc00>;
 };

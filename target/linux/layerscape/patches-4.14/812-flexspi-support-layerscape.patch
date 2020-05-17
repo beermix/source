@@ -1534,7 +1534,7 @@ Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
  	/* PMC */
  	{ "pm25lv512",   INFO(0,        0, 32 * 1024,    2, SECT_4K_PMC) },
  	{ "pm25lv010",   INFO(0,        0, 32 * 1024,    4, SECT_4K_PMC) },
-@@ -2439,6 +2446,7 @@ static int spi_nor_init_params(struct sp
+@@ -2436,6 +2443,7 @@ static int spi_nor_init_params(struct sp
  			params->quad_enable = macronix_quad_enable;
  			break;
  
@@ -1542,7 +1542,7 @@ Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
  		case SNOR_MFR_MICRON:
  			break;
  
-@@ -2757,7 +2765,8 @@ int spi_nor_scan(struct spi_nor *nor, co
+@@ -2754,7 +2762,8 @@ int spi_nor_scan(struct spi_nor *nor, co
  	mtd->_read = spi_nor_read;
  
  	/* NOR protection support for STmicro/Micron chips and similar */

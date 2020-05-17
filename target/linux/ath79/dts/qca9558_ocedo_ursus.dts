@@ -4,7 +4,7 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
 
-#include "qca955x.dtsi"
+#include "qca9557.dtsi"
 
 / {
 	compatible = "ocedo,ursus", "qca,qca9558";
@@ -28,7 +28,9 @@
 			gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "phy0tpt";
 		};
+
 	};
+
 };
 
 &pcie1 {
@@ -117,7 +119,6 @@
 
 	phy2: ethernet-phy@2 {
 		reg = <2>;
-		at803x-override-sgmii-link-check;
 	};
 };
 
@@ -145,5 +146,4 @@
 	mtd-mac-address = <&art 0x12>;
 	phy-handle = <&phy2>;
 	pll-data = <0x3000101 0x101 0x1313>;
-	qca955x-sgmii-fixup;
 };

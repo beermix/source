@@ -11,6 +11,7 @@ ARCH:=arm
 BOARD:=samsung
 BOARDNAME:=Samsung s3c24xx/s5pv210
 SUBTARGETS:=s5pv210
+MAINTAINER:=Jianhui Zhao <jianhuizhao329@gmail.com>
 
 KERNEL_PATCHVER:=4.14
 

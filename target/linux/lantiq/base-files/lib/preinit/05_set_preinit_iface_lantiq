@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. /lib/functions/lantiq.sh
+
 set_preinit_iface() {
 	ifname=eth0
 }
