@@ -3,11 +3,11 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://downloads.uclibc-ng.org/releases/?C=M	O=D
+# https://downloads.uclibc-ng.org/releases/?C=M;O=D
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/target.mk
 
-PKG_VERSION:=1.0.32
+PKG_VERSION:=1.0.34
 
 PKG_NAME:=uClibc-ng
 PKG_SOURCE_URL = http://downloads.uclibc-ng.org/releases/$(PKG_VERSION)/
