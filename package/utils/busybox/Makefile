@@ -91,12 +91,7 @@ ifneq ($(findstring c,$(OPENWRT_VERBOSE)),)
 endif
 
 define Build/Configure
-	rm -f $(PKG_BUILD_DIR)/.config
-	touch $(PKG_BUILD_DIR)/.config
-ifeq ($(DEVICE_TYPE),nas)
-	echo "CONFIG_HDPARM=y" >> $(PKG_BUILD_DIR)/.config
-endif
-	grep 'CONFIG_BUSYBOX_$(BUSYBOX_SYM)' $(TOPDIR)/.config | sed -e "s,\\(# \)\\?CONFIG_BUSYBOX_$(BUSYBOX_SYM)_\\(.*\\),\\1CONFIG_\\2,g" >> $(PKG_BUILD_DIR)/.config
+	grep 'CONFIG_BUSYBOX_$(BUSYBOX_SYM)' $(TOPDIR)/.config | sed -e "s,\\(# \)\\?CONFIG_BUSYBOX_$(BUSYBOX_SYM)_\\(.*\\),\\1CONFIG_\\2,g" > $(PKG_BUILD_DIR)/.config
 	yes 'n' | $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) oldconfig
 endef
 
@@ -117,9 +112,6 @@ endif
 ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_NTPD),)
 	$(INSTALL_BIN) ./files/sysntpd $(1)/etc/init.d/sysntpd
 	$(INSTALL_BIN) ./files/ntpd-hotplug $(1)/usr/sbin/ntpd-hotplug
-endif
-ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_FEATURE_SUID),)
-	$(INSTALL_SUID) $(PKG_INSTALL_DIR)/bin/busybox $(1)/bin/busybox
 endif
 	-rm -rf $(1)/lib64
 endef

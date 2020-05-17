@@ -42,4 +42,3 @@ endef
 
 $(eval $(call BuildPackage,libbsd))
 
-

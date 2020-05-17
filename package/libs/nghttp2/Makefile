@@ -31,9 +31,11 @@ CMAKE_OPTIONS += \
         -DENABLE_LIB_ONLY=ON
 
 define Build/InstallDev
-	$(call Build/InstallDev/cmake,$(1))
-	$(SED) 's,/usr/include,$$$${prefix}/include,g' $(1)/usr/lib/pkgconfig/libnghttp2.pc
-	$(SED) 's,/usr/lib,$$$${prefix}/lib,g' $(1)/usr/lib/pkgconfig/libnghttp2.pc
+	$(INSTALL_DIR) $(1)/usr/include/nghttp2
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/nghttp2/*.h $(1)/usr/include/nghttp2/
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/*.pc $(1)/usr/lib/pkgconfig/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libnghttp2.so* $(1)/usr/lib/
 endef
 
 define Package/libnghttp2/install
