@@ -1,0 +1,29 @@
+diff --git a/Makefile.def b/Makefile.def
+index 1aab271d8..736a206c0 100644
+--- a/Makefile.def
++++ b/Makefile.def
+@@ -132,7 +132,8 @@ host_modules= { module= gotools; };
+ target_modules = { module= libstdc++-v3;
+ 		   bootstrap=true;
+ 		   lib_path=src/.libs;
+-		   raw_cxx=true; };
++		   raw_cxx=true;
++		   bootstrap_configure_flags='--disable-libstdcxx-debug --disable-libstdcxx-pch'; };
+ target_modules = { module= libsanitizer;
+ 		   bootstrap=true;
+ 		   lib_path=.libs;
+diff --git a/Makefile.tpl b/Makefile.tpl
+index 41cae58a2..104ba4fd2 100644
+--- a/Makefile.tpl
++++ b/Makefile.tpl
+@@ -1144,7 +1144,9 @@ configure-stage[+id+]-[+prefix+][+module+]:
+ 	  --target=[+target_alias+] \
+ 	  [+ IF prev +]--with-build-libsubdir=$(HOST_SUBDIR)[+ ENDIF prev +] \
+ 	  $(STAGE[+id+]_CONFIGURE_FLAGS)[+ IF extra_configure_flags +] \
+-	  [+extra_configure_flags+][+ ENDIF extra_configure_flags +]
++	  [+extra_configure_flags+][+ ENDIF extra_configure_flags +] \
++	  [+ IF bootstrap_configure_flags +][+bootstrap_configure_flags+] \
++	  [+ ENDIF bootstrap_configure_flags +]
+ @endif [+prefix+][+module+]-bootstrap
+ [+ ENDFOR bootstrap_stage +]
+ [+ ENDIF bootstrap +]
