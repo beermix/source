@@ -26,7 +26,7 @@ PKG_HASH:=616a0e4ae688d0e151d46e3e4258565da4d443d1ddbd316db0b90910e2d5d868
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=0
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -128,8 +128,6 @@ define Package/tor/install
 	$(INSTALL_BIN) ./files/tor.init $(1)/etc/init.d/tor
 	$(INSTALL_DIR) $(1)/etc/tor
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/tor/torrc.sample $(1)/etc/tor/torrc
-	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) ./files/tor.conf $(1)/etc/config/tor
 endef
 
 define Package/tor-gencert/install
