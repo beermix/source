@@ -25,7 +25,7 @@ tools-$(BUILD_TOOLCHAIN) += gmp mpfr mpc libelf expat
 tools-y += m4 libtool autoconf automake flex bison pkgconf mklibs zlib
 tools-y += sstrip make-ext4fs e2fsprogs mtd-utils mkimage
 tools-y += firmware-utils patch-image quilt padjffs2
-tools-y += mm-macros missing-macros cmake bc findutils gengetopt patchelf
+tools-y += mm-macros missing-macros cmake scons bc findutils gengetopt patchelf
 tools-y += mtools dosfstools libressl
 tools-$(CONFIG_TARGET_orion_generic) += wrt350nv2-builder upslug2
 tools-$(CONFIG_TARGET_x86) += qemu
@@ -123,7 +123,7 @@ define PrepareStaging
 		$(if $(QUIET),,set -x;) \
 		mkdir -p "$$dir"; \
 		cd "$$dir"; \
-		mkdir -p bin lib stamp; \
+		mkdir -p bin lib include stamp; \
 	); done
 endef
 
@@ -138,11 +138,7 @@ $(STAGING_DIR_HOST)/.prepared: $(TMP_DIR)/.build
 	mkdir -p $(BUILD_DIR_HOST)/stamp $(STAGING_DIR_HOST)/include/sys
 	$(INSTALL_DATA) $(TOPDIR)/tools/include/*.h $(STAGING_DIR_HOST)/include/
 	$(INSTALL_DATA) $(TOPDIR)/tools/include/sys/*.h $(STAGING_DIR_HOST)/include/sys/
-ifneq ($(HOST_OS),Linux)
-	mkdir -p $(STAGING_DIR_HOST)/include/asm
-	$(INSTALL_DATA) $(TOPDIR)/tools/include/asm/*.h $(STAGING_DIR_HOST)/include/asm/
-endif
-	ln -snf lib $(STAGING_DIR_HOST)/lib64
+	ln -sf lib $(STAGING_DIR_HOST)/lib64
 	touch $@
 
 endif
@@ -156,6 +152,6 @@ $(curdir)/ := .config prereq
 $(curdir)/install: $(curdir)/compile
 
 tools_enabled = $(foreach tool,$(sort $(tools-y) $(tools-)),$(if $(filter $(tool),$(tools-y)),y,n))
-$(eval $(call stampfile,$(curdir),tools,compile,,_$(subst $(space),,$(tools_enabled)),$(STAGING_DIR_HOST)))
-$(eval $(call stampfile,$(curdir),tools,check,$(TMP_DIR)/.build,,$(STAGING_DIR_HOST)))
+$(eval $(call stampfile,$(curdir),tools,compile,,_$(subst $(space),,$(tools_enabled))))
+$(eval $(call stampfile,$(curdir),tools,check,$(TMP_DIR)/.build))
 $(eval $(call subdir,$(curdir)))

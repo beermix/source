@@ -2,9 +2,10 @@
 .DS_Store
 .*.swp
 /env
-/.dl
+/dl
+/.config
 /.config.old
-/bin*
+/bin
 /build_dir
 /staging_dir
 /tmp
@@ -18,7 +19,6 @@
 /*.patch
 key-build*
 *.orig
-*.zst
 *.rej
 *~
 .#*

@@ -9,7 +9,7 @@ PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/urandom-seed
+define Package/$(PKG_NAME)
   SECTION:=base
   CATEGORY:=Base system
   DEPENDS:=+getrandom
@@ -25,7 +25,7 @@ define Build/Compile/Default
 endef
 Build/Compile = $(Build/Compile/Default)
 
-define Package/urandom-seed/install
+define Package/$(PKG_NAME)/install
 	$(CP) ./files/* $(1)/
 endef
 
