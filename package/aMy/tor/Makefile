@@ -26,7 +26,7 @@ PKG_HASH:=616a0e4ae688d0e151d46e3e4258565da4d443d1ddbd316db0b90910e2d5d868
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=0
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -91,8 +91,6 @@ endef
 
 define Package/tor/conffiles
 /etc/tor/torrc
-/var/lib/tor/fingerprint
-/var/lib/tor/keys/*
 /etc/config/tor
 endef
 
