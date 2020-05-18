@@ -13,11 +13,13 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/software/scm/git/
-PKG_HASH:=
+PKG_HASH:=6d65132471df9e531807cb2746f8be317e22a343b9385bbe11c9ce7f0d2fc848
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
+
+PKG_CPE_ID:=cpe:/a:git-scm:git
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -56,7 +58,7 @@ endef
 define Package/git-gitweb
 $(call Package/git/Default)
   TITLE:=Git repository web interface
-  DEPENDS+=	+git
+  DEPENDS+= +git
 endef
 
 define Package/git-gitweb/description
@@ -70,8 +72,8 @@ endef
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS) -Os -ffunction-sections -fdata-sections" \
-	CPPFLAGS="$(TARGET_CPPFLAGS) -Wl,--gc-sections" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	NO_EXPAT="YesPlease" \
 	NO_MKSTEMPS="YesPlease" \
@@ -87,7 +89,8 @@ MAKE_FLAGS := \
 	GITWEB_JS="/gitweb/gitweb.js" \
 	GITWEB_CSS="/gitweb/gitweb.css" \
 	GITWEB_LOGO="/gitweb/gitweb-logo.png" \
-	GITWEB_FAVICON="/gitweb/gitweb-favicon.png"
+	GITWEB_FAVICON="/gitweb/gitweb-favicon.png" \
+	uname_S="Linux" \
 
 CONFIGURE_ARGS += \
 	--without-iconv \
