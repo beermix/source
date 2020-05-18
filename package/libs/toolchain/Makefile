@@ -559,7 +559,7 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
-	rm -f $(1)/opt/$$$$dir/*.py ; \
+	rm -f $(1)/$$$$dir/*.py ; \
 	exit 0
   endef
 
