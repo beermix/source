@@ -22,6 +22,7 @@ PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:banu:tinyproxy
 
 PKG_INSTALL:=1
+PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -39,6 +40,8 @@ define Package/tinyproxy/conffiles
 endef
 
 CONFIGURE_VARS += ac_cv_path_A2X=no
+
+CONFIGURE_ARGS += --enable-filter --enable-upstream --enable-transparent --enable-reverse
 
 define Package/tinyproxy/install
 	$(INSTALL_DIR) $(1)/usr/bin

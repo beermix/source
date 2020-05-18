@@ -1,0 +1,29 @@
+diff --git a/Makefile.am b/Makefile.am
+index 4a3ead6..582331c 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,7 +2,6 @@ SUBDIRS = \
+ 	src \
+ 	data \
+ 	etc \
+-	docs \
+ 	m4macros \
+ 	tests \
+ 	scripts
+@@ -12,11 +11,11 @@ ACLOCAL_AMFLAGS = -I m4macros
+ 
+ all-local:
+ 
+-dist_doc_DATA = \
+-	AUTHORS \
+-	NEWS \
+-	README \
+-	README.md
++#dist_doc_DATA = \
++#	AUTHORS \
++#	NEWS \
++#	README \
++#	README.md
+ 
+ EXTRA_DIST = \
+ 	autogen.sh \
