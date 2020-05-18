@@ -19,8 +19,6 @@ PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
-PKG_CPE_ID:=cpe:/a:git-scm:git
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/git/Default
@@ -58,7 +56,7 @@ endef
 define Package/git-gitweb
 $(call Package/git/Default)
   TITLE:=Git repository web interface
-  DEPENDS+= +git
+  DEPENDS+=	+git
 endef
 
 define Package/git-gitweb/description
@@ -72,7 +70,7 @@ endef
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS)" \
+	CFLAGS="$(TARGET_CFLAGS) -Os" \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	NO_EXPAT="YesPlease" \
@@ -89,8 +87,7 @@ MAKE_FLAGS := \
 	GITWEB_JS="/gitweb/gitweb.js" \
 	GITWEB_CSS="/gitweb/gitweb.css" \
 	GITWEB_LOGO="/gitweb/gitweb-logo.png" \
-	GITWEB_FAVICON="/gitweb/gitweb-favicon.png" \
-	uname_S="Linux" \
+	GITWEB_FAVICON="/gitweb/gitweb-favicon.png"
 
 CONFIGURE_ARGS += \
 	--without-iconv \
