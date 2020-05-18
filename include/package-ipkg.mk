@@ -173,6 +173,7 @@ $$(call addfield,Depends,$$(Package/$(1)/DEPENDS)
 )$$(call addfield,LicenseFiles,$(LICENSE_FILES)
 )$$(call addfield,Section,$(SECTION)
 )$$(call addfield,Require-User,$(USERID)
+)$(if $(PKG_CPE_ID),CPE-ID: $(PKG_CPE_ID)
 )$(if $(filter hold,$(PKG_FLAGS)),Status: unknown hold not-installed
 )$(if $(filter essential,$(PKG_FLAGS)),Essential: yes
 )$(if $(MAINTAINER),Maintainer: $(MAINTAINER)
@@ -207,7 +208,7 @@ $(_endef)
 	(cd $$(IDIR_$(1)); \
 		( \
 			find . -type f \! -path ./CONTROL/\* -exec sha256sum \{\} \; 2> /dev/null | \
-			sed 's|\([[:blank:]]\)\./|\1/|' > $$(IDIR_$(1))/CONTROL/files-sha256 \
+			sed 's|\([[:blank:]]\)\./|\1/|' > $$(IDIR_$(1))/CONTROL/files-sha256sum \
 		) || true \
 	)
     endif

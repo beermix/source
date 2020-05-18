@@ -100,20 +100,13 @@ prepare-tmpinfo: FORCE
 	fi
 
 ifneq ($(DISTRO_PKG_CONFIG),)
-scripts/config/mconf: export PATH:=$(dir $(DISTRO_PKG_CONFIG)):$(PATH)
+scripts/config/%onf: export PATH:=$(dir $(DISTRO_PKG_CONFIG)):$(PATH)
 endif
-scripts/config/mconf:
-	@$(_SINGLE)$(SUBMAKE) -s -C scripts/config all CC="$(HOSTCC_WRAPPER)"
+scripts/config/%onf: CFLAGS+= -O2
+scripts/config/%onf:
+	@$(_SINGLE)$(SUBMAKE) -s -C scripts/config $(notdir $@) CC="$(HOSTCC_WRAPPER)"
 
 $(eval $(call rdep,scripts/config,scripts/config/mconf))
-
-scripts/config/qconf:
-	@$(_SINGLE)$(SUBMAKE) -s -C scripts/config qconf \
-		CC="$(HOSTCC_WRAPPER)" \
-		DISTRO-PKG-CONFIG="$(DISTRO_PKG_CONFIG)"
-
-scripts/config/conf:
-	@$(_SINGLE)$(SUBMAKE) -s -C scripts/config conf CC="$(HOSTCC_WRAPPER)"
 
 config: scripts/config/conf prepare-tmpinfo FORCE
 	[ -L .config ] && export KCONFIG_OVERWRITECONFIG=1; \
@@ -150,7 +143,7 @@ xconfig: scripts/config/qconf prepare-tmpinfo FORCE
 	fi
 	$< Config.in
 
-prepare_kernel_conf: .config FORCE
+prepare_kernel_conf: .config toolchain/install FORCE
 
 ifeq ($(wildcard staging_dir/host/bin/quilt),)
   prepare_kernel_conf:
