@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 # https://github.com/bminor/glibc/tree/release/2.31/master
 # 	
-# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.30/master
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.31/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=HEAD
 include $(TOPDIR)/rules.mk
 
@@ -14,8 +14,8 @@ PKG_VERSION:=2.31
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=glibc-2.31
-PKG_MIRROR_HASH:=
+PKG_SOURCE_VERSION:=109474122400ca7d60782b131dc867a5c1f2fe55
+PKG_MIRROR_HASH:=5a04a24e69eace9eb892f0b48b869d31d4900ad656099064b6a9d8a342c13d8c
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -42,7 +42,12 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
+
+# -Os miscompiles w. 2.24 gcc5/gcc6
+# only -O2 tested by upstream changeset
+# "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
+	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign -Wl,-z,max-page-size=0x1000 $(filter-out -fomit-frame-pointer -fno-plt -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
@@ -63,7 +68,7 @@ GLIBC_CONFIGURE:= \
 		--enable-obsolete-nsl \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=4.14
+		--enable-kernel=4.14.0
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
