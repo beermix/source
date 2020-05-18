@@ -44,13 +44,13 @@ endef
 
 define Package/libdw
   $(call Package/elfutils/Default)
-  DEPENDS:=+libelf
+  DEPENDS:=+libelf +libbz2
   TITLE+= (libdw)
 endef
 
 define Package/libelf
   $(call Package/elfutils/Default)
-  DEPENDS:=$(INTL_DEPENDS)
+  DEPENDS:=$(INTL_DEPENDS) +zlib
   TITLE+= (libelf)
   PROVIDES:=libelf1
 endef
@@ -65,8 +65,9 @@ CONFIGURE_ARGS += \
 	--program-prefix=eu- \
 	--disable-debuginfod \
 	--without-lzma \
-	--without-zlib \
-	--without-bzlib
+	--with-zlib \
+	--with-bzlib \
+	--enable-thread-safety
 
 TARGET_CFLAGS += -D_GNU_SOURCE -Wno-unused-result -Wno-format-nonliteral
 
