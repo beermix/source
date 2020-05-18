@@ -62,6 +62,7 @@ CONFIGURE_ARGS += \
 	--disable-fam \
 	--disable-gtk-doc-html \
 	--disable-man \
+	--with-libiconv=gnu \
 	--disable-compile-warnings \
 	--with-pcre=internal
 
