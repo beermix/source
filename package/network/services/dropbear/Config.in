@@ -10,15 +10,6 @@ config DROPBEAR_CURVE25519
 
 		Increases binary size by about 4 kB (MIPS).
 
-config DROPBEAR_ED25519
-	bool "Ed25519 support"
-	default n
-	help
-		This enables the following public key algorithm:
-		  ssh-ed25519
-
-		Increases binary size by about 12 kB (MIPS).
-
 config DROPBEAR_ECC
 	bool "Elliptic curve cryptography (ECC)"
 	default n
@@ -57,6 +48,15 @@ config DROPBEAR_ECC_FULL
 		(*) - basic ECC support; provided by DROPBEAR_ECC.
 
 		Increases binary size by about 4 kB (MIPS).
+
+config DROPBEAR_ED25519
+	bool "Ed25519 support"
+	default y
+	help
+		This enables the following public key algorithm:
+		  ssh-ed25519
+
+		Increases binary size by about 12 kB (MIPS).
 
 config DROPBEAR_CHACHA20POLY1305
 	bool "Chacha20-Poly1305 support"
