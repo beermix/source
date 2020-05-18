@@ -368,25 +368,80 @@ endef
 LIBGCC_A=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/gcc/*/*/libgcc_pic.a))
 LIBGCC_MAP=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/gcc/*/*/libgcc.map))
 LIBGCC_SO=$(lastword $(wildcard $(TOOLCHAIN_DIR)/lib/libgcc_s.so.*))
+ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
+  ifneq ($(if $(CONFIG_USE_UCLIBC),$(CONFIG_GCC_VERSION_LINARO)),)
+    BUILD_LIBGCC:=$(if $(CONFIG_m68k)$(CONFIG_powerpc),,$(PKG_BUILD_DIR)/libgcc_s.so.*)
+  endif
+endif
 
-define Build/Compile/uClibc
+ifneq ($(BUILD_LIBGCC),)
+  define Build/Compile/uClibc
+	$(SCRIPT_DIR)/relink-lib.sh \
+		"$(TARGET_CROSS)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libc_so.a)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libc_so.a)" \
+		"$(patsubst $(TOOLCHAIN_DIR)/lib/%,$(PKG_BUILD_DIR)/%,$(wildcard $(TOOLCHAIN_DIR)/lib/libuClibc-*.so))" \
+		-Wl,-init,__uClibc_init -Wl,-soname=libc.so.0 \
+		$(BUILD_LIBGCC)
+	$(SCRIPT_DIR)/relink-lib.sh \
+		"$(TARGET_CROSS)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libcrypt-*.so)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libcrypt_pic.a)" \
+		"$(patsubst $(TOOLCHAIN_DIR)/lib/%,$(PKG_BUILD_DIR)/%,$(wildcard $(TOOLCHAIN_DIR)/lib/libcrypt-*.so))" \
+		$(BUILD_LIBGCC) \
+		-Wl,-soname=libcrypt.so.0
+	$(SCRIPT_DIR)/relink-lib.sh \
+		"$(TARGET_CROSS)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libatomic.so)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libatomic.a)" \
+		"$(patsubst $(TOOLCHAIN_DIR)/lib/%,$(PKG_BUILD_DIR)/%,$(wildcard $(TOOLCHAIN_DIR)/lib/libatomic*.so))" \
+		$(BUILD_LIBGCC) \
+		-Wl,-soname=libatomic.so.0
+	$(SCRIPT_DIR)/relink-lib.sh \
+		"$(TARGET_CROSS)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libm-*.so)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libm_pic.a)" \
+		"$(patsubst $(TOOLCHAIN_DIR)/lib/%,$(PKG_BUILD_DIR)/%,$(wildcard $(TOOLCHAIN_DIR)/lib/libm-*.so))" \
+		$(BUILD_LIBGCC) \
+		-Wl,-soname=libm.so.0
+	$(SCRIPT_DIR)/relink-lib.sh \
+		"$(TARGET_CROSS)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libpthread-*.so)" \
+		"$(wildcard $(TOOLCHAIN_DIR)/lib/libpthread_so.a)" \
+		"$(patsubst $(TOOLCHAIN_DIR)/lib/%,$(PKG_BUILD_DIR)/%,$(wildcard $(TOOLCHAIN_DIR)/lib/libpthread-*.so))" \
+		-Wl,-z,nodelete,-z,initfirst,-init=__pthread_initialize_minimal_internal \
+		-ldl -lc $(BUILD_LIBGCC) \
+		-Wl,-soname=libpthread.so.0
+  endef
+  define Build/Compile/libgcc
+	$(SCRIPT_DIR)/relink-lib.sh \
+		"$(TARGET_CROSS)" \
+		"$(LIBGCC_SO)" \
+		"$(LIBGCC_A)" \
+		"$(patsubst $(TOOLCHAIN_DIR)/lib/%,$(PKG_BUILD_DIR)/%,$(LIBGCC_SO))" \
+		-Wl,--version-script=$(LIBGCC_MAP) -Wl,-soname=libgcc_s.so.1
+  endef
+else
+  define Build/Compile/uClibc
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/libuClibc-*.so \
 		$(TOOLCHAIN_DIR)/lib/libcrypt-*.so \
 		$(TOOLCHAIN_DIR)/lib/libm-*.so \
 		$(TOOLCHAIN_DIR)/lib/libpthread-*.so \
 		$(PKG_BUILD_DIR)/
-endef
-ifneq ($(LIBGCC_SO),)
+  endef
+  ifneq ($(LIBGCC_SO),)
     define Build/Compile/libgcc
 	$(CP) $(LIBGCC_SO) $(PKG_BUILD_DIR)/
     endef
+  endif
 endif
 
 define Build/Compile/Default
 	$(call Build/Compile/libgcc)
 	$(call Build/Compile/$(LIBC))
 endef
+
 Build/Compile = $(Build/Compile/Default)
 
 ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
@@ -434,6 +489,10 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 			fi; \
 		done; \
 	done
+ifneq ($(CONFIG_TARGET_x86_64),)
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec-$(LIBC_SO_VERSION).so $(1)/opt/lib
+	$(CP) $(TOOLCHAIN_DIR)/lib/libmvec.so.* $(1)/opt/lib
+endif
   endef
 
   define Package/uClibc/install
@@ -448,6 +507,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 		$(1)/lib/
 	$(CP) \
 		$(PKG_BUILD_DIR)/libuClibc-* \
+		$(PKG_BUILD_DIR)/libm-* \
+		$(PKG_BUILD_DIR)/libcrypt-* \
 		$(1)/lib/
   endef
 
@@ -553,6 +614,7 @@ else
 		$(INSTALL_DIR) $(1)/lib ; \
 		$(CP) $(call qstrip,$(CONFIG_LIBSTDCPP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
+	rm -f $(1)/opt/$$$$dir/*.py ; \
 	exit 0
   endef
 
