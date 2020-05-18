@@ -32,6 +32,7 @@ define Package/ethtool
   CATEGORY:=Network
   TITLE:=Display or change ethernet card settings
   URL:=http://www.kernel.org/pub/software/network/ethtool/
+  DEPENDS:=+libmnl
 endef
 
 define Package/ethtool/description
