@@ -13,8 +13,8 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:= \
-	http://www.netfilter.org/projects/libnetfilter_log/files/ \
-	ftp://ftp.netfilter.org/pub/libnetfilter_log/
+	http://www.netfilter.org/projects/libnetfilter_conntrack/files/ \
+	ftp://ftp.netfilter.org/pub/libnetfilter_conntrack/
 PKG_HASH:=
 PKG_MAINTAINER:=Yousong Zhou <yszhou4tech@gmail.com>
 
