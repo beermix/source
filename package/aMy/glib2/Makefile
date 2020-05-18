@@ -35,7 +35,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr +libpcre
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr
   TITLE:=glib 2.0
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.gtk.org/
@@ -63,7 +63,7 @@ CONFIGURE_ARGS += \
 	--disable-gtk-doc-html \
 	--disable-man \
 	--disable-compile-warnings \
-	--with-pcre=system
+	--with-pcre=internal
 
 CONFIGURE_VARS += \
 	glib_cv_stack_grows=no \
