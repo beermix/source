@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=yasm
-PKG_VERSION:=e256985
+PKG_VERSION:=c9db6d7
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/yasm/yasm

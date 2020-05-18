@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2015 OpenWrt.org 
+# Copyright (C) 2007-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -15,11 +15,6 @@ PKG_SOURCE_URL:=https://github.com/bminor/bash
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-
-PKG_LICENSE:=GPL-3.0-or-later
-PKG_LICENSE_FILES:=COPYING
-PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
-PKG_CPE_ID:=cpe:/a:gnu:bash
 
 PKG_INSTALL:=1
 

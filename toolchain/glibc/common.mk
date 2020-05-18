@@ -36,8 +36,6 @@ HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
-	unset ASFLAGS; \
-	unset LDFLAGS; \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign -Wl,-z,max-page-size=0x1000 $(filter-out -fomit-frame-pointer -fno-plt -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	LDFLAGS="-Wl,-z,max-page-size=0x1000" \
@@ -56,11 +54,7 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--enable-lock-elision \
 		--enable-bind-now \
-		--without-selinux \
 		--disable-debug \
-		--disable-build-nscd \
-		--disable-nscd \
-		--disable-timezone-tools \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=4.14
 
