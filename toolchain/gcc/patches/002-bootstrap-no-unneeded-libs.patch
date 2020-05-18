@@ -1,8 +1,8 @@
 diff --git a/Makefile.def b/Makefile.def
-index 1aab271d8..736a206c0 100644
+index 36fd26b03..4825df3a5 100644
 --- a/Makefile.def
 +++ b/Makefile.def
-@@ -132,7 +132,8 @@ host_modules= { module= gotools; };
+@@ -137,7 +137,8 @@ host_modules= { module= libctf; no_install=true; no_check=true;
  target_modules = { module= libstdc++-v3;
  		   bootstrap=true;
  		   lib_path=src/.libs;
@@ -13,10 +13,10 @@ index 1aab271d8..736a206c0 100644
  		   bootstrap=true;
  		   lib_path=.libs;
 diff --git a/Makefile.tpl b/Makefile.tpl
-index 41cae58a2..104ba4fd2 100644
+index efed15117..1c570f038 100644
 --- a/Makefile.tpl
 +++ b/Makefile.tpl
-@@ -1144,7 +1144,9 @@ configure-stage[+id+]-[+prefix+][+module+]:
+@@ -1145,7 +1145,9 @@ configure-stage[+id+]-[+prefix+][+module+]:
  	  --target=[+target_alias+] \
  	  [+ IF prev +]--with-build-libsubdir=$(HOST_SUBDIR)[+ ENDIF prev +] \
  	  $(STAGE[+id+]_CONFIGURE_FLAGS)[+ IF extra_configure_flags +] \
