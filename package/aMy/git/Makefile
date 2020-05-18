@@ -56,7 +56,7 @@ endef
 define Package/git-gitweb
 $(call Package/git/Default)
   TITLE:=Git repository web interface
-  DEPENDS+=	+git
+  DEPENDS+= +git
 endef
 
 define Package/git-gitweb/description
