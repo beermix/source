@@ -4,7 +4,7 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://github.com/bminor/glibc/tree/release/2.31/master
-# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.31/master
+# 	
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=refs/heads/release/2.30/master
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog;h=HEAD
 include $(TOPDIR)/rules.mk
@@ -30,6 +30,17 @@ HOST_STAMP_CONFIGURED:=$(CUR_BUILD_DIR)/.configured
 HOST_STAMP_BUILT:=$(CUR_BUILD_DIR)/.built
 HOST_STAMP_INSTALLED:=$(TOOLCHAIN_DIR)/stamp/.glibc_$(VARIANT)_installed
 
+ifeq ($(ARCH),mips64)
+  ifdef CONFIG_MIPS64_ABI_N64
+    TARGET_CFLAGS += -mabi=64
+  endif
+  ifdef CONFIG_MIPS64_ABI_N32
+    TARGET_CFLAGS += -mabi=n32
+  endif
+  ifdef CONFIG_MIPS64_ABI_O32
+    TARGET_CFLAGS += -mabi=32
+  endif
+endif
 
 GLIBC_CONFIGURE:= \
 	BUILD_CC="$(HOSTCC)" \
@@ -49,7 +60,6 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
-		--enable-lock-elision \
 		--enable-obsolete-nsl \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
