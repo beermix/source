@@ -64,10 +64,7 @@ endif
 CONFIGURE_ARGS += \
 	--program-prefix=eu- \
 	--disable-debuginfod \
-	--without-lzma \
-	--with-zlib \
-	--with-bzlib \
-	--enable-thread-safety
+	--without-lzma
 
 TARGET_CFLAGS += -D_GNU_SOURCE -Wno-unused-result -Wno-format-nonliteral
 
