@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dropbear
 PKG_VERSION:=2019.78
-PKG_RELEASE:=5
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:= \
@@ -22,7 +22,6 @@ PKG_LICENSE_FILES:=LICENSE libtomcrypt/LICENSE libtommath/LICENSE
 PKG_CPE_ID:=cpe:/a:matt_johnston:dropbear_ssh_server
 
 PKG_BUILD_PARALLEL:=1
-PKG_ASLR_PIE_REGULAR:=1
 PKG_USE_MIPS16:=0
 PKG_FIXUP:=autoreconf
 
@@ -75,7 +74,6 @@ define Package/dropbearconvert
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Utility for converting SSH keys
-  DEPENDS:= +DROPBEAR_ZLIB:zlib
 endef
 
 CONFIGURE_ARGS += \
@@ -115,6 +113,12 @@ define Build/Configure
 			$(PKG_BUILD_DIR)/localoptions.h; \
 	done
 
+	echo '#define DROPBEAR_ED25519 $(if $(CONFIG_DROPBEAR_ED25519),1,0)' >> \
+		$(PKG_BUILD_DIR)/localoptions.h
+
+	echo '#define DROPBEAR_CHACHA20POLY1305 $(if $(CONFIG_DROPBEAR_CHACHA20POLY1305),1,0)' >> \
+		$(PKG_BUILD_DIR)/localoptions.h
+
 	# remove protocol idented software version number
 	$(ESED) 's,^(#define LOCAL_IDENT) .*$$$$,\1 "SSH-2.0-dropbear",g' \
 		$(PKG_BUILD_DIR)/sysoptions.h
@@ -133,15 +137,8 @@ define Build/Configure
 		$(PKG_BUILD_DIR)/sysoptions.h; \
 	done
 
-	echo '#define DROPBEAR_CHACHA20POLY1305 $(if $(CONFIG_DROPBEAR_CHACHA20POLY1305),1,0)' >> \
-		$(PKG_BUILD_DIR)/localoptions.h
-
 	# Enforce rebuild of svr-chansession.c
 	rm -f $(PKG_BUILD_DIR)/svr-chansession.o
-
-	# Rebuild them on config change
-	+$(MAKE) -C $(PKG_BUILD_DIR)/libtomcrypt clean
-	+$(MAKE) -C $(PKG_BUILD_DIR)/libtommath clean
 endef
 
 define Build/Compile
@@ -166,8 +163,6 @@ define Package/dropbear/install
 	$(INSTALL_BIN) ./files/dropbear.init $(1)/etc/init.d/dropbear
 	$(INSTALL_DIR) $(1)/usr/lib/opkg/info
 	$(INSTALL_DIR) $(1)/etc/dropbear
-	$(INSTALL_DIR) $(1)/lib/preinit
-	$(INSTALL_DATA) ./files/dropbear.failsafe $(1)/lib/preinit/99_10_failsafe_dropbear
 	$(if $(CONFIG_DROPBEAR_ED25519),touch $(1)/etc/dropbear/dropbear_ed25519_host_key)
 	$(if $(CONFIG_DROPBEAR_ECC),touch $(1)/etc/dropbear/dropbear_ecdsa_host_key)
 	touch $(1)/etc/dropbear/dropbear_rsa_host_key

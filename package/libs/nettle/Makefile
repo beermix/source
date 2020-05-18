@@ -55,11 +55,6 @@ CONFIGURE_ARGS += \
 	--enable-arm-neon
 endif
 
-ifeq ($(ARCH),armeb)
-CONFIGURE_ARGS += \
-	--disable-assembler
-endif
-
 define Build/Compile
 	$(call Build/Compile/Default, \
 		DESTDIR="$(PKG_INSTALL_DIR)" \

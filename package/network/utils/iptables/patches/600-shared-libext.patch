@@ -54,7 +54,7 @@
  initextb_func := $(addprefix ebt_,${pfb_build_static})
 --- a/iptables/Makefile.am
 +++ b/iptables/Makefile.am
-@@ -7,19 +7,22 @@ BUILT_SOURCES =
+@@ -8,19 +8,22 @@ BUILT_SOURCES =
  
  xtables_legacy_multi_SOURCES  = xtables-legacy-multi.c iptables-xml.c
  xtables_legacy_multi_CFLAGS   = ${AM_CFLAGS}
@@ -80,7 +80,7 @@
  endif
  xtables_legacy_multi_SOURCES += xshared.c iptables-restore.c iptables-save.c
  xtables_legacy_multi_LDADD   += ../libxtables/libxtables.la -lm
-@@ -28,7 +31,8 @@ xtables_legacy_multi_LDADD   += ../libxt
+@@ -30,7 +33,8 @@ if ENABLE_NFTABLES
  if ENABLE_NFTABLES
  xtables_nft_multi_SOURCES  = xtables-nft-multi.c iptables-xml.c
  xtables_nft_multi_CFLAGS   = ${AM_CFLAGS}
@@ -90,7 +90,7 @@
  if ENABLE_STATIC
  xtables_nft_multi_CFLAGS  += -DALL_INCLUSIVE
  endif
-@@ -42,7 +46,8 @@ xtables_nft_multi_SOURCES += xtables-sav
+@@ -45,7 +49,8 @@ xtables_nft_multi_SOURCES += xtables-sav
  				xtables-eb-standalone.c xtables-eb.c \
  				xtables-eb-translate.c \
  				xtables-translate.c

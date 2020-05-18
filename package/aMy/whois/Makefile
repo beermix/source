@@ -23,7 +23,7 @@ PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xf $(DL_DIR)/$
 define Package/whois
 	SECTION:=net
 	CATEGORY:=Network
-	DEPENDS:=+libidn2
+	#DEPENDS:=+libidn2
 	TITLE:=intelligent WHOIS client
 	URL:=http://ftp.debian.org/debian/pool/main/w/whois
 	MAINTAINER:=Entware team, https://entware.net

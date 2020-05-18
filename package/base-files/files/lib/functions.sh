@@ -17,22 +17,6 @@ NO_EXPORT=1
 LOAD_STATE=1
 LIST_SEP=" "
 
-# xor multiple hex values of the same length
-xor() {
-	local val
-	local ret="0x$1"
-	local retlen=${#1}
-
-	shift
-	while [ -n "$1" ]; do
-		val="0x$1"
-		ret=$((ret ^ val))
-		shift
-	done
-
-	printf "%0${retlen}x" "$ret"
-}
-
 append() {
 	local var="$1"
 	local value="$2"
@@ -70,7 +54,7 @@ config () {
 	local cfgtype="$1"
 	local name="$2"
 
-	export ${NO_EXPORT:+-n} CONFIG_NUM_SECTIONS=$((CONFIG_NUM_SECTIONS + 1))
+	export ${NO_EXPORT:+-n} CONFIG_NUM_SECTIONS=$(($CONFIG_NUM_SECTIONS + 1))
 	name="${name:-cfg$CONFIG_NUM_SECTIONS}"
 	append CONFIG_SECTIONS "$name"
 	export ${NO_EXPORT:+-n} CONFIG_SECTION="$name"
@@ -93,7 +77,7 @@ list() {
 
 	config_get len "$CONFIG_SECTION" "${varname}_LENGTH" 0
 	[ $len = 0 ] && append CONFIG_LIST_STATE "${CONFIG_SECTION}_${varname}"
-	len=$((len + 1))
+	len=$(($len + 1))
 	config_set "$CONFIG_SECTION" "${varname}_ITEM$len" "$value"
 	config_set "$CONFIG_SECTION" "${varname}_LENGTH" "$len"
 	append "CONFIG_${CONFIG_SECTION}_${varname}" "$value" "$LIST_SEP"
@@ -143,7 +127,7 @@ config_foreach() {
 	[ -z "$CONFIG_SECTIONS" ] && return 0
 	for section in ${CONFIG_SECTIONS}; do
 		config_get cfgtype "$section" TYPE
-		[ -n "$___type" ] && [ "x$cfgtype" != "x$___type" ] && continue
+		[ -n "$___type" -a "x$cfgtype" != "x$___type" ] && continue
 		eval "$___function \"\$section\" \"\$@\""
 	done
 }
@@ -162,7 +146,7 @@ config_list_foreach() {
 	while [ $c -le "$len" ]; do
 		config_get val "${section}" "${option}_ITEM$c"
 		eval "$function \"\$val\" \"\$@\""
-		c="$((c + 1))"
+		c="$(($c + 1))"
 	done
 }
 
@@ -254,6 +238,7 @@ default_postinst() {
 		fi
 
 		if grep -m1 -q -s "^/etc/uci-defaults/" "$filelist"; then
+			. /lib/functions/system.sh
 			[ -d /tmp/.uci ] || mkdir -p /tmp/.uci
 			for i in $(grep -s "^/etc/uci-defaults/" "$filelist"); do
 				( [ -f "$i" ] && cd "$(dirname $i)" && . "$i" ) && rm -f "$i"
@@ -323,10 +308,10 @@ group_add_next() {
 		echo $gid
 		return
 	fi
-	gids=$(cut -d: -f3 ${IPKG_INSTROOT}/etc/group)
+	gids=$(cat ${IPKG_INSTROOT}/etc/group | cut -d: -f3)
 	gid=65536
-	while echo "$gids" | grep -q "^$gid$"; do
-		gid=$((gid + 1))
+	while [ -n "$(echo "$gids" | grep "^$gid$")" ] ; do
+	        gid=$((gid + 1))
 	done
 	group_add $1 $gid
 	echo $gid
@@ -335,8 +320,8 @@ group_add_next() {
 group_add_user() {
 	local grp delim=","
 	grp=$(grep -s "^${1}:" ${IPKG_INSTROOT}/etc/group)
-	echo "$grp" | cut -d: -f4 | grep -q $2 && return
-	echo "$grp" | grep -q ":$" && delim=""
+	[ -z "$(echo $grp | cut -d: -f4 | grep $2)" ] || return
+	[ -n "$(echo $grp | grep ":$")" ] && delim=""
 	[ -n "$IPKG_INSTROOT" ] || lock /var/lock/passwd
 	sed -i "s/$grp/$grp$delim$2/g" ${IPKG_INSTROOT}/etc/group
 	[ -n "$IPKG_INSTROOT" ] || lock -u /var/lock/passwd
@@ -351,10 +336,10 @@ user_add() {
 	local shell="${6:-/bin/false}"
 	local rc
 	[ -z "$uid" ] && {
-		uids=$(cut -d: -f3 ${IPKG_INSTROOT}/etc/passwd)
+		uids=$(cat ${IPKG_INSTROOT}/etc/passwd | cut -d: -f3)
 		uid=65536
-		while echo "$uids" | grep -q "^$uid$"; do
-			uid=$((uid + 1))
+		while [ -n "$(echo "$uids" | grep "^$uid$")" ] ; do
+		        uid=$((uid + 1))
 		done
 	}
 	[ -z "$gid" ] && gid=$uid
@@ -373,4 +358,4 @@ board_name() {
 	[ -e /tmp/sysinfo/board_name ] && cat /tmp/sysinfo/board_name || echo "generic"
 }
 
-[ -z "$IPKG_INSTROOT" ] && [ -f /lib/config/uci.sh ] && . /lib/config/uci.sh
+[ -z "$IPKG_INSTROOT" -a -f /lib/config/uci.sh ] && . /lib/config/uci.sh

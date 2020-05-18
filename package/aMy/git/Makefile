@@ -19,6 +19,8 @@ PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
+PKG_CPE_ID:=cpe:/a:git-scm:git
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/git/Default
@@ -56,7 +58,7 @@ endef
 define Package/git-gitweb
 $(call Package/git/Default)
   TITLE:=Git repository web interface
-  DEPENDS+=	+git
+  DEPENDS+= +git
 endef
 
 define Package/git-gitweb/description
@@ -70,8 +72,8 @@ endef
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS) -Os -ffunction-sections -fdata-sections" \
-	CPPFLAGS="$(TARGET_CPPFLAGS) -Wl,--gc-sections" \
+	CFLAGS="$(TARGET_CFLAGS) -Os" \
+	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	NO_EXPAT="YesPlease" \
 	NO_MKSTEMPS="YesPlease" \

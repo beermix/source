@@ -15683,3 +15683,7 @@ index 79f9ba89af5..70990740b6c 100644
  # define HAVE_DOS_BASED_FILE_SYSTEM
  # define FOPEN_WB "wb"
  # ifndef DIR_SEPARATOR_2
+diff --git a/maintainer-scripts/ChangeLog b/maintainer-scripts/ChangeLog
+index b1a9be6f5b2..039f7381af5 100644
+diff --git a/maintainer-scripts/gcc_release b/maintainer-scripts/gcc_release
+index 74cce1af18d..2456908d716 100755

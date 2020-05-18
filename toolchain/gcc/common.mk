@@ -44,47 +44,23 @@ ifeq ($(PKG_VERSION),9.3.0)
   PKG_HASH:=71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1
 endif
 
-ifeq ($(PKG_VERSION),8.4.1)
-  PKG_REV:=8-20200430
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-endif
-
 ifeq ($(PKG_VERSION),9.3.1)
-#  PKG_REV:=9.3.1-20200408
-#  PKG_SOURCE_URL:=https://dl.dropboxusercontent.com/s/h5zpklahnpus5e0
-#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-  PKG_REV:=1bcc05f
-  PKG_SOURCE_PROTO:=git
-  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
-  PKG_SOURCE_VERSION:=$(PKG_REV)
-  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-endif
-
-ifeq ($(PKG_VERSION),10.1.0)
-  PKG_HASH:=b6898a23844b656f1b68691c5c012036c2e694ac4b53a8918d4712ad876e7ea2
-endif
-
-ifeq ($(PKG_VERSION),10.0.1)
-  PKG_VERSION:=10.0.1
-  PKG_REV:=10.0.1-20200501
-  PKG_SOURCE_URL:=ftp://gcc.gnu.org/pub/gcc/snapshots/$(PKG_REV)
+  PKG_REV:=9.3.1-20200515
+  PKG_SOURCE_URL:=https://dl.dropboxusercontent.com/s/h5zpklahnpus5e0
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_REV:=bcf1d38
+#  PKG_REV:=1bcc05f
 #  PKG_SOURCE_PROTO:=git
 #  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
 #  PKG_SOURCE_VERSION:=$(PKG_REV)
 #  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 #  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+endif
+
+ifeq ($(PKG_VERSION),10.1.0)
+  PKG_HASH:=b6898a23844b656f1b68691c5c012036c2e694ac4b53a8918d4712ad876e7ea2
 endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
@@ -158,11 +134,6 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
-		--with-tune=generic \
-		--disable-libstdcxx-debug \
-		--disable-libstdcxx-pch \
-		--disable-vtable-verify \
-		--disable-libunwind-exceptions \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
@@ -227,8 +198,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -pipe -fhonour-copts -Wl,-z,max-page-size=0x1000" \
+		CXXFLAGS_FOR_TARGET="-march=bonnell -g1 -O3 -pipe -fhonour-copts -Wl,-z,max-page-size=0x1000" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
