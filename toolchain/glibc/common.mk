@@ -41,12 +41,7 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-
-# -Os miscompiles w. 2.24 gcc5/gcc6
-# only -O2 tested by upstream changeset
-# "Optimize i386 syscall inlining for GCC 5"
 GLIBC_CONFIGURE:= \
-	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
 	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -fno-plt -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
@@ -63,6 +58,7 @@ GLIBC_CONFIGURE:= \
 		--without-gd \
 		--without-cvs \
 		--enable-add-ons \
+		--enable-obsolete-nsl \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		--enable-kernel=4.14

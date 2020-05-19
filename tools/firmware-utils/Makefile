@@ -12,7 +12,13 @@ include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 define cc
-	$(HOSTCC) $(HOST_CFLAGS) -include endian.h $(HOST_LDFLAGS) -o $(HOST_BUILD_DIR)/bin/$(firstword $(1)) $(foreach src,$(1),src/$(src).c) $(2)
+	$(HOSTCC) \
+		$(HOST_CFLAGS) \
+		-Wno-unused-parameter \
+		-include endian.h $(HOST_LDFLAGS) \
+		-o $(HOST_BUILD_DIR)/bin/$(firstword $(1)) \
+		$(foreach src,$(1),src/$(src).c) \
+		$(2)
 endef
 
 define Host/Compile
@@ -26,14 +32,14 @@ define Host/Compile
 	$(call cc,dgfirmware)
 	$(call cc,mksenaofw md5, -Wall --std=gnu99)
 	$(call cc,trx2usr)
-	$(call cc,ptgen)
+	$(call cc,ptgen cyg_crc32)
 	$(call cc,srec2bin)
 	$(call cc,mkmylofw)
 	$(call cc,mkcsysimg)
 	$(call cc,mkzynfw)
 	$(call cc,lzma2eva,-lz)
 	$(call cc,mkcasfw)
-	$(call cc,mkfwimage,-lz -Wall)
+	$(call cc,mkfwimage,-lz -Wall -Werror -Wextra -D_FILE_OFFSET_BITS=64)
 	$(call cc,mkfwimage2,-lz)
 	$(call cc,imagetag imagetag_cmdline cyg_crc32)
 	$(call cc,add_header)
@@ -87,6 +93,7 @@ define Host/Compile
 	$(call cc,dns313-header, -Wall)
 	$(call cc,mksercommfw, -Wall)
 	$(call cc,nec-enc, -Wall --std=gnu99)
+	$(call cc,uimage_padhdr, -Wall -lz)
 endef
 
 define Host/Install

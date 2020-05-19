@@ -1,0 +1,51 @@
+From 951a22165ca3fb1cfd334dee537c2fb85eaa75bc Mon Sep 17 00:00:00 2001
+From: Petr Mensik <pemensik@redhat.com>
+Date: Wed, 3 Jul 2019 17:02:16 +0200
+Subject: [PATCH 06/12] Compare address and interface index for allowed
+ interface
+
+If interface is recreated with the same address but different index, it
+would not change any other parameter.
+
+Test also address family on incoming TCP queries.
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+---
+ src/dnsmasq.c | 3 ++-
+ src/network.c | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/dnsmasq.c b/src/dnsmasq.c
+index 6e44c12..6481de8 100644
+--- a/src/dnsmasq.c
++++ b/src/dnsmasq.c
+@@ -1824,7 +1824,8 @@ static void check_dns_listeners(time_t now)
+ 		    addr.addr4 = tcp_addr.in.sin_addr;
+ 		  
+ 		  for (iface = daemon->interfaces; iface; iface = iface->next)
+-		    if (iface->index == if_index)
++		    if (iface->index == if_index &&
++		        iface->addr.sa.sa_family == tcp_addr.sa.sa_family)
+ 		      break;
+ 		  
+ 		  if (!iface && !loopback_exception(listener->tcpfd, tcp_addr.sa.sa_family, &addr, intr_name))
+diff --git a/src/network.c b/src/network.c
+index 732f434..62d32c9 100644
+--- a/src/network.c
++++ b/src/network.c
+@@ -388,10 +388,11 @@ static int iface_allowed(struct iface_param *param, int if_index, char *label,
+   /* check whether the interface IP has been added already 
+      we call this routine multiple times. */
+   for (iface = daemon->interfaces; iface; iface = iface->next) 
+-    if (sockaddr_isequal(&iface->addr, addr))
++    if (sockaddr_isequal(&iface->addr, addr) && iface->index == if_index)
+       {
+ 	iface->dad = !!(iface_flags & IFACE_TENTATIVE);
+ 	iface->found = 1; /* for garbage collection */
++	iface->netmask = netmask;
+ 	return 1;
+       }
+ 
+-- 
+2.24.2 (Apple Git-127)
+

@@ -487,6 +487,15 @@ define Package/ip6tables-mod-nat/description
 iptables extensions for IPv6-NAT targets.
 endef
 
+define Package/libiptc
+$(call Package/iptables/Default)
+  SECTION:=libs
+  CATEGORY:=Libraries
+  DEPENDS:=+libip4tc +libip6tc +libxtables
+  ABI_VERSION:=0
+  TITLE:=IPv4/IPv6 firewall - shared libiptc library (nf compatibility stub)
+endef
+
 define Package/libip4tc
 $(call Package/iptables/Default)
   SECTION:=libs
@@ -618,6 +627,11 @@ define Package/ip6tables-nft/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/ip6tables-nft{,-restore,-save} $(1)/usr/sbin/
 	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/ip6tables{,-restore}-translate $(1)/usr/sbin/
+endef
+
+define Package/libiptc/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libiptc.so.* $(1)/usr/lib/
 endef
 
 define Package/libip4tc/install
