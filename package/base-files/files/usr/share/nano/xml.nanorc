@@ -1,22 +1,18 @@
-## Here is an example for XML files.
+## Here is an example for xml files.
+##
 
-syntax xml "\.([jrsx]html?|jnlp|mml|pom|rng|sgml?|svg|w[as]dl|wsdd|xjb|xml|xs(d|lt?)|xul)$"
+syntax "XML" ".*\.([jrs]?html?|xml|sgml?|rng|vue|mei|musicxml)$"
 header "<\?xml.*version=.*\?>"
 magic "(XML|SGML) (sub)?document"
 comment "<!--|-->"
 
-# The entire content of the tag:
+color white "^.+$"
 color green  start="<" end=">"
-
-# The start and the end of the tag:
-color cyan   "<[^> ]+" ">"
-
-# The strings inside the tag:
-color magenta "\"[^"]*\""
-
-# Comments:
+color cyan   "<[^> ]+"
+color cyan   ">"
 color yellow start="<!DOCTYPE" end="[/]?>"
 color yellow start="<!--" end="-->"
-
-# Escapes:
 color red    "&[^;]*;"
+
+## Trailing spaces
+color ,green "[[:space:]]+$"
