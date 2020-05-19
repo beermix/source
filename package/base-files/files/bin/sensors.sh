@@ -18,11 +18,11 @@ do
 	IFS=""
 	echo -ne "$TOPLEFT$NORMAL"
 
-	COLS=`tput cols`	
+	COLS=`tput cols`
 	FORMAT="%-"$COLS"s\\n"
 	echo "Press Ctrl+C to exit" | awk "{ printf(\"$FORMAT\", \$0) }"
-	echo -ne `/usr/sbin/sensors | 
-		awk "{ printf(\"$FORMAT\", \\$0) }" | 
+	echo -ne `/usr/sbin/sensors |
+		awk "{ printf(\"$FORMAT\", \\$0) }" |
 
 		sed -r "s/( |:)([ +.0-9-]+)(.{1,3}[VMC])(.*)/\1$BOLD$CYAN\2$NORMAL$CYAN\3$NORMAL\4/g" |
 		sed -r "s/= ([ +.0-9-]+)(.{0,4})([,\)])/= $BOLD$GREEN\1$NORMAL$GREEN\2$NORMAL\3/g" |
@@ -30,6 +30,6 @@ do
 		sed -r "s/^(.*):/$BOLD$BROWN\1$NORMAL:/g" |
 		sed -r "s:(ALARM):$BOLD$RED\1$NORMAL:g"
 	`
-
+	grep 'cpu MHz' /proc/cpuinfo
 	sleep 1s
 done
