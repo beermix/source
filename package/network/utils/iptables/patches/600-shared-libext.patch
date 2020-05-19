@@ -81,7 +81,7 @@
  xtables_legacy_multi_SOURCES += xshared.c iptables-restore.c iptables-save.c
  xtables_legacy_multi_LDADD   += ../libxtables/libxtables.la -lm
 @@ -30,7 +33,8 @@ if ENABLE_NFTABLES
- if ENABLE_NFTABLES
+ BUILT_SOURCES += xtables-config-parser.h
  xtables_nft_multi_SOURCES  = xtables-nft-multi.c iptables-xml.c
  xtables_nft_multi_CFLAGS   = ${AM_CFLAGS}
 -xtables_nft_multi_LDADD    = ../extensions/libext.a ../extensions/libext_ebt.a
@@ -97,6 +97,6 @@
 -xtables_nft_multi_LDADD   += ${libmnl_LIBS} ${libnftnl_LIBS} ${libnetfilter_conntrack_LIBS} ../extensions/libext4.a ../extensions/libext6.a ../extensions/libext_ebt.a ../extensions/libext_arpt.a
 +xtables_nft_multi_LDADD   += ${libmnl_LIBS} ${libnftnl_LIBS} ${libnetfilter_conntrack_LIBS}
 +xtables_nft_multi_LDFLAGS += -liptext4 -liptext6 -liptext_arpt
+ # yacc and lex generate dirty code
+ xtables_nft_multi-xtables-config-parser.o xtables_nft_multi-xtables-config-syntax.o: AM_CFLAGS += -Wno-missing-prototypes -Wno-missing-declarations -Wno-implicit-function-declaration -Wno-nested-externs -Wno-undef -Wno-redundant-decls
  xtables_nft_multi_SOURCES += xshared.c
- xtables_nft_multi_LDADD   += ../libxtables/libxtables.la -lm
- endif

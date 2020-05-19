@@ -3,10 +3,6 @@
 IMAGE_KERNEL = $(word 1,$^)
 IMAGE_ROOTFS = $(word 2,$^)
 
-define rootfs_align
-$(patsubst %-256k,0x40000,$(patsubst %-128k,0x20000,$(patsubst %-64k,0x10000,$(patsubst squashfs%,0x4,$(patsubst root.%,%,$(1))))))
-endef
-
 define Build/uImage
 	mkimage -A $(LINUX_KARCH) \
 		-O linux -T kernel \
@@ -113,13 +109,10 @@ endef
 # append a fake/empty uImage header, to fool bootloaders rootfs integrity check
 # for example
 define Build/append-uImage-fakehdr
-	$(eval type=$(word 1,$(1)))
-	$(eval magic=$(word 2,$(1)))
 	touch $@.fakehdr
 	$(STAGING_DIR_HOST)/bin/mkimage \
-		-A $(LINUX_KARCH) -O linux -T $(type) -C none \
-		-n '$(VERSION_DIST) fake $(type)' \
-		$(if $(magic),-M $(magic)) \
+		-A $(LINUX_KARCH) -O linux -T $(1) -C none \
+		-n '$(VERSION_DIST) fake $(1)' \
 		-d $@.fakehdr \
 		-s \
 		$@.fakehdr
@@ -143,13 +136,10 @@ define Build/append-dtb
 endef
 
 define Build/install-dtb
-	$(call locked, \
-		$(foreach dts,$(DEVICE_DTS), \
-			$(CP) \
-				$(DTS_DIR)/$(dts).dtb \
-				$(BIN_DIR)/$(IMG_PREFIX)-$(dts).dtb; \
-		), \
-		install-dtb-$(IMG_PREFIX) \
+	$(foreach dts,$(DEVICE_DTS), \
+		$(CP) \
+			$(DTS_DIR)/$(dts).dtb \
+			$(BIN_DIR)/$(IMG_PREFIX)-$(dts).dtb; \
 	)
 endef
 
@@ -240,7 +230,8 @@ define Build/append-uboot
 endef
 
 define Build/pad-to
-	$(call Image/pad-to,$@,$(1))
+	dd if=$@ of=$@.new bs=$(1) conv=sync
+	mv $@.new $@
 endef
 
 define Build/pad-extra
@@ -269,15 +260,8 @@ define Build/xor-image
 endef
 
 define Build/check-size
-	@[ $$(($(subst k,* 1024,$(subst m, * 1024k,$(if $(1),$(1),$(IMAGE_SIZE)))))) -ge "$$(stat -c%s $@)" ] || { \
+	@[ $$(($(subst k,* 1024,$(subst m, * 1024k,$(1))))) -ge "$$(stat -c%s $@)" ] || { \
 		echo "WARNING: Image file $@ is too big" >&2; \
-		rm -f $@; \
-	}
-endef
-
-define Build/check-kernel-size
-	@[ $$(($(subst k,* 1024,$(subst m, * 1024k,$(1))))) -ge "$$(stat -c%s $(IMAGE_KERNEL))" ] || { \
-		echo "WARNING: Kernel for $@ is too big > $(1)" >&2; \
 		rm -f $@; \
 	}
 endef
