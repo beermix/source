@@ -15,8 +15,9 @@ PKG_RELEASE:=1
 include $(INCLUDE_DIR)/package.mk
 
 define KernelPackage/r8168
-  SUBMENU:=Other modules
-  TITLE:=r8168
+  SUBMENU:=$(NETWORK_DEVICES_MENU)
+  TITLE:=Debian RTL-8169 PCI Driver
+  DEPENDS:=@PCI_SUPPORT +kmod-mii +LINUX_4_19:kmod-phy-realtek
   FILES:=$(PKG_BUILD_DIR)/r8168.ko
  AUTOLOAD:=$(call AutoProbe,r8169)
 endef
