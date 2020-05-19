@@ -110,6 +110,7 @@ CONFIGURE_ARGS += \
 	--disable-systemd  \
 	--disable-module-relay \
 	--disable-module-dircache \
+	--disable-silent-rules \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
