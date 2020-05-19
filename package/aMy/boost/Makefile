@@ -11,13 +11,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=boost
-PKG_VERSION:=1.72.0
-PKG_SOURCE_VERSION:=1_72_0
+PKG_VERSION:=1.73.0
+PKG_SOURCE_VERSION:=1_73_0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_SOURCE_VERSION).tar.bz2
 PKG_SOURCE_URL:=@SF/$(PKG_NAME)/$(PKG_NAME)/$(PKG_VERSION) https://dl.bintray.com/boostorg/release/$(PKG_VERSION)/source/
-PKG_HASH:=59c9b274bc451cf91a9ba1dd2c7fdcaf5d60b1b3aa83f2c9fa143417cc660722
+PKG_HASH:=4eb3b8d442b426dc35346235c8733b5ae35ba431690e38c6a8263dce9fcbb402
 
 PKG_MAINTAINER:=Carlos M. Ferreira <carlosmf.pt@gmail.com>
 PKG_LICENSE:=BSL-1.0
@@ -43,7 +43,7 @@ define Package/boost/Default
 endef
 
 define Package/boost/description
-This package provides the Boost v1.72.0 libraries.
+This package provides the Boost v1.73.0 libraries.
 Boost is a set of free, peer-reviewed, portable C++ source libraries.
 
 This package provides the following run-time libraries:
@@ -79,10 +79,10 @@ There are many more header-only libraries supported by Boost.
 See more at http://www.boost.org/doc/libs/1_72_0/
 endef
 
-PKG_BUILD_DEPENDS:=boost/host
+PKG_BUILD_DEPENDS:=boost/host PACKAGE_python3:python3
 
 #include ../../lang/python/python3-version.mk
-#BOOST_PYTHON3_VER=$(PYTHON3_VERSION)
+BOOST_PYTHON3_VER=$(PYTHON3_VERSION)
 
 BOOST_LIBS =
 
@@ -472,7 +472,7 @@ define Build/InstallDev
 
 	$(INSTALL_DIR) $(1)/usr/lib
 	# copies all cmake files, compiled archive and shared object files
-	$(CP) -v $(PKG_INSTALL_DIR)/lib/*.a $(1)/usr/lib/ || :
+	$(CP) -v $(PKG_INSTALL_DIR)/lib/{*.{a,so*},cmake} $(1)/usr/lib/ || :
 endef
 
 define Host/Install
@@ -482,10 +482,13 @@ endef
 
 define Package/boost/Default/install
 	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/lib/libboost_$(2)*.so* $(1)/usr/lib/
 endef
 
 define Package/boost-test/install
 		$(INSTALL_DIR) $(1)/usr/lib
+		$(CP) $(PKG_INSTALL_DIR)/lib/libboost_unit_test_framework*.so* $(1)/usr/lib/
+		$(CP) $(PKG_INSTALL_DIR)/lib/libboost_prg_exec_monitor*.so* $(1)/usr/lib/
 endef
 
 define BuildBoostLibrary
