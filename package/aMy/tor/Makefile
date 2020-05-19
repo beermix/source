@@ -99,12 +99,17 @@ CONFIGURE_ARGS += \
 	--with-openssl-dir="$(STAGING_DIR)/usr" \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc \
+	--disable-manpage \
+	--disable-html-manual \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
 	--disable-module-dirauth \
+	--disable-systemd  \
+	--disable-module-relay \
+	--disable-module-dircache \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
@@ -113,7 +118,8 @@ CONFIGURE_ARGS += \
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
-		--disable-gcc-hardening
+		--disable-gcc-hardening \
+		--disable-linker-hardening
 else
 	EXTRA_CFLAGS += $(FPIC)
 endif
