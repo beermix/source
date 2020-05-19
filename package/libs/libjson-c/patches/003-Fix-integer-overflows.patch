@@ -19,20 +19,21 @@ printbuf is vulnerable to an out of boundary write on 64 bit systems.
 
 --- a/linkhash.c
 +++ b/linkhash.c
-@@ -498,7 +498,12 @@ int lh_table_insert(struct lh_table *t,
- 	unsigned long h, n;
+@@ -579,9 +579,12 @@ int lh_table_insert_w_hash(struct lh_tab
+ {
+ 	unsigned long n;
  
- 	t->inserts++;
--	if(t->count >= t->size * LH_LOAD_FACTOR) lh_table_resize(t, t->size * 2);
-+	if(t->count >= t->size * LH_LOAD_FACTOR) {
+-	if (t->count >= t->size * LH_LOAD_FACTOR)
+-		if (lh_table_resize(t, t->size * 2) != 0)
++	if (t->count >= t->size * LH_LOAD_FACTOR) {
 +		/* Avoid signed integer overflow with large tables. */
-+		int new_size = (t->size > INT_MAX / 2) ? INT_MAX : (t->size * 2);
-+		if (t->size != INT_MAX)
-+			lh_table_resize(t, new_size);
++		int new_size = INT_MAX / 2 < t->size ? t->size * 2 : INT_MAX;
++		if (t->size == INT_MAX || lh_table_resize(t, new_size) != 0)
+ 			return -1;
 +	}
  
- 	h = t->hash_fn(k);
  	n = h % t->size;
+ 
 --- a/printbuf.c
 +++ b/printbuf.c
 @@ -15,6 +15,7 @@
@@ -43,25 +44,27 @@ printbuf is vulnerable to an out of boundary write on 64 bit systems.
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
-@@ -63,7 +64,16 @@ static int printbuf_extend(struct printb
+@@ -65,9 +66,16 @@ static int printbuf_extend(struct printb
  	if (p->size >= min_size)
  		return 0;
  
--	new_size = json_max(p->size * 2, min_size + 8);
+-	new_size = p->size * 2;
+-	if (new_size < min_size + 8)
+-		new_size =  min_size + 8;
 +	/* Prevent signed integer overflows with large buffers. */
-+	if (min_size > INT_MAX - 8)
-+		return -1;
-+	if (p->size > INT_MAX / 2)
-+		new_size = min_size + 8;
-+	else {
-+		new_size = p->size * 2;
-+		if (new_size < min_size + 8)
-+			new_size = min_size + 8;
-+	}
++  if (min_size > INT_MAX - 8)
++    return -1;
++  if (p->size > INT_MAX / 2)
++    new_size = min_size + 8;
++  else {
++    new_size = p->size * 2;
++    if (new_size < min_size + 8)
++      new_size = min_size + 8;
++  }
  #ifdef PRINTBUF_DEBUG
  	MC_DEBUG("printbuf_memappend: realloc "
  	  "bpos=%d min_size=%d old_size=%d new_size=%d\n",
-@@ -78,6 +88,9 @@ static int printbuf_extend(struct printb
+@@ -82,6 +90,9 @@ static int printbuf_extend(struct printb
  
  int printbuf_memappend(struct printbuf *p, const char *buf, int size)
  {
@@ -71,7 +74,7 @@ printbuf is vulnerable to an out of boundary write on 64 bit systems.
    if (p->size <= p->bpos + size + 1) {
      if (printbuf_extend(p, p->bpos + size + 1) < 0)
        return -1;
-@@ -94,6 +107,9 @@ int printbuf_memset(struct printbuf *pb,
+@@ -98,6 +109,9 @@ int printbuf_memset(struct printbuf *pb,
  
  	if (offset == -1)
  		offset = pb->bpos;

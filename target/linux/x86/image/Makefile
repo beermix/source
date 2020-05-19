@@ -143,6 +143,7 @@ endif
 
 define Image/Build/gzip
 	gzip -f9n $(BIN_DIR)/$(IMG_PREFIX)-combined-$(1).img
+	gzip -f9n $(BIN_DIR)/$(IMG_PREFIX)-rootfs-$(1).img
 endef
 
 ifneq ($(CONFIG_TARGET_IMAGES_GZIP),)
@@ -172,6 +173,7 @@ define Image/Build
 	$(call Image/Build/grub2,$(1))
 	$(call Image/Build/vdi,$(1))
 	$(call Image/Build/vmdk,$(1))
+	$(CP) $(KDIR)/root.$(1) $(BIN_DIR)/$(IMG_PREFIX)-rootfs-$(1).img
   else
 	$(CP) $(KDIR)/root.iso $(BIN_DIR)/$(IMG_PREFIX).iso
   endif
