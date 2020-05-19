@@ -72,8 +72,8 @@ endef
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS) -Os" \
-	CPPFLAGS="$(TARGET_CPPFLAGS)" \
+	CFLAGS="$(TARGET_CFLAGS) -Os -ffunction-sections -fdata-sections -flto" \
+	CPPFLAGS="$(TARGET_CPPFLAGS) -Wl,--gc-sections,--as-needed -flto" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	NO_EXPAT="YesPlease" \
 	NO_MKSTEMPS="YesPlease" \
