@@ -12,13 +12,7 @@ include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 define cc
-	$(HOSTCC) \
-		$(HOST_CFLAGS) \
-		-Wno-unused-parameter \
-		-include endian.h $(HOST_LDFLAGS) \
-		-o $(HOST_BUILD_DIR)/bin/$(firstword $(1)) \
-		$(foreach src,$(1),src/$(src).c) \
-		$(2)
+	$(HOSTCC) $(HOST_CFLAGS) -include endian.h $(HOST_LDFLAGS) -o $(HOST_BUILD_DIR)/bin/$(firstword $(1)) $(foreach src,$(1),src/$(src).c) $(2)
 endef
 
 define Host/Compile
@@ -32,19 +26,23 @@ define Host/Compile
 	$(call cc,dgfirmware)
 	$(call cc,mksenaofw md5, -Wall --std=gnu99)
 	$(call cc,trx2usr)
-	$(call cc,ptgen cyg_crc32)
+	$(call cc,ptgen)
 	$(call cc,srec2bin)
 	$(call cc,mkmylofw)
 	$(call cc,mkcsysimg)
+	$(call cc,mkzynfw)
 	$(call cc,lzma2eva,-lz)
 	$(call cc,mkcasfw)
-	$(call cc,mkfwimage,-lz -Wall -Werror -Wextra -D_FILE_OFFSET_BITS=64)
+	$(call cc,mkfwimage,-lz -Wall)
 	$(call cc,mkfwimage2,-lz)
 	$(call cc,imagetag imagetag_cmdline cyg_crc32)
 	$(call cc,add_header)
 	$(call cc,makeamitbin)
 	$(call cc,encode_crc)
 	$(call cc,nand_ecc)
+	$(call cc,mkplanexfw sha1)
+	$(call cc,mktplinkfw mktplinkfw-lib md5, -Wall -fgnu89-inline)
+	$(call cc,mktplinkfw2 mktplinkfw-lib md5, -fgnu89-inline)
 	$(call cc,tplink-safeloader md5, -Wall --std=gnu99)
 	$(call cc,pc1crypt)
 	$(call cc,osbridge-crc)
@@ -52,6 +50,7 @@ define Host/Compile
 	$(call cc,mkdniimg)
 	$(call cc,mktitanimg)
 	$(call cc,mkchkimg)
+	$(call cc,mkzcfw cyg_crc32)
 	$(call cc,spw303v)
 	$(call cc,zyxbcm)
 	$(call cc,trx2edips)
@@ -61,6 +60,7 @@ define Host/Compile
 	$(call cc,buffalo-tftp buffalo-lib, -Wall)
 	$(call cc,mkwrgimg md5, -Wall)
 	$(call cc,mkwrggimg md5, -Wall)
+	$(call cc,mkedimaximg)
 	$(call cc,mkbrncmdline)
 	$(call cc,mkbrnimg)
 	$(call cc,mkdapimg)
@@ -87,7 +87,6 @@ define Host/Compile
 	$(call cc,dns313-header, -Wall)
 	$(call cc,mksercommfw, -Wall)
 	$(call cc,nec-enc, -Wall --std=gnu99)
-	$(call cc,uimage_padhdr, -Wall -lz)
 endef
 
 define Host/Install
