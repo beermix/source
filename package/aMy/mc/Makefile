@@ -34,7 +34,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/mc
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+glib2 +libncurses
+	DEPENDS:=+glib2 +libncurses +libmount +MC_VFS:libssh2
 	TITLE:=Midnight Commander - a powerful visual file manager
 	URL:=https://www.midnight-commander.org/
 	MENU:=1
@@ -55,7 +55,6 @@ endef
 CONFIGURE_ARGS += \
 	--enable-silent-rules \
 	--disable-tests \
-	--disable-aspell \
 	--disable-doxygen-doc \
 	--disable-doxygen-rtf \
 	--disable-doxygen-xml \
@@ -65,7 +64,6 @@ CONFIGURE_ARGS += \
 	--disable-doxygen-html \
 	--with-homedir=/etc/mc \
 	--with-screen=ncurses \
-	--disable-mclib \
 	--enable-vfs-extfs \
 	--enable-vfs-ftp \
 	--disable-vfs-sftp \
@@ -118,7 +116,7 @@ define Package/mc/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/hlp/mc.hlp $(1)/usr/share/mc/help
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/mc.menu $(1)/etc/mc
 	$(INSTALL_DIR) $(1)/etc/mc/skins
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/skins/*.ini $(1)/etc/mc/skins
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/skins/default.ini $(1)/etc/mc/skins
 	$(INSTALL_DIR) $(1)/etc/mc/mcedit/Syntax
 ifeq ($(CONFIG_MC_DIFFVIEWER),y)
 	ln -sf mc $(1)/usr/bin/mcdiff
@@ -134,6 +132,7 @@ endef
 
 define Package/mc/conffiles
 /etc/mc/mc.menu
+/etc/mc/skins/default.ini
 endef
 
 $(eval $(call BuildPackage,mc))
