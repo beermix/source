@@ -5,12 +5,22 @@
 # See /LICENSE for more information.
 # https://github.com/torproject/tor/tree/release-0.4.2
 # https://github.com/torproject/tor/tree/release-0.4.3
-# https://github.com/torproject/tor/tree/maint-0.3.5
 # https://archive.torproject.org/tor-package-archive/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
+PKG_VERSION:=0.4.3.5
+PKG_RELEASE:=1
+
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://dist.torproject.org/ \
+	https://archive.torproject.org/tor-package-archive
+PKG_HASH:=616a0e4ae688d0e151d46e3e4258565da4d443d1ddbd316db0b90910e2d5d868
+PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
+		Peter Wagner <tripolar@gmx.at>
+PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:torproject:tor
 
 #PKG_VERSION:=ab92fd5
 #PKG_SOURCE_PROTO:=git
@@ -18,11 +28,6 @@ PKG_NAME:=tor
 #PKG_SOURCE_VERSION:=$(PKG_VERSION)
 #PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 #PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-
-PKG_VERSION:=0.4.3.5
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org/
-PKG_HASH:=616a0e4ae688d0e151d46e3e4258565da4d443d1ddbd316db0b90910e2d5d868
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
@@ -91,6 +96,8 @@ endef
 
 define Package/tor/conffiles
 /etc/tor/torrc
+/var/lib/tor/fingerprint
+/var/lib/tor/keys/*
 /etc/config/tor
 endef
 
@@ -106,11 +113,10 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
-	--disable-module-dirauth \
 	--disable-systemd  \
+	--disable-module-dirauth \
 	--disable-module-relay \
 	--disable-module-dircache \
-	--disable-silent-rules \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
@@ -135,6 +141,8 @@ define Package/tor/install
 	$(INSTALL_BIN) ./files/tor.init $(1)/etc/init.d/tor
 	$(INSTALL_DIR) $(1)/etc/tor
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/tor/torrc.sample $(1)/etc/tor/torrc
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/tor.conf $(1)/etc/config/tor
 endef
 
 define Package/tor-gencert/install
