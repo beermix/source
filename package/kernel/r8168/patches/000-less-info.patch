@@ -1,23 +1,7 @@
-diff --git a/src/r8168.h b/src/r8168.h
-index 883d104..63bce9b 100755
---- a/src/r8168.h
-+++ b/src/r8168.h
-@@ -339,10 +339,7 @@ do { \
- #define MODULENAME "r8168"
- #define PFX MODULENAME ": "
- 
--#define GPL_CLAIM "\
--r8168  Copyright (C) 2020  Realtek NIC software team <nicfae@realtek.com> \n \
--This program comes with ABSOLUTELY NO WARRANTY; for details, please see <http://www.gnu.org/licenses/>. \n \
--This is free software, and you are welcome to redistribute it under certain conditions; see <http://www.gnu.org/licenses/>. \n"
-+#define GPL_CLAIM ""
- 
- #ifdef RTL8168_DEBUG
- #define assert(expr) \
-diff --git a/src/r8168_n.c b/src/r8168_n.c
+diff --git a/r8168_n.c b/r8168_n.c
 index 1e24ee3..98bc14c 100755
---- a/src/r8168_n.c
-+++ b/src/r8168_n.c
+--- a/r8168_n.c
++++ b/r8168_n.c
 @@ -26005,8 +26005,6 @@ rtl8168_init_one(struct pci_dev *pdev,
          if (rc)
                  goto err_out;
