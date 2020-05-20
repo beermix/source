@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define KernelPackage/r8168
   SUBMENU:=Network Devices
-  TITLE:=Debian RTL-8168 PCI Driver
+  TITLE:=Debian RealTek RTL-r8168/r8169 PCI Gigabit Ethernet Adapter kernel support
   DEPENDS:=@PCI_SUPPORT +kmod-mii
   FILES:=$(PKG_BUILD_DIR)/r8168.ko
  AUTOLOAD:=$(call AutoProbe,r8168)
