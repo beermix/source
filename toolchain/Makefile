@@ -29,7 +29,7 @@
 curdir:=toolchain
 
 # subdirectories to descend into
-$(curdir)/builddirs := $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_EXTERNAL_TOOLCHAIN),wrapper,kernel-headers binutils gcc/initial gcc/final $(LIBC)) $(if $(CONFIG_NASM),nasm)
+$(curdir)/builddirs := $(if $(CONFIG_GDB),gdb) $(if $(CONFIG_EXTERNAL_TOOLCHAIN),wrapper,kernel-headers binutils gcc/initial gcc/final $(LIBC) fortify-headers) $(if $(CONFIG_NASM),nasm)
 ifdef CONFIG_USE_UCLIBC
   $(curdir)/builddirs += $(LIBC)/utils
 endif
@@ -62,7 +62,7 @@ ifneq ($(ARCH),)
 		cd "$$dir"; \
 		ln -nsf lib lib64; \
 		ln -nsf lib lib32; \
-		mkdir -p stamp lib bin usr/include usr/lib ; \
+		mkdir -p stamp lib usr/include usr/lib ; \
 	); done
 	@grep GCC_VERSION $@ >/dev/null 2>&1 || $(INSTALL_DATA) $(TOPDIR)/toolchain/info.mk $@
 	@touch $@
