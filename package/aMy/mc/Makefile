@@ -34,7 +34,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/mc
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+glib2 +libncurses +libmount
+	DEPENDS:=+glib2 +libncurses
 	TITLE:=Midnight Commander - a powerful visual file manager
 	URL:=https://www.midnight-commander.org/
 	MENU:=1
