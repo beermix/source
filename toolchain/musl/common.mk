@@ -8,15 +8,13 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=musl
-PKG_VERSION:=1.1.24
+PKG_VERSION:=1.2.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=ea9525c8bcf6170df59364c4bcd616de1acf8703
-PKG_MIRROR_HASH:=6975c45b9bfe586ac00dbfcd1b1a13ab110af0528028ab3dee03e23e2c0763e5
-PKG_SOURCE_URL:=git://git.musl-libc.org/musl
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE_URL:=https://git.musl-libc.org/git/musl
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_MIRROR_HASH:=f68308e7182300bf7d48fed740785db2d212216c41df1a6ed9a51d8a370f6120
 
 LIBC_SO_VERSION:=$(PKG_VERSION)
 PATCH_DIR:=$(PATH_PREFIX)/patches
@@ -40,7 +38,7 @@ MUSL_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
-		--enable-debug \
+		--disable-debug \
 		--enable-optimize
 
 define Host/Configure
