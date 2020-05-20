@@ -18,7 +18,7 @@ include $(INCLUDE_DIR)/package.mk
 define KernelPackage/r8168
   SUBMENU:=Network Devices
   TITLE:=RealTek RTL-8168 PCI Gigabit Ethernet Adapter kernel support
-  DEPENDS:=@PCI_SUPPORT +kmod-mii +r8169-firmware +LINUX_4_19:kmod-phy-realtek
+  DEPENDS:=@PCI_SUPPORT +kmod-mii +LINUX_4_19:kmod-phy-realtek
   FILES:=$(PKG_BUILD_DIR)/r8168.ko
  AUTOLOAD:=$(call AutoProbe,r8168)
 endef
