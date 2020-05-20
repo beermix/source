@@ -3,7 +3,8 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/mtorromeo/r8168
+# https://salsa.debian.org/debian/r8168.git
 
 
 include $(TOPDIR)/rules.mk
@@ -15,9 +16,9 @@ PKG_RELEASE:=1
 include $(INCLUDE_DIR)/package.mk
 
 define KernelPackage/r8168
-  SUBMENU:=$(NETWORK_DEVICES_MENU)
+  SUBMENU:=Network Devices
   TITLE:=Debian RTL-8169 PCI Driver
-  DEPENDS:=@PCI_SUPPORT +kmod-mii +LINUX_4_19:kmod-phy-realtek
+  DEPENDS:=@PCI_SUPPORT +kmod-mii +r8169-firmware +LINUX_4_19:kmod-phy-realtek
   FILES:=$(PKG_BUILD_DIR)/r8168.ko
  AUTOLOAD:=$(call AutoProbe,r8169)
 endef
