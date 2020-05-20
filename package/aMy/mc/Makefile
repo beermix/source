@@ -26,15 +26,14 @@ PKG_CONFIG_DEPENDS := \
 	CONFIG_MC_SUBSHELL \
 	CONFIG_MC_LARGEFILE \
 	CONFIG_MC_BACKGROUND \
-	CONFIG_MC_CHARSET \
-	CONFIG_MC_VFS
+	CONFIG_MC_CHARSET
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/mc
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+glib2 +libncurses +libmount +MC_VFS:libssh2
+	DEPENDS:=+glib2 +libncurses +libmount
 	TITLE:=Midnight Commander - a powerful visual file manager
 	URL:=https://www.midnight-commander.org/
 	MENU:=1
