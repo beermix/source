@@ -331,10 +331,7 @@ do { \
 #define MODULENAME "r8168"
 #define PFX MODULENAME ": "
 
-#define GPL_CLAIM "\
-r8168  Copyright (C) 2019  Realtek NIC software team <nicfae@realtek.com> \n \
-This program comes with ABSOLUTELY NO WARRANTY; for details, please see <http://www.gnu.org/licenses/>. \n \
-This is free software, and you are welcome to redistribute it under certain conditions; see <http://www.gnu.org/licenses/>. \n"
+#define GPL_CLAIM ""
 
 #ifdef RTL8168_DEBUG
 #define assert(expr) \
