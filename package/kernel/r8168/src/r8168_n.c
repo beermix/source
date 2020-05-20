@@ -26005,8 +26005,6 @@ rtl8168_init_one(struct pci_dev *pdev,
         if (rc)
                 goto err_out;
 
-        printk(KERN_INFO "%s: This product is covered by one or more of the following patents: US6,570,884, US6,115,776, and US6,327,625.\n", MODULENAME);
-
         rtl8168_disable_rxdvgate(dev);
 
         device_set_wakeup_enable(&pdev->dev, tp->wol_enabled);
