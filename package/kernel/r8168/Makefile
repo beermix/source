@@ -17,10 +17,10 @@ include $(INCLUDE_DIR)/package.mk
 
 define KernelPackage/r8168
   SUBMENU:=Network Devices
-  TITLE:=Debian RTL-8169 PCI Driver
-  DEPENDS:=@PCI_SUPPORT +kmod-mii +r8169-firmware +LINUX_4_19:kmod-phy-realtek
+  TITLE:=Debian RTL-8168 PCI Driver
+  DEPENDS:=@PCI_SUPPORT +kmod-mii
   FILES:=$(PKG_BUILD_DIR)/r8168.ko
- AUTOLOAD:=$(call AutoProbe,r8169)
+ AUTOLOAD:=$(call AutoProbe,r8168)
 endef
 
 MAKE_OPTS:= \
