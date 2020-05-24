@@ -1,7 +1,7 @@
-# DP: updates from the 9 branch upto 20200515 (aa237c6dcee).
+# DP: updates from the 9 branch upto 20200518 (87891f424b2).
 
 LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
-	4212a6a3e44f870412d9025eeb323fd4f50a61da aa237c6dceeeab1455d83a9063ab87afb4a18082 \
+	4212a6a3e44f870412d9025eeb323fd4f50a61da 87891f424b2d167446d693103a09e3adbb083d84 \
 	| awk '/^diff .*\.texi/ {skip=1; next} /^diff / { skip=0 } skip==0' \
 	| grep -v -E '^(diff|index)'
 
@@ -776,7 +776,7 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20200515
++20200518
 --- a/gcc/ada/ChangeLog
 +++ b/gcc/ada/ChangeLog
 @@ -1,3 +1,8 @@
@@ -4399,7 +4399,42 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
     node has been accessed improperly.  */
 --- a/gcc/d/ChangeLog
 +++ b/gcc/d/ChangeLog
-@@ -1,3 +1,15 @@
+@@ -1,3 +1,50 @@
++2020-05-18  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	Backport from mainline
++	2020-03-16  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/92216
++	* decl.cc (make_thunk): Don't set TREE_PUBLIC on thunks if the target
++	function is external to the current compilation.
++
++2020-05-17  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	Backport from mainline
++	2020-05-06  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/94970
++	* d-codegen.cc (force_target_expr): Move create_temporary_var
++	implementation inline here.
++	(create_temporary_var): Remove.
++	(maybe_temporary_var): Remove.
++	(bind_expr): Remove.
++	* d-convert.cc (d_array_convert): Use build_local_temp to generate
++	temporaries, and generate its assignment.
++	* d-tree.h (create_temporary_var): Remove.
++	(maybe_temporary_var): Remove.
++	(d_array_convert): Remove vars argument.
++	* expr.cc (ExprVisitor::visit (CatExp *)): Use build_local_temp to
++	generate temporaries, don't wrap them in a BIND_EXPR.
++	(ExprVisitor::visit (NewExp *)): Likewise.
++
++2020-05-16  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/95155
++	* dmd/dclass.c (ClassDeclaration::semantic): Don't prematurely
++	set done on semantic analysis.
++
 +2020-04-07  Iain Buclaw  <ibuclaw@gdcproject.org>
 +
 +	PR d/94240
@@ -4415,6 +4450,262 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+--- a/gcc/d/d-codegen.cc
++++ b/gcc/d/d-codegen.cc
+@@ -612,7 +612,12 @@ build_target_expr (tree decl, tree exp)
+ tree
+ force_target_expr (tree exp)
+ {
+-  tree decl = create_temporary_var (TREE_TYPE (exp));
++  tree decl = build_decl (input_location, VAR_DECL, NULL_TREE,
++			  TREE_TYPE (exp));
++  DECL_CONTEXT (decl) = current_function_decl;
++  DECL_ARTIFICIAL (decl) = 1;
++  DECL_IGNORED_P (decl) = 1;
++  layout_decl (decl, 0);
+ 
+   return build_target_expr (decl, exp);
+ }
+@@ -1801,66 +1806,6 @@ array_bounds_check (void)
+     }
+ }
+ 
+-/* Return an undeclared local temporary of type TYPE
+-   for use with BIND_EXPR.  */
+-
+-tree
+-create_temporary_var (tree type)
+-{
+-  tree decl = build_decl (input_location, VAR_DECL, NULL_TREE, type);
+-
+-  DECL_CONTEXT (decl) = current_function_decl;
+-  DECL_ARTIFICIAL (decl) = 1;
+-  DECL_IGNORED_P (decl) = 1;
+-  layout_decl (decl, 0);
+-
+-  return decl;
+-}
+-
+-/* Return an undeclared local temporary OUT_VAR initialized
+-   with result of expression EXP.  */
+-
+-tree
+-maybe_temporary_var (tree exp, tree *out_var)
+-{
+-  tree t = exp;
+-
+-  /* Get the base component.  */
+-  while (TREE_CODE (t) == COMPONENT_REF)
+-    t = TREE_OPERAND (t, 0);
+-
+-  if (!DECL_P (t) && !REFERENCE_CLASS_P (t))
+-    {
+-      *out_var = create_temporary_var (TREE_TYPE (exp));
+-      DECL_INITIAL (*out_var) = exp;
+-      return *out_var;
+-    }
+-  else
+-    {
+-      *out_var = NULL_TREE;
+-      return exp;
+-    }
+-}
+-
+-/* Builds a BIND_EXPR around BODY for the variables VAR_CHAIN.  */
+-
+-tree
+-bind_expr (tree var_chain, tree body)
+-{
+-  /* Only handles one var.  */
+-  gcc_assert (TREE_CHAIN (var_chain) == NULL_TREE);
+-
+-  if (DECL_INITIAL (var_chain))
+-    {
+-      tree ini = build_assign (INIT_EXPR, var_chain, DECL_INITIAL (var_chain));
+-      DECL_INITIAL (var_chain) = NULL_TREE;
+-      body = compound_expr (ini, body);
+-    }
+-
+-  return d_save_expr (build3 (BIND_EXPR, TREE_TYPE (body),
+-			      var_chain, body, NULL_TREE));
+-}
+-
+ /* Returns the TypeFunction class for Type T.
+    Assumes T is already ->toBasetype().  */
+ 
+--- a/gcc/d/d-convert.cc
++++ b/gcc/d/d-convert.cc
+@@ -775,21 +775,23 @@ d_array_convert (Expression *exp)
+ 
+ /* Convert EXP to a dynamic array, where ETYPE is the element type.
+    Similar to above, except that EXP is allowed to be an element of an array.
+-   Temporary variables that need some kind of BIND_EXPR are pushed to VARS.  */
++   Temporary variables are created inline if EXP is not an lvalue.  */
+ 
+ tree
+-d_array_convert (Type *etype, Expression *exp, vec<tree, va_gc> **vars)
++d_array_convert (Type *etype, Expression *exp)
+ {
+   Type *tb = exp->type->toBasetype ();
+ 
+   if ((tb->ty != Tarray && tb->ty != Tsarray) || same_type_p (tb, etype))
+     {
+       /* Convert single element to an array.  */
+-      tree var = NULL_TREE;
+-      tree expr = maybe_temporary_var (build_expr (exp), &var);
++      tree expr = build_expr (exp);
+ 
+-      if (var != NULL_TREE)
+-	vec_safe_push (*vars, var);
++      if (!exp->isLvalue ())
++	{
++	  tree var = build_local_temp (TREE_TYPE (expr));
++	  expr = compound_expr (modify_expr (var, expr), var);
++	}
+ 
+       return d_array_value (build_ctype (exp->type->arrayOf ()),
+ 			    size_int (1), build_address (expr));
+--- a/gcc/d/d-tree.h
++++ b/gcc/d/d-tree.h
+@@ -558,8 +558,6 @@ extern tree build_array_from_val (Type *, tree);
+ extern tree void_okay_p (tree);
+ extern tree build_bounds_condition (const Loc &, tree, tree, bool);
+ extern bool array_bounds_check (void);
+-extern tree create_temporary_var (tree);
+-extern tree maybe_temporary_var (tree, tree *);
+ extern tree bind_expr (tree, tree);
+ extern TypeFunction *get_function_type (Type *);
+ extern bool call_by_alias_p (FuncDeclaration *, FuncDeclaration *);
+@@ -583,7 +581,7 @@ extern tree convert_for_assignment (tree, Type *, Type *);
+ extern tree convert_for_argument (tree, Parameter *);
+ extern tree convert_for_condition (tree, Type *);
+ extern tree d_array_convert (Expression *);
+-extern tree d_array_convert (Type *, Expression *, vec<tree, va_gc> **);
++extern tree d_array_convert (Type *, Expression *);
+ 
+ /* In d-incpath.cc.  */
+ extern void add_import_paths (const char *, const char *, bool);
+--- a/gcc/d/decl.cc
++++ b/gcc/d/decl.cc
+@@ -1803,8 +1803,11 @@ make_thunk (FuncDeclaration *decl, int offset)
+ 
+   DECL_CONTEXT (thunk) = d_decl_context (decl);
+ 
+-  /* Thunks inherit the public access of the function they are targetting.  */
+-  TREE_PUBLIC (thunk) = TREE_PUBLIC (function);
++  /* Thunks inherit the public access of the function they are targetting.
++     When the function is outside the current compilation unit however, then the
++     thunk must be kept private to not conflict.  */
++  TREE_PUBLIC (thunk) = TREE_PUBLIC (function) && !DECL_EXTERNAL (function);
++
+   DECL_EXTERNAL (thunk) = 0;
+ 
+   /* Thunks are always addressable.  */
+--- a/gcc/d/dmd/dclass.c
++++ b/gcc/d/dmd/dclass.c
+@@ -395,7 +395,6 @@ void ClassDeclaration::semantic(Scope *sc)
+     }
+     else if (symtab && !scx)
+     {
+-        semanticRun = PASSsemanticdone;
+         return;
+     }
+     semanticRun = PASSsemantic;
+--- a/gcc/d/expr.cc
++++ b/gcc/d/expr.cc
+@@ -691,7 +691,6 @@ public:
+     else
+       etype = tb2->nextOf ();
+ 
+-    vec<tree, va_gc> *elemvars = NULL;
+     tree result;
+ 
+     if (e->e1->op == TOKcat)
+@@ -711,9 +710,7 @@ public:
+ 
+ 	/* Store all concatenation args to a temporary byte[][ndims] array.  */
+ 	Type *targselem = Type::tint8->arrayOf ();
+-	tree var = create_temporary_var (make_array_type (targselem, ndims));
+-	tree init = build_constructor (TREE_TYPE (var), NULL);
+-	vec_safe_push (elemvars, var);
++	tree var = build_local_temp (make_array_type (targselem, ndims));
+ 
+ 	/* Loop through each concatenation from right to left.  */
+ 	vec<constructor_elt, va_gc> *elms = NULL;
+@@ -725,7 +722,7 @@ public:
+ 	      ? (oe = ce->e1)
+ 	      : (ce = (CatExp *)ce->e1, oe = ce->e2)))
+ 	  {
+-	    tree arg = d_array_convert (etype, oe, &elemvars);
++	    tree arg = d_array_convert (etype, oe);
+ 	    tree index = size_int (dim);
+ 	    CONSTRUCTOR_APPEND_ELT (elms, index, d_save_expr (arg));
+ 
+@@ -738,8 +735,8 @@ public:
+ 
+ 	/* Check there is no logic bug in constructing byte[][] of arrays.  */
+ 	gcc_assert (dim == 0);
+-	CONSTRUCTOR_ELTS (init) = elms;
+-	DECL_INITIAL (var) = init;
++	tree init = build_constructor (TREE_TYPE (var), elms);
++	var = compound_expr (modify_expr (var, init), var);
+ 
+ 	tree arrs = d_array_value (build_ctype (targselem->arrayOf ()),
+ 				   size_int (ndims), build_address (var));
+@@ -752,13 +749,10 @@ public:
+ 	/* Handle single concatenation (a ~ b).  */
+ 	result = build_libcall (LIBCALL_ARRAYCATT, e->type, 3,
+ 				build_typeinfo (e->loc, e->type),
+-				d_array_convert (etype, e->e1, &elemvars),
+-				d_array_convert (etype, e->e2, &elemvars));
++				d_array_convert (etype, e->e1),
++				d_array_convert (etype, e->e2));
+       }
+ 
+-    for (size_t i = 0; i < vec_safe_length (elemvars); ++i)
+-      result = bind_expr ((*elemvars)[i], result);
+-
+     this->result_ = result;
+   }
+ 
+@@ -2480,12 +2474,13 @@ public:
+ 	else
+ 	  {
+ 	    /* Multidimensional array allocations.  */
+-	    vec<constructor_elt, va_gc> *elms = NULL;
+-	    Type *telem = e->newtype->toBasetype ();
+ 	    tree tarray = make_array_type (Type::tsize_t, e->arguments->dim);
+-	    tree var = create_temporary_var (tarray);
+-	    tree init = build_constructor (TREE_TYPE (var), NULL);
++	    tree var = build_local_temp (tarray);
++	    vec<constructor_elt, va_gc> *elms = NULL;
+ 
++	    /* Get the base element type for the array, generating the
++	       initializer for the dims parameter along the way.  */
++	    Type *telem = e->newtype->toBasetype ();
+ 	    for (size_t i = 0; i < e->arguments->dim; i++)
+ 	      {
+ 		Expression *arg = (*e->arguments)[i];
+@@ -2496,8 +2491,9 @@ public:
+ 		gcc_assert (telem);
+ 	      }
+ 
+-	    CONSTRUCTOR_ELTS (init) = elms;
+-	    DECL_INITIAL (var) = init;
++	    /* Initialize the temporary.  */
++	    tree init = modify_expr (var, build_constructor (tarray, elms));
++	    var = compound_expr (init, var);
+ 
+ 	    /* Generate: _d_newarraymTX(ti, dims)
+ 		     or: _d_newarraymiTX(ti, dims)  */
+@@ -2510,7 +2506,6 @@ public:
+ 				       build_address (var));
+ 
+ 	    result = build_libcall (libcall, tb, 2, tinfo, dims);
+-	    result = bind_expr (var, result);
+ 	  }
+ 
+ 	if (e->argprefix)
 --- a/gcc/d/typeinfo.cc
 +++ b/gcc/d/typeinfo.cc
 @@ -324,9 +324,29 @@ class TypeInfoVisitor : public Visitor
@@ -5346,6 +5637,14 @@ LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
  extern void incr_ticks_for_insn (rtx_insn *);
  extern void mark_end_of_function_resources (rtx, bool);
  extern void init_resource_info (rtx_insn *);
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
 new file mode 100644
 new file mode 100644
 new file mode 100644
@@ -8312,7 +8611,13 @@ new file mode 100644
 +}
 --- a/libphobos/ChangeLog
 +++ b/libphobos/ChangeLog
-@@ -1,3 +1,15 @@
+@@ -1,3 +1,21 @@
++2020-05-16  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/90719
++	* libdruntime/core/sys/posix/sys/stat.d (Solaris): Move st_pad3 from
++	struct stat64_t to stat32_t.
++
 +2020-04-27  Iain Buclaw  <ibuclaw@gdcproject.org>
 +
 +	PR d/90718
@@ -8343,10 +8648,10 @@ new file mode 100644
          socklen_t ai_addrlen;
 --- a/libphobos/libdruntime/core/sys/posix/sys/stat.d
 +++ b/libphobos/libdruntime/core/sys/posix/sys/stat.d
-@@ -1314,7 +1314,6 @@ else version (Solaris)
+@@ -1348,7 +1348,6 @@ else version (Solaris)
              dev_t st_rdev;
              c_long[2] st_pad2;
-             off_t st_size;
+             off64_t st_size;
 -            c_long st_pad3;
              union
              {
