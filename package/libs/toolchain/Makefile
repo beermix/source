@@ -413,26 +413,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) $(TOOLCHAIN_DIR)/lib/libstdc++.so.* $(1)/usr/lib/
   endef
 
-  define Package/libasan/install
-	$(INSTALL_DIR) $(1)/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libasan.so.* $(1)/lib/
-  endef
-
-  define Package/libtsan/install
-	$(INSTALL_DIR) $(1)/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libtsan.so.* $(1)/lib/
-  endef
-
-  define Package/liblsan/install
-	$(INSTALL_DIR) $(1)/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/liblsan.so.* $(1)/lib/
-  endef
-
-  define Package/libubsan/install
-	$(INSTALL_DIR) $(1)/lib
-	$(CP) $(TOOLCHAIN_DIR)/lib/libubsan.so.* $(1)/lib/
-  endef
-
   define Package/glibc/install
 	$(CP) ./glibc-files/* $(1)/
 	rm -f $(1)/etc/localtime
