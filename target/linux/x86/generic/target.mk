@@ -1,7 +1,6 @@
 BOARDNAME:=Generic
 CPU_TYPE :=pentium4
-FEATURES += pci pcie
-DEFAULT_PACKAGES += kmod-button-hotplug
+FEATURES += audio pci pcie usb
 
 define Target/Description
 	Build firmware images for modern x86 based boards with CPUs
