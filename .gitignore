@@ -27,3 +27,4 @@ TAGS*~
 git-src
 .project
 .cproject
+/scripts/config/mconf_check
