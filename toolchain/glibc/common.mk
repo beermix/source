@@ -41,7 +41,6 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
 # "Optimize i386 syscall inlining for GCC 5"
@@ -66,6 +65,8 @@ GLIBC_CONFIGURE:= \
 		--enable-add-ons \
 		--disable-debug \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
+		$(if $(CONFIG_PKG_CC_STACKPROTECTOR_REGULAR),--enable-stack-protector=yes,) \
+		$(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong,) \
 		--enable-kernel=4.14
 
 export libc_cv_ssp=no
