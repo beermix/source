@@ -12,9 +12,8 @@ CMAKE_INSTALL:=1
 
 PKG_LICENSE:=LGPL-2.1
 PKG_LICENSE_FILES:=
-PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 
-PKG_ASLR_PIE_REGULAR:=1
+PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
