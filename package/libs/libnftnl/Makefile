@@ -43,7 +43,8 @@ TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
 	--enable-static \
-	--enable-shared
+	--enable-shared \
+	--without-json-parsing
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/libnftnl
