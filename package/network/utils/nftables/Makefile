@@ -28,45 +28,33 @@ CONFIGURE_ARGS += \
         --disable-man-doc \
         --with-mini-gmp \
         --without-cli \
-        --disable-python
+        --disable-python \
 
-define Package/nftables/Default
+define Package/nftables
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=Firewall
-  TITLE:=nftables userspace utility
-  DEPENDS:=+kmod-nft-core +libnftnl
+  TITLE:=nftables packet filtering userspace utility
+  DEPENDS:=+kmod-nft-core +libnftnl +PACKAGE_NFT_WITH_JSON:jansson
   URL:=http://netfilter.org/projects/nftables/
-  PROVIDES:=nftables
 endef
 
-define Package/nftables-nojson
-  $(Package/nftables/Default)
-  TITLE+= no JSON support
-  VARIANT:=nojson
-  DEFAULT_VARIANT:=1
+define Package/nftables/config
+	config PACKAGE_NFT_WITH_JSON
+		bool "Build nftables with json support"
+		depends on PACKAGE_nftables
+		default n
 endef
 
-define Package/nftables-json
-  $(Package/nftables/Default)
-  TITLE+= with JSON support
-  VARIANT:=json
-  DEPENDS+=+jansson
-endef
-
-ifeq ($(BUILD_VARIANT),json)
-  CONFIGURE_ARGS += --with-json
+ifeq ($(CONFIG_PACKAGE_NFT_WITH_JSON),y)
+CONFIGURE_ARGS += --with-json
 endif
 
-define Package/nftables/install/Default
+define Package/nftables/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/nft $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
 endef
 
-Package/nftables-nojson/install = $(Package/nftables/install/Default)
-Package/nftables-json/install = $(Package/nftables/install/Default)
-
-$(eval $(call BuildPackage,nftables-nojson))
-$(eval $(call BuildPackage,nftables-json))
+$(eval $(call BuildPackage,nftables))
