@@ -22,13 +22,6 @@ PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
 PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:torproject:tor
 
-#PKG_VERSION:=ab92fd5
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/torproject/tor
-#PKG_SOURCE_VERSION:=$(PKG_VERSION)
-#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
@@ -113,9 +106,8 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
-	--disable-systemd  \
-	--disable-module-dirauth \
 	--disable-module-relay \
+	--disable-module-dirauth \
 	--disable-module-dircache \
 	--with-tor-user=tor \
 	--with-tor-group=tor
@@ -125,8 +117,7 @@ CONFIGURE_ARGS += \
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
-		--disable-gcc-hardening \
-		--disable-linker-hardening
+		--disable-gcc-hardening --disable-linker-hardening
 else
 	EXTRA_CFLAGS += $(FPIC)
 endif
@@ -159,6 +150,7 @@ define Package/tor-geoip/install
 	$(INSTALL_DIR) $(1)/usr/share/tor
 	$(INSTALL_DATA) \
 	  $(PKG_INSTALL_DIR)/usr/share/tor/geoip \
+	  $(PKG_INSTALL_DIR)/usr/share/tor/geoip6 \
 	$(1)/usr/share/tor/
 endef
 
