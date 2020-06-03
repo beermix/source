@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=iperf3
-PKG_VERSION:=99b79f2
+PKG_VERSION:=7457ef8
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/esnet/iperf
@@ -46,7 +46,7 @@ $(call Package/iperf3/default)
 endef
 
 # TARGET_CFLAGS += -D_GNU_SOURCE
-CONFIGURE_ARGS += --disable-shared
+CONFIGURE_ARGS += --disable-shared --without-sctp
 
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS += --with-openssl="$(STAGING_DIR)/usr"
