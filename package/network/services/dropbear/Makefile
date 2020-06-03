@@ -107,9 +107,6 @@ define Build/Configure
 	echo '#define DROPBEAR_CURVE25519 $(if $(CONFIG_DROPBEAR_CURVE25519),1,0)' >> \
 		$(PKG_BUILD_DIR)/localoptions.h
 
-	echo '#define DROPBEAR_ED25519 $(if $(CONFIG_DROPBEAR_ED25519),1,0)' >> \
-		$(PKG_BUILD_DIR)/localoptions.h
-
 	for OPTION in DROPBEAR_ECDSA DROPBEAR_ECDH; do \
 		echo "#define $$$$OPTION $(if $(CONFIG_DROPBEAR_ECC),1,0)" >> \
 			$(PKG_BUILD_DIR)/localoptions.h; \
