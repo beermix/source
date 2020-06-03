@@ -39,9 +39,9 @@ define Package/tinyproxy/conffiles
 /etc/config/tinyproxy
 endef
 
-TARGET_CFLAGS += -D_GNU_SOURCE
+# TARGET_CFLAGS += -D_GNU_SOURCE
 
-# CONFIGURE_VARS += ac_cv_path_A2X=no
+CONFIGURE_VARS += ac_cv_path_A2X=no
 
 define Package/tinyproxy/install
 	$(INSTALL_DIR) $(1)/usr/bin
