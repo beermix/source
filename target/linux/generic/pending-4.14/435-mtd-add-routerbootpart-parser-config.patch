@@ -1,7 +1,7 @@
 From 4437e01fb6bca63fccdba5d6c44888b0935885c2 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thibaut=20VAR=C3=88NE?= <hacks@slashdirt.org>
 Date: Tue, 24 Mar 2020 11:45:07 +0100
-Subject: [PATCH] generic: routerboot partition build bits (5.4)
+Subject: [PATCH] generic: routerboot partition build bits (4.14)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -16,23 +16,21 @@ Signed-off-by: Thibaut VARÈNE <hacks@slashdirt.org>
 
 --- a/drivers/mtd/parsers/Kconfig
 +++ b/drivers/mtd/parsers/Kconfig
-@@ -176,3 +176,12 @@ config MTD_REDBOOT_PARTS_READONLY
- 	  'FIS directory' images, enable this option.
- 
- endif # MTD_REDBOOT_PARTS
+@@ -6,3 +6,12 @@ config MTD_PARSER_TRX
+ 	  may contain up to 3/4 partitions (depending on the version).
+ 	  This driver will parse TRX header and report at least two partitions:
+ 	  kernel and rootfs.
 +
 +config MTD_ROUTERBOOT_PARTS
 +	tristate "RouterBoot flash partition parser"
 +	depends on MTD && OF
 +	help
-+	 MikroTik RouterBoot is implemented as a multi segment system on the
-+	 flash, some of which are fixed and some of which are located at
-+	 variable offsets. This parser handles both cases via properly
-+	 formatted DTS.
++	  MikroTik RouterBoot is implemented as a multi segment system on the
++	  flash, some of which are fixed and some of which are located at
++	  variable offsets. This parser handles both cases via properly
++	  formatted DTS.
 --- a/drivers/mtd/parsers/Makefile
 +++ b/drivers/mtd/parsers/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_MTD_AFS_PARTS)		+= afs.o
+@@ -1 +1,2 @@
  obj-$(CONFIG_MTD_PARSER_TRX)		+= parser_trx.o
- obj-$(CONFIG_MTD_SHARPSL_PARTS)		+= sharpslpart.o
- obj-$(CONFIG_MTD_REDBOOT_PARTS)		+= redboot.o
-+obj-$(CONFIG_MTD_ROUTERBOOT_PARTS)		+= routerbootpart.o
++obj-$(CONFIG_MTD_ROUTERBOOT_PARTS)	+= routerbootpart.o
