@@ -35,8 +35,7 @@ define Package/wireguard/Default
   CATEGORY:=Network
   SUBMENU:=VPN
   URL:=https://www.wireguard.com
-  MAINTAINER:=Jason A. Donenfeld <Jason@zx2c4.com> \
-              Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+  MAINTAINER:=Jason A. Donenfeld <Jason@zx2c4.com>
 endef
 
 define Package/wireguard/Default/description
