@@ -45,8 +45,8 @@ $(call Package/iperf3/default)
   DEPENDS:= +libopenssl
 endef
 
-# TARGET_CFLAGS += -D_GNU_SOURCE
-CONFIGURE_ARGS += --disable-shared --without-sctp
+TARGET_CFLAGS += -D_GNU_SOURCE
+CONFIGURE_ARGS += --disable-shared
 
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS += --with-openssl="$(STAGING_DIR)/usr"
