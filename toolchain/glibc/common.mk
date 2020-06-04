@@ -50,7 +50,7 @@ GLIBC_CONFIGURE:= \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
-		BASH_SHELL=/bin/sh \
+		BASH_SHELL=/bin/bash \
 		--prefix= \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(REAL_GNU_TARGET_NAME) \
@@ -63,10 +63,8 @@ GLIBC_CONFIGURE:= \
 		--disable-debug \
 		--enable-stack-protector=yes \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
-		--enable-kernel=4.14.0
+		--enable-kernel=4.14
 
-# export libc_cv_ssp=no
-# export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
