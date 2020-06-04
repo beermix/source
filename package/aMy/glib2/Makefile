@@ -50,6 +50,7 @@ TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
 HOST_CONFIGURE_ARGS += \
 	--disable-libelf \
 	--disable-selinux \
+	--with-libiconv=gnu \
 	--with-pcre=internal \
 	--disable-libmount
 
@@ -63,6 +64,7 @@ CONFIGURE_ARGS += \
 	--disable-gtk-doc-html \
 	--disable-man \
 	--disable-compile-warnings \
+	--with-libiconv=gnu \
 	--with-pcre=internal
 
 CONFIGURE_VARS += \
