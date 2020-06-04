@@ -117,7 +117,6 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
-		--enable-libgomp \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
@@ -196,8 +195,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -Wl,-z,max-page-size=0x1000" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -g1 -Wl,-z,max-page-size=0x1000" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
