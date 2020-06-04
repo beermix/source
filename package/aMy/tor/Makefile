@@ -19,7 +19,7 @@ PKG_NAME:=tor
 
 PKG_VERSION:=7c7e2e2
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/bminor/bash
+PKG_SOURCE_URL:=https://github.com/torproject/tor
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -110,7 +110,6 @@ CONFIGURE_ARGS += \
 	--disable-zstd \
 	--disable-module-relay \
 	--disable-module-dirauth \
-	--disable-module-dircache \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
@@ -119,7 +118,8 @@ CONFIGURE_ARGS += \
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
-		--disable-gcc-hardening --disable-linker-hardening
+		--disable-gcc-hardening \
+		--disable-linker-hardening
 else
 	EXTRA_CFLAGS += $(FPIC)
 endif
