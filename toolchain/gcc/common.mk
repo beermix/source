@@ -100,7 +100,7 @@ endif
 ifdef CONFIG_GCC_USE_GRAPHITE
   GRAPHITE_CONFIGURE:= --with-isl=$(TOPDIR)/staging_dir/host
 else
-  GRAPHITE_CONFIGURE:= --disable-graphite --with-isl=no
+  GRAPHITE_CONFIGURE:= --without-isl --without-cloog
 endif
 
 GCC_CONFIGURE:= \
@@ -137,7 +137,6 @@ GCC_CONFIGURE:= \
 		--disable-cet \
 		--disable-libada \
 		--without-ppl \
-		--without-cloog \
 		--disable-libssp \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit

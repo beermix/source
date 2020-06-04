@@ -58,10 +58,10 @@ HOST_CONFIGURE_ARGS = \
 	--disable-cet \
 	--without-ppl \
 	--without-cloog \
+	--without-isl \
 	--disable-libada \
 	--disable-libssp \
 	--disable-graphite \
-	--with-isl=no \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
