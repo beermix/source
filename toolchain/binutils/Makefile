@@ -56,6 +56,10 @@ HOST_CONFIGURE_ARGS = \
 	--disable-sim \
 	--disable-gdb \
 	--disable-cet \
+	--without-ppl \
+	--without-cloog \
+	--disable-libada \
+	--disable-libssp \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))

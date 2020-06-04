@@ -135,6 +135,10 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--disable-cet \
+		--disable-libada \
+		--without-ppl \
+		--without-cloog \
+		--disable-libssp \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
