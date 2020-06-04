@@ -52,11 +52,7 @@ config GCC_DEFAULT_SSP
 
 config GCC_LIBSSP
 	bool
-	prompt "Build gcc libssp" if TOOLCHAINOPTS
-	depends on !USE_MUSL && !USE_GLIBC
-	default y if !USE_MUSL || !USE_GLIBC
-	help
-	    Enable Stack-Smashing Protection support
+	default n
 
 config SJLJ_EXCEPTIONS
 	bool
