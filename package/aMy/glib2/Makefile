@@ -30,12 +30,12 @@ HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/nls.mk
+# include $(INCLUDE_DIR)/nls.mk
 
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi
   TITLE:=glib 2.0
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.gtk.org/
@@ -50,7 +50,6 @@ TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
 HOST_CONFIGURE_ARGS += \
 	--disable-libelf \
 	--disable-selinux \
-	--with-libiconv=gnu \
 	--with-pcre=internal \
 	--disable-libmount
 
@@ -64,7 +63,6 @@ CONFIGURE_ARGS += \
 	--disable-gtk-doc-html \
 	--disable-man \
 	--disable-compile-warnings \
-	--with-libiconv=gnu \
 	--with-pcre=internal
 
 CONFIGURE_VARS += \
