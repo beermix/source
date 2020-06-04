@@ -1,5 +1,5 @@
 CC ?= gcc
-CFLAGS += -std=c99 -s -O3
+CFLAGS += -march=bonnell -std=c99 -s -O3
 LIBS = 
 SRC_FILES = *.c
 
