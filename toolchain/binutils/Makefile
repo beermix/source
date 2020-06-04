@@ -60,7 +60,7 @@ HOST_CONFIGURE_ARGS = \
 	--without-cloog \
 	--disable-libada \
 	--disable-libssp \
-	--enable-graphite=no \
+	--disable-graphite \
 	--with-isl=no \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
