@@ -100,7 +100,7 @@ endif
 ifdef CONFIG_GCC_USE_GRAPHITE
   GRAPHITE_CONFIGURE:= --with-isl=$(TOPDIR)/staging_dir/host
 else
-  GRAPHITE_CONFIGURE:= --without-isl --without-cloog
+  GRAPHITE_CONFIGURE:= --enable-graphite=no --with-isl=no
 endif
 
 GCC_CONFIGURE:= \

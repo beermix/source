@@ -60,6 +60,8 @@ HOST_CONFIGURE_ARGS = \
 	--without-cloog \
 	--disable-libada \
 	--disable-libssp \
+	--enable-graphite=no \
+	--with-isl=no \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
