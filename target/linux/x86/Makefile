@@ -15,7 +15,6 @@ MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 
 KERNEL_PATCHVER:=4.14
 KERNEL_TESTING_PATCHVER:=5.4
-
 KERNELNAME:=bzImage
 
 include $(INCLUDE_DIR)/target.mk
