@@ -30,7 +30,7 @@ HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
-# include $(INCLUDE_DIR)/nls.mk
+include $(INCLUDE_DIR)/nls.mk
 
 define Package/glib2
   SECTION:=libs
@@ -62,7 +62,6 @@ CONFIGURE_ARGS += \
 	--disable-fam \
 	--disable-gtk-doc-html \
 	--disable-man \
-	--with-libiconv=no \
 	--disable-compile-warnings \
 	--with-pcre=internal
 
