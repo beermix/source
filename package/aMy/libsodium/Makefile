@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsodium
-PKG_VERSION:=6bae891
+PKG_VERSION:=2ea21b9
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium
@@ -22,7 +22,6 @@ PKG_LICENSE_FILES:=LICENSE
 
 PKG_USE_MIPS16:=0
 PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -53,9 +52,6 @@ endmenu
 endef
 
 CONFIGURE_ARGS+= \
-	--disable-ssp \
-	--with-pthreads \
-	--disable-pie \
 	$(if $(CONFIG_LIBSODIUM_MINIMAL),--enable,--disable)-minimal
 
 define Build/InstallDev
