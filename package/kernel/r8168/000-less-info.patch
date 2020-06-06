@@ -14,3 +14,16 @@ index 883d104..63bce9b 100755
  
  #ifdef RTL8168_DEBUG
  #define assert(expr) \
+diff --git a/r8168_n.c b/r8168_n.c
+index 1e24ee3..98bc14c 100755
+--- a/r8168_n.c
++++ b/r8168_n.c
+@@ -26005,8 +26005,6 @@ rtl8168_init_one(struct pci_dev *pdev,
+         if (rc)
+                 goto err_out;
+ 
+-        printk(KERN_INFO "%s: This product is covered by one or more of the following patents: US6,570,884, US6,115,776, and US6,327,625.\n", MODULENAME);
+-
+         rtl8168_disable_rxdvgate(dev);
+ 
+         device_set_wakeup_enable(&pdev->dev, tp->wol_enabled);
