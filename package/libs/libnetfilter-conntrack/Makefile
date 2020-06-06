@@ -15,8 +15,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:= \
 	http://www.netfilter.org/projects/libnetfilter_conntrack/files/ \
 	ftp://ftp.netfilter.org/pub/libnetfilter_conntrack/
-PKG_HASH:=
-PKG_MAINTAINER:=Yousong Zhou <yszhou4tech@gmail.com>
+PKG_HASH:=0cd13be008923528687af6c6b860f35392d49251c04ee0648282d36b1faec1cf
 
 PKG_FIXUP:=autoreconf
 PKG_LICENSE:=GPL-2.0+

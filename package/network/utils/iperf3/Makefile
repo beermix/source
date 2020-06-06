@@ -7,21 +7,20 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=iperf
-PKG_VERSION:=3.7
-PKG_RELEASE:=1
+PKG_NAME:=iperf3
+PKG_VERSION:=7457ef8
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://downloads.es.net/pub/iperf
-PKG_HASH:=d846040224317caf2f75c843d309a950a7db23f9b44b94688ccbe557d6d1710c
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/esnet/iperf
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_LICENSE:=BSD-3-Clause
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
-
-PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
