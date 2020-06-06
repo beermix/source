@@ -1,7 +1,7 @@
 diff --git a/src/r8168.h b/src/r8168.h
 index b90f19f..d958a08 100755
---- a/src/r8168.h
-+++ b/src/r8168.h
+--- a/r8168.h
++++ b/r8168.h
 @@ -339,11 +339,6 @@ do { \
  #define MODULENAME "r8168"
  #define PFX MODULENAME ": "
