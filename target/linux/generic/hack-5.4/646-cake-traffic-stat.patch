@@ -1,0 +1,58 @@
+From 69fa00eeb9e7a700ae3a8b5e9b4d1908d418796c Mon Sep 17 00:00:00 2001
+From: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Date: Sun, 19 Jan 2020 09:13:22 +0000
+Subject: [PATCH] traffic stats
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+---
+ include/uapi/linux/pkt_sched.h |  2 ++
+ net/sched/sch_cake.c           | 13 ++++++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+--- a/include/uapi/linux/pkt_sched.h
++++ b/include/uapi/linux/pkt_sched.h
+@@ -1077,6 +1077,8 @@ enum {
+ 	TCA_CAKE_TIN_STATS_UNRESPONSIVE_FLOWS,
+ 	TCA_CAKE_TIN_STATS_MAX_SKBLEN,
+ 	TCA_CAKE_TIN_STATS_FLOW_QUANTUM,
++	TCA_CAKE_TIN_STATS_TRAFFIC_BYTES,
++	TCA_CAKE_TIN_STATS_TRAFFIC_TIME,
+ 	__TCA_CAKE_TIN_STATS_MAX
+ };
+ #define TCA_CAKE_TIN_STATS_MAX (__TCA_CAKE_TIN_STATS_MAX - 1)
+--- a/net/sched/sch_cake.c
++++ b/net/sched/sch_cake.c
+@@ -182,6 +182,8 @@ struct cake_tin_data {
+ 
+ 	u32	packets;
+ 	u64	bytes;
++	u64	prev_bytes;
++	ktime_t	prev_time;
+ 
+ 	u32	ack_drops;
+ 
+@@ -2811,6 +2813,8 @@ static int cake_dump_stats(struct Qdisc
+ 	struct nlattr *stats = nla_nest_start_noflag(d->skb, TCA_STATS_APP);
+ 	struct cake_sched_data *q = qdisc_priv(sch);
+ 	struct nlattr *tstats, *ts;
++	ktime_t	now;
++	u64 tin_bytes;
+ 	int i;
+ 
+ 	if (!stats)
+@@ -2860,7 +2864,14 @@ static int cake_dump_stats(struct Qdisc
+ 			goto nla_put_failure;
+ 
+ 		PUT_TSTAT_U64(THRESHOLD_RATE64, b->tin_rate_bps);
+-		PUT_TSTAT_U64(SENT_BYTES64, b->bytes);
++		tin_bytes = b->bytes;
++		now = ktime_get();
++		PUT_TSTAT_U64(SENT_BYTES64, tin_bytes);
++		PUT_TSTAT_U32(TRAFFIC_BYTES, (u32)(tin_bytes - b->prev_bytes));
++		b->prev_bytes = tin_bytes;
++		PUT_TSTAT_U32(TRAFFIC_TIME, ktime_ms_delta(now, b->prev_time));
++		b->prev_time = now;
++
+ 		PUT_TSTAT_U32(BACKLOG_BYTES, b->tin_backlog);
+ 
+ 		PUT_TSTAT_U32(TARGET_US,

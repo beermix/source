@@ -1,0 +1,85 @@
+From 1cf667174f8696af711881355253807ed5cd679c Mon Sep 17 00:00:00 2001
+From: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Date: Sat, 18 Jan 2020 19:44:33 +0000
+Subject: [PATCH] cake traffic
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+---
+ include/uapi/linux/pkt_sched.h |  2 ++
+ tc/q_cake.c                    | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/include/uapi/linux/pkt_sched.h b/include/uapi/linux/pkt_sched.h
+index 8b2f993c..6dc5a866 100644
+--- a/include/uapi/linux/pkt_sched.h
++++ b/include/uapi/linux/pkt_sched.h
+@@ -1075,6 +1075,8 @@ enum {
+ 	TCA_CAKE_TIN_STATS_UNRESPONSIVE_FLOWS,
+ 	TCA_CAKE_TIN_STATS_MAX_SKBLEN,
+ 	TCA_CAKE_TIN_STATS_FLOW_QUANTUM,
++	TCA_CAKE_TIN_STATS_TRAFFIC_BYTES,
++	TCA_CAKE_TIN_STATS_TRAFFIC_TIME,
+ 	__TCA_CAKE_TIN_STATS_MAX
+ };
+ #define TCA_CAKE_TIN_STATS_MAX (__TCA_CAKE_TIN_STATS_MAX - 1)
+diff --git a/tc/q_cake.c b/tc/q_cake.c
+index 307a12c0..15b585e2 100644
+--- a/tc/q_cake.c
++++ b/tc/q_cake.c
+@@ -624,6 +624,8 @@ static int cake_print_xstats(struct qdisc_util *qu, FILE *f,
+ {
+ 	struct rtattr *st[TCA_CAKE_STATS_MAX + 1];
+ 	SPRINT_BUF(b1);
++	__u64 traf_cap;
++	__u32 traf_bps, traf_pct, traf_time;
+ 	int i;
+ 
+ 	if (xstats == NULL)
+@@ -649,11 +651,13 @@ static int cake_print_xstats(struct qdisc_util *qu, FILE *f,
+ 			GET_STAT_U32(MEMORY_LIMIT));
+ 	}
+ 
++	traf_cap = 1;
+ 	if (st[TCA_CAKE_STATS_CAPACITY_ESTIMATE64]) {
+ 		print_string(PRINT_FP, NULL, " capacity estimate: %s\n",
+ 			sprint_rate(GET_STAT_U64(CAPACITY_ESTIMATE64), b1));
+ 		print_uint(PRINT_JSON, "capacity_estimate", NULL,
+ 			GET_STAT_U64(CAPACITY_ESTIMATE64));
++		traf_cap = GET_STAT_U64(CAPACITY_ESTIMATE64);
+ 	}
+ 
+ 	if (st[TCA_CAKE_STATS_MIN_NETLEN] &&
+@@ -800,6 +804,30 @@ static int cake_print_xstats(struct qdisc_util *qu, FILE *f,
+ 		PRINT_TSTAT_U32("  pkts    ", SENT_PACKETS);
+ 		PRINT_TSTAT_U64("  bytes   ", SENT_BYTES64);
+ 
++		fprintf(f, "  traffic%%");
++		for (i = 0; i < num_tins; i++) {
++			traf_bps = rta_getattr_u32(GET_TSTAT(i, TRAFFIC_BYTES));
++			traf_time = rta_getattr_u32(GET_TSTAT(i, TRAFFIC_TIME));
++			traf_pct = 0;
++			if (traf_time)
++				traf_pct = ((traf_bps * 1000ULL) / traf_time) * 100ULL / traf_cap;
++			fprintf(f, " %12u", traf_pct);
++		}
++		fprintf(f, "\n");
++
++		fprintf(f, "  traftin%%");
++		for (i = 0; i < num_tins; i++) {
++			traf_bps = rta_getattr_u32(GET_TSTAT(i, TRAFFIC_BYTES));
++			traf_time = rta_getattr_u32(GET_TSTAT(i, TRAFFIC_TIME));
++			traf_cap = rta_getattr_u64(GET_TSTAT(i, THRESHOLD_RATE64));
++
++			traf_pct = 0;
++			if (traf_time)
++				traf_pct = ((traf_bps * 1000ULL) / traf_time) * 100ULL / traf_cap;
++			fprintf(f, " %12u", traf_pct);
++		}
++		fprintf(f, "\n");
++
+ 		PRINT_TSTAT_U32("  way_inds", WAY_INDIRECT_HITS);
+ 		PRINT_TSTAT_U32("  way_miss", WAY_MISSES);
+ 		PRINT_TSTAT_U32("  way_cols", WAY_COLLISIONS);
+-- 
+2.24.2 (Apple Git-127)
+

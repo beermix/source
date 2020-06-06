@@ -1,0 +1,125 @@
+From 51cdd1a227d448e0c3bfbe6d4150f75511387bc3 Mon Sep 17 00:00:00 2001
+From: Petr Mensik <pemensik@redhat.com>
+Date: Thu, 4 Jul 2019 20:28:08 +0200
+Subject: [PATCH 05/12] Explicitly mark address port not used
+
+On many places return value is ignored. Usually it means port is always
+the same and not needed to be displayed. Unify warnings.
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+---
+ src/dbus.c    | 2 +-
+ src/forward.c | 4 ++--
+ src/network.c | 8 ++++----
+ src/tftp.c    | 6 +++---
+ 4 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/src/dbus.c b/src/dbus.c
+index 4123391..6def129 100644
+--- a/src/dbus.c
++++ b/src/dbus.c
+@@ -237,7 +237,7 @@ static DBusMessage *dbus_reply_server_loop(DBusMessage *message)
+   for (serv = daemon->servers; serv; serv = serv->next)
+     if (serv->flags & SERV_LOOP)
+       {
+-	prettyprint_addr(&serv->addr, daemon->addrbuff);
++	(void)prettyprint_addr(&serv->addr, daemon->addrbuff);
+ 	dbus_message_iter_append_basic (&args_iter, DBUS_TYPE_STRING, &daemon->addrbuff);
+       }
+   
+diff --git a/src/forward.c b/src/forward.c
+index fde554d..428d7e7 100644
+--- a/src/forward.c
++++ b/src/forward.c
+@@ -676,7 +676,7 @@ static size_t process_reply(struct dns_header *header, time_t now, struct server
+   if (!(header->hb4 & HB4_RA) && rcode == NOERROR &&
+       server && !(server->flags & SERV_WARNED_RECURSIVE))
+     {
+-      prettyprint_addr(&server->addr, daemon->namebuff);
++      (void)prettyprint_addr(&server->addr, daemon->namebuff);
+       my_syslog(LOG_WARNING, _("nameserver %s refused to do a recursive query"), daemon->namebuff);
+       if (!option_bool(OPT_LOG))
+ 	server->flags |= SERV_WARNED_RECURSIVE;
+@@ -960,7 +960,7 @@ void reply_query(int fd, int family, time_t now)
+     {
+       forward->sentto->edns_pktsz = SAFE_PKTSZ;
+       forward->sentto->pktsz_reduced = now;
+-      prettyprint_addr(&forward->sentto->addr, daemon->addrbuff);
++      (void)prettyprint_addr(&forward->sentto->addr, daemon->addrbuff);
+       my_syslog(LOG_WARNING, _("reducing DNS packet size for nameserver %s to %d"), daemon->addrbuff, SAFE_PKTSZ);
+     }
+ 
+diff --git a/src/network.c b/src/network.c
+index 79325ac..732f434 100644
+--- a/src/network.c
++++ b/src/network.c
+@@ -643,7 +643,7 @@ int enumerate_interfaces(int reset)
+ 	      if (l->iface->done)
+ 	        {
+ 	          iface = l->iface;
+-	          prettyprint_addr(&iface->addr, daemon->addrbuff);
++	          (void)prettyprint_addr(&iface->addr, daemon->addrbuff);
+ 	          my_syslog(LOG_DEBUG, _("stopped listening on %s(#%d): %s"),
+ 	                    iface->name, iface->index, daemon->addrbuff);
+ 	        }
+@@ -958,7 +958,7 @@ void create_bound_listeners(int dienow)
+ 	new->next = daemon->listeners;
+ 	daemon->listeners = new;
+ 	iface->done = 1;
+-	prettyprint_addr(&iface->addr, daemon->addrbuff);
++	(void)prettyprint_addr(&iface->addr, daemon->addrbuff);
+ 	my_syslog(LOG_DEBUG, _("listening on %s(#%d): %s"),
+ 	          iface->name, iface->index, daemon->addrbuff);
+       }
+@@ -980,7 +980,7 @@ void create_bound_listeners(int dienow)
+       {
+ 	new->next = daemon->listeners;
+ 	daemon->listeners = new;
+-	prettyprint_addr(&if_tmp->addr, daemon->addrbuff);
++	(void)prettyprint_addr(&if_tmp->addr, daemon->addrbuff);
+ 	my_syslog(LOG_DEBUG, _("listening on %s"), daemon->addrbuff);
+       }
+ }
+@@ -1313,7 +1313,7 @@ void pre_allocate_sfds(void)
+ 	errno != 0 &&
+ 	option_bool(OPT_NOWILD))
+       {
+-	prettyprint_addr(&srv->source_addr, daemon->namebuff);
++	(void)prettyprint_addr(&srv->source_addr, daemon->namebuff);
+ 	if (srv->interface[0] != 0)
+ 	  {
+ 	    strcat(daemon->namebuff, " ");
+diff --git a/src/tftp.c b/src/tftp.c
+index d6f3563..3ed2ed6 100644
+--- a/src/tftp.c
++++ b/src/tftp.c
+@@ -322,7 +322,7 @@ void tftp_request(struct listener *listen, time_t now)
+   transfer->opt_blocksize = transfer->opt_transize = 0;
+   transfer->netascii = transfer->carrylf = 0;
+  
+-  prettyprint_addr(&peer, daemon->addrbuff);
++  (void)prettyprint_addr(&peer, daemon->addrbuff);
+   
+   /* if we have a nailed-down range, iterate until we find a free one. */
+   while (!option_bool(OPT_SINGLE_PORT))
+@@ -624,7 +624,7 @@ void check_tftp_listeners(time_t now)
+ 	    {
+ 	      strcpy(daemon->namebuff, transfer->file->filename);
+ 	      sanitise(daemon->namebuff);
+-	      prettyprint_addr(&transfer->peer, daemon->addrbuff);
++	      (void)prettyprint_addr(&transfer->peer, daemon->addrbuff);
+ 	      my_syslog(MS_TFTP | LOG_INFO, endcon ? _("failed sending %s to %s") : _("sent %s to %s"), daemon->namebuff, daemon->addrbuff);
+ 	      /* unlink */
+ 	      *up = tmp;
+@@ -667,7 +667,7 @@ static void handle_tftp(time_t now, struct tftp_transfer *transfer, ssize_t len)
+ 	  char *end = daemon->packet + len;
+ 	  char *err = next(&p, end);
+ 	  
+-	  prettyprint_addr(&transfer->peer, daemon->addrbuff);
++	  (void)prettyprint_addr(&transfer->peer, daemon->addrbuff);
+ 	  
+ 	  /* Sanitise error message */
+ 	  if (!err)
+-- 
+2.24.2 (Apple Git-127)
+

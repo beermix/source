@@ -1,0 +1,77 @@
+From b0701bc2dc51a313e9d023c161e5e08538685e4c Mon Sep 17 00:00:00 2001
+From: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Date: Sat, 18 Jan 2020 15:28:10 +0000
+Subject: [PATCH] rfc8622
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+---
+ net/sched/sch_cake.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+--- a/net/sched/sch_cake.c
++++ b/net/sched/sch_cake.c
+@@ -313,8 +313,8 @@ static const u8 precedence[] = {
+ };
+ 
+ static const u8 diffserv8[] = {
+-	2, 5, 1, 2, 4, 2, 2, 2,
+-	0, 2, 1, 2, 1, 2, 1, 2,
++	2, 0, 1, 2, 4, 2, 2, 2,
++	1, 2, 1, 2, 1, 2, 1, 2,
+ 	5, 2, 4, 2, 4, 2, 4, 2,
+ 	3, 2, 3, 2, 3, 2, 3, 2,
+ 	6, 2, 3, 2, 3, 2, 3, 2,
+@@ -324,7 +324,7 @@ static const u8 diffserv8[] = {
+ };
+ 
+ static const u8 diffserv4[] = {
+-	0, 2, 0, 0, 2, 0, 0, 0,
++	0, 1, 0, 0, 2, 0, 0, 0,
+ 	1, 0, 0, 0, 0, 0, 0, 0,
+ 	2, 0, 2, 0, 2, 0, 2, 0,
+ 	2, 0, 2, 0, 2, 0, 2, 0,
+@@ -335,7 +335,7 @@ static const u8 diffserv4[] = {
+ };
+ 
+ static const u8 diffserv3[] = {
+-	0, 0, 0, 0, 2, 0, 0, 0,
++	0, 1, 0, 0, 2, 0, 0, 0,
+ 	1, 0, 0, 0, 0, 0, 0, 0,
+ 	0, 0, 0, 0, 0, 0, 0, 0,
+ 	0, 0, 0, 0, 0, 0, 0, 0,
+@@ -1515,7 +1515,7 @@ static unsigned int cake_drop(struct Qdi
+ 	return idx + (tin << 16);
+ }
+ 
+-static u8 cake_handle_diffserv(struct sk_buff *skb, u16 wash)
++static u8 cake_handle_diffserv(struct sk_buff *skb, bool wash)
+ {
+ 	int wlen = skb_network_offset(skb);
+ 	u8 dscp;
+@@ -1528,7 +1528,7 @@ static u8 cake_handle_diffserv(struct sk
+ 			return 0;
+ 
+ 		dscp = ipv4_get_dsfield(ip_hdr(skb)) >> 2;
+-		if (wash && dscp)
++		if (wash && dscp > 1)
+ 			ipv4_change_dsfield(ip_hdr(skb), INET_ECN_MASK, 0);
+ 		return dscp;
+ 
+@@ -1539,7 +1539,7 @@ static u8 cake_handle_diffserv(struct sk
+ 			return 0;
+ 
+ 		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) >> 2;
+-		if (wash && dscp)
++		if (wash && dscp > 1)
+ 			ipv6_change_dsfield(ipv6_hdr(skb), INET_ECN_MASK, 0);
+ 		return dscp;
+ 
+@@ -1563,7 +1563,7 @@ static struct cake_tin_data *cake_select
+ 	 * using firewall marks or skb->priority.
+ 	 */
+ 	dscp = cake_handle_diffserv(skb,
+-				    q->rate_flags & CAKE_FLAG_WASH);
++				    !!(q->rate_flags & CAKE_FLAG_WASH));
+ 	mark = (skb->mark & q->fwmark_mask) >> q->fwmark_shft;
+ 
+ 	if (q->tin_mode == CAKE_DIFFSERV_BESTEFFORT)
