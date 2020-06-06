@@ -50,10 +50,17 @@ CMAKE_OPTIONS += \
 	-DLIBCXXABI_INCLUDE_TESTS=OFF \
 	-DLIBCXXABI_LIBDIR_SUFFIX="" \
 	-DLIBCXXABI_INSTALL_LIBRARY=ON \
-	-DLIBCXXABI_ENABLE_SHARED=OFF
+	-DLIBCXXABI_ENABLE_SHARED=OFF \
+	-DLIBCXXABI_LIBCXX_SRC_DIR=$(BUILD_DIR)/libcxx-$(PKG_VERSION).src \
+	-DLIBCXXABI_LIBCXX_INCLUDES=$(BUILD_DIR)/libcxx-$(PKG_VERSION).src/include
 
 TARGET_CXXFLAGS += -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+
+define Build/Prepare
+	$(MAKE) -C $(TOPDIR)/package/libs/libcxx prepare
+	$(call Build/Prepare/Default)
+endef
 
 define Build/InstallDev
 	$(call Build/InstallDev/cmake,$(1))
