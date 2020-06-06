@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsodium
-PKG_VERSION:=2ea21b9
+PKG_VERSION:=a230795
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium
@@ -52,6 +52,7 @@ endmenu
 endef
 
 CONFIGURE_ARGS+= \
+	--disable-ssp \
 	$(if $(CONFIG_LIBSODIUM_MINIMAL),--enable,--disable)-minimal
 
 define Build/InstallDev
