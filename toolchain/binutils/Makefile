@@ -56,7 +56,6 @@ HOST_CONFIGURE_ARGS = \
 	--disable-sim \
 	--disable-gdb \
 	--enable-relro \
-	--with-mmap \
 	--enable-default-hash-style=gnu \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
