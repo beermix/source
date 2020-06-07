@@ -56,7 +56,6 @@ HOST_CONFIGURE_ARGS = \
 	--disable-sim \
 	--disable-gdb \
 	--enable-relro \
-	--with-pic \
 	--with-mmap \
 	--enable-default-hash-style=gnu \
 	$(GRAPHITE_CONFIGURE) \
