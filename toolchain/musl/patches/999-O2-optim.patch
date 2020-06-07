@@ -11,25 +11,3 @@ index b46f8ca4..dbc6c4ef 100644
  CFLAGS_C99FSE = -std=c99 -ffreestanding -nostdinc 
  
  CFLAGS_ALL = $(CFLAGS_C99FSE)
-diff --git a/configure b/configure
-index 86801281..1f7c84b2 100755
---- a/configure
-+++ b/configure
-@@ -37,7 +37,7 @@ Optional features:
- 
- Some influential environment variables:
-   CC                      C compiler command [detected]
--  CFLAGS                  C compiler flags [-Os -pipe ...]
-+  CFLAGS                  C compiler flags [-O2 -pipe ...]
-   CROSS_COMPILE           prefix for cross compiler and tools [none]
-   LIBCC                   compiler runtime library [detected]
- 
-@@ -425,7 +425,7 @@ xno|x) printf "disabled\n" ; optimize=no ;;
- *) printf "custom\n" ;;
- esac
- 
--test "$optimize" = no || tryflag CFLAGS_AUTO -Os || tryflag CFLAGS_AUTO -O2
-+test "$optimize" = no || tryflag CFLAGS_AUTO -O2 || tryflag CFLAGS_AUTO -O2
- test "$optimize" = yes && optimize="internal,malloc,string"
- 
- if fnmatch 'no|size' "$optimize" ; then :
