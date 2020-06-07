@@ -54,7 +54,6 @@ CONFIGURE_ARGS = \
 	--disable-pmem \
 	--disable-native \
 	--disable-shm \
-	--enable-optimizations \
 	--disable-tcmalloc \
 	--cc="$(TARGET_CC)" \
 	--extra-cflags="$(TARGET_CFLAGS)" \
