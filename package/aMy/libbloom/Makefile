@@ -8,21 +8,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libbloom
-PKG_VERSION:=07136f9
+PKG_VERSION:=1.6
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/jvirkki/libbloom
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=v$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/jvirkki/libbloom/archive
+
+PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/libbloom
+define Package/libbloom/Default
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=libbloom
-  DEPENDS:=+libpthread +librt
+  DEPENDS:=+check
 endef
 
 define Build/InstallDev
