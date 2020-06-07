@@ -1,0 +1,3 @@
+FROM rustembedded/cross:i686-unknown-linux-musl
+
+ENV RUSTFLAGS="-Ctarget-feature=+ssse3"
