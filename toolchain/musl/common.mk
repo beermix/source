@@ -38,7 +38,7 @@ MUSL_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--enable-optimize=* \
 		--disable-gcc-wrapper \
-		--disable-debug
+		--enable-debug
 
 define Host/Configure
 	ln -snf $(PKG_NAME)-$(PKG_VERSION) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
