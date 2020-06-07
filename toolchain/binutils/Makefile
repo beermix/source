@@ -28,12 +28,12 @@ ifeq ($(PKG_VERSION),2.32)
 endif
 
 ifeq ($(PKG_VERSION),2.34)
-  #PKG_HASH:=f00b0e8803dc9bab1e2165bd568528135be734df3fabf8d0161828cd56028952
-  PKG_SOURCE_PROTO:=git
-  KG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-  PKG_SOURCE_VERSION:=8a17fb0
-  PKG_SOURCE_URL:=git://sourceware.org/git/binutils-gdb.git
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+  PKG_HASH:=f00b0e8803dc9bab1e2165bd568528135be734df3fabf8d0161828cd56028952
+  #PKG_SOURCE_PROTO:=git
+  #PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+  #PKG_SOURCE_VERSION:=8a17fb0
+  #PKG_SOURCE_URL:=git://sourceware.org/git/binutils-gdb.git
+  #PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
 HOST_BUILD_PARALLEL:=1
@@ -71,7 +71,7 @@ define Host/Prepare
 	ln -snf $(notdir $(HOST_BUILD_DIR)) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 	$(CP) $(SCRIPT_DIR)/config.{guess,sub} $(HOST_BUILD_DIR)/
 	$(SED) 's, " Linaro.*,,' $(HOST_BUILD_DIR)/bfd/version.h
-	$(SED) '/^development=/s/true/false/' $(HOST_BUILD_DIR)/bfd/development.sh
+	#$(SED) '/^development=/s/true/false/' $(HOST_BUILD_DIR)/bfd/development.sh
 endef
 
 define Host/Compile
