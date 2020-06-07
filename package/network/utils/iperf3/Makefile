@@ -22,6 +22,8 @@ PKG_LICENSE:=BSD-3-Clause
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
+PKG_FIXUP:=autoreconf
+
 include $(INCLUDE_DIR)/package.mk
 
 DISABLE_NLS:=
