@@ -24,8 +24,8 @@ define Build/Compile
 endef
 
 define Package/mdig/install
-	$(INSTALL_DIR) $(1)/root/zapret/mdig
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mdig $(1)/root/zapret/mdig
+	$(INSTALL_DIR) $(1)/usr/bin/mdig
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mdig $(1)/usr/bin/mdig
 endef
 
 $(eval $(call BuildPackage,mdig))
