@@ -24,8 +24,8 @@ define Build/Compile
 endef
 
 define Package/ip2net/install
-	$(INSTALL_DIR) $(1)/opt/zapret/ip2net
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ip2net $(1)/opt/zapret/ip2net
+	$(INSTALL_DIR) $(1)/root/zapret/ip2net
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ip2net $(1)/root/zapret/ip2net
 endef
 
 $(eval $(call BuildPackage,ip2net))
