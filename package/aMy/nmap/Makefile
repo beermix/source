@@ -26,10 +26,10 @@ PKG_CPE_ID:=cpe:/a:nmap:nmap
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
-#PYTHON3_PKG_BUILD:=0
+PYTHON3_PKG_BUILD:=0
 
 include $(INCLUDE_DIR)/package.mk
-#include ../../lang/python/python3-package.mk
+include ../../lang/python/python3-package.mk
 
 NMAP_DEPENDS:=+libpcap +libstdcpp +zlib +libpcre
 NCAT_DEPENDS:=+libpcap
@@ -100,7 +100,7 @@ endef
 
 define Package/ndiff
 $(call Package/nmap/default)
-  #DEPENDS:=+python3-light +python3-xml
+  DEPENDS:=+python3-light +python3-xml
   TITLE:=Utility to compare the results of Nmap scans
 endef
 
@@ -116,9 +116,9 @@ CONFIGURE_ARGS += \
 	--without-nmap-update \
 	--without-subversion \
 	--without-zenmap
-	# --with-libnbase=included
-	# --with-libnsock=included
-	# --without-apr
+	 --with-libnbase=included
+	 --with-libnsock=included
+	 --without-apr
 
 ifeq ($(BUILD_VARIANT),full)
   CONFIGURE_ARGS += \
@@ -145,8 +145,8 @@ endif
 CONFIGURE_VARS += \
 	ac_cv_dnet_bsd_bpf=no
 
-#PYTHON3_PKG_SETUP_DIR:=ndiff
-#PYTHON3_PKG_SETUP_ARGS:=
+PYTHON3_PKG_SETUP_DIR:=ndiff
+PYTHON3_PKG_SETUP_ARGS:=
 
 define Build/Compile
 	$(call Build/Compile/Default,)
