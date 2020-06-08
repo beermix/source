@@ -27,6 +27,7 @@ endef
 ALLWIFIBOARDS:= \
 	8dev_habanero-dvk \
 	aruba_ap-303 \
+	asrock_g10 \
 	avm_fritzrepeater-1200 \
 	cellc_rtl30vw \
 	dlink_dap2610 \
@@ -43,7 +44,7 @@ define Package/ipq-wifi-default
   SUBMENU:=ath10k Board-Specific Overrides
   SECTION:=firmware
   CATEGORY:=Firmware
-  DEPENDS:=@TARGET_ipq40xx
+  DEPENDS:=@(TARGET_ipq40xx||TARGET_ipq806x)
   TITLE:=Custom Board
 endef
 
@@ -57,10 +58,12 @@ define ipq-wifi-install-one
     $(call ipq-wifi-install-one-to,$(1),$(2),QCA4019/hw1.0),\
   $(if $(filter $(suffix $(1)),.QCA9888 .qca9888),\
     $(call ipq-wifi-install-one-to,$(1),$(2),QCA9888/hw2.0),\
+  $(if $(filter $(suffix $(1)),.QCA9980 .qca9980),\
+    $(call ipq-wifi-install-one-to,$(1),$(2),QCA9980/hw2.0),\
   $(if $(filter $(suffix $(1)),.QCA9984 .qca9984),\
     $(call ipq-wifi-install-one-to,$(1),$(2),QCA9984/hw1.0),\
     $(error Unrecognized board-file suffix '$(suffix $(1))' for '$(1)')\
-  )))
+  ))))
 
 endef
 # Blank line required at end of above define due to foreach context
@@ -98,6 +101,7 @@ endef
 
 $(eval $(call generate-ipq-wifi-package,8dev_habanero-dvk,8devices Habanero DVK))
 $(eval $(call generate-ipq-wifi-package,aruba_ap-303,Aruba AP-303))
+$(eval $(call generate-ipq-wifi-package,asrock_g10,ASRock G10))
 $(eval $(call generate-ipq-wifi-package,avm_fritzrepeater-1200,AVM FRITZRepeater 1200))
 $(eval $(call generate-ipq-wifi-package,cellc_rtl30vw, Cell C RTL30VW))
 $(eval $(call generate-ipq-wifi-package,dlink_dap2610,D-Link DAP-2610))
