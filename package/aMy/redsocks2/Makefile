@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=redsocks2
-PKG_VERSION:=d94c245
+PKG_VERSION:=release-0.67
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/semigodking/redsocks
@@ -45,6 +45,8 @@ define Package/redsocks2/description
  Also included is a small DNS server returning answers with the "truncated" flag
  set for any UDP query, forcing the resolver to use TCP.
 endef
+
+#MAKE_FLAGS+=USE_CRYPTO_POLARSSL=true
 
 define Package/redsocks2/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
