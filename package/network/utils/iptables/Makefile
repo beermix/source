@@ -108,7 +108,7 @@ endef
 define Package/iptables-nft
 $(call Package/iptables/Default)
   TITLE:=IP firewall administration tool nft
-  DEPENDS:=iptables @IPTABLES_NFTABLES +libxtables-nft
+  DEPENDS:=ip6tables @IPTABLES_NFTABLES +libxtables-nft
 endef
 
 define Package/iptables-nft/description
