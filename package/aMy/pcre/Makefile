@@ -64,7 +64,6 @@ CONFIGURE_ARGS += \
 	--enable-unicode-properties \
 	--enable-pcre16 \
 	$(if $(CONFIG_PCRE_JIT_ENABLED),--enable-jit,--disable-jit) \
-	--with-match-limit-recursion=16000 \
 	$(if $(CONFIG_PACKAGE_libpcrecpp),--enable,--disable)-cpp
 
 MAKE_FLAGS += \

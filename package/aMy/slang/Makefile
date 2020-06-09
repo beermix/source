@@ -16,6 +16,7 @@ PKG_SOURCE_URL:=https://www.jedsoft.org/releases/slang
 PKG_HASH:=bbf7f2dcc14e7c7fca40868fd4b411a2bd9e2655
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -30,13 +31,34 @@ endef
 # TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 # TARGET_LDFLAGS += -Wl,--gc-sections
 
-CONFIGURE_ARGS += --without-iconv --without-onig --with-pcre --without-png --without-z --without-x
+CONFIGURE_ARGS += \
+	--without-iconv \
+	--without-onig \
+	--with-pcre \
+	--without-png \
+	--without-z \
+	--without-x
+
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/libslang.so* \
+		$(1)/usr/lib/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/* \
+		$(1)/usr/lib/pkgconfig/
+
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/include/*.h \
+		$(1)/usr/include/
+endef
 
 define Package/slang/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
-	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/*.h $(1)/usr/include/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/libslang.so.* \
+		$(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,slang))
