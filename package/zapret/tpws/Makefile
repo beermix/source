@@ -1,3 +1,5 @@
+#
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tpws
@@ -10,8 +12,7 @@ define Package/tpws
 	CATEGORY:=Network
 	TITLE:=tpws
 	SUBMENU:=Zapret
- 	DEPENDS:=+zlib +libcap +iptables-mod-extra +iptables-mod-filter \
- 	+iptables-mod-ipopt +iptables-mod-conntrack-extra +iptables-mod-tproxy +kmod-ipt-raw
+ 	DEPENDS:=+zlib +libcap
 endef
 
 define Build/Prepare
@@ -24,8 +25,8 @@ define Build/Compile
 endef
 
 define Package/tpws/install
-	$(INSTALL_DIR) $(1)/usr/bin/tpws
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tpws $(1)/usr/bin/tpws
+	$(INSTALL_DIR) $(1)/opt/zapret/tpws
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tpws $(1)/opt/zapret/tpws
 endef
 
 $(eval $(call BuildPackage,tpws))
