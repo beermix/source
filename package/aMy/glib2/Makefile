@@ -22,19 +22,18 @@ PKG_CPE_ID:=cpe:/a:gnome:glib
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=meson/host libiconv/host
-HOST_BUILD_DEPENDS:=meson/host libiconv/host libffi/host
+PKG_BUILD_DEPENDS:=meson/host
+HOST_BUILD_DEPENDS:=meson/host libffi/host
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/nls.mk
 include ../../../feeds/packages/devel/meson/meson.mk
 
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) +zlib +libpthread +libffi +libpcre
+  DEPENDS:=+zlib +libpthread +libffi +libpcre
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
@@ -43,9 +42,8 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-HOST_LDFLAGS += -liconv
 TARGET_CFLAGS += -Os -fno-stack-protector -U_FORTIFY_SOURCE -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections -liconv
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
 	-Dselinux=disabled \

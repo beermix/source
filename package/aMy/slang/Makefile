@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 OpenWrt.org
+# Copyright (C) 2020 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -24,17 +24,16 @@ define Package/slang
   SECTION:=libs
   CATEGORY:=Libraries
   CATEGORY:=Utilities
-  DEPENDS:=+libpcre
+  #DEPENDS:=+libpcre
   TITLE:=slang
 endef
 
-# TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-# TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_CFLAGS += -Os
 
 CONFIGURE_ARGS += \
 	--without-iconv \
 	--without-onig \
-	--with-pcre \
+	--without-pcre \
 	--without-png \
 	--without-z \
 	--without-x
@@ -47,6 +46,7 @@ define Build/InstallDev
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/* \
 		$(1)/usr/lib/pkgconfig/
+	$(SED) 's,includedir=.*,includedir=$$$${prefix}/include,' $(1)/usr/lib/pkgconfig/slang.pc
 
 	$(INSTALL_DIR) $(1)/usr/include
 	$(CP) \
