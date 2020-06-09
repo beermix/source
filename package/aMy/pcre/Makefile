@@ -23,6 +23,7 @@ PKG_CPE_ID:=cpe:/a:pcre:pcre
 PKG_FIXUP:=autoreconf
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 
 PKG_CONFIG_DEPENDS:=\
 	CONFIG_PACKAGE_libpcrecpp \

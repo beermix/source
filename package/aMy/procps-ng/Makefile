@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@SF/procps-ng
-PKG_HASH:=
+PKG_HASH:=925eacd65dedcf9c98eb94e8978bbfb63f5de37294cc1047d81462ed477a20af
 
 PKG_MAINTAINER:=
 PKG_LICENSE:=GPL-2.0-or-later
@@ -22,11 +22,10 @@ PKG_LICENSE_FILES:=COPYING COPYING.LIB
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
-PKG_BUILD_DEPENDS:=gettext libiconv
 
 include $(INCLUDE_DIR)/package.mk
 
-CONFIGURE_ARGS += --enable-skill --disable-modern-top
+CONFIGURE_ARGS += --enable-skill
 
 # most of these have alternatives provided by busybox applets
 PROCPS_APPLETS := \

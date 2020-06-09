@@ -3,17 +3,17 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://brick.kernel.dk/snaps/?C=M;O=D 
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fio
-PKG_VERSION:=3.19
-PKG_RELEASE:=2
+PKG_VERSION:=3.20
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://brick.kernel.dk/snaps
-PKG_HASH:=4b6db7eaee26d6fd33bf210eb73b6d37f5d45adcc88726866ad030565f3ccc06
+PKG_HASH:=87a539ecebce3d8281ff9c653e9978302f91c72534273e85ef37a980ac5398d7
 
 PKG_MAINTAINER:=
 PKG_LICENSE:=GPL-2.0-or-later
@@ -54,6 +54,7 @@ CONFIGURE_ARGS = \
 	--disable-pmem \
 	--disable-native \
 	--disable-shm \
+	--disable-optimizations \
 	--disable-tcmalloc \
 	--cc="$(TARGET_CC)" \
 	--extra-cflags="$(TARGET_CFLAGS)" \
