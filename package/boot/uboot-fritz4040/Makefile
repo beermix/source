@@ -46,11 +46,6 @@ define U-Boot/fritz7530
   BUILD_DEVICES:=avm_fritzbox-7530
 endef
 
-define U-Boot/rt_ac58u
-  NAME:=RT-AC58U
-  BUILD_DEVICES:=asus_rt-ac58u
-endef
-
 UBOOT_CONFIGURE_VARS += USE_PRIVATE_LIBGCC=yes
 UBOOT_MAKE_FLAGS = USE_PRIVATE_LIBGCC=yes
 export DTC
@@ -64,9 +59,7 @@ endef
 
 define Build/Compile
 	$(Build/Compile/U-Boot)
-	$(if $(filter rt-ac58u,$(UBOOT_BOARD)),
-		$(CP) $(PKG_BUILD_DIR)/u-boot.bin $(PKG_BUILD_DIR)/$(UBOOT_IMAGE);,
-		(cd $(PKG_BUILD_DIR); ./fritz/fritzcreator.sh $(UBOOT_BOARD);))
+	(cd $(PKG_BUILD_DIR); ./fritz/fritzcreator.sh $(UBOOT_BOARD);)
 endef
 
 define Build/InstallDev
@@ -79,6 +72,6 @@ define Package/u-boot/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/upload-to-f4040.sh $(1)/
 endef
 
-UBOOT_TARGETS := fritz1200 fritz3000 fritz4040 fritz7530 rt-ac58u
+UBOOT_TARGETS := fritz1200 fritz3000 fritz4040 fritz7530
 
 $(eval $(call BuildPackage/U-Boot))
