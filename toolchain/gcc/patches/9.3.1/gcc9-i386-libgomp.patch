@@ -1,5 +1,5 @@
---- libgomp/configure.tgt.jj	2008-01-10 20:53:48.000000000 +0100
-+++ libgomp/configure.tgt	2008-03-27 12:44:51.000000000 +0100
+--- a/libgomp/configure.tgt.jj	2008-01-10 20:53:48.000000000 +0100
++++ b/libgomp/configure.tgt	2008-03-27 12:44:51.000000000 +0100
 @@ -67,7 +67,7 @@ if test $enable_linux_futex = yes; then
  	    ;;
  	  *)

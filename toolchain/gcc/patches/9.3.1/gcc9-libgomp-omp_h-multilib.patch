@@ -2,8 +2,8 @@
 
 	* omp.h.in (omp_nest_lock_t): Fix up for Linux multilibs.
 
---- libgomp/omp.h.in.jj	2008-06-09 13:34:05.000000000 +0200
-+++ libgomp/omp.h.in	2008-06-09 13:34:48.000000000 +0200
+--- a/libgomp/omp.h.in.jj	2008-06-09 13:34:05.000000000 +0200
++++ b/libgomp/omp.h.in	2008-06-09 13:34:48.000000000 +0200
 @@ -42,8 +42,8 @@ typedef struct
  
  typedef struct
