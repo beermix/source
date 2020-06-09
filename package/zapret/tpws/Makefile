@@ -25,8 +25,8 @@ define Build/Compile
 endef
 
 define Package/tpws/install
-	$(INSTALL_DIR) $(1)/usr/bin/tpws
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tpws $(1)/usr/bin/tpws
+	$(INSTALL_DIR) $(1)/opt/zapret/tpws
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tpws $(1)/opt/zapret/tpws
 endef
 
 $(eval $(call BuildPackage,tpws))
