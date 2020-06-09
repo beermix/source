@@ -12,7 +12,7 @@ define Package/nfqws
 	CATEGORY:=Network
 	TITLE:=nfqws
 	SUBMENU:=Zapret
- 	DEPENDS:=+libnetfilter-queue +libcap +zlib
+ 	DEPENDS:=+libnetfilter-queue +libcap +zlib +iptables-mod-nfqueue
 endef
 
 define Build/Prepare
@@ -25,8 +25,8 @@ define Build/Compile
 endef
 
 define Package/nfqws/install
-	$(INSTALL_DIR) $(1)/opt/zapret/nfq
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nfqws $(1)/opt/zapret/nfq
+	$(INSTALL_DIR) $(1)/usr/bin/nfq
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nfqws $(1)/usr/bin/nfq
 endef
 
 $(eval $(call BuildPackage,nfqws))
