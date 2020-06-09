@@ -27,8 +27,8 @@ define Package/slang
   TITLE:=slang
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections
+# TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+# TARGET_LDFLAGS += -Wl,--gc-sections
 
 CONFIGURE_ARGS += --without-iconv --without-onig --with-pcre --without-png --without-z --without-x
 
