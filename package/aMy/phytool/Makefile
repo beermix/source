@@ -41,7 +41,6 @@ endef
 define Package/phytool/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/phytool $(1)/usr/bin/
-	$(LN) phytool $(1)/usr/bin/mv6tool
 endef
 
 $(eval $(call BuildPackage,phytool))

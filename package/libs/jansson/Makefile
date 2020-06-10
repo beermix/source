@@ -44,4 +44,3 @@ define Package/jansson/install
 endef
 
 $(eval $(call BuildPackage,jansson))
-
