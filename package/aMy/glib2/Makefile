@@ -45,7 +45,7 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
+TARGET_CFLAGS += -Os $(FPIC) -ffunction-sections -fdata-sections -flto
 
 HOST_CONFIGURE_ARGS += \
 	--disable-libelf \
