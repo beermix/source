@@ -1,22 +1,26 @@
+diff --git a/aclocal.m4 b/aclocal.m4
+index 09260c46..8392fc1c 100644
 --- a/aclocal.m4
 +++ b/aclocal.m4
-@@ -454,7 +454,7 @@ AC_REQUIRE([CF_PROG_AR])
+@@ -486,7 +486,7 @@ AC_CACHE_CHECK(for options to update archives, cf_cv_ar_flags,[
+ 		;;
+ 	(*)
+ 		cf_cv_ar_flags=unknown
+-		for cf_ar_flags in -curvU -curv curv -crv crv -cqv cqv -rv rv
++		for cf_ar_flags in -curvD -curv curv -crv crv -cqv cqv -rv rv
+ 		do
  
- AC_CACHE_CHECK(for options to update archives, cf_cv_ar_flags,[
- 	cf_cv_ar_flags=unknown
--	for cf_ar_flags in -curvU -curv curv -crv crv -cqv cqv -rv rv
-+	for cf_ar_flags in -curvD -curv curv -crv crv -cqv cqv -rv rv
- 	do
- 
- 		# check if $ARFLAGS already contains this choice
+ 			# check if $ARFLAGS already contains this choice
+diff --git a/configure b/configure
+index b3b29cef..aa22c139 100755
 --- a/configure
 +++ b/configure
-@@ -4751,7 +4751,7 @@ if test "${cf_cv_ar_flags+set}" = set; t
- else
+@@ -4771,7 +4771,7 @@ else
+ 		;;
+ 	(*)
+ 		cf_cv_ar_flags=unknown
+-		for cf_ar_flags in -curvU -curv curv -crv crv -cqv cqv -rv rv
++		for cf_ar_flags in -curvD -curv curv -crv crv -cqv cqv -rv rv
+ 		do
  
- 	cf_cv_ar_flags=unknown
--	for cf_ar_flags in -curvU -curv curv -crv crv -cqv cqv -rv rv
-+	for cf_ar_flags in -curvD -curv curv -crv crv -cqv cqv -rv rv
- 	do
- 
- 		# check if $ARFLAGS already contains this choice
+ 			# check if $ARFLAGS already contains this choice
