@@ -33,7 +33,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/mc
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+glib2 +slang +libmount
+	DEPENDS:=+glib2 +libncurses +libmount
 	TITLE:=Midnight Commander - a powerful visual file manager
 	URL:=https://www.midnight-commander.org/
 	MENU:=1
@@ -63,7 +63,7 @@ CONFIGURE_ARGS += \
 	--disable-doxygen-dot \
 	--disable-doxygen-html \
 	--with-homedir=/etc/mc \
-	--with-screen=slang \
+	--with-screen=ncurses \
 	--enable-vfs-extfs \
 	--enable-vfs-ftp \
 	--disable-vfs-sftp \

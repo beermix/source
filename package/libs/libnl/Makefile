@@ -82,7 +82,7 @@ endef
 TARGET_CFLAGS += -ffunction-sections -fdata-sections $(FPIC)
 
 CONFIGURE_ARGS += \
-	--disable-debug
+	--disable-debug --disable-static
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/libnl3 $(1)/usr/lib/pkgconfig
