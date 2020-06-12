@@ -3,9 +3,8 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# PKG_VERSION:=7.6
-# PKG_HASH:=0e7d44caa9c153d96a9b5f12644fbe35a632537a5a7f653792b72e53d9d5c2db
-
+#
+#
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
