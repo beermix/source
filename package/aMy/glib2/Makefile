@@ -18,8 +18,7 @@ PKG_HASH:=8f43c31767e88a25da72b52a40f3301fefc49a665b56dc10ee7cc9565cbe7481
 
 PKG_BUILD_PARALLEL:=1
 HOST_BUILD_PARALLEL:=1
-PKG_BUILD_DEPENDS:=gettext
-HOST_BUILD_DEPENDS:=gettext-full/host libiconv/host libffi/host
+HOST_BUILD_DEPENDS:=libffi/host
 PKG_INSTALL:=1
 
 PKG_CPE_ID:=cpe:/a:gnome:glib
@@ -30,7 +29,6 @@ HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/nls.mk
 
 define Package/glib2
   SECTION:=libs
@@ -50,7 +48,6 @@ TARGET_CFLAGS += -Os $(FPIC) -ffunction-sections -fdata-sections -flto
 HOST_CONFIGURE_ARGS += \
 	--disable-libelf \
 	--disable-selinux \
-	--with-libiconv=gnu \
 	--with-pcre=internal \
 	--disable-libmount
 
@@ -64,7 +61,6 @@ CONFIGURE_ARGS += \
 	--disable-gtk-doc-html \
 	--disable-man \
 	--disable-compile-warnings \
-	--with-libiconv=gnu \
 	--with-pcre=internal
 
 CONFIGURE_VARS += \
