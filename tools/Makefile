@@ -52,7 +52,6 @@ $(curdir)/automake/compile := $(curdir)/m4/compile $(curdir)/autoconf/compile $(
 $(curdir)/gmp/compile := $(curdir)/libtool/compile
 $(curdir)/mpc/compile := $(curdir)/mpfr/compile $(curdir)/gmp/compile
 $(curdir)/mpfr/compile := $(curdir)/gmp/compile
-#$(curdir)/gawk/compile := $(curdir)/mpfr/compile
 $(curdir)/mtd-utils/compile := $(curdir)/libtool/compile $(curdir)/e2fsprogs/compile $(curdir)/zlib/compile
 $(curdir)/mklibs/compile := $(curdir)/libtool/compile
 $(curdir)/qemu/compile := $(curdir)/e2fsprogs/compile $(curdir)/zlib/compile
