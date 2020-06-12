@@ -25,8 +25,8 @@ define Build/Compile
 endef
 
 define Package/nfqws/install
-	$(INSTALL_DIR) $(1)/opt/zapret/nfq
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nfqws $(1)/opt/zapret/nfq
+	$(INSTALL_DIR) $(1)/root/zapret/nfq
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nfqws $(1)/root/zapret/nfq
 endef
 
 $(eval $(call BuildPackage,nfqws))
