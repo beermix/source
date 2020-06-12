@@ -1,4 +1,4 @@
-#
+a#
 # Copyright (C) 2009-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
@@ -22,6 +22,7 @@ unexport CFLAGS
 HOST_CONFIGURE_ARGS += \
 	--enable-static \
 	--disable-shared \
+	--with-pic \
 	--with-mpfr=$(TOPDIR)/staging_dir/host \
 	--with-gmp=$(TOPDIR)/staging_dir/host
 

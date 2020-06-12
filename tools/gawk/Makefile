@@ -14,8 +14,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_HASH:=d1119785e746d46a8209d28b2de404a57f983aa48670f4e225531d3bdc175551
 PKG_SOURCE_URL:=https://ftp.gnu.org/gnu/gawk
 
-HOST_FIXUP:=autoreconf
-
 HOST_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
