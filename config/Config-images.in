@@ -287,4 +287,14 @@ menu "Target Images"
 		  it will be mounted by PARTUUID which makes the kernel find the
 		  appropriate disk automatically.
 
+	config TARGET_IMAGE_COMPRESSION_UTILITY
+		string
+		prompt "Gzip image compression utility"
+		default "gzip"
+		help
+		  Specify the name of the image compression binary used to gzip
+		  compress images. This utility must be option compatible with
+		  gzip. A good alternative would be the parallel gzip utility
+		  pigz.
+
 endmenu

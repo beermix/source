@@ -174,7 +174,7 @@ define Build/lzma-no-dict
 endef
 
 define Build/gzip
-	gzip -f -9n -c $@ $(1) > $@.new
+	$(call qstrip,$(CONFIG_TARGET_IMAGE_COMPRESSION_UTILITY)) -f -9n -c $@ $(1) > $@.new
 	@mv $@.new $@
 endef
 
