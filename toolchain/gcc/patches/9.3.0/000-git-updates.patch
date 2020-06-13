@@ -111,11 +111,6 @@ new file mode 100755
 +            subprocess.check_output(cmd, shell=True)
 +        else:
 +            print('Please resolve all remaining file conflicts.')
---- a/gcc/BASE-VER
-+++ b/gcc/BASE-VER
-@@ -1 +1 @@
--9.3.0
-+9.3.1
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
 @@ -1,3 +1,825 @@
