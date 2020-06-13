@@ -33,7 +33,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi
   TITLE:=glib 2.0
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.gtk.org/
