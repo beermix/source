@@ -39,7 +39,7 @@ endef
 CONFIGURE_ARGS += \
 	--enable-cgroup \
 	--enable-delayacct \
-	--enable-unicode
+	--disable-unicode
 
 CONFIGURE_VARS += \
 	ac_cv_file__proc_stat=yes \
