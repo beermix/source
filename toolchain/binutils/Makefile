@@ -61,6 +61,14 @@ HOST_CONFIGURE_ARGS = \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
 
+ifneq ($(CONFIG_SSP_SUPPORT),)
+  HOST_CONFIGURE_ARGS+= \
+		--enable-libssp
+else
+  HOST_CONFIGURE_ARGS+= \
+		--disable-libssp
+endif
+
 ifneq ($(CONFIG_EXTRA_TARGET_ARCH),)
   HOST_CONFIGURE_ARGS+= \
 		--enable-targets=$(call qstrip,$(CONFIG_EXTRA_TARGET_ARCH_NAME))-linux-$(TARGET_SUFFIX)
