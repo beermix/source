@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=iperf3
-PKG_VERSION:=8c8ef21
+PKG_VERSION:=e8ba3ca
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/esnet/iperf
