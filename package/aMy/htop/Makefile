@@ -25,7 +25,7 @@ define Package/htop
   SECTION:=admin
   CATEGORY:=Administration
   TITLE:=Interactive processes viewer
-  DEPENDS:=+libncurses
+  DEPENDS:=+libncurses +libmnl
   URL:=http://htop.sourceforge.net/
   MAINTAINER:=Etienne CHAMPETIER <champetier.etienne@gmail.com>
 endef
@@ -37,13 +37,9 @@ define Package/htop/description
 endef
 
 CONFIGURE_ARGS += \
-	--disable-unicode \
-	--disable-hwloc \
-	--enable-proc \
-	--enable-taskstats \
-	--enable-linux-affinity \
 	--enable-cgroup \
-	--enable-vserver
+	--enable-delayacct \
+	--enable-unicode
 
 CONFIGURE_VARS += \
 	ac_cv_file__proc_stat=yes \
