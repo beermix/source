@@ -16,6 +16,7 @@ menu "Target Images"
 			prompt "Compression"
 			default TARGET_INITRAMFS_COMPRESSION_LZMA if TARGET_apm821xx
 			default TARGET_INITRAMFS_COMPRESSION_LZMA if TARGET_ar71xx
+			default TARGET_INITRAMFS_COMPRESSION_LZMA if TARGET_ath79_mikrotik
 			default TARGET_INITRAMFS_COMPRESSION_LZMA if TARGET_lantiq
 			default TARGET_INITRAMFS_COMPRESSION_LZMA if TARGET_mpc85xx
 			default TARGET_INITRAMFS_COMPRESSION_LZMA if TARGET_ramips
@@ -286,15 +287,5 @@ menu "Target Images"
 		  Override the root partition on the final device. If left empty,
 		  it will be mounted by PARTUUID which makes the kernel find the
 		  appropriate disk automatically.
-
-	config TARGET_IMAGE_COMPRESSION_UTILITY
-		string
-		prompt "Gzip image compression utility"
-		default "gzip"
-		help
-		  Specify the name of the image compression binary used to gzip
-		  compress images. This utility must be option compatible with
-		  gzip. A good alternative would be the parallel gzip utility
-		  pigz.
 
 endmenu

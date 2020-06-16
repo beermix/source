@@ -151,7 +151,7 @@ endef
 ifdef CONFIG_TARGET_IMAGES_GZIP
   define Image/Gzip
 	rm -f $(1).gz
-	$(call qstrip,$(CONFIG_TARGET_IMAGE_COMPRESSION_UTILITY)) -9n $(1)
+	gzip -9n $(1)
   endef
 endif
 
@@ -317,15 +317,13 @@ ifdef CONFIG_TARGET_ROOTFS_TARGZ
   define Image/Build/targz
 	$(TAR) -cp --numeric-owner --owner=0 --group=0 --mode=a-s --sort=name \
 		$(if $(SOURCE_DATE_EPOCH),--mtime="@$(SOURCE_DATE_EPOCH)") \
-		-C $(TARGET_DIR)/ . | $(call qstrip,$(CONFIG_TARGET_IMAGE_COMPRESSION_UTILITY)) \
-		-9n > $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))-rootfs.tar.gz
+		-C $(TARGET_DIR)/ . | gzip -9n > $(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))-rootfs.tar.gz
   endef
 endif
 
 ifdef CONFIG_TARGET_ROOTFS_CPIOGZ
   define Image/Build/cpiogz
-	( cd $(TARGET_DIR); find . | cpio -o -H newc -R root:root | \
-	$(call qstrip,$(CONFIG_TARGET_IMAGE_COMPRESSION_UTILITY)) -9n >$(BIN_DIR)/$(IMG_ROOTFS).cpio.gz )
+	( cd $(TARGET_DIR); find . | cpio -o -H newc -R root:root | gzip -9n >$(BIN_DIR)/$(IMG_ROOTFS).cpio.gz )
   endef
 endif
 
@@ -569,7 +567,7 @@ define Device/Build/image
   .IGNORE: $(BIN_DIR)/$(call IMAGE_NAME,$(1),$(2))
 
   $(BIN_DIR)/$(call IMAGE_NAME,$(1),$(2)).gz: $(KDIR)/tmp/$(call IMAGE_NAME,$(1),$(2))
-	$(call qstrip,$(CONFIG_TARGET_IMAGE_COMPRESSION_UTILITY)) -c -9n $$^ > $$@
+	gzip -c -9n $$^ > $$@
 
   $(BIN_DIR)/$(call IMAGE_NAME,$(1),$(2)): $(KDIR)/tmp/$(call IMAGE_NAME,$(1),$(2))
 	cp $$^ $$@
