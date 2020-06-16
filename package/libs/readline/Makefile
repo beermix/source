@@ -58,7 +58,7 @@ CONFIGURE_VARS += \
 	bash_cv_wcwidth_broken=no \
 	bash_cv_func_sigsetjmp=yes \
 
-TARGET_CFLAGS += $(FPIC)
+TARGET_CFLAGS += -Os $(FPIC)
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include

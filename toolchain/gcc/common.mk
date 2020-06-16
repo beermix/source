@@ -123,6 +123,7 @@ GCC_CONFIGURE:= \
 		--disable-multilib \
 		--disable-libmpx \
 		--disable-nls \
+		--disable-libssp \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
 		$(SOFT_FLOAT_CONFIG_OPTION) \
@@ -152,14 +153,6 @@ endif
 ifneq ($(CONFIG_GCC_DEFAULT_SSP),)
   GCC_CONFIGURE+= \
 		--enable-default-ssp
-endif
-
-ifneq ($(CONFIG_GCC_LIBSSP),)
-  GCC_CONFIGURE+= \
-		--enable-libssp
-else
-  GCC_CONFIGURE+= \
-		--disable-libssp
 endif
 
 ifneq ($(CONFIG_EXTRA_TARGET_ARCH),)
