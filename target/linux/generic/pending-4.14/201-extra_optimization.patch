@@ -9,7 +9,7 @@ diff -Naur linux-4.14.181-orig/Makefile linux-4.14.181/Makefile
 +KBUILD_CFLAGS   += -Os $(EXTRA_OPTIMIZATION)
  else
 -KBUILD_CFLAGS   += -O2
-+KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch $(EXTRA_OPTIMIZATION)
++KBUILD_CFLAGS   += -O2 $(EXTRA_OPTIMIZATION)
  endif
  
  # Tell gcc to never replace conditional load with a non-conditional one
