@@ -33,6 +33,7 @@ define Package/iperf3/default
   CATEGORY:=Network
   TITLE:=Internet Protocol bandwidth measuring tool
   URL:=https://github.com/esnet/iperf
+  DEPENDS:= +libsctp
 endef
 
 define Package/iperf3
@@ -47,8 +48,8 @@ $(call Package/iperf3/default)
   DEPENDS:= +libopenssl
 endef
 
-TARGET_CFLAGS += -D_GNU_SOURCE
-CONFIGURE_ARGS += --disable-shared
+#TARGET_CFLAGS += -D_GNU_SOURCE
+CONFIGURE_ARGS += --disable-shared --with-sctp
 
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS += --with-openssl="$(STAGING_DIR)/usr"
