@@ -135,7 +135,6 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--disable-libstdcxx-debug \
-		--enable-checking=release \
 		--with-linker-hash-style=gnu \
 		--with-tune=generic \
 		--enable-cld \
@@ -205,7 +204,6 @@ GCC_MAKE:= \
 		CFLAGS="$(HOST_CFLAGS)" \
 		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
 		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
-		LDFLAGS_FOR_TARGET="$(TARGET_LDFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
