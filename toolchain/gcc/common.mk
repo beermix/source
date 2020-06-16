@@ -135,6 +135,7 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--disable-libstdcxx-debug \
+		--enable-checking=release \
 		--with-linker-hash-style=gnu \
 		--with-tune=generic \
 		--enable-cld \
