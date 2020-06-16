@@ -122,6 +122,7 @@ GCC_CONFIGURE:= \
 		--disable-libmudflap \
 		--disable-multilib \
 		--disable-libmpx \
+		--disable-libquadmath \
 		--disable-nls \
 		$(GRAPHITE_CONFIGURE) \
 		--with-host-libstdcxx=-lstdc++ \
@@ -203,6 +204,7 @@ GCC_MAKE:= \
 		CFLAGS="$(HOST_CFLAGS)" \
 		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
 		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		LDFLAGS_FOR_TARGET="$(TARGET_LDFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
