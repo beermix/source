@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# http://git.savannah.gnu.org/cgit/readline.git
 
 include $(TOPDIR)/rules.mk
 
@@ -15,7 +15,7 @@ PKG_NAME:=readline
 #PKG_SOURCE_URL:=@GNU/readline
 #PKG_HASH:=4d03b40d773b965e934fe486ba2f9b22b93034f7a221de05c1b1ccf367a75b4c
 
-PKG_VERSION:=576f19e
+PKG_VERSION:=c5ad6be
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/readline.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
