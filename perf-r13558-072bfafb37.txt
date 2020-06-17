@@ -1,0 +1,87 @@
+# Running sched/messaging benchmark...
+# 20 sender and receiver processes per group
+# 10 groups == 400 processes run
+
+     Total time: 2.190 [sec]
+
+# Running sched/pipe benchmark...
+# Executed 1000000 pipe operations between two processes
+
+     Total time: 32.643 [sec]
+
+      32.643674 usecs/op
+          30633 ops/sec
+
+# Running mem/memcpy benchmark...
+# function 'default' (Default memcpy() provided by glibc)
+# Copying 1MB bytes ...
+
+     845.308538 MB/sec
+
+# Running mem/memset benchmark...
+# function 'default' (Default memset() provided by glibc)
+# Copying 1MB bytes ...
+
+     757.002271 MB/sec
+
+# Running futex/hash benchmark...
+Run summary [PID 3013]: 2 threads, each operating on 1024 [private] futexes for 10 secs.
+
+[thread  0] futexes: 0xb5a4010 ... 0xb5a500c [ 968601 ops/sec ]
+[thread  1] futexes: 0xb5a5020 ... 0xb5a601c [ 972185 ops/sec ]
+
+Averaged 970393 operations/sec (+- 0.18%), total secs = 10
+
+# Running futex/wake benchmark...
+Run summary [PID 3013]: blocking on 2 threads (at [private] futex 0x8384bac), waking up 1 at a time.
+
+[Run 1]: Wokeup 2 of 2 threads in 0.0320 ms
+[Run 2]: Wokeup 2 of 2 threads in 0.0300 ms
+[Run 3]: Wokeup 2 of 2 threads in 0.0300 ms
+[Run 4]: Wokeup 2 of 2 threads in 0.0340 ms
+[Run 5]: Wokeup 2 of 2 threads in 0.0320 ms
+[Run 6]: Wokeup 2 of 2 threads in 0.0310 ms
+[Run 7]: Wokeup 2 of 2 threads in 0.0320 ms
+[Run 8]: Wokeup 2 of 2 threads in 0.0410 ms
+[Run 9]: Wokeup 2 of 2 threads in 0.0180 ms
+[Run 10]: Wokeup 2 of 2 threads in 0.0310 ms
+Wokeup 2 of 2 threads in 0.0311 ms (+-5.70%)
+
+# Running futex/wake-parallel benchmark...
+Run summary [PID 3013]: blocking on 2 threads (at [private] futex 0x8384cf8), 2 threads waking up 1 at a time.
+
+[Run 1]: Avg per-thread latency (waking 1/2 threads) in 0.0385 ms (+-50.65%)
+[Run 2]: Avg per-thread latency (waking 1/2 threads) in 0.0370 ms (+-54.05%)
+[Run 3]: Avg per-thread latency (waking 1/2 threads) in 0.0380 ms (+-57.89%)
+[Run 4]: Avg per-thread latency (waking 1/2 threads) in 0.0355 ms (+-54.93%)
+[Run 5]: Avg per-thread latency (waking 1/2 threads) in 0.0195 ms (+-58.97%)
+[Run 6]: Avg per-thread latency (waking 1/2 threads) in 0.0190 ms (+-57.89%)
+[Run 7]: Avg per-thread latency (waking 1/2 threads) in 0.0360 ms (+-58.33%)
+[Run 8]: Avg per-thread latency (waking 1/2 threads) in 0.0380 ms (+-47.37%)
+[Run 9]: Avg per-thread latency (waking 1/2 threads) in 0.0195 ms (+-53.85%)
+[Run 10]: Avg per-thread latency (waking 1/2 threads) in 0.0190 ms (+-52.63%)
+Avg per-thread latency (waking 1/2 threads) in 0.0300 ms (+-14.61%)
+
+# Running futex/requeue benchmark...
+Run summary [PID 3013]: Requeuing 2 threads (from [private] 0x8384e34 to 0x8384e30), 1 at a time.
+
+[Run 1]: Requeued 2 of 2 threads in 0.0110 ms
+[Run 2]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 3]: Requeued 2 of 2 threads in 0.0110 ms
+[Run 4]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 5]: Requeued 2 of 2 threads in 0.0200 ms
+[Run 6]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 7]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 8]: Requeued 2 of 2 threads in 0.0110 ms
+[Run 9]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 10]: Requeued 2 of 2 threads in 0.0100 ms
+Requeued 2 of 2 threads in 0.0113 ms (+-8.66%)
+
+# Running futex/lock-pi benchmark...
+Run summary [PID 3013]: 2 threads doing pi lock/unlock pairing for 10 secs.
+
+[thread   0] futex: 0x8384f18 [ 18459 ops/sec ]
+[thread   1] futex: 0x8384f18 [ 18462 ops/sec ]
+
+Averaged 18460 operations/sec (+- 0.01%), total secs = 10
+

@@ -137,7 +137,6 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--disable-libstdcxx-debug \
 		--with-linker-hash-style=gnu \
-		--enable-checking=release \
 		--with-tune=generic \
 		--enable-cld \
 		--with-diagnostics-color=always \
