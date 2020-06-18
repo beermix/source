@@ -123,7 +123,7 @@ endef
 
 export BUILD_CC="$(TARGET_CC)"
 
-TARGET_LDFLAGS += -Os -Wl,--gc-sections,--as-needed
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 CONFIGURE_ARGS += \
 	--disable-linux-caps \
