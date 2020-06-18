@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
 #PKG_VERSION:=0.4.3.5
-#PKG_RELEASE:=1
+#PKG_RELEASE:=2
 #PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 #PKG_SOURCE_URL:=https://dist.torproject.org/ https://archive.torproject.org/tor-package-archive
 #PKG_HASH:=616a0e4ae688d0e151d46e3e4258565da4d443d1ddbd316db0b90910e2d5d868
@@ -112,18 +112,11 @@ CONFIGURE_ARGS += \
 	--disable-module-dirauth \
 	--enable-silent-rules \
 	--with-tor-user=tor \
-	--with-tor-group=tor
+	--with-tor-group=tor \
+	--with-pic
 
 # TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 # TARGET_LDFLAGS += -Wl,--gc-sections -flto
-
-ifneq ($(CONFIG_SSP_SUPPORT),y)
-	CONFIGURE_ARGS += \
-		--disable-gcc-hardening \
-		--disable-linker-hardening
-else
-	EXTRA_CFLAGS += $(FPIC)
-endif
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
