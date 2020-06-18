@@ -55,6 +55,8 @@ TARGET_CFLAGS += -Ofast
 
 CONFIGURE_ARGS+= \
 	--disable-ssp \
+	--disable-static \
+	--enable-shared \
 	$(if $(CONFIG_LIBSODIUM_MINIMAL),--enable,--disable)-minimal
 
 define Build/InstallDev
