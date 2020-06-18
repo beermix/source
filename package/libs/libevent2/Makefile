@@ -18,6 +18,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/libevent-$(PKG_VERSION)-stable
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=BSD-3-Clause
+PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:libevent_project:libevent
 
 PKG_FIXUP:=autoreconf
@@ -31,7 +32,7 @@ define Package/libevent2/Default
   CATEGORY:=Libraries
   TITLE:=Event notification
   URL:=http://libevent.org
-  ABI_VERSION:=6
+  ABI_VERSION:=8
 endef
 
 define Package/libevent2/Default/description
@@ -109,9 +110,8 @@ define Package/libevent2-pthreads/description
 	threading & locking.
 endef
 
-# TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
-# TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -flto
-TARGET_CFLAGS += $(FPIC)
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -flto
 
 CONFIGURE_ARGS += \
 	--enable-shared \
