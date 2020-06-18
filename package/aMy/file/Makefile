@@ -46,7 +46,7 @@ $(call Package/file/Default)
 endef
 
 TARGET_CFLAGS += $(FPIC)
-TARGET_LDFLAGS += -Os -Wl,--gc-sections,--as-needed
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 CONFIGURE_ARGS += \
 	--enable-shared \
