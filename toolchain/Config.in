@@ -283,10 +283,6 @@ config USE_MUSL
 	default y if !TOOLCHAINOPTS && !EXTERNAL_TOOLCHAIN && !NATIVE_TOOLCHAIN && !(arc)
 	bool
 
-config GCC_LIBSSP
-        default n
-        bool
-
 config SSP_SUPPORT
 	default y if !PKG_CC_STACKPROTECTOR_NONE
 	bool
