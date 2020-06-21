@@ -42,7 +42,7 @@ endif
 
 ifeq ($(PKG_VERSION),8.4.1)
   PKG_REV:=8-20200618
-  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
+  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-8
   PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
   GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
