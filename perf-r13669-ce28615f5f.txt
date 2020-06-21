@@ -1,0 +1,104 @@
+# Running sched/messaging benchmark...
+# 20 sender and receiver processes per group
+# 10 groups == 400 processes run
+
+     Total time: 3.756 [sec]
+
+# Running sched/pipe benchmark...
+# Executed 1000000 pipe operations between two processes
+
+     Total time: 33.551 [sec]
+
+      33.551984 usecs/op
+          29804 ops/sec
+
+# Running mem/memcpy benchmark...
+# function 'default' (Default memcpy() provided by glibc)
+# Copying 1MB bytes ...
+
+     835.421888 MB/sec
+
+# Running mem/memset benchmark...
+# function 'default' (Default memset() provided by glibc)
+# Copying 1MB bytes ...
+
+     825.082508 MB/sec
+
+# Running futex/hash benchmark...
+Run summary [PID 2515]: 2 threads, each operating on 1024 [private] futexes for 10 secs.
+
+[thread  0] futexes: 0x8472010 ... 0x847300c [ 922112 ops/sec ]
+[thread  1] futexes: 0x8473020 ... 0x847401c [ 922419 ops/sec ]
+
+Averaged 922265 operations/sec (+- 0.02%), total secs = 10
+
+# Running futex/wake benchmark...
+Run summary [PID 2515]: blocking on 2 threads (at [private] futex 0x845cdcc), waking up 1 at a time.
+
+[Run 1]: Wokeup 2 of 2 threads in 0.0160 ms
+[Run 2]: Wokeup 2 of 2 threads in 0.0160 ms
+[Run 3]: Wokeup 2 of 2 threads in 0.0180 ms
+[Run 4]: Wokeup 2 of 2 threads in 0.0080 ms
+[Run 5]: Wokeup 2 of 2 threads in 0.0160 ms
+[Run 6]: Wokeup 2 of 2 threads in 0.0150 ms
+[Run 7]: Wokeup 2 of 2 threads in 0.0150 ms
+[Run 8]: Wokeup 2 of 2 threads in 0.0160 ms
+[Run 9]: Wokeup 2 of 2 threads in 0.0080 ms
+[Run 10]: Wokeup 2 of 2 threads in 0.0160 ms
+Wokeup 2 of 2 threads in 0.0144 ms (+-7.62%)
+
+# Running futex/wake-parallel benchmark...
+Run summary [PID 2515]: blocking on 2 threads (at [private] futex 0x845cf18), 2 threads waking up 1 at a time.
+
+[Run 1]: Avg per-thread latency (waking 1/2 threads) in 0.0785 ms (+-12.10%)
+[Run 2]: Avg per-thread latency (waking 1/2 threads) in 0.0485 ms (+-21.65%)
+[Run 3]: Avg per-thread latency (waking 1/2 threads) in 0.0480 ms (+-22.92%)
+[Run 4]: Avg per-thread latency (waking 1/2 threads) in 0.0795 ms (+-10.69%)
+[Run 5]: Avg per-thread latency (waking 1/2 threads) in 0.0795 ms (+-8.18%)
+[Run 6]: Avg per-thread latency (waking 1/2 threads) in 0.0770 ms (+-7.79%)
+[Run 7]: Avg per-thread latency (waking 1/2 threads) in 0.0750 ms (+-9.33%)
+[Run 8]: Avg per-thread latency (waking 1/2 threads) in 0.0760 ms (+-7.89%)
+[Run 9]: Avg per-thread latency (waking 1/2 threads) in 0.0765 ms (+-8.50%)
+[Run 10]: Avg per-thread latency (waking 1/2 threads) in 0.0740 ms (+-9.46%)
+Avg per-thread latency (waking 1/2 threads) in 0.0712 ms (+-4.55%)
+
+# Running futex/requeue benchmark...
+Run summary [PID 2515]: Requeuing 2 threads (from [private] 0x845d054 to 0x845d050), 1 at a time.
+
+[Run 1]: Requeued 2 of 2 threads in 0.0110 ms
+[Run 2]: Requeued 2 of 2 threads in 0.0090 ms
+[Run 3]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 4]: Requeued 2 of 2 threads in 0.0130 ms
+[Run 5]: Requeued 2 of 2 threads in 0.0110 ms
+[Run 6]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 7]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 8]: Requeued 2 of 2 threads in 0.0050 ms
+[Run 9]: Requeued 2 of 2 threads in 0.0100 ms
+[Run 10]: Requeued 2 of 2 threads in 0.0100 ms
+Requeued 2 of 2 threads in 0.0099 ms (+-6.47%)
+
+# Running futex/lock-pi benchmark...
+Run summary [PID 2515]: 2 threads doing pi lock/unlock pairing for 10 secs.
+
+[thread   0] futex: 0x845d134 [ 14947 ops/sec ]
+[thread   1] futex: 0x845d134 [ 14947 ops/sec ]
+
+Averaged 14947 operations/sec (+- 0.00%), total secs = 10
+
+# Running epoll/wait benchmark...
+Run summary [PID 2515]: 1 threads monitoring on 64 file-descriptors for 8 secs.
+
+[thread  0] fdmap: 0xb7eab760 ... 0xb7eab85c [ 323464 ops/sec ]
+
+Averaged 323464 operations/sec (+- 0.00%), total secs = 8
+
+# Running epoll/ctl benchmark...
+Run summary [PID 2515]: 2 threads doing epoll_ctl ops 64 file-descriptors for 8 secs.
+
+[thread  0] fdmap: 0xb7eab870 ... 0xb7eab96c [ add: 1436288 ops; mod: 1436288 ops; del: 1436288 ops ]
+[thread  1] fdmap: 0xb7eab980 ... 0xb7eaba7c [ add: 1434624 ops; mod: 1434624 ops; del: 1434624 ops ]
+
+Averaged 1435456 ADD operations (+- 0.06%)
+Averaged 1435456 MOD operations (+- 0.06%)
+Averaged 1435456 DEL operations (+- 0.06%)
+
