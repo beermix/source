@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=busybox
-PKG_VERSION:=4789c7c
+PKG_VERSION:=62744ef
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/mirror/busybox
