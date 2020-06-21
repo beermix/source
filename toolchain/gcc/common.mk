@@ -63,6 +63,14 @@ ifeq ($(PKG_VERSION),10.1.0)
   PKG_HASH:=b6898a23844b656f1b68691c5c012036c2e694ac4b53a8918d4712ad876e7ea2
 endif
 
+ifeq ($(PKG_VERSION),10.1.1)
+  PKG_REV:=10-20200620
+  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+endif
+
 PATCH_DIR=../patches/$(GCC_VERSION)
 
 BUGURL=http://bugs.openwrt.org/
