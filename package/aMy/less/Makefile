@@ -18,7 +18,6 @@ PKG_HASH:=eab470c7c928132441541aa49b1352c0fc699c30f762dfaeb3bf88e6f0fd701b
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
 PKG_MAINTAINER:=Julen Landa Alustiza <julen@zokormazo.info>
-PKG_CPE_ID:=cpe:/a:gnu:less
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
@@ -30,7 +29,6 @@ define Package/less/Default
   CATEGORY:=Utilities
   TITLE:=Pager program similar to more
   URL:=http://www.greenwoodsoftware.com/less/
-  ALTERNATIVES:=200:/usr/bin/less:/usr/bin/gnu-less
 endef
 
 define Package/less/Default/description
