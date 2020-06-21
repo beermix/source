@@ -8,14 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=linux-firmware
-PKG_VERSION:=20200122
-PKG_RELEASE:=1
+PKG_VERSION:=3890db3
 
-PKG_SOURCE_URL:=@KERNEL/linux/kernel/firmware
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=a30e811b3736a72b874ac27e10662f5e5409b1cadf8aab7ba88e8f8bc8083986
-
-PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://git.kernel.org/pub/scm/linux/kernel/git/dwmw2/linux-firmware.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 SCAN_DEPS = *.mk
 
