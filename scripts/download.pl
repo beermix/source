@@ -55,9 +55,9 @@ sub localmirrors {
 sub which($) {
 	my $prog = shift;
 	my $res = `which $prog`;
-	$res or return undef;
-	$res =~ /^no / and return undef;
-	$res =~ /not found/ and return undef;
+	$res or return;
+	$res =~ /^no / and return;
+	$res =~ /not found/ and return;
 	return $res;
 }
 
@@ -177,12 +177,14 @@ sub download
 	unlink "$target/$filename";
 	system("mv", "$target/$filename.dl", "$target/$filename");
 	cleanup();
+	return;
 }
 
 sub cleanup
 {
 	unlink "$target/$filename.dl";
 	unlink "$target/$filename.hash";
+	return;
 }
 
 @mirrors = localmirrors();
