@@ -232,6 +232,14 @@ config NASM
 	help
 	  Enable if you want to build nasm
 
+config YASM
+	bool
+	depends on ( i386 || x86_64 )
+	prompt "Build yasm" if TOOLCHAINOPTS
+	default y
+	help
+	  Enable if you want to build yasm
+
 comment "C Library"
 	depends on TOOLCHAINOPTS
 
