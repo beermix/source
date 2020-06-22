@@ -43,7 +43,7 @@ define Package/glib2/description
 endef
 
 TARGET_CFLAGS += -Os -ffunction-sections -fdata-sections -flto=2
-TARGET_LDFLAGS += -Wl,--gc-sections -flto=2
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
 	-Dselinux=disabled \

@@ -74,7 +74,7 @@ MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
 	CFLAGS="$(TARGET_CFLAGS) -Os -ffunction-sections -fdata-sections -flto=2" \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
-	LDFLAGS="$(TARGET_LDFLAGS) -Wl,--gc-sections -flto=2" \
+	LDFLAGS="$(TARGET_LDFLAGS) -Wl,--gc-sections" \
 	NO_EXPAT="YesPlease" \
 	NO_MKSTEMPS="YesPlease" \
 	NO_GETTEXT="YesPlease" \
