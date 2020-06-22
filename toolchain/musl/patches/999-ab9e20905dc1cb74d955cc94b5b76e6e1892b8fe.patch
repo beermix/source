@@ -1,0 +1,104 @@
+diff --git a/src/math/i386/log.s b/src/math/i386/log.s
+index fcccf030..08c59924 100644
+--- a/src/math/i386/log.s
++++ b/src/math/i386/log.s
+@@ -4,4 +4,6 @@ log:
+ 	fldln2
+ 	fldl 4(%esp)
+ 	fyl2x
++	fstpl 4(%esp)
++	fldl 4(%esp)
+ 	ret
+diff --git a/src/math/i386/log10.s b/src/math/i386/log10.s
+index 28eb5b2f..120e91ec 100644
+--- a/src/math/i386/log10.s
++++ b/src/math/i386/log10.s
+@@ -4,4 +4,6 @@ log10:
+ 	fldlg2
+ 	fldl 4(%esp)
+ 	fyl2x
++	fstpl 4(%esp)
++	fldl 4(%esp)
+ 	ret
+diff --git a/src/math/i386/log10f.s b/src/math/i386/log10f.s
+index c0c0c67e..b055493a 100644
+--- a/src/math/i386/log10f.s
++++ b/src/math/i386/log10f.s
+@@ -4,4 +4,6 @@ log10f:
+ 	fldlg2
+ 	flds 4(%esp)
+ 	fyl2x
++	fstps 4(%esp)
++	flds 4(%esp)
+ 	ret
+diff --git a/src/math/i386/log1p.s b/src/math/i386/log1p.s
+index 354f391a..f3c95f83 100644
+--- a/src/math/i386/log1p.s
++++ b/src/math/i386/log1p.s
+@@ -10,10 +10,14 @@ log1p:
+ 	cmp $0x00100000,%eax
+ 	jb 2f
+ 	fyl2xp1
++	fstpl 4(%esp)
++	fldl 4(%esp)
+ 	ret
+ 1:	fld1
+ 	faddp
+ 	fyl2x
++	fstpl 4(%esp)
++	fldl 4(%esp)
+ 	ret
+ 		# subnormal x, return x with underflow
+ 2:	fsts 4(%esp)
+diff --git a/src/math/i386/log1pf.s b/src/math/i386/log1pf.s
+index 4d3484cd..9f13d95f 100644
+--- a/src/math/i386/log1pf.s
++++ b/src/math/i386/log1pf.s
+@@ -10,10 +10,14 @@ log1pf:
+ 	cmp $0x00800000,%eax
+ 	jb 2f
+ 	fyl2xp1
++	fstps 4(%esp)
++	flds 4(%esp)
+ 	ret
+ 1:	fld1
+ 	faddp
+ 	fyl2x
++	fstps 4(%esp)
++	flds 4(%esp)
+ 	ret
+ 		# subnormal x, return x with underflow
+ 2:	fxch
+diff --git a/src/math/i386/log2.s b/src/math/i386/log2.s
+index 15088037..7eff0b61 100644
+--- a/src/math/i386/log2.s
++++ b/src/math/i386/log2.s
+@@ -4,4 +4,6 @@ log2:
+ 	fld1
+ 	fldl 4(%esp)
+ 	fyl2x
++	fstpl 4(%esp)
++	fldl 4(%esp)
+ 	ret
+diff --git a/src/math/i386/log2f.s b/src/math/i386/log2f.s
+index 00cdce75..b32fa2f7 100644
+--- a/src/math/i386/log2f.s
++++ b/src/math/i386/log2f.s
+@@ -4,4 +4,6 @@ log2f:
+ 	fld1
+ 	flds 4(%esp)
+ 	fyl2x
++	fstps 4(%esp)
++	flds 4(%esp)
+ 	ret
+diff --git a/src/math/i386/logf.s b/src/math/i386/logf.s
+index da7ff3ae..4d0346a4 100644
+--- a/src/math/i386/logf.s
++++ b/src/math/i386/logf.s
+@@ -4,4 +4,6 @@ logf:
+ 	fldln2
+ 	flds 4(%esp)
+ 	fyl2x
++	fstps 4(%esp)
++	flds 4(%esp)
+ 	ret
