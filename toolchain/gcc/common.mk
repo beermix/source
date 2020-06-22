@@ -72,10 +72,17 @@ ifeq ($(PKG_VERSION),10.1.0)
 endif
 
 ifeq ($(PKG_VERSION),10.1.1)
-  PKG_REV:=10-20200620
-  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+#  PKG_REV:=10-20200620
+#  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
+#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+  PKG_REV:=2c7ae01
+  PKG_SOURCE_PROTO:=git
+  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
+  PKG_SOURCE_VERSION:=$(PKG_REV)
+  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
   HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
