@@ -1,5 +1,5 @@
---- a/src/gcc/config/i386/gnu-user.h
-+++ b/src/gcc/config/i386/gnu-user.h
+--- a/gcc/config/i386/gnu-user.h
++++ b/gcc/config/i386/gnu-user.h
 @@ -74,7 +74,7 @@ along with GCC; see the file COPYING3.
    { "link_emulation", GNU_USER_LINK_EMULATION },\
    { "dynamic_linker", GNU_USER_DYNAMIC_LINKER }
@@ -9,8 +9,8 @@
    %{!shared: \
      %{!static: \
        %{!static-pie: \
---- a/src/gcc/config/i386/gnu-user64.h
-+++ b/src/gcc/config/i386/gnu-user64.h
+--- a/gcc/config/i386/gnu-user64.h
++++ b/gcc/config/i386/gnu-user64.h
 @@ -56,6 +56,7 @@ see the files COPYING3 and COPYING.RUNTI
                    "%{" SPEC_64 ":-m " GNU_USER_LINK_EMULATION64 "} \
                     %{" SPEC_32 ":-m " GNU_USER_LINK_EMULATION32 "} \
