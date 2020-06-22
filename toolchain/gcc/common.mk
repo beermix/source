@@ -58,7 +58,7 @@ ifeq ($(PKG_VERSION),9.3.1)
 #  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
 #  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-  PKG_REV:=ebfec20
+  PKG_REV:=ba65473
   PKG_SOURCE_PROTO:=git
   PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
   PKG_SOURCE_VERSION:=$(PKG_REV)
