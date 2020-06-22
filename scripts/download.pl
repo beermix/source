@@ -55,9 +55,9 @@ sub localmirrors {
 sub which($) {
 	my $prog = shift;
 	my $res = `which $prog`;
-	$res or return;
-	$res =~ /^no / and return;
-	$res =~ /not found/ and return;
+	$res or return undef;
+	$res =~ /^no / and return undef;
+	$res =~ /not found/ and return undef;
 	return $res;
 }
 
@@ -88,7 +88,7 @@ sub download_cmd($) {
 }
 
 my $hash_cmd = hash_cmd();
-
+$hash_cmd or ($file_hash eq "skip") or die "Cannot find appropriate hash command, ensure the provided hash is either a MD5 or SHA256 checksum.\n";
 
 sub download
 {
@@ -177,14 +177,12 @@ sub download
 	unlink "$target/$filename";
 	system("mv", "$target/$filename.dl", "$target/$filename");
 	cleanup();
-	return;
 }
 
 sub cleanup
 {
 	unlink "$target/$filename.dl";
 	unlink "$target/$filename.hash";
-	return;
 }
 
 @mirrors = localmirrors();
