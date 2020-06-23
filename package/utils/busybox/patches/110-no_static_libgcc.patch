@@ -1,5 +1,3 @@
-diff --git a/Makefile.flags b/Makefile.flags
-index e378fbad9..d955ac4eb 100644
 --- a/Makefile.flags
 +++ b/Makefile.flags
 @@ -60,7 +60,7 @@ CFLAGS += $(call cc-option,-funsigned-char,)
