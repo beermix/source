@@ -12,14 +12,6 @@ __errmsg() {
 	echo "ss-rules: $*" >&2
 }
 
-if [ "$1" = "-6" ]; then
-	if ! ip6tables -t nat -L -n &>/dev/null; then
-		__errmsg "Skipping ipv6.  Requires ip6tables-mod-nat"
-		exit 1
-	fi
-	o_use_ipv6=1; shift
-fi
-
 ss_rules_usage() {
 	cat >&2 <<EOF
 Usage: ss-rules [options]
@@ -103,15 +95,6 @@ o_local_default=bypass
 
 alias grep_af="sed -ne '/:/!p'"
 o_dst_bypass_="$o_dst_bypass4_"
-if [ -n "$o_use_ipv6" ]; then
-	alias grep_af="sed -ne /:/p"
-	alias iptables=ip6tables
-	alias iptables-save=ip6tables-save
-	alias iptables-restore=ip6tables-restore
-	alias ip="ip -6"
-	o_af=6
-	o_dst_bypass_="$o_dst_bypass6_"
-fi
 
 ss_rules_parse_args() {
 	while [ "$#" -gt 0 ]; do

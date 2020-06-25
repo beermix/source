@@ -66,7 +66,6 @@ ss_xxx() {
 	json_init
 	ss_mkjson_${cfgtype}_conf || return
 	json_add_boolean use_syslog 1
-	json_add_boolean ipv6_first "$ipv6_first"
 	json_add_boolean fast_open "$fast_open"
 	json_add_boolean reuse_port "$reuse_port"
 	json_add_boolean no_delay "$no_delay"
@@ -234,7 +233,6 @@ validate_common_options_() {
 	"${func:-ss_validate}" "$cfgtype" "$cfg" "$@" \
 		'disabled:bool:0' \
 		'fast_open:bool:0' \
-		'ipv6_first:bool:0' \
 		'no_delay:bool:0' \
 		'reuse_port:bool:0' \
 		'verbose:bool:0' \
