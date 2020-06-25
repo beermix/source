@@ -12,20 +12,20 @@ uint32_t net32_add(uint32_t netorder_value, uint32_t cpuorder_increment)
 
 uint8_t *tcp_find_option(struct tcphdr *tcp, uint8_t kind)
 {
-	char *t = (char*)(tcp+1);
-	char *end = (char*)tcp + (tcp->doff<<2);
+	uint8_t *t = (uint8_t*)(tcp+1);
+	uint8_t *end = (uint8_t*)tcp + (tcp->doff<<2);
 	while(t<end)
 	{
 		switch(*t)
 		{
 			case 0: // end
-				break; 
+				return NULL;
 			case 1: // noop
 				t++;
 				break;
 			default: // kind,len,data
-				if ((t+1)>=end || (t+t[1])>end)
-					break;
+				if ((t+1)>=end || t[1]<2 || (t+t[1])>end)
+					return NULL;
 				if (*t==kind)
 					return t;
 				t+=t[1];
