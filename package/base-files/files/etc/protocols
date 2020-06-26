@@ -7,7 +7,7 @@
 # If you need a huge list of used numbers please install the nmap package.
 
 ip	0	IP		# internet protocol, pseudo protocol number
-hopopt	0	HOPOPT		# IPv6 Hop-by-Hop Option [RFC1883]
+#hopopt	0	HOPOPT		# IPv6 Hop-by-Hop Option [RFC1883]
 icmp	1	ICMP		# internet control message protocol
 igmp	2	IGMP		# Internet Group Management
 ggp	3	GGP		# gateway-gateway protocol
@@ -22,7 +22,7 @@ hmp	20	HMP		# host monitoring protocol
 xns-idp	22	XNS-IDP		# Xerox NS IDP
 rdp	27	RDP		# "reliable datagram" protocol
 iso-tp4	29	ISO-TP4		# ISO Transport Protocol class 4 [RFC905]
-dccp	33	DCCP		# Datagram Congestion Control Prot. [RFC4340]
+dccp	33	DCCP		# Datagram Congestion Control Protocol [RFC4340]
 xtp	36	XTP		# Xpress Transfer Protocol
 ddp	37	DDP		# Datagram Delivery Protocol
 idpr-cmtp 38	IDPR-CMTP	# IDPR Control Message Transport
@@ -32,7 +32,7 @@ ipv6-frag 44	IPv6-Frag	# Fragment Header for IPv6
 idrp	45	IDRP		# Inter-Domain Routing Protocol
 rsvp	46	RSVP		# Reservation Protocol
 gre	47	GRE		# General Routing Encapsulation
-esp	50	IPSEC-ESP	# Encap Security Payload [RFC2406]
+esp	50	IPSEC-ESP	# Encap Security Payload [RFC2046]
 ah	51	IPSEC-AH	# Authentication Header [RFC2402]
 skip	57	SKIP		# SKIP
 ipv6-icmp 58	IPv6-ICMP	# ICMP for IPv6
@@ -49,16 +49,9 @@ encap	98	ENCAP		# Yet Another IP encapsulation [RFC1241]
 #	99			# any private encryption scheme
 pim	103	PIM		# Protocol Independent Multicast
 ipcomp	108	IPCOMP		# IP Payload Compression Protocol
-vrrp	112	VRRP		# Virtual Router Redundancy Protocol [RFC5798]
+vrrp	112	VRRP		# Virtual Router Redundancy Protocol
 l2tp	115	L2TP		# Layer Two Tunneling Protocol [RFC2661]
 isis	124	ISIS		# IS-IS over IPv4
 sctp	132	SCTP		# Stream Control Transmission Protocol
 fc	133	FC		# Fibre Channel
-mobility-header 135 Mobility-Header # Mobility Support for IPv6 [RFC3775]
-udplite	136	UDPLite		# UDP-Lite [RFC3828]
-mpls-in-ip 137	MPLS-in-IP	# MPLS-in-IP [RFC4023]
-manet	138			# MANET Protocols [RFC5498]
-hip	139	HIP		# Host Identity Protocol
-shim6	140	Shim6		# Shim6 Protocol [RFC5533]
-wesp	141	WESP		# Wrapped Encapsulating Security Payload
-rohc	142	ROHC		# Robust Header Compression
+
