@@ -16,8 +16,6 @@ ss_rules_usage() {
 	cat >&2 <<EOF
 Usage: ss-rules [options]
 
-	-6              Operate on address family IPv6
-	                When present, must be the first argument
 	-h, --help      Show this help message then exit
 	-f, --flush     Flush rules, ipset then exit
 	-l <port>       Local port number of ss-redir with TCP mode

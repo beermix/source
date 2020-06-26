@@ -112,7 +112,6 @@ ss_rules() {
 
 	[ -x "$bin" ] || return 1
 	"$bin" -f
-	"$bin" -6 -f
 
 	config_get cfgtype "$cfg" TYPE
 	[ "$cfgtype" = ss_rules ] || return 1
@@ -128,7 +127,6 @@ ss_rules() {
 	[ "$dst_forward_recentrst" = 0 ] || args="$args --dst-forward-recentrst"
 
 	ss_rules_call
-	ss_rules_call -6
 }
 
 ss_rules_call() {
@@ -168,7 +166,6 @@ stop_service() {
 
 	[ -x "$bin" ] && {
 		"$bin" -f
-		"$bin" -6 -f
 	}
 	rm -rf "$ss_confdir"
 }
