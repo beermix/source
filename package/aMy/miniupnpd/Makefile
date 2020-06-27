@@ -28,7 +28,7 @@ include $(INCLUDE_DIR)/version.mk
 define Package/miniupnpd
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+iptables +libip4tc +IPV6:libip6tc +IPV6:ip6tables +libuuid +libcap
+  DEPENDS:=+iptables +libip4tc +IPV6:libip6tc +IPV6:ip6tables +libuuid +libcap +libopenssl
   TITLE:=Lightweight UPnP IGD, NAT-PMP & PCP daemon
   SUBMENU:=Firewall
   URL:=https://miniupnp.tuxfamily.org/
@@ -38,10 +38,10 @@ define Package/miniupnpd/conffiles
 /etc/config/upnpd
 endef
 
-define Build/Prepare
-	$(call Build/Prepare/Default)
-	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
-endef
+#define Build/Prepare
+#	$(call Build/Prepare/Default)
+#	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
+#endef
 
 CONFIGURE_ARGS = \
 	$(if $(CONFIG_IPV6),--ipv6) \
