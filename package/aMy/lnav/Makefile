@@ -18,7 +18,7 @@ PKG_SOURCE_URL:=https://github.com/tstack/lnav/releases/download/v$(PKG_VERSION)
 #PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 #PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-#PKG_FIXUP:=autoreconf
+PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -29,7 +29,7 @@ define Package/lnav/Default
 	CATEGORY:=Utilities
 	TITLE:=lnav
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libstdcpp +librt +libncurses +libreadline +zlib +libsqlite3 +libpcre +libpcrecpp +libbz2 +zlib +libbsd
+	DEPENDS:=+libstdcpp +librt +libncurses +libreadline +zlib +libsqlite3 +libpcre +libpcrecpp +libbz2 +libbsd
 endef
 
 define Package/lnav/install
