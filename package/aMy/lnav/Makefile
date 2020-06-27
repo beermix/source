@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
-PKG_VERSION:=d2b9d1c
+PKG_VERSION:=e0181a0
 
 #PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 #PKG_SOURCE_URL:=https://github.com/tstack/lnav/releases/download/v$(PKG_VERSION)/
@@ -29,8 +29,7 @@ define Package/lnav/Default
 	CATEGORY:=Utilities
 	TITLE:=lnav
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libpthread +libstdcpp +libncurses +libreadline +zlib \
-	+libsqlite3 +libpcre +libbz2 +libcurl +libopenssl  
+	DEPENDS:=+libncurses +libreadline +zlib +libsqlite3 +libpcre +libbz2  
 endef
 
 define Package/lnav/install
