@@ -9,12 +9,6 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=readline
 
-#PKG_VERSION:=8.1-alpha
-#PKG_RELEASE:=1
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-#PKG_SOURCE_URL:=@GNU/readline
-#PKG_HASH:=4d03b40d773b965e934fe486ba2f9b22b93034f7a221de05c1b1ccf367a75b4c
-
 PKG_VERSION:=c5ad6be
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/readline.git
@@ -58,7 +52,8 @@ CONFIGURE_VARS += \
 	bash_cv_wcwidth_broken=no \
 	bash_cv_func_sigsetjmp=yes \
 
-TARGET_CFLAGS += -Os $(FPIC)
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CFLAGS += $(FPIC)
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include

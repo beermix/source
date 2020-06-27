@@ -6,7 +6,7 @@
 
 define KernelPackage/sound-cs5535audio
   TITLE:=CS5535/CS5536 Audio Controller
-  DEPENDS:=@TARGET_x86_geode
+  DEPENDS:=@TARGET_x86_geode +kmod-ac97
   KCONFIG:=CONFIG_SND_CS5535AUDIO
   FILES:=$(LINUX_DIR)/sound/pci/cs5535audio/snd-cs5535audio.ko
   AUTOLOAD:=$(call AutoLoad,36,snd-cs5535audio)
@@ -39,7 +39,7 @@ $(eval $(call KernelPackage,sp5100-tco))
 define KernelPackage/pcengines-apuv2
   SUBMENU:=$(OTHER_MENU)
   TITLE:=PC Engines APUv2/3 front button and LEDs driver
-  DEPENDS:=@TARGET_x86
+  DEPENDS:=@TARGET_x86 +kmod-gpio-amd-fch +kmod-leds-gpio
   KCONFIG:=CONFIG_PCENGINES_APU2
   FILES:=$(LINUX_DIR)/drivers/platform/x86/pcengines-apuv2.ko
   AUTOLOAD:=$(call AutoLoad,60,pcengines-apuv2)
