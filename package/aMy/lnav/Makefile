@@ -29,7 +29,7 @@ define Package/lnav/Default
 	CATEGORY:=Utilities
 	TITLE:=lnav
 	URL:=https://github.com/tstack/lnav
-	DEPENDS:=+libncurses +libreadline +zlib +libsqlite3 +libpcre +libbz2 +zlib +libbsd
+	DEPENDS:=+libstdcpp +librt +libncurses +libreadline +zlib +libsqlite3 +libpcre +libpcrecpp +libbz2 +zlib +libbsd
 endef
 
 define Package/lnav/install
