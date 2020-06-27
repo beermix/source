@@ -50,7 +50,8 @@ CONFIGURE_ARGS = \
 	--disable-pppconn \
 	--firewall=iptables
 
-TARGET_CFLAGS += $(FPIC) -Os -flto
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CFLAGS += $(FPIC) -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 define Package/miniupnpd/install
