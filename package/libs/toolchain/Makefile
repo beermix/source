@@ -615,6 +615,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
 	sed -i 's,^#!.*,#!/bin/sh,' $(1)/usr/bin/ldd
+	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
   endef
 
   define Package/ldconfig/install
