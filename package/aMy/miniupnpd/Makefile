@@ -47,7 +47,6 @@ CONFIGURE_ARGS = \
 	$(if $(CONFIG_IPV6),--ipv6) \
 	--igd2 \
 	--leasefile \
-	--portinuse \
 	--disable-pppconn \
 	--firewall=iptables
 
