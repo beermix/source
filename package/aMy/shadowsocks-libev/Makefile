@@ -121,8 +121,9 @@ CONFIGURE_ARGS += \
 	--disable-assert \
 	--disable-ssp \
 
+TARGET_CPPFLAGS += -fPIC
 TARGET_CFLAGS += -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+TARGET_LDFLAGS += -fPIC -Wl,--gc-sections,--as-needed
 
 $(eval $(call BuildPackage,shadowsocks-libev-config))
 $(eval $(call BuildPackage,shadowsocks-libev-ss-rules))
