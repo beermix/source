@@ -48,6 +48,7 @@ CONFIGURE_ARGS = \
 	--igd2 \
 	--leasefile \
 	--disable-pppconn \
+	--portinuse \
 	--firewall=iptables
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
