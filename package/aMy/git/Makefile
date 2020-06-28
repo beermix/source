@@ -74,9 +74,9 @@ TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS) -ffunction-sections -fdata-sections -flto" \
+	CFLAGS="$(TARGET_CFLAGS)" \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
-	LDFLAGS="$(TARGET_LDFLAGS) -Wl,--gc-sections" \
+	LDFLAGS="$(TARGET_LDFLAGS)" \
 	NO_EXPAT="YesPlease" \
 	NO_MKSTEMPS="YesPlease" \
 	NO_GETTEXT="YesPlease" \
