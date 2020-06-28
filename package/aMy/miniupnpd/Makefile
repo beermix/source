@@ -51,9 +51,11 @@ CONFIGURE_ARGS = \
 	--disable-fork \
 	--firewall=iptables
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-TARGET_CFLAGS += $(FPIC) -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os -fno-strict-aliasing -fno-common -fPIE -Wall -Wextra -Wstrict-prototypes -Wdeclaration-after-statement
+TARGET_CFLAGS := $(filter-out -D_FORTIFY_SOURCE=1,$(TARGET_CFLAGS)) -D_FORTIFY_SOURCE=2
+#TARGET_CFLAGS += $(FPIC)
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -pie
+TARGET_CPPFLAGS += -D_GNU_SOURCE
 
 define Package/miniupnpd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
