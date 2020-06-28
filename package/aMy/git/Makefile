@@ -70,9 +70,11 @@ define Package/git-gitweb/conffiles
 /etc/gitweb.conf
 endef
 
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS) -Os -ffunction-sections -fdata-sections -flto=2" \
+	CFLAGS="$(TARGET_CFLAGS) -ffunction-sections -fdata-sections -flto" \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS) -Wl,--gc-sections" \
 	NO_EXPAT="YesPlease" \

@@ -14,6 +14,7 @@ include $(TOPDIR)/rules.mk
 #
 PKG_NAME:=shadowsocks-libev
 PKG_VERSION:=25be24c
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
@@ -121,9 +122,9 @@ CONFIGURE_ARGS += \
 	--disable-assert \
 	--disable-ssp \
 
-TARGET_CPPFLAGS += $(FPIC)
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += $(FPIC) -Wl,--gc-sections,--as-needed
+TARGET_CPPFLAGS += $(FPIC)
 
 $(eval $(call BuildPackage,shadowsocks-libev-config))
 $(eval $(call BuildPackage,shadowsocks-libev-ss-rules))
