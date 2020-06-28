@@ -1,0 +1,1856 @@
+# DP: updates from the 9 branch upto 20200617 (d2132067ab2).
+
+LANG=C git diff --no-renames --src-prefix=a/src/ --dst-prefix=b/src/ \
+	4212a6a3e44f870412d9025eeb323fd4f50a61da d2132067ab23f9ab135f81fba816e39e5940c098 \
+	| awk '/^diff .*\.texi/ {skip=1; next} /^diff / { skip=0 } skip==0' \
+	| grep -v -E '^(diff|index)'
+
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,17 @@
++2020-06-02  Martin Liska  <mliska@suse.cz>
++
++	* -: Remove.
++
++2020-04-20  Martin Liska  <mliska@suse.cz>
++
++	Backport from mainline
++	2020-04-17  Martin Liska  <mliska@suse.cz>
++		    Jonathan Yong <10walls@gmail.com>
++
++	PR gcov-profile/94570
++	* ltmain.sh: Do not define HAVE_DOS_BASED_FILE_SYSTEM
++	for CYGWIN.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+--- a/contrib/ChangeLog
++++ b/contrib/ChangeLog
+@@ -1,3 +1,14 @@
++2020-05-29  Martin Liska  <mliska@suse.cz>
++
++	* git-backport.py: The script did 'git co HEAD~' when
++	there was no modified ChangeLog file in a successful
++	git cherry pick.
++	Run cherry-pick --continue without editor.
++
++2020-05-27  Martin Liska  <mliska@suse.cz>
++
++	* git-backport.py: New file.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+new file mode 100755
+--- /dev/null
++++ b/contrib/git-backport.py
+@@ -0,0 +1,65 @@
++#!/usr/bin/env python3
++
++# Copyright (C) 2020 Free Software Foundation, Inc.
++#
++# This file is part of GCC.
++#
++# GCC is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 3, or (at your option)
++# any later version.
++#
++# GCC is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with GCC; see the file COPYING.  If not, write to
++# the Free Software Foundation, 51 Franklin Street, Fifth Floor,
++# Boston, MA 02110-1301, USA.
++
++import argparse
++import subprocess
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description='Backport a git revision and '
++                                     'stash all ChangeLog files.')
++    parser.add_argument('revision', help='Revision')
++    args = parser.parse_args()
++
++    r = subprocess.run('git cherry-pick -x %s' % args.revision, shell=True)
++    if r.returncode == 0:
++        cmd = 'git show --name-only --pretty="" -- "*ChangeLog"'
++        changelogs = subprocess.check_output(cmd, shell=True, encoding='utf8')
++        changelogs = changelogs.strip()
++        if changelogs:
++            for changelog in changelogs.split('\n'):
++                subprocess.check_output('git checkout HEAD~ %s' % changelog,
++                                        shell=True)
++        subprocess.check_output('git commit --amend --no-edit', shell=True)
++    else:
++        # 1) remove all ChangeLog files from conflicts
++        out = subprocess.check_output('git diff --name-only --diff-filter=U',
++                                      shell=True,
++                                      encoding='utf8')
++        conflicts = out.strip().split('\n')
++        changelogs = [c for c in conflicts if c.endswith('ChangeLog')]
++        if changelogs:
++            cmd = 'git checkout --theirs %s' % '\n'.join(changelogs)
++            subprocess.check_output(cmd, shell=True)
++        # 2) remove all ChangeLog files from index
++        cmd = 'git diff --name-only --diff-filter=M HEAD'
++        out = subprocess.check_output(cmd, shell=True, encoding='utf8')
++        out = out.strip().split('\n')
++        modified = [c for c in out if c.endswith('ChangeLog')]
++        for m in modified:
++            subprocess.check_output('git reset %s' % m, shell=True)
++            subprocess.check_output('git checkout %s' % m, shell=True)
++
++        # try to continue
++        if len(conflicts) == len(changelogs):
++            cmd = 'git -c core.editor=true cherry-pick --continue'
++            subprocess.check_output(cmd, shell=True)
++        else:
++            print('Please resolve all remaining file conflicts.')
+--- a/gcc/ChangeLog
++++ b/gcc/ChangeLog
+@@ -1,3 +1,835 @@
++2020-06-12  Martin Liska  <mliska@suse.cz>
++	    Jakub Jelinek  <jakub@redhat.com>
++
++	PR sanitizer/95634
++	* asan.c (asan_emit_stack_protection): Fix emission for ilp32
++	by using Pmode instead of ptr_mode.
++
++2020-06-12  Martin Liska  <mliska@suse.cz>
++
++	PR sanitizer/94910
++	* asan.c (asan_emit_stack_protection): Emit
++	also **SavedFlagPtr(FakeStack, class_id) = 0 in order to release
++	a stack frame.
++
++2020-06-06  Carl Love  <cel@us.ibm.com>
++
++	PR target/94833
++	* config/rs6000/vsx.md (define_expand): Fix instruction generation for
++	first_match_index_<mode>.
++
++2020-06-05  H.J. Lu  <hjl.tools@gmail.com>
++
++	* config/i386/driver-i386.c (host_detect_local_cpu): Support
++	Intel Airmont, Tremont, Comet Lake, Ice Lake and Tiger Lake
++	processor families.
++
++2020-06-02  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
++
++	* config/aarch64/aarch64-cores.def (zeus): Define.
++	* config/aarch64/aarch64-tune.md: Regenerate.
++	* doc/invoke.texi (AArch64 Options): Document zeus -mcpu option.
++
++2020-05-31  Gerald Pfeifer  <gerald@pfeifer.com>
++
++	* config/i386/i386-c.c (ix86_target_macros): Define _ILP32 and
++	__ILP32__ for 32-bit targets.
++
++2020-05-29  Alex Coplan  <alex.coplan@arm.com>
++
++	PR target/94591
++	* config/aarch64/aarch64.c (aarch64_evpc_rev_local): Don't match
++	identity permutation.
++
++2020-05-29  Dong JianQiang  <dongjianqiang2@huawei.com>
++
++	PR gcov-profile/95332
++	* gcov-io.c (gcov_var::endian): Move field.
++	(from_file): Add IN_GCOV_TOOL check.
++	* gcov-io.h (gcov_magic): Ditto.
++
++2020-05-26  Alexandre Oliva  <oliva@adacore.com>
++
++	PR target/94812
++	* config/rs6000/rs6000.md (rs6000_mffsl): Copy result to
++	output operand in emulation.  Don't overwrite pseudos.
++
++2020-05-24  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/95258
++	* config/i386/driver-i386.c (host_detect_local_cpu): Detect
++	AVX512VPOPCNTDQ.
++
++2020-05-22  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	Backport from master
++	PR tree-optimization/94969
++	2020-05-13  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	* tree-data-ref.c (constant_access_functions): Rename to...
++	(invariant_access_functions): ...this.  Add parameter.  Check for
++	invariant access function, rather than constant.
++	(build_classic_dist_vector): Call above function.
++	* tree-loop-distribution.c (pg_add_dependence_edges): Add comment.
++
++2020-05-21  Martin Liska  <mliska@suse.cz>
++
++	* common/config/aarch64/aarch64-common.c (aarch64_handle_option):
++	Use MASK_OUTLINE_ATOMICS for x_target_flags.
++
++2020-05-21  Martin Liska  <mliska@suse.cz>
++
++	* common/config/aarch64/aarch64-common.c (aarch64_handle_option):
++	Handle OPT_moutline_atomics.
++	* config/aarch64/aarch64.c: Add outline-atomics to
++	aarch64_attributes.
++	* doc/extend.texi: Document the newly added target attribute.
++
++2020-05-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backport from mainline.
++	2020-04-30  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	PR target/94748
++	* config/aarch64/aarch64-bti-insert.c (rest_of_insert_bti): Remove
++	the check for NOTE_INSN_DELETED_LABEL.
++
++2020-05-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backport from mainline.
++	2020-04-23  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	PR target/94697
++	* config/aarch64/aarch64-bti-insert.c (rest_of_insert_bti): Swap
++	bti c and bti j handling.
++
++2020-05-14  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	Backport from mainline.
++	2020-04-27  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++	PR target/94515
++	* dwarf2cfi.c (struct GTY): Add ra_mangled.
++	(cfi_row_equal_p): Check ra_mangled.
++	(dwarf2out_frame_debug_cfa_window_save): Remove the argument,
++	this only handles the sparc logic now.
++	(dwarf2out_frame_debug_cfa_toggle_ra_mangle): New function for
++	the aarch64 specific logic.
++	(dwarf2out_frame_debug): Update to use the new subroutines.
++	(change_cfi_row): Check ra_mangled.
++
++2020-05-12  David Edelsohn  <dje.gcc@gmail.com>
++
++	Backport from mainline
++	2020-04-08  Clement Chigot  <clement.chigot@atos.net>
++
++        * config/rs6000/aix61.h (LIB_SPEC): Add -lc128 with -mlong-double-128.
++        * config/rs6000/aix71.h (LIB_SPEC): Likewise.
++        * config/rs6000/aix72.h (LIB_SPEC): Likewise.
++
++2020-05-12  David Edelsohn  <dje.gcc@gmail.com>
++
++	Backport from mainline
++	2020-05-04  Clement Chigot  <clement.chigot@atos.net>
++		    David Edelsohn  <dje.gcc@gmail.com>
++
++	* config/rs6000/rs6000.c (rs6000_init_builtins): Override explicit
++	for fmodl, frexpl, ldexpl and modfl builtins.
++
++2020-05-11  Xiong Hu Luo  <luoxhu@linux.ibm.com>
++
++	Backport from master.
++	2020-04-27  Xiong Hu Luo  <luoxhu@linux.ibm.com>
++
++	PR target/91518
++	* config/rs6000/rs6000.c (frame_pointer_needed_indeed):
++	New variable.
++	(rs6000_emit_prologue_components):
++	Check with frame_pointer_needed_indeed.
++	(rs6000_emit_epilogue_components): Likewise.
++	(rs6000_emit_prologue): Likewise.
++	(rs6000_emit_epilogue): Set frame_pointer_needed_indeed.
++
++2020-05-07 Uroš Bizjak  <ubizjak@gmail.com>
++
++	* config/alpha/alpha.c (alpha_atomic_assign_expand_fenv): Use
++	TARGET_EXPR instead of MODIFY_EXPR for the first assignments to
++	fenv_var and new_fenv_var.
++
++2020-05-05  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	Backport from mainline
++	2020-04-30  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	* config/s390/constraints.md ("j>f", "jb4"): New constraints.
++	* config/s390/vecintrin.h (vec_load_len_r, vec_store_len_r): Fix
++	macro definitions.
++	* config/s390/vx-builtins.md ("vlrlrv16qi", "vstrlrv16qi"): Add a
++	separate expander.
++	("*vlrlrv16qi", "*vstrlrv16qi"): Add alternative for vl/vst.
++	Change constraint for vlrl/vstrl to jb4.
++
++2020-05-04  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	Backport from mainline
++	2020-04-20  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	* config/s390/vector.md ("popcountv8hi2_vx", "popcountv4si2_vx")
++	("popcountv2di2_vx"): Use simplify_gen_subreg.
++
++2020-05-04  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	Backport from mainline
++	2020-04-20  Andreas Krebbel  <krebbel@linux.ibm.com>
++
++	PR target/94613
++	* config/s390/s390-builtin-types.def: Add 3 new function modes.
++	* config/s390/s390-builtins.def: Add mode dependent low-level
++	builtin and map the overloaded builtins to these.
++	* config/s390/vx-builtins.md ("vec_selV_HW"): Rename to ...
++	("vsel<V_HW"): ... this and rewrite the pattern with bitops.
++
++2020-05-04  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	PR tree-optimization/93674
++	Backport from master
++	2020-04-09  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	* tree-ssa-loop-ivopts.c (langhooks.h): New include.
++	(add_iv_candidate_for_use): For iv_use of non integer or pointer type,
++	or non-mode precision type, add candidate in unsigned type with the
++	same precision.
++
++2020-05-01  Alan Modra	 <amodra@gmail.com>
++
++	PR target/94145
++	Backport from master
++	2020-03-27  Alan Modra	 <amodra@gmail.com>
++
++	* config/rs6000/rs6000.c (rs6000_longcall_ref): Use unspec_volatile
++	for PLT16_LO.
++	* config/rs6000/rs6000.md (UNSPEC_PLT16_LO): Remove.
++	(UNSPECV_PLT16_LO): Define.
++	(pltseq_plt16_lo_): Use unspec_volatile.
++
++2020-04-30  Carl Love  <cel@us.ibm.com>
++
++	* config/rs6000/emmintrin.h (_mm_movemask_epi8): Fix comment.
++
++2020-04-29  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from master
++	2020-04-29  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/93654
++	* config/i386/i386.c (ix86_set_indirect_branch_type): Allow
++	-fcf-protection with -mindirect-branch=thunk-extern and
++	-mfunction-return=thunk-extern.
++	* doc/invoke.texi: Update notes for -fcf-protection=branch with
++	-mindirect-branch=thunk-extern and -mindirect-return=thunk-extern.
++
++2020-04-21  Martin Jambor  <mjambor@suse.cz>
++
++	Backport from master
++	2020-04-09  Martin Jambor  <mjambor@suse.cz>
++	            Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/94482
++	* tree-sra.c (create_access_replacement): Dump new replacement with
++	TDF_UID.
++	(sra_modify_expr): Fix handling of cases when the original EXPR writes
++	to only part of the replacement.
++	* tree-ssa-forwprop.c (pass_forwprop::execute): Properly verify
++	the first operand of combinations into REAL/IMAGPART_EXPR and
++	BIT_FIELD_REF.
++
++2020-04-20  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from master
++	2020-04-13  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/94556
++	* config/i386/i386.c (ix86_expand_epilogue): Restore the frame
++	pointer in word_mode for eh_return epilogues.
++
++2020-04-20  Andrea Corallo  <andrea.corallo@arm.com>
++
++	Backport from mainline.
++	2020-04-15  Andrea Corallo  <andrea.corallo@arm.com>
++
++	PR target/94530
++	* config/aarch64/falkor-tag-collision-avoidance.c
++	(valid_src_p): Check for aarch64_address_info type before
++	accessing base field.
++
++2020-04-20  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-03  Tamar Christina  <tamar.christina@arm.com>
++
++	PR target/94396
++	* common/config/aarch64/aarch64-common.c
++	(aarch64_get_extension_string_for_isa_flags): Handle default flags.
++
++2020-04-20  Martin Liska  <mliska@suse.cz>
++
++	Backport from mainline
++	2020-04-17  Martin Liska  <mliska@suse.cz>
++		    Jonathan Yong <10walls@gmail.com>
++
++	PR gcov-profile/94570
++	* coverage.c (coverage_init): Use separator properly.
++
++2020-04-17  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from master
++	2020-04-08  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/94417
++	* config/i386/i386.c (rest_of_insert_endbranch): Insert ENDBR at
++	function entry if function will be called indirectly.
++
++2020-04-17  Kewen Lin  <linkw@gcc.gnu.org>
++
++	Backport from mainline
++	2020-04-03  Kewen Lin  <linkw@gcc.gnu.org>
++
++	PR tree-optimization/94443
++	* tree-vect-loop.c (vectorizable_live_operation): Use
++	gsi_insert_seq_before to replace gsi_insert_before.
++
++2020-04-17  Kewen Lin  <linkw@gcc.gnu.org>
++
++	Backport from mainline
++	2020-04-01  Kewen Lin  <linkw@gcc.gnu.org>
++
++	PR tree-optimization/94043
++	* tree-vect-loop.c (vectorizable_live_operation): Generate loop-closed
++	phi for vec_lhs and use it for lane extraction.
++
++2020-04-16  Michael Meissner  <meissner@linux.ibm.com>
++
++	PR target/94557
++	* config/rs6000/rs6000.c (rs6000_adjust_vec_address): Fix
++	regression caused by PR target/93932 backport.  Mask variable
++	vector extract index so it does not go beyond the vector when
++	extracting a vector element from memory.
++
++2020-04-16  Richard Biener  <rguenther@suse.de>
++
++	Backport from mainline
++	2020-04-07  Richard Biener  <rguenther@suse.de>
++
++	PR middle-end/94479
++	* gimplify.c (gimplify_addr_expr): Also consider generated
++	MEM_REFs.
++
++2020-04-15  Max Filippov  <jcmvbkbc@gmail.com>
++
++	Backport from mainline.
++	2020-04-14  Max Filippov  <jcmvbkbc@gmail.com>
++
++	PR target/94584
++	* config/xtensa/xtensa.md (zero_extendhisi2, zero_extendqisi2)
++	(extendhisi2_internal): Add %v1 before the load instructions.
++
++2020-04-15  Max Filippov  <jcmvbkbc@gmail.com>
++
++	Backport from mainline.
++	2019-09-26  Max Filippov  <jcmvbkbc@gmail.com>
++
++	* config/xtensa/xtensa.c (hwloop_optimize): Insert zero overhead
++	loop instruction into new basic block before the loop when basic
++	block that precedes the loop is empty.
++
++2020-04-15  Uroš Bizjak  <ubizjak@gmail.com>
++
++	PR target/94603
++	* config/i386/i386-builtin.def (__builtin_ia32_movq128):
++	Require OPTION_MASK_ISA_SSE2.
++
++2020-04-11  Uroš Bizjak  <ubizjak@gmail.com>
++
++	PR target/94494
++	* config/i386/sse.md (REDUC_SSE_SMINMAX_MODE): Use TARGET_SSE2
++	condition for V4SI, V8HI and V16QI modes.
++
++2020-04-10  Claudiu Zissulescu  <claziss@synopsys.com>
++
++	Backport from trunk
++	2020-0-31  Vineet Gupta <vgupta@synopsys.com>
++	* config/arc/linux.h: GLIBC_DYNAMIC_LINKER support BE/arc700.
++
++2020-04-09  Michael Meissner  <meissner@linux.ibm.com>
++
++	Back port from trunk
++	2020-02-26  Michael Meissner  <meissner@linux.ibm.com>
++
++	PR target/93932
++	* config/rs6000/vsx.md (vsx_extract_<mode>_var, VSX_D iterator):
++	Split the insn into two parts.  This insn only does variable
++	extract from a register.
++	(vsx_extract_<mode>_var_load, VSX_D iterator): New insn, do
++	variable extract from memory.
++	(vsx_extract_v4sf_var): Split the insn into two parts.  This insn
++	only does variable extract from a register.
++	(vsx_extract_v4sf_var_load): New insn, do variable extract from
++	memory.
++	(vsx_extract_<mode>_var, VSX_EXTRACT_I iterator): Split the insn
++	into two parts.  This insn only does variable extract from a
++	register.
++	(vsx_extract_<mode>_var_load, VSX_EXTRACT_I iterator): New insn,
++	do variable extract from memory.
++
++2020-04-07  Will Schmidt  <will_schmidt@vnet.ibm.com>
++
++	Backport from mainline.
++	2020-03-23  Will Schmidt  <will_schmidt@vnet.ibm.com>
++
++	* config/rs6000/rs6000-call.c altivec_init_builtins(): Remove
++	code to skip defining builtins based on builtin_mask.
++
++2020-04-07  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94509
++	* config/i386/i386.c (expand_vec_perm_pshufb): Fix the check
++	for inter-lane permutation for 64-byte modes.
++
++	PR target/94488
++	* config/aarch64/aarch64-simd.md (ashl<mode>3, lshr<mode>3,
++	ashr<mode>3): Force operands[2] into reg whenever it is not CONST_INT.
++	Assume it is a REG after that instead of testing it and doing FAIL
++	otherwise.  Formatting fix.
++
++	Backported from mainline
++	2020-04-04  Hannes Domani  <ssbssa@yahoo.de>
++		    Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/94459
++	* dwarf2out.c (gen_subprogram_die): Look through references, pointers,
++	arrays, pointer-to-members, function types and qualifiers when
++	checking if in-class DIE had an 'auto' or 'decltype(auto)' return type
++	to emit type again on definition.
++
++	2020-04-03  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94460
++	* config/i386/sse.md (avx2_ph<plusminus_mnemonic>wv16hi3,
++	avx2_ph<plusminus_mnemonic>dv8si3): Fix up RTL pattern to do
++	second half of first lane from first lane of second operand and
++	first half of second lane from second lane of first operand.
++
++	2020-04-01  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/94423
++	* tree-object-size.c (pass_object_sizes::execute): Don't call
++	replace_uses_by for SSA_NAME_OCCURS_IN_ABNORMAL_PHI lhs, instead
++	call replace_call_with_value.
++
++	2020-03-31  Marc Glisse  <marc.glisse@inria.fr>
++		    Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/94412
++	* fold-const.c (fold_binary_loc) <case TRUNC_DIV_EXPR>: Use
++	ANY_INTEGRAL_TYPE_P instead of INTEGRAL_TYPE_P.
++
++	2020-03-30  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/93069
++	* config/i386/sse.md (vec_extract_lo_<mode><mask_name>): Use
++	<store_mask_constraint> instead of m in output operand constraint.
++	(vec_extract_hi_<mode><mask_name>): Use <mask_operand2> instead of
++	%{%3%}.
++
++	2020-03-28  Jakub Jelinek  <jakub@redhat.com>
++
++	PR tree-optimization/94329
++	* tree-ssa-reassoc.c (reassociate_bb): When calling reassoc_remove_stmt
++	on the last stmt in a bb, make sure gsi_prev isn't done immediately
++	after gsi_last_bb.
++
++	2020-03-25  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/94303
++	* varasm.c (output_constructor_array_range): If local->index
++	RANGE_EXPR doesn't start at the current location in the constructor,
++	skip needed number of bytes using assemble_zeros or assert we don't
++	go backwards.
++
++	2020-03-25  Richard Biener  <rguenther@suse.de>
++		    Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/94283
++	* tree-if-conv.c (ifcvt_local_dce): Delete dead statements backwards.
++
++	2020-03-24  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/94283
++	* tree-if-conv.c (ifcvt_local_dce): For gimple debug stmts, just set
++	GF_PLF_2, but don't add them to worklist.  Don't add an assigment to
++	worklist or set GF_PLF_2 just because it is used in a debug stmt in
++	another bb.  Formatting improvements.
++
++	PR debug/94277
++	* cgraphunit.c (check_global_declaration): For DECL_EXTERNAL and
++	non-TREE_PUBLIC non-DECL_ARTIFICIAL FUNCTION_DECLs, set TREE_PUBLIC
++	regardless of whether TREE_NO_WARNING is set on it or whether
++	warn_unused_function is true or not.
++
++	2020-03-19  Jakub Jelinek  <jakub@redhat.com>
++
++	PR tree-optimization/94211
++	* tree-ssa-phiopt.c (value_replacement): Use estimate_num_insns_seq
++	instead of estimate_num_insns for bb_seq (middle_bb).  Rename
++	emtpy_or_with_defined_p variable to empty_or_with_defined_p, adjust
++	all uses.
++
++2020-04-07  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
++
++	PR target/94518
++	2019-09-23  Richard Sandiford  <richard.sandiford@arm.com>
++
++	* config/aarch64/atomics.md (aarch64_store_exclusive_pair): Fix
++	memmodel index.
++
++2020-04-07  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94500
++	* config/i386/i386.c (emit_reduc_half): For V{64QI,32HI}mode
++	handle i < 64 using avx512bw_lshrv4ti3.  Formatting fixes.
++
++2020-04-02  Martin Jambor  <mjambor@suse.cz>
++
++	PR tree-optimization/93435
++	* params.def (PARAM_SRA_MAX_PROPAGATIONS): New parameter.
++	* tree-sra.c (propagation_budget): New variable.
++	(budget_for_propagation_access): New function.
++	(propagate_subaccesses_across_link): Use it.
++	(propagate_all_subaccesses): Set up and destroy propagation_budget.
++	* doc/invoke.texi (sra-max-propagations): New.
++
++2020-04-03  Martin Liska  <mliska@suse.cz>
++
++	Backport from mainline
++	2020-04-03  Martin Liska  <mliska@suse.cz>
++
++	PR ipa/94445
++	* ipa-icf-gimple.c (func_checker::compare_gimple_call):
++	  Compare type attributes for gimple_call_fntypes.
++
++2020-04-02  Fritz Reese  <foreese@gcc.gnu.org>
++
++	Backport from master.
++	2020-04-02  Fritz Reese  <foreese@gcc.gnu.org>
++
++	PR fortran/85982
++	* fortran/decl.c (match_attr_spec): Lump COMP_STRUCTURE/COMP_MAP into
++	attribute checking used by TYPE.
++
++2020-04-02  Richard Biener  <rguenther@suse.de>
++
++	Backport from mainline
++	2020-03-12  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/94103
++	* tree-ssa-sccvn.c (visit_reference_op_load): Avoid type
++	punning when the mode precision is not sufficient.
++
++	2020-03-18  Richard Biener  <rguenther@suse.de>
++
++	PR middle-end/94206
++	* gimple-fold.c (gimple_fold_builtin_memset): Avoid using
++	partial int modes or not mode-precision integer types for
++	the store.
++
++2020-04-02  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94435
++	* config/aarch64/aarch64.c (aarch64_gen_compare_reg_maybe_ze): For
++	y_mode E_[QH]Imode and y being a CONST_INT, change y_mode to SImode.
++
++2020-04-01  Zackery Spytz  <zspytz@gmail.com>
++
++	* doc/extend.texi: Fix a typo in the documentation of the
++	copy function attribute.
++
++2020-04-01  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
++
++	Backport from mainline
++	2020-03-31  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94368
++	* config/aarch64/constraints.md (Uph): New constraint.
++	* config/aarch64/atomics.md (cas_short_expected_imm): New mode attr.
++	(@aarch64_compare_and_swap<mode>): Use it instead of n in operand 2's
++	constraint.
++
++2020-04-01  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
++
++	Backport from mainline
++	2020-01-17  Wilco Dijkstra  <wdijkstr@arm.com>
++
++	PR target/92692
++	* config/aarch64/atomics.md (aarch64_compare_and_swap<mode>)
++	Use epilogue_completed rather than reload_completed.
++
++2020-04-01  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
++
++	Backport from mainline
++	2019-09-19  Richard Henderson  <richard.henderson@linaro.org>
++
++	* config/aarch64/aarch64.opt (-moutline-atomics): New.
++	* config/aarch64/aarch64.c (aarch64_atomic_ool_func): New.
++	(aarch64_ool_cas_names, aarch64_ool_swp_names): New.
++	(aarch64_ool_ldadd_names, aarch64_ool_ldset_names): New.
++	(aarch64_ool_ldclr_names, aarch64_ool_ldeor_names): New.
++	(aarch64_expand_compare_and_swap): Honor TARGET_OUTLINE_ATOMICS.
++	* config/aarch64/atomics.md (atomic_exchange<ALLI>): Likewise.
++	(atomic_<atomic_op><ALLI>): Likewise.
++	(atomic_fetch_<atomic_op><ALLI>): Likewise.
++	(atomic_<atomic_op>_fetch<ALLI>): Likewise.
++	* doc/invoke.texi: Document -moutline-atomics.
++
++2020-04-01  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
++
++	Backport from mainline
++	2019-09-19  Richard Henderson  <richard.henderson@linaro.org>
++
++	* config/aarch64/aarch64 (aarch64_split_compare_and_swap): Disable
++	strong_zero_p for aarch64_track_speculation; unify some code paths;
++	use aarch64_gen_compare_reg instead of open-coding.
++
++2020-04-01  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
++
++	Backport from mainline
++	2019-09-19  Richard Henderson  <richard.henderson@linaro.org>
++
++	* config/aarch64/aarch64.c (aarch64_gen_compare_reg): Add support
++	for NE comparison of TImode values.
++	(aarch64_emit_load_exclusive): Add support for TImode.
++	(aarch64_emit_store_exclusive): Likewise.
++	(aarch64_split_compare_and_swap): Disable strong_zero_p for TImode.
++	* config/aarch64/atomics.md (@atomic_compare_and_swap<ALLI_TI>):
++	Change iterator from ALLI to ALLI_TI.
++	(@atomic_compare_and_swap<JUST_TI>): New.
++	(@atomic_compare_and_swap<JUST_TI>_lse): New.
++	(aarch64_load_exclusive_pair): New.
++	(aarch64_store_exclusive_pair): New.
++	* config/aarch64/iterators.md (JUST_TI): New.
++
++2020-04-01  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
++
++	Backport from mainline
++	2019-09-19  Richard Henderson  <richard.henderson@linaro.org>
++
++	* config/aarch64/aarch64.c (aarch64_print_operand): Allow integer
++	registers with %R.
++
++2020-03-31  Carl Love  <cel@us.ibm.com>
++
++	Backport of:
++	  commit e97929e20b2f52e6cfc046c1302324d1b24d95e3
++	  Author: Carl Love <carll@us.ibm.com>
++	  Date:   Wed Mar 25 18:33:37 2020 -0500
++
++	PR target/93819
++        * gcc/config/rs6000/altivec.h:
++        Fixed swapped arguments for vec_rlnm define.
++
++2020-03-31  Carl Love  <cel@us.ibm.com>
++
++	Backport from mainline
++	  commit 68dd57808f7c0147acdb5ca72c88ff655afcb0ce
++	  Author: Carl Love <carll@us.ibm.com>
++	  Date:   Fri Mar 20 18:15:05 2020 -0500
++	with ChangeLog typo fixed.
++
++	PR target/87583
++	* gcc/config/rs6000/rs6000.c (rs6000_option_override_internal):
++	Add check for TARGET_FPRND for Power 7 or newer.
++
++2020-03-24  John David Anglin  <danglin@gcc.gnu.org>
++
++	PR lto/94249
++	* config/pa/pa.h (TARGET_CPU_CPP_BUILTINS): Define __BIG_ENDIAN__.
++
++2020-03-24  Tamar Christina  <tamar.christina@arm.com>
++
++	PR target/94052
++	* config/aarch64/aarch64-simd.md (mov<mode>): Remove paradoxical
++	subregs of VSTRUCT modes.
++
++2020-03-24  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	Backport from mainline
++	2020-03-16  Bin Cheng  <bin.cheng@linux.alibaba.com>
++
++	PR tree-optimization/94125
++	* tree-loop-distribution.c
++	(loop_distribution::break_alias_scc_partitions): Update post order
++	number for merged scc.
++
++2020-03-23  Will Schmidt  <will_schmidt@vnet.ibm.com>
++
++	Backport from mainline
++	2020-03-10  Will Schmidt  <will_schmidt@vnet.ibm.com>
++
++	PR target/90763
++	    * config/rs6000/rs6000-c.c (altivec_resolve_overloaded_builtin):
++	    Add clause to handle P9V_BUILTIN_VEC_LXVL with const arguments.
++
++2020-03-23  Iain Sandoe  <iain@sandoe.co.uk>
++
++	Backport from master.
++	2020-03-22  Iain Sandoe  <iain@sandoe.co.uk>
++
++	* config/i386/darwin.h (JUMP_TABLES_IN_TEXT_SECTION): Remove
++	references to Darwin.
++	* config/i386/i386.h (JUMP_TABLES_IN_TEXT_SECTION): Define this
++	unconditionally and comment on why.
++
++2020-03-19  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backport from mainline
++	2020-01-13  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR driver/92757
++	* doc/invoke.texi (Warning Options): Add caveat about some warnings
++	depending on optimization settings.
++
++2020-03-19  Jiufu Guo  <guojiufu@linux.ibm.com>
++
++	PR target/93709
++	* gcc/config/rs6000/rs6000.c (rs6000_emit_p9_fp_minmax): Check
++	NAN and SIGNED_ZEROR for smax/smin.
++
++2020-03-17  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/94189
++	* builtins.c (expand_builtin_strnlen): Do return NULL_RTX if we would
++	emit a warning if it was enabled and don't depend on TREE_NO_WARNING
++	for code-generation.
++
++	Backported from mainline
++	2020-03-16  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/94167
++	* tree-inline.c (insert_init_stmt): Don't gimple_regimplify_operands
++	DEBUG_STMTs.
++
++	2020-03-14  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/93566
++	* tree-nested.c (convert_nonlocal_omp_clauses,
++	convert_local_omp_clauses): Handle {,in_,task_}reduction clauses
++	with C/C++ array sections.
++
++	2020-03-13  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94121
++	* config/aarch64/aarch64.c (aarch64_add_offset_1): Use gen_int_mode
++	instead of GEN_INT.
++
++	2020-03-12  Jakub Jelinek  <jakub@redhat.com>
++
++	* doc/tm.texi.in (ASM_OUTPUT_ALIGNED_DECL_LOCAL): Change
++	ASM_OUTPUT_ALIGNED_DECL in description to ASM_OUTPUT_ALIGNED_LOCAL
++	and ASM_OUTPUT_DECL to ASM_OUTPUT_LOCAL.
++	* doc/tm.texi: Regenerated.
++
++	PR tree-optimization/94130
++	* tree-ssa-dse.c: Include gimplify.h.
++	(increment_start_addr): If stmt has lhs, drop the lhs from call and
++	set it after the call to the original value of the first argument.
++	Formatting fixes.
++	(decrement_count): Formatting fix.
++
++	2020-03-11  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/94134
++	* config/pdp11/pdp11.c (pdp11_asm_output_var): Call switch_to_section
++	at the start to switch to data section.  Don't print extra newline if
++	.globl directive has not been emitted.
++
++	PR target/94121
++	* config/aarch64/aarch64.c (aarch64_add_offset_1): Use absu_hwi
++	instead of abs_hwi, change moffset type to unsigned HOST_WIDE_INT.
++
++	PR middle-end/94111
++	* dfp.c (decimal_to_binary): Only use decimal128ToString if from->cl
++	is rvc_normal, otherwise use real_to_decimal to print the number to
++	string.
++
++	PR tree-optimization/94114
++	* tree-loop-distribution.c (generate_memset_builtin): Call
++	rewrite_to_non_trapping_overflow even on mem.
++	(generate_memcpy_builtin): Call rewrite_to_non_trapping_overflow even
++	on dest and src.
++
++	2020-03-05  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/93399
++	* tree-pretty-print.h (pretty_print_string): Declare.
++	* tree-pretty-print.c (pretty_print_string): Remove forward
++	declaration, no longer static.  Change nbytes parameter type
++	from unsigned to size_t.
++	* print-rtl.c (print_value) <case CONST_STRING>: Use
++	pretty_print_string and for shrink way too long strings.
++
++	2020-03-04  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/93888
++	* tree-inline.c (copy_decl_to_var): Copy DECL_BY_REFERENCE flag.
++
++	PR tree-optimization/94001
++	* tree-tailcall.c (process_assignment): Before comparing op1 to
++	*ass_var, verify *ass_var is non-NULL.
++
++2020-03-13  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/94163
++	* tree-ssa-pre.c (create_expression_by_pieces): Check
++	whether alignment would be zero.
++
++2020-03-13  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR rtl-optimization/94119
++	* resource.h (clear_hashed_info_until_next_barrier): Declare.
++	* resource.c (clear_hashed_info_until_next_barrier): New function.
++	* reorg.c (add_to_delay_list): Fix formatting.
++	(relax_delay_slots): Call clear_hashed_info_until_next_barrier on
++	the next instruction after removing a BARRIER.
++
++2020-03-12  Bill Schmidt  <wschmidt@linux.ibm.com>
++
++	Backport from master
++	2020-03-02  Bill Schmidt  <wschmidt@linux.ibm.com>
++
++	PR target/87560
++	* rs6000-cpus.def (OTHER_ALTIVEC_MASKS): New #define.
++	* rs6000.c (rs6000_disable_incompatible_switches): Add table entry
++	for OPTION_MASK_ALTIVEC.
++
++2020-03-12  Richard Earnshaw  <rearnsha@arm.com>
++
++	Backport from master
++	2020-02-10  Richard Earnshaw  <rearnsha@arm.com>
++
++	PR target/91913
++	* config/arm/arm.md (movsi_compare0): Allow SP as a source register
++	in Thumb state and also as a destination in Arm state.  Add T16
++	variants.
++
++2020-03-12  Martin Liska  <mliska@suse.cz>
++
++	Backport from mainline
++	2020-03-09  Martin Liska  <mliska@suse.cz>
++
++	PR target/93800
++	* config/rs6000/rs6000.c (rs6000_option_override_internal):
++	Remove set of str_align_loops and str_align_jumps as these
++	should be set in previous 2 conditions in the function.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+--- a/gcc/DATESTAMP
++++ b/gcc/DATESTAMP
+@@ -1 +1 @@
+-20200312
++20200617
+--- a/gcc/ada/ChangeLog
++++ b/gcc/ada/ChangeLog
+@@ -1,3 +1,8 @@
++2020-05-04  Mikael Pettersson  <mikpelinux@gmail.com>
++
++	PR bootstrap/94918
++	* mingw32.h: Prevent windows.h from including emmintrin.h on Cygwin64.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+--- a/gcc/ada/mingw32.h
++++ b/gcc/ada/mingw32.h
+@@ -56,6 +56,7 @@
+ /* Note: windows.h on cygwin-64 includes x86intrin.h which uses malloc.
+    That fails to compile, if malloc is poisoned, i.e. if !IN_RTS.  */
+ #define _X86INTRIN_H_INCLUDED
++#define _EMMINTRIN_H_INCLUDED
+ #endif
+ #include <windows.h>
+ 
+--- a/gcc/asan.c
++++ b/gcc/asan.c
+@@ -1597,8 +1597,25 @@ asan_emit_stack_protection (rtx base, rtx pbase, unsigned int alignb,
+       if (use_after_return_class < 5
+ 	  && can_store_by_pieces (sz, builtin_memset_read_str, &c,
+ 				  BITS_PER_UNIT, true))
+-	store_by_pieces (shadow_mem, sz, builtin_memset_read_str, &c,
+-			 BITS_PER_UNIT, true, RETURN_BEGIN);
++	{
++	  /* Emit:
++	       memset(ShadowBase, kAsanStackAfterReturnMagic, ShadowSize);
++	       **SavedFlagPtr(FakeStack, class_id) = 0
++	  */
++	  store_by_pieces (shadow_mem, sz, builtin_memset_read_str, &c,
++			   BITS_PER_UNIT, true, RETURN_BEGIN);
++
++	  unsigned HOST_WIDE_INT offset
++	    = (1 << (use_after_return_class + 6));
++	  offset -= GET_MODE_SIZE (ptr_mode);
++	  mem = gen_rtx_MEM (ptr_mode, base);
++	  mem = adjust_address (mem, ptr_mode, offset);
++	  rtx addr = gen_reg_rtx (ptr_mode);
++	  emit_move_insn (addr, mem);
++	  addr = convert_memory_address (Pmode, addr);
++	  mem = gen_rtx_MEM (QImode, addr);
++	  emit_move_insn (mem, const0_rtx);
++	}
+       else if (use_after_return_class >= 5
+ 	       || !set_storage_via_setmem (shadow_mem,
+ 					   GEN_INT (sz),
+--- a/gcc/builtins.c
++++ b/gcc/builtins.c
+@@ -3112,27 +3112,25 @@ expand_builtin_strnlen (tree exp, rtx target, machine_mode target_mode)
+ 	    return NULL_RTX;
+ 	}
+ 
+-      if (lendata.decl
+-	  && !TREE_NO_WARNING (exp)
+-	  && ((tree_int_cst_lt (len, bound))
+-	      || !exact))
++      if (lendata.decl && (tree_int_cst_lt (len, bound) || !exact))
+ 	{
+ 	  location_t warnloc
+ 	    = expansion_point_location_if_in_system_header (loc);
+ 
+-	  if (warning_at (warnloc, OPT_Wstringop_overflow_,
+-			  exact
+-			  ? G_("%K%qD specified bound %E exceeds the size %E "
+-			       "of unterminated array")
+-			  : G_("%K%qD specified bound %E may exceed the size "
+-			       "of at most %E of unterminated array"),
+-			  exp, func, bound, len))
++	  if (!TREE_NO_WARNING (exp)
++	      && warning_at (warnloc, OPT_Wstringop_overflow_,
++			     exact
++			     ? G_("%K%qD specified bound %E exceeds the size "
++				  "%E of unterminated array")
++			     : G_("%K%qD specified bound %E may exceed the "
++				  "size of at most %E of unterminated array"),
++			     exp, func, bound, len))
+ 	    {
+ 	      inform (DECL_SOURCE_LOCATION (lendata.decl),
+ 		      "referenced argument declared here");
+ 	      TREE_NO_WARNING (exp) = true;
+-	      return NULL_RTX;
+ 	    }
++	  return NULL_RTX;
+ 	}
+ 
+       if (!len)
+--- a/gcc/c/ChangeLog
++++ b/gcc/c/ChangeLog
+@@ -1,3 +1,49 @@
++2020-04-07  Jakub Jelinek  <jakub@redhat.com>
++
++	PR c++/94512
++	* c-parser.c (c_parser_omp_parallel): Set OMP_PARALLEL_COMBINED
++	if c_parser_omp_master succeeded.
++
++	Backported from mainline
++	2020-03-23  Jakub Jelinek  <jakub@redhat.com>
++
++	PR gcov-profile/94029
++	PR c/94239
++	* c-parser.c (c_parser_declaration_or_fndef): Initialize endloc to
++	the function_start_locus location.  Don't do that afterwards for the
++	__GIMPLE body parsing.
++
++	2020-03-19  Jakub Jelinek  <jakub@redhat.com>
++
++	PR gcov-profile/94029
++	* c-tree.h (finish_function): Add location_t argument defaulted to
++	input_location.
++	* c-parser.c (c_parser_compound_statement): Add endlocp argument and
++	set it to the locus of closing } if non-NULL.
++	(c_parser_compound_statement_nostart): Return locus of closing }.
++	(c_parser_parse_rtl_body): Likewise.
++	(c_parser_declaration_or_fndef): Propagate locus of closing } to
++	finish_function.
++	* c-decl.c (finish_function): Add end_loc argument, use it instead of
++	input_location to set function_end_locus.
++
++	2020-03-17  Jakub Jelinek  <jakub@redhat.com>
++
++	PR c/94172
++	* c-tree.h (C_TYPE_INCOMPLETE_VARS): Define to TYPE_LANG_SLOT_1
++	instead of TYPE_VFIELD, and support it on {RECORD,UNION,ENUMERAL}_TYPE.
++	(TYPE_ACTUAL_ARG_TYPES): Check that it is only used on FUNCTION_TYPEs.
++	* c-decl.c (pushdecl): Push C_TYPE_INCOMPLETE_VARS also to
++	ENUMERAL_TYPEs.
++	(finish_incomplete_vars): New function, moved from finish_struct.  Use
++	relayout_decl instead of layout_decl.
++	(finish_struct): Remove obsolete comment about C_TYPE_INCOMPLETE_VARS
++	being TYPE_VFIELD.  Use finish_incomplete_vars.
++	(finish_enum): Clear C_TYPE_INCOMPLETE_VARS.  Call
++	finish_incomplete_vars.
++	* c-typeck.c (c_build_qualified_type): Clear C_TYPE_INCOMPLETE_VARS
++	also on ENUMERAL_TYPEs.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
+--- a/gcc/c/c-decl.c
++++ b/gcc/c/c-decl.c
+@@ -3272,7 +3272,8 @@ pushdecl (tree x)
+ 	element = TREE_TYPE (element);
+       element = TYPE_MAIN_VARIANT (element);
+ 
+-      if (RECORD_OR_UNION_TYPE_P (element)
++      if ((RECORD_OR_UNION_TYPE_P (element)
++	   || TREE_CODE (element) == ENUMERAL_TYPE)
+ 	  && (TREE_CODE (x) != TYPE_DECL
+ 	      || TREE_CODE (TREE_TYPE (x)) == ARRAY_TYPE)
+ 	  && !COMPLETE_TYPE_P (element))
+@@ -8141,6 +8142,26 @@ field_decl_cmp (const void *x_p, const void *y_p)
+   return 1;
+ }
+ 
++/* If this structure or union completes the type of any previous
++   variable declaration, lay it out and output its rtl.  */
++static void
++finish_incomplete_vars (tree incomplete_vars, bool toplevel)
++{
++  for (tree x = incomplete_vars; x; x = TREE_CHAIN (x))
++    {
++      tree decl = TREE_VALUE (x);
++      if (TREE_CODE (TREE_TYPE (decl)) == ARRAY_TYPE)
++	layout_array_type (TREE_TYPE (decl));
++      if (TREE_CODE (decl) != TYPE_DECL)
++	{
++	  relayout_decl (decl);
++	  if (c_dialect_objc ())
++	    objc_check_decl (decl);
++	  rest_of_decl_compilation (decl, toplevel, 0);
++	}
++    }
++}
++
+ /* Fill in the fields of a RECORD_TYPE or UNION_TYPE node, T.
+    LOC is the location of the RECORD_TYPE or UNION_TYPE's definition.
+    FIELDLIST is a chain of FIELD_DECL nodes for the fields.
+@@ -8399,13 +8420,6 @@ finish_struct (location_t loc, tree t, tree fieldlist, tree attributes,
+       warning_at (loc, 0, "union cannot be made transparent");
+     }
+ 
+-  /* Note: C_TYPE_INCOMPLETE_VARS overloads TYPE_VFIELD which is used
+-     in dwarf2out via rest_of_decl_compilation below and means
+-     something totally different.  Since we will be clearing
+-     C_TYPE_INCOMPLETE_VARS shortly after we iterate through them,
+-     clear it ahead of time and avoid problems in dwarf2out.  Ideally,
+-     C_TYPE_INCOMPLETE_VARS should use some language specific
+-     node.  */
+   tree incomplete_vars = C_TYPE_INCOMPLETE_VARS (TYPE_MAIN_VARIANT (t));
+   for (x = TYPE_MAIN_VARIANT (t); x; x = TYPE_NEXT_VARIANT (x))
+     {
+@@ -8426,21 +8440,7 @@ finish_struct (location_t loc, tree t, tree fieldlist, tree attributes,
+   /* Finish debugging output for this type.  */
+   rest_of_type_compilation (t, toplevel);
+ 
+-  /* If this structure or union completes the type of any previous
+-     variable declaration, lay it out and output its rtl.  */
+-  for (x = incomplete_vars; x; x = TREE_CHAIN (x))
+-    {
+-      tree decl = TREE_VALUE (x);
+-      if (TREE_CODE (TREE_TYPE (decl)) == ARRAY_TYPE)
+-	layout_array_type (TREE_TYPE (decl));
+-      if (TREE_CODE (decl) != TYPE_DECL)
+-	{
+-	  layout_decl (decl, 0);
+-	  if (c_dialect_objc ())
+-	    objc_check_decl (decl);
+-	  rest_of_decl_compilation (decl, toplevel, 0);
+-	}
+-    }
++  finish_incomplete_vars (incomplete_vars, toplevel);
+ 
+   /* If we're inside a function proper, i.e. not file-scope and not still
+      parsing parameters, then arrange for the size of a variable sized type
+@@ -8719,8 +8719,10 @@ finish_enum (tree enumtype, tree values, tree attributes)
+   TYPE_LANG_SPECIFIC (enumtype) = lt;
+ 
+   /* Fix up all variant types of this enum type.  */
++  tree incomplete_vars = C_TYPE_INCOMPLETE_VARS (TYPE_MAIN_VARIANT (enumtype));
+   for (tem = TYPE_MAIN_VARIANT (enumtype); tem; tem = TYPE_NEXT_VARIANT (tem))
+     {
++      C_TYPE_INCOMPLETE_VARS (tem) = NULL_TREE;
+       if (tem == enumtype)
+ 	continue;
+       TYPE_VALUES (tem) = TYPE_VALUES (enumtype);
+@@ -8739,6 +8741,8 @@ finish_enum (tree enumtype, tree values, tree attributes)
+   /* Finish debugging output for this type.  */
+   rest_of_type_compilation (enumtype, toplevel);
+ 
++  finish_incomplete_vars (incomplete_vars, toplevel);
++
+   /* If this enum is defined inside a struct, add it to
+      struct_types.  */
+   if (warn_cxx_compat
+@@ -9593,7 +9597,7 @@ temp_pop_parm_decls (void)
+    This is called after parsing the body of the function definition.  */
+ 
+ void
+-finish_function (void)
++finish_function (location_t end_loc)
+ {
+   tree fndecl = current_function_decl;
+   
+@@ -9689,7 +9693,7 @@ finish_function (void)
+ 
+   /* Store the end of the function, so that we get good line number
+      info for the epilogue.  */
+-  cfun->function_end_locus = input_location;
++  cfun->function_end_locus = end_loc;
+ 
+   /* Finalize the ELF visibility for the function.  */
+   c_determine_visibility (fndecl);
+--- a/gcc/c/c-parser.c
++++ b/gcc/c/c-parser.c
+@@ -1402,8 +1402,8 @@ static struct c_expr c_parser_braced_init (c_parser *, tree, bool,
+ static void c_parser_initelt (c_parser *, struct obstack *);
+ static void c_parser_initval (c_parser *, struct c_expr *,
+ 			      struct obstack *);
+-static tree c_parser_compound_statement (c_parser *);
+-static void c_parser_compound_statement_nostart (c_parser *);
++static tree c_parser_compound_statement (c_parser *, location_t * = NULL);
++static location_t c_parser_compound_statement_nostart (c_parser *);
+ static void c_parser_label (c_parser *);
+ static void c_parser_statement (c_parser *, bool *, location_t * = NULL);
+ static void c_parser_statement_after_labels (c_parser *, bool *,
+@@ -1498,8 +1498,7 @@ static void c_parser_objc_at_synthesize_declaration (c_parser *);
+ static void c_parser_objc_at_dynamic_declaration (c_parser *);
+ static bool c_parser_objc_diagnose_bad_element_prefix
+   (c_parser *, struct c_declspecs *);
+-
+-static void c_parser_parse_rtl_body (c_parser *parser, char *start_with_pass);
++static location_t c_parser_parse_rtl_body (c_parser *, char *);
+ 
+ /* Parse a translation unit (C90 6.7, C99 6.9, C11 6.9).
+ 
+@@ -2321,14 +2320,16 @@ c_parser_declaration_or_fndef (c_parser *parser, bool fndef_ok,
+ 				   omp_declare_simd_clauses);
+       if (oacc_routine_data)
+ 	c_finish_oacc_routine (oacc_routine_data, current_function_decl, true);
++      location_t startloc = c_parser_peek_token (parser)->location;
+       DECL_STRUCT_FUNCTION (current_function_decl)->function_start_locus
+-	= c_parser_peek_token (parser)->location;
++	= startloc;
++      location_t endloc = startloc;
+ 
+       /* If the definition was marked with __RTL, use the RTL parser now,
+ 	 consuming the function body.  */
+       if (specs->declspec_il == cdil_rtl)
+ 	{
+-	  c_parser_parse_rtl_body (parser, specs->gimple_or_rtl_pass);
++	  endloc = c_parser_parse_rtl_body (parser, specs->gimple_or_rtl_pass);
+ 
+ 	  /* Normally, store_parm_decls sets next_is_function_body,
+ 	     anticipating a function body.  We need a push_scope/pop_scope
+@@ -2337,7 +2338,7 @@ c_parser_declaration_or_fndef (c_parser *parser, bool fndef_ok,
+ 	  push_scope ();
+ 	  pop_scope ();
+ 
+-	  finish_function ();
++	  finish_function (endloc);
+ 	  return;
+ 	}
+       /* If the definition was marked with __GIMPLE then parse the
+@@ -2351,7 +2352,7 @@ c_parser_declaration_or_fndef (c_parser *parser, bool fndef_ok,
+ 	  in_late_binary_op = saved;
+ 	}
+       else
+-	fnbody = c_parser_compound_statement (parser);
++	fnbody = c_parser_compound_statement (parser, &endloc);
+       tree fndecl = current_function_decl;
+       if (nested)
+ 	{
+@@ -2362,7 +2363,7 @@ c_parser_declaration_or_fndef (c_parser *parser, bool fndef_ok,
+ 	     by initializer_constant_valid_p.  See gcc.dg/nested-fn-2.c.  */
+ 	  DECL_STATIC_CHAIN (decl) = 1;
+ 	  add_stmt (fnbody);
+-	  finish_function ();
++	  finish_function (endloc);
+ 	  c_pop_function_context ();
+ 	  add_stmt (build_stmt (DECL_SOURCE_LOCATION (decl), DECL_EXPR, decl));
+ 	}
+@@ -2370,7 +2371,7 @@ c_parser_declaration_or_fndef (c_parser *parser, bool fndef_ok,
+ 	{
+ 	  if (fnbody)
+ 	    add_stmt (fnbody);
+-	  finish_function ();
++	  finish_function (endloc);
+ 	}
+       /* Get rid of the empty stmt list for GIMPLE/RTL.  */
+       if (specs->declspec_il != cdil_none)
+@@ -4965,7 +4966,7 @@ c_parser_initval (c_parser *parser, struct c_expr *after,
+      cancellation-point-directive  */
+ 
+ static tree
+-c_parser_compound_statement (c_parser *parser)
++c_parser_compound_statement (c_parser *parser, location_t *endlocp)
+ {
+   tree stmt;
+   location_t brace_loc;
+@@ -4979,7 +4980,9 @@ c_parser_compound_statement (c_parser *parser)
+       return error_mark_node;
+     }
+   stmt = c_begin_compound_stmt (true);
+-  c_parser_compound_statement_nostart (parser);
++  location_t end_loc = c_parser_compound_statement_nostart (parser);
++  if (endlocp)
++    *endlocp = end_loc;
+ 
+   return c_end_compound_stmt (brace_loc, stmt, true);
+ }
+@@ -4988,7 +4991,7 @@ c_parser_compound_statement (c_parser *parser)
+    used for parsing both compound statements and statement expressions
+    (which follow different paths to handling the opening).  */
+ 
+-static void
++static location_t
+ c_parser_compound_statement_nostart (c_parser *parser)
+ {
+   bool last_stmt = false;
+@@ -4997,9 +5000,10 @@ c_parser_compound_statement_nostart (c_parser *parser)
+   location_t label_loc = UNKNOWN_LOCATION;  /* Quiet warning.  */
+   if (c_parser_next_token_is (parser, CPP_CLOSE_BRACE))
+     {
+-      add_debug_begin_stmt (c_parser_peek_token (parser)->location);
++      location_t endloc = c_parser_peek_token (parser)->location;
++      add_debug_begin_stmt (endloc);
+       c_parser_consume_token (parser);
+-      return;
++      return endloc;
+     }
+   mark_valid_location_for_stdc_pragma (true);
+   if (c_parser_next_token_is_keyword (parser, RID_LABEL))
+@@ -5040,8 +5044,9 @@ c_parser_compound_statement_nostart (c_parser *parser)
+     {
+       mark_valid_location_for_stdc_pragma (save_valid_for_pragma);
+       c_parser_error (parser, "expected declaration or statement");
++      location_t endloc = c_parser_peek_token (parser)->location;
+       c_parser_consume_token (parser);
+-      return;
++      return endloc;
+     }
+   while (c_parser_next_token_is_not (parser, CPP_CLOSE_BRACE))
+     {
+@@ -5122,7 +5127,7 @@ c_parser_compound_statement_nostart (c_parser *parser)
+ 	{
+ 	  mark_valid_location_for_stdc_pragma (save_valid_for_pragma);
+ 	  c_parser_error (parser, "expected declaration or statement");
+-	  return;
++	  return c_parser_peek_token (parser)->location;
+ 	}
+       else if (c_parser_next_token_is_keyword (parser, RID_ELSE))
+         {
+@@ -5130,7 +5135,7 @@ c_parser_compound_statement_nostart (c_parser *parser)
+             {
+ 	      mark_valid_location_for_stdc_pragma (save_valid_for_pragma);
+ 	      error_at (loc, "expected %<}%> before %<else%>");
+-              return;
++	      return c_parser_peek_token (parser)->location;
+             }
+           else
+             {
+@@ -5152,9 +5157,11 @@ c_parser_compound_statement_nostart (c_parser *parser)
+     }
+   if (last_label)
+     error_at (label_loc, "label at end of compound statement");
++  location_t endloc = c_parser_peek_token (parser)->location;
+   c_parser_consume_token (parser);
+   /* Restore the value we started with.  */
+   mark_valid_location_for_stdc_pragma (save_valid_for_pragma);
++  return endloc;
+ }
+ 
+ /* Parse all consecutive labels. */
+@@ -17624,9 +17631,9 @@ c_parser_omp_parallel (location_t loc, c_parser *parser,
+ 	  stmt = c_finish_omp_parallel (loc,
+ 					cclauses[C_OMP_CLAUSE_SPLIT_PARALLEL],
+ 					block);
+-	  OMP_PARALLEL_COMBINED (stmt) = 1;
+ 	  if (ret == NULL)
+ 	    return ret;
++	  OMP_PARALLEL_COMBINED (stmt) = 1;
+ 	  return stmt;
+ 	}
+       else if (!flag_openmp)  /* flag_openmp_simd  */
+@@ -19920,13 +19927,13 @@ c_parse_file (void)
+ 
+    Take ownership of START_WITH_PASS, if non-NULL.  */
+ 
+-void
++location_t
+ c_parser_parse_rtl_body (c_parser *parser, char *start_with_pass)
+ {
+   if (!c_parser_require (parser, CPP_OPEN_BRACE, "expected %<{%>"))
+     {
+       free (start_with_pass);
+-      return;
++      return c_parser_peek_token (parser)->location;
+     }
+ 
+   location_t start_loc = c_parser_peek_token (parser)->location;
+@@ -19948,7 +19955,7 @@ c_parser_parse_rtl_body (c_parser *parser, char *start_with_pass)
+ 	case CPP_EOF:
+ 	  error_at (start_loc, "no closing brace");
+ 	  free (start_with_pass);
+-	  return;
++	  return c_parser_peek_token (parser)->location;
+ 	default:
+ 	  break;
+ 	}
+@@ -19966,7 +19973,7 @@ c_parser_parse_rtl_body (c_parser *parser, char *start_with_pass)
+   if (!read_rtl_function_body_from_file_range (start_loc, end_loc))
+     {
+       free (start_with_pass);
+-      return;
++      return end_loc;
+     }
+ 
+  /*  If a pass name was provided for START_WITH_PASS, run the backend
+@@ -19974,6 +19981,7 @@ c_parser_parse_rtl_body (c_parser *parser, char *start_with_pass)
+      ownership of START_WITH_PASS.  */
+   if (start_with_pass)
+     run_rtl_passes (start_with_pass);
++  return end_loc;
+ }
+ 
+ #include "gt-c-c-parser.h"
+--- a/gcc/c/c-tree.h
++++ b/gcc/c/c-tree.h
+@@ -38,9 +38,12 @@ along with GCC; see the file COPYING3.  If not see
+    nonzero if the definition of the type has already started.  */
+ #define C_TYPE_BEING_DEFINED(TYPE) TYPE_LANG_FLAG_0 (TYPE)
+ 
+-/* In an incomplete RECORD_TYPE or UNION_TYPE, a list of variable
+-   declarations whose type would be completed by completing that type.  */
+-#define C_TYPE_INCOMPLETE_VARS(TYPE) TYPE_VFIELD (TYPE)
++/* In an incomplete RECORD_TYPE, UNION_TYPE or ENUMERAL_TYPE, a list of
++   variable declarations whose type would be completed by completing
++   that type.  */
++#define C_TYPE_INCOMPLETE_VARS(TYPE) \
++  TYPE_LANG_SLOT_1 (TREE_CHECK4 (TYPE, RECORD_TYPE, UNION_TYPE, \
++				 QUAL_UNION_TYPE, ENUMERAL_TYPE))
+ 
+ /* In an IDENTIFIER_NODE, nonzero if this identifier is actually a
+    keyword.  C_RID_CODE (node) is then the RID_* value of the keyword.  */
+@@ -111,7 +114,8 @@ along with GCC; see the file COPYING3.  If not see
+ /* For FUNCTION_TYPE, a hidden list of types of arguments.  The same as
+    TYPE_ARG_TYPES for functions with prototypes, but created for functions
+    without prototypes.  */
+-#define TYPE_ACTUAL_ARG_TYPES(NODE) TYPE_LANG_SLOT_1 (NODE)
++#define TYPE_ACTUAL_ARG_TYPES(NODE) \
++  TYPE_LANG_SLOT_1 (FUNCTION_TYPE_CHECK (NODE))
+ 
+ /* For a CONSTRUCTOR, whether some initializer contains a
+    subexpression meaning it is not a constant expression.  */
+@@ -558,7 +562,7 @@ extern bool c_check_switch_jump_warnings (struct c_spot_bindings *,
+ 					  location_t, location_t);
+ extern void finish_decl (tree, location_t, tree, tree, tree);
+ extern tree finish_enum (tree, tree, tree);
+-extern void finish_function (void);
++extern void finish_function (location_t = input_location);
+ extern tree finish_struct (location_t, tree, tree, tree,
+ 			   struct c_struct_parse_info *);
+ extern struct c_arg_info *build_arg_info (void);
+--- a/gcc/c/c-typeck.c
++++ b/gcc/c/c-typeck.c
+@@ -14965,7 +14965,8 @@ c_build_qualified_type (tree type, int type_quals, tree orig_qual_type,
+ 		   : build_qualified_type (type, type_quals));
+   /* A variant type does not inherit the list of incomplete vars from the
+      type main variant.  */
+-  if (RECORD_OR_UNION_TYPE_P (var_type)
++  if ((RECORD_OR_UNION_TYPE_P (var_type)
++       || TREE_CODE (var_type) == ENUMERAL_TYPE)
+       && TYPE_MAIN_VARIANT (var_type) != var_type)
+     C_TYPE_INCOMPLETE_VARS (var_type) = 0;
+   return var_type;
+--- a/gcc/cgraphunit.c
++++ b/gcc/cgraphunit.c
+@@ -967,15 +967,15 @@ check_global_declaration (symtab_node *snode)
+       && DECL_INITIAL (decl) == 0
+       && DECL_EXTERNAL (decl)
+       && ! DECL_ARTIFICIAL (decl)
+-      && ! TREE_NO_WARNING (decl)
+-      && ! TREE_PUBLIC (decl)
+-      && (warn_unused_function
+-	  || snode->referred_to_p (/*include_self=*/false)))
++      && ! TREE_PUBLIC (decl))
+     {
+-      if (snode->referred_to_p (/*include_self=*/false))
++      if (TREE_NO_WARNING (decl))
++	;
++      else if (snode->referred_to_p (/*include_self=*/false))
+ 	pedwarn (input_location, 0, "%q+F used but never defined", decl);
+       else
+-	warning (OPT_Wunused_function, "%q+F declared %<static%> but never defined", decl);
++	warning (OPT_Wunused_function, "%q+F declared %<static%> but never "
++				       "defined", decl);
+       /* This symbol is effectively an "extern" declaration now.  */
+       TREE_PUBLIC (decl) = 1;
+     }
+--- a/gcc/common/config/aarch64/aarch64-common.c
++++ b/gcc/common/config/aarch64/aarch64-common.c
+@@ -161,6 +161,13 @@ aarch64_handle_option (struct gcc_options *opts,
+       opts->x_flag_omit_leaf_frame_pointer = val;
+       return true;
+ 
++    case OPT_moutline_atomics:
++      if (val)
++	opts->x_target_flags |= MASK_OUTLINE_ATOMICS;
++      else
++	opts->x_target_flags &= ~MASK_OUTLINE_ATOMICS;
++      return true;
++
+     default:
+       return true;
+     }
+@@ -433,7 +440,22 @@ aarch64_get_extension_string_for_isa_flags (unsigned long isa_flags,
+ 	/* We remove all the dependent bits, to prevent them from being turned
+ 	   on twice.  This only works because we assume that all there are
+ 	   individual options to set all bits standalone.  */
+-	isa_flag_bits &= ~opt->flags_on;
++
++	/* PR target/94396.
++
++	   For flags which would already imply a bit that's on by default (e.g
++	   fp16fml which implies +fp,+fp16) we must emit the flags that are not
++	   on by default.  i.e. in Armv8.4-a +fp16fml is default if +fp16.  So
++	   if a user passes armv8.4-a+fp16 (or +fp16fml) then we need to emit
++	   +fp16.  But if +fp16fml is used in an architecture where it is
++	   completely optional we only have to emit the canonical flag.  */
++	uint64_t toggle_bits = opt->flags_on & default_arch_flags;
++	/* Now check to see if the canonical flag is on by default.  If it
++	   is not then enabling it will enable all bits in flags_on.  */
++	if ((opt->flag_canonical & default_arch_flags) == 0)
++	  toggle_bits = opt->flags_on;
++
++	isa_flag_bits &= ~toggle_bits;
+ 	isa_flag_bits |= opt->flag_canonical;
+       }
+     }
+--- a/gcc/config/aarch64/aarch64-bti-insert.c
++++ b/gcc/config/aarch64/aarch64-bti-insert.c
+@@ -130,22 +130,6 @@ rest_of_insert_bti (void)
+   rtx_insn *insn;
+   basic_block bb;
+ 
+-  /* Since a Branch Target Exception can only be triggered by an indirect call,
+-     we exempt function that are only called directly.  We also exempt
+-     functions that are already protected by Return Address Signing (PACIASP/
+-     PACIBSP).  For all other cases insert a BTI C at the beginning of the
+-     function.  */
+-  if (!cgraph_node::get (cfun->decl)->only_called_directly_p ())
+-    {
+-      bb = ENTRY_BLOCK_PTR_FOR_FN (cfun)->next_bb;
+-      insn = BB_HEAD (bb);
+-      if (!aarch64_pac_insn_p (get_first_nonnote_insn ()))
+-	{
+-	  bti_insn = gen_bti_c ();
+-	  emit_insn_before (bti_insn, insn);
+-	}
+-    }
+-
+   bb = 0;
+   FOR_EACH_BB_FN (bb, cfun)
+     {
+@@ -153,14 +137,10 @@ rest_of_insert_bti (void)
+ 	   insn = NEXT_INSN (insn))
+ 	{
+ 	  /* If a label is marked to be preserved or can be a non-local goto
+-	     target, it must be protected with a BTI J.  The same applies to
+-	     NOTE_INSN_DELETED_LABEL since they are basically labels that might
+-	     be referenced via variables or constant pool.  */
+-	  if ((LABEL_P (insn)
++	     target, it must be protected with a BTI J.  */
++	  if (LABEL_P (insn)
+ 	       && (LABEL_PRESERVE_P (insn)
+ 		   || bb->flags & BB_NON_LOCAL_GOTO_TARGET))
+-	      || (NOTE_P (insn)
+-		  && NOTE_KIND (insn) == NOTE_INSN_DELETED_LABEL))
+ 	    {
+ 	      bti_insn = gen_bti_j ();
+ 	      emit_insn_after (bti_insn, insn);
+@@ -201,6 +181,22 @@ rest_of_insert_bti (void)
+ 	}
+     }
+ 
++  /* Since a Branch Target Exception can only be triggered by an indirect call,
++     we exempt function that are only called directly.  We also exempt
++     functions that are already protected by Return Address Signing (PACIASP/
++     PACIBSP).  For all other cases insert a BTI C at the beginning of the
++     function.  */
++  if (!cgraph_node::get (cfun->decl)->only_called_directly_p ())
++    {
++      bb = ENTRY_BLOCK_PTR_FOR_FN (cfun)->next_bb;
++      insn = BB_HEAD (bb);
++      if (!aarch64_pac_insn_p (get_first_nonnote_insn ()))
++	{
++	  bti_insn = gen_bti_c ();
++	  emit_insn_before (bti_insn, insn);
++	}
++    }
++
+   timevar_pop (TV_MACH_DEP);
+   return 0;
+ }
+--- a/gcc/config/aarch64/aarch64-cores.def
++++ b/gcc/config/aarch64/aarch64-cores.def
+@@ -109,6 +109,9 @@ AARCH64_CORE("tsv110",  tsv110, tsv110, 8_2A,  AARCH64_FL_FOR_ARCH8_2 | AARCH64_
+ 
+ /* ARMv8.4-A Architecture Processors.  */
+ 
++/* ARM ('A') cores. */
++AARCH64_CORE("zeus", zeus, cortexa57, 8_4A,  AARCH64_FL_FOR_ARCH8_4 | AARCH64_FL_SVE | AARCH64_FL_RCPC | AARCH64_FL_F16 | AARCH64_FL_PROFILE | AARCH64_FL_SSBS, neoversen1, 0x41, 0xd40, -1)
++
+ /* Qualcomm ('Q') cores. */
+ AARCH64_CORE("saphira",     saphira,    saphira,    8_4A,  AARCH64_FL_FOR_ARCH8_4 | AARCH64_FL_CRYPTO | AARCH64_FL_RCPC, saphira,   0x51, 0xC01, -1)
+ 
+--- a/gcc/config/aarch64/aarch64-protos.h
++++ b/gcc/config/aarch64/aarch64-protos.h
+@@ -644,4 +644,17 @@ poly_uint64 aarch64_regmode_natural_size (machine_mode);
+ 
+ bool aarch64_high_bits_all_ones_p (HOST_WIDE_INT);
+ 
++struct atomic_ool_names
++{
++    const char *str[5][4];
++};
++
++rtx aarch64_atomic_ool_func(machine_mode mode, rtx model_rtx,
++			    const atomic_ool_names *names);
++extern const atomic_ool_names aarch64_ool_swp_names;
++extern const atomic_ool_names aarch64_ool_ldadd_names;
++extern const atomic_ool_names aarch64_ool_ldset_names;
++extern const atomic_ool_names aarch64_ool_ldclr_names;
++extern const atomic_ool_names aarch64_ool_ldeor_names;
++
+ #endif /* GCC_AARCH64_PROTOS_H */
+--- a/gcc/config/aarch64/aarch64-simd.md
++++ b/gcc/config/aarch64/aarch64-simd.md
+@@ -1012,31 +1012,17 @@
+ 						     tmp));
+           DONE;
+         }
+-      else
+-        {
+-          operands[2] = force_reg (SImode, operands[2]);
+-        }
+-    }
+-  else if (MEM_P (operands[2]))
+-    {
+-      operands[2] = force_reg (SImode, operands[2]);
+     }
+ 
+-  if (REG_P (operands[2]))
+-    {
+-      rtx tmp = gen_reg_rtx (<MODE>mode);
+-      emit_insn (gen_aarch64_simd_dup<mode> (tmp,
+-					     convert_to_mode (<VEL>mode,
+-							      operands[2],
+-							      0)));
+-      emit_insn (gen_aarch64_simd_reg_sshl<mode> (operands[0], operands[1],
+-						  tmp));
+-      DONE;
+-    }
+-  else
+-    FAIL;
+-}
+-)
++  operands[2] = force_reg (SImode, operands[2]);
++
++  rtx tmp = gen_reg_rtx (<MODE>mode);
++  emit_insn (gen_aarch64_simd_dup<mode> (tmp, convert_to_mode (<VEL>mode,
++							       operands[2],
++							       0)));
++  emit_insn (gen_aarch64_simd_reg_sshl<mode> (operands[0], operands[1], tmp));
++  DONE;
++})
+ 
+ (define_expand "lshr<mode>3"
+   [(match_operand:VDQ_I 0 "register_operand" "")
+@@ -1059,31 +1045,19 @@
+ 						  tmp));
+ 	  DONE;
+ 	}
+-      else
+-        operands[2] = force_reg (SImode, operands[2]);
+-    }
+-  else if (MEM_P (operands[2]))
+-    {
+-      operands[2] = force_reg (SImode, operands[2]);
+     }
+ 
+-  if (REG_P (operands[2]))
+-    {
+-      rtx tmp = gen_reg_rtx (SImode);
+-      rtx tmp1 = gen_reg_rtx (<MODE>mode);
+-      emit_insn (gen_negsi2 (tmp, operands[2]));
+-      emit_insn (gen_aarch64_simd_dup<mode> (tmp1,
+-					     convert_to_mode (<VEL>mode,
+-							      tmp, 0)));
+-      emit_insn (gen_aarch64_simd_reg_shl<mode>_unsigned (operands[0],
+-							  operands[1],
+-							  tmp1));
+-      DONE;
+-    }
+-  else
+-    FAIL;
+-}
+-)
++  operands[2] = force_reg (SImode, operands[2]);
++
++  rtx tmp = gen_reg_rtx (SImode);
++  rtx tmp1 = gen_reg_rtx (<MODE>mode);
++  emit_insn (gen_negsi2 (tmp, operands[2]));
++  emit_insn (gen_aarch64_simd_dup<mode> (tmp1,
++					 convert_to_mode (<VEL>mode, tmp, 0)));
++  emit_insn (gen_aarch64_simd_reg_shl<mode>_unsigned (operands[0], operands[1],
++						      tmp1));
++  DONE;
++})
+ 
+ (define_expand "ashr<mode>3"
+   [(match_operand:VDQ_I 0 "register_operand" "")
+@@ -1106,31 +1080,19 @@
+ 						  tmp));
+           DONE;
+ 	}
+-      else
+-        operands[2] = force_reg (SImode, operands[2]);
+-    }
+-  else if (MEM_P (operands[2]))
+-    {
+-      operands[2] = force_reg (SImode, operands[2]);
+     }
+ 
+-  if (REG_P (operands[2]))
+-    {
+-      rtx tmp = gen_reg_rtx (SImode);
+-      rtx tmp1 = gen_reg_rtx (<MODE>mode);
+-      emit_insn (gen_negsi2 (tmp, operands[2]));
+-      emit_insn (gen_aarch64_simd_dup<mode> (tmp1,
+-					     convert_to_mode (<VEL>mode,
+-							      tmp, 0)));
+-      emit_insn (gen_aarch64_simd_reg_shl<mode>_signed (operands[0],
+-							operands[1],
+-							tmp1));
+-      DONE;
+-    }
+-  else
+-    FAIL;
+-}
+-)
++  operands[2] = force_reg (SImode, operands[2]);
++
++  rtx tmp = gen_reg_rtx (SImode);
++  rtx tmp1 = gen_reg_rtx (<MODE>mode);
++  emit_insn (gen_negsi2 (tmp, operands[2]));
++  emit_insn (gen_aarch64_simd_dup<mode> (tmp1, convert_to_mode (<VEL>mode,
++								tmp, 0)));
++  emit_insn (gen_aarch64_simd_reg_shl<mode>_signed (operands[0], operands[1],
++						    tmp1));
++  DONE;
++})
+ 
+ (define_expand "vashl<mode>3"
+  [(match_operand:VDQ_I 0 "register_operand" "")
+@@ -5214,6 +5176,26 @@
+       if (GET_CODE (operands[0]) != REG)
+ 	operands[1] = force_reg (<MODE>mode, operands[1]);
+     }
++
++  /* If we have a paradoxical subreg trying to write to <MODE> from and the
++     registers don't overlap then we need to break it apart.  What it's trying
++     to do is give two kind of information at the same time.  It's trying to
++     convey liveness information by saying that the entire register will be
++     written to eventually, but it also only wants to write a single part of the
++     register.  Hence the paradoxical subreg.
++
++     Instead of allowing this we will split the two concerns.  The liveness
++     information will be conveyed using a clobber and then we break apart the
++     paradoxical subreg into just a normal write of the part that it wanted to
++     write originally.  */
++
++  if (REG_P (operands[0]) && paradoxical_subreg_p (operands[1]))
++    {
++      if (!reg_overlap_mentioned_p (operands[0], operands[1]))
++	emit_clobber (operands[0]);
++      operands[1] = SUBREG_REG (operands[1]);
++      operands[0] = gen_lowpart (GET_MODE (operands[1]), operands[0]);
++    }
+ })
+ 
+ 
+--- a/gcc/config/aarch64/aarch64-tune.md
++++ b/gcc/config/aarch64/aarch64-tune.md
+@@ -1,5 +1,5 @@
+ ;; -*- buffer-read-only: t -*-
+ ;; Generated automatically by gentune.sh from aarch64-cores.def
+ (define_attr "tune"
+-	"cortexa35,cortexa53,cortexa57,cortexa72,cortexa73,thunderx,thunderxt88p1,thunderxt88,octeontx,octeontxt81,octeontxt83,thunderxt81,thunderxt83,emag,xgene1,falkor,qdf24xx,exynosm1,phecda,thunderx2t99p1,vulcan,thunderx2t99,cortexa55,cortexa75,cortexa76,ares,neoversen1,neoversee1,tsv110,saphira,cortexa57cortexa53,cortexa72cortexa53,cortexa73cortexa35,cortexa73cortexa53,cortexa75cortexa55,cortexa76cortexa55"
++	"cortexa35,cortexa53,cortexa57,cortexa72,cortexa73,thunderx,thunderxt88p1,thunderxt88,octeontx,octeontxt81,octeontxt83,thunderxt81,thunderxt83,emag,xgene1,falkor,qdf24xx,exynosm1,phecda,thunderx2t99p1,vulcan,thunderx2t99,cortexa55,cortexa75,cortexa76,ares,neoversen1,neoversee1,tsv110,zeus,saphira,cortexa57cortexa53,cortexa72cortexa53,cortexa73cortexa35,cortexa73cortexa53,cortexa75cortexa55,cortexa76cortexa55"
+ 	(const (symbol_ref "((enum attr_tune) aarch64_tune)")))
+--- a/gcc/config/aarch64/aarch64.c
++++ b/gcc/config/aarch64/aarch64.c
+@@ -1879,10 +1879,33 @@ emit_set_insn (rtx x, rtx y)
+ rtx
+ aarch64_gen_compare_reg (RTX_CODE code, rtx x, rtx y)
+ {
+-  machine_mode mode = SELECT_CC_MODE (code, x, y);
+-  rtx cc_reg = gen_rtx_REG (mode, CC_REGNUM);
++  machine_mode cmp_mode = GET_MODE (x);
++  machine_mode cc_mode;
++  rtx cc_reg;
+ 
+-  emit_set_insn (cc_reg, gen_rtx_COMPARE (mode, x, y));
++  if (cmp_mode == TImode)
++    {
++      gcc_assert (code == NE);
++
++      cc_mode = CCmode;
++      cc_reg = gen_rtx_REG (cc_mode, CC_REGNUM);
++
++      rtx x_lo = operand_subword (x, 0, 0, TImode);
++      rtx y_lo = operand_subword (y, 0, 0, TImode);
++      emit_set_insn (cc_reg, gen_rtx_COMPARE (cc_mode, x_lo, y_lo));
++
++      rtx x_hi = operand_subword (x, 1, 0, TImode);
++      rtx y_hi = operand_subword (y, 1, 0, TImode);
++      emit_insn (gen_ccmpdi (cc_reg, cc_reg, x_hi, y_hi,
++			     gen_rtx_EQ (cc_mode, cc_reg, const0_rtx),
++			     GEN_INT (AARCH64_EQ)));
++    }
++  else
++    {
++      cc_mode = SELECT_CC_MODE (code, x, y);
++      cc_reg = gen_rtx_REG (cc_mode, CC_REGNUM);
++      emit_set_insn (cc_reg, gen_rtx_COMPARE (cc_mode, x, y));
++    }
+   return cc_reg;
+ }
+ 
+@@ -1895,7 +1918,10 @@ aarch64_gen_compare_reg_maybe_ze (RTX_CODE code, rtx x, rtx y,
+   if (y_mode == E_QImode || y_mode == E_HImode)
+     {
+       if (CONST_INT_P (y))
+-	y = GEN_INT (INTVAL (y) & GET_MODE_MASK (y_mode));
++	{
++	  y = GEN_INT (INTVAL (y) & GET_MODE_MASK (y_mode));
++	  y_mode = SImode;
++	}
+       else
+ 	{
+ 	  rtx t, cc_reg;
+@@ -2818,7 +2844,7 @@ aarch64_add_offset_1 (scalar_int_mode mode, rtx dest,
+   gcc_assert (emit_move_imm || temp1 != NULL_RTX);
+   gcc_assert (temp1 
