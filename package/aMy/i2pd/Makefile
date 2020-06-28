@@ -29,7 +29,6 @@ CMAKE_OPTIONS += \
 	-DWITH_AVX=0 \
 	-DWITH_HARDENING=0 \
 	-DWITH_LIBRARY=0 \
-	-DCMAKE_BUILD_TYPE=Release \
 	-DWITH_STATIC=1 \
 	-DWITH_UPNP=0
 
@@ -39,7 +38,6 @@ define Package/i2pd
 	DEPENDS:=+libstdcpp +libpthread +librt +libopenssl +boost +boost-system \
 	+boost-filesystem +boost-program_options +boost-date_time +libatomic +zlib
 	TITLE:=full-featured C++ implementation of I2P client
-	URL:=https://github.com/PurpleI2P/i2pd
 	USERID:=i2pd:i2pd
 endef
 

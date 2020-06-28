@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=7503e8d
+PKG_VERSION:=9b4c4ab
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/mirror/ncurses
+PKG_SOURCE_URL:=https://github.com/mirror/ncurses.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
 PKG_LICENSE:=MIT
