@@ -143,7 +143,7 @@ $(call Package/e2fsprogs)
 endef
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-TARGET_CFLAGS += $(FPIC) -fno-stack-protector -U_FORTIFY_SOURCE -ffunction-sections -fdata-sections -flto
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
 
 TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lrt)
 TARGET_LDFLAGS += -flto
