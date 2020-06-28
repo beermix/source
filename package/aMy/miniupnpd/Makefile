@@ -49,6 +49,7 @@ CONFIGURE_ARGS = \
 	--leasefile \
 	--portinuse \
 	--disable-fork \
+	--debug \
 	--firewall=iptables
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os -fno-strict-aliasing -fno-common -fPIE -Wall -Wextra -Wstrict-prototypes -Wdeclaration-after-statement
