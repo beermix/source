@@ -38,10 +38,10 @@ define Package/miniupnpd/conffiles
 /etc/config/upnpd
 endef
 
-#define Build/Prepare
-#	$(call Build/Prepare/Default)
-#	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
-#endef
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
+endef
 
 CONFIGURE_ARGS = \
 	$(if $(CONFIG_IPV6),--ipv6) \
