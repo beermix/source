@@ -1,34 +1,13 @@
 diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 32b8c72d6d0b..ce099e2f2714 100644
+index 32b8c72d6d0b..797ab3fb0c29 100644
 --- a/arch/x86/Makefile
 +++ b/arch/x86/Makefile
-@@ -33,8 +33,7 @@ M16_CFLAGS	 := $(call cc-option, -m16, $(CODE16GCC_CFLAGS))
- 
- REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING \
- 		   -Wall -Wstrict-prototypes -march=i386 -mregparm=3 \
--		   -fno-strict-aliasing -fomit-frame-pointer -fno-pic \
--		   -mno-mmx -mno-sse
-+		   -fno-strict-aliasing -fomit-frame-pointer -fno-pic
- 
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
-@@ -58,7 +57,6 @@ endif
+@@ -58,7 +58,7 @@ endif
  #
  #    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53383
  #
--KBUILD_CFLAGS += -mno-sse -mno-mmx -mno-sse2
+-KBUILD_CFLAGS += -mno-sse -mno-mmx -mno-sse2 -mno-3dnow
++KBUILD_CFLAGS += -mno-3dnow
  KBUILD_CFLAGS += $(call cc-option,-mno-avx,)
  
  ifeq ($(CONFIG_X86_32),y)
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 6b84afdd7538..6c06e243d703 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -32,7 +32,6 @@ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
- cflags-$(CONFIG_X86_32) := -march=i386
- cflags-$(CONFIG_X86_64) := -mcmodel=small
- KBUILD_CFLAGS += $(cflags-y)
--KBUILD_CFLAGS += -mno-mmx -mno-sse
- KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
- KBUILD_CFLAGS += $(call cc-option,-fno-stack-protector)
- KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
