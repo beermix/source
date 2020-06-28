@@ -71,6 +71,7 @@ define Build/Configure/Default
 			-DDL_LIBRARY=$(STAGING_DIR) \
 			-DCMAKE_PREFIX_PATH=$(STAGING_DIR) \
 			-DCMAKE_SKIP_RPATH=TRUE  \
+			-Wno-dev \
 			$(CMAKE_OPTIONS) \
 		$(CMAKE_SOURCE_DIR) \
 	)
@@ -104,6 +105,7 @@ define Host/Configure/Default
 			-DCMAKE_PREFIX_PATH=$(HOST_BUILD_PREFIX) \
 			-DCMAKE_SKIP_RPATH=TRUE  \
 			-DCMAKE_INSTALL_LIBDIR=lib \
+			-Wno-dev \
 			$(CMAKE_HOST_OPTIONS) \
 		$(HOST_CMAKE_SOURCE_DIR) \
 	)
