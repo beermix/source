@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=miniupnpd
-PKG_VERSION:=2.1.20200510
-PKG_RELEASE:=2
+PKG_VERSION:=2.2.0-RC1
+PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://miniupnp.tuxfamily.org/files
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=821e708f369cc1fb851506441fbc3a1f4a1b5a8bf8e84a9e71758a32f5127e8b
+PKG_HASH:=
 
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
@@ -48,6 +48,7 @@ CONFIGURE_ARGS = \
 	--igd2 \
 	--leasefile \
 	--portinuse \
+	--disable-fork \
 	--firewall=iptables
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
