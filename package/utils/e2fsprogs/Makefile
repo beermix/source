@@ -3,7 +3,7 @@
 # Copyright 2010 Vertical Communications
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# -fno-stack-protector -U_FORTIFY_SOURCE
 
 include $(TOPDIR)/rules.mk
 
@@ -142,7 +142,7 @@ $(call Package/e2fsprogs)
   DEPENDS:= +e2fsprogs
 endef
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os -fno-stack-protector -U_FORTIFY_SOURCE
 TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
 
 TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lrt)
