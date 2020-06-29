@@ -1,0 +1,45 @@
+From 12a13bd8b3f7d17735f86c767787ca03e55132a9 Mon Sep 17 00:00:00 2001
+From: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Date: Fri, 19 Jun 2020 11:28:51 +0100
+Subject: [PATCH] Fix buffer overflow in TCP requests
+
+This patch fixes a buffer overflow in TCP requests. Since the read is
+not actually being retried, the byte written by the child can be left in
+the pipe. When that happens, cache_recv_insert() reads the length of the
+name, which is now multiplied by 256 due to the extra 0 byte (8 bit
+shift) and results in daemon->namebuff being overflowed. Namebuff is
+immediately before the daemon struct in memory so it ends up corrupting
+the beginning of the daemon struct.
+
+Signed-off-by: Frank Riley <fhriley@gmail.com>
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+---
+ src/dnsmasq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/dnsmasq.c b/src/dnsmasq.c
+index 13cc917..7769cf2 100644
+--- a/src/dnsmasq.c
++++ b/src/dnsmasq.c
+@@ -1883,7 +1883,7 @@ static void check_dns_listeners(time_t now)
+ 			   single byte comes back up the pipe, which
+ 			   is sent by the child after it has closed the
+ 			   netlink socket. */
+-			retry_send(read(pipefd[0], &a, 1));
++			while (retry_send(read(pipefd[0], &a, 1)));
+ #endif
+ 			break;
+ 		      }
+@@ -1924,7 +1924,7 @@ static void check_dns_listeners(time_t now)
+ #ifdef HAVE_LINUX_NETWORK
+ 		  /* See comment above re netlink socket. */
+ 		  close(daemon->netlinkfd);
+-		  retry_send(write(pipefd[1], &a, 1));
++		  while (retry_send(write(pipefd[1], &a, 1)));
+ #endif
+ 		}
+ 
+-- 
+2.24.3 (Apple Git-128)
+
