@@ -72,7 +72,7 @@ ifeq ($(PKG_VERSION),10.1.0)
 endif
 
 ifeq ($(PKG_VERSION),10.1.1)
-#  PKG_REV:=10-20200627
+#  PKG_REV:=10-20200703
 #  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
 #  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
 #  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
