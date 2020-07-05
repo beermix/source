@@ -8,13 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=busybox
-PKG_VERSION:=d21a63f
+PKG_VERSION:=1.32.0
+PKG_RELEASE:=1
+PKG_FLAGS:=essential
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/mirror/busybox.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE_URL:=https://www.busybox.net/downloads \
+		http://sources.buildroot.net
+PKG_HASH:=c35d87f1d04b2b153d33c275c2632e40d388a88f19a9e71727e0bbbff51fe689
 
 PKG_BUILD_DEPENDS:=BUSYBOX_CONFIG_PAM:libpam
 PKG_BUILD_PARALLEL:=1
@@ -76,6 +77,7 @@ ifeq ($(CONFIG_USE_GLIBC),y)
   LDLIBS += $(call BUSYBOX_IF_ENABLED,NSLOOKUP_OPENWRT,resolv)
 endif
 
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -flto=jobserver -fuse-linker-plugin
 
