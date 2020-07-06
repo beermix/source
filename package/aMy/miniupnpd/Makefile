@@ -43,10 +43,6 @@ define Build/Prepare
 	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
 endef
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-TARGET_CFLAGS += $(FPIC) -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
-
 MAKE_FLAGS += \
 	TARGET_OPENWRT=1 TEST=0 LIBS="" \
 	CC="$(TARGET_CC) -DIPTABLES_143 -lip4tc -luuid \
@@ -54,6 +50,10 @@ MAKE_FLAGS += \
 	CONFIG_OPTIONS="--portinuse --leasefile --igd2 \
 		$(if $(CONFIG_IPV6),--ipv6)" \
 	-f Makefile.linux miniupnpd
+
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CFLAGS += $(FPIC) -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 define Package/miniupnpd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
