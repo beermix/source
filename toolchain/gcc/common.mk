@@ -205,8 +205,6 @@ ifeq ($(CONFIG_arm),y)
   # that do not belong here. The cpu,fpu type should be specified via
   # --with-cpu and --with-fpu for ARM and not CFLAGS.
   TARGET_CFLAGS:=$(filter-out -m%,$(call qstrip,$(TARGET_CFLAGS)))
-  TARGET_CFLAGS:=$(filter-out -fno-plt,$(call qstrip,$(TARGET_CFLAGS)))
-  TARGET_CFLAGS:=$(filter-out -O%,$(TARGET_CFLAGS)) -O3
 endif
 
 ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
@@ -217,8 +215,8 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -O3" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -O3" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
