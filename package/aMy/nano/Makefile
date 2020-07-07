@@ -38,6 +38,8 @@ define Package/nano/description
   of the Pico text editor.
 endef
 
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+
 CONFIGURE_ARGS += \
 	--enable-color \
 	--enable-nanorc \
@@ -46,6 +48,10 @@ CONFIGURE_ARGS += \
 define Package/nano/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/$(PKG_NAME) $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_DATA) ./etc/nanorc $(1)/etc/
+	$(INSTALL_DIR) $(1)/share/nanorc
+	$(INSTALL_DATA) ./share/nanorc/* $(1)/share/nanorc/
 endef
 
 $(eval $(call BuildPackage,nano))
