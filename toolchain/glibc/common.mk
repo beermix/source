@@ -11,8 +11,8 @@ PKG_VERSION:=2.31
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=4e8a33a9590edc5c3a2cc5e726a3f2a73b66cdc0
-PKG_MIRROR_HASH:=
+PKG_SOURCE_VERSION:=3a44844c97a8ca1d0798c45b5252e6a49f9cf8e1
+PKG_MIRROR_HASH:=d7206510e494b3c723173d8ec0dd2e41314da59075871c5642324688001b3f6e
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -40,7 +40,6 @@ ifeq ($(ARCH),mips64)
 endif
 
 TARGET_CFLAGS=${TARGET_CFLAGS/-Wl,-z,now/}
-TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
 TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
@@ -50,7 +49,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -march=bonnell -O2 -fno-plt -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
