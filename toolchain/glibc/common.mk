@@ -39,8 +39,9 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-# TARGET_CFLAGS=${TARGET_CFLAGS/-Wl,-z,now/}
-# TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
+TARGET_CFLAGS=${TARGET_CFLAGS/-Wl,-z,now/}
+TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
+TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
@@ -65,7 +66,7 @@ GLIBC_CONFIGURE:= \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_REGULAR),--enable-stack-protector=yes) \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
-		--enable-kernel=5.4.0
+		--enable-kernel=5.4
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
