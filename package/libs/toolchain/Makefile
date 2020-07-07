@@ -367,28 +367,27 @@ define Package/libgfortran/config
 	endmenu
 endef
 
-define Package/libgo
+define Package/libgomp
 $(call Package/gcc/Default)
-  TITLE:=Go support library
-  DEPENDS+=@INSTALL_GCCGO
+  TITLE:=OpenMP support library
 endef
 
-define Package/libgo/config
+define Package/libgomp/config
 	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
 
-	config LIBGO_ROOT_DIR
+	config LIBGOMP_ROOT_DIR
 		string
-		prompt "libgo shared library base directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		prompt "libgomp shared library base directory"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
 		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
 		default "/"  if NATIVE_TOOLCHAIN
 
-	config LIBGO_FILE_SPEC
+	config LIBGOMP_FILE_SPEC
 		string
-		prompt "libgo shared library files (use wildcards)"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
-		default "./lib/libgo.so*"
+		prompt "libgomp shared library files (use wildcards)"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		default "./lib/libgomp.so*"
 
 	endmenu
 endef
@@ -616,7 +615,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/{getent,getconf,sprof,gencat,makedb,pldd,pcprofiledump,xtrace,sotruss,catchsegv,localedef,lddlibc4,ldd} $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/{getent,getconf,ldd,localedef,lddlibc4} $(1)/usr/bin/
 	mkdir -p $(1)/share/i18n/charmaps
 	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-* $(1)/share/i18n/charmaps/
 	mkdir -p $(1)/share/i18n/locales
@@ -730,10 +729,10 @@ else
 	exit 0
   endef
 
-  define Package/libgo/install
-	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
+  define Package/libgomp/install
+	for file in $(call qstrip,$(CONFIG_LIBGOMP_FILE_SPEC)); do \
 		$(INSTALL_DIR) $(1)/lib ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGO_ROOT_DIR))/$$$$file $(1)/lib/ ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBGOMP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
 	exit 0
   endef
@@ -770,6 +769,6 @@ $(eval $(call BuildPackage,libpthread))
 $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
-$(eval $(call BuildPackage,libgo))
+$(eval $(call BuildPackage,libgomp))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
