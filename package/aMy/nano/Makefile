@@ -50,8 +50,8 @@ define Package/nano/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/$(PKG_NAME) $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DATA) ./etc/nanorc $(1)/etc/
-	$(INSTALL_DIR) $(1)/share/nanorc
-	$(INSTALL_DATA) ./share/nanorc/* $(1)/share/nanorc/
+	$(INSTALL_DIR) $(1)/usr/share/nanorc
+	$(INSTALL_DATA) ./share/nanorc/* $(1)/usr/share/nanorc/
 endef
 
 $(eval $(call BuildPackage,nano))
