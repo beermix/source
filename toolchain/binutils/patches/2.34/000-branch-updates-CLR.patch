@@ -1,12 +1,33 @@
-# DP: updates from the binutils-2.34 branch
-
-# git diff d7f734bc7e9e5fb6c33b433973b57e1eed3a7e9f 11327a1bc2e2970eb85cd5e49ddd3a646c3fa250
-
 diff --git a/bfd/ChangeLog b/bfd/ChangeLog
-index dd2c11d918..062b7ec873 100644
+index dd2c11d918..ca87f744a3 100644
 --- a/bfd/ChangeLog
 +++ b/bfd/ChangeLog
-@@ -1,6 +1,199 @@
+@@ -1,6 +1,224 @@
++2020-04-21  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-21  Tamar Christina  <tamar.christina@arm.com>
++
++	PR binutils/24753
++	* compress.c (bfd_get_full_section_contents): Exclude sections with no
++	content.
++
++2020-04-08  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-01  Tamar Christina  <tamar.christina@arm.com>
++
++	PR ld/16017
++	* elf32-arm.c (elf32_arm_populate_plt_entry): Set LSB of the PLT0
++	address in the GOT if in thumb only mode.
++
++2020-04-08  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-01  Tamar Christina  <tamar.christina@arm.com>
++
++	* elf32-arm.c (elf32_thumb2_plt_entry): Fix PC-rel offset.
++
 +2020-03-30  Alan Modra  <amodra@gmail.com>
 +
 +	PR 25745
@@ -223,6 +244,20 @@ index 2bfcf1a6b1..3ddd2d89a8 100644
        if (!_bfd_coff_free_symbols (abfd))
  	return FALSE;
      }
+diff --git a/bfd/compress.c b/bfd/compress.c
+index ce6bb2beae..728ba39dfb 100644
+--- a/bfd/compress.c
++++ b/bfd/compress.c
+@@ -255,6 +255,9 @@ bfd_get_full_section_contents (bfd *abfd, sec_ptr sec, bfd_byte **ptr)
+ 	      /* PR 24753: Linker created sections can be larger than
+ 		 the file size, eg if they are being used to hold stubs.  */
+ 	      && (bfd_section_flags (sec) & SEC_LINKER_CREATED) == 0
++	      /* PR 24753: Sections which have no content should also be
++		 excluded as they contain no size on disk.  */
++	      && (bfd_section_flags (sec) & SEC_HAS_CONTENTS) != 0
+ 	      /* The MMO file format supports its own special compression
+ 		 technique, but it uses COMPRESS_SECTION_NONE when loading
+ 		 a section's contents.  */
 diff --git a/bfd/configure b/bfd/configure
 index 9cba071955..bc576b7894 100755
 --- a/bfd/configure
@@ -352,6 +387,34 @@ index a8d98a60f4..f02b7249dd 100644
  	}
  
        /* Check that all sections are in a PT_LOAD segment.
+diff --git a/bfd/elf32-arm.c b/bfd/elf32-arm.c
+index faf8376f20..cb8370c39d 100644
+--- a/bfd/elf32-arm.c
++++ b/bfd/elf32-arm.c
+@@ -2453,8 +2453,8 @@ static const bfd_vma elf32_thumb2_plt_entry [] =
+   0x0c00f240,		/* movw	   ip, #0xNNNN	  */
+   0x0c00f2c0,		/* movt	   ip, #0xNNNN	  */
+   0xf8dc44fc,		/* add	   ip, pc	  */
+-  0xe7fdf000		/* ldr.w   pc, [ip]	  */
+-			/* b      .-2		  */
++  0xe7fcf000		/* ldr.w   pc, [ip]	  */
++			/* b      .-4		  */
+ };
+ 
+ /* The format of the first entry in the procedure linkage table
+@@ -9993,6 +9993,12 @@ elf32_arm_populate_plt_entry (bfd *output_bfd, struct bfd_link_info *info,
+ 	      rel.r_info = ELF32_R_INFO (dynindx, R_ARM_JUMP_SLOT);
+ 	      initial_got_entry = (splt->output_section->vma
+ 				   + splt->output_offset);
++
++	      /* PR ld/16017
++		 When thumb only we need to set the LSB for any address that
++		 will be used with an interworking branch instruction.  */
++	      if (using_thumb_only (htab))
++		initial_got_entry |= 1;
+ 	    }
+ 	}
+ 
 diff --git a/bfd/elf32-msp430.c b/bfd/elf32-msp430.c
 index 184f01d4ee..784c32ed02 100644
 --- a/bfd/elf32-msp430.c
@@ -1322,19 +1385,6 @@ index 128cf19145..8a8b74f3f9 100644
      }
    else
      return '?';
-diff --git a/bfd/version.h b/bfd/version.h
-index c54e28f89a..91798ce4e2 100644
---- a/bfd/version.h
-+++ b/bfd/version.h
-@@ -16,7 +16,7 @@
- 
-    In releases, the date is not included in either version strings or
-    sonames.  */
--#define BFD_VERSION_DATE 20200201
-+#define BFD_VERSION_DATE 20200407
- #define BFD_VERSION @bfd_version@
- #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
- #define REPORT_BUGS_TO @report_bugs_to@
 diff --git a/bfd/version.m4 b/bfd/version.m4
 index 697d7097e6..367775a83a 100644
 --- a/bfd/version.m4
@@ -1477,10 +1527,67 @@ index 35842f74b2..6ecfab5d5a 100644
  	      else
  		{
 diff --git a/gas/ChangeLog b/gas/ChangeLog
-index 25d49fd4c4..4ad599ae79 100644
+index 25d49fd4c4..92957f531b 100644
 --- a/gas/ChangeLog
 +++ b/gas/ChangeLog
-@@ -1,6 +1,55 @@
+@@ -1,6 +1,112 @@
++2020-06-10  Alex Coplan  <alex.coplan@arm.com>
++
++	Backport from master
++	2020-06-01  Alex Coplan  <alex.coplan@arm.com>
++	* write.c (relax_segment): Fix handling of negative offset when
++	relaxing an rs_org frag.
++	* testsuite/gas/aarch64/org-neg.d: New test.
++	* testsuite/gas/aarch64/org-neg.l: Error output for test.
++	* testsuite/gas/aarch64/org-neg.s: Input for test.
++	* testsuite/gas/arm/org-neg.d: New test.
++	* testsuite/gas/arm/org-neg.l: Error output for test.
++	* testsuite/gas/arm/org-neg.s: Input for test.
++
++2020-05-18  Alexander Fedotov <alfedotov@gmail.com>
++
++	PR 25992
++	* config/tc-arm.c : Add arm_ext_v8r feature.
++	(it_fsm_post_encode): Check arm_ext_v8r feature.
++	(get_aeabi_cpu_arch_from_fset): Check arm_ext_v8r feature.
++
++2020-05-18  Alan Modra  <amodra@gmail.com>
++
++	* symbols.c (resolve_symbol_value): Invoke LOCAL_SYMBOL_CHECK
++	before looking at add_symbol->sy_flags.
++
++2020-05-15  Alan Modra  <amodra@gmail.com>
++	    Alex Coplan  <alex.coplan@arm.com>
++
++	* symbols.c (struct local_symbol): Update comment.
++	(resolve_symbol_value): For resolved symbols equated to other
++	symbols, verify that the referenced symbol is not a local_symbol
++	before accessing sy_value.  Don't leave symbol loops during
++	finalize_syms resolution.
++	* testsuite/gas/all/assign-bad-recursive.d: New test.
++	* testsuite/gas/all/assign-bad-recursive.l: Error output for test.
++	* testsuite/gas/all/assign-bad-recursive.s: Assembly for test.
++	* testsuite/gas/all/gas.exp: Run it.
++
++2020-05-07  Andre Vieira  <andre.simoesdiasvieira@arm.com>
++
++	Backport from mainline.
++	2020-05-04  Andre Vieira  <andre.simoesdiasvieira@arm.com>
++
++	PR gas/25863
++	* config/tc-arm.c (do_mve_vmull): Fix scalar and NEON parsing of vmul.
++	* testsuite/gas/arm/mve-scalar-vmult-it.d: New test.
++	* testsuite/gas/arm/mve-scalar-vmult-it.s: New test.
++
++2020-04-21  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-21  Tamar Christina  <tamar.christina@arm.com>
++
++	PR binutils/24753
++	* testsuite/gas/arm/pr24753.d: New test.
++	* testsuite/gas/arm/pr24753.s: New test.
++
 +2020-03-13  Andre Vieira  <andre.simoesdiasvieira@arm.com>
 +
 +	Backport from mainline.
@@ -1553,10 +1660,18 @@ index 5ed7302da7..9a3f352108 100644
  
  * Add support for z80-elf target.
 diff --git a/gas/config/tc-arm.c b/gas/config/tc-arm.c
-index bb0b03e35e..8ad2d6d3bd 100644
+index bb0b03e35e..b6bb0debbe 100644
 --- a/gas/config/tc-arm.c
 +++ b/gas/config/tc-arm.c
-@@ -7046,6 +7046,8 @@ enum operand_parse_code
+@@ -230,6 +230,7 @@ static const arm_feature_set arm_ext_div = ARM_FEATURE_CORE_LOW (ARM_EXT_DIV);
+ static const arm_feature_set arm_ext_v7 = ARM_FEATURE_CORE_LOW (ARM_EXT_V7);
+ static const arm_feature_set arm_ext_v7a = ARM_FEATURE_CORE_LOW (ARM_EXT_V7A);
+ static const arm_feature_set arm_ext_v7r = ARM_FEATURE_CORE_LOW (ARM_EXT_V7R);
++static const arm_feature_set arm_ext_v8r = ARM_FEATURE_CORE_HIGH (ARM_EXT2_V8R);
+ #ifdef OBJ_ELF
+ static const arm_feature_set ATTRIBUTE_UNUSED arm_ext_v7m = ARM_FEATURE_CORE_LOW (ARM_EXT_V7M);
+ #endif
+@@ -7046,6 +7047,8 @@ enum operand_parse_code
    OP_RNDMQ,     /* Neon double precision (0..31) or MVE vector register.  */
    OP_RNDMQR,    /* Neon double precision (0..31), MVE vector or ARM register.
  		 */
@@ -1565,7 +1680,7 @@ index bb0b03e35e..8ad2d6d3bd 100644
    OP_RNQ,	/* Neon quad precision register */
    OP_RNQMQ,	/* Neon quad or MVE vector register.  */
    OP_RVSD,	/* VFP single or double precision register */
-@@ -7195,6 +7197,8 @@ enum operand_parse_code
+@@ -7195,6 +7198,8 @@ enum operand_parse_code
    OP_oRNSDQ,	 /* Optional single, double or quad precision vector register */
    OP_oRNSDQMQ,	 /* Optional single, double or quad register or MVE vector
  		    register.  */
@@ -1574,7 +1689,7 @@ index bb0b03e35e..8ad2d6d3bd 100644
    OP_oSHll,	 /* LSL immediate */
    OP_oSHar,	 /* ASR immediate */
    OP_oSHllar,	 /* LSL or ASR immediate */
-@@ -7391,6 +7395,10 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
+@@ -7391,6 +7396,10 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
  	case OP_RVS:   po_reg_or_fail (REG_TYPE_VFS);	  break;
  	case OP_RVD:   po_reg_or_fail (REG_TYPE_VFD);	  break;
  	case OP_oRND:
@@ -1585,7 +1700,7 @@ index bb0b03e35e..8ad2d6d3bd 100644
  	case OP_RNDMQR:
  	  po_reg_or_goto (REG_TYPE_RN, try_rndmq);
  	  break;
-@@ -7456,6 +7464,12 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
+@@ -7456,6 +7465,12 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
  	case OP_RVSD_COND:
  	  po_reg_or_goto (REG_TYPE_VFSD, try_cond);
  	  break;
@@ -1598,7 +1713,30 @@ index bb0b03e35e..8ad2d6d3bd 100644
  	case OP_oRNSDQ:
  	case OP_RNSDQ: po_reg_or_fail (REG_TYPE_NSDQ);    break;
  	case OP_RNSDQMQR:
-@@ -19542,7 +19556,7 @@ neon_mixed_length (struct neon_type_el et, unsigned size)
+@@ -18207,19 +18222,13 @@ do_mve_vmull (void)
+ 
+   enum neon_shape rs = neon_select_shape (NS_HHH, NS_FFF, NS_DDD, NS_DDS,
+ 					  NS_QQS, NS_QQQ, NS_QQR, NS_NULL);
+-  if (!ARM_CPU_HAS_FEATURE (cpu_variant, mve_ext)
+-      && inst.cond == COND_ALWAYS
++  if (inst.cond == COND_ALWAYS
+       && ((unsigned)inst.instruction) == M_MNEM_vmullt)
+     {
++
+       if (rs == NS_QQQ)
+ 	{
+-
+-	  struct neon_type_el et = neon_check_type (3, rs, N_EQK , N_EQK,
+-						    N_SUF_32 | N_F64 | N_P8
+-						    | N_P16 | N_I_MVE | N_KEY);
+-	  if (((et.type == NT_poly) && et.size == 8
+-	       && ARM_CPU_IS_ANY (cpu_variant))
+-	      || (et.type == NT_integer) || (et.type == NT_float))
++	  if (!ARM_CPU_HAS_FEATURE (cpu_variant, mve_ext))
+ 	    goto neon_vmul;
+ 	}
+       else
+@@ -19542,7 +19551,7 @@ neon_mixed_length (struct neon_type_el et, unsigned size)
  static void
  do_neon_dyadic_long (void)
  {
@@ -1607,7 +1745,17 @@ index bb0b03e35e..8ad2d6d3bd 100644
    if (rs == NS_QDD)
      {
        if (vfp_or_neon_is_neon (NEON_CHECK_ARCH | NEON_CHECK_CC) == FAIL)
-@@ -26039,8 +26053,8 @@ static const struct asm_opcode insns[] =
+@@ -22792,7 +22801,8 @@ it_fsm_post_encode (void)
+       && warn_on_restrict_it
+       && !now_pred.warn_deprecated
+       && warn_on_deprecated
+-      && ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_v8)
++      && (ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_v8)
++          || ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_v8r))
+       && !ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_m))
+     {
+       if (inst.instruction >= 0x10000)
+@@ -26039,8 +26049,8 @@ static const struct asm_opcode insns[] =
  #define ARM_VARIANT & fpu_neon_ext_v1
   mnUF(vabd,      _vabd,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ), neon_dyadic_if_su),
   mnUF(vabdl,     _vabdl,	  3, (RNQMQ, RNDMQ, RNDMQ),   neon_dyadic_long),
@@ -1618,6 +1766,26 @@ index bb0b03e35e..8ad2d6d3bd 100644
   mnUF(vand,      _vand,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ_Ibig), neon_logic),
   mnUF(vbic,      _vbic,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ_Ibig), neon_logic),
   mnUF(vorr,      _vorr,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ_Ibig), neon_logic),
+@@ -32327,12 +32337,14 @@ get_aeabi_cpu_arch_from_fset (const arm_feature_set *arch_ext_fset,
+ 
+ found:
+   /* Tag_CPU_arch_profile.  */
+-  if (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v7a)
+-      || ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8)
+-      || (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_atomics)
+-	  && !ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8m_m_only)))
++  if (!ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8r)
++      && (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v7a)
++          || ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8)
++          || (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_atomics)
++              && !ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8m_m_only))))
+     *profile = 'A';
+-  else if (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v7r))
++  else if (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v7r)
++      || ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8r))
+     *profile = 'R';
+   else if (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_m))
+     *profile = 'M';
 diff --git a/gas/config/tc-i386.c b/gas/config/tc-i386.c
 index 8728725b82..3f1d4cab7e 100644
 --- a/gas/config/tc-i386.c
@@ -1797,6 +1965,78 @@ index e8685dd046..ed74e82855 100644
  
  @cindex @samp{-O0} option, i386
  @cindex @samp{-O0} option, x86-64
+diff --git a/gas/symbols.c b/gas/symbols.c
+index 79cdb82ba8..acdab3f5e0 100644
+--- a/gas/symbols.c
++++ b/gas/symbols.c
+@@ -114,7 +114,7 @@ struct symbol
+ /* A pointer in the symbol may point to either a complete symbol
+    (struct symbol above) or to a local symbol (struct local_symbol
+    defined here).  The symbol code can detect the case by examining
+-   the first field.  It is always NULL for a local symbol.
++   the first field which is present in both structs.
+ 
+    We do this because we ordinarily only need a small amount of
+    information for a local symbol.  The symbol table takes up a lot of
+@@ -1237,11 +1237,18 @@ resolve_symbol_value (symbolS *symp)
+   if (symp->sy_flags.sy_resolved)
+     {
+       final_val = 0;
+-      while (symp->sy_value.X_op == O_symbol
+-	     && symp->sy_value.X_add_symbol->sy_flags.sy_resolved)
++      while (symp->sy_value.X_op == O_symbol)
+ 	{
+ 	  final_val += symp->sy_value.X_add_number;
+ 	  symp = symp->sy_value.X_add_symbol;
++	  if (LOCAL_SYMBOL_CHECK (symp))
++	    {
++	      struct local_symbol *locsym = (struct local_symbol *) symp;
++	      final_val += locsym->lsy_value;
++	      return final_val;
++	    }
++	  if (!symp->sy_flags.sy_resolved)
++	    return 0;
+ 	}
+       if (symp->sy_value.X_op == O_constant)
+ 	final_val += symp->sy_value.X_add_number;
+@@ -1380,6 +1387,12 @@ resolve_symbol_value (symbolS *symp)
+ 	      break;
+ 	    }
+ 
++	  /* Don't leave symbol loops.  */
++	  if (finalize_syms
++	      && !LOCAL_SYMBOL_CHECK (add_symbol)
++	      && add_symbol->sy_flags.sy_resolving)
++	    break;
++
+ 	  if (finalize_syms && final_val == 0)
+ 	    {
+ 	      if (LOCAL_SYMBOL_CHECK (add_symbol))
+diff --git a/gas/testsuite/gas/aarch64/org-neg.d b/gas/testsuite/gas/aarch64/org-neg.d
+new file mode 100644
+index 0000000000..83e6af6afb
+--- /dev/null
++++ b/gas/testsuite/gas/aarch64/org-neg.d
+@@ -0,0 +1,3 @@
++#name: negative org should not cause internal error
++#source: org-neg.s
++#error_output: org-neg.l
+diff --git a/gas/testsuite/gas/aarch64/org-neg.l b/gas/testsuite/gas/aarch64/org-neg.l
+new file mode 100644
+index 0000000000..f8414adc19
+--- /dev/null
++++ b/gas/testsuite/gas/aarch64/org-neg.l
+@@ -0,0 +1,2 @@
++[^:]*: Assembler messages:
++.*: Error: attempt to move .org backwards
+diff --git a/gas/testsuite/gas/aarch64/org-neg.s b/gas/testsuite/gas/aarch64/org-neg.s
+new file mode 100644
+index 0000000000..403e70d5e0
+--- /dev/null
++++ b/gas/testsuite/gas/aarch64/org-neg.s
+@@ -0,0 +1,2 @@
++.=-1
++ret
 diff --git a/gas/testsuite/gas/aarch64/sve-bfloat-movprfx.d b/gas/testsuite/gas/aarch64/sve-bfloat-movprfx.d
 index 4ba95b8950..e51bd11427 100644
 --- a/gas/testsuite/gas/aarch64/sve-bfloat-movprfx.d
@@ -1921,6 +2161,135 @@ index 0000000000..9ef0ad532f
 +	bfcvtnt z0.h, p1/m, z2.s
 +
 +	ret
+diff --git a/gas/testsuite/gas/all/assign-bad-recursive.d b/gas/testsuite/gas/all/assign-bad-recursive.d
+new file mode 100644
+index 0000000000..aeec5d55f8
+--- /dev/null
++++ b/gas/testsuite/gas/all/assign-bad-recursive.d
+@@ -0,0 +1,4 @@
++#name: bad recursive assignments
++#source: assign-bad-recursive.s
++#xfail: bfin-*-*
++#error_output: assign-bad-recursive.l
+diff --git a/gas/testsuite/gas/all/assign-bad-recursive.l b/gas/testsuite/gas/all/assign-bad-recursive.l
+new file mode 100644
+index 0000000000..70eaf0fe2e
+--- /dev/null
++++ b/gas/testsuite/gas/all/assign-bad-recursive.l
+@@ -0,0 +1,7 @@
++[^:]*: Assembler messages:
++.*: Error: symbol definition loop encountered at `aaa'
++#...
++.*: Error: symbol definition loop encountered at `iii'
++#...
++.*: Error: symbol definition loop encountered at `xxx'
++#pass
+diff --git a/gas/testsuite/gas/all/assign-bad-recursive.s b/gas/testsuite/gas/all/assign-bad-recursive.s
+new file mode 100644
+index 0000000000..21917d91ff
+--- /dev/null
++++ b/gas/testsuite/gas/all/assign-bad-recursive.s
+@@ -0,0 +1,8 @@
++ aaa = aaa
++
++ iii = jjj
++ jjj = iii
++
++ xxx = yyy
++ yyy = zzz
++ zzz = xxx
+diff --git a/gas/testsuite/gas/all/gas.exp b/gas/testsuite/gas/all/gas.exp
+index 78cd3eb3ea..93e6e79b9d 100644
+--- a/gas/testsuite/gas/all/gas.exp
++++ b/gas/testsuite/gas/all/gas.exp
+@@ -97,6 +97,7 @@ if { ![istarget "bfin-*-*"] } then {
+     gas_test "assign-ok.s" "" "" "== assignment support"
+ }
+ gas_test_error "assign-bad.s" "" "== assignment for symbol already set"
++run_dump_test assign-bad-recursive
+ 
+ run_dump_test simple-forward
+ run_dump_test forward
+diff --git a/gas/testsuite/gas/arm/attr-march-armv8-r+crypto.d b/gas/testsuite/gas/arm/attr-march-armv8-r+crypto.d
+index e2d83a0dbe..5bd0fc5f37 100644
+--- a/gas/testsuite/gas/arm/attr-march-armv8-r+crypto.d
++++ b/gas/testsuite/gas/arm/attr-march-armv8-r+crypto.d
+@@ -9,7 +9,7 @@ Attribute Section: aeabi
+ File Attributes
+   Tag_CPU_name: "8-R"
+   Tag_CPU_arch: v8-R
+-  Tag_CPU_arch_profile: Application
++  Tag_CPU_arch_profile: Realtime
+   Tag_ARM_ISA_use: Yes
+   Tag_THUMB_ISA_use: Thumb-2
+   Tag_FP_arch: FP for ARMv8
+diff --git a/gas/testsuite/gas/arm/attr-march-armv8-r+fp.d b/gas/testsuite/gas/arm/attr-march-armv8-r+fp.d
+index e7a8446f9d..afd5a756d0 100644
+--- a/gas/testsuite/gas/arm/attr-march-armv8-r+fp.d
++++ b/gas/testsuite/gas/arm/attr-march-armv8-r+fp.d
+@@ -9,7 +9,7 @@ Attribute Section: aeabi
+ File Attributes
+   Tag_CPU_name: "8-R"
+   Tag_CPU_arch: v8-R
+-  Tag_CPU_arch_profile: Application
++  Tag_CPU_arch_profile: Realtime
+   Tag_ARM_ISA_use: Yes
+   Tag_THUMB_ISA_use: Thumb-2
+   Tag_FP_arch: FP for ARMv8
+diff --git a/gas/testsuite/gas/arm/attr-march-armv8-r+simd.d b/gas/testsuite/gas/arm/attr-march-armv8-r+simd.d
+index e09091cb22..8c8578a78f 100644
+--- a/gas/testsuite/gas/arm/attr-march-armv8-r+simd.d
++++ b/gas/testsuite/gas/arm/attr-march-armv8-r+simd.d
+@@ -9,7 +9,7 @@ Attribute Section: aeabi
+ File Attributes
+   Tag_CPU_name: "8-R"
+   Tag_CPU_arch: v8-R
+-  Tag_CPU_arch_profile: Application
++  Tag_CPU_arch_profile: Realtime
+   Tag_ARM_ISA_use: Yes
+   Tag_THUMB_ISA_use: Thumb-2
+   Tag_FP_arch: FP for ARMv8
+diff --git a/gas/testsuite/gas/arm/attr-march-armv8-r.d b/gas/testsuite/gas/arm/attr-march-armv8-r.d
+index 820f32beea..cf4b3a51f8 100644
+--- a/gas/testsuite/gas/arm/attr-march-armv8-r.d
++++ b/gas/testsuite/gas/arm/attr-march-armv8-r.d
+@@ -9,7 +9,7 @@ Attribute Section: aeabi
+ File Attributes
+   Tag_CPU_name: "8-R"
+   Tag_CPU_arch: v8-R
+-  Tag_CPU_arch_profile: Application
++  Tag_CPU_arch_profile: Realtime
+   Tag_ARM_ISA_use: Yes
+   Tag_THUMB_ISA_use: Thumb-2
+   Tag_MPextension_use: Allowed
+diff --git a/gas/testsuite/gas/arm/mve-scalar-vmul-it.d b/gas/testsuite/gas/arm/mve-scalar-vmul-it.d
+new file mode 100644
+index 0000000000..f4564a5e80
+--- /dev/null
++++ b/gas/testsuite/gas/arm/mve-scalar-vmul-it.d
+@@ -0,0 +1,11 @@
++# name: Armv8.1-M Mainline scalar vmul instructions in it blocks (with MVE)
++# as: -march=armv8.1-m.main+mve.fp+fp.dp
++# objdump: -dr --prefix-addresses --show-raw-insn -marmv8.1-m.main
++
++.*: +file format .*arm.*
++
++Disassembly of section .text:
++[^>]*> bfbc      	itt	lt
++[^>]*> ee20 0a81 	vmullt.f32	s0, s1, s2
++[^>]*> ee21 0b02 	vmullt.f64	d0, d1, d2
++#...
+diff --git a/gas/testsuite/gas/arm/mve-scalar-vmul-it.s b/gas/testsuite/gas/arm/mve-scalar-vmul-it.s
+new file mode 100644
+index 0000000000..e6c24acdfc
+--- /dev/null
++++ b/gas/testsuite/gas/arm/mve-scalar-vmul-it.s
+@@ -0,0 +1,5 @@
++.syntax unified
++.text
++itt lt
++vmullt.f32 s0, s1, s2
++vmullt.f64 d0, d1, d2
 diff --git a/gas/testsuite/gas/arm/mve-vaddsub-it-bad.d b/gas/testsuite/gas/arm/mve-vaddsub-it-bad.d
 new file mode 100644
 index 0000000000..1889c216f1
@@ -2045,6 +2414,62 @@ index 0000000000..50b12a0d5d
 +[^>]*> ee30 0a06 	vaddle.f32	s0, s0, s12
 +[^>]*> ee30 0b41 	vsuble.f64	d0, d0, d1
 +#...
+diff --git a/gas/testsuite/gas/arm/org-neg.d b/gas/testsuite/gas/arm/org-neg.d
+new file mode 100644
+index 0000000000..83e6af6afb
+--- /dev/null
++++ b/gas/testsuite/gas/arm/org-neg.d
+@@ -0,0 +1,3 @@
++#name: negative org should not cause internal error
++#source: org-neg.s
++#error_output: org-neg.l
+diff --git a/gas/testsuite/gas/arm/org-neg.l b/gas/testsuite/gas/arm/org-neg.l
+new file mode 100644
+index 0000000000..f8414adc19
+--- /dev/null
++++ b/gas/testsuite/gas/arm/org-neg.l
+@@ -0,0 +1,2 @@
++[^:]*: Assembler messages:
++.*: Error: attempt to move .org backwards
+diff --git a/gas/testsuite/gas/arm/org-neg.s b/gas/testsuite/gas/arm/org-neg.s
+new file mode 100644
+index 0000000000..f60486e2c8
+--- /dev/null
++++ b/gas/testsuite/gas/arm/org-neg.s
+@@ -0,0 +1,2 @@
++.=-1
++nop
+diff --git a/gas/testsuite/gas/arm/pr24753.d b/gas/testsuite/gas/arm/pr24753.d
+new file mode 100644
+index 0000000000..01990d1ff5
+--- /dev/null
++++ b/gas/testsuite/gas/arm/pr24753.d
+@@ -0,0 +1,7 @@
++#skip: *-*-pe *-*-wince *-*-vxworks
++#objdump: -d
++#name: PR24753: Don't error on sections with no content size mismatch with file
++
++.*: +file format .*arm.*
++
++#...
+diff --git a/gas/testsuite/gas/arm/pr24753.s b/gas/testsuite/gas/arm/pr24753.s
+new file mode 100644
+index 0000000000..5ba33fd29c
+--- /dev/null
++++ b/gas/testsuite/gas/arm/pr24753.s
+@@ -0,0 +1,12 @@
++.text
++.global _start
++_start:
++	nop
++
++.section .text2, "ax", %progbits
++_func:
++	nop
++
++.bss
++.fill 0x8000
++
 diff --git a/gas/testsuite/gas/i386/i386.exp b/gas/testsuite/gas/i386/i386.exp
 index 9be9c1a22e..a9b1d0c3b9 100644
 --- a/gas/testsuite/gas/i386/i386.exp
@@ -2073,6 +2498,28 @@ index 0000000000..65d21a0eb4
 +#name: x86-64 sysenter (Default)
 +#source: x86-64-sysenter-amd.s
 +#dump: x86-64-sysenter-intel.d
+diff --git a/gas/write.c b/gas/write.c
+index 5d9a239422..acdf07b344 100644
+--- a/gas/write.c
++++ b/gas/write.c
+@@ -2936,7 +2936,7 @@ relax_segment (struct frag *segment_frag_root, segT segment, int pass)
+ 
+ 	      case rs_org:
+ 		{
+-		  addressT target = offset;
++		  offsetT target = offset;
+ 		  addressT after;
+ 
+ 		  if (symbolP)
+@@ -2956,7 +2956,7 @@ relax_segment (struct frag *segment_frag_root, segT segment, int pass)
+ 		  /* Growth may be negative, but variable part of frag
+ 		     cannot have fewer than 0 chars.  That is, we can't
+ 		     .org backwards.  */
+-		  if (address + fragP->fr_fix > target)
++		  if ((offsetT) (address + fragP->fr_fix) > target)
+ 		    {
+ 		      growth = 0;
+ 
 diff --git a/gprof/ChangeLog b/gprof/ChangeLog
 index 5bb89490bc..656dfce9ad 100644
 --- a/gprof/ChangeLog
@@ -2176,10 +2623,15 @@ index 727cd72564..c23692e5c3 100755
    with options \\"\$ac_cs_config\\"
  
 diff --git a/include/ChangeLog b/include/ChangeLog
-index c7fd4ab141..2cf472a5df 100644
+index c7fd4ab141..7cdf7ec41c 100644
 --- a/include/ChangeLog
 +++ b/include/ChangeLog
-@@ -1,3 +1,33 @@
+@@ -1,3 +1,38 @@
++2020-05-20  Alexander Fedotov  <alfedotov@gmail.com>
++
++	PR 25992
++	* opcode/arm.h (ARM_EXT2_V8R): Define. Modified ARM_AEXT2_V8R.
++
 +2020-04-01  Martin Liska  <mliska@suse.cz>
 +	    Maciej W. Rozycki <macro@linux-mips.org>
 +
@@ -2235,6 +2687,33 @@ index 0ce0de1012..81a288f5fb 100644
 +};
 +
  #endif /* GCC_LTO_SYMTAB_H  */
+diff --git a/include/opcode/arm.h b/include/opcode/arm.h
+index 6d8c3d0086..ca46985d61 100644
+--- a/include/opcode/arm.h
++++ b/include/opcode/arm.h
+@@ -76,9 +76,10 @@
+ #define ARM_EXT2_V8_6A	     0x00010000	/* ARM V8.6A.			     */
+ #define ARM_EXT2_BF16	     0x00020000 /* ARMv8 bfloat16.		     */
+ #define ARM_EXT2_I8MM	     0x00040000 /* ARMv8.6A i8mm.		     */
+-#define ARM_EXT2_CRC	     0x00080000	/* ARMv8 CRC32 */
+-#define ARM_EXT2_MVE	     0x00100000	/* MVE Integer extension.	   */
+-#define ARM_EXT2_MVE_FP	     0x00200000	/* MVE Floating Point extension.   */
++#define ARM_EXT2_CRC	     0x00080000	/* ARMv8 CRC32.                      */
++#define ARM_EXT2_MVE	     0x00100000	/* MVE Integer extension.	     */
++#define ARM_EXT2_MVE_FP	     0x00200000	/* MVE Floating Point extension.     */
++#define ARM_EXT2_V8R	     0x80000000	/* ARM V8-R.	                     */
+ 
+ /* Co-processor space extensions.  */
+ #define ARM_CEXT_XSCALE	     0x00000001	/* Allow MIA etc.	 	   */
+@@ -182,7 +183,7 @@
+ #define ARM_AEXT2_V8M_MAIN	(ARM_AEXT2_V8M_BASE | ARM_EXT2_V8M_MAIN)
+ #define ARM_AEXT2_V8M_MAIN_DSP	 ARM_AEXT2_V8M_MAIN
+ #define ARM_AEXT_V8R		 ARM_AEXT_V8A
+-#define ARM_AEXT2_V8R		 ARM_AEXT2_V8AR
++#define ARM_AEXT2_V8R		 (ARM_EXT2_V8R | ARM_AEXT2_V8AR)
+ #define ARM_AEXT_V8_1M_MAIN	 ARM_AEXT_V8M_MAIN
+ #define ARM_AEXT2_V8_1M_MAIN	(ARM_AEXT2_V8M_MAIN | ARM_EXT2_V8_1M_MAIN     \
+ 						    | ARM_EXT2_FP16_INST)
 diff --git a/include/plugin-api.h b/include/plugin-api.h
 index 09e1202df0..e317d78478 100644
 --- a/include/plugin-api.h
@@ -2361,10 +2840,38 @@ index 09e1202df0..e317d78478 100644
  
  /* The plugin transfer vector.  */
 diff --git a/ld/ChangeLog b/ld/ChangeLog
-index ea75ff6f00..35e6ccbcd7 100644
+index ea75ff6f00..0006ace73e 100644
 --- a/ld/ChangeLog
 +++ b/ld/ChangeLog
-@@ -1,6 +1,48 @@
+@@ -1,6 +1,76 @@
++2020-06-03  Nick Clifton  <nickc@redhat.com>
++
++	Import from mainline:
++	2020-05-18  Nick Clifton  <nickc@redhat.com>
++
++	PR 25993
++	* emultempl/pe.em (_after_open): Check for duplicate filename
++	pointers before renaming the dll.
++	* emultempl/pep.em (_after_open): Likewise.
++
++2020-04-08  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-01  Tamar Christina  <tamar.christina@arm.com>
++
++	PR ld/16017
++	* testsuite/ld-arm/arm-elf.exp (thumb-plt-got): New.
++	* testsuite/ld-arm/thumb-plt-got.d: New test.
++
++2020-04-08  Tamar Christina  <tamar.christina@arm.com>
++
++	Backport from mainline.
++	2020-04-01  Tamar Christina  <tamar.christina@arm.com>
++
++	* testsuite/ld-arm/arm-elf.exp (thumb-plt): New.
++	* testsuite/ld-arm/thumb-plt.d: New test.
++	* testsuite/ld-arm/thumb-plt.s: New test.
++
 +2020-03-25  H.J. Lu  <hongjiu.lu@intel.com>
 +
 +	* testsuite/ld-plugin/lto.exp (lto_link_tests): Run PR ld/25355
@@ -2516,6 +3023,80 @@ index 27b4341542..811134a503 100755
  configured by $0, generated by GNU Autoconf 2.69,
    with options \\"\$ac_cs_config\\"
  
+diff --git a/ld/emultempl/pe.em b/ld/emultempl/pe.em
+index 97fb1468aa..26fa7465c0 100644
+--- a/ld/emultempl/pe.em
++++ b/ld/emultempl/pe.em
+@@ -1652,13 +1652,26 @@ gld_${EMULATION_NAME}_after_open (void)
+ 		else /* sentinel */
+ 		  seq = 'c';
+ 
+-		new_name = xmalloc (strlen (is->the_bfd->filename) + 3);
+-		sprintf (new_name, "%s.%c", is->the_bfd->filename, seq);
+-		bfd_set_filename (is->the_bfd, new_name);
++		/* PR 25993: It is possible that is->the_bfd-filename == is->filename.
++		   In which case calling bfd_set_filename on one will free the memory
++		   pointed to by the other.  */
++		if (is->filename == is->the_bfd->filename)
++		  {
++		    new_name = xmalloc (strlen (is->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->filename, seq);
++		    bfd_set_filename (is->the_bfd, new_name);
++		    is->filename = new_name;
++		  }
++		else
++		  {
++		    new_name = xmalloc (strlen (is->the_bfd->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->the_bfd->filename, seq);
++		    bfd_set_filename (is->the_bfd, new_name);
+ 
+-		new_name = xmalloc (strlen (is->filename) + 3);
+-		sprintf (new_name, "%s.%c", is->filename, seq);
+-		is->filename = new_name;
++		    new_name = xmalloc (strlen (is->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->filename, seq);
++		    is->filename = new_name;
++		  }
+ 	      }
+ 	  }
+       }
+diff --git a/ld/emultempl/pep.em b/ld/emultempl/pep.em
+index e8f5ca503f..ef23221c03 100644
+--- a/ld/emultempl/pep.em
++++ b/ld/emultempl/pep.em
+@@ -1620,13 +1620,26 @@ gld_${EMULATION_NAME}_after_open (void)
+ 		else /* sentinel */
+ 		  seq = 'c';
+ 
+-		new_name = xmalloc (strlen (is->the_bfd->filename) + 3);
+-		sprintf (new_name, "%s.%c", is->the_bfd->filename, seq);
+-		bfd_set_filename (is->the_bfd, new_name);
++		/* PR 25993: It is possible that is->the_bfd-filename == is->filename.
++		   In which case calling bfd_set_filename on one will free the memory
++		   pointed to by the other.  */
++		if (is->filename == is->the_bfd->filename)
++		  {
++		    new_name = xmalloc (strlen (is->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->filename, seq);
++		    bfd_set_filename (is->the_bfd, new_name);
++		    is->filename = new_name;
++		  }
++		else
++		  {
++		    new_name = xmalloc (strlen (is->the_bfd->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->the_bfd->filename, seq);
++		    bfd_set_filename (is->the_bfd, new_name);
+ 
+-		new_name = xmalloc (strlen (is->filename) + 3);
+-		sprintf (new_name, "%s.%c", is->filename, seq);
+-		is->filename = new_name;
++		    new_name = xmalloc (strlen (is->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->filename, seq);
++		    is->filename = new_name;
++		  }
+ 	      }
+ 	  }
+       }
 diff --git a/ld/testplug.c b/ld/testplug.c
 index 9dd0b91e45..c126f03607 100644
 --- a/ld/testplug.c
@@ -2600,6 +3181,104 @@ index adaedf47c3..ca899b11da 100644
    sym->resolution = LDPR_UNKNOWN;
    sym->name = malloc (colon1 - str + 1);
    if (!sym->name)
+diff --git a/ld/testsuite/ld-arm/arm-elf.exp b/ld/testsuite/ld-arm/arm-elf.exp
+index 44e599f4be..0163e73832 100644
+--- a/ld/testsuite/ld-arm/arm-elf.exp
++++ b/ld/testsuite/ld-arm/arm-elf.exp
+@@ -1261,3 +1261,9 @@ set arm_unwind_tests {
+      "unwind-mix"}
+ }
+ run_ld_link_tests $arm_unwind_tests
++
++if { ![istarget "arm*-*-nacl*"] } {
++    run_dump_test "thumb-plt"
++    run_dump_test "thumb-plt-got"
++}
++
+diff --git a/ld/testsuite/ld-arm/thumb-plt-got.d b/ld/testsuite/ld-arm/thumb-plt-got.d
+new file mode 100644
+index 0000000000..e65aba9e2f
+--- /dev/null
++++ b/ld/testsuite/ld-arm/thumb-plt-got.d
+@@ -0,0 +1,14 @@
++#source: thumb-plt.s
++#name: Thumb only PLT and GOT LSB Symbol
++#ld: -shared -e0
++#readelf: -rx .got
++#skip: *-*-pe *-*-wince *-*-vxworks armeb-*-* *-*-gnueabihf
++
++Relocation section '.rel.plt' at offset 0x108 contains 1 entry:
++ Offset     Info    Type            Sym.Value  Sym. Name
++000101c4  00000116 R_ARM_JUMP_SLOT   00000000   foo
++
++Hex dump of section '.got':
++ NOTE: This section has relocations against it, but these have NOT been applied to this dump.
++  0x000101b8 40010100 00000000 00000000 11010000 @...............
++
+diff --git a/ld/testsuite/ld-arm/thumb-plt.d b/ld/testsuite/ld-arm/thumb-plt.d
+new file mode 100644
+index 0000000000..441325b21d
+--- /dev/null
++++ b/ld/testsuite/ld-arm/thumb-plt.d
+@@ -0,0 +1,34 @@
++#source: thumb-plt.s
++#name: Thumb only PLT and GOT
++#ld: -shared -e0
++#objdump: -dr
++#skip: *-*-pe *-*-wince *-*-vxworks armeb-*-* *-*-gnueabihf
++
++.*: +file format .*arm.*
++
++
++Disassembly of section \.plt:
++
++00000110 <\.plt>:
++ 110:	b500      	push	{lr}
++ 112:	f8df e008 	ldr.w	lr, \[pc, #8\]	; 11c <\.plt\+0xc>
++ 116:	44fe      	add	lr, pc
++ 118:	f85e ff08 	ldr.w	pc, \[lr, #8\]!
++ 11c:	0001009c 	\.word	0x0001009c
++
++00000120 <foo@plt>:
++ 120:	f240 0c98 	movw	ip, #152	; 0x98
++ 124:	f2c0 0c01 	movt	ip, #1
++ 128:	44fc      	add	ip, pc
++ 12a:	f8dc f000 	ldr.w	pc, \[ip\]
++ 12e:	e7fc      	b.n	12a <foo@plt\+0xa>
++
++Disassembly of section .text:
++
++00000130 <bar>:
++ 130:	b580      	push	{r7, lr}
++ 132:	af00      	add	r7, sp, #0
++ 134:	f7ff fff4 	bl	120 <foo@plt>
++ 138:	4603      	mov	r3, r0
++ 13a:	4618      	mov	r0, r3
++ 13c:	bd80      	pop	{r7, pc}
+diff --git a/ld/testsuite/ld-arm/thumb-plt.s b/ld/testsuite/ld-arm/thumb-plt.s
+new file mode 100644
+index 0000000000..e3fd80f0f1
+--- /dev/null
++++ b/ld/testsuite/ld-arm/thumb-plt.s
+@@ -0,0 +1,18 @@
++	.cpu cortex-m3
++	.text
++	.align	1
++	.global	bar
++	.arch armv7-m
++	.syntax unified
++	.thumb
++	.thumb_func
++	.fpu softvfp
++	.type	bar, %function
++bar:
++	push	{r7, lr}
++	add	r7, sp, #0
++	bl	foo(PLT)
++	mov	r3, r0
++	mov	r0, r3
++	pop	{r7, pc}
++	.size	bar, .-bar
 diff --git a/ld/testsuite/ld-plugin/lto.exp b/ld/testsuite/ld-plugin/lto.exp
 index 9b03b7b397..3f1d804223 100644
 --- a/ld/testsuite/ld-plugin/lto.exp
