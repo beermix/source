@@ -367,27 +367,28 @@ define Package/libgfortran/config
 	endmenu
 endef
 
-define Package/libgomp
+define Package/libgo
 $(call Package/gcc/Default)
-  TITLE:=OpenMP support library
+  TITLE:=Go support library
+  DEPENDS+=@INSTALL_GCCGO
 endef
 
-define Package/libgomp/config
+define Package/libgo/config
 	menu "Configuration"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
 
-	config LIBGOMP_ROOT_DIR
+	config LIBGO_ROOT_DIR
 		string
-		prompt "libgomp shared library base directory"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
+		prompt "libgo shared library base directory"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
 		default TOOLCHAIN_ROOT  if !NATIVE_TOOLCHAIN
 		default "/"  if NATIVE_TOOLCHAIN
 
-	config LIBGOMP_FILE_SPEC
+	config LIBGO_FILE_SPEC
 		string
-		prompt "libgomp shared library files (use wildcards)"
-		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgomp
-		default "./lib/libgomp.so*"
+		prompt "libgo shared library files (use wildcards)"
+		depends on EXTERNAL_TOOLCHAIN && PACKAGE_libgo
+		default "./lib/libgo.so*"
 
 	endmenu
 endef
@@ -525,8 +526,10 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
+		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
+		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
-	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
+	for file in libanl libc libcidn libcrypt libdl libmvec libm libnsl libnss_dns libnss_db libnss_files libnss_hesiod libresolv libSegFault libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
 			if [ -e "$$$$file" ]; then \
 				$(CP) $$$$file $(1)/lib/; \
@@ -613,9 +616,16 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
-	sed -i 's,^#!.*,#!/bin/sh,' $(1)/usr/bin/ldd
-	$(CP) $(TOOLCHAIN_DIR)/bin/lddlibc4 $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/{getent,getconf,sprof,gencat,makedb,pldd,pcprofiledump,xtrace,sotruss,catchsegv,localedef,lddlibc4,ldd} $(1)/usr/bin/
+	mkdir -p $(1)/share/i18n/charmaps
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-* $(1)/share/i18n/charmaps/
+	mkdir -p $(1)/share/i18n/locales
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/ru_* $(1)/share/i18n/locales/
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/en_* $(1)/share/i18n/locales/
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/i18n* $(1)/share/i18n/locales/
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/iso* $(1)/share/i18n/locales/
+	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/translit_* $(1)/share/i18n/locales/
+	mkdir -p $(1)/lib/locale
   endef
 
   define Package/ldconfig/install
@@ -720,10 +730,10 @@ else
 	exit 0
   endef
 
-  define Package/libgomp/install
-	for file in $(call qstrip,$(CONFIG_LIBGOMP_FILE_SPEC)); do \
+  define Package/libgo/install
+	for file in $(call qstrip,$(CONFIG_LIBGO_FILE_SPEC)); do \
 		$(INSTALL_DIR) $(1)/lib ; \
-		$(CP) $(call qstrip,$(CONFIG_LIBGOMP_ROOT_DIR))/$$$$file $(1)/lib/ ; \
+		$(CP) $(call qstrip,$(CONFIG_LIBGO_ROOT_DIR))/$$$$file $(1)/lib/ ; \
 	done ; \
 	exit 0
   endef
@@ -760,6 +770,6 @@ $(eval $(call BuildPackage,libpthread))
 $(eval $(call BuildPackage,libthread-db))
 $(eval $(call BuildPackage,librt))
 $(eval $(call BuildPackage,libgfortran))
-$(eval $(call BuildPackage,libgomp))
+$(eval $(call BuildPackage,libgo))
 $(eval $(call BuildPackage,ldd))
 $(eval $(call BuildPackage,ldconfig))
