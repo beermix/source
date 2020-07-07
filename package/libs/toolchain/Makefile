@@ -525,10 +525,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld*.so.* \
 		$(TOOLCHAIN_DIR)/lib/ld-$(LIBC_SO_VERSION).so \
-		$(TOOLCHAIN_DIR)/lib/libmemusage.so \
-		$(TOOLCHAIN_DIR)/lib/libpcprofile.so \
 		$(1)/lib/
-	for file in libanl libc libcidn libcrypt libdl libmvec libm libnsl libnss_dns libnss_db libnss_files libnss_hesiod libresolv libSegFault libutil; do \
+	for file in libanl libc libcidn libcrypt libdl libm libnsl libnss_dns libnss_files libresolv libutil; do \
 		for file in $(TOOLCHAIN_DIR)/lib/$$$$file.so.* $(TOOLCHAIN_DIR)/lib/$$$$file-$(LIBC_SO_VERSION).so; do \
 			if [ -e "$$$$file" ]; then \
 				$(CP) $$$$file $(1)/lib/; \
@@ -615,17 +613,8 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
 
   define Package/ldd/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-	$(CP) $(TOOLCHAIN_DIR)/bin/{getent,getconf,ldd,localedef,lddlibc4} $(1)/usr/bin/
+	$(CP) $(TOOLCHAIN_DIR)/bin/ldd $(1)/usr/bin/
 	sed -i 's,^#!.*,#!/bin/sh,' $(1)/usr/bin/ldd
-	mkdir -p $(1)/share/i18n/charmaps
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/charmaps/UTF-* $(1)/share/i18n/charmaps/
-	mkdir -p $(1)/share/i18n/locales
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/ru_* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/en_* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/i18n* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/iso* $(1)/share/i18n/locales/
-	$(CP) $(TOOLCHAIN_DIR)/share/i18n/locales/translit_* $(1)/share/i18n/locales/
-	mkdir -p $(1)/lib/locale
   endef
 
   define Package/ldconfig/install
