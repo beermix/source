@@ -51,7 +51,7 @@ menu "Configuration"
 endmenu
 endef
 
-TARGET_CFLAGS += -Ofast
+# TARGET_CFLAGS += -Ofast
 
 CONFIGURE_ARGS+= \
 	--disable-ssp \
