@@ -21,14 +21,13 @@ PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_FIXUP:=autoreconf
-PKG_INSTALL:=1
+PKG_INSTALL:=0
 PKG_USE_MIPS16:=0
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=c-ares pcre
 
 include $(INCLUDE_DIR)/package.mk
-
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/shadowsocks-libev-config
   SECTION:=net
@@ -49,7 +48,6 @@ define Package/shadowsocks-libev-config/install
 	$(INSTALL_BIN) ./files/shadowsocks-libev.init $(1)/etc/init.d/shadowsocks-libev
 endef
 
-
 define Package/shadowsocks-libev/Default
   define Package/shadowsocks-libev-$(1)
     SECTION:=net
@@ -67,7 +65,7 @@ define Package/shadowsocks-libev/Default
 
 endef
 
-DEPENDS_ss-local = +libpcre
+DEPENDS_ss-local = +libpcre +libstdcpp +libpthread +librt
 DEPENDS_ss-server = +libcares +libpcre
 
 SHADOWSOCKS_COMPONENTS:=ss-local ss-redir ss-tunnel ss-server
@@ -106,24 +104,12 @@ uci batch <<-EOF
 EOF
 endef
 
-define Build/Prepare
-	$(call Build/Prepare/Default)
-	$(FIND) $(PKG_BUILD_DIR) \
-			   -name '*.o' \
-			-o -name '*.lo' \
-			-o -name '.deps' \
-			-o -name '.libs' \
-		| $(XARGS) rm -rvf
-endef
-
-CONFIGURE_ARGS += \
-	--disable-documentation \
-	--disable-silent-rules \
-	--disable-assert \
-	--disable-ssp \
-
-TARGET_CFLAGS += -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+CMAKE_OPTIONS += \
+	-DWITH_DOC_HTML=0 \
+	-DWITH_DOC_MAN=0 \
+	-DWITH_SS_REDIR=0 \
+	-DWITH_STATIC=1 \
+	-DCMAKE_VERBOSE_MAKEFILE=1
 
 $(eval $(call BuildPackage,shadowsocks-libev-config))
 $(eval $(call BuildPackage,shadowsocks-libev-ss-rules))

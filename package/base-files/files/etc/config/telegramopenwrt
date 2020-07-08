@@ -1,4 +1,0 @@
-config telegramopenwrt 'global'
-	option key '1316468248:AAH4nWGI1ePbcF8i0vv5yWIlN6CPQxh2dHo'
-	option url 'https://api.telegram.org/bot'
-	option my_chat_id '90228'
