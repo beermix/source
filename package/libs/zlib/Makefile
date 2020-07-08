@@ -8,13 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=47b1208
+PKG_VERSION:=1.2.11
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=@SF/libpng http://www.zlib.net
+PKG_HASH:=4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066
+
+PKG_LICENSE:=Zlib
+PKG_LICENSE_FILES:=README
+PKG_CPE_ID:=cpe:/a:gnu:zlib
 
 PKG_CONFIG_DEPENDS:= CONFIG_ZLIB_OPTIMIZE_SPEED
 
@@ -57,14 +60,8 @@ ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
 endif
 
 CMAKE_OPTIONS += \
-	-DCMAKE_VERBOSE_MAKEFILE=1 \
-	-DZLIB_COMPAT=1 \
-	-DHAVE_SSE42CRC_INTRIN=0 \
-	-DHAVE_PCLMULQDQ_INTRIN=0 \
-	-DHAVE_SSE42CRC_INLINE_ASM=0 \
-	-DHAVE_SSE42CMPSTR_INTRIN=0 \
-	-DHAVE_AVX2_INTRIN=0
-	
+	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
+
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
 	$(CP)	$(PKG_INSTALL_DIR)/usr/include/z{conf,lib}.h \
@@ -73,7 +70,7 @@ define Build/InstallDev
 	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/libz.{a,so*} \
 		$(1)/usr/lib/
 	mkdir -p $(1)/usr/lib/pkgconfig
-	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/share/pkgconfig/zlib.pc \
 		$(1)/usr/lib/pkgconfig/
 endef
 
@@ -93,7 +90,7 @@ define Package/zlib-dev/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.a $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/pkgconfig/zlib.pc \
 	  $(1)/usr/lib/pkgconfig/
 endef
 
