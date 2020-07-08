@@ -160,6 +160,7 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--with-diagnostics-color=always \
 		--enable-checking=release \
+		--with-tune=generic \
 		--with-linker-hash-style=gnu \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
