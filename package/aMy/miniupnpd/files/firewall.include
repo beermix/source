@@ -60,7 +60,6 @@ add_extzone_rules $(uci -q get upnpd.config.external_zone)
 # please set external_zone in that case!)
 
 network_find_wan wan_iface
-network_find_wan6 wan6_iface
 
 for ext_iface in $wan_iface $wan6_iface; do
     # fw3 -q network fails on sub-interfaces => map to device first
