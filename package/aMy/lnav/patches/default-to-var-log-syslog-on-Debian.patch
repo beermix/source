@@ -1,0 +1,28 @@
+Description: Prefer /var/log/syslog over /var/log/messages
+ On Debian the default /etc/rsyslog.conf shipped with rsyslog
+ prefers logs *.* to /var/log/syslog. Thus prefer this logfile
+ in list of default logfiles.
+Origin: vendor
+Bug-Debian: https://bugs.debian.org/721700
+Forwarded: not-needed
+Author: Salvatore Bonaccorso <carnil@debian.org>
+Last-Update: 2015-11-16
+
+--- a/src/lnav.cc
++++ b/src/lnav.cc
+@@ -2511,12 +2511,12 @@ int main(int argc, char *argv[])
+     }
+ 
+     if (!(lnav_data.ld_flags & LNF_CHECK_CONFIG)) {
+-        DEFAULT_FILES.insert(make_pair(LNF_SYSLOG, string("var/log/messages")));
+-        DEFAULT_FILES.insert(
+-                make_pair(LNF_SYSLOG, string("var/log/system.log")));
+         DEFAULT_FILES.insert(make_pair(LNF_SYSLOG, string("var/log/syslog")));
+         DEFAULT_FILES.insert(
+                 make_pair(LNF_SYSLOG, string("var/log/syslog.log")));
++        DEFAULT_FILES.insert(make_pair(LNF_SYSLOG, string("var/log/messages")));
++        DEFAULT_FILES.insert(
++                make_pair(LNF_SYSLOG, string("var/log/system.log")));
+     }
+ 
+     init_lnav_commands(lnav_commands);

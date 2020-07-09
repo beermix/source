@@ -24,11 +24,11 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -fno-stack-protector -U_FORTIFY_SOURCE
+#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS))-fno-stack-protector -U_FORTIFY_SOURCE
 
 CONFIGURE_ARGS += \
         --disable-silent-rules \
-        --disable-static
+        --enable-static
 
 Package/lnav = $(Package/lnav/Default)
 define Package/lnav/Default

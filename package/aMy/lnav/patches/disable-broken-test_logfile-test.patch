@@ -1,0 +1,23 @@
+Description: Disable broken test_logfile.sh test
+Origin: vendor
+Author: Salvatore Bonaccorso <carnil@debian.org>
+Last-Update: 2019-09-02
+
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -382,7 +382,6 @@ TESTS = \
+ 	test_json_op.sh \
+ 	test_json_ptr_walk.sh \
+ 	test_log_accel \
+-	test_logfile.sh \
+ 	test_pcrepp \
+ 	test_reltime \
+ 	test_scripts.sh \
+@@ -400,6 +399,7 @@ TESTS = \
+ 
+ DISABLED_TESTS = \
+ 	test_top_status \
++    test_logfile.sh \
+     test_view_colors.sh \
+     test_vt52_curses.sh
+ 
