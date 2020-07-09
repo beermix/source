@@ -1,0 +1,13 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 398dfe2..bc47bbc 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -92,7 +92,7 @@ TIME_FORMATS = \
+     $()
+ 
+ time_fmts.cc: ptimec
+-	$(PTIME_V)./ptimec $(TIME_FORMATS) > $@
++	$(PTIME_V) ptimec $(TIME_FORMATS) > $@
+ 
+ if HAVE_RE2C
+ %.cc: %.re
