@@ -12,8 +12,8 @@ PKG_NAME:=lnav
 #PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 #PKG_SOURCE_URL:=https://github.com/tstack/lnav/releases/download/v$(PKG_VERSION)
 
-#PKG_VERSION:=56a341f
-PKG_VERSION:=73e902f
+PKG_VERSION:=56a341f
+#PKG_VERSION:=73e902f
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
