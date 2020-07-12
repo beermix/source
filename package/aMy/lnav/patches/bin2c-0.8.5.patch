@@ -1,0 +1,36 @@
+diff --color -Naur lnav-0.8.5-orig/src/Makefile.am lnav-0.8.5/src/Makefile.am
+--- lnav-0.8.5-orig/src/Makefile.am	2020-07-12 17:55:59.300500420 +0300
++++ lnav-0.8.5/src/Makefile.am	2020-07-12 17:56:45.421005967 +0300
+@@ -18,25 +18,25 @@
+ RE2C_V_0 = @echo "  RE2C   " $@;
+ 
+ help.c: $(srcdir)/help.txt bin2c
+-	$(BIN2C_V)./bin2c -z -c $(srcdir)/help.txt $@
++	$(BIN2C_V)bin2c -z -c $(srcdir)/help.txt $@
+ 
+ dump-pid-sh.c: $(srcdir)/dump-pid.sh bin2c
+-	$(BIN2C_V)./bin2c -z -c $(srcdir)/dump-pid.sh $@
++	$(BIN2C_V)bin2c -z -c $(srcdir)/dump-pid.sh $@
+ 
+ default-log-formats-json.c: $(srcdir)/default-log-formats.json bin2c
+-	$(BIN2C_V)./bin2c -z -c $(srcdir)/default-log-formats.json $@
++	$(BIN2C_V)bin2c -z -c $(srcdir)/default-log-formats.json $@
+ 
+ default-config-json.c: $(srcdir)/default-config.json bin2c
+-	$(BIN2C_V)./bin2c -z -c $(srcdir)/default-config.json $@
++	$(BIN2C_V)bin2c -z -c $(srcdir)/default-config.json $@
+ 
+ init-sql.c: bin2c init.sql
+-	$(BIN2C_V)./bin2c -z -c $(srcdir)/init.sql $@
++	$(BIN2C_V)bin2c -z -c $(srcdir)/init.sql $@
+ 
+ %.c: $(srcdir)/%.lnav bin2c
+-	$(BIN2C_V)./bin2c -z -c $< $@
++	$(BIN2C_V)bin2c -z -c $< $@
+ 
+ %.c: $(srcdir)/%.json bin2c
+-	$(BIN2C_V)./bin2c -z -c $< $@
++	$(BIN2C_V)bin2c -z -c $< $@
+ 
+ TIME_FORMATS = \
+     "@%@" \
