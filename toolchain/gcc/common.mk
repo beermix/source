@@ -210,14 +210,14 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
   TARGET_CFLAGS+=-fno-split-stack
 endif
 
-# TARGET_CFLAGS:=$(filter-out -O2,$(call qstrip,$(TARGET_CFLAGS)))
+TARGET_CFLAGS:=$(filter-out -O2,$(call qstrip,$(TARGET_CFLAGS)))
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -O3" \
-		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS) -O3" \
+		CFLAGS_FOR_TARGET="-O3 $(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="-O3 $(TARGET_CFLAGS)" \
 		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
