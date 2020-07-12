@@ -123,7 +123,8 @@ CONFIGURE_ARGS += \
 	--disable-ssp \
 
 TARGET_CFLAGS += -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+TARGET_LDFLAGS += $(FPIC) -Wl,--gc-sections,--as-needed
+TARGET_CPPFLAGS += $(FPIC)
 
 $(eval $(call BuildPackage,shadowsocks-libev-config))
 $(eval $(call BuildPackage,shadowsocks-libev-ss-rules))
