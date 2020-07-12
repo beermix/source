@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+#
 
 include $(TOPDIR)/rules.mk
 
