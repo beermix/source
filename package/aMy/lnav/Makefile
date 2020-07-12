@@ -27,6 +27,7 @@ include $(INCLUDE_DIR)/package.mk
 
 #TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_CXXFLAGS += -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 CONFIGURE_ARGS += --disable-silent-rules --disable-static
