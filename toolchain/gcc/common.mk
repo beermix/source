@@ -217,9 +217,9 @@ GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="-O3 $(TARGET_CFLAGS)" \
-		CXXFLAGS_FOR_TARGET="-O3 $(TARGET_CFLAGS)" \
-		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
+		CFLAGS_FOR_TARGET="-O3 $(TARGET_CFLAGS) -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
+		CXXFLAGS_FOR_TARGET="-O3 $(TARGET_CFLAGS) -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
+		GOCFLAGS_FOR_TARGET="-O2 $(TARGET_CFLAGS) -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro"
 
 define Host/SetToolchainInfo
 	$(SED) 's,TARGET_CROSS=.*,TARGET_CROSS=$(REAL_GNU_TARGET_NAME)-,' $(TOOLCHAIN_DIR)/info.mk
