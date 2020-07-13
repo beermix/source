@@ -9,13 +9,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=uclibc++
-PKG_VERSION:=6687fc9
+PKG_VERSION:=0.2.5
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=git://git.busybox.net/uClibc++
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE:=uClibc++-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://cxx.uclibc.org/src/
+PKG_HASH:=596fb9ed7295564ce4c70ae6076a18f92e72f70310d70c98520bbca85c77895a
+PKG_BUILD_DIR:=$(BUILD_DIR)/uClibc++-$(PKG_VERSION)
 
 PKG_LICENSE:=LGPL-2.1-or-later
 PKG_INSTALL:=1
@@ -53,6 +53,14 @@ endif
 
 ifeq ($(CONFIG_USE_MUSL),y)
 SSP_LIB=-lssp_nonshared
+endif
+
+ifeq (${V}, s)
+MAKE_VARS+= \
+	V=1
+else ifeq (${V}, sc)
+MAKE_VARS+= \
+	V=2
 endif
 
 MAKE_FLAGS:= \
