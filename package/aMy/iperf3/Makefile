@@ -3,6 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
+# https://downloads.es.net/pub/iperf/?C=M;O=D
 # +libsctp
 
 include $(TOPDIR)/rules.mk
