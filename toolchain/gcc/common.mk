@@ -212,7 +212,6 @@ endif
 
 TARGET_CFLAGS:=$(filter-out -m%,$(call qstrip,$(TARGET_CFLAGS)))
 TARGET_CFLAGS:=$(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
-# TARGET_CFLAGS:=${TARGET_CFLAGS/-O2/-O3}
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
