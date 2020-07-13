@@ -40,7 +40,6 @@ ifeq ($(ARCH),mips64)
 endif
 
 TARGET_CFLAGS=${TARGET_CFLAGS/-Wl,-z,now/}
-TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
 TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
@@ -50,7 +49,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -fno-plt -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
