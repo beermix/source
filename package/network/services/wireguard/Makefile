@@ -4,7 +4,7 @@
 # Copyright (C) 2016-2017 Dan Luedtke <mail@danrl.com>
 #
 # This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information. https://git.zx2c4.com/wireguard-linux-compat/
+# See /LICENSE for more information.
 
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
@@ -50,7 +50,7 @@ endef
 define Package/wireguard
   $(call Package/wireguard/Default)
   TITLE:=WireGuard meta-package
-  DEPENDS:=+wireguard-tools +kmod-wireguard +kmod-crypto-manager +kmod-fou
+  DEPENDS:=+wireguard-tools +kmod-wireguard
 endef
 
 include $(INCLUDE_DIR)/kernel-defaults.mk
@@ -73,7 +73,7 @@ define KernelPackage/wireguard
   CATEGORY:=Kernel modules
   SUBMENU:=Network Support
   TITLE:=WireGuard kernel module
-  DEPENDS:=+IPV6:kmod-udptunnel6 +kmod-udptunnel4 +kmod-crypto-manager +kmod-fou
+  DEPENDS:=+IPV6:kmod-udptunnel6 +kmod-udptunnel4
   FILES:= $(PKG_BUILD_DIR)/src/wireguard.$(LINUX_KMOD_SUFFIX)
   AUTOLOAD:=$(call AutoProbe,wireguard)
 endef
