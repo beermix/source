@@ -3,16 +3,16 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.31
+PKG_VERSION:=2.31.9000
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=3a44844c97a8ca1d0798c45b5252e6a49f9cf8e1
-PKG_MIRROR_HASH:=d7206510e494b3c723173d8ec0dd2e41314da59075871c5642324688001b3f6e
+PKG_SOURCE_VERSION:=e72b98e6f858583a3ef904e27c6fbd932bdc86c8
+PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -39,8 +39,8 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-# TARGET_CFLAGS=${TARGET_CFLAGS/-Wl,-z,now/}
-# TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
+TARGET_CFLAGS:=${TARGET_CFLAGS/-Wl,-z,now/}
+TARGET_LDFLAGS:=${TARGET_LDFLAGS/-znow/}
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
@@ -67,8 +67,8 @@ GLIBC_CONFIGURE:= \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
 		--enable-kernel=5.4.0
 
-# export libc_cv_ssp=no
-# export libc_cv_ssp_strong=no
+export libc_cv_ssp=no
+export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 

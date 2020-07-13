@@ -158,7 +158,6 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
-		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
@@ -211,16 +210,16 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
   TARGET_CFLAGS+=-fno-split-stack
 endif
 
-TARGET_CFLAGS:=$(filter-out -O2,$(call qstrip,$(TARGET_CFLAGS)))
-TARGET_CFLAGS:=$(filter-out -fno-plt,$(call qstrip,$(TARGET_CFLAGS)))
+# TARGET_CFLAGS:=$(filter-out -O2,$(call qstrip,$(TARGET_CFLAGS)))
+TARGET_CFLAGS:=${TARGET_CFLAGS/-O2/-O3}
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
 	$(MAKE) \
 		CFLAGS="$(HOST_CFLAGS)" \
-		CFLAGS_FOR_TARGET="-O3 $(TARGET_CFLAGS) -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
-		CXXFLAGS_FOR_TARGET="-O3 $(TARGET_CFLAGS) -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro" \
-		GOCFLAGS_FOR_TARGET="-O2 $(TARGET_CFLAGS) -fstack-protector -Wl,-z -Wl,now -Wl,-z -Wl,relro"
+		CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		CXXFLAGS_FOR_TARGET="$(TARGET_CFLAGS)" \
+		GOCFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
 
 define Host/SetToolchainInfo
 	$(SED) 's,TARGET_CROSS=.*,TARGET_CROSS=$(REAL_GNU_TARGET_NAME)-,' $(TOOLCHAIN_DIR)/info.mk
