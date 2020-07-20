@@ -1,23 +1,23 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# http://ftp.midnight-commander.org/?C=M;O=D
+# http://ftp.midnight-commander.org/?C=M;O=D  +libmount
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mc
-PKG_VERSION:=4.8.25
-PKG_RELEASE:=1
+PKG_VERSION:=4.8.24
+PKG_RELEASE:=2
 PKG_MAINTAINER:=Dirk Brenken <dev@brenken.org>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_CPE_ID:=cpe:/a:midnight_commander:midnight_commander
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ftp.midnight-commander.org/
-PKG_HASH:=ffc19617f20ebb23330acd3998b7fd559a042d172fa55746d53d246697b2548a
+PKG_HASH:=859f1cc070450bf6eb4d319ffcb6a5ac29deb0ac0d81559fb2e71242b1176d46
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf gettext-version
-PKG_BUILD_DEPENDS:=MC_VFS:libtirpc
+#PKG_BUILD_DEPENDS:=MC_VFS:libtirpc
 
 PKG_CONFIG_DEPENDS := \
 	CONFIG_PACKAGE_MC \
@@ -26,14 +26,15 @@ PKG_CONFIG_DEPENDS := \
 	CONFIG_MC_SUBSHELL \
 	CONFIG_MC_LARGEFILE \
 	CONFIG_MC_BACKGROUND \
-	CONFIG_MC_CHARSET
+	CONFIG_MC_CHARSET \
+	CONFIG_MC_VFS
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/mc
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+glib2 +libslang2 +libmount
+	DEPENDS:=+glib2 +libncurses
 	TITLE:=Midnight Commander - a powerful visual file manager
 	URL:=https://www.midnight-commander.org/
 	MENU:=1
@@ -54,21 +55,9 @@ endef
 CONFIGURE_ARGS += \
 	--enable-silent-rules \
 	--disable-tests \
-	--disable-aspell \
 	--disable-doxygen-doc \
-	--disable-doxygen-rtf \
-	--disable-doxygen-xml \
-	--disable-doxygen-chm \
-	--disable-doxygen-chi \
-	--disable-doxygen-dot \
-	--disable-doxygen-html \
 	--with-homedir=/etc/mc \
-	--with-screen=slang \
-	--enable-vfs-extfs \
-	--enable-vfs-ftp \
-	--disable-vfs-sftp \
-	--enable-vfs-tar \
-	--enable-vfs-cpio \
+	--with-screen=ncurses \
 	--without-x \
 
 CONFIGURE_VARS += \
@@ -112,8 +101,8 @@ define Package/mc/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/mc.ext $(1)/etc/mc
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/mc.default.keymap $(1)/etc/mc/mc.keymap
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/filehighlight.ini $(1)/etc/mc
-	#$(INSTALL_DIR) $(1)/usr/share/mc/help
-	#$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/hlp/mc.hlp $(1)/usr/share/mc/help
+	$(INSTALL_DIR) $(1)/usr/share/mc/help
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/hlp/mc.hlp $(1)/usr/share/mc/help
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/mc.menu $(1)/etc/mc
 	$(INSTALL_DIR) $(1)/etc/mc/skins
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/skins/default.ini $(1)/etc/mc/skins
