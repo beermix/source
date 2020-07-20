@@ -115,8 +115,8 @@ CONFIGURE_ARGS += \
 	--with-tor-group=tor \
 	--with-pic
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections -flto
+#TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+#TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
