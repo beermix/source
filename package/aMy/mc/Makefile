@@ -6,15 +6,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mc
-PKG_VERSION:=4.8.24
-PKG_RELEASE:=2
+PKG_VERSION:=4.8.25
+PKG_RELEASE:=1
 PKG_MAINTAINER:=Dirk Brenken <dev@brenken.org>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_CPE_ID:=cpe:/a:midnight_commander:midnight_commander
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ftp.midnight-commander.org/
-PKG_HASH:=859f1cc070450bf6eb4d319ffcb6a5ac29deb0ac0d81559fb2e71242b1176d46
+PKG_HASH:=ffc19617f20ebb23330acd3998b7fd559a042d172fa55746d53d246697b2548a
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf gettext-version
 
@@ -25,8 +25,7 @@ PKG_CONFIG_DEPENDS := \
 	CONFIG_MC_SUBSHELL \
 	CONFIG_MC_LARGEFILE \
 	CONFIG_MC_BACKGROUND \
-	CONFIG_MC_CHARSET \
-	CONFIG_MC_VFS
+	CONFIG_MC_CHARSET
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -57,6 +56,7 @@ CONFIGURE_ARGS += \
 	--disable-doxygen-doc \
 	--with-homedir=/etc/mc \
 	--with-screen=ncurses \
+	--enable-vfs \
 	--without-x \
 
 CONFIGURE_VARS += \
@@ -86,12 +86,6 @@ ifeq ($(CONFIG_MC_CHARSET),)
 CONFIGURE_ARGS += --disable-charset
 endif
 
-ifeq ($(CONFIG_MC_VFS),)
-CONFIGURE_ARGS += --disable-vfs
-else
-TARGET_CPPFLAGS += -I$(STAGING_DIR)/usr/include/tirpc
-endif
-
 define Package/mc/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/mc $(1)/usr/bin
@@ -107,15 +101,13 @@ define Package/mc/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/skins/default.ini $(1)/etc/mc/skins
 	$(INSTALL_DATA) ./skins/* $(1)/etc/mc/skins/
 	$(INSTALL_DIR) $(1)/etc/mc/mcedit/Syntax
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/vfs/sfs/sfs.ini $(1)/etc/mc
+	$(INSTALL_DIR) $(1)/usr/lib/mc/extfs.d
 ifeq ($(CONFIG_MC_DIFFVIEWER),y)
 	ln -sf mc $(1)/usr/bin/mcdiff
 endif
 ifeq ($(CONFIG_MC_EDITOR),y)
 	ln -sf mc $(1)/usr/bin/mcedit
-endif
-ifeq ($(CONFIG_MC_VFS),y)
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/vfs/sfs/sfs.ini $(1)/etc/mc
-	$(INSTALL_DIR) $(1)/usr/lib/mc/extfs.d
 endif
 endef
 
