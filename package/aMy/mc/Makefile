@@ -17,7 +17,6 @@ PKG_SOURCE_URL:=http://ftp.midnight-commander.org/
 PKG_HASH:=859f1cc070450bf6eb4d319ffcb6a5ac29deb0ac0d81559fb2e71242b1176d46
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf gettext-version
-#PKG_BUILD_DEPENDS:=MC_VFS:libtirpc
 
 PKG_CONFIG_DEPENDS := \
 	CONFIG_PACKAGE_MC \
