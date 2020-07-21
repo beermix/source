@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcorkipset
-PKG_VERSION:=91e42e2
+PKG_VERSION:=19470fa
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
