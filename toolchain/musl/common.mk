@@ -30,7 +30,6 @@ TARGET_LDFLAGS:= ${TARGET_LDFLAGS/-znow/}
 
 TARGET_CFLAGS:= $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS+= $(if $(CONFIG_MUSL_DISABLE_CRYPT_SIZE_HACK),,-DCRYPT_SIZE_HACK)
-TARGET_CFLAGS+= -mstackrealign
 
 MUSL_CONFIGURE:= \
 	$(TARGET_CONFIGURE_OPTS) \
@@ -42,7 +41,7 @@ MUSL_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
 		--enable-debug \
-		--enable-optimize=*
+		--enable-optimize
 
 define Host/Configure
 	ln -snf $(PKG_NAME)-$(PKG_VERSION) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
