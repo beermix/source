@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.31.9000
+PKG_VERSION:=2.31
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=7ebd114211dcd290efd54e610bbde0765bd7764c
-PKG_MIRROR_HASH:=
+PKG_SOURCE_VERSION:=6f3459f9859a7b506c64fa1823769ab631072c6e
+PKG_MIRROR_HASH:=01ed0c8131bdc32c9abd3aaaebc4fcffb2d496c2b8c363a0e845ac09d874a2ff
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -49,7 +49,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -fno-caller-saves -mstackrealign -fno-plt -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -fno-caller-saves -mstackrealign -fno-plt -march=bonnell -O2 -m32 -pipe -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -65,7 +65,7 @@ GLIBC_CONFIGURE:= \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_REGULAR),--enable-stack-protector=yes) \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
-		--enable-kernel=5.4.0
+		--enable-kernel=4.19.0
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
