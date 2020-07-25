@@ -45,6 +45,10 @@ ifeq ($(PKG_VERSION),2.34)
   #PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
+ifeq ($(PKG_VERSION),2.35)
+  PKG_HASH:=
+endif
+
 HOST_BUILD_PARALLEL:=1
 
 PATCH_DIR:=./patches/$(PKG_VERSION)

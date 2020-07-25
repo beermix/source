@@ -67,8 +67,8 @@ ifeq ($(PKG_VERSION),9.3.1)
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
-ifeq ($(PKG_VERSION),10.1.0)
-  PKG_HASH:=b6898a23844b656f1b68691c5c012036c2e694ac4b53a8918d4712ad876e7ea2
+ifeq ($(PKG_VERSION),10.2.0)
+  PKG_HASH:=
 endif
 
 ifeq ($(PKG_VERSION),10.1.1)
