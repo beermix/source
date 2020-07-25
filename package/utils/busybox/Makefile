@@ -76,6 +76,7 @@ ifeq ($(CONFIG_USE_GLIBC),y)
   LDLIBS += $(call BUSYBOX_IF_ENABLED,NSLOOKUP_OPENWRT,resolv)
 endif
 
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -flto=jobserver -fuse-linker-plugin
 
