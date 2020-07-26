@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glib2
-PKG_VERSION:=2.64.4
+PKG_VERSION:=2.65.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=glib-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@GNOME/glib/2.64
-PKG_HASH:=f7e0b325b272281f0462e0f7fff25a833820cac19911ff677251daf6d87bce50
+PKG_SOURCE_URL:=@GNOME/glib/2.65
+PKG_HASH:=b041e63cd0ac1fccb486374022ade040d907aad29b278e27d9e43e9294a6e7a3
 
 PKG_MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 PKG_LICENSE:=LGPL-2.1-or-later
@@ -22,8 +22,8 @@ PKG_CPE_ID:=cpe:/a:gnome:glib
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=meson/host
-HOST_BUILD_DEPENDS:=libffi/host
+PKG_BUILD_DEPENDS:=meson/host libiconv/host
+HOST_BUILD_DEPENDS:=meson/host libffi/host
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
@@ -33,7 +33,7 @@ include ../../../feeds/packages/devel/meson/meson.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+zlib +libpthread +libffi +libpcre
+  DEPENDS:=+zlib +libpthread +libffi
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
@@ -43,12 +43,15 @@ define Package/glib2/description
 endef
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+HOST_LDFLAGS += -Wl,-rpath=$(STAGING_DIR_HOSTPKG)/lib
+TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
 	-Dselinux=disabled \
 	-Dlibmount=disabled \
+	-Dinternal_pcre=true \
+	-Dxattr=false \
 	-Dman=false \
 	-Ddtrace=false \
 	-Dsystemtap=false \
@@ -60,8 +63,8 @@ COMP_ARGS= \
 	-Dnls=disabled \
 	-Doss_fuzz=disabled
 
-MESON_HOST_ARGS += $(COMP_ARGS) -Dxattr=false -Dinternal_pcre=true
-MESON_ARGS += $(COMP_ARGS) -Dxattr=false -Dinternal_pcre=false
+MESON_HOST_ARGS += $(COMP_ARGS)
+MESON_ARGS += $(COMP_ARGS) -Db_lto=true
 
 # hack to compile static libraries
 define Build/Compile
