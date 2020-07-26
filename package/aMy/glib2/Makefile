@@ -22,7 +22,7 @@ PKG_CPE_ID:=cpe:/a:gnome:glib
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=meson/host libiconv/host
+PKG_BUILD_DEPENDS:=meson/host
 HOST_BUILD_DEPENDS:=meson/host libffi/host
 PKG_INSTALL:=1
 
