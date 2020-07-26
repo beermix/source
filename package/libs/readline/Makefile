@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# http://git.savannah.gnu.org/cgit/readline.git
+# http://git.savannah.gnu.org/cgit/readline.git/log/
 
 include $(TOPDIR)/rules.mk
 
