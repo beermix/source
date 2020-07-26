@@ -45,7 +45,7 @@ endef
 
 define Package/git-http
 $(call Package/git/Default)
-  DEPENDS+= +git +libcurl
+  DEPENDS+= +git +libcurl +libnghttp2
   TITLE:=Git HTTP commands
 endef
 
@@ -74,8 +74,8 @@ TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS) -ffunction-sections -fdata-sections" \
-	CPPFLAGS="$(TARGET_CPPFLAGS) -Wl,--gc-sections" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	NO_EXPAT="YesPlease" \
 	NO_MKSTEMPS="YesPlease" \
