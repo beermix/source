@@ -19,15 +19,6 @@ ifeq ($(PKG_VERSION),2.29.1)
   PKG_HASH:=e7010a46969f9d3e53b650a518663f98a5dde3c3ae21b7d71e5e6803bc36b577
 endif
 
-ifeq ($(PKG_VERSION),2.31)
-  PKG_HASH:=
-  #PKG_SOURCE_PROTO:=git
-  #PKG_SOURCE_VERSION:=
-  #PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-  #PKG_SOURCE_URL:=https://github.com/bminor/binutils-gdb.git
-  #PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
-endif
-
 ifeq ($(PKG_VERSION),2.31.1)
   PKG_HASH:=5d20086ecf5752cc7d9134246e9588fa201740d540f7eb84d795b1f7a93bca86
 endif
@@ -38,11 +29,6 @@ endif
 
 ifeq ($(PKG_VERSION),2.34)
   PKG_HASH:=f00b0e8803dc9bab1e2165bd568528135be734df3fabf8d0161828cd56028952
-  #PKG_SOURCE_PROTO:=git
-  #PKG_SOURCE_VERSION:=cb5f6a3
-  #PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-  #PKG_SOURCE_URL:=https://github.com/bminor/binutils-gdb.git
-  #PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 endif
 
 ifeq ($(PKG_VERSION),2.35)

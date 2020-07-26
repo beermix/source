@@ -40,50 +40,12 @@ ifeq ($(PKG_VERSION),8.4.0)
   PKG_HASH:=e30a6e52d10e1f27ed55104ad233c30bd1e99cfb5ff98ab022dc941edd1b2dd4
 endif
 
-ifeq ($(PKG_VERSION),8.4.1)
-  PKG_REV:=8-20200618
-  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-8
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-endif
-
 ifeq ($(PKG_VERSION),9.3.0)
   PKG_HASH:=71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1
 endif
 
-ifeq ($(PKG_VERSION),9.3.1)
-  PKG_REV:=9-20200703
-  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-9
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_REV:=cb797c7
-#  PKG_SOURCE_PROTO:=git
-#  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
-#  PKG_SOURCE_VERSION:=$(PKG_REV)
-#  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-endif
-
 ifeq ($(PKG_VERSION),10.2.0)
   PKG_HASH:=b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c
-endif
-
-ifeq ($(PKG_VERSION),10.1.1)
-  PKG_REV:=10-20200711
-  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_REV:=37ba6ac
-#  PKG_SOURCE_PROTO:=git
-#  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
-#  PKG_SOURCE_VERSION:=$(PKG_REV)
-#  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
