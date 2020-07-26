@@ -1,4 +1,4 @@
-#
+# 
 # Copyright (C) 2002-2003 Erik Andersen <andersen@uclibc.org>
 # Copyright (C) 2004 Manuel Novoa III <mjn3@uclibc.org>
 # Copyright (C) 2005-2006 Felix Fietkau <nbd@nbd.name>
