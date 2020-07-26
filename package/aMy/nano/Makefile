@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nano
-PKG_VERSION:=4.9.3
+PKG_VERSION:=5.0-pre1
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0+
 PKG_LICENSE_FILES:=COPYING
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://www.nano-editor.org/dist/v4
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://www.nano-editor.org/dist/test
 PKG_HASH:=
 
 PKG_INSTALL:=1
@@ -37,8 +37,6 @@ define Package/nano/description
   Nano (Nano's ANOther editor, or Not ANOther editor) is an enhanced clone
   of the Pico text editor.
 endef
-
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 CONFIGURE_ARGS += \
 	--enable-color \

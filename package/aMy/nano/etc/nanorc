@@ -195,10 +195,10 @@ set suspend
 ## by default there are no colors, except for errorcolor.
 ## set titlecolor brightwhite,blue
 ## set statuscolor brightwhite,green
-set errorcolor brightwhite,red
+#set errorcolor brightwhite,red
 # set selectedcolor brightwhite,magenta
 # set stripecolor ,yellow
-set numbercolor cyan
+#set numbercolor cyan
 # set keycolor cyan
 # set functioncolor green
 ## In root's .nanorc you might want to use:
@@ -267,21 +267,21 @@ include "/usr/share/nanorc/*.nanorc"
 ## If you would like nano to have keybindings that are more "usual",
 ## such as ^O for Open, ^F for Find, ^H for Help, and ^Q for Quit,
 ## then uncomment these:
-#bind ^Q exit all
-#bind ^S savefile main
-#bind ^W writeout main
-#bind ^O insert main
+bind ^Q exit all
+bind ^S savefile main
+bind ^W writeout main
+bind ^O insert main
 #bind ^H help all
 #bind ^H exit help
 #bind ^F whereis all
-#bind ^G findnext all
+bind ^G findnext all
 #bind ^B wherewas all
-#bind ^D findprevious all
-#bind ^R replace main
+bind ^D findprevious all
+bind ^R replace main
 #bind M-X flipnewbuffer all
-#bind ^X cut all
-#bind ^C copy main
-#bind ^V paste all
+bind ^X cut all
+bind ^C copy main
+bind ^V paste all
 #bind ^P curpos main
 #bind ^A mark main
 #unbind ^K main
@@ -293,8 +293,8 @@ include "/usr/share/nanorc/*.nanorc"
 #bind ^T gotoline main
 #bind ^T gotodir browser
 #bind ^Y speller main
-#bind M-U undo main
-#bind M-R redo main
-#bind ^U undo main
-#bind ^E redo main
-#set multibuffer
+bind M-U undo main
+bind M-R redo main
+bind ^U undo main
+bind ^E redo main
+set multibuffer
