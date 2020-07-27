@@ -17,9 +17,9 @@ Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
 --- a/drivers/net/phy/sfp-bus.c
 +++ b/drivers/net/phy/sfp-bus.c
-@@ -184,7 +184,32 @@ int sfp_parse_port(struct sfp_bus *bus,
- }
- EXPORT_SYMBOL_GPL(sfp_parse_port);
+@@ -38,7 +38,32 @@ struct sfp_bus {
+ 	bool started;
+ };
  
 +static void sfp_quirk_2500basex(const struct sfp_eeprom_id *id,
 +				unsigned long *modes)

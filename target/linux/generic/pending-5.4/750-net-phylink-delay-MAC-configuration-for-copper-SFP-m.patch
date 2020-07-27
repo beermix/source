@@ -134,7 +134,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
  
 --- a/drivers/net/phy/sfp-bus.c
 +++ b/drivers/net/phy/sfp-bus.c
-@@ -109,6 +109,7 @@ static const struct sfp_quirk *sfp_looku
+@@ -103,6 +103,7 @@ static const struct sfp_quirk *sfp_looku
  
  	return NULL;
  }
@@ -142,9 +142,9 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
  /**
   * sfp_parse_port() - Parse the EEPROM base ID, setting the port type
   * @bus: a pointer to the &struct sfp_bus structure for the sfp module
-@@ -250,6 +251,33 @@ static const struct sfp_quirk *sfp_looku
- 	return NULL;
- }
+@@ -179,6 +180,33 @@ int sfp_parse_port(struct sfp_bus *bus,
+ EXPORT_SYMBOL_GPL(sfp_parse_port);
+ 
  /**
 + * sfp_may_have_phy() - indicate whether the module may have a PHY
 + * @bus: a pointer to the &struct sfp_bus structure for the sfp module
