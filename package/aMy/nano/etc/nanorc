@@ -60,7 +60,7 @@
 # set fill -8
 
 ## Remember the used search/replace strings for the next session.
-set historylog
+#set historylog
 
 ## Scroll the buffer contents per half-screen instead of per line.
 # set jumpyscrolling
@@ -269,15 +269,15 @@ include "/usr/share/nanorc/*.nanorc"
 ## then uncomment these:
 bind ^Q exit all
 bind ^S savefile main
-bind ^W writeout main
-bind ^O insert main
+#bind ^W writeout main
+#bind ^O insert main
 #bind ^H help all
 #bind ^H exit help
 #bind ^F whereis all
-bind ^G findnext all
+#bind ^G findnext all
 #bind ^B wherewas all
-bind ^D findprevious all
-bind ^R replace main
+#bind ^D findprevious all
+#bind ^R replace main
 #bind M-X flipnewbuffer all
 bind ^X cut all
 bind ^C copy main
@@ -293,8 +293,8 @@ bind ^V paste all
 #bind ^T gotoline main
 #bind ^T gotodir browser
 #bind ^Y speller main
-bind M-U undo main
-bind M-R redo main
+#bind M-U undo main
+#bind M-R redo main
 bind ^U undo main
 bind ^E redo main
-set multibuffer
+#set multibuffer
