@@ -66,7 +66,7 @@ CMAKE_OPTIONS += \
 	-DHAVE_SSE42CRC_INLINE_ASM=0 \
 	-DHAVE_SSE42CMPSTR_INTRIN=0 \
 	-DHAVE_AVX2_INTRIN=0
-
+	
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
 	$(CP)	$(PKG_INSTALL_DIR)/usr/include/z{conf,lib}.h \
@@ -75,7 +75,7 @@ define Build/InstallDev
 	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/libz.{a,so*} \
 		$(1)/usr/lib/
 	mkdir -p $(1)/usr/lib/pkgconfig
-	$(CP)	$(PKG_INSTALL_DIR)/usr/share/pkgconfig/zlib.pc \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
 		$(1)/usr/lib/pkgconfig/
 endef
 
@@ -95,7 +95,7 @@ define Package/zlib-dev/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.a $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/pkgconfig/zlib.pc \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
 	  $(1)/usr/lib/pkgconfig/
 endef
 
