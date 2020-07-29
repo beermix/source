@@ -8,14 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nano
-PKG_VERSION:=5.0-pre1
+PKG_VERSION:=4.9.3
 PKG_RELEASE:=1
-PKG_LICENSE:=GPL-3.0+
-PKG_LICENSE_FILES:=COPYING
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://www.nano-editor.org/dist/test
-PKG_HASH:=
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=@GNU/nano
+PKG_HASH:=6e3438f033a0ed07d3d74c30d0803cbda3d2366ba1601b7bbf9b16ac371f51b4
+
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=COPYING
+PKG_MAINTAINER:=Jonathan Bennett <JBennett@incomsystems.biz>, Hannu Nyman <hannu.nyman@iki.fi>
+PKG_CPE_ID:=cpe:/a:gnu:nano
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
@@ -27,10 +30,8 @@ define Package/nano
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=An enhanced clone of the Pico text editor
-  URL:=http://www.nano-editor.org/
-  MAINTAINER:=Jonathan Bennett <JBennett@incomsystems.biz>, \
-		Hannu Nyman <hannu.nyman@iki.fi>
-  DEPENDS:=+libncurses +zlib +file
+  URL:=https://www.nano-editor.org/
+  DEPENDS:=+libncurses
 endef
 
 define Package/nano/description
@@ -41,7 +42,10 @@ endef
 CONFIGURE_ARGS += \
 	--enable-color \
 	--enable-nanorc \
-	--enable-multibuffer \
+	--without-slang \
+
+CONFIGURE_VARS += \
+	ac_cv_header_regex_h=no \
 
 define Package/nano/install
 	$(INSTALL_DIR) $(1)/usr/bin

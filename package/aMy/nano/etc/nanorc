@@ -279,9 +279,9 @@ bind ^S savefile main
 #bind ^D findprevious all
 #bind ^R replace main
 #bind M-X flipnewbuffer all
-bind ^X cut all
-bind ^C copy main
-bind ^V paste all
+#bind ^X cut all
+#bind ^C copy main
+#bind ^V paste all
 #bind ^P curpos main
 #bind ^A mark main
 #unbind ^K main
@@ -295,6 +295,6 @@ bind ^V paste all
 #bind ^Y speller main
 #bind M-U undo main
 #bind M-R redo main
-bind ^U undo main
-bind ^E redo main
+#bind ^U undo main
+#bind ^E redo main
 #set multibuffer
