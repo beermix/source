@@ -3,14 +3,15 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://kernel.ubuntu.com/~cking/tarballs/stress-ng/?C=M;O=D  +libaio +libbsd  +keyctl
+# https://kernel.ubuntu.com/~cking/tarballs/stress-ng/?C=M;O=D  +libaio +libbsd +keyctl
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=stress-ng
-PKG_VERSION:=0.11.15
 
-PKG_SOURCE_URL:=http://kernel.ubuntu.com/~cking/tarballs/stress-ng
+PKG_VERSION:=4c63c27
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/ColinIanKing/stress-ng
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -23,7 +24,7 @@ define Package/stress-ng
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=stress-ng
-  DEPENDS:=+libpthread +librt +libatomic +zlib +libbsd
+  DEPENDS:=+libpthread +librt +libatomic +zlib
 endef
 
 define Package/stress-ng/install
