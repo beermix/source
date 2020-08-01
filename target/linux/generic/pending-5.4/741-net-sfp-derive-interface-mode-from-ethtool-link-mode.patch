@@ -40,7 +40,7 @@ Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
  			    "selection of interface failed, advertisement %*pb\n",
 --- a/drivers/net/phy/sfp-bus.c
 +++ b/drivers/net/phy/sfp-bus.c
-@@ -320,16 +320,12 @@ EXPORT_SYMBOL_GPL(sfp_parse_support);
+@@ -394,16 +394,12 @@ EXPORT_SYMBOL_GPL(sfp_parse_support);
  /**
   * sfp_select_interface() - Select appropriate phy_interface_t mode
   * @bus: a pointer to the &struct sfp_bus structure for the sfp module
@@ -59,7 +59,7 @@ Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
  				     unsigned long *link_modes)
  {
  	if (phylink_test(link_modes, 10000baseCR_Full) ||
-@@ -342,7 +338,8 @@ phy_interface_t sfp_select_interface(str
+@@ -416,7 +412,8 @@ phy_interface_t sfp_select_interface(str
  	if (phylink_test(link_modes, 2500baseX_Full))
  		return PHY_INTERFACE_MODE_2500BASEX;
  
