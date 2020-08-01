@@ -10,19 +10,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.4.3.6
-PKG_RELEASE:=1
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org/ https://archive.torproject.org/tor-package-archive
-PKG_HASH:=
-PKG_CPE_ID:=cpe:/a:torproject:tor
 
-#PKG_VERSION:=084cc7f
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/torproject/tor
-#PKG_SOURCE_VERSION:=$(PKG_VERSION)
-#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+#PKG_VERSION:=0.4.3.6
+#PKG_RELEASE:=1
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+#PKG_SOURCE_URL:=https://dist.torproject.org/ https://archive.torproject.org/tor-package-archive
+#PKG_HASH:=
+#PKG_CPE_ID:=cpe:/a:torproject:tor
+
+PKG_VERSION:=f67d5b3
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/torproject/tor
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
