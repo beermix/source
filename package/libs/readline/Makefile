@@ -46,13 +46,12 @@ define Package/libreadline/description
 	history expansion on previous commands.
 endef
 
-CONFIGURE_ARGS += --with-curses --disable-install-examples
+CONFIGURE_ARGS += --with-curses --disable-install-examples --enable-static
 
 CONFIGURE_VARS += \
 	bash_cv_wcwidth_broken=no \
 	bash_cv_func_sigsetjmp=yes \
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 TARGET_CFLAGS += $(FPIC)
 
 define Build/InstallDev
