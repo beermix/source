@@ -1,0 +1,11 @@
+--- a/include/trace-cmd/trace-cmd.h
++++ b/include/trace-cmd/trace-cmd.h
+@@ -6,6 +6,8 @@
+ #ifndef _TRACE_CMD_H
+ #define _TRACE_CMD_H
+ 
++#include <pthread.h>
++
+ #include "traceevent/event-parse.h"
+ 
+ #define TRACECMD_MAGIC { 23, 8, 68 }
