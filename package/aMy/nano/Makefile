@@ -3,17 +3,17 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://www.nano-editor.org/dist/v4/?C=M;O=D
+# https://www.nano-editor.org/dist/v5/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nano
-PKG_VERSION:=4.9.3
+PKG_VERSION:=5.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/nano
-PKG_HASH:=6e3438f033a0ed07d3d74c30d0803cbda3d2366ba1601b7bbf9b16ac371f51b4
+PKG_HASH:=7c0d94be69cd066f20df2868a2da02f7b1d416ce8d47c0850a8bd270897caa36
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
