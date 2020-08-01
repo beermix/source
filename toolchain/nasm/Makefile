@@ -10,7 +10,7 @@ PKG_VERSION:=2.15.03
 PKG_SOURCE_URL:=https://www.nasm.us/pub/nasm/releasebuilds/$(PKG_VERSION)/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
-PKG_HASH:=
+PKG_HASH:=c0c39a305f08ccf0c5c6edba4294dd2851b3925b6d9642dd1efd62f72829822f
 
 HOST_BUILD_PARALLEL:=1
 
