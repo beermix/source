@@ -4,15 +4,16 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog
+# 2.31.9000
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.31
+PKG_VERSION:=2.31.9000
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=7611339a9b5670cccddf429b4a78dad1888f56fa
+PKG_SOURCE_VERSION:=7f1a08cff82255cd4252a2c75fd65b80a6a170bf
 PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
