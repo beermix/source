@@ -3,8 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=shortlog
-# 2.31.9000
+#
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc

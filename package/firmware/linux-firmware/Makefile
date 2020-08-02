@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=@KERNEL/linux/kernel/firmware
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=
+PKG_HASH:=898c334b0da7de6ea173899beb696fad647dce0c06960d7368ba4d4e802fb860
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 
