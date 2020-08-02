@@ -14,7 +14,6 @@ PKG_SOURCE_URL:=https://distfiles.dereferenced.org/pkgconf
 PKG_HASH:=
 
 HOST_BUILD_PARALLEL:=1
-HOST_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/host-build.mk
 
