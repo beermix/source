@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=git
-PKG_VERSION:=2.25.4
+PKG_VERSION:=2.20.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -71,6 +71,7 @@ define Package/git-gitweb/conffiles
 endef
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+#QTARGET_LDFLAGS += -Wl,--gc-sections
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
