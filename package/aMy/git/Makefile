@@ -71,7 +71,6 @@ define Package/git-gitweb/conffiles
 endef
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-#QTARGET_LDFLAGS += -Wl,--gc-sections
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
