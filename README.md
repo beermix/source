@@ -7,7 +7,7 @@ application selection and configuration provided by the vendor and allows you
 to customize the device through the use of packages to suit any application.
 For developers, OpenWrt is the framework to build an application without having
 to build a complete firmware around it; for users this means the ability for
-full customization, to use the device in ways never envisioned. 
+full customization, to use the device in ways never envisioned.
 
 Sunshine!
 
@@ -85,4 +85,3 @@ For a list of supported devices see the [OpenWrt Hardware Database](https://open
 ## License
 
 OpenWrt is licensed under GPL-2.0
-
