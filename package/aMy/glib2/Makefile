@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glib2
 PKG_VERSION:=2.65.0
-PKG_RELEASE:=1
+PKG_RELEASE:=3
 
 PKG_SOURCE:=glib-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNOME/glib/2.65
@@ -43,7 +43,7 @@ define Package/glib2/description
 endef
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-HOST_LDFLAGS += -Wl,-rpath=$(STAGING_DIR_HOSTPKG)/lib
+HOST_LDFLAGS += -Wl,-rpath,$(STAGING_DIR_HOSTPKG)/lib
 TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
 
@@ -60,8 +60,10 @@ COMP_ARGS= \
 	-Dforce_posix_threads=true \
 	-Dfam=false \
 	-Dinstalled_tests=false \
-	-Dnls=disabled \
-	-Doss_fuzz=disabled
+	-Dnls=$(if $(CONFIG_BUILD_NLS),en,dis)abled \
+	-Doss_fuzz=disabled \
+	-Dglib_assert=false \
+	-Dglib_checks=false
 
 MESON_HOST_ARGS += $(COMP_ARGS)
 MESON_ARGS += $(COMP_ARGS) -Db_lto=true
@@ -117,6 +119,11 @@ define Build/InstallDev
 	$(INSTALL_DATA) \
 		$(PKG_INSTALL_DIR)/usr/share/aclocal/*.m4  \
 		$(2)/share/aclocal/
+
+	$(INSTALL_DIR) $(1)/usr/share/glib-2.0
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/share/glib-2.0/codegen \
+		$(1)/usr/share/glib-2.0/
 endef
 
 define Package/glib2/install
