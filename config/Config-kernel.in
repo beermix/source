@@ -1095,6 +1095,13 @@ config KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE
 	  with the "-O2" compiler flag for best performance and most
 	  helpful compile-time warnings.
 
+config KERNEL_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+	bool "Optimize for performance -O3"
+	help
+	  This is the default optimization level for the kernel, building
+	  with the "-O3" compiler flag for best performance -O3 and most
+	  helpful compile-time warnings.
+
 config KERNEL_CC_OPTIMIZE_FOR_SIZE
 	bool "Optimize for size"
 	help
