@@ -482,7 +482,6 @@ endef
 
 define Package/boost/Default/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/lib/libboost_$(2)*.so* $(1)/usr/lib/
 endef
 
 define Package/boost-test/install
