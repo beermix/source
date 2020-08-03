@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=iptables
-PKG_VERSION:=1.8.4
+PKG_VERSION:=1.8.5
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://netfilter.org/projects/iptables/files
