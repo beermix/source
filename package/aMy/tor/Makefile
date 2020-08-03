@@ -11,22 +11,21 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
 
-#PKG_VERSION:=0.4.3.6
-#PKG_RELEASE:=1
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-#PKG_SOURCE_URL:=https://dist.torproject.org/ https://archive.torproject.org/tor-package-archive
-#PKG_HASH:=
-#PKG_CPE_ID:=cpe:/a:torproject:tor
+PKG_VERSION:=0.3.5.11
+PKG_RELEASE:=1
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://dist.torproject.org/ https://archive.torproject.org/tor-package-archive
+PKG_HASH:=
 
-PKG_VERSION:=f67d5b3
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/torproject/tor
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+#PKG_VERSION:=f67d5b3
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=https://github.com/torproject/tor
+#PKG_SOURCE_VERSION:=$(PKG_VERSION)
+#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
+#PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -103,20 +102,17 @@ CONFIGURE_ARGS += \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc \
 	--disable-manpage \
-	--disable-html-manual \
 	--disable-seccomp \
 	--disable-libscrypt \
-	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
-	--disable-module-relay \
+	--disable-unittests \
 	--disable-module-dirauth \
+	--disable-systemd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
-	--disable-linker-hardening \
-	--disable-gcc-hardening \
-	--disable-silent-rules \
-	--with-pic
+	--enable-transparent \
+	--disable-silent-rules
 
 #TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 #TARGET_LDFLAGS += -Wl,--gc-sections -flto
