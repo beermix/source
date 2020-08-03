@@ -111,9 +111,11 @@ CONFIGURE_ARGS += \
 	--disable-zstd \
 	--disable-module-relay \
 	--disable-module-dirauth \
-	--enable-silent-rules \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
+	--disable-linker-hardening \
+	--disable-gcc-hardening \
+	--disable-silent-rules \
 	--with-pic
 
 #TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
