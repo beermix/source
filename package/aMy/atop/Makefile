@@ -41,6 +41,8 @@ define Package/atop/description
   network activity per process/thread.
 endef
 
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+
 MAKE_FLAGS += \
 	CFLAGS+="-Wno-misleading-indentation -Wno-unused-const-variable -Wno-format-truncation"
 
