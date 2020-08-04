@@ -51,7 +51,6 @@ MAKE_FLAGS += \
 		$(if $(CONFIG_IPV6),--ipv6)" \
 	-f Makefile.linux miniupnpd
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 TARGET_CFLAGS += $(FPIC) -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
