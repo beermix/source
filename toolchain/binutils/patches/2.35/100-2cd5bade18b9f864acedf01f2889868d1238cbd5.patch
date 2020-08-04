@@ -1,22 +1,3 @@
-diff --git a/gas/ChangeLog b/gas/ChangeLog
-index bc179d9197d..9af16a03a29 100644
---- a/gas/ChangeLog
-+++ b/gas/ChangeLog
-@@ -1,3 +1,14 @@
-+2020-07-28  H.J. Lu  <hongjiu.lu@intel.com>
-+
-+	PR gas/26305
-+	* config/tc-i386.c (build_modrm_byte): Use disp32/disp16 on
-+	(%bp)/(%ebp)/(%rbp) for {disp32}.
-+	* doc/c-i386.texi: Update {disp32} documentation.
-+	* testsuite/gas/i386/pseudos.s: Add (%bp)/(%ebp) tests.
-+	* testsuite/gas/i386/x86-64-pseudos.s: Add (%ebp)/(%rbp) tests.
-+	* testsuite/gas/i386/pseudos.d: Updated.
-+	* testsuite/gas/i386/x86-64-pseudos.d: Likewise.
-+
- 2020-07-24  Nick Clifton  <nickc@redhat.com>
- 
- 	* configure: Regenerate.
 diff --git a/gas/config/tc-i386.c b/gas/config/tc-i386.c
 index ed514cf986c..7c8466c6a35 100644
 --- a/gas/config/tc-i386.c

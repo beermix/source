@@ -1,16 +1,3 @@
-diff --git a/ld/ChangeLog b/ld/ChangeLog
-index 54e959cce4b..ad6a252dd74 100644
---- a/ld/ChangeLog
-+++ b/ld/ChangeLog
-@@ -1,3 +1,8 @@
-+2020-08-03  Alan Modra  <amodra@gmail.com>
-+
-+	* ldlex.l (yy_create_string_buffer): Use xmalloc rather than malloc.
-+	* lexsup.c (parse_args): Likewise.
-+
- 2020-08-03  Alan Modra  <amodra@gmail.com>
- 
- 	PR 26328
 diff --git a/ld/ldlex.l b/ld/ldlex.l
 index 0fcbe84c8b5..4bd523eda65 100644
 --- a/ld/ldlex.l
