@@ -78,7 +78,7 @@ ifeq ($(CONFIG_USE_GLIBC),y)
 endif
 
 # TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-TARGET_CFLAGS += -mstackrealign -flto
+TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -flto=jobserver -fuse-linker-plugin
 
 MAKE_VARS :=
