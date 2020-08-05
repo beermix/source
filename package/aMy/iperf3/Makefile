@@ -53,7 +53,7 @@ endef
 define Package/iperf3-sctp
 $(call Package/iperf3/default)
   TITLE+= with sctp support
-  VARIANT:=ssl
+  VARIANT:=sctp
   DEPENDS:= +libsctp
 endef
 
