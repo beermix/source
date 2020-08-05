@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=shadowsocks-libev
+PKG_NAME:=shadowsocks-libev2
 PKG_VERSION:=2.6.0
 PKG_RELEASE:=1
 PKG_REV:=637f207934680500a780c3788b41956250086e9f
@@ -34,7 +34,7 @@ PKG_BUILD_DEPENDS:=pcre
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/shadowsocks-libev/Default
+define Package/shadowsocks-libev2/Default
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Lightweight Secured Socks5 Proxy $(2)
@@ -43,20 +43,20 @@ define Package/shadowsocks-libev/Default
 	DEPENDS:=$(3) +libpthread +libsodium +libev +ipset +ip +iptables-mod-tproxy
 endef
 
-Package/shadowsocks-libev = $(call Package/shadowsocks-libev/Default,openssl,(OpenSSL),+libopenssl)
-Package/shadowsocks-libev-mbedtls = $(call Package/shadowsocks-libev/Default,mbedtls,(mbed TLS),+libmbedtls)
+Package/shadowsocks-libev2 = $(call Package/shadowsocks-libev2/Default,openssl,(OpenSSL),+libopenssl)
+Package/shadowsocks-libev2-mbedtls = $(call Package/shadowsocks-libev2/Default,mbedtls,(mbed TLS),+libmbedtls)
 
-define Package/shadowsocks-libev/description
-Shadowsocks-libev is a lightweight secured socks5 proxy for embedded devices and low end boxes.
+define Package/shadowsocks-libev2/description
+shadowsocks-libev2 is a lightweight secured socks5 proxy for embedded devices and low end boxes.
 endef
 
-Package/shadowsocks-libev-mbedtls/description = $(Package/shadowsocks-libev/description)
+Package/shadowsocks-libev2-mbedtls/description = $(Package/shadowsocks-libev2/description)
 
-define Package/shadowsocks-libev/conffiles
+define Package/shadowsocks-libev2/conffiles
 /etc/shadowsocks.json
 endef
 
-Package/shadowsocks-libev-mbedtls/conffiles = $(Package/shadowsocks-libev/conffiles)
+Package/shadowsocks-libev2-mbedtls/conffiles = $(Package/shadowsocks-libev2/conffiles)
 
 # Use shared lib provided by OpenWrt, and use our SSP settings
 CONFIGURE_ARGS += --enable-system-shared-lib --disable-documentation --disable-ssp
@@ -80,7 +80,7 @@ ifeq ($(BUILD_VARIANT),mbedtls)
 	CONFIGURE_ARGS += --with-crypto-library=mbedtls
 endif
 
-define Package/shadowsocks-libev/install
+define Package/shadowsocks-libev2/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-{local,redir,tunnel} $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -88,7 +88,7 @@ define Package/shadowsocks-libev/install
 	$(INSTALL_BIN) ./files/shadowsocks.init $(1)/etc/init.d/shadowsocks
 endef
 
-Package/shadowsocks-libev-mbedtls/install = $(Package/shadowsocks-libev/install)
+Package/shadowsocks-libev2-mbedtls/install = $(Package/shadowsocks-libev2/install)
 
-$(eval $(call BuildPackage,shadowsocks-libev))
-$(eval $(call BuildPackage,shadowsocks-libev-mbedtls))
+$(eval $(call BuildPackage,shadowsocks-libev2))
+$(eval $(call BuildPackage,shadowsocks-libev2-mbedtls))
