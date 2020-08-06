@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=stress-ng
 
-PKG_VERSION:=V0.11.17
+PKG_VERSION:=2370b5c
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/ColinIanKing/stress-ng.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
