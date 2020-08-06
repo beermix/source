@@ -1,7 +1,3 @@
-# DP: updates from the binutils-2.34 branch
-
-# git diff d7f734bc7e9e5fb6c33b433973b57e1eed3a7e9f 9d67d950a5927dc61fa71fedfbb211ff1bfd7b95
-
 diff --git a/bfd/ChangeLog b/bfd/ChangeLog
 index dd2c11d918..ca87f744a3 100644
 --- a/bfd/ChangeLog
@@ -1389,19 +1385,6 @@ index 128cf19145..8a8b74f3f9 100644
      }
    else
      return '?';
-diff --git a/bfd/version.h b/bfd/version.h
-index c54e28f89a..5934196f40 100644
---- a/bfd/version.h
-+++ b/bfd/version.h
-@@ -16,7 +16,7 @@
- 
-    In releases, the date is not included in either version strings or
-    sonames.  */
--#define BFD_VERSION_DATE 20200201
-+#define BFD_VERSION_DATE 20200514
- #define BFD_VERSION @bfd_version@
- #define BFD_VERSION_STRING  @bfd_version_package@ @bfd_version_string@
- #define REPORT_BUGS_TO @report_bugs_to@
 diff --git a/bfd/version.m4 b/bfd/version.m4
 index 697d7097e6..367775a83a 100644
 --- a/bfd/version.m4
@@ -1544,10 +1527,58 @@ index 35842f74b2..6ecfab5d5a 100644
  	      else
  		{
 diff --git a/gas/ChangeLog b/gas/ChangeLog
-index 25d49fd4c4..901af53f54 100644
+index 25d49fd4c4..5eb92e3383 100644
 --- a/gas/ChangeLog
 +++ b/gas/ChangeLog
-@@ -1,6 +1,74 @@
+@@ -1,6 +1,122 @@
++2020-07-06  Stefan Schulze Frielinghaus  <stefansf@linux.ibm.com>
++
++	Backport from mainline.
++	2020-05-26  Stefan Schulze Frielinghaus  <stefansf@linux.ibm.com>
++
++	* testsuite/gas/s390/zarch-z13.d: Add regexp checks for vector
++	load/store instruction variants with alignment hints.
++	* testsuite/gas/s390/zarch-z13.s: Emit new vector load/store
++	instruction variants with alignment hints.
++
++2020-06-10  Alex Coplan  <alex.coplan@arm.com>
++
++	Backport from master
++	2020-06-01  Alex Coplan  <alex.coplan@arm.com>
++	* write.c (relax_segment): Fix handling of negative offset when
++	relaxing an rs_org frag.
++	* testsuite/gas/aarch64/org-neg.d: New test.
++	* testsuite/gas/aarch64/org-neg.l: Error output for test.
++	* testsuite/gas/aarch64/org-neg.s: Input for test.
++	* testsuite/gas/arm/org-neg.d: New test.
++	* testsuite/gas/arm/org-neg.l: Error output for test.
++	* testsuite/gas/arm/org-neg.s: Input for test.
++
++2020-05-18  Alexander Fedotov <alfedotov@gmail.com>
++
++	PR 25992
++	* config/tc-arm.c : Add arm_ext_v8r feature.
++	(it_fsm_post_encode): Check arm_ext_v8r feature.
++	(get_aeabi_cpu_arch_from_fset): Check arm_ext_v8r feature.
++
++2020-05-18  Alan Modra  <amodra@gmail.com>
++
++	* symbols.c (resolve_symbol_value): Invoke LOCAL_SYMBOL_CHECK
++	before looking at add_symbol->sy_flags.
++
++2020-05-15  Alan Modra  <amodra@gmail.com>
++	    Alex Coplan  <alex.coplan@arm.com>
++
++	* symbols.c (struct local_symbol): Update comment.
++	(resolve_symbol_value): For resolved symbols equated to other
++	symbols, verify that the referenced symbol is not a local_symbol
++	before accessing sy_value.  Don't leave symbol loops during
++	finalize_syms resolution.
++	* testsuite/gas/all/assign-bad-recursive.d: New test.
++	* testsuite/gas/all/assign-bad-recursive.l: Error output for test.
++	* testsuite/gas/all/assign-bad-recursive.s: Assembly for test.
++	* testsuite/gas/all/gas.exp: Run it.
++
 +2020-05-07  Andre Vieira  <andre.simoesdiasvieira@arm.com>
 +
 +	Backport from mainline.
@@ -1639,10 +1670,18 @@ index 5ed7302da7..9a3f352108 100644
  
  * Add support for z80-elf target.
 diff --git a/gas/config/tc-arm.c b/gas/config/tc-arm.c
-index bb0b03e35e..7550f9096c 100644
+index bb0b03e35e..b6bb0debbe 100644
 --- a/gas/config/tc-arm.c
 +++ b/gas/config/tc-arm.c
-@@ -7046,6 +7046,8 @@ enum operand_parse_code
+@@ -230,6 +230,7 @@ static const arm_feature_set arm_ext_div = ARM_FEATURE_CORE_LOW (ARM_EXT_DIV);
+ static const arm_feature_set arm_ext_v7 = ARM_FEATURE_CORE_LOW (ARM_EXT_V7);
+ static const arm_feature_set arm_ext_v7a = ARM_FEATURE_CORE_LOW (ARM_EXT_V7A);
+ static const arm_feature_set arm_ext_v7r = ARM_FEATURE_CORE_LOW (ARM_EXT_V7R);
++static const arm_feature_set arm_ext_v8r = ARM_FEATURE_CORE_HIGH (ARM_EXT2_V8R);
+ #ifdef OBJ_ELF
+ static const arm_feature_set ATTRIBUTE_UNUSED arm_ext_v7m = ARM_FEATURE_CORE_LOW (ARM_EXT_V7M);
+ #endif
+@@ -7046,6 +7047,8 @@ enum operand_parse_code
    OP_RNDMQ,     /* Neon double precision (0..31) or MVE vector register.  */
    OP_RNDMQR,    /* Neon double precision (0..31), MVE vector or ARM register.
  		 */
@@ -1651,7 +1690,7 @@ index bb0b03e35e..7550f9096c 100644
    OP_RNQ,	/* Neon quad precision register */
    OP_RNQMQ,	/* Neon quad or MVE vector register.  */
    OP_RVSD,	/* VFP single or double precision register */
-@@ -7195,6 +7197,8 @@ enum operand_parse_code
+@@ -7195,6 +7198,8 @@ enum operand_parse_code
    OP_oRNSDQ,	 /* Optional single, double or quad precision vector register */
    OP_oRNSDQMQ,	 /* Optional single, double or quad register or MVE vector
  		    register.  */
@@ -1660,7 +1699,7 @@ index bb0b03e35e..7550f9096c 100644
    OP_oSHll,	 /* LSL immediate */
    OP_oSHar,	 /* ASR immediate */
    OP_oSHllar,	 /* LSL or ASR immediate */
-@@ -7391,6 +7395,10 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
+@@ -7391,6 +7396,10 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
  	case OP_RVS:   po_reg_or_fail (REG_TYPE_VFS);	  break;
  	case OP_RVD:   po_reg_or_fail (REG_TYPE_VFD);	  break;
  	case OP_oRND:
@@ -1671,7 +1710,7 @@ index bb0b03e35e..7550f9096c 100644
  	case OP_RNDMQR:
  	  po_reg_or_goto (REG_TYPE_RN, try_rndmq);
  	  break;
-@@ -7456,6 +7464,12 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
+@@ -7456,6 +7465,12 @@ parse_operands (char *str, const unsigned int *pattern, bfd_boolean thumb)
  	case OP_RVSD_COND:
  	  po_reg_or_goto (REG_TYPE_VFSD, try_cond);
  	  break;
@@ -1684,7 +1723,7 @@ index bb0b03e35e..7550f9096c 100644
  	case OP_oRNSDQ:
  	case OP_RNSDQ: po_reg_or_fail (REG_TYPE_NSDQ);    break;
  	case OP_RNSDQMQR:
-@@ -18207,19 +18221,13 @@ do_mve_vmull (void)
+@@ -18207,19 +18222,13 @@ do_mve_vmull (void)
  
    enum neon_shape rs = neon_select_shape (NS_HHH, NS_FFF, NS_DDD, NS_DDS,
  					  NS_QQS, NS_QQQ, NS_QQR, NS_NULL);
@@ -1707,7 +1746,7 @@ index bb0b03e35e..7550f9096c 100644
  	    goto neon_vmul;
  	}
        else
-@@ -19542,7 +19550,7 @@ neon_mixed_length (struct neon_type_el et, unsigned size)
+@@ -19542,7 +19551,7 @@ neon_mixed_length (struct neon_type_el et, unsigned size)
  static void
  do_neon_dyadic_long (void)
  {
@@ -1716,7 +1755,17 @@ index bb0b03e35e..7550f9096c 100644
    if (rs == NS_QDD)
      {
        if (vfp_or_neon_is_neon (NEON_CHECK_ARCH | NEON_CHECK_CC) == FAIL)
-@@ -26039,8 +26047,8 @@ static const struct asm_opcode insns[] =
+@@ -22792,7 +22801,8 @@ it_fsm_post_encode (void)
+       && warn_on_restrict_it
+       && !now_pred.warn_deprecated
+       && warn_on_deprecated
+-      && ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_v8)
++      && (ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_v8)
++          || ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_v8r))
+       && !ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_m))
+     {
+       if (inst.instruction >= 0x10000)
+@@ -26039,8 +26049,8 @@ static const struct asm_opcode insns[] =
  #define ARM_VARIANT & fpu_neon_ext_v1
   mnUF(vabd,      _vabd,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ), neon_dyadic_if_su),
   mnUF(vabdl,     _vabdl,	  3, (RNQMQ, RNDMQ, RNDMQ),   neon_dyadic_long),
@@ -1727,6 +1776,26 @@ index bb0b03e35e..7550f9096c 100644
   mnUF(vand,      _vand,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ_Ibig), neon_logic),
   mnUF(vbic,      _vbic,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ_Ibig), neon_logic),
   mnUF(vorr,      _vorr,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ_Ibig), neon_logic),
+@@ -32327,12 +32337,14 @@ get_aeabi_cpu_arch_from_fset (const arm_feature_set *arch_ext_fset,
+ 
+ found:
+   /* Tag_CPU_arch_profile.  */
+-  if (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v7a)
+-      || ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8)
+-      || (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_atomics)
+-	  && !ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8m_m_only)))
++  if (!ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8r)
++      && (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v7a)
++          || ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8)
++          || (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_atomics)
++              && !ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8m_m_only))))
+     *profile = 'A';
+-  else if (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v7r))
++  else if (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v7r)
++      || ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_v8r))
+     *profile = 'R';
+   else if (ARM_CPU_HAS_FEATURE (p_ver_ret->flags, arm_ext_m))
+     *profile = 'M';
 diff --git a/gas/config/tc-i386.c b/gas/config/tc-i386.c
 index 8728725b82..3f1d4cab7e 100644
 --- a/gas/config/tc-i386.c
@@ -1906,6 +1975,78 @@ index e8685dd046..ed74e82855 100644
  
  @cindex @samp{-O0} option, i386
  @cindex @samp{-O0} option, x86-64
+diff --git a/gas/symbols.c b/gas/symbols.c
+index 79cdb82ba8..acdab3f5e0 100644
+--- a/gas/symbols.c
++++ b/gas/symbols.c
+@@ -114,7 +114,7 @@ struct symbol
+ /* A pointer in the symbol may point to either a complete symbol
+    (struct symbol above) or to a local symbol (struct local_symbol
+    defined here).  The symbol code can detect the case by examining
+-   the first field.  It is always NULL for a local symbol.
++   the first field which is present in both structs.
+ 
+    We do this because we ordinarily only need a small amount of
+    information for a local symbol.  The symbol table takes up a lot of
+@@ -1237,11 +1237,18 @@ resolve_symbol_value (symbolS *symp)
+   if (symp->sy_flags.sy_resolved)
+     {
+       final_val = 0;
+-      while (symp->sy_value.X_op == O_symbol
+-	     && symp->sy_value.X_add_symbol->sy_flags.sy_resolved)
++      while (symp->sy_value.X_op == O_symbol)
+ 	{
+ 	  final_val += symp->sy_value.X_add_number;
+ 	  symp = symp->sy_value.X_add_symbol;
++	  if (LOCAL_SYMBOL_CHECK (symp))
++	    {
++	      struct local_symbol *locsym = (struct local_symbol *) symp;
++	      final_val += locsym->lsy_value;
++	      return final_val;
++	    }
++	  if (!symp->sy_flags.sy_resolved)
++	    return 0;
+ 	}
+       if (symp->sy_value.X_op == O_constant)
+ 	final_val += symp->sy_value.X_add_number;
+@@ -1380,6 +1387,12 @@ resolve_symbol_value (symbolS *symp)
+ 	      break;
+ 	    }
+ 
++	  /* Don't leave symbol loops.  */
++	  if (finalize_syms
++	      && !LOCAL_SYMBOL_CHECK (add_symbol)
++	      && add_symbol->sy_flags.sy_resolving)
++	    break;
++
+ 	  if (finalize_syms && final_val == 0)
+ 	    {
+ 	      if (LOCAL_SYMBOL_CHECK (add_symbol))
+diff --git a/gas/testsuite/gas/aarch64/org-neg.d b/gas/testsuite/gas/aarch64/org-neg.d
+new file mode 100644
+index 0000000000..83e6af6afb
+--- /dev/null
++++ b/gas/testsuite/gas/aarch64/org-neg.d
+@@ -0,0 +1,3 @@
++#name: negative org should not cause internal error
++#source: org-neg.s
++#error_output: org-neg.l
+diff --git a/gas/testsuite/gas/aarch64/org-neg.l b/gas/testsuite/gas/aarch64/org-neg.l
+new file mode 100644
+index 0000000000..f8414adc19
+--- /dev/null
++++ b/gas/testsuite/gas/aarch64/org-neg.l
+@@ -0,0 +1,2 @@
++[^:]*: Assembler messages:
++.*: Error: attempt to move .org backwards
+diff --git a/gas/testsuite/gas/aarch64/org-neg.s b/gas/testsuite/gas/aarch64/org-neg.s
+new file mode 100644
+index 0000000000..403e70d5e0
+--- /dev/null
++++ b/gas/testsuite/gas/aarch64/org-neg.s
+@@ -0,0 +1,2 @@
++.=-1
++ret
 diff --git a/gas/testsuite/gas/aarch64/sve-bfloat-movprfx.d b/gas/testsuite/gas/aarch64/sve-bfloat-movprfx.d
 index 4ba95b8950..e51bd11427 100644
 --- a/gas/testsuite/gas/aarch64/sve-bfloat-movprfx.d
@@ -2030,6 +2171,107 @@ index 0000000000..9ef0ad532f
 +	bfcvtnt z0.h, p1/m, z2.s
 +
 +	ret
+diff --git a/gas/testsuite/gas/all/assign-bad-recursive.d b/gas/testsuite/gas/all/assign-bad-recursive.d
+new file mode 100644
+index 0000000000..aeec5d55f8
+--- /dev/null
++++ b/gas/testsuite/gas/all/assign-bad-recursive.d
+@@ -0,0 +1,4 @@
++#name: bad recursive assignments
++#source: assign-bad-recursive.s
++#xfail: bfin-*-*
++#error_output: assign-bad-recursive.l
+diff --git a/gas/testsuite/gas/all/assign-bad-recursive.l b/gas/testsuite/gas/all/assign-bad-recursive.l
+new file mode 100644
+index 0000000000..70eaf0fe2e
+--- /dev/null
++++ b/gas/testsuite/gas/all/assign-bad-recursive.l
+@@ -0,0 +1,7 @@
++[^:]*: Assembler messages:
++.*: Error: symbol definition loop encountered at `aaa'
++#...
++.*: Error: symbol definition loop encountered at `iii'
++#...
++.*: Error: symbol definition loop encountered at `xxx'
++#pass
+diff --git a/gas/testsuite/gas/all/assign-bad-recursive.s b/gas/testsuite/gas/all/assign-bad-recursive.s
+new file mode 100644
+index 0000000000..21917d91ff
+--- /dev/null
++++ b/gas/testsuite/gas/all/assign-bad-recursive.s
+@@ -0,0 +1,8 @@
++ aaa = aaa
++
++ iii = jjj
++ jjj = iii
++
++ xxx = yyy
++ yyy = zzz
++ zzz = xxx
+diff --git a/gas/testsuite/gas/all/gas.exp b/gas/testsuite/gas/all/gas.exp
+index 78cd3eb3ea..93e6e79b9d 100644
+--- a/gas/testsuite/gas/all/gas.exp
++++ b/gas/testsuite/gas/all/gas.exp
+@@ -97,6 +97,7 @@ if { ![istarget "bfin-*-*"] } then {
+     gas_test "assign-ok.s" "" "" "== assignment support"
+ }
+ gas_test_error "assign-bad.s" "" "== assignment for symbol already set"
++run_dump_test assign-bad-recursive
+ 
+ run_dump_test simple-forward
+ run_dump_test forward
+diff --git a/gas/testsuite/gas/arm/attr-march-armv8-r+crypto.d b/gas/testsuite/gas/arm/attr-march-armv8-r+crypto.d
+index e2d83a0dbe..5bd0fc5f37 100644
+--- a/gas/testsuite/gas/arm/attr-march-armv8-r+crypto.d
++++ b/gas/testsuite/gas/arm/attr-march-armv8-r+crypto.d
+@@ -9,7 +9,7 @@ Attribute Section: aeabi
+ File Attributes
+   Tag_CPU_name: "8-R"
+   Tag_CPU_arch: v8-R
+-  Tag_CPU_arch_profile: Application
++  Tag_CPU_arch_profile: Realtime
+   Tag_ARM_ISA_use: Yes
+   Tag_THUMB_ISA_use: Thumb-2
+   Tag_FP_arch: FP for ARMv8
+diff --git a/gas/testsuite/gas/arm/attr-march-armv8-r+fp.d b/gas/testsuite/gas/arm/attr-march-armv8-r+fp.d
+index e7a8446f9d..afd5a756d0 100644
+--- a/gas/testsuite/gas/arm/attr-march-armv8-r+fp.d
++++ b/gas/testsuite/gas/arm/attr-march-armv8-r+fp.d
+@@ -9,7 +9,7 @@ Attribute Section: aeabi
+ File Attributes
+   Tag_CPU_name: "8-R"
+   Tag_CPU_arch: v8-R
+-  Tag_CPU_arch_profile: Application
++  Tag_CPU_arch_profile: Realtime
+   Tag_ARM_ISA_use: Yes
+   Tag_THUMB_ISA_use: Thumb-2
+   Tag_FP_arch: FP for ARMv8
+diff --git a/gas/testsuite/gas/arm/attr-march-armv8-r+simd.d b/gas/testsuite/gas/arm/attr-march-armv8-r+simd.d
+index e09091cb22..8c8578a78f 100644
+--- a/gas/testsuite/gas/arm/attr-march-armv8-r+simd.d
++++ b/gas/testsuite/gas/arm/attr-march-armv8-r+simd.d
+@@ -9,7 +9,7 @@ Attribute Section: aeabi
+ File Attributes
+   Tag_CPU_name: "8-R"
+   Tag_CPU_arch: v8-R
+-  Tag_CPU_arch_profile: Application
++  Tag_CPU_arch_profile: Realtime
+   Tag_ARM_ISA_use: Yes
+   Tag_THUMB_ISA_use: Thumb-2
+   Tag_FP_arch: FP for ARMv8
+diff --git a/gas/testsuite/gas/arm/attr-march-armv8-r.d b/gas/testsuite/gas/arm/attr-march-armv8-r.d
+index 820f32beea..cf4b3a51f8 100644
+--- a/gas/testsuite/gas/arm/attr-march-armv8-r.d
++++ b/gas/testsuite/gas/arm/attr-march-armv8-r.d
+@@ -9,7 +9,7 @@ Attribute Section: aeabi
+ File Attributes
+   Tag_CPU_name: "8-R"
+   Tag_CPU_arch: v8-R
+-  Tag_CPU_arch_profile: Application
++  Tag_CPU_arch_profile: Realtime
+   Tag_ARM_ISA_use: Yes
+   Tag_THUMB_ISA_use: Thumb-2
+   Tag_MPextension_use: Allowed
 diff --git a/gas/testsuite/gas/arm/mve-scalar-vmul-it.d b/gas/testsuite/gas/arm/mve-scalar-vmul-it.d
 new file mode 100644
 index 0000000000..f4564a5e80
@@ -2182,6 +2424,31 @@ index 0000000000..50b12a0d5d
 +[^>]*> ee30 0a06 	vaddle.f32	s0, s0, s12
 +[^>]*> ee30 0b41 	vsuble.f64	d0, d0, d1
 +#...
+diff --git a/gas/testsuite/gas/arm/org-neg.d b/gas/testsuite/gas/arm/org-neg.d
+new file mode 100644
+index 0000000000..83e6af6afb
+--- /dev/null
++++ b/gas/testsuite/gas/arm/org-neg.d
+@@ -0,0 +1,3 @@
++#name: negative org should not cause internal error
++#source: org-neg.s
++#error_output: org-neg.l
+diff --git a/gas/testsuite/gas/arm/org-neg.l b/gas/testsuite/gas/arm/org-neg.l
+new file mode 100644
+index 0000000000..f8414adc19
+--- /dev/null
++++ b/gas/testsuite/gas/arm/org-neg.l
+@@ -0,0 +1,2 @@
++[^:]*: Assembler messages:
++.*: Error: attempt to move .org backwards
+diff --git a/gas/testsuite/gas/arm/org-neg.s b/gas/testsuite/gas/arm/org-neg.s
+new file mode 100644
+index 0000000000..f60486e2c8
+--- /dev/null
++++ b/gas/testsuite/gas/arm/org-neg.s
+@@ -0,0 +1,2 @@
++.=-1
++nop
 diff --git a/gas/testsuite/gas/arm/pr24753.d b/gas/testsuite/gas/arm/pr24753.d
 new file mode 100644
 index 0000000000..01990d1ff5
@@ -2241,6 +2508,118 @@ index 0000000000..65d21a0eb4
 +#name: x86-64 sysenter (Default)
 +#source: x86-64-sysenter-amd.s
 +#dump: x86-64-sysenter-intel.d
+diff --git a/gas/testsuite/gas/s390/zarch-z13.d b/gas/testsuite/gas/s390/zarch-z13.d
+index e61352b8e2..bfb6fe1ba8 100644
+--- a/gas/testsuite/gas/s390/zarch-z13.d
++++ b/gas/testsuite/gas/s390/zarch-z13.d
+@@ -17,7 +17,6 @@ Disassembly of section .text:
+ .*:	e7 f0 fd fc 10 46 [ 	]*vgmh	%v15,253,252
+ .*:	e7 f0 fd fc 20 46 [ 	]*vgmf	%v15,253,252
+ .*:	e7 f0 fd fc 30 46 [ 	]*vgmg	%v15,253,252
+-.*:	e7 f6 9f a0 00 06 [ 	]*vl	%v15,4000\(%r6,%r9\)
+ .*:	e7 f1 00 00 04 56 [ 	]*vlr	%v15,%v17
+ .*:	e7 f6 9f a0 d0 05 [ 	]*vlrep	%v15,4000\(%r6,%r9\),13
+ .*:	e7 f6 9f a0 00 05 [ 	]*vlrepb	%v15,4000\(%r6,%r9\)
+@@ -42,7 +41,6 @@ Disassembly of section .text:
+ .*:	e7 f6 9f a0 10 04 [ 	]*vllezh	%v15,4000\(%r6,%r9\)
+ .*:	e7 f6 9f a0 20 04 [ 	]*vllezf	%v15,4000\(%r6,%r9\)
+ .*:	e7 f6 9f a0 30 04 [ 	]*vllezg	%v15,4000\(%r6,%r9\)
+-.*:	e7 f1 6f a0 04 36 [ 	]*vlm	%v15,%v17,4000\(%r6\)
+ .*:	e7 f6 9f a0 d0 07 [ 	]*vlbb	%v15,4000\(%r6,%r9\),13
+ .*:	e7 f6 9f a0 d0 22 [ 	]*vlvg	%v15,%r6,4000\(%r9\),13
+ .*:	e7 f6 9f a0 00 22 [ 	]*vlvgb	%v15,%r6,4000\(%r9\)
+@@ -98,12 +96,10 @@ Disassembly of section .text:
+ .*:	e7 f1 00 00 04 5f [ 	]*vsegb	%v15,%v17
+ .*:	e7 f1 00 00 14 5f [ 	]*vsegh	%v15,%v17
+ .*:	e7 f1 00 00 24 5f [ 	]*vsegf	%v15,%v17
+-.*:	e7 f6 9f a0 00 0e [ 	]*vst	%v15,4000\(%r6,%r9\)
+ .*:	e7 f6 9f a0 d0 08 [ 	]*vsteb	%v15,4000\(%r6,%r9\),13
+ .*:	e7 f6 9f a0 d0 09 [ 	]*vsteh	%v15,4000\(%r6,%r9\),13
+ .*:	e7 f6 9f a0 d0 0b [ 	]*vstef	%v15,4000\(%r6,%r9\),13
+ .*:	e7 f6 9f a0 d0 0a [ 	]*vsteg	%v15,4000\(%r6,%r9\),13
+-.*:	e7 f1 6f a0 04 3e [ 	]*vstm	%v15,%v17,4000\(%r6\)
+ .*:	e7 f6 9f a0 00 3f [ 	]*vstl	%v15,%r6,4000\(%r9\)
+ .*:	e7 f1 00 00 d4 d7 [ 	]*vuph	%v15,%v17,13
+ .*:	e7 f1 00 00 04 d7 [ 	]*vuphb	%v15,%v17
+@@ -680,3 +676,11 @@ Disassembly of section .text:
+ .*:	e3 69 b8 f0 fd 3b [ 	]*lzrf	%r6,-10000\(%r9,%r11\)
+ .*:	e3 69 b8 f0 fd 2a [ 	]*lzrg	%r6,-10000\(%r9,%r11\)
+ .*:	b9 3c 00 69 [ 	]*prno	%r6,%r9
++.*:	e7 f6 9f a0 00 06 [	]*vl	%v15,4000\(%r6,%r9\)
++.*:	e7 f6 9f a0 d0 06 [	]*vl	%v15,4000\(%r6,%r9\),13
++.*:	e7 f1 6f a0 04 36 [	]*vlm	%v15,%v17,4000\(%r6\)
++.*:	e7 f1 6f a0 d4 36 [	]*vlm	%v15,%v17,4000\(%r6\),13
++.*:	e7 f6 9f a0 00 0e [	]*vst	%v15,4000\(%r6,%r9\)
++.*:	e7 f6 9f a0 d0 0e [	]*vst	%v15,4000\(%r6,%r9\),13
++.*:	e7 f1 6f a0 04 3e [	]*vstm	%v15,%v17,4000\(%r6\)
++.*:	e7 f1 6f a0 d4 3e [	]*vstm	%v15,%v17,4000\(%r6\),13
+diff --git a/gas/testsuite/gas/s390/zarch-z13.s b/gas/testsuite/gas/s390/zarch-z13.s
+index c2964d8297..646dd3097f 100644
+--- a/gas/testsuite/gas/s390/zarch-z13.s
++++ b/gas/testsuite/gas/s390/zarch-z13.s
+@@ -11,7 +11,6 @@ foo:
+ 	vgmh	%v15,253,252
+ 	vgmf	%v15,253,252
+ 	vgmg	%v15,253,252
+-	vl	%v15,4000(%r6,%r9)
+ 	vlr	%v15,%v17
+ 	vlrep	%v15,4000(%r6,%r9),13
+ 	vlrepb	%v15,4000(%r6,%r9)
+@@ -36,7 +35,6 @@ foo:
+ 	vllezh	%v15,4000(%r6,%r9)
+ 	vllezf	%v15,4000(%r6,%r9)
+ 	vllezg	%v15,4000(%r6,%r9)
+-	vlm	%v15,%v17,4000(%r6)
+ 	vlbb	%v15,4000(%r6,%r9),13
+ 	vlvg	%v15,%r6,4000(%r9),13
+ 	vlvgb	%v15,%r6,4000(%r9)
+@@ -92,12 +90,10 @@ foo:
+ 	vsegb	%v15,%v17
+ 	vsegh	%v15,%v17
+ 	vsegf	%v15,%v17
+-	vst	%v15,4000(%r6,%r9)
+ 	vsteb	%v15,4000(%r6,%r9),13
+ 	vsteh	%v15,4000(%r6,%r9),13
+ 	vstef	%v15,4000(%r6,%r9),13
+ 	vsteg	%v15,4000(%r6,%r9),13
+-	vstm	%v15,%v17,4000(%r6)
+ 	vstl	%v15,%r6,4000(%r9)
+ 	vuph	%v15,%v17,13
+ 	vuphb	%v15,%v17
+@@ -674,3 +670,11 @@ foo:
+ 	lzrf	%r6,-10000(%r9,%r11)
+ 	lzrg	%r6,-10000(%r9,%r11)
+ 	ppno	%r6,%r9
++	vl		%v15,4000(%r6,%r9)
++	vl		%v15,4000(%r6,%r9),13
++	vlm		%v15,%v17,4000(%r6)
++	vlm		%v15,%v17,4000(%r6),13
++	vst		%v15,4000(%r6,%r9)
++	vst		%v15,4000(%r6,%r9),13
++	vstm		%v15,%v17,4000(%r6)
++	vstm		%v15,%v17,4000(%r6),13
+diff --git a/gas/write.c b/gas/write.c
+index 5d9a239422..acdf07b344 100644
+--- a/gas/write.c
++++ b/gas/write.c
+@@ -2936,7 +2936,7 @@ relax_segment (struct frag *segment_frag_root, segT segment, int pass)
+ 
+ 	      case rs_org:
+ 		{
+-		  addressT target = offset;
++		  offsetT target = offset;
+ 		  addressT after;
+ 
+ 		  if (symbolP)
+@@ -2956,7 +2956,7 @@ relax_segment (struct frag *segment_frag_root, segT segment, int pass)
+ 		  /* Growth may be negative, but variable part of frag
+ 		     cannot have fewer than 0 chars.  That is, we can't
+ 		     .org backwards.  */
+-		  if (address + fragP->fr_fix > target)
++		  if ((offsetT) (address + fragP->fr_fix) > target)
+ 		    {
+ 		      growth = 0;
+ 
 diff --git a/gprof/ChangeLog b/gprof/ChangeLog
 index 5bb89490bc..656dfce9ad 100644
 --- a/gprof/ChangeLog
@@ -2344,10 +2723,15 @@ index 727cd72564..c23692e5c3 100755
    with options \\"\$ac_cs_config\\"
  
 diff --git a/include/ChangeLog b/include/ChangeLog
-index c7fd4ab141..2cf472a5df 100644
+index c7fd4ab141..7cdf7ec41c 100644
 --- a/include/ChangeLog
 +++ b/include/ChangeLog
-@@ -1,3 +1,33 @@
+@@ -1,3 +1,38 @@
++2020-05-20  Alexander Fedotov  <alfedotov@gmail.com>
++
++	PR 25992
++	* opcode/arm.h (ARM_EXT2_V8R): Define. Modified ARM_AEXT2_V8R.
++
 +2020-04-01  Martin Liska  <mliska@suse.cz>
 +	    Maciej W. Rozycki <macro@linux-mips.org>
 +
@@ -2403,6 +2787,33 @@ index 0ce0de1012..81a288f5fb 100644
 +};
 +
  #endif /* GCC_LTO_SYMTAB_H  */
+diff --git a/include/opcode/arm.h b/include/opcode/arm.h
+index 6d8c3d0086..ca46985d61 100644
+--- a/include/opcode/arm.h
++++ b/include/opcode/arm.h
+@@ -76,9 +76,10 @@
+ #define ARM_EXT2_V8_6A	     0x00010000	/* ARM V8.6A.			     */
+ #define ARM_EXT2_BF16	     0x00020000 /* ARMv8 bfloat16.		     */
+ #define ARM_EXT2_I8MM	     0x00040000 /* ARMv8.6A i8mm.		     */
+-#define ARM_EXT2_CRC	     0x00080000	/* ARMv8 CRC32 */
+-#define ARM_EXT2_MVE	     0x00100000	/* MVE Integer extension.	   */
+-#define ARM_EXT2_MVE_FP	     0x00200000	/* MVE Floating Point extension.   */
++#define ARM_EXT2_CRC	     0x00080000	/* ARMv8 CRC32.                      */
++#define ARM_EXT2_MVE	     0x00100000	/* MVE Integer extension.	     */
++#define ARM_EXT2_MVE_FP	     0x00200000	/* MVE Floating Point extension.     */
++#define ARM_EXT2_V8R	     0x80000000	/* ARM V8-R.	                     */
+ 
+ /* Co-processor space extensions.  */
+ #define ARM_CEXT_XSCALE	     0x00000001	/* Allow MIA etc.	 	   */
+@@ -182,7 +183,7 @@
+ #define ARM_AEXT2_V8M_MAIN	(ARM_AEXT2_V8M_BASE | ARM_EXT2_V8M_MAIN)
+ #define ARM_AEXT2_V8M_MAIN_DSP	 ARM_AEXT2_V8M_MAIN
+ #define ARM_AEXT_V8R		 ARM_AEXT_V8A
+-#define ARM_AEXT2_V8R		 ARM_AEXT2_V8AR
++#define ARM_AEXT2_V8R		 (ARM_EXT2_V8R | ARM_AEXT2_V8AR)
+ #define ARM_AEXT_V8_1M_MAIN	 ARM_AEXT_V8M_MAIN
+ #define ARM_AEXT2_V8_1M_MAIN	(ARM_AEXT2_V8M_MAIN | ARM_EXT2_V8_1M_MAIN     \
+ 						    | ARM_EXT2_FP16_INST)
 diff --git a/include/plugin-api.h b/include/plugin-api.h
 index 09e1202df0..e317d78478 100644
 --- a/include/plugin-api.h
@@ -2529,10 +2940,20 @@ index 09e1202df0..e317d78478 100644
  
  /* The plugin transfer vector.  */
 diff --git a/ld/ChangeLog b/ld/ChangeLog
-index ea75ff6f00..f26bea4fcf 100644
+index ea75ff6f00..0006ace73e 100644
 --- a/ld/ChangeLog
 +++ b/ld/ChangeLog
-@@ -1,6 +1,66 @@
+@@ -1,6 +1,76 @@
++2020-06-03  Nick Clifton  <nickc@redhat.com>
++
++	Import from mainline:
++	2020-05-18  Nick Clifton  <nickc@redhat.com>
++
++	PR 25993
++	* emultempl/pe.em (_after_open): Check for duplicate filename
++	pointers before renaming the dll.
++	* emultempl/pep.em (_after_open): Likewise.
++
 +2020-04-08  Tamar Christina  <tamar.christina@arm.com>
 +
 +	Backport from mainline.
@@ -2702,6 +3123,80 @@ index 27b4341542..811134a503 100755
  configured by $0, generated by GNU Autoconf 2.69,
    with options \\"\$ac_cs_config\\"
  
+diff --git a/ld/emultempl/pe.em b/ld/emultempl/pe.em
+index 97fb1468aa..26fa7465c0 100644
+--- a/ld/emultempl/pe.em
++++ b/ld/emultempl/pe.em
+@@ -1652,13 +1652,26 @@ gld_${EMULATION_NAME}_after_open (void)
+ 		else /* sentinel */
+ 		  seq = 'c';
+ 
+-		new_name = xmalloc (strlen (is->the_bfd->filename) + 3);
+-		sprintf (new_name, "%s.%c", is->the_bfd->filename, seq);
+-		bfd_set_filename (is->the_bfd, new_name);
++		/* PR 25993: It is possible that is->the_bfd-filename == is->filename.
++		   In which case calling bfd_set_filename on one will free the memory
++		   pointed to by the other.  */
++		if (is->filename == is->the_bfd->filename)
++		  {
++		    new_name = xmalloc (strlen (is->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->filename, seq);
++		    bfd_set_filename (is->the_bfd, new_name);
++		    is->filename = new_name;
++		  }
++		else
++		  {
++		    new_name = xmalloc (strlen (is->the_bfd->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->the_bfd->filename, seq);
++		    bfd_set_filename (is->the_bfd, new_name);
+ 
+-		new_name = xmalloc (strlen (is->filename) + 3);
+-		sprintf (new_name, "%s.%c", is->filename, seq);
+-		is->filename = new_name;
++		    new_name = xmalloc (strlen (is->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->filename, seq);
++		    is->filename = new_name;
++		  }
+ 	      }
+ 	  }
+       }
+diff --git a/ld/emultempl/pep.em b/ld/emultempl/pep.em
+index e8f5ca503f..ef23221c03 100644
+--- a/ld/emultempl/pep.em
++++ b/ld/emultempl/pep.em
+@@ -1620,13 +1620,26 @@ gld_${EMULATION_NAME}_after_open (void)
+ 		else /* sentinel */
+ 		  seq = 'c';
+ 
+-		new_name = xmalloc (strlen (is->the_bfd->filename) + 3);
+-		sprintf (new_name, "%s.%c", is->the_bfd->filename, seq);
+-		bfd_set_filename (is->the_bfd, new_name);
++		/* PR 25993: It is possible that is->the_bfd-filename == is->filename.
++		   In which case calling bfd_set_filename on one will free the memory
++		   pointed to by the other.  */
++		if (is->filename == is->the_bfd->filename)
++		  {
++		    new_name = xmalloc (strlen (is->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->filename, seq);
++		    bfd_set_filename (is->the_bfd, new_name);
++		    is->filename = new_name;
++		  }
++		else
++		  {
++		    new_name = xmalloc (strlen (is->the_bfd->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->the_bfd->filename, seq);
++		    bfd_set_filename (is->the_bfd, new_name);
+ 
+-		new_name = xmalloc (strlen (is->filename) + 3);
+-		sprintf (new_name, "%s.%c", is->filename, seq);
+-		is->filename = new_name;
++		    new_name = xmalloc (strlen (is->filename) + 3);
++		    sprintf (new_name, "%s.%c", is->filename, seq);
++		    is->filename = new_name;
++		  }
+ 	      }
+ 	  }
+       }
 diff --git a/ld/testplug.c b/ld/testplug.c
 index 9dd0b91e45..c126f03607 100644
 --- a/ld/testplug.c
@@ -2936,10 +3431,19 @@ index 6752a76483..e276bb589d 100644
  	    if { ![ar_simple_create $ar $ldflags $binfile "$objfiles"] } {
  		set failed 1
 diff --git a/opcodes/ChangeLog b/opcodes/ChangeLog
-index 52315cced2..ee75d098d9 100644
+index 52315cced2..982454e421 100644
 --- a/opcodes/ChangeLog
 +++ b/opcodes/ChangeLog
-@@ -1,6 +1,34 @@
+@@ -1,6 +1,43 @@
++2020-07-06  Stefan Schulze Frielinghaus  <stefansf@linux.ibm.com>
++
++	Backport from mainline.
++	2020-05-26  Stefan Schulze Frielinghaus  <stefansf@linux.ibm.com>
++
++	* s390-opc.txt: Relocate vector load/store instructions with
++	additional alignment parameter and change architecture level
++	constraint from z14 to z13.
++
 +2020-02-10  H.J. Lu  <hongjiu.lu@intel.com>
 +
 +	PR gas/25516
@@ -38498,3 +39002,65 @@ index 03a490aca8..8eb388e677 100644
  "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
  "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
  "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/opcodes/s390-opc.txt b/opcodes/s390-opc.txt
+index a95b87127b..33dbeb3824 100644
+--- a/opcodes/s390-opc.txt
++++ b/opcodes/s390-opc.txt
+@@ -1159,7 +1159,6 @@ e70000000046 vgmb VRI_V0UU "vector generate mask byte" z13 zarch vx
+ e70000001046 vgmh VRI_V0UU "vector generate mask halfword" z13 zarch vx
+ e70000002046 vgmf VRI_V0UU "vector generate mask word" z13 zarch vx
+ e70000003046 vgmg VRI_V0UU "vector generate mask double word" z13 zarch vx
+-e70000000006 vl VRX_VRRD "vector memory load" z13 zarch vx
+ e70000000056 vlr VRX_VV "vector register load" z13 zarch vx
+ e70000000005 vlrep VRX_VRRDU "vector load and replicate" z13 zarch vx
+ e70000000005 vlrepb VRX_VRRD "vector load and replicate byte elements" z13 zarch vx
+@@ -1184,7 +1183,6 @@ e70000000004 vllezb VRX_VRRD "vector load logical byte element and zero" z13 zar
+ e70000001004 vllezh VRX_VRRD "vector load logical halfword element and zero" z13 zarch vx
+ e70000002004 vllezf VRX_VRRD "vector load logical word element and zero" z13 zarch vx
+ e70000003004 vllezg VRX_VRRD "vector load logical double word element and zero" z13 zarch vx
+-e70000000036 vlm VRS_VVRD "vector load multiple" z13 zarch vx
+ e70000000007 vlbb VRX_VRRDU "vector load to block boundary" z13 zarch vx
+ e70000000022 vlvg VRS_VRRDU "vector load VR element from GR" z13 zarch vx
+ e70000000022 vlvgb VRS_VRRD "vector load VR byte element from GR" z13 zarch vx
+@@ -1240,12 +1238,10 @@ e7000000005f vseg VRR_VV0U "vector sign extend to double word" z13 zarch vx
+ e7000000005f vsegb VRR_VV "vector sign extend byte to double word" z13 zarch vx
+ e7000000105f vsegh VRR_VV "vector sign extend halfword to double word" z13 zarch vx
+ e7000000205f vsegf VRR_VV "vector sign extend word to double word" z13 zarch vx
+-e7000000000e vst VRX_VRRD "vector store" z13 zarch vx
+ e70000000008 vsteb VRX_VRRDU "vector store byte element" z13 zarch vx
+ e70000000009 vsteh VRX_VRRDU "vector store halfword element" z13 zarch vx
+ e7000000000b vstef VRX_VRRDU "vector store word element" z13 zarch vx
+ e7000000000a vsteg VRX_VRRDU "vector store double word element" z13 zarch vx
+-e7000000003e vstm VRS_VVRD "vector store multiple" z13 zarch vx
+ e7000000003f vstl VRS_VRRD "vector store with length" z13 zarch vx
+ e700000000d7 vuph VRR_VV0U "vector unpack high" z13 zarch vx
+ e700000000d7 vuphb VRR_VV "vector unpack high byte" z13 zarch vx
+@@ -1680,6 +1676,13 @@ e3000000003b lzrf RXY_RRRD "load and zero rightmost byte 32->32" z13 zarch
+ e3000000002a lzrg RXY_RRRD "load and zero rightmost byte 64->64" z13 zarch
+ b93c ppno RRE_RR "perform pseudorandom number operation" z13 zarch
+ 
++# Aligned vector store hints
++
++e70000000006 vl VRX_VRRDU "vector memory load" z13 zarch optparm,vx
++e70000000036 vlm VRS_VVRDU "vector load multiple" z13 zarch optparm,vx
++e7000000000e vst VRX_VRRDU "vector store" z13 zarch optparm,vx
++e7000000003e vstm VRS_VVRDU "vector store multiple" z13 zarch optparm,vx
++
+ # arch12 instructions
+ 
+ # Vector Enhancements Facility 1
+@@ -1881,14 +1884,6 @@ b93c prno RRE_RR "perform pseudorandom number operation" arch12 zarch
+ b9a1 tpei RRE_RR "test pending external interruption" arch12 zarch
+ b9ac irbm RRE_RR "insert reference bits multiple" arch12 zarch
+ 
+-# Aligned vector store hints
+-
+-e70000000006 vl VRX_VRRDU "vector memory load" arch12 zarch optparm
+-e70000000036 vlm VRS_VVRDU "vector load multiple" arch12 zarch optparm
+-e7000000000e vst VRX_VRRDU "vector store" arch12 zarch optparm
+-e7000000003e vstm VRS_VVRDU "vector store multiple" arch12 zarch optparm
+-
+-
+ # arch13 instructions
+ 
+ 
