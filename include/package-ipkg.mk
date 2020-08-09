@@ -262,7 +262,7 @@ $(_endef)
     endif
 
 	$(INSTALL_DIR) $$(PDIR_$(1))
-	$(FAKEROOT) $(SCRIPT_DIR)/ipkg-build -m "$(PKG_FILE_MODES)" $$(IDIR_$(1)) $$(PDIR_$(1))
+	$(IPKG_BUILD) $$(IDIR_$(1)) $$(PDIR_$(1))
 	@[ -f $$(IPKG_$(1)) ]
 
     $(1)-clean:
