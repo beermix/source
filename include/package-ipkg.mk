@@ -9,6 +9,10 @@ ifndef DUMP
   include $(INCLUDE_DIR)/feeds.mk
 endif
 
+# invoke ipkg-build with some default options
+IPKG_BUILD:= \
+  $(SCRIPT_DIR)/ipkg-build -c -o 0 -g 0
+
 IPKG_REMOVE:= \
   $(SCRIPT_DIR)/ipkg-remove
 
