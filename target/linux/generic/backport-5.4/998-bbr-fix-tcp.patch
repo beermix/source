@@ -1,0 +1,39 @@
+From 1cd7f04b17b112f8263b29f5c972edab91c46278 Mon Sep 17 00:00:00 2001
+From: Neal Cardwell <ncardwell@google.com>
+Date: Fri, 27 Sep 2019 17:10:26 -0400
+Subject: [PATCH] net-tcp: re-generalize TSO sizing in TCP CC module API
+
+Reorganize the API for CC modules so that the CC module once again
+gets complete control of the TSO sizing decision. This is how the API
+was set up around 2016 and the initial BBRv1 upstreaming. Later Eric
+Dumazet simplified it. But with wider testing it now seems that to
+avoid CPU regressions BBR needs to have a different TSO sizing
+function.
+
+This is necessary to handle cases where there are many flows
+bottlenecked on the sender host's NIC, in which case BBR's pacing rate
+is much lower than CUBIC/Reno/DCTCP's. Why does this happen? Because
+BBR's pacing rate adapts to the low bandwidth share each flow sees. By
+contrast, CUBIC/Reno/DCTCP see no loss or ECN, so they grow a very
+large cwnd, and thus large pacing rate and large TSO burst size.
+
+Change-Id: Ic8ccfdbe4010ee8d4bf6a6334c48a2fceb2171ea
+---
+ include/net/tcp.h     |  4 ++--
+ net/ipv4/tcp_bbr.c    | 37 ++++++++++++++++++++++++++-----------
+ net/ipv4/tcp_output.c | 11 +++++------
+ 3 files changed, 33 insertions(+), 19 deletions(-)
+
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1029,8 +1029,8 @@ struct tcp_congestion_ops {
+ 	u32  (*undo_cwnd)(struct sock *sk);
+ 	/* hook for packet ack accounting (optional) */
+ 	void (*pkts_acked)(struct sock *sk, const struct ack_sample *sample);
+-	/* override sysctl_tcp_min_tso_segs */
+-	u32 (*min_tso_segs)(struct sock *sk);
++	/* pick target number of segments per TSO/GSO skb (optional): */
++	u32 (*tso_segs)(struct sock *sk, unsigned int mss_now);
+ 	/* returns the multiplier used in tcp_sndbuf_expand (optional) */
+ 	u32 (*sndbuf_expand)(struct sock *sk);
+ 	/* call when packets are delivered to update cwnd and pacing rate,
