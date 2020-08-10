@@ -78,6 +78,7 @@ CONFIGURE_ARGS+= \
 	--without-bash-malloc \
 	--bindir=/bin \
 	--disable-rpath \
+	--disable-nls \
 	--enable-direxpand-default \
 	--enable-job-control \
 	--enable-readline
