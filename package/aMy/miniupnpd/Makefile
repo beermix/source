@@ -20,7 +20,7 @@ PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:miniupnp_project:miniupnpd
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=0
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/version.mk
