@@ -33,7 +33,7 @@ include ../../../feeds/packages/devel/meson/meson.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+zlib +libpthread +libffi
+  DEPENDS:=+zlib +libpthread +libffi +libpcre
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
@@ -50,7 +50,6 @@ TARGET_LDFLAGS += -Wl,--gc-sections
 COMP_ARGS= \
 	-Dselinux=disabled \
 	-Dlibmount=disabled \
-	-Dinternal_pcre=true \
 	-Dxattr=false \
 	-Dman=false \
 	-Ddtrace=false \
@@ -65,8 +64,8 @@ COMP_ARGS= \
 	-Dglib_assert=false \
 	-Dglib_checks=false
 
-MESON_HOST_ARGS += $(COMP_ARGS)
-MESON_ARGS += $(COMP_ARGS) -Db_lto=true
+MESON_HOST_ARGS += $(COMP_ARGS) -Dinternal_pcre=true
+MESON_ARGS += $(COMP_ARGS) -Db_lto=true -Dinternal_pcre=false
 
 # hack to compile static libraries
 define Build/Compile
