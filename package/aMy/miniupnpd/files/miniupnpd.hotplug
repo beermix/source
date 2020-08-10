@@ -7,7 +7,9 @@
 # - check only on ifup (otherwise lease updates etc would cause
 #   miniupnpd state loss)
 
-[ "$ACTION" != "ifup" ] && /etc/init.d/miniupnpd running && exit 0
+. /lib/functions/procd.sh
+
+[ "$ACTION" != "ifup" ] && procd_running "miniupnpd" "*" && exit 0
 
 tmpconf="/var/etc/miniupnpd.conf"
 external_iface=$(uci -q get upnpd.config.external_iface)
