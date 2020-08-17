@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=8832d7d
+PKG_VERSION:=193d8fd
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng
