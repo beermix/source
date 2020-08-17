@@ -8,6 +8,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/target.mk
 
 PKG_VERSION:=1.0.34
+PKG_RELEASE:=1
 
 PKG_NAME:=uClibc-ng
 PKG_SOURCE_URL = http://downloads.uclibc-ng.org/releases/$(PKG_VERSION)/
