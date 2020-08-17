@@ -39,7 +39,7 @@ define Package/rustup/description
  platforms Rust supports, including Windows.
 endef
 
-RUSTC_TARGET_ARCH:= mips64-unknown-linux-muslabi64
+RUSTC_TARGET_ARCH:= i686-unknown-linux-gnu
 HOST_RUST_DIR:=$(BUILD_DIR_HOST)/.rustup
 HOST_CARGO_DIR:=$(BUILD_DIR_HOST)/.cargo
 
