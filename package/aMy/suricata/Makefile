@@ -51,7 +51,7 @@ CONFIGURE_ARGS = \
    --enable-gccprotect \
    --enable-debug \
    --enable-pie \
-   --host=mips64-unknown-linux-muslabi64  # RustC Target Triple goes here
+   --host=i686-unknown-linux-gnu  # RustC Target Triple goes here
 
 define Package/suricata5/install
 	$(INSTALL_DIR) $(1)/usr/bin
