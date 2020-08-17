@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=iperf
 
-PKG_VERSION:=3.8.1
+PKG_VERSION:=3.9
 PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://downloads.es.net/pub/iperf
-PKG_HASH:=e5b080f3273a8a715a4100f13826ac2ca31cc7b1315925631b2ecf64957ded96
+PKG_HASH:=24b63a26382325f759f11d421779a937b63ca1bc17c44587d2fcfedab60ac038
 
 #PKG_VERSION:=a9c2803
 #PKG_SOURCE_PROTO:=git
@@ -50,25 +50,12 @@ $(call Package/iperf3/default)
   DEPENDS:= +libopenssl
 endef
 
-define Package/iperf3-sctp
-$(call Package/iperf3/default)
-  TITLE+= with sctp support
-  VARIANT:=sctp
-  DEPENDS:= +libsctp
-endef
-
 CONFIGURE_ARGS += --disable-shared
 
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS += --with-openssl="$(STAGING_DIR)/usr"
 else
 	CONFIGURE_ARGS += --without-openssl
-endif
-
-ifeq ($(BUILD_VARIANT),sctp)
-	CONFIGURE_ARGS += --without-openssl --with-sctp="$(STAGING_DIR)/usr"
-else
-	CONFIGURE_ARGS += --without-openssl --without-sctp
 endif
 
 MAKE_FLAGS += noinst_PROGRAMS=
@@ -95,11 +82,6 @@ define Package/iperf3-ssl/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/iperf3 $(1)/usr/bin/
 endef
 
-define Package/iperf3-sctp/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/iperf3 $(1)/usr/bin/
-endef
-
 $(eval $(call BuildPackage,iperf3))
 $(eval $(call BuildPackage,iperf3-ssl))
-$(eval $(call BuildPackage,iperf3-sctp))
+
