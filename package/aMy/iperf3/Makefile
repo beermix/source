@@ -25,7 +25,7 @@ PKG_HASH:=24b63a26382325f759f11d421779a937b63ca1bc17c44587d2fcfedab60ac038
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
-PKG_FIXUP:=autoreconf
+#PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -50,6 +50,8 @@ $(call Package/iperf3/default)
   DEPENDS:= +libopenssl
 endef
 
+TARGET_CFLAGS += -D_GNU_SOURCE
+#CONFIGURE_ARGS += --disable-static
 CONFIGURE_ARGS += --disable-shared
 
 ifeq ($(BUILD_VARIANT),ssl)
@@ -58,7 +60,7 @@ else
 	CONFIGURE_ARGS += --without-openssl
 endif
 
-MAKE_FLAGS += noinst_PROGRAMS=
+#MAKE_FLAGS += noinst_PROGRAMS=
 
 define Package/iperf3/description
  Iperf is a modern alternative for measuring TCP and UDP bandwidth
@@ -75,6 +77,8 @@ endef
 define Package/iperf3/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/iperf3 $(1)/usr/bin/
+	#$(INSTALL_DIR) $(1)/usr/lib
+	#$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/libiperf.so* $(1)/usr/lib/
 endef
 
 define Package/iperf3-ssl/install
