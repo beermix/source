@@ -23,8 +23,7 @@ define Package/wongsyrone-specific
 		+transocks-wong +ipt2socks \
 		+pdnsd +trojan +v2ray +vlmcsd +pcap-dnsproxy \
 		+iptables-mod-fullconenat +luci-app-sfe \
-		+ethtool \
-		+kmod-igb-intel-oot +kmod-e1000e-intel-oot +kmod-ixgbe-intel-oot
+		+ethtool
 endef
 
 define Package/wongsyrone-specific/description
