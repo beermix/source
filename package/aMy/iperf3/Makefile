@@ -51,7 +51,6 @@ $(call Package/iperf3/default)
 endef
 
 TARGET_CFLAGS += -D_GNU_SOURCE
-#CONFIGURE_ARGS += --disable-static
 CONFIGURE_ARGS += --disable-shared
 
 ifeq ($(BUILD_VARIANT),ssl)
@@ -60,7 +59,7 @@ else
 	CONFIGURE_ARGS += --without-openssl
 endif
 
-#MAKE_FLAGS += noinst_PROGRAMS=
+MAKE_FLAGS += noinst_PROGRAMS=
 
 define Package/iperf3/description
  Iperf is a modern alternative for measuring TCP and UDP bandwidth

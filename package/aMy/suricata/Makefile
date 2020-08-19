@@ -23,7 +23,7 @@ PKG_BUILD_DEPENDS:=rustup/host
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
-define Package/suricata5
+define Package/suricata
     SUBMENU:=Firewall
     SECTION:=net
     CATEGORY:=Network
@@ -51,9 +51,9 @@ CONFIGURE_ARGS = \
    --enable-gccprotect \
    --enable-debug \
    --enable-pie \
-   --host=i686-unknown-linux-gnu  # RustC Target Triple goes here
+   --host=i686-unknown-linux-musl  # RustC Target Triple goes here
 
-define Package/suricata5/install
+define Package/suricata/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata $(1)/usr/bin/suricata
 
@@ -74,4 +74,4 @@ define Package/suricata5/install
 #	$(INSTALL_BIN) ./files/suricata.init $(1)/etc/init.d/suricata
 endef
 
-$(eval $(call BuildPackage,suricata5))
+$(eval $(call BuildPackage,suricata))

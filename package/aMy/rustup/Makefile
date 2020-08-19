@@ -7,19 +7,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rustup
-PKG_VERSION:=1.22.1
-PKG_RELEASE:=1
-PKG_LICENSE:=MIT
+PKG_VERSION:=995002f
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rustup.git
-PKG_SOURCE_DATE:=2020-07-18
-PKG_SOURCE_VERSION:=ac1a8c415b5c2886275ca92a3a8f3a4cd0587711
-PKG_HASH:=skip
-PKG_MIRROR_HASH:=skip
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-src
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-src.tar.gz
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -39,7 +33,7 @@ define Package/rustup/description
  platforms Rust supports, including Windows.
 endef
 
-RUSTC_TARGET_ARCH:= i686-unknown-linux-gnu
+RUSTC_TARGET_ARCH:= i686-unknown-linux-musl
 HOST_RUST_DIR:=$(BUILD_DIR_HOST)/.rustup
 HOST_CARGO_DIR:=$(BUILD_DIR_HOST)/.cargo
 
