@@ -18,7 +18,7 @@ PKG_NAME:=tor
 #	https://archive.torproject.org/tor-package-archive
 #PKG_HASH:=6a2d0637d4e514be2ec574723a05065245cce51da78a21cec1dc831be5ccac62
 
-PKG_VERSION:=e78ce52
+PKG_VERSION:=6bd94c8
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
