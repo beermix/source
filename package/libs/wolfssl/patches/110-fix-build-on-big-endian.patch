@@ -1,0 +1,20 @@
+See https://github.com/wolfSSL/wolfssl/issues/3240 for details
+
+--- a/wolfcrypt/src/misc.c
++++ b/wolfcrypt/src/misc.c
+@@ -120,7 +120,6 @@ WC_STATIC WC_INLINE word32 ByteReverseWo
+     return rotlFixed(value, 16U);
+ #endif
+ }
+-#if defined(LITTLE_ENDIAN_ORDER)
+ /* This routine performs a byte swap of words array of a given count. */
+ WC_STATIC WC_INLINE void ByteReverseWords(word32* out, const word32* in,
+                                     word32 byteCount)
+@@ -131,7 +130,6 @@ WC_STATIC WC_INLINE void ByteReverseWord
+         out[i] = ByteReverseWord32(in[i]);
+ 
+ }
+-#endif /* LITTLE_ENDIAN_ORDER */
+ 
+ #if defined(WORD64_AVAILABLE) && !defined(WOLFSSL_NO_WORD64_OPS)
+ 
