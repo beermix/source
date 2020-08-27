@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_VERSION:=3159b06
+PKG_VERSION:=2.33.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -25,19 +25,19 @@ include $(INCLUDE_DIR)/cmake.mk
 CMAKE_SOURCE_SUBDIR:=build
 
 CMAKE_OPTIONS += \
-	-DWITH_AESNI=0 \
-	-DWITH_AVX=0 \
-	-DWITH_HARDENING=0 \
-	-DWITH_LIBRARY=0 \
-	-DWITH_STATIC=0 \
+	-DCMAKE_BUILD_TYPE:STRING='None' \
+	-DBUILD_SHARED_LIBS:BOOL='ON' \
+	-DWITH_UPNP:BOOL='ON' \
+	-DWITH_AESNI:BOOL='OFF' \
+	-DWITH_AVX:BOOL='OFF' \
 	-DBoost_USE_STATIC_RUNTIME=1 \
-	-DWITH_UPNP=0
+	-Wno-dev
 
 define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
 	DEPENDS:=+libstdcpp +libpthread +librt +libopenssl +boost +boost-system \
-	+boost-filesystem +boost-program_options +boost-date_time +libatomic +zlib
+	+boost-filesystem +boost-program_options +boost-date_time +libatomic +zlib +libminiupnpc
 	TITLE:=full-featured C++ implementation of I2P client
 	USERID:=i2pd:i2pd
 endef
