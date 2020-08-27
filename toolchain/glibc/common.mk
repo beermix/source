@@ -40,8 +40,10 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-TARGET_CFLAGS:= ${TARGET_CFLAGS/-Wl,-z,now/}
-TARGET_LDFLAGS:= ${TARGET_LDFLAGS/-znow/}
+# TARGET_CFLAGS:= ${TARGET_CFLAGS/-Wl,-z,now/}
+# TARGET_LDFLAGS:= ${TARGET_LDFLAGS/-znow/}
+TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
+TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
