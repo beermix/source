@@ -145,7 +145,6 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--with-diagnostics-color=always \
 		--with-linker-hash-style=gnu \
-		--disable-fixed-point \
 		--disable-libstdcxx-pch \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
