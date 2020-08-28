@@ -96,7 +96,7 @@ ifeq ($(BUILD_VARIANT),selinux)
   LDLIBS += selinux sepol
 endif
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+#TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -flto=jobserver -fuse-linker-plugin
 
