@@ -1,3 +1,21 @@
+From 2be57f27e8a8ae447c45524a3735ee02727b0345 Mon Sep 17 00:00:00 2001
+From: Rosen Penev <rosenp@gmail.com>
+Date: Thu, 27 Aug 2020 18:19:04 -0700
+Subject: [PATCH] hwclock: use settimeofday syscall directly
+
+musl's settimeofday implementation completely ignores the tz parameter.
+While this is perfectly valid, it causes problems when wanting to set
+the kernel timezone.
+
+Added comments.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ util-linux/hwclock.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/util-linux/hwclock.c b/util-linux/hwclock.c
+index e85bca2b2..0c4a5c9ec 100644
 --- a/util-linux/hwclock.c
 +++ b/util-linux/hwclock.c
 @@ -34,6 +34,7 @@
@@ -8,13 +26,13 @@
  #include <sys/utsname.h>
  #include "rtc_.h"
  
-@@ -49,6 +60,10 @@
+@@ -49,6 +50,10 @@
   */
  #define SHOW_HWCLOCK_DIFF 0
  
 +/* musl 1.2.0+ does not have SYS_settimeofday */
-+#ifndef SYS_settimeofday
-+#define SYS_settimeofday	SYS_settimeofday_time32
++#if !defined(SYS_settimeofday) && defined(__NR_settimeofday)
++#define SYS_settimeofday	__NR_settimeofday
 +#endif
  
  #if !SHOW_HWCLOCK_DIFF
@@ -45,3 +63,4 @@
  		bb_simple_perror_msg_and_die("settimeofday");
  	if (settimeofday(&tv, NULL))
  		bb_simple_perror_msg_and_die("settimeofday");
+
