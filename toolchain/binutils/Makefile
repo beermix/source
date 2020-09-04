@@ -46,7 +46,6 @@ HOST_CONFIGURE_ARGS = \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
-	--with-linker-hash-style=gnu \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
@@ -69,7 +68,7 @@ define Host/Prepare
 	ln -snf $(notdir $(HOST_BUILD_DIR)) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
 	$(CP) $(SCRIPT_DIR)/config.{guess,sub} $(HOST_BUILD_DIR)/
 	$(SED) 's, " Linaro.*,,' $(HOST_BUILD_DIR)/bfd/version.h
-	#$(SED) '/^development=/s/true/false/' $(HOST_BUILD_DIR)/bfd/development.sh
+	$(SED) '/^development=/s/true/false/' $(HOST_BUILD_DIR)/bfd/development.sh
 endef
 
 define Host/Compile
