@@ -39,7 +39,6 @@ MUSL_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
 		--enable-debug \
-		--disable-warnings \
 		--enable-optimize
 
 define Host/Configure
