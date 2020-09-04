@@ -40,7 +40,7 @@ MUSL_CONFIGURE:= \
 		--disable-gcc-wrapper \
 		--enable-debug \
 		--disable-warnings \
-		--enable-optimize=*
+		--enable-optimize
 
 define Host/Configure
 	ln -snf $(PKG_NAME)-$(PKG_VERSION) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
