@@ -11,8 +11,6 @@ Signed-off-by: Karel Zak <kzak@redhat.com>
  sys-utils/hwclock.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/sys-utils/hwclock.c b/sys-utils/hwclock.c
-index ac4f9c753..ac74549d7 100644
 --- a/sys-utils/hwclock.c
 +++ b/sys-utils/hwclock.c
 @@ -675,6 +675,10 @@ display_time(struct timeval hwctime)
