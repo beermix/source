@@ -110,6 +110,7 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
+		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
@@ -179,7 +180,7 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
   TARGET_CFLAGS+=-fno-split-stack
 endif
 
-TARGET_CFLAGS := $(filter-out -D_FORTIFY_SOURCE=%,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := $(filter-out -D_FORTIFY_SOURCE=%,$(TARGET_CFLAGS))
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
