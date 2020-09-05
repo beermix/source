@@ -14,7 +14,7 @@ PKG_RELEASE:=1
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/software/network/ethtool
-PKG_HASH:=
+PKG_HASH:=2f3b54d08d048f5977b80cb6cb4744994370def7553ee634d39dbbb6ccf87546
 
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
@@ -32,7 +32,6 @@ define Package/ethtool
   CATEGORY:=Network
   TITLE:=Display or change ethernet card settings
   URL:=http://www.kernel.org/pub/software/network/ethtool/
-  DEPENDS:=+libmnl
 endef
 
 define Package/ethtool/description
@@ -45,6 +44,8 @@ define Package/ethtool/config
 		depends on PACKAGE_ethtool
 		bool "Enable pretty printing"
 endef
+
+CONFIGURE_ARGS += --disable-netlink
 
 ifeq ($(CONFIG_ETHTOOL_PRETTY_DUMP),y)
 CONFIGURE_ARGS += --enable-pretty-dump
