@@ -1,0 +1,39 @@
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=shadowsocksr-libev
+PKG_VERSION:=4799b31
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+
+PKG_INSTALL:=0
+PKG_BUILD_PARALLEL:=1
+
+include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
+
+define Package/shadowsocksr-libev
+	SECTION:=net
+	CATEGORY:=Network
+	SUBMENU:=Web Servers/Proxies
+	TITLE:=Lightweight Secured Socks5 Proxy
+	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
+	DEPENDS:=+libopenssl +libpthread +libpcre +zlib
+endef
+
+#CMAKE_OPTIONS += \
+#	-DCMAKE_BUILD_TYPE=Release
+
+define Package/shadowsocksr-libev/compile
+	make -j7
+endef
+
+define Package/shadowsocksr-libev/install
+	$(CP) $(PKG_BUILD_DIR)/src/ss_local $(1)/usr/bin/ssr-redir
+	$(CP) $(PKG_BUILD_DIR)/src/ss_redir $(1)/usr/bin/ssr-local
+endef
+
+$(eval $(call BuildPackage,shadowsocksr-libev))
