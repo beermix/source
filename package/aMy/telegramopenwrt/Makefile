@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=telegramopenwrt
-PKG_VERSION:=2a99a68
+PKG_VERSION:=700f86e
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/alexwbaule/telegramopenwrt.git
+PKG_SOURCE_URL:=https://github.com/tarasifua/telegramopenwrt
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
@@ -23,20 +23,24 @@ define Package/telegramopenwrt
   URL:=https://github.com/alexwbaule/telegramopenwrt
 endef
 
-define Build/Configure
+define Build/Compile
+	true
 endef
 
-define Build/Compile
+define Build/Configure
+	true
 endef
 
 define Package/telegramopenwrt/install
-	$(INSTALL_DIR) $(1)/etc/config
+	#$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_DIR) $(1)/usr/lib/telegramopenwrt/plugins
-	$(INSTALL_DIR) $(1)/usr/lib/telegramopenwrt/plugins/actions
-	$(INSTALL_DIR) $(1)/usr/lib/telegramopenwrt/plugins/ctx
-	$(INSTALL_DIR) $(1)/usr/lib/telegramopenwrt/plugins/help
+	$(INSTALL_DIR) $(1)/usr
+
+	$(CP) $(PKG_BUILD_DIR)/etc/init.d $(1)/etc/
+	$(CP) $(PKG_BUILD_DIR)/sbin $(1)/
+	$(CP) $(PKG_BUILD_DIR)/usr $(1)/
+	$(CP) $(PKG_BUILD_DIR)/sbin $(1)/
 endef
 
 $(eval $(call BuildPackage,telegramopenwrt))
