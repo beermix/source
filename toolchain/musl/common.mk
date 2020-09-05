@@ -29,21 +29,21 @@ HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)-$(PKG_VERSION)
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/hardening.mk
 
-TARGET_CFLAGS+= -mstackrealign
 TARGET_CFLAGS:= $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS+= $(if $(CONFIG_MUSL_DISABLE_CRYPT_SIZE_HACK),,-DCRYPT_SIZE_HACK)
 
 MUSL_CONFIGURE:= \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="$(TARGET_CFLAGS)" \
+	CFLAGS="-m32 -mstackrealign $(TARGET_CFLAGS)" \
 	CROSS_COMPILE="$(TARGET_CROSS)" \
 	$(HOST_BUILD_DIR)/configure \
 		--prefix=/ \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
-		--enable-debug \
-		--enable-optimize
+		--enable-debug
+
+# 		--enable-optimize="internal,malloc,string,linux,network"
 
 define Host/Configure
 	ln -snf $(PKG_NAME)-$(PKG_VERSION) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
