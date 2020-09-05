@@ -260,7 +260,13 @@ $(_endef)
     endif
 
 	$(INSTALL_DIR) $$(PDIR_$(1))
+ifdef PKG_FILE_MODES
+	echo "Package $(1) is build with fakeroot" >&2
 	$(FAKEROOT) $(SCRIPT_DIR)/ipkg-build -m "$(PKG_FILE_MODES)" $$(IDIR_$(1)) $$(PDIR_$(1))
+else
+	echo "Package $(1) is build without fakeroot" >&2
+	$(SCRIPT_DIR)/ipkg-build -r $$(IDIR_$(1)) $$(PDIR_$(1))
+endif
 	@[ -f $$(IPKG_$(1)) ]
 
     $(1)-clean:

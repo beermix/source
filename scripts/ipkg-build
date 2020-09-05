@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 # ipkg-build -- construct a .ipk from a directory
 # Carl Worth <cworth@east.isi.edu>
 # based on a script by Steve Redler IV, steve@sr-tech.com 5-21-2001
@@ -72,13 +74,14 @@ pkg_appears_sane() {
 # ipkg-build "main"
 ###
 file_modes=""
-usage="Usage: $0 [-v] [-h] [-m] <pkg_directory> [<destination_directory>]"
-while getopts "hvm:" opt; do
+usage="Usage: $0 [-v] [-h] [-r] [-m] <pkg_directory> [<destination_directory>]"
+while getopts "hvrm:" opt; do
     case $opt in
 	v ) echo $version
 	    exit 0
 	    ;;
 	h ) 	echo $usage  >&2 ;;
+	r )	TAR="$TAR --owner=0 --group=0" ;;
 	m )	file_modes=$OPTARG ;;
 	\? ) 	echo $usage  >&2
 	esac
