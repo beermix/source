@@ -1,20 +1,28 @@
-From a6c8d0e4459b6849fa88f8210e011ee5e859c527 Mon Sep 17 00:00:00 2001
+From 6fc8a79de8942b6f930eaf9a1e1dc05fa626785f Mon Sep 17 00:00:00 2001
 From: Rosen Penev <rosenp@gmail.com>
-Date: Wed, 25 Mar 2020 17:52:27 -0700
+Date: Sat, 29 Aug 2020 17:17:28 -0700
 Subject: [PATCH] umdns: fix 64-bit time format string
 
 Fixes compilation under musl 1.2.0
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- service.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ service.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/service.c b/service.c
-index 97b6f91..2ffc63f 100644
+index af3083e..53f44c1 100644
 --- a/service.c
 +++ b/service.c
-@@ -122,7 +122,7 @@ service_timeout(struct service *s)
+@@ -17,6 +17,7 @@
+ 
+ #include <resolv.h>
+ #include <glob.h>
++#include <inttypes.h>
+ #include <stdio.h>
+ #include <time.h>
+ 
+@@ -122,7 +123,7 @@ service_timeout(struct service *s)
  	time_t t = monotonic_time();
  
  	if (t - s->t <= TOUT_LOOKUP) {
@@ -23,6 +31,3 @@ index 97b6f91..2ffc63f 100644
  		return 0;
  	}
  
--- 
-2.25.1
-

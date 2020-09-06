@@ -32,6 +32,7 @@ define Package/trace-cmd-extra
 endef
 
 MAKE_FLAGS += \
+	NO_AUDIT=1 \
 	NO_PYTHON=1 \
 	prefix=/usr
 
