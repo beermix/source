@@ -3,23 +3,25 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://github.com/mirror/ncurses
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.2
-PKG_RELEASE:=1
+PKG_VERSION:=a7e05fb
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_HASH:=30306e0c76e0f9f1f0de987cf1c82a5c21e1ce6568b9227f7da5b71cbea86c9d
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_URL:=https://github.com/mirror/ncurses.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
+HOST_BUILD_PARALLEL:=1
 
 PKG_BUILD_DEPENDS:=ncurses/host
 
@@ -69,6 +71,7 @@ CONFIGURE_ARGS += \
 	--enable-overwrite \
 	--enable-pc-files \
 	--disable-rpath \
+	--disable-rpath-hack \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
@@ -77,13 +80,13 @@ CONFIGURE_ARGS += \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
+	--without-cxx-binding \
 	--with-normal \
 	--with-shared \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
-	--enable-widec \
-	--with-build-cppflags=-D_GNU_SOURCE
+	--enable-widec
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
