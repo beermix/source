@@ -1,5 +1,3 @@
-diff --git a/zlib.pc.cmakein b/zlib.pc.cmakein
-index 7744dc2..5ed025b 100644
 --- a/zlib.pc.cmakein
 +++ b/zlib.pc.cmakein
 @@ -1,8 +1,8 @@
