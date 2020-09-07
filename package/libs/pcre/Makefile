@@ -67,6 +67,7 @@ HOST_CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
 	--enable-pcre16 \
+	--with-match-limit-recursion=16000 \
 	--enable-cpp
 
 TARGET_CFLAGS += $(FPIC)
