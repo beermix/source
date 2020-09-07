@@ -31,7 +31,7 @@ define Package/nano
   CATEGORY:=Utilities
   TITLE:=An enhanced clone of the Pico text editor
   URL:=https://www.nano-editor.org/
-  DEPENDS:=+libncurses +zlib +file
+  DEPENDS:=+libncurses
 endef
 
 define Package/nano/description
@@ -45,6 +45,7 @@ CONFIGURE_ARGS += \
 	--without-slang \
 	--enable-color \
 	--enable-nanorc \
+	--disable-libmagic \
 
 CONFIGURE_VARS += \
 	ac_cv_header_regex_h=no \
