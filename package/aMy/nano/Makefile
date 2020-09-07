@@ -40,7 +40,6 @@ define Package/nano/description
 endef
 
 CONFIGURE_ARGS += \
-	--enable-tiny \
 	--disable-utf8 \
 	--without-slang \
 	--enable-color \
