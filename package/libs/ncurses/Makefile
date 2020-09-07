@@ -20,7 +20,6 @@ PKG_LICENSE_FILES:=README
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
-HOST_BUILD_PARALLEL:=1
 
 PKG_BUILD_DEPENDS:=ncurses/host
 
@@ -52,7 +51,7 @@ define Package/libncurses-dev
   TITLE:=Development files for the ncurses library
 endef
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+# TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 TARGET_CFLAGS += $(FPIC)
 
 define Package/ncurses-bin
