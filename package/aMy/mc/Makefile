@@ -1,7 +1,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# http://ftp.midnight-commander.org/?C=M;O=D  +libmount
+#
 
 include $(TOPDIR)/rules.mk
 
@@ -17,6 +17,7 @@ PKG_SOURCE_URL:=http://ftp.midnight-commander.org/
 PKG_HASH:=ffc19617f20ebb23330acd3998b7fd559a042d172fa55746d53d246697b2548a
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf gettext-version
+PKG_BUILD_DEPENDS:=MC_VFS:libtirpc
 
 PKG_CONFIG_DEPENDS := \
 	CONFIG_PACKAGE_MC \
@@ -25,7 +26,8 @@ PKG_CONFIG_DEPENDS := \
 	CONFIG_MC_SUBSHELL \
 	CONFIG_MC_LARGEFILE \
 	CONFIG_MC_BACKGROUND \
-	CONFIG_MC_CHARSET
+	CONFIG_MC_CHARSET \
+	CONFIG_MC_VFS
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -56,7 +58,6 @@ CONFIGURE_ARGS += \
 	--disable-doxygen-doc \
 	--with-homedir=/etc/mc \
 	--with-screen=ncurses \
-	--enable-vfs \
 	--without-x \
 
 CONFIGURE_VARS += \
@@ -86,6 +87,12 @@ ifeq ($(CONFIG_MC_CHARSET),)
 CONFIGURE_ARGS += --disable-charset
 endif
 
+ifeq ($(CONFIG_MC_VFS),)
+CONFIGURE_ARGS += --disable-vfs
+else
+TARGET_CPPFLAGS += -I$(STAGING_DIR)/usr/include/tirpc
+endif
+
 define Package/mc/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/mc $(1)/usr/bin
@@ -101,13 +108,15 @@ define Package/mc/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/skins/default.ini $(1)/etc/mc/skins
 	$(INSTALL_DATA) ./skins/* $(1)/etc/mc/skins/
 	$(INSTALL_DIR) $(1)/etc/mc/mcedit/Syntax
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/vfs/sfs/sfs.ini $(1)/etc/mc
-	$(INSTALL_DIR) $(1)/usr/lib/mc/extfs.d
 ifeq ($(CONFIG_MC_DIFFVIEWER),y)
 	ln -sf mc $(1)/usr/bin/mcdiff
 endif
 ifeq ($(CONFIG_MC_EDITOR),y)
 	ln -sf mc $(1)/usr/bin/mcedit
+endif
+ifeq ($(CONFIG_MC_VFS),y)
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/vfs/sfs/sfs.ini $(1)/etc/mc
+	$(INSTALL_DIR) $(1)/usr/lib/mc/extfs.d
 endif
 endef
 
