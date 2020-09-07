@@ -40,7 +40,7 @@ define Package/nano/description
 endef
 
 CONFIGURE_ARGS += \
-	--disable-utf8 \
+	--enable-utf8 \
 	--without-slang \
 	--enable-color \
 	--enable-nanorc \
