@@ -3,17 +3,17 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://www.nano-editor.org/dist/v5/?C=M;O=D
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nano
-PKG_VERSION:=5.1
+PKG_VERSION:=5.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/nano
-PKG_HASH:=
+PKG_HASH:=32c2da43e1ae9a5e43437d8c6e1ec0388af870c7762c479e5bffb5f292bda7e1
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
@@ -40,9 +40,11 @@ define Package/nano/description
 endef
 
 CONFIGURE_ARGS += \
+	--enable-tiny \
+	--disable-utf8 \
+	--without-slang \
 	--enable-color \
 	--enable-nanorc \
-	--without-slang \
 
 CONFIGURE_VARS += \
 	ac_cv_header_regex_h=no \
