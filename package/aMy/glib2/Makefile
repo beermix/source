@@ -22,18 +22,20 @@ PKG_CPE_ID:=cpe:/a:gnome:glib
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=meson/host
-HOST_BUILD_DEPENDS:=meson/host libffi/host
+PKG_BUILD_DEPENDS:=meson/host gettext-full libiconv/host
+HOST_BUILD_DEPENDS:=meson/host gettext-full/host libiconv/host libffi/host
+PKG_CONFIG_DEPENDS:=CONFIG_BUILD_NLS
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/nls.mk
 include ../../../feeds/packages/devel/meson/meson.mk
 
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+zlib +libpthread +libffi +libpcre
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
@@ -43,14 +45,15 @@ define Package/glib2/description
 endef
 
 TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
-HOST_LDFLAGS += -Wl,-rpath,$(STAGING_DIR_HOSTPKG)/lib
+HOST_LDFLAGS += -liconv -Wl,-rpath,$(STAGING_DIR_HOSTPKG)/lib
 TARGET_CFLAGS += -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_LDFLAGS += -Wl,--gc-sections -liconv $(if $(INTL_FULL),-lintl)
 
 COMP_ARGS= \
+	-Diconv=external \
 	-Dselinux=disabled \
 	-Dlibmount=disabled \
-	-Dxattr=false \
+	-Dinternal_pcre=true \
 	-Dman=false \
 	-Ddtrace=false \
 	-Dsystemtap=false \
@@ -64,8 +67,8 @@ COMP_ARGS= \
 	-Dglib_assert=false \
 	-Dglib_checks=false
 
-MESON_HOST_ARGS += $(COMP_ARGS) -Dinternal_pcre=true
-MESON_ARGS += $(COMP_ARGS) -Db_lto=true -Dinternal_pcre=false
+MESON_HOST_ARGS += $(COMP_ARGS) -Dxattr=false
+MESON_ARGS += $(COMP_ARGS) -Dxattr=true -Db_lto=true
 
 # hack to compile static libraries
 define Build/Compile
