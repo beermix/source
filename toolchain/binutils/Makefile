@@ -79,10 +79,10 @@ define Host/Install
 	mkdir -p $(TOOLCHAIN_DIR)/initial
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR)/initial \
-		install-strip
+		install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR) \
-		install-strip
+		install
 	$(call FixupLibdir,$(TOOLCHAIN_DIR)/initial)
 	$(RM) $(TOOLCHAIN_DIR)/initial/lib/libiberty.a
 	$(CP) $(TOOLCHAIN_DIR)/bin/$(REAL_GNU_TARGET_NAME)-readelf $(HOST_BUILD_PREFIX)/bin/readelf
@@ -92,6 +92,7 @@ define Host/Install
 	if [ -d $(TOOLCHAIN_DIR)/extlib ]; then \
 		$(CP) -r $(TOOLCHAIN_DIR)/extlib $(TOOLCHAIN_DIR)/initial/; \
 	fi
+	strip -s $(HOST_BUILD_PREFIX)/bin/*
 endef
 
 define Host/Clean
