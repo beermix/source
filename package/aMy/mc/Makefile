@@ -55,18 +55,9 @@ endef
 CONFIGURE_ARGS += \
 	--enable-silent-rules \
 	--disable-tests \
-	--disable-aspell \
-	--disable-doxygen-doc \
-	--disable-doxygen-rtf \
-	--disable-doxygen-xml \
-	--disable-doxygen-chm \
-	--disable-doxygen-chi \
-	--disable-doxygen-dot \
-	--disable-doxygen-html \
 	--disable-doxygen-doc \
 	--with-homedir=/etc/mc \
 	--with-screen=ncurses \
-	--disable-mclib \
 	--without-x \
 
 CONFIGURE_VARS += \
