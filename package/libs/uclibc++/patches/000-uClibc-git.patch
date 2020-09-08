@@ -1,0 +1,217 @@
+diff --git a/include/iterator_base b/include/iterator_base
+index 1cae589..e112a7f 100644
+--- a/include/iterator_base
++++ b/include/iterator_base
+@@ -139,7 +139,7 @@ namespace std{
+ 	public:
+ 		typedef Iterator iterator_type;
+ 
+-		reverse_iterator() : current(){};
++		reverse_iterator() : current(){}
+ 		explicit reverse_iterator(Iterator x) : current(x) { }
+ 		template<class U> reverse_iterator(const reverse_iterator<U> &x) : current(x.base()){}
+ 
+@@ -225,7 +225,7 @@ namespace std{
+ 		Container& container;
+ 	public:
+ 		typedef Container container_type;
+-		explicit back_insert_iterator(Container& x):container(x) {};
++		explicit back_insert_iterator(Container& x):container(x) {}
+ 		back_insert_iterator<Container>& operator=(const typename Container::value_type& value){
+ 			container.push_back(value);
+ 			return *this;
+diff --git a/include/stack b/include/stack
+index d4861b3..ea697f1 100644
+--- a/include/stack
++++ b/include/stack
+@@ -34,7 +34,7 @@ namespace std{
+ 		typedef typename Container::size_type	size_type;
+ 		typedef Container			container_type;
+ 
+-		explicit stack(const Container& a = Container()) : c(a) {  };
++		explicit stack(const Container& a = Container()) : c(a) {  }
+ 		bool empty() const { return c.empty(); }
+ 		size_type size() const { return c.size(); }
+ 		value_type&       top() { return c.back(); }
+
+commit 0dd45c2d767f80d9f194c100a3eb5e5c5e919ec0
+Author: Rosen Penev <rosenp@gmail.com>
+Date:   Fri Aug 2 18:55:56 2019 -0700
+
+    iterator: Add missing parentheses
+    
+    Clang warns:
+    
+    warning: '&&' within '||' [-Wlogical-op-parentheses]
+    return sbuf == b.sbuf || is_eof() && b.is_eof();
+    
+    Signed-off-by: Rosen Penev <rosenp@gmail.com>
+    Signed-off-by: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+
+diff --git a/include/iterator b/include/iterator
+index d65f467..3348d85 100644
+--- a/include/iterator
++++ b/include/iterator
+@@ -164,7 +164,7 @@ namespace std{
+ 		}
+ 
+ 		bool equal(const istreambuf_iterator& b) const{
+-			return sbuf == b.sbuf || is_eof() && b.is_eof();
++			return sbuf == b.sbuf || (is_eof() && b.is_eof());
+ 		}
+ 	private:
+ 		streambuf_type* sbuf;
+
+commit 3523d9461c628746f478a11e20040b6c799f18c7
+Author: Rosen Penev <rosenp@gmail.com>
+Date:   Fri Aug 2 18:55:57 2019 -0700
+
+    include: Switch if to ifdef
+    
+    Throws -Wundef warning in modern compilers.
+    
+    Signed-off-by: Rosen Penev <rosenp@gmail.com>
+    Signed-off-by: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+
+diff --git a/include/cstdio b/include/cstdio
+index 8699385..f959ff5 100644
+--- a/include/cstdio
++++ b/include/cstdio
+@@ -65,7 +65,7 @@ namespace std{
+ 	using ::sprintf;
+ 	using ::sscanf;
+ 	using ::tmpfile;
+-#if _GLIBCXX_USE_TMPNAM
++#ifdef _GLIBCXX_USE_TMPNAM
+ 	using ::tmpnam;
+ #endif
+ 	using ::ungetc;
+diff --git a/include/new b/include/new
+index 6214b11..1dc33a4 100644
+--- a/include/new
++++ b/include/new
+@@ -39,13 +39,13 @@ namespace std{
+ 
+ _UCXXEXPORT void* operator new(std::size_t numBytes) _UCXX_THROW(std::bad_alloc);
+ _UCXXEXPORT void operator delete(void* ptr) _UCXX_USE_NOEXCEPT;
+-#if __cpp_sized_deallocation
++#ifdef __cpp_sized_deallocation
+ _UCXXEXPORT void operator delete(void* ptr, std::size_t) _UCXX_USE_NOEXCEPT;
+ #endif
+ 
+ _UCXXEXPORT void* operator new[](std::size_t numBytes) _UCXX_THROW(std::bad_alloc);
+ _UCXXEXPORT void operator delete[](void * ptr) _UCXX_USE_NOEXCEPT;
+-#if __cpp_sized_deallocation
++#ifdef __cpp_sized_deallocation
+ _UCXXEXPORT void operator delete[](void * ptr, std::size_t) _UCXX_USE_NOEXCEPT;
+ #endif
+ 
+
+commit c3ee60eca977032cbd4ce55b396c6e1121518f10
+Author: Rosen Penev <rosenp@gmail.com>
+Date:   Fri Aug 2 18:55:58 2019 -0700
+
+    include: Replace C style casts with static_cast
+    
+    Found with Clang's -Wold-style-cast
+    
+    Signed-off-by: Rosen Penev <rosenp@gmail.com>
+    Signed-off-by: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+
+diff --git a/include/char_traits b/include/char_traits
+index 36eae36..1d33f39 100644
+--- a/include/char_traits
++++ b/include/char_traits
+@@ -52,7 +52,7 @@ namespace std{
+ 		static char_type to_char_type(const int_type & i);
+ 
+ 		inline static int_type to_int_type(const char_type & c){
+-			return (short int)(unsigned char)c;
++			return static_cast<short int>(static_cast<unsigned char>(c));
+ 		}
+ 
+ 		inline static bool eq_int_type(const int_type & a, const int_type & b){
+@@ -71,7 +71,7 @@ namespace std{
+ 		}
+ 
+ 		inline static char_type* move(char_type* s1, const char_type* s2, size_t n){
+-			return (char*) memmove(s1, s2, n);
++			return static_cast<char*>(memmove(s1, s2, n));
+ 		}
+ 
+ 		inline static char_type* copy(char_type* s1, const char_type* s2, size_t n){
+@@ -82,7 +82,7 @@ namespace std{
+ 		}
+ 
+ 		inline static char_type* assign(char_type* s, size_t n, char_type a){
+-			return (char *)memset(s, a, n);
++			return static_cast<char *>(memset(s, a, n));
+ 		}
+ 
+ 		inline static int compare(const char_type* s1, const char_type* s2, size_t n){
+diff --git a/include/memory b/include/memory
+index 9ce6559..37ac637 100644
+--- a/include/memory
++++ b/include/memory
+@@ -63,15 +63,15 @@ public:
+ 
+ 	//Space for n Ts
+ 	pointer allocate(size_type n, typename allocator<void>::const_pointer = 0){
+-		return (T*)(::operator new( n * sizeof(T) ));
++		return static_cast<T*>(::operator new( n * sizeof(T) ));
+ 	}
+ 	void deallocate(pointer p, size_type){
+ 		::operator delete(p);
+ 	}
+ 
+ 	//Use placement new to engage the constructor
+-	void construct(pointer p, const T& val) { new((void*)p) T(val); }
+-	void destroy(pointer p){ ((T*)p)->~T(); }	//Call destructor
++	void construct(pointer p, const T& val) { new(static_cast<void*>(p)) T(val); }
++	void destroy(pointer p){ (static_cast<T*>(p))->~T(); }	//Call destructor
+ 
+ 	size_type max_size() const _UCXX_USE_NOEXCEPT;
+ 	template<class U> struct rebind { typedef allocator<U> other; };
+diff --git a/include/string b/include/string
+index a790715..8cfa8b0 100644
+--- a/include/string
++++ b/include/string
+@@ -70,7 +70,7 @@ public:
+ 	typedef typename vector<Ch, A>::reverse_iterator reverse_iterator;
+ 	typedef typename vector<Ch, A>::const_reverse_iterator const_reverse_iterator;
+ 
+-	static const size_type npos = (size_type)-1;
++	static const size_type npos = static_cast<size_type>(-1);
+ 
+ 	explicit _UCXXEXPORT basic_string(const A& al = A()) : vector<Ch, A>(al){ return; }
+ 
+diff --git a/include/vector b/include/vector
+index 8310bc1..3cf64ed 100644
+--- a/include/vector
++++ b/include/vector
+@@ -180,7 +180,7 @@ namespace std{
+ 		}
+ 
+ 		_UCXXEXPORT size_type max_size() const{
+-			return ((size_type)(-1)) / sizeof(T);
++			return static_cast<size_type>(-1) / sizeof(T);
+ 		}
+ 
+ 		void downsize(size_type sz);
+
+commit 3791a7b3b5f6a4c806929d30671058fe105c61ef
+Author: Rosen Penev <rosenp@gmail.com>
+Date:   Fri Sep 27 13:35:09 2019 -0700
+
+    cstdio: Add undef for four functions
+    
+    When compiling with uClibc-ng, these functions get defined as macros and
+    become unavailable for std.
+    
+    Fixes programs that use the std versions of these functions.
+    
+    This matches libstdcpp behavior.
+    
+    Signed-off-by: Rosen Penev <rosenp@gmail.com>
+    Signed-off-by: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+
