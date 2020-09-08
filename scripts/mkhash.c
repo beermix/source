@@ -736,7 +736,10 @@ static int usage(const char *progname)
 {
 	int i;
 
-	fprintf(stderr, "Usage: %s <hash type> [<file>...]\n"
+	fprintf(stderr, "Usage: %s <hash type> [options] [<file>...]\n"
+		"Options:\n"
+		"	-n		Print filename(s)\n"
+		"\n"
 		"Supported hash types:", progname);
 
 	for (i = 0; i < ARRAY_SIZE(types); i++)
@@ -767,7 +770,7 @@ static int hash_file(struct hash_type *t, const char *filename, bool add_filenam
 	if (!filename || !strcmp(filename, "-")) {
 		str = t->func(stdin);
 	} else {
-		FILE *f = fopen(filename, "r");
+		FILE *f = fopen(filename, "r+");
 
 		if (!f) {
 			fprintf(stderr, "Failed to open '%s'\n", filename);
@@ -794,7 +797,7 @@ int main(int argc, char **argv)
 {
 	struct hash_type *t;
 	const char *progname = argv[0];
-	int i, ch;
+	int i, ch, hash_return;
 	bool add_filename = false;
 
 	while ((ch = getopt(argc, argv, "n")) != -1) {
@@ -821,7 +824,8 @@ int main(int argc, char **argv)
 		return hash_file(t, NULL, add_filename);
 
 	for (i = 0; i < argc - 1; i++)
-		hash_file(t, argv[1 + i], add_filename);
+		if ((hash_return = hash_file(t, argv[1 + i], add_filename)))
+			return hash_return;
 
 	return 0;
 }
