@@ -128,8 +128,6 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
-		--with-tune=generic \
-		--enable-cld \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
@@ -184,7 +182,6 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
 endif
 
 TARGET_CFLAGS:= $(filter-out -D_FORTIFY_SOURCE=%,$(TARGET_CFLAGS))
-# TARGET_CFLAGS:= -O2 $(filter-out -O%,$(TARGET_CFLAGS))
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
