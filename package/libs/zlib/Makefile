@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=52d1278
+PKG_VERSION:=cdcde5f
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng
+PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
@@ -53,7 +53,7 @@ endef
 TARGET_CFLAGS += $(FPIC)
 
 ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
-	TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
+	TARGET_CFLAGS := -O3 $(filter-out -O%,$(TARGET_CFLAGS))
 endif
 
 CMAKE_OPTIONS += \
@@ -66,7 +66,7 @@ CMAKE_OPTIONS += \
 	-DHAVE_SSE42CRC_INLINE_ASM=0 \
 	-DHAVE_SSE42CMPSTR_INTRIN=0 \
 	-DHAVE_AVX2_INTRIN=0
-	
+
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
 	$(CP)	$(PKG_INSTALL_DIR)/usr/include/z{conf,lib}.h \
