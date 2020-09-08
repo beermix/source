@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# http://git.savannah.gnu.org/cgit/readline.git
+# http://git.savannah.gnu.org/cgit/readline.git/log
 
 include $(TOPDIR)/rules.mk
 
@@ -46,7 +46,7 @@ define Package/libreadline/description
 	history expansion on previous commands.
 endef
 
-CONFIGURE_ARGS += --with-curses --disable-install-examples --disable-static
+CONFIGURE_ARGS += --with-curses --disable-install-examples --enable-static --enable-shared
 
 CONFIGURE_VARS += \
 	bash_cv_wcwidth_broken=no \
@@ -58,7 +58,7 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/readline $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{history,readline}.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{history,readline}.{a,so*} $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/readline.pc $(1)/usr/lib/pkgconfig/
 endef
 

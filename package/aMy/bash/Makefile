@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bash
-PKG_VERSION:=36f2c406ff27995392a9247dfa90672fdaf7dc43
+PKG_VERSION:=36f2c40
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/bash.git

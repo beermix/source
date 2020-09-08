@@ -51,7 +51,7 @@ define Package/libncurses-dev
   TITLE:=Development files for the ncurses library
 endef
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += $(FPIC)
 
 define Package/ncurses-bin
@@ -77,13 +77,13 @@ CONFIGURE_ARGS += \
 	--without-tests \
 	--disable-big-core \
 	--disable-home-terminfo \
-	--without-cxx-binding \
 	--with-normal \
 	--with-shared \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
-	--enable-widec
+	--enable-widec \
+	--with-build-cppflags=-D_GNU_SOURCE
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
