@@ -16,10 +16,15 @@ PKG_NAME:=shadowsocks-libev
 PKG_VERSION:=a727596
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev
+PKG_SOURCE_URL:=https://github.com/shadowsocks/shadowsocks-libev.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+
+PKG_MAINTAINER:=Yousong Zhou <yszhou4tech@gmail.com>
+
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=LICENSE
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -85,7 +90,7 @@ define Package/shadowsocks-libev-ss-rules
   SUBMENU:=Web Servers/Proxies
   TITLE:=shadowsocks-libev ss-rules
   URL:=https://github.com/shadowsocks/shadowsocks-libev
-  DEPENDS:=+ip +iptables-mod-tproxy +resolveip +shadowsocks-libev-ss-redir +shadowsocks-libev-config
+  DEPENDS:=+ip +ipset +iptables-mod-tproxy +resolveip +shadowsocks-libev-ss-redir +shadowsocks-libev-config
 endef
 
 define Package/shadowsocks-libev-ss-rules/install
@@ -122,7 +127,6 @@ CONFIGURE_ARGS += \
 	--disable-assert \
 	--disable-ssp \
 
-TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
