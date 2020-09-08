@@ -6,10 +6,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=telegramopenwrt
-PKG_VERSION:=1.0.0
+PKG_VERSION:=4b6d750
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/alexwbaule/telegramopenwrt.git
+PKG_SOURCE_URL:=https://github.com/tarasifua/telegramopenwrt.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
