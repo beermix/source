@@ -92,7 +92,7 @@ define Host/Install
 	if [ -d $(TOOLCHAIN_DIR)/extlib ]; then \
 		$(CP) -r $(TOOLCHAIN_DIR)/extlib $(TOOLCHAIN_DIR)/initial/; \
 	fi
-	strip -s $(HOST_BUILD_PREFIX)/bin/*
+	/usr/bin/strip -s $(HOST_BUILD_PREFIX)/bin/*
 endef
 
 define Host/Clean
