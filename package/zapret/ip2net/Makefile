@@ -19,6 +19,8 @@ define Build/Prepare
 	$(CP) ./ip2net/* $(PKG_BUILD_DIR)/
 endef
 
+TARGET_CFLAGS := -O3 $(filter-out -O%,$(TARGET_CFLAGS)
+
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) $(TARGET_CONFIGURE_OPTS)
 endef
