@@ -4,12 +4,14 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/PurpleI2P/i2pd
+#
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
 PKG_VERSION:=a05a54b
+PKG_RELEASE:=1
+PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -17,7 +19,9 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
-PKG_BUILD_PARALLEL:=1
+PKG_MAINTAINER:=David Yang <mmyangfl@gmail.com>
+PKG_LICENSE:=BSD-3-Clause
+PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -35,9 +39,10 @@ CMAKE_OPTIONS += \
 define Package/i2pd
 	SECTION:=net
 	CATEGORY:=Network
-	DEPENDS:=+libstdcpp +libpthread +librt +libopenssl +boost +boost-system \
-	+boost-filesystem +boost-program_options +boost-date_time +libatomic +zlib
+	DEPENDS:=+libopenssl +boost +boost-system +boost-filesystem \
+	         +boost-program_options +boost-date_time +libatomic +zlib
 	TITLE:=full-featured C++ implementation of I2P client
+	URL:=https://github.com/PurpleI2P/i2pd
 	USERID:=i2pd:i2pd
 endef
 
@@ -48,13 +53,14 @@ define Package/i2pd/description
 endef
 
 define Package/i2pd/conffiles
-	/etc/config/i2pd
-	/etc/i2pd/i2pd.conf
-	/etc/i2pd/tunnels.conf
-	/etc/i2pd/tunnels.d/*
+/etc/config/i2pd
+/etc/i2pd/i2pd.conf
+/etc/i2pd/tunnels.conf
+/etc/i2pd/tunnels.d/
 endef
 
 TARGET_LDFLAGS+=-latomic
+$ MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
