@@ -128,6 +128,8 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
+		--with-tune=generic \
+		--enable-cld \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
