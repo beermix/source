@@ -5,10 +5,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=yasm
-PKG_VERSION:=c9db6d7
+PKG_VERSION:=009450c
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/yasm/yasm
+PKG_SOURCE_URL:=https://github.com/yasm/yasm.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
