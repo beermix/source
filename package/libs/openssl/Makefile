@@ -3,14 +3,14 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# https://www.openssl.org/source/snapshot/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssl
 PKG_BASE:=1.1.1
-PKG_BUGFIX:=g
-PKG_VERSION:=$(PKG_BASE)$(PKG_BUGFIX)
+PKG_BUGFIX:=stable-SNAP-20200907
+PKG_VERSION:=$(PKG_BASE)-$(PKG_BUGFIX)
 PKG_RELEASE:=1
 PKG_USE_MIPS16:=0
 ENGINES_DIR=engines-1.1
@@ -18,13 +18,8 @@ ENGINES_DIR=engines-1.1
 PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:= \
-	http://ftp.fi.muni.cz/pub/openssl/source/ \
-	http://ftp.linux.hr/pub/openssl/source/ \
-	ftp://ftp.pca.dfn.de/pub/tools/net/openssl/source/ \
-	http://www.openssl.org/source/ \
-	http://www.openssl.org/source/old/$(PKG_BASE)/
-PKG_HASH:=ddb04774f1e32f0c49751e21b67216ac87852ceb056b75209af2443400636d46
+PKG_SOURCE_URL:= https://www.openssl.org/source/snapshot
+PKG_HASH:=
 
 PKG_LICENSE:=OpenSSL
 PKG_LICENSE_FILES:=LICENSE
@@ -392,6 +387,7 @@ endef
 define Package/libopenssl-afalg/install
 	$(INSTALL_DIR) $(1)/usr/lib/$(ENGINES_DIR)
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/$(ENGINES_DIR)/afalg.so $(1)/usr/lib/$(ENGINES_DIR)
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/$(ENGINES_DIR)/capi.so $(1)/usr/lib/$(ENGINES_DIR)
 endef
 
 define Package/libopenssl-devcrypto/install
