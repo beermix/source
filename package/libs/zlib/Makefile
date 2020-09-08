@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=cdcde5f
+PKG_VERSION:=52d1278
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng.git
@@ -58,7 +58,6 @@ endif
 
 CMAKE_OPTIONS += \
 	-DCMAKE_VERBOSE_MAKEFILE=1 \
-	-DWITH_GZFILEOP=1 \
 	-DZLIB_COMPAT=1 \
 	-DWITH_OPTIM=1 \
 	-DHAVE_SSE42CRC_INTRIN=0 \
