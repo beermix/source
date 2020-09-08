@@ -1,5 +1,5 @@
-src-git packages https://github.com/wongsyrone/packages-1.git
-src-git luci https://github.com/wongsyrone/luci-1.git
+src-git packages https://github.com/openwrt/packages.git
+src-git luci https://github.com/openwrt/luci.git
 src-git routing https://github.com/openwrt-routing/packages.git
 #src-git packages https://git.openwrt.org/feed/packages.git
 #src-git luci https://git.openwrt.org/project/luci.git
