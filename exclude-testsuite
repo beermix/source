@@ -10,3 +10,4 @@
 *gcc/ada/*.ad*
 *libjava*
 *gcc/BASE-VER*
+*exclude-testsuite
