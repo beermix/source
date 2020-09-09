@@ -6,10 +6,7 @@ GCC_CONFIGURE += \
 	--with-headers=$(TOOLCHAIN_DIR)/include \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
-	--enable-threads=posix \
-	--disable-libstdcxx-debug \
-	--disable-libstdcxx-verbose \
-	--disable-libstdcxx-pch \
+	--enable-threads \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
@@ -73,7 +70,7 @@ endef
 
 define Host/Install
 	$(CleanupToolchain)
-	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) install-strip
+	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) install
 	# Set up the symlinks to enable lying about target name.
 	set -e; \
 	(cd $(TOOLCHAIN_DIR); \
