@@ -10,9 +10,12 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=htop
 PKG_VERSION:=8ec5d4a
 
-PKG_SOURCE:=$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/htop-dev/htop/archive
-PKG_HASH:=
+PKG_VERSION:=402e46b
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/htop-dev//htop
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=COPYING
