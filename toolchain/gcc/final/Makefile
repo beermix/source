@@ -9,6 +9,7 @@ GCC_CONFIGURE += \
 	--enable-threads=posix \
 	--disable-libstdcxx-debug \
 	--disable-libstdcxx-verbose \
+	--disable-libstdcxx-pch \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
