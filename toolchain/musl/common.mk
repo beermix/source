@@ -25,9 +25,9 @@ HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)-$(PKG_VERSION)
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/hardening.mk
 
+TARGET_CFLAGS+= -mstackrealign
 TARGET_CFLAGS:= $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS+= $(if $(CONFIG_MUSL_DISABLE_CRYPT_SIZE_HACK),,-DCRYPT_SIZE_HACK)
-TARGET_CFLAGS+= -mstackrealign
 
 MUSL_CONFIGURE:= \
 	$(TARGET_CONFIGURE_OPTS) \
@@ -39,7 +39,7 @@ MUSL_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--disable-gcc-wrapper \
 		--enable-debug \
-		--enable-optimize
+		--enable-optimize=*
 
 define Host/Configure
 	ln -snf $(PKG_NAME)-$(PKG_VERSION) $(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)
