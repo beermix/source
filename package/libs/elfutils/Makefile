@@ -64,6 +64,7 @@ endif
 CONFIGURE_ARGS += \
 	--program-prefix=eu- \
 	--disable-debuginfod \
+	--disable-libdebuginfod \
 	--without-lzma
 
 TARGET_CFLAGS += -D_GNU_SOURCE -Wno-unused-result -Wno-format-nonliteral
