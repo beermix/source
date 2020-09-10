@@ -38,7 +38,7 @@ define Build/Prepare
 	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
 endef
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += -flto -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += $(FPIC) -flto -Wl,--gc-sections
 MAKE_FLAGS += \
