@@ -14,9 +14,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://sourceware.org/$(PKG_NAME)/ftp/$(PKG_VERSION)
 PKG_HASH:=
 
-PKG_RELEASE:=1
-PKG_BUILD_PARALLEL:=1
-
 PKG_MAINTAINER:=Luiz Angelo Daros de Luca <luizluca@gmail.com>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING COPYING-GPLV2 COPYING-LGPLV3
@@ -66,11 +63,10 @@ endif
 
 CONFIGURE_ARGS += \
 	--program-prefix=eu- \
-	--disable-libdebuginfod \
 	--disable-debuginfod \
 	--without-lzma
 
-TARGET_CFLAGS += -D_GNU_SOURCE -Wno-unused-result -Wno-format-nonliteral -Wno-error -Wno-null-dereference
+TARGET_CFLAGS += -D_GNU_SOURCE -Wno-unused-result -Wno-format-nonliteral
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
