@@ -65,6 +65,8 @@ endef
 
 CONFIGURE_ARGS += \
 	--enable-echo \
+	--without-cxx \
+	--without-cxx-binding \
 	--enable-const \
 	--enable-overwrite \
 	--enable-pc-files \
