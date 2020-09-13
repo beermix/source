@@ -449,6 +449,7 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   LD_MUSL_NAME = $(notdir $(firstword $(wildcard $(TOOLCHAIN_DIR)/lib/libc.so*)))
 
   define Package/musl/install
+  	$(CP) ./musl-files/* $(1)/
 	$(INSTALL_DIR) $(1)/lib $(1)/usr/bin
 	$(CP) \
 		$(TOOLCHAIN_DIR)/lib/ld-musl-*.so* \
