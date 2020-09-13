@@ -13,7 +13,7 @@ PKG_VERSION:=cd55cfd
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/htop-dev/htop
+PKG_SOURCE_URL:=https://github.com/htop-dev/htop.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
 PKG_LICENSE:=GPL-2.0-or-later
