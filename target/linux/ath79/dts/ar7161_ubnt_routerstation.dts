@@ -5,7 +5,7 @@
 
 / {
 	compatible = "ubnt,routerstation", "qca,ar7161";
-	model = "Ubiquiti RouterStation";
+	model = "Ubiquiti Networks RouterStation";
 };
 
 &eth0 {

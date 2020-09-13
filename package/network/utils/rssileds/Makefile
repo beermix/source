@@ -8,7 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rssileds
-PKG_RELEASE:=3
+PKG_VERSION:=0.2
+PKG_RELEASE:=2
 PKG_LICNESE:=GPL-2.0+
 
 include $(INCLUDE_DIR)/package.mk
@@ -18,7 +19,7 @@ define Package/rssileds
   CATEGORY:=Network
   TITLE:=RSSI real-time LED indicator
   DEPENDS:=+libiwinfo +libnl-tiny +libubox +libuci
-  MAINTAINER:=Daniel Golle <daniel@makrotopia.org>
+  MAINTAINER:=Daniel Golle <dgolle@allnet.de>
 endef
 
 define Package/rssileds/description

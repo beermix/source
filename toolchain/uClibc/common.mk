@@ -1,14 +1,13 @@
 #
-# Copyright (C) 2006-2020 OpenWrt.org
+# Copyright (C) 2006-2012 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://downloads.uclibc-ng.org/releases/?C=M;O=D
+#
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/target.mk
 
-PKG_VERSION:=1.0.35
-PKG_RELEASE:=1
+PKG_VERSION:=1.0.31
 
 PKG_NAME:=uClibc-ng
 PKG_SOURCE_URL = http://downloads.uclibc-ng.org/releases/$(PKG_VERSION)/
@@ -17,7 +16,7 @@ CONFIG_DIR:=$(PATH_PREFIX)/config
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 LIBC_SO_VERSION:=$(PKG_VERSION)
 
-PKG_HASH:=
+PKG_HASH:=2215d7377118434d1697fd575f10d7a6be3f29e460d6b0e1ee9f6f5306288060
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)-$(PKG_VERSION)
 

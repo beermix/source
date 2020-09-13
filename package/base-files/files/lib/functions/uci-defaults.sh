@@ -68,12 +68,6 @@ ucidef_set_model_name() {
 	json_select ..
 }
 
-ucidef_set_compat_version() {
-	json_select_object system
-	json_add_string compat_version "${1:-1.0}"
-	json_select ..
-}
-
 ucidef_set_interface_lan() {
 	ucidef_set_interface "lan" ifname "$1" protocol "${2:-static}"
 }
@@ -313,14 +307,6 @@ ucidef_set_interface_macaddr() {
 	ucidef_set_interface "$network" macaddr "$macaddr"
 }
 
-ucidef_set_label_macaddr() {
-	local macaddr="$1"
-
-	json_select_object system
-		json_add_string label_macaddr "$macaddr"
-	json_select ..
-}
-
 ucidef_add_atm_bridge() {
 	local vpi="$1"
 	local vci="$2"
@@ -410,7 +396,7 @@ ucidef_set_led_gpio() {
 }
 
 ucidef_set_led_ide() {
-	_ucidef_set_led_trigger "$1" "$2" "$3" disk-activity
+	_ucidef_set_led_trigger "$1" "$2" "$3" ide-disk
 }
 
 ucidef_set_led_netdev() {
@@ -579,7 +565,7 @@ ucidef_add_gpio_switch() {
 	json_select_object gpioswitch
 		json_select_object "$cfg"
 			json_add_string name "$name"
-			json_add_string pin "$pin"
+			json_add_int pin "$pin"
 			json_add_int default "$default"
 		json_select ..
 	json_select ..
@@ -621,5 +607,6 @@ board_config_update() {
 }
 
 board_config_flush() {
-	json_dump -i -o ${CFG}
+	json_dump -i > /tmp/.board.json
+	mv /tmp/.board.json ${CFG}
 }

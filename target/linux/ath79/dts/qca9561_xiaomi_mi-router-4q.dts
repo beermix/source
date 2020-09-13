@@ -18,7 +18,8 @@
 	};
 
 	keys {
-		compatible = "gpio-keys";
+		compatible = "gpio-keys-polled";
+		poll-interval = <100>;
 
 		reset {
 			label = "Reset button";
@@ -54,6 +55,10 @@
 };
 
 &uart {
+	status = "okay";
+};
+
+&gpio {
 	status = "okay";
 };
 

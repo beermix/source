@@ -13,42 +13,12 @@ __target_inc=1
 DEVICE_TYPE?=router
 
 # Default packages - the really basic set
-DEFAULT_PACKAGES:=\
-	base-files \
-	busybox \
-	ca-bundle \
-	dropbear \
-	fstools \
-	libc \
-	libgcc \
-	libustream-wolfssl \
-	logd \
-	mtd \
-	netifd \
-	opkg \
-	uci \
-	uclient-fetch \
-	urandom-seed \
-	urngd
-# For the basic set
-DEFAULT_PACKAGES.basic:=
+DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools uclient-fetch logd urandom-seed urngd
 # For nas targets
-DEFAULT_PACKAGES.nas:=\
-	block-mount \
-	fdisk \
-	lsblk \
-	mdadm
+DEFAULT_PACKAGES.nas:=block-mount fdisk lsblk mdadm
 # For router targets
-DEFAULT_PACKAGES.router:=\
-	dnsmasq \
-	firewall \
-	ip6tables \
-	iptables \
-	kmod-ipt-offload \
-	odhcp6c \
-	odhcpd-ipv6only \
-	ppp \
-	ppp-mod-pppoe
+DEFAULT_PACKAGES.router:=dnsmasq iptables ip6tables ppp ppp-mod-pppoe firewall odhcpd-ipv6only odhcp6c kmod-ipt-offload
+DEFAULT_PACKAGES.bootloader:=
 
 ifneq ($(DUMP),)
   all: dumpinfo
@@ -79,6 +49,10 @@ else
   ifneq ($(SUBTARGET),)
     -include ./$(SUBTARGET)/target.mk
   endif
+endif
+
+ifneq ($(filter 4.9,$(KERNEL_PATCHVER)),)
+  DEFAULT_PACKAGES.router:=$(filter-out kmod-ipt-offload,$(DEFAULT_PACKAGES.router))
 endif
 
 # Add device specific packages (here below to allow device type set from subtarget)
@@ -203,8 +177,8 @@ ifeq ($(DUMP),1)
     CPU_CFLAGS_octeonplus = -march=octeon+ -mabi=64
   endif
   ifeq ($(ARCH),i386)
-    CPU_TYPE ?= pentium-mmx
-    CPU_CFLAGS_pentium-mmx = -march=pentium-mmx
+    CPU_TYPE ?= pentium
+    CPU_CFLAGS_pentium = -march=pentium-mmx
     CPU_CFLAGS_pentium4 = -march=pentium4
   endif
   ifneq ($(findstring arm,$(ARCH)),)
@@ -252,9 +226,7 @@ ifeq ($(DUMP),1)
     .PRECIOUS: $(TMP_CONFIG)
 
     ifdef KERNEL_TESTING_PATCHVER
-      ifneq ($(KERNEL_TESTING_PATCHVER),$(KERNEL_PATCHVER))
-        FEATURES += testing-kernel
-      endif
+      FEATURES += testing-kernel
     endif
     ifneq ($(CONFIG_OF),)
       FEATURES += dt

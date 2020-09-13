@@ -11,16 +11,16 @@
 	compatible = "rosinson,wr818", "qca,qca9563";
 
 	aliases {
-		led-boot = &led_system;
-		led-failsafe = &led_system;
-		led-running = &led_system;
-		led-upgrade = &led_system;
+		led-boot = &system;
+		led-failsafe = &system;
+		led-running = &system;
+		led-upgrade = &system;
 	};
 
-	leds {
+	gpio_leds: leds {
 		compatible = "gpio-leds";
 
-		led_system: system {
+		system: system {
 			label = "wr818:red:system";
 			gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
 		};
@@ -48,10 +48,14 @@
 	status = "okay";
 };
 
-&spi {
+&gpio {
 	status = "okay";
+};
 
+&spi {
 	num-cs = <1>;
+
+	status = "okay";
 
 	flash@0 {
 		compatible = "jedec,spi-nor";
@@ -121,7 +125,6 @@
 
 &wmac {
 	status = "okay";
-
 	mtd-cal-data = <&art 0x1000>;
 };
 

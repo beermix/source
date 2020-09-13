@@ -26,8 +26,8 @@ define Package/stress-ng
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=stress-ng is a stress test utility
-  URL:=https://kernel.ubuntu.com/~cking/stress-ng/
-  DEPENDS:=+zlib
+  URL:=https://kernel.ubuntu.com/~cking/stress-ng
+  DEPENDS:=+zlib +libbsd
 endef
 
 define Package/stress-ng/description

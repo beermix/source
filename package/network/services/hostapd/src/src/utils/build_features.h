@@ -39,10 +39,6 @@ static inline int has_feature(const char *feat)
 	if (!strcmp(feat, "suiteb192"))
 		return 1;
 #endif
-#ifdef CONFIG_WEP
-	if (!strcmp(feat, "wep"))
-		return 1;
-#endif
 	return 0;
 }
 

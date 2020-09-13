@@ -5,7 +5,7 @@
 
 / {
 	compatible = "ubnt,unifiac-pro", "qca,qca9563";
-	model = "Ubiquiti UniFi AC Pro";
+	model = "Ubiquiti UniFi-AC-PRO";
 };
 
 &usb_phy0 {
