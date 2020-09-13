@@ -18,7 +18,6 @@ include $(INCLUDE_DIR)/toolchain-build.mk
 
 HOST_CONFIGURE_ARGS+= \
 		--target=$(REAL_GNU_TARGET_NAME) \
-		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--disable-lto \
 		--disable-werror \
 		--disable-gdb \
