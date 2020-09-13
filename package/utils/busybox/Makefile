@@ -28,6 +28,10 @@ PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=LICENSE archival/libarchive/bz/LICENSE
 PKG_CPE_ID:=cpe:/a:busybox:busybox
 
+ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_FEATURE_SUID),)
+  PKG_FILE_MODES:=/bin/busybox:root:root:4755
+endif
+
 include $(INCLUDE_DIR)/package.mk
 
 ifeq ($(DUMP),)
@@ -93,7 +97,15 @@ ifneq ($(findstring c,$(OPENWRT_VERBOSE)),)
 endif
 
 define Build/Configure
-	grep 'CONFIG_BUSYBOX_$(BUSYBOX_SYM)' $(TOPDIR)/.config | sed -e "s,\\(# \)\\?CONFIG_BUSYBOX_$(BUSYBOX_SYM)_\\(.*\\),\\1CONFIG_\\2,g" > $(PKG_BUILD_DIR)/.config
+	rm -f $(PKG_BUILD_DIR)/.config
+	touch $(PKG_BUILD_DIR)/.config
+ifeq ($(DEVICE_TYPE),nas)
+	echo "CONFIG_HDPARM=y" >> $(PKG_BUILD_DIR)/.config
+endif
+ifeq ($(BUILD_VARIANT),selinux)
+	cat $(TOPDIR)/$(SOURCE)/selinux.config >> $(PKG_BUILD_DIR)/.config
+endif
+	grep 'CONFIG_BUSYBOX_$(BUSYBOX_SYM)' $(TOPDIR)/.config | sed -e "s,\\(# \)\\?CONFIG_BUSYBOX_$(BUSYBOX_SYM)_\\(.*\\),\\1CONFIG_\\2,g" >> $(PKG_BUILD_DIR)/.config
 	yes 'n' | $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) oldconfig
 endef
 
@@ -117,5 +129,7 @@ ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_NTPD),)
 endif
 	-rm -rf $(1)/lib64
 endef
+
+Package/busybox-selinux/install = $(Package/busybox/install)
 
 $(eval $(call BuildPackage,busybox))
