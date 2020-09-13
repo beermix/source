@@ -3,17 +3,18 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# http://git.savannah.gnu.org/cgit/bash.git/log
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bash
-PKG_VERSION:=5.0
-PKG_RELEASE:=5
+PKG_VERSION:=36f2c40
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@GNU/bash
-PKG_HASH:=b4a80f2ac66170b2913efbfb9f2594f1f76c7b1afd11f799e22035d63077fb4d
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/bash.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
@@ -21,6 +22,7 @@ PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 PKG_CPE_ID:=cpe:/a:gnu:bash
 
 PKG_INSTALL:=1
+PKG_ASLR_PIE:=0
 
 include $(INCLUDE_DIR)/package.mk
 
