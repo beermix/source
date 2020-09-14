@@ -32,6 +32,8 @@ PKG_BUILD_PARALLEL:=1
 # get pcre for static linking
 PKG_BUILD_DEPENDS:=pcre
 
+TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/shadowsocks-libev2/Default

@@ -22,6 +22,8 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
+TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
+
 define Package/shadowsocksr-libev
 	SECTION:=net
 	CATEGORY:=Network
