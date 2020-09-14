@@ -69,7 +69,7 @@ define prepare_rootfs
 	@( \
 		cd $(1); \
 		for script in ./usr/lib/opkg/info/*.postinst; do \
-			IPKG_INSTROOT=$(1) $$(which bash) $$script; \
+			IPKG_INSTROOT=$(1) $$(command -v bash) $$script; \
 			ret=$$?; \
 			if [ $$ret -ne 0 ]; then \
 				echo "postinst script $$script has failed with exit code $$ret" >&2; \
@@ -79,10 +79,10 @@ define prepare_rootfs
 		for script in ./etc/init.d/*; do \
 			grep '#!/bin/sh /etc/rc.common' $$script >/dev/null || continue; \
 			if ! echo " $(3) " | grep -q " $$(basename $$script) "; then \
-				IPKG_INSTROOT=$(1) $$(which bash) ./etc/rc.common $$script enable; \
+				IPKG_INSTROOT=$(1) $$(command -v bash) ./etc/rc.common $$script enable; \
 				echo "Enabling" $$(basename $$script); \
 			else \
-				IPKG_INSTROOT=$(1) $$(which bash) ./etc/rc.common $$script disable; \
+				IPKG_INSTROOT=$(1) $$(command -v bash) ./etc/rc.common $$script disable; \
 				echo "Disabling" $$(basename $$script); \
 			fi; \
 		done || true \
@@ -99,4 +99,5 @@ define prepare_rootfs
 	rm -rf $(1)/boot
 	$(call clean_ipkg,$(1))
 	$(call mklibs,$(1))
+	$(if $(SOURCE_DATE_EPOCH),find $(1)/ -mindepth 1 -execdir touch -hcd "@$(SOURCE_DATE_EPOCH)" "{}" +)
 endef
