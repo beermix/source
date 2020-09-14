@@ -63,7 +63,6 @@
 			label = "zbt-wd323:orange:lan2";
 			gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
 		};
-
 	};
 };
 
@@ -79,8 +78,6 @@
 };
 
 &gpio {
-	status = "okay";
-
 	pinctrl-names = "default";
 	pinctrl-0 = <&jtag_disable_pins>;
 };
@@ -144,7 +141,6 @@
 &wmac {
 	status = "okay";
 	mtd-cal-data = <&art 0x1000>;
-	mtd-mac-address = <&art 0x1002>;
 };
 
 &pinmux {

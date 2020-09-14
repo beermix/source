@@ -16,6 +16,7 @@
 		led-failsafe = &led_power;
 		led-running = &led_power;
 		led-upgrade = &led_power;
+		label-mac-device = &eth0;
 	};
 
 	leds {
@@ -40,8 +41,7 @@
 	};
 
 	keys {
-		compatible = "gpio-keys-polled";
-		poll-interval = <100>;
+		compatible = "gpio-keys";
 
 		manual {
 			label = "manual";
@@ -78,12 +78,13 @@
 };
 
 &spi {
-	num-chipselects = <1>;
 	status = "okay";
+
+	num-chipselects = <1>;
 
 	flash@0 {
 		compatible = "jedec,spi-nor";
-		spi-max-frequency = <104000000>;
+		spi-max-frequency = <50000000>;
 		reg = <0>;
 
 		partitions {
@@ -138,6 +139,7 @@
 
 &wmac {
 	status = "okay";
+
 	mtd-cal-data = <&art 0x1000>;
 	mtd-mac-address = <&art 0x0>;
 };

@@ -8,18 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=git
-PKG_VERSION:=2.26.2
+PKG_VERSION:=2.20.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/software/scm/git/
-PKG_HASH:=6d65132471df9e531807cb2746f8be317e22a343b9385bbe11c9ce7f0d2fc848
+PKG_HASH:=
 
-PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=1
-
+PKG_LICENSE:=GPL-2.0-or-later
+PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:git-scm:git
+
+PKG_FIXUP:=autoreconf
+PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -70,7 +72,7 @@ define Package/git-gitweb/conffiles
 /etc/gitweb.conf
 endef
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
 
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
@@ -91,7 +93,8 @@ MAKE_FLAGS := \
 	GITWEB_JS="/gitweb/gitweb.js" \
 	GITWEB_CSS="/gitweb/gitweb.css" \
 	GITWEB_LOGO="/gitweb/gitweb-logo.png" \
-	GITWEB_FAVICON="/gitweb/gitweb-favicon.png"
+	GITWEB_FAVICON="/gitweb/gitweb-favicon.png" \
+	uname_S="Linux" \
 
 CONFIGURE_ARGS += \
 	--without-iconv \

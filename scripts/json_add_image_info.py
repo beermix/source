@@ -20,7 +20,20 @@ if not image_file.is_file():
 
 
 def get_titles():
-    return [{"title": getenv("DEVICE_TITLE")}]
+    titles = []
+    for prefix in ["", "ALT0_", "ALT1_", "ALT2_"]:
+        title = {}
+        for var in ["vendor", "model", "variant"]:
+            if getenv("DEVICE_{}{}".format(prefix, var.upper())):
+                title[var] = getenv("DEVICE_{}{}".format(prefix, var.upper()))
+
+        if title:
+            titles.append(title)
+
+    if not titles:
+        titles.append({"title": getenv("DEVICE_TITLE")})
+
+    return titles
 
 
 device_id = getenv("DEVICE_ID")

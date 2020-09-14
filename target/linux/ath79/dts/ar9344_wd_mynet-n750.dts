@@ -15,10 +15,10 @@
 	};
 
 	aliases {
-		led-boot = &power;
-		led-failsafe = &power;
-		led-running = &power;
-		led-upgrade = &power;
+		led-boot = &led_power;
+		led-failsafe = &led_power;
+		led-running = &led_power;
+		led-upgrade = &led_power;
 	};
 
 	leds {
@@ -39,7 +39,7 @@
 			gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
 		};
 
-		power: power {
+		led_power: power {
 			label = "mynet-n750:blue:power";
 			gpios = <&gpio 14 GPIO_ACTIVE_HIGH>;
 		};
@@ -69,8 +69,6 @@
 };
 
 &gpio {
-	status = "okay";
-
 	gpio_ext_lna0 {
 		gpio-hog;
 		gpios = <15 0>;
@@ -87,9 +85,9 @@
 };
 
 &spi {
-	num-cs = <1>;
-
 	status = "okay";
+
+	num-cs = <1>;
 
 	flash@0 {
 		compatible = "jedec,spi-nor";
@@ -179,11 +177,13 @@
 
 &wmac {
 	status = "okay";
+
 	qca,no-eeprom;
 };
 
 &mdio0 {
 	status = "okay";
+
 	phy-mask = <0>;
 
 	switch0@1f {
@@ -192,7 +192,7 @@
 
 		qca,ar8327-initvals = <
 			0x04 0x07600000 /* PORT0 PAD MODE CTRL */
-			0x10 0x80000080 /* POWER_ON_STRIP */
+			0x10 0x80000080 /* POWER_ON_STRAP */
 			0x50 0xc737c737 /* LED_CTRL0 */
 			0x54 0x00000000 /* LED_CTRL1 */
 			0x58 0x00000000 /* LED_CTRL2 */

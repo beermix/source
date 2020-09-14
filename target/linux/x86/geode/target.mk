@@ -8,9 +8,7 @@ DEFAULT_PACKAGES += \
 			kmod-ledtrig-netdev hwclock wpad-basic
 # Geos
 DEFAULT_PACKAGES += \
-		soloscli linux-atm br2684ctl ppp-mod-pppoa pppdump pppstats \
-		hwclock flashrom tc kmod-pppoa kmod-8139cp kmod-mppe \
-		kmod-usb-ohci-pci kmod-hwmon-lm90
+		soloscli hwclock flashrom tc
 
 define Target/Description
 	Build firmware images for AMD Geode GX/LX based systems (net5501, alix, geos)

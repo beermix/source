@@ -4,7 +4,7 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
 
-#include "qca9557.dtsi"
+#include "qca955x.dtsi"
 
 / {
 	compatible = "tplink,tl-wdr4900-v2", "qca,qca9558";
@@ -15,9 +15,10 @@
 		led-failsafe = &led_system;
 		led-running = &led_system;
 		led-upgrade = &led_system;
+		label-mac-device = &eth1;
 	};
 
-	gpio_leds: leds {
+	leds {
 		compatible = "gpio-leds";
 
 		led_system: system {
@@ -52,7 +53,7 @@
 		};
 	};
 
-	 ath9k-leds {
+	ath9k-leds {
 		compatible = "gpio-leds";
 
 		wlan5g {
@@ -140,6 +141,7 @@
 
 &spi {
 	status = "okay";
+
 	num-cs = <1>;
 
 	flash@0 {
@@ -220,6 +222,7 @@
 
 &wmac {
 	status = "okay";
+
 	mtd-cal-data = <&art 0x1000>;
 	mtd-mac-address = <&uboot 0x1fc00>;
 	mtd-mac-address-increment = <(-1)>;

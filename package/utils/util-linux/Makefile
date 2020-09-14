@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=util-linux
-PKG_VERSION:=2.34
-PKG_RELEASE:=1
+PKG_VERSION:=2.36
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@KERNEL/linux/utils/$(PKG_NAME)/v2.34
-PKG_HASH:=743f9d0c7252b6db246b659c1e1ce0bd45d8d4508b4dfa427bbb4a3e9b9f62b5
+PKG_SOURCE_URL:=@KERNEL/linux/utils/$(PKG_NAME)/v2.36
+PKG_HASH:=9e4b1c67eb13b9b67feb32ae1dc0d50e08ce9e5d82e1cccd0ee771ad2fa9e0b1
 PKG_CPE_ID:=cpe:/a:kernel:util-linux
 
 PKG_LICENSE:=GPL-2.0
@@ -126,6 +126,7 @@ define Package/blkdiscard
 $(call Package/util-linux/Default)
   TITLE:=discard sectors on a device
   SUBMENU=Disc
+  DEPENDS:=libblkid
 endef
 
 define Package/blkdiscard/description
@@ -267,6 +268,7 @@ endef
 define Package/logger
 $(call Package/util-linux/Default)
   TITLE:=a shell command interface to the syslog system log module
+  ALTERNATIVES:=200:/usr/bin/logger:/usr/bin/util-linux-logger
 endef
 
 define Package/logger/description
@@ -313,6 +315,16 @@ endef
 
 define Package/lscpu/description
  lscpu displays information about the CPU architecture
+endef
+
+define Package/more
+$(call Package/util-linux/Default)
+  TITLE:=filter for paging through text one screenful at a time
+  DEPENDS:= +libncurses
+endef
+
+define Package/more/description
+ more is a filter for paging through text one screenful at a time
 endef
 
 define Package/mcookie
@@ -503,12 +515,18 @@ CONFIGURE_ARGS += \
 	--disable-use-tty-group		\
 	--disable-rpath			\
 	--disable-tls			\
+	--disable-su			\
 	--disable-sulogin		\
 	--disable-makeinstall-chown	\
+	--disable-login 		\
+	--disable-nologin		\
+	--disable-lslogins		\
+	--disable-runuser		\
+	--disable-chfn-chsh		\
 	--without-python		\
 	--without-udev			\
 	--without-readline		\
-	--disable-more			\
+	--without-libmagic		\
 	--with-ncursesw
 
 TARGET_CFLAGS += $(FPIC) -std=gnu99
@@ -644,7 +662,7 @@ endef
 
 define Package/logger/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/logger $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/logger $(1)/usr/bin/util-linux-logger
 endef
 
 define Package/look/install
@@ -665,6 +683,11 @@ endef
 define Package/lscpu/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/lscpu $(1)/usr/bin/
+endef
+
+define Package/more/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/more $(1)/usr/bin/
 endef
 
 define Package/mcookie/install
@@ -782,6 +805,7 @@ $(eval $(call BuildPackage,look))
 $(eval $(call BuildPackage,losetup))
 $(eval $(call BuildPackage,lsblk))
 $(eval $(call BuildPackage,lscpu))
+$(eval $(call BuildPackage,more))
 $(eval $(call BuildPackage,mcookie))
 $(eval $(call BuildPackage,mount-utils))
 $(eval $(call BuildPackage,namei))
