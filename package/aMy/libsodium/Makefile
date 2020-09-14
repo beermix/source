@@ -52,7 +52,7 @@ menu "Configuration"
 endmenu
 endef
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Ofast
+TARGET_CFLAGS := -Ofast $(filter-out -O%,$(TARGET_CFLAGS))
 
 CONFIGURE_ARGS+= \
 	--disable-ssp \

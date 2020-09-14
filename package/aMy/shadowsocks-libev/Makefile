@@ -127,6 +127,7 @@ CONFIGURE_ARGS += \
 	--disable-assert \
 	--disable-ssp \
 
+TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
