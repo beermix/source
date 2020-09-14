@@ -173,6 +173,7 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
 endif
 
 TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := ${TARGET_CFLAGS/-fno-caller-saves/}
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
