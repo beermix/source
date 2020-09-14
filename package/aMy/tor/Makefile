@@ -110,6 +110,8 @@ CONFIGURE_ARGS += \
 	--disable-zstd \
 	--disable-module-dirauth \
 	--disable-systemd \
+	--disable-gcc-hardening \
+	--disable-linker-hardening \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--with-pic
