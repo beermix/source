@@ -548,8 +548,7 @@ CONFIGURE_ARGS += \
 	--with-xt-lock-name=/var/run/xtables.lock \
 	$(if $(CONFIG_IPTABLES_CONNLABEL),,--disable-connlabel) \
 	$(if $(CONFIG_IPTABLES_NFTABLES),,--disable-nftables) \
-	$(if $(CONFIG_IPV6),,--disable-ipv6) \
-	--disable-libnfnetlink
+	$(if $(CONFIG_IPV6),,--disable-ipv6)
 
 MAKE_FLAGS := \
 	$(TARGET_CONFIGURE_OPTS) \
