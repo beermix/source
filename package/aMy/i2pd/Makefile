@@ -9,15 +9,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_VERSION:=da1e523
+PKG_VERSION:=2.33.0
 PKG_RELEASE:=1
 PKG_BUILD_PARALLEL:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/PurpleI2P/i2pd/tar.gz/$(PKG_VERSION)?
+PKG_HASH:=
 
 PKG_MAINTAINER:=David Yang <mmyangfl@gmail.com>
 PKG_LICENSE:=BSD-3-Clause
@@ -29,7 +27,6 @@ include $(INCLUDE_DIR)/cmake.mk
 CMAKE_SOURCE_SUBDIR:=build
 
 CMAKE_OPTIONS += \
-	cmake -DCMAKE_BUILD_TYPE=Release \
 	-DBUILD_SHARED_LIBS=0 \
 	-DWITH_UPNP=0 \
 	-DWITH_AESNI=0 \
