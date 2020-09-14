@@ -23,7 +23,7 @@ PKG_CPE_ID:=cpe:/a:gnome:glib
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=meson/host
-HOST_BUILD_DEPENDS:=meson/host gettext-full/host libiconv/host libffi/host
+HOST_BUILD_DEPENDS:=meson/host libffi/host
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
@@ -43,7 +43,7 @@ define Package/glib2/description
 endef
 
 TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
-HOST_LDFLAGS += -liconv -Wl,-rpath,$(STAGING_DIR_HOSTPKG)/lib
+HOST_LDFLAGS += -Wl,-rpath,$(STAGING_DIR_HOSTPKG)/lib
 TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
 
@@ -65,8 +65,8 @@ COMP_ARGS= \
 	-Dglib_assert=false \
 	-Dglib_checks=false
 
-MESON_HOST_ARGS += $(COMP_ARGS) -Dxattr=false -Diconv=external
-MESON_ARGS += $(COMP_ARGS) -Db_lto=true -Diconv=libc
+MESON_HOST_ARGS += $(COMP_ARGS) -Dxattr=false
+MESON_ARGS += $(COMP_ARGS) -Dxattr=false -Db_lto=true
 
 # hack to compile static libraries
 define Build/Compile
