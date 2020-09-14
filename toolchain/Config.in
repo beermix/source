@@ -113,7 +113,6 @@ menuconfig EXTERNAL_TOOLCHAIN
 		config EXTERNAL_TOOLCHAIN_LIBC_USE_UCLIBC
 			bool "uClibc"
 			select USE_UCLIBC
-			depends on !(aarch64 || aarch64_be)
 
 		config EXTERNAL_TOOLCHAIN_LIBC_USE_MUSL
 			bool "musl"
@@ -237,7 +236,7 @@ comment "C Library"
 
 choice
 	prompt "C Library implementation" if TOOLCHAINOPTS
-	default LIBC_USE_UCLIBC if arc
+	default LIBC_USE_UCLIBC
 	default LIBC_USE_MUSL
 	help
 	  Select the C library implementation.
@@ -250,7 +249,6 @@ choice
 	config LIBC_USE_UCLIBC
 		select USE_UCLIBC
 		bool "Use uClibc"
-		depends on BROKEN || arc
 
 	config LIBC_USE_MUSL
 		select USE_MUSL
