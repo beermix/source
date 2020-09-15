@@ -8,7 +8,8 @@
 
 define Device/dsa-migration
   DEVICE_COMPAT_VERSION := 1.1
-  DEVICE_COMPAT_MESSAGE := Config cannot be migrated from swconfig to DSA
+  DEVICE_COMPAT_MESSAGE := Config cannot be migrated from swconfig to DSA \
+	(early adopters with DSA already set up may just force-flash keeping existing config)
 endef
 
 define Device/buffalo_ls421de
@@ -23,8 +24,8 @@ define Device/buffalo_ls421de
   DEVICE_DTS := armada-370-buffalo-ls421de
   DEVICE_PACKAGES :=  \
     kmod-rtc-rs5c372a kmod-hwmon-gpiofan kmod-hwmon-drivetemp kmod-usb3 \
-    kmod-linkstation-poweroff kmod-md-raid0 kmod-md-raid1 kmod-md-mod \
-    kmod-fs-xfs mkf2fs e2fsprogs partx-utils
+    kmod-md-raid0 kmod-md-raid1 kmod-md-mod kmod-fs-xfs mkf2fs e2fsprogs \
+    partx-utils
 endef
 TARGET_DEVICES += buffalo_ls421de
 

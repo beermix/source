@@ -197,10 +197,30 @@ define Device/asus_rt-ac58u
 #	to add a version... or we are very careful not to add '\0' into that
 #	string and call it a day.... Yeah, we do the latter!
 	UIMAGE_NAME:=$(shell echo -e '\03\01\01\01RT-AC58U')
+	KERNEL_INITRAMFS := $$(KERNEL) | uImage none
+	KERNEL_INITRAMFS_SUFFIX := -factory.trx
 	DEVICE_PACKAGES := -kmod-ath10k-ct kmod-ath10k-ct-smallbuffers \
 		kmod-usb-ledtrig-usbport
 endef
 TARGET_DEVICES += asus_rt-ac58u
+
+define Device/asus_rt-acrh17
+	$(call Device/FitImageLzma)
+	DEVICE_VENDOR := ASUS
+	DEVICE_MODEL := RT-ACRH17
+	SOC := qcom-ipq4019
+	BLOCKSIZE := 128k
+	PAGESIZE := 2048
+	DTB_SIZE := 65536
+	IMAGE_SIZE := 20439364
+	FILESYSTEMS := squashfs
+	UIMAGE_NAME:=$(shell echo -e '\03\01\01\01RT-AC82U')
+	KERNEL_INITRAMFS := $$(KERNEL) | uImage none
+	KERNEL_INITRAMFS_SUFFIX := -factory.trx
+	IMAGES := sysupgrade.bin
+	DEVICE_PACKAGES := ath10k-firmware-qca9984-ct ipq-wifi-asus_rt-acrh17 kmod-usb-ledtrig-usbport
+endef
+TARGET_DEVICES += asus_rt-acrh17
 
 define Device/avm_fritzbox-4040
 	$(call Device/FitImageLzma)
@@ -244,18 +264,6 @@ define Device/avm_fritzrepeater-3000
 	DEVICE_PACKAGES := ath10k-firmware-qca9984-ct fritz-caldata fritz-tffs-nand
 endef
 TARGET_DEVICES += avm_fritzrepeater-3000
-
-define Device/buffalo_wtr-m2133hp
-	$(call Device/FitImage)
-	$(call Device/UbiFit)
-	DEVICE_VENDOR := Buffalo
-	DEVICE_MODEL := WTR-M2133HP
-	SOC := qcom-ipq4019
-	DEVICE_PACKAGES := uboot-envtools ath10k-firmware-qca9984-ct ipq-wifi-buffalo_wtr-m2133hp
-	BLOCKSIZE := 128k
-	PAGESIZE := 2048
-endef
-TARGET_DEVICES += buffalo_wtr-m2133hp
 
 define Device/cellc_rtl30vw
 	KERNEL_SUFFIX := -fit-uImage.itb
@@ -449,19 +457,6 @@ define Device/glinet_gl-b1300
 endef
 TARGET_DEVICES += glinet_gl-b1300
 
-define Device/glinet_gl-s1300
-	$(call Device/FitImage)
-	DEVICE_VENDOR := GL.iNet
-	DEVICE_MODEL := GL-S1300
-	SOC := qcom-ipq4029
-	KERNEL_SIZE := 4096k
-	IMAGE_SIZE := 26624k
-	IMAGES := sysupgrade.bin
-	IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata
-	DEVICE_PACKAGES := ipq-wifi-glinet_gl-s1300 kmod-fs-ext4 kmod-mmc kmod-spi-dev
-endef
-TARGET_DEVICES += glinet_gl-s1300
-
 define Device/linksys_ea6350v3
 	# The Linksys EA6350v3 has a uboot bootloader that does not
 	# support either booting lzma kernel images nor booting UBI
@@ -626,6 +621,35 @@ define Device/qcom_ap-dk04.1-c1
 	BOARD_NAME := ap-dk04.1-c1
 endef
 TARGET_DEVICES += qcom_ap-dk04.1-c1
+
+define Device/p2w_r619ac
+	$(call Device/FitzImage)
+	$(call Device/UbiFit)
+	DEVICE_VENDOR := P&W
+	DEVICE_MODEL := R619AC
+	SOC := qcom-ipq4019
+	DEVICE_DTS_CONFIG := config@10
+	BLOCKSIZE := 128k
+	PAGESIZE := 2048
+	IMAGES += nand-factory.bin
+	IMAGE/nand-factory.bin := append-ubi | qsdk-ipq-factory-nand
+	DEVICE_PACKAGES := ipq-wifi-p2w_r619ac
+endef
+TARGET_DEVICES += p2w_r619ac
+
+define Device/p2w_r619ac-128m
+	$(call Device/FitzImage)
+	$(call Device/UbiFit)
+	DEVICE_VENDOR := P&W
+	DEVICE_MODEL := R619AC
+	DEVICE_VARIANT := 128M
+	SOC := qcom-ipq4019
+	DEVICE_DTS_CONFIG := config@10
+	BLOCKSIZE := 128k
+	PAGESIZE := 2048
+	DEVICE_PACKAGES := ipq-wifi-p2w_r619ac
+endef
+TARGET_DEVICES += p2w_r619ac-128m
 
 define Device/qxwlan_e2600ac-c1
 	$(call Device/FitImage)

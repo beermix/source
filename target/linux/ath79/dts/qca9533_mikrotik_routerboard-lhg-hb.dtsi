@@ -68,18 +68,17 @@
 };
 
 &eth0 {
+	compatible = "syscon", "simple-mfd";
+};
+
+&eth1 {
 	status = "okay";
 
 	phy-handle = <&swphy0>;
 
 	gmac-config {
 		device = <&gmac>;
-		switch-phy-swap = <1>;
 	};
-};
-
-&eth1 {
-	compatible = "syscon", "simple-mfd";
 };
 
 &pinmux {

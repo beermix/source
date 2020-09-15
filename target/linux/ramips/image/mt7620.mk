@@ -52,7 +52,7 @@ define Device/alfa-network_tube-e4g
   DEVICE_VENDOR := ALFA Network
   DEVICE_MODEL := Tube-E4G
   DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci uboot-envtools uqmi -iwinfo \
-	-kmod-rt2800-soc -wpad-basic-wolfssl
+	-kmod-rt2800-soc -wpad-basic
 endef
 TARGET_DEVICES += alfa-network_tube-e4g
 
@@ -400,8 +400,8 @@ define Device/fon_fon2601
   DEVICE_VENDOR := Fon
   DEVICE_MODEL := FON2601
   DEVICE_PACKAGES := kmod-mt76x2 kmod-usb2 kmod-usb-ohci
-  KERNEL_INITRAMFS := $$(KERNEL) | uimage-padhdr
-  IMAGE/sysupgrade.bin := append-kernel | append-rootfs | uimage-padhdr | \
+  KERNEL_INITRAMFS := $$(KERNEL) | fonfxcimage
+  IMAGE/sysupgrade.bin := append-kernel | append-rootfs | fonfxcimage | \
 	pad-rootfs | append-metadata | check-size
 endef
 TARGET_DEVICES += fon_fon2601
@@ -487,29 +487,6 @@ define Device/hnet_c108
   SUPPORTED_DEVICES += c108
 endef
 TARGET_DEVICES += hnet_c108
-
-define Device/sunvalley_filehub_common
-  SOC := mt7620n
-  IMAGE_SIZE := 6144k
-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci kmod-i2c-ralink
-  LOADER_TYPE := bin
-  LOADER_FLASH_OFFS := 0x200000
-  COMPILE := loader-$(1).bin
-  COMPILE/loader-$(1).bin := loader-okli-compile | pad-to 64k | lzma | \
-	uImage lzma
-  KERNEL := $(KERNEL_DTB) | uImage lzma -M 0x4f4b4c49
-  KERNEL_INITRAMFS := $(KERNEL_DTB) | uImage lzma
-  IMAGES += kernel.bin rootfs.bin
-  IMAGE/kernel.bin := append-loader-okli $(1) | check-size 64k
-  IMAGE/rootfs.bin := $$(sysupgrade_bin) | check-size
-endef
-
-define Device/hootoo_ht-tm05
-  $(Device/sunvalley_filehub_common)
-  DEVICE_VENDOR := HooToo
-  DEVICE_MODEL := HT-TM05
-endef
-TARGET_DEVICES += hootoo_ht-tm05
 
 define Device/iodata_wn-ac1167gr
   SOC := mt7620a
@@ -719,22 +696,6 @@ define Device/netgear_ex6130
 endef
 TARGET_DEVICES += netgear_ex6130
 
-define Device/netgear_jwnr2010-v5
-  $(Device/netgear_sercomm_nor)
-  SOC := mt7620n
-  BLOCKSIZE := 4k
-  IMAGE_SIZE := 3840k
-  DEVICE_MODEL := JWNR2010
-  DEVICE_VARIANT := v5
-  SERCOMM_HWNAME := N300
-  SERCOMM_HWID := ASW
-  SERCOMM_HWVER := A001
-  SERCOMM_SWVER := 0x0040
-  SERCOMM_PAD := 128k
-  DEFAULT := n
-endef
-TARGET_DEVICES += netgear_jwnr2010-v5
-
 define Device/netgear_wn3000rp-v3
   SOC := mt7620a
   IMAGE_SIZE := 7872k
@@ -928,16 +889,14 @@ define Device/ralink_mt7620a-v22sg-evb
 endef
 TARGET_DEVICES += ralink_mt7620a-v22sg-evb
 
-define Device/ravpower_rp-wd03
-  $(Device/sunvalley_filehub_common)
-  DEVICE_VENDOR := RAVPower
-  DEVICE_MODEL := RP-WD03
-  SUPPORTED_DEVICES += ravpower,wd03
-  DEVICE_COMPAT_VERSION := 2.0
-  DEVICE_COMPAT_MESSAGE := Partition design has changed compared to older versions (up to 19.07) due to kernel size restrictions. \
-	Upgrade via sysupgrade mechanism is not possible, so new installation via TFTP is required.
+define Device/ravpower_wd03
+  SOC := mt7620n
+  IMAGE_SIZE := 7872k
+  DEVICE_VENDOR := Ravpower
+  DEVICE_MODEL := WD03
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci
 endef
-TARGET_DEVICES += ravpower_rp-wd03
+TARGET_DEVICES += ravpower_wd03
 
 define Device/sanlinking_d240
   SOC := mt7620a
@@ -1028,7 +987,7 @@ define Device/tplink_archer-mr200
   TPLINK_HWID := 0xd7500001
   TPLINK_HWREV := 0x4a
   IMAGES := sysupgrade.bin
-  DEVICE_PACKAGES := kmod-mt76x0e kmod-usb2 kmod-usb-net-rndis \
+  DEVICE_PACKAGES := kmod-mt76x0e kmod-usb2 kmod-usb-net kmod-usb-net-rndis \
 	kmod-usb-serial kmod-usb-serial-option adb-enablemodem
   DEVICE_MODEL := Archer MR200
   SUPPORTED_DEVICES += mr200
@@ -1097,6 +1056,23 @@ define Device/xiaomi_miwifi-mini
   SUPPORTED_DEVICES += miwifi-mini
 endef
 TARGET_DEVICES += xiaomi_miwifi-mini
+
+define Device/xiaomi_miwifi-r3
+  SOC := mt7620a
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  KERNEL_SIZE := 4096k
+  IMAGE_SIZE := 32768k
+  UBINIZE_OPTS := -E 5
+  IMAGES += kernel1.bin rootfs0.bin
+  IMAGE/kernel1.bin := append-kernel | check-size
+  IMAGE/rootfs0.bin := append-ubi | check-size
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  DEVICE_VENDOR := Xiaomi
+  DEVICE_MODEL := Mi Router R3
+  DEVICE_PACKAGES := kmod-mt76x2 kmod-usb2 kmod-usb-ohci uboot-envtools
+endef
+TARGET_DEVICES += xiaomi_miwifi-r3
 
 define Device/youku_yk1
   SOC := mt7620a
