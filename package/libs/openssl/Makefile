@@ -19,11 +19,12 @@ PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
-	http://ftp.fi.muni.cz/pub/openssl/source/ \
-	http://ftp.linux.hr/pub/openssl/source/ \
+	https://mirrors.cloud.tencent.com/openssl/source/ \
+	https://mirrors.cloud.tencent.com/openssl/source/old/$(PKG_BASE)/ \
+	https://ftp.fi.muni.cz/pub/openssl/source/ \
 	ftp://ftp.pca.dfn.de/pub/tools/net/openssl/source/ \
-	http://www.openssl.org/source/ \
-	http://www.openssl.org/source/old/$(PKG_BASE)/
+	https://www.openssl.org/source/ \
+	https://www.openssl.org/source/old/$(PKG_BASE)/
 PKG_HASH:=ddb04774f1e32f0c49751e21b67216ac87852ceb056b75209af2443400636d46
 
 PKG_LICENSE:=OpenSSL

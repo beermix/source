@@ -319,56 +319,7 @@ static struct mtd_part_parser uimage_netgear_parser = {
 	.of_match_table = mtdsplit_uimage_netgear_of_match_table,
 	.parse_fn = mtdsplit_uimage_parse_netgear,
 	.type = MTD_PARSER_TYPE_FIRMWARE,
-
 };
-
-
-/**************************************************
- * ALLNET
- **************************************************/
-
-#define FW_MAGIC_SG8208M	0x00000006
-#define FW_MAGIC_SG8310PM	0x83000006
-
-static ssize_t uimage_verify_allnet(u_char *buf, size_t len, int *extralen)
-{
-	struct uimage_header *header = (struct uimage_header *)buf;
-
-	switch (be32_to_cpu(header->ih_magic)) {
-	case FW_MAGIC_SG8208M:
-	case FW_MAGIC_SG8310PM:
-		break;
-	default:
-		return -EINVAL;
-	}
-
-	if (header->ih_os != IH_OS_LINUX)
-		return -EINVAL;
-
-	return 0;
-}
-
-static int
-mtdsplit_uimage_parse_allnet(struct mtd_info *master,
-			      const struct mtd_partition **pparts,
-			      struct mtd_part_parser_data *data)
-{
-	return __mtdsplit_parse_uimage(master, pparts, data,
-				      uimage_verify_allnet);
-}
-
-static const struct of_device_id mtdsplit_uimage_allnet_of_match_table[] = {
-	{ .compatible = "allnet,uimage" },
-	{},
-};
-
-static struct mtd_part_parser uimage_allnet_parser = {
-	.owner = THIS_MODULE,
-	.name = "allnet-fw",
-	.of_match_table = mtdsplit_uimage_allnet_of_match_table,
-	.parse_fn = mtdsplit_uimage_parse_allnet,
-};
-
 
 /**************************************************
  * Edimax
@@ -457,43 +408,6 @@ static struct mtd_part_parser uimage_fonfxc_parser = {
 };
 
 /**************************************************
- * SGE (T&W) Shenzhen Gongjin Electronics
- **************************************************/
-
-#define SGE_PAD_LEN		96
-
-static ssize_t uimage_find_sge(u_char *buf, size_t len, int *extralen)
-{
-	if (uimage_verify_default(buf, len, extralen) < 0)
-		return -EINVAL;
-
-	*extralen = SGE_PAD_LEN;
-
-	return 0;
-}
-
-static int
-mtdsplit_uimage_parse_sge(struct mtd_info *master,
-			      const struct mtd_partition **pparts,
-			      struct mtd_part_parser_data *data)
-{
-	return __mtdsplit_parse_uimage(master, pparts, data,
-				       uimage_find_sge);
-}
-
-static const struct of_device_id mtdsplit_uimage_sge_of_match_table[] = {
-	{ .compatible = "sge,uimage" },
-	{},
-};
-
-static struct mtd_part_parser uimage_sge_parser = {
-	.owner = THIS_MODULE,
-	.name = "sge-fw",
-	.of_match_table = mtdsplit_uimage_sge_of_match_table,
-	.parse_fn = mtdsplit_uimage_parse_sge,
-};
-
-/**************************************************
  * OKLI (OpenWrt Kernel Loader Image)
  **************************************************/
 
@@ -554,10 +468,8 @@ static int __init mtdsplit_uimage_init(void)
 {
 	register_mtd_parser(&uimage_generic_parser);
 	register_mtd_parser(&uimage_netgear_parser);
-	register_mtd_parser(&uimage_allnet_parser);
 	register_mtd_parser(&uimage_edimax_parser);
 	register_mtd_parser(&uimage_fonfxc_parser);
-	register_mtd_parser(&uimage_sge_parser);
 	register_mtd_parser(&uimage_okli_parser);
 
 	return 0;

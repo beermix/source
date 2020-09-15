@@ -42,13 +42,9 @@ dnsmasq_ignore_opt() {
 		bootp-*|\
 		pxe-*)
 			[ -z "$dnsmasq_has_dhcp" ] ;;
-		dnssec*|\
+		dnssec-*|\
 		trust-anchor)
-			if [ -z "$dnsmasq_has_dnssec" ]; then
-				echo "dnsmasq: \"$opt\" requested, but dnssec support is not available" >&2
-				exit 1
-			fi
-			;;
+			[ -z "$dnsmasq_has_dnssec" ] ;;
 		tftp-*)
 			[ -z "$dnsmasq_has_tftp" ] ;;
 		ipset)
@@ -97,6 +93,25 @@ dhcp_calc() {
 		[ "${ip%.*}" != "$ip" ] && ip="${ip#*.}" || ip=
 	done
 	echo "$res"
+}
+
+dhcp_check() {
+	local ifname="$1"
+	local stamp="${BASEDHCPSTAMPFILE_CFG}.${ifname}.dhcp"
+	local rv=0
+
+	[ -s "$stamp" ] && return $(cat "$stamp")
+
+	# If interface is down, skip it.
+	# The init script will be called again once the link is up
+	case "$(devstatus "$ifname" | jsonfilter -e @.up)" in
+		false) return 1;;
+	esac
+
+	udhcpc -n -q -s /bin/true -t 1 -i "$ifname" >&- && rv=1 || rv=0
+
+	echo $rv > "$stamp"
+	return $rv
 }
 
 log_once() {
@@ -494,6 +509,15 @@ dhcp_add() {
 
 	# Override interface netmask with dhcp config if applicable
 	config_get netmask "$cfg" netmask "${subnet##*/}"
+
+	#check for an already active dhcp server on the interface, unless 'force' is set
+	config_get_bool force "$cfg" force 0
+	[ $force -gt 0 ] || dhcp_check "$ifname" || {
+		logger -t dnsmasq \
+			"found already running DHCP-server on interface '$ifname'" \
+			"refusing to start, use 'option force 1' to override"
+		return 0
+	}
 
 	config_get start "$cfg" start 100
 	config_get limit "$cfg" limit 150

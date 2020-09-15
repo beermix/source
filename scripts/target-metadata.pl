@@ -174,7 +174,7 @@ EOF
 	print <<EOF;
 choice
 	prompt "Target System"
-	default TARGET_ath79
+	default TARGET_x86
 	reset if !DEVEL
 	
 EOF
@@ -239,7 +239,6 @@ config TARGET_$target->{conf}_$profile->{id}
 	bool "$profile->{name}"
 	depends on TARGET_$target->{conf}
 EOF
-			$profile->{broken} and print "\tdepends on BROKEN\n";
 			my @pkglist = merge_package_lists($target->{packages}, $profile->{packages});
 			foreach my $pkg (@pkglist) {
 				print "\tselect DEFAULT_$pkg\n";
@@ -299,7 +298,6 @@ menuconfig TARGET_DEVICE_$target->{conf}_$profile->{id}
 	depends on TARGET_$target->{conf}
 	default $profile->{default}
 EOF
-			$profile->{broken} and print "\tdepends on BROKEN\n";
 			my @pkglist = merge_package_lists($target->{packages}, $profile->{packages});
 			foreach my $pkg (@pkglist) {
 				print "\tselect DEFAULT_$pkg if !TARGET_PER_DEVICE_ROOTFS\n";
