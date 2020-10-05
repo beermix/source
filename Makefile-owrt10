@@ -5,9 +5,7 @@ GCCTAG = releases/gcc-$(GCCVER)
 GCCBRANCH = releases/gcc-10
 
 update:
-	git -C $(GCCGIT) remote update -p
-	git -C $(GCCGIT) rev-parse --verify --quiet refs/tags/$(GCCTAG) > /dev/null
-	git -C $(GCCGIT) rev-parse --verify --quiet $(GCCBRANCH) > /dev/null
+	git -C $(GCCGIT) fetch origin +$(GCCBRANCH):$(GCCBRANCH) +refs/tags/$(GCCTAG):refs/tags/$(GCCTAG)
 	git -C $(GCCGIT) diff $(GCCTAG)..$(GCCBRANCH) -- \* ':!*/DATESTAMP' | filterdiff --exclude-from-file="exclude-testsuite" --clean > new.patch~
 	git show HEAD:gcc-stable-branch.patch | sed -n '/^diff --git/,$$p' > current.patch~
 	! diff current.patch~ new.patch~ > /dev/null
