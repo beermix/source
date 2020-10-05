@@ -91,6 +91,7 @@ prepare-tmpinfo: FORCE
 	[ tmp/.config-feeds.in -nt tmp/.packageauxvars ] || ./scripts/feeds feed_config > tmp/.config-feeds.in
 	./scripts/package-metadata.pl mk tmp/.packageinfo > tmp/.packagedeps || { rm -f tmp/.packagedeps; false; }
 	./scripts/package-metadata.pl pkgaux tmp/.packageinfo > tmp/.packageauxvars || { rm -f tmp/.packageauxvars; false; }
+	./scripts/package-metadata.pl usergroup tmp/.packageinfo > tmp/.packageusergroup || { rm -f tmp/.packageusergroup; false; }
 	touch $(TOPDIR)/tmp/.build
 
 .config: ./scripts/config/conf $(if $(CONFIG_HAVE_DOT_CONFIG),,prepare-tmpinfo)
@@ -141,6 +142,13 @@ menuconfig: scripts/config/mconf prepare-tmpinfo FORCE
 	[ -L .config ] && export KCONFIG_OVERWRITECONFIG=1; \
 		$< Config.in
 
+nconfig: scripts/config/nconf prepare-tmpinfo FORCE
+	if [ \! -e .config -a -e $(HOME)/.openwrt/defconfig ]; then \
+		cp $(HOME)/.openwrt/defconfig .config; \
+	fi
+	[ -L .config ] && export KCONFIG_OVERWRITECONFIG=1; \
+		$< Config.in
+
 xconfig: scripts/config/qconf prepare-tmpinfo FORCE
 	if [ \! -e .config -a -e $(HOME)/.openwrt/defconfig ]; then \
 		cp $(HOME)/.openwrt/defconfig .config; \
@@ -162,12 +170,16 @@ kernel_oldconfig: prepare_kernel_conf
 ifneq ($(DISTRO_PKG_CONFIG),)
 kernel_menuconfig: export PATH:=$(dir $(DISTRO_PKG_CONFIG)):$(PATH)
 kernel_nconfig: export PATH:=$(dir $(DISTRO_PKG_CONFIG)):$(PATH)
+kernel_xconfig: export PATH:=$(dir $(DISTRO_PKG_CONFIG)):$(PATH)
 endif
 kernel_menuconfig: prepare_kernel_conf
 	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux menuconfig
 
 kernel_nconfig: prepare_kernel_conf
 	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux nconfig
+
+kernel_xconfig: prepare_kernel_conf
+	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux xconfig
 
 staging_dir/host/.prereq-build: include/prereq-build.mk
 	mkdir -p tmp
@@ -249,9 +261,9 @@ package/symlinks-clean:
 	./scripts/feeds uninstall -a
 
 help:
-	cat README
+	cat README.md
 
-distclean:
+distclean: cacheclean
 	rm -rf bin build_dir .config* dl feeds key-build* logs package/feeds package/openwrt-packages staging_dir tmp
 	@$(_SINGLE)$(SUBMAKE) -C scripts/config clean
 
