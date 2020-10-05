@@ -51,7 +51,6 @@ define Package/libncurses-dev
   TITLE:=Development files for the ncurses library
 endef
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += $(FPIC)
 
 define Package/ncurses-bin
@@ -65,8 +64,6 @@ endef
 
 CONFIGURE_ARGS += \
 	--enable-echo \
-	--without-cxx \
-	--without-cxx-binding \
 	--enable-const \
 	--enable-overwrite \
 	--enable-pc-files \
@@ -84,7 +81,8 @@ CONFIGURE_ARGS += \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
-	--enable-widec
+	--enable-widec \
+	--with-build-cppflags=-D_GNU_SOURCE
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
@@ -138,11 +136,13 @@ ifneq ($(HOST_OS),FreeBSD)
 			mv $$$$dir $$$$(echo -ne "\x$$$$dir"); \
 		done \
 	)
-	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen v/vt100 v/vt102 v/vt200 v/vt220 x/xterm x/xterm-color x/xterm-xfree86 x/xterm-256color; do \
+	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color; do \
 		$(INSTALL_DIR) $(1)/usr/share/terminfo/`dirname $$$$file`; \
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/terminfo/$$$$file \
 			$(1)/usr/share/terminfo/$$$$file; \
 	done
+	$(INSTALL_DIR) $(1)/usr/share/tabset
+	$(CP) $(PKG_INSTALL_DIR)/usr/share/tabset $(1)/usr/share/
 endif
 endef
 

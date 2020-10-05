@@ -242,7 +242,7 @@ generate_static_system() {
 		delete system.@system[0]
 		add system system
 		set system.@system[-1].hostname='OpenWrt'
-		set system.@system[-1].timezone='UTC'
+		set system.@system[-1].timezone='MSK-3'
 		set system.@system[-1].ttylogin='0'
 		set system.@system[-1].log_size='64'
 		set system.@system[-1].urandom_seed='0'
@@ -262,13 +262,6 @@ generate_static_system() {
 			local hostname
 			if json_get_var hostname hostname; then
 				uci -q set "system.@system[-1].hostname=$hostname"
-			fi
-
-			local compat_version
-			if json_get_var compat_version compat_version; then
-				uci -q set "system.@system[-1].compat_version=$compat_version"
-			else
-				uci -q set "system.@system[-1].compat_version=1.0"
 			fi
 
 			if json_is_a ntpserver array; then

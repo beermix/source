@@ -29,9 +29,6 @@ config PCIE_SUPPORT
 config PCMCIA_SUPPORT
 	bool
 
-config PWM_SUPPORT
-	bool
-
 config USB_SUPPORT
 	select AUDIO_SUPPORT
 	bool

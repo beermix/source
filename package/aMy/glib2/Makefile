@@ -35,7 +35,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi
   TITLE:=glib 2.0
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.gtk.org/
@@ -45,12 +45,13 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto
 
 HOST_CONFIGURE_ARGS += \
 	--disable-libelf \
 	--disable-selinux \
+	--disable-xattr \
 	--with-pcre=internal \
 	--disable-libmount
 
@@ -61,6 +62,7 @@ CONFIGURE_ARGS += \
 	--disable-selinux \
 	--disable-libmount \
 	--disable-fam \
+	--disable-xattr \
 	--disable-gtk-doc-html \
 	--disable-man \
 	--disable-compile-warnings \

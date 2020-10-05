@@ -16,5 +16,10 @@ update:
 	mv -f 000-gcc9-stable-branch.patch ./toolchain/gcc/patches/9.3.0/000-gcc9-stable-branch.patch
 
 	test -d ~/binutils-gdb || git clone http://sourceware.org/git/binutils-gdb.git ~/binutils-gdb
-	(cd ~/binutils-gdb ; git remote update -p > /dev/null 2>&1 ; git diff binutils-2_34..origin/binutils-2_34-branch | filterdiff --exclude="*/bfd/version.h";) > binutils-stable-branch.patch
+	( \
+		cd ~/binutils-gdb ; \
+		git remote update -p > /dev/null 2>&1 ; \
+		git diff binutils-2_34..origin/binutils-2_34-branch | filterdiff --exclude="*/bfd/version.h"; \
+	) > binutils-stable-branch.patch
+	git diff --exit-code binutils-stable-branch.patch
 	mv -f binutils-stable-branch.patch ./toolchain/binutils/patches/2.34/000-binutils34-stable-branch.patch

@@ -1,87 +1,133 @@
-![OpenWrt logo](/logo.svg)
+欢迎来到Lean的Openwrt源码仓库！
+=
+Welcome to Lean's  git source of OpenWrt and packages
+=
+中文：如何编译自己需要的 OpenWrt 固件
+-
+注意：
+-
+1. **不**要用 **root** 用户 git 和编译！！！
+2. 国内用户编译前最好准备好梯子
+3. 默认登陆IP 192.168.1.1, 密码 password
 
-OpenWrt Project is a Linux operating system targeting embedded devices. Instead
-of trying to create a single, static firmware, OpenWrt provides a fully
-writable filesystem with package management. This frees you from the
-application selection and configuration provided by the vendor and allows you
-to customize the device through the use of packages to suit any application.
-For developers, OpenWrt is the framework to build an application without having
-to build a complete firmware around it; for users this means the ability for
-full customization, to use the device in ways never envisioned.
+编译命令如下:
+-
+1. 首先装好 Ubuntu 64bit，推荐  Ubuntu  18 LTS x64
 
-Sunshine!
+2. 命令行输入 `sudo apt-get update` ，然后输入
+`
+sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl swig rsync
+`
 
-## Development
+3. 使用 `git clone https://github.com/coolsnowwolf/lede` 命令下载好源代码，然后 `cd lede` 进入目录
 
-To build your own firmware you need a GNU/Linux, BSD or MacOSX system (case
-sensitive filesystem required). Cygwin is unsupported because of the lack of a
-case sensitive file system.
+4. ```bash
+   ./scripts/feeds update -a
+   ./scripts/feeds install -a
+   make menuconfig
+   ```
 
-### Requirements
+5. `make -j8 download V=s` 下载dl库（国内请尽量全局科学上网）
 
-You need the following tools to compile OpenWrt, the package names vary between
-distributions. A complete list with distribution specific packages is found in
-the [Build System Setup](https://openwrt.org/docs/guide-developer/build-system/install-buildsystem)
-documentation.
 
+6. 输入 `make -j1 V=s` （-j1 后面是线程数。第一次编译推荐用单线程）即可开始编译你要的固件了。
+
+本套代码保证肯定可以编译成功。里面包括了 R20 所有源代码，包括 IPK 的。
+
+你可以自由使用，但源码编译二次发布请注明我的 GitHub 仓库链接。谢谢合作！
+=
+
+二次编译：
+```bash
+cd lede
+git pull
+./scripts/feeds update -a && ./scripts/feeds install -a
+make defconfig
+make -j8 download
+make -j$(($(nproc) + 1)) V=s
 ```
-gcc binutils bzip2 flex python3 perl make find grep diff unzip gawk getopt
-subversion libz-dev libc-dev
+
+如果需要重新配置：
+```bash
+rm -rf ./tmp && rm -rf .config
+make menuconfig
+make -j$(($(nproc) + 1)) V=s
 ```
 
-### Quickstart
+编译完成后输出路径：/lede/bin/targets
 
-1. Run `./scripts/feeds update -a` to obtain all the latest package definitions
-   defined in feeds.conf / feeds.conf.default
+特别提示：
+------
+1.源代码中绝不含任何后门和可以监控或者劫持你的 HTTPS 的闭源软件，SSL 安全是互联网最后的壁垒。安全干净才是固件应该做到的；
 
-2. Run `./scripts/feeds install -a` to install symlinks for all obtained
-   packages into package/feeds/
+2.如有技术问题需要讨论，欢迎加入 QQ 讨论群：OP共享技术交流群 ,号码 297253733 ，加群链接: 点击链接加入群聊【OP共享技术交流群】：[点击加入](https://jq.qq.com/?_wv=1027&k=5yCRuXL "OP共享技术交流群")
 
-3. Run `make menuconfig` to select your preferred configuration for the
-   toolchain, target system & firmware packages.
+3.想学习OpenWrt开发，但是摸不着门道？自学没毅力？基础太差？怕太难学不会？跟着佐大学OpenWrt开发入门培训班助你能学有所成
+报名地址：[点击报名](http://forgotfun.org/2018/04/openwrt-training-2018.html "报名")
 
-4. Run `make` to build your firmware. This will download all sources, build the
-   cross-compile toolchain and then cross-compile the GNU/Linux kernel & all chosen
-   applications for your target system.
+## 软路由介绍
+友情推荐不恰饭：如果你在寻找一个低功耗小体积性能不错的 x86/x64 路由器，我个人建议可以考虑 
+小马v1 的铝合金版本 (N3710 4千兆)：[页面介绍](https://item.taobao.com/item.htm?spm=a230r.1.14.20.144c763fRkK0VZ&id=561126544764 " 小马v1 的铝合金版本")
 
-### Related Repositories
+![xm1](doc/xm5.jpg)
+![xm2](doc/xm6.jpg)
 
-The main repository uses multiple sub-repositories to manage packages of
-different categories. All packages are installed via the OpenWrt package
-manager called `opkg`. If you're looking to develop the web interface or port
-packages to OpenWrt, please find the fitting repository below.
+## Donate
 
-* [LuCI Web Interface](https://github.com/openwrt/luci): Modern and modular
-  interface to control the device via a web browser.
+如果你觉得此项目对你有帮助，可以捐助我们，以鼓励项目能持续发展，更加完善
 
-* [OpenWrt Packages](https://github.com/openwrt/packages): Community repository
-  of ported packages.
+### Alipay 支付宝
 
-* [OpenWrt Routing](https://github.com/openwrt-routing/packages): Packages
-  specifically focused on (mesh) routing.
+![alipay](doc/alipay_donate.jpg)
 
-## Support Information
+### Wechat 微信
 
-For a list of supported devices see the [OpenWrt Hardware Database](https://openwrt.org/supported_devices)
+![wechat](doc/wechat_donate.jpg)
 
-### Documentation
+------
 
-* [Quick Start Guide](https://openwrt.org/docs/guide-quick-start/start)
-* [User Guide](https://openwrt.org/docs/guide-user/start)
-* [Developer Documentation](https://openwrt.org/docs/guide-developer/start)
-* [Technical Reference](https://openwrt.org/docs/techref/start)
+English Version: How to make your Openwrt firmware.
+-
+Note:
+--
+1. DO **NOT** USE **ROOT** USER TO CONFIGURE!!!
 
-### Support Community
+2. Login IP is 192.168.1.1 and login password is "password".
 
-* [Forum](https://forum.openwrt.org): For usage, projects, discussions and hardware advise.
-* [Support Chat](https://webchat.freenode.net/#openwrt): Channel `#openwrt` on freenode.net.
+Let's start!
+---
+First, you need a computer with a linux system. It's better to use Ubuntu 18 LTS 64-bit.
 
-### Developer Community
+Next you need gcc, binutils, bzip2, flex, python3.5+, perl, make, find, grep, diff, unzip, gawk, getopt, subversion, libz-dev and libc headers installed.
 
-* [Bug Reports](https://bugs.openwrt.org): Report bugs in OpenWrt
-* [Dev Mailing List](https://lists.openwrt.org/mailman/listinfo/openwrt-devel): Send patches
-* [Dev Chat](https://webchat.freenode.net/#openwrt-devel): Channel `#openwrt-devel` on freenode.net.
+To install these program, please login root users and type
+`
+sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3.5 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget swig rsync
+`
+in terminal
 
-## License
+Third, logout of root users. And type this `git clone https://github.com/coolsnowwolf/lede` in terminal to clone this source.
 
-OpenWrt is licensed under GPL-2.0
+After these please type `cd lede` to cd into the source.
+
+Please Run `./scripts/feeds update -a` to get all the latest package definitions
+defined in `feeds.conf` / `feeds.conf.default` respectively
+and `./scripts/feeds install -a` to install symlinks of all of them into
+`package/feeds/` .
+
+Please use `make menuconfig` to choose your preferred
+configuration for the toolchain and firmware.
+
+Use `make menuconfig` to configure your image.
+
+Simply running `make` will build your firmware.
+It will download all sources, build the cross-compile toolchain,
+the kernel and all chosen applications.
+
+To build your own firmware you need to have access to a Linux, BSD or MacOSX system
+(case-sensitive filesystem required). Cygwin will not be supported because of
+the lack of case sensitiveness in the file system.
+
+## Note: Addition Lean's private package source code in `./package/lean` directory. Use it under GPL v3.
+
+## GPLv3 is compatible with more licenses than GPLv2: it allows you to make combinations with code that has specific kinds of additional requirements that are not in GPLv3 itself. Section 7 has more information about this, including the list of additional requirements that are permitted.

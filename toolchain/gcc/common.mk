@@ -28,6 +28,14 @@ GCC_DIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=@GNU/gcc/gcc-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
+ifeq ($(PKG_VERSION),5.5.0)
+  PKG_HASH:=530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87
+endif
+
+ifeq ($(PKG_VERSION),7.5.0)
+  PKG_HASH:=b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661
+endif
+
 ifeq ($(PKG_VERSION),8.4.0)
   PKG_HASH:=e30a6e52d10e1f27ed55104ad233c30bd1e99cfb5ff98ab022dc941edd1b2dd4
 endif
@@ -38,14 +46,6 @@ endif
 
 ifeq ($(PKG_VERSION),10.2.0)
   PKG_HASH:=b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c
-endif
-
-ifeq ($(PKG_VERSION),11.0.0)
-  PKG_REV:=11-20200830
-  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-11
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
@@ -172,7 +172,8 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
   TARGET_CFLAGS+=-fno-split-stack
 endif
 
-TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
+#TARGET_CFLAGS := $(filter-out -D_FORTIFY_SOURCE=%,$(TARGET_CFLAGS))
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \

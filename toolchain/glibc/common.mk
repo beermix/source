@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2020 OpenWrt.org
+# Copyright (C) 2006-2016 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,13 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.32
-PKG_RELEASE:=1
+PKG_VERSION:=2.31
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=386543bc4495f658dcce6cd4d11e4ba6574a46f5
-PKG_MIRROR_HASH:=
+PKG_SOURCE_VERSION:=3a44844c97a8ca1d0798c45b5252e6a49f9cf8e1
+PKG_MIRROR_HASH:=d7206510e494b3c723173d8ec0dd2e41314da59075871c5642324688001b3f6e
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -40,11 +39,6 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-TARGET_CFLAGS := ${TARGET_CFLAGS/-Wl,-z,now/}
-TARGET_LDFLAGS := ${TARGET_LDFLAGS/-znow/}
-# TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
-# TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
-
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
 # "Optimize i386 syscall inlining for GCC 5"
@@ -52,7 +46,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -mstackrealign -march=bonnell -O2 -m32 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 $(filter-out -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -68,7 +62,7 @@ GLIBC_CONFIGURE:= \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_REGULAR),--enable-stack-protector=yes) \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
-		--enable-kernel=5.4
+		--enable-kernel=4.14.0
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no

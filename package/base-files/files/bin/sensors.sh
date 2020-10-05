@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 TOPLEFT=`tput cup 0 0`
 NORMAL=`tput sgr0`

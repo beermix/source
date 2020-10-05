@@ -1,0 +1,58 @@
+diff --git a/include/netfilter.mk b/include/netfilter.mk
+index c95bcb504dd3..17a60d9ac67d 100644
+--- a/include/netfilter.mk
++++ b/include/netfilter.mk
+@@ -185,7 +185,7 @@ $(eval $(call nf_add,IPT_IPV6_EXTRA,CONFIG_IP6_NF_MATCH_RT, $(P_V6)ip6t_rt))
+ 
+ # kernel only
+ $(eval $(if $(NF_KMOD),$(call nf_add,NF_NAT,CONFIG_NF_NAT, $(P_XT)nf_nat),))
+-$(eval $(if $(NF_KMOD),$(call nf_add,NF_NAT,CONFIG_NF_NAT_REDIRECT, $(P_XT)nf_nat_redirect),))
++$(eval $(if $(NF_KMOD),$(call nf_add,NF_NAT,CONFIG_NF_NAT_REDIRECT, $(P_XT)nf_nat_redirect, lt 4.18),))
+ $(eval $(if $(NF_KMOD),$(call nf_add,NF_NAT,CONFIG_NF_NAT_IPV4, $(P_V4)nf_nat_ipv4),))
+ $(eval $(if $(NF_KMOD),$(call nf_add,NF_NAT,CONFIG_NF_NAT_MASQUERADE_IPV4, $(P_V4)nf_nat_masquerade_ipv4, lt 4.18),))
+ 
+@@ -223,7 +223,7 @@ $(eval $(call nf_add,NF_NATHELPER,CONFIG_NF_NAT_FTP, $(P_XT)nf_nat_ftp))
+ $(eval $(call nf_add,NF_NATHELPER_EXTRA,CONFIG_NF_CONNTRACK_BROADCAST, $(P_XT)nf_conntrack_broadcast))
+ $(eval $(call nf_add,NF_NATHELPER_EXTRA,CONFIG_NF_CONNTRACK_AMANDA, $(P_XT)nf_conntrack_amanda))
+ $(eval $(call nf_add,NF_NATHELPER_EXTRA,CONFIG_NF_NAT_AMANDA, $(P_XT)nf_nat_amanda))
+-$(eval $(call nf_add,NF_NATHELPER_EXTRA,CONFIG_NF_CT_PROTO_GRE, $(P_XT)nf_conntrack_proto_gre))
++$(eval $(call nf_add,NF_NATHELPER_EXTRA,CONFIG_NF_CT_PROTO_GRE, $(P_XT)nf_conntrack_proto_gre,lt 5.1))
+ $(eval $(call nf_add,NF_NATHELPER_EXTRA,CONFIG_NF_NAT_PROTO_GRE, $(P_V4)nf_nat_proto_gre))
+ $(eval $(call nf_add,NF_NATHELPER_EXTRA,CONFIG_NF_CONNTRACK_H323, $(P_XT)nf_conntrack_h323))
+ $(eval $(call nf_add,NF_NATHELPER_EXTRA,CONFIG_NF_NAT_H323, $(P_V4)nf_nat_h323))
+diff --git a/target/linux/generic/config-4.19 b/target/linux/generic/config-4.19
+index 172af013dbee..30ab9a19bd93 100644
+--- a/target/linux/generic/config-4.19
++++ b/target/linux/generic/config-4.19
+@@ -3446,6 +3446,7 @@ CONFIG_NF_CONNTRACK_PROCFS=y
+ # CONFIG_NF_NAT_IRC is not set
+ CONFIG_NF_NAT_MASQUERADE_IPV4=y
+ CONFIG_NF_NAT_MASQUERADE_IPV6=y
++CONFIG_NF_NAT_REDIRECT=y
+ # CONFIG_NF_NAT_NEEDED is not set
+ # CONFIG_NF_NAT_PPTP is not set
+ # CONFIG_NF_NAT_PROTO_GRE is not set
+diff --git a/target/linux/generic/config-5.4 b/target/linux/generic/config-5.4
+index a9d3e6920afd..8c8a7539ba41 100644
+--- a/target/linux/generic/config-5.4
++++ b/target/linux/generic/config-5.4
+@@ -3659,7 +3659,7 @@ CONFIG_NF_CONNTRACK_PROCFS=y
+ # CONFIG_NF_CT_NETLINK is not set
+ # CONFIG_NF_CT_NETLINK_TIMEOUT is not set
+ # CONFIG_NF_CT_PROTO_DCCP is not set
+-# CONFIG_NF_CT_PROTO_GRE is not set
++CONFIG_NF_CT_PROTO_GRE=y
+ # CONFIG_NF_CT_PROTO_SCTP is not set
+ # CONFIG_NF_CT_PROTO_UDPLITE is not set
+ # CONFIG_NF_DEFRAG_IPV4 is not set
+@@ -3676,8 +3676,8 @@ CONFIG_NF_CONNTRACK_PROCFS=y
+ # CONFIG_NF_NAT_H323 is not set
+ # CONFIG_NF_NAT_IPV6 is not set
+ # CONFIG_NF_NAT_IRC is not set
+-CONFIG_NF_NAT_MASQUERADE_IPV4=y
+-CONFIG_NF_NAT_MASQUERADE_IPV6=y
++CONFIG_NF_NAT_MASQUERADE=y
++CONFIG_NF_NAT_REDIRECT=y
+ # CONFIG_NF_NAT_NEEDED is not set
+ # CONFIG_NF_NAT_PPTP is not set
+ # CONFIG_NF_NAT_PROTO_GRE is not set

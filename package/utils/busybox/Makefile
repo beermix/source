@@ -77,7 +77,6 @@ ifeq ($(CONFIG_USE_GLIBC),y)
   LDLIBS += $(call BUSYBOX_IF_ENABLED,NSLOOKUP_OPENWRT,resolv)
 endif
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -flto=jobserver -fuse-linker-plugin
 
@@ -120,10 +119,10 @@ ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_NTPD),)
 	$(INSTALL_BIN) ./files/sysntpd $(1)/etc/init.d/sysntpd
 	$(INSTALL_BIN) ./files/ntpd-hotplug $(1)/usr/sbin/ntpd-hotplug
 endif
+ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_FEATURE_SUID),)
+	$(INSTALL_SUID) $(PKG_INSTALL_DIR)/bin/busybox $(1)/bin/busybox
+endif
 	-rm -rf $(1)/lib64
 endef
 
-Package/busybox-selinux/install = $(Package/busybox/install)
-
 $(eval $(call BuildPackage,busybox))
-$(eval $(call BuildPackage,busybox-selinux))
