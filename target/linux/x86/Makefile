@@ -9,17 +9,17 @@ include $(TOPDIR)/rules.mk
 ARCH:=i386
 BOARD:=x86
 BOARDNAME:=x86
-FEATURES:=squashfs vdi vmdk pcmcia fpu boot-part rootfs-part
-SUBTARGETS:=64 generic legacy geode
+FEATURES:=squashfs ext4 vdi vmdk pcmcia targz fpu boot-part rootfs-part
+SUBTARGETS:=generic legacy geode 64
 
-KERNEL_PATCHVER:=5.4
-KERNEL_TESTING_PATCHVER:=4.19
+KERNEL_PATCHVER:=4.19
+KERNEL_TESTING_PATCHVER:=5.4
 
 KERNELNAME:=bzImage
 
 include $(INCLUDE_DIR)/target.mk
 
-DEFAULT_PACKAGES += partx-utils mkf2fs fdisk e2fsprogs  lm-sensors autocore automount
+DEFAULT_PACKAGES += partx-utils mkf2fs e2fsprogs kmod-button-hotplug
 
 $(eval $(call BuildTarget))
 

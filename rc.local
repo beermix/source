@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#e2fsck -fpDv -E bmap2extent /dev/sdb1
+#e2fsck -fpDv -E bmap2extent /dev/sdc1
+#e2fsck -fpDv -E bmap2extent /dev/sdd1
+
+e2fsck -fpDv /dev/sdb1
+#e2fsck -fpDv /dev/sdc1
+e2fsck -fpDv /dev/sdd1
+
+#fsck.ext4 -yfv /dev/sdb1
+#fsck.ext4 -yfv /dev/sdc1
+#fsck.ext4 -yfv /dev/sdd1
+
+mount -t ext4 -o errors=remount-ro,relatime,rw /dev/sdd1 /home/user
+mount -t ext4 -o errors=remount-ro,relatime,rw /dev/sdb1 /home/user/.aa
+
+exit 0

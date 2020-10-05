@@ -1,5 +1,0 @@
-#!/bin/sh
-
-git pull https://github.com/coolsnowwolf/lede.git --log --signoff
-
-exit 0

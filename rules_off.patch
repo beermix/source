@@ -1,0 +1,28 @@
+diff --git a/rules.mk b/rules.mk
+index 9daacf4163..8b2424f2ba 100644
+--- a/rules.mk
++++ b/rules.mk
+@@ -174,8 +174,8 @@ TARGET_CFLAGS:=$(TARGET_OPTIMIZATION)$(if $(CONFIG_DEBUG), -g3) $(call qstrip,$(
+ TARGET_CXXFLAGS = $(TARGET_CFLAGS)
+ TARGET_ASFLAGS_DEFAULT = $(TARGET_CFLAGS)
+ TARGET_ASFLAGS = $(TARGET_ASFLAGS_DEFAULT)
+-TARGET_CPPFLAGS:=
+-TARGET_LDFLAGS:=
++TARGET_CPPFLAGS:=-I$(STAGING_DIR)/usr/include
++TARGET_LDFLAGS:=-L$(STAGING_DIR)/usr/lib -L$(STAGING_DIR)/lib
+ ifneq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
+ LIBGCC_S_PATH=$(realpath $(wildcard $(call qstrip,$(CONFIG_LIBGCC_ROOT_DIR))/$(call qstrip,$(CONFIG_LIBGCC_FILE_SPEC))))
+ LIBGCC_S=$(if $(LIBGCC_S_PATH),-L$(dir $(LIBGCC_S_PATH)) -lgcc_s)
+diff --git a/tools/Makefile b/tools/Makefile
+index 51796c3836..65bec34c1b 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -118,7 +118,7 @@ define PrepareStaging
+ 		$(if $(QUIET),,set -x;) \
+ 		mkdir -p "$$dir"; \
+ 		cd "$$dir"; \
+-		mkdir -p bin lib stamp usr/include usr/lib; \
++		mkdir -p bin lib stamp; \
+ 	); done
+ endef
+ 
