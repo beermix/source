@@ -44,8 +44,8 @@ define Build/Prepare
 endef
 
 TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
-TARGET_CFLAGS += -flto -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += $(FPIC) -flto -Wl,--gc-sections
+TARGET_CFLAGS += $(FPIC) -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 MAKE_FLAGS += \
 	TARGET_OPENWRT=1 TEST=0 LIBS="" \
 	CC="$(TARGET_CC) -DIPTABLES_143 -lip4tc -luuid \
