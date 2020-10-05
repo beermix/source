@@ -3,7 +3,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/torproject/tor/tree/release-0.4.2
+# https://github.com/torproject/tor/tree/release-0.4.4
 # https://github.com/torproject/tor/tree/release-0.4.3
 # https://archive.torproject.org/tor-package-archive/?C=M;O=D
 
@@ -11,18 +11,18 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
 
-PKG_VERSION:=0.4.4.5
-PKG_RELEASE:=1
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org/ https://archive.torproject.org/tor-package-archive
+#PKG_VERSION:=0.4.4.5
+#PKG_RELEASE:=1
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+#PKG_SOURCE_URL:=https://dist.torproject.org/ https://archive.torproject.org/tor-package-archive
 #PKG_HASH:=
 
-#PKG_VERSION:=94fef11
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/torproject/tor
-#PKG_SOURCE_VERSION:=$(PKG_VERSION)
-#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_VERSION:=1ebea31
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/torproject/tor
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
