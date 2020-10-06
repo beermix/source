@@ -22,6 +22,7 @@ PKG_FLAGS:=nonshared
 PKG_BUILD_DIR:=$(LINUX_DIR)/tools/perf-$(TARGET_DIR_NAME)
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/nls.mk
 
 define Package/perf
   SECTION:=devel
@@ -37,6 +38,8 @@ define Package/perf/description
 endef
 
 HOST_CFLAGS += -I$(LINUX_DIR)/tools/include
+
+TARGET_LDFLAGS += $(INTL_LDFLAGS)
 
 MAKE_FLAGS = \
 	ARCH="$(LINUX_KARCH)" \
@@ -54,7 +57,7 @@ MAKE_FLAGS = \
 	CROSS_COMPILE="$(TARGET_CROSS)" \
 	CC="$(TARGET_CC)" \
 	LD="$(TARGET_CROSS)ld" \
-	CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS)" \
+	EXTRA_CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	KBUILD_HOSTCFLAGS="$(HOST_CFLAGS)" \
 	$(if $(findstring c,$(OPENWRT_VERBOSE)),V=1,V='') \
