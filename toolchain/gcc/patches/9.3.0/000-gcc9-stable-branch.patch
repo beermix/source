@@ -719,10 +719,11 @@ Thomas Schwinge (3):
       'libgomp.oacc-fortran/{error_,}stop-{1,2,3}.f': initialize before the checkpoint
       [HSA] Avoid ICE when "HSA does not implement indirect calls"
 
-Tobias Burnus (3):
+Tobias Burnus (4):
       [Fortran] Fix result-variable handling of MODULE PROCEDURE (PR94348)
       ICE in gfc_get_dataptr_offset, at fortran/trans-array.c:6951
       Fortran: Avoid double-free with parse error (PR96041, PR93423)
+      configure: Fix in-tree building of GMP on BSD [PR97302]
 
 Uros Bizjak (6):
       i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
@@ -773,6 +774,30 @@ index 9605d767a80..30c7aaf6cc0 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/configure b/configure
+index abd93a990a9..8de7fd3afc3 100755
+--- a/configure
++++ b/configure
+@@ -3679,6 +3679,7 @@
+     ;;
+   *-*-freebsd*)
+     if test "x$with_gmp" = x && test "x$with_gmp_dir" = x \
++	&& ! test -d ${srcdir}/gmp \
+ 	&& test -f /usr/local/include/gmp.h; then
+       with_gmp=/usr/local
+     fi
+diff --git a/configure.ac b/configure.ac
+index 9db4fd14aa2..4aab1482e34 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -961,6 +961,7 @@
+     ;;
+   *-*-freebsd*)
+     if test "x$with_gmp" = x && test "x$with_gmp_dir" = x \
++	&& ! test -d ${srcdir}/gmp \
+ 	&& test -f /usr/local/include/gmp.h; then
+       with_gmp=/usr/local
+     fi
 diff --git a/contrib/ChangeLog b/contrib/ChangeLog
 index fde2d2b76eb..17151424a88 100644
 --- a/contrib/ChangeLog
