@@ -16,7 +16,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_HASH:=e2787907e0892e0b1a3c06f1def6fd3cdc0eff850b0919c7f21b5bda7563d2d8
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
-PKG_GIT_OPTS:= --depth 50
 
 SCAN_DEPS = *.mk
 
