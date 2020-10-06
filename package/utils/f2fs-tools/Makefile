@@ -38,7 +38,7 @@ define Package/f2fs-tools/SELinux
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=+libf2fs-selinux +libselinux
+  #DEPENDS:=+libf2fs-selinux +libselinux
   URL:=http://git.kernel.org/cgit/linux/kernel/git/jaegeuk/f2fs-tools.git
   VARIANT:=selinux
 endef
