@@ -78,7 +78,8 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (207):
+GCC Administrator (208):
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -5540,10 +5541,15 @@ index fde2d2b76eb..17151424a88 100644
 +        else:
 +            print('Please resolve all remaining file conflicts.')
 diff --git a/gcc/ChangeLog b/gcc/ChangeLog
-index d8e53874e68..1f9be5d8b2b 100644
+index d8e53874e68..3924fa1386f 100644
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2084 @@
+@@ -1,3 +1,2089 @@
++2020-10-05  Alex Coplan  <alex.coplan@arm.com>
++
++	* config/arm/arm-cpus.in (neoverse-v1): Add missing vendor and
++	part numbers.
++
 +2020-10-02  Alex Coplan  <alex.coplan@arm.com>
 +
 +	* config/arm/arm-cpus.in (neoverse-n2): New.
