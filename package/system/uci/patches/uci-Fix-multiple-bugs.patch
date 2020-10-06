@@ -1,0 +1,886 @@
+From patchwork Sun Oct  4 15:14:48 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Hauke Mehrtens <hauke@hauke-m.de>
+X-Patchwork-Id: 1376438
+X-Patchwork-Delegate: hauke@hauke-m.de
+Return-Path: 
+ <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2001:8b0:10b:1231::1; helo=merlin.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=hauke-m.de
+Authentication-Results: ozlabs.org;
+	dkim=pass (2048-bit key;
+ secure) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=merlin.20170209 header.b=GE8o4Cn7;
+	dkim=fail reason="signature verification failed" (2048-bit key;
+ unprotected) header.d=hauke-m.de header.i=@hauke-m.de header.a=rsa-sha256
+ header.s=MBO0001 header.b=DsND6eLy;
+	dkim-atps=neutral
+Received: from merlin.infradead.org (merlin.infradead.org
+ [IPv6:2001:8b0:10b:1231::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	by ozlabs.org (Postfix) with ESMTPS id 4C46lV1PxYz9s1t
+	for <incoming@patchwork.ozlabs.org>; Mon,  5 Oct 2020 02:16:53 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=odG8MerOJ4vHuIkmWd0wQfnG6WSj14DYhWlGofTbxec=; b=GE8o4Cn7IdAhBiEfAIssHJxsz
+	NqW5X3lrI2/pUGN0BUcX0XSKTJ6r8In19OJM38qONu8q/KuJtohoOP0Bw4hBI8xWxU6S9V5OGtppT
+	B/ZWavKDcTy+TWTnhR3mzfCjBy4RCU3F1Qxghkrvq0bRxG8yUlzc5+rCoK0u3bt/5LSGpMj+yYhLw
+	OuUaPTwxwqpF/XO2GQsF3QbCLBoKA2GcElV9OnjGmq6AY9N6qBYdS/emPsk435McXVC1SWRXEuclI
+	ktF6KAWsd10n2m0XVOxcAWYdE3RHBhL85WNyAEbLZs7U5abXKC3woj4E9iEmvXWeNwE9XAJEXmKj9
+	ba3xC+PAg==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1kP5jh-0006OE-IR; Sun, 04 Oct 2020 15:15:41 +0000
+Received: from mout-p-201.mailbox.org ([80.241.56.171])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kP5jX-0006KG-Aw
+ for openwrt-devel@lists.openwrt.org; Sun, 04 Oct 2020 15:15:33 +0000
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4C46jq2ST3zQlLp;
+ Sun,  4 Oct 2020 17:15:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hauke-m.de; s=MBO0001;
+ t=1601824525;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=7X/wqvGuhtQND/ptInpuRfszYSeJZXPklfwR7m35Ll8=;
+ b=DsND6eLyzOIfBO4F6db4tzi6xH+Woi5QzUlOiYRCkg7sc6Ts5QW1gTs9F/iCNrtQdTkXEE
+ UbCU7IHsJaRVGizxUvDf4kBtiEcC0OHUbXbAuy/F7rOlYwjfBxxSA9dnRVlFtXNlEuFocq
+ fptYZAzM9U764NFJ0ZaGg2K65oLpcFvmdDYWTfc38AF+V1iXmcNS8Bisne8kKgb2nNFMPw
+ AL0ovIZqpujZsQi6nm/rD8GY7KOJL883IuJnqJRasRp7ZjJl/0MpE0shZnc67OpycVieK/
+ +b2uqNHz5VaL4zSkpzimEYAguICY/mreIwCNb6oJK26Wly3DejYzH+rj3DX3og==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+ by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173])
+ (amavisd-new, port 10030)
+ with ESMTP id FHRuZhHHA3sa; Sun,  4 Oct 2020 17:15:23 +0200 (CEST)
+From: Hauke Mehrtens <hauke@hauke-m.de>
+To: openwrt-devel@lists.openwrt.org
+Subject: [PATCH uci v2 1/4] file: use size_t for position and pointer
+Date: Sun,  4 Oct 2020 17:14:48 +0200
+Message-Id: <20201004151451.16015-2-hauke@hauke-m.de>
+In-Reply-To: <20201004151451.16015-1-hauke@hauke-m.de>
+References: <20201004151451.16015-1-hauke@hauke-m.de>
+MIME-Version: 1.0
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -4.40 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 65BEE17DD
+X-Rspamd-UID: 366b6a
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201004_111531_509716_776F222F 
+X-CRM114-Status: GOOD (  17.30  )
+X-Spam-Score: -0.9 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on merlin.infradead.org summary:
+ Content analysis details:   (-0.9 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.7 RCVD_IN_DNSWL_LOW      RBL: Sender listed at https://www.dnswl.org/,
+ low trust [80.241.56.171 listed in list.dnswl.org]
+ -0.0 RCVD_IN_MSPIKE_H3      RBL: Good reputation (+3)
+ [80.241.56.171 listed in wl.mailspike.net]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+ -0.1 DKIM_VALID_AU          Message has a valid DKIM or DK signature from
+ author's domain
+ -0.1 DKIM_VALID_EF          Message has a valid DKIM or DK signature from
+ envelope-from domain
+ -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+ 0.1 DKIM_SIGNED            Message has a DKIM or DK signature,
+ not necessarily
+ valid -0.0 RCVD_IN_MSPIKE_WL      Mailspike good senders
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: OpenWrt Development List <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, ynezz@true.cz
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: 
+ openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+The bufsz variable is used to store the size of the buf memory region
+and pos is used to index a position in this memory. Use size_t for these
+variables in the internal handling instaed of int to not break with big
+files.
+
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ file.c         | 14 +++++++-------
+ libuci.c       |  2 +-
+ uci_internal.h |  8 ++++----
+ 3 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/file.c b/file.c
+index 5502a42..003f6c6 100644
+--- a/file.c
++++ b/file.c
+@@ -42,11 +42,11 @@
+ /*
+  * Fetch a new line from the input stream and resize buffer if necessary
+  */
+-__private void uci_getln(struct uci_context *ctx, int offset)
++__private void uci_getln(struct uci_context *ctx, size_t offset)
+ {
+ 	struct uci_parse_context *pctx = ctx->pctx;
+ 	char *p;
+-	int ofs;
++	size_t ofs;
+ 
+ 	if (pctx->buf == NULL) {
+ 		pctx->buf = uci_malloc(ctx, LINEBUF);
+@@ -116,7 +116,7 @@ static void skip_whitespace(struct uci_context *ctx)
+ 		pctx->pos += 1;
+ }
+ 
+-static inline void addc(struct uci_context *ctx, int *pos_dest, int *pos_src)
++static inline void addc(struct uci_context *ctx, size_t *pos_dest, size_t *pos_src)
+ {
+ 	struct uci_parse_context *pctx = ctx->pctx;
+ 
+@@ -128,7 +128,7 @@ static inline void addc(struct uci_context *ctx, int *pos_dest, int *pos_src)
+ /*
+  * parse a double quoted string argument from the command line
+  */
+-static void parse_double_quote(struct uci_context *ctx, int *target)
++static void parse_double_quote(struct uci_context *ctx, size_t *target)
+ {
+ 	struct uci_parse_context *pctx = ctx->pctx;
+ 	char c;
+@@ -163,7 +163,7 @@ static void parse_double_quote(struct uci_context *ctx, int *target)
+ /*
+  * parse a single quoted string argument from the command line
+  */
+-static void parse_single_quote(struct uci_context *ctx, int *target)
++static void parse_single_quote(struct uci_context *ctx, size_t *target)
+ {
+ 	struct uci_parse_context *pctx = ctx->pctx;
+ 	char c;
+@@ -192,7 +192,7 @@ static void parse_single_quote(struct uci_context *ctx, int *target)
+ /*
+  * parse a string from the command line and detect the quoting style
+  */
+-static void parse_str(struct uci_context *ctx, int *target)
++static void parse_str(struct uci_context *ctx, size_t *target)
+ {
+ 	struct uci_parse_context *pctx = ctx->pctx;
+ 	bool next = true;
+@@ -241,7 +241,7 @@ done:
+ static int next_arg(struct uci_context *ctx, bool required, bool name, bool package)
+ {
+ 	struct uci_parse_context *pctx = ctx->pctx;
+-	int val, ptr;
++	size_t val, ptr;
+ 
+ 	skip_whitespace(ctx);
+ 	val = ptr = pctx_pos(pctx);
+diff --git a/libuci.c b/libuci.c
+index 140edf2..786d035 100644
+--- a/libuci.c
++++ b/libuci.c
+@@ -148,7 +148,7 @@ uci_get_errorstr(struct uci_context *ctx, char **dest, const char *prefix)
+ 		err = UCI_ERR_UNKNOWN;
+ 
+ 	if (ctx && ctx->pctx && (err == UCI_ERR_PARSE)) {
+-		snprintf(error_info, sizeof(error_info) - 1, " (%s) at line %d, byte %d",
++		snprintf(error_info, sizeof(error_info) - 1, " (%s) at line %d, byte %zu",
+ 			 (ctx->pctx->reason ? ctx->pctx->reason : "unknown"),
+ 			 ctx->pctx->line, ctx->pctx->byte);
+ 	}
+diff --git a/uci_internal.h b/uci_internal.h
+index f00b394..3a94dbb 100644
+--- a/uci_internal.h
++++ b/uci_internal.h
+@@ -23,7 +23,7 @@ struct uci_parse_context
+ 	/* error context */
+ 	const char *reason;
+ 	int line;
+-	int byte;
++	size_t byte;
+ 
+ 	/* private: */
+ 	struct uci_package *package;
+@@ -32,8 +32,8 @@ struct uci_parse_context
+ 	FILE *file;
+ 	const char *name;
+ 	char *buf;
+-	int bufsz;
+-	int pos;
++	size_t bufsz;
++	size_t pos;
+ };
+ #define pctx_pos(pctx)		((pctx)->pos)
+ #define pctx_str(pctx, i)	(&(pctx)->buf[(i)])
+@@ -54,7 +54,7 @@ __private struct uci_package *uci_alloc_package(struct uci_context *ctx, const c
+ 
+ __private FILE *uci_open_stream(struct uci_context *ctx, const char *filename, const char *origfilename, int pos, bool write, bool create);
+ __private void uci_close_stream(FILE *stream);
+-__private void uci_getln(struct uci_context *ctx, int offset);
++__private void uci_getln(struct uci_context *ctx, size_t offset);
+ 
+ __private void uci_parse_error(struct uci_context *ctx, char *reason);
+ __private void uci_alloc_parse_context(struct uci_context *ctx);
+
+From patchwork Sun Oct  4 15:14:49 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Hauke Mehrtens <hauke@hauke-m.de>
+X-Patchwork-Id: 1376437
+X-Patchwork-Delegate: hauke@hauke-m.de
+Return-Path: 
+ <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2001:8b0:10b:1231::1; helo=merlin.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=hauke-m.de
+Authentication-Results: ozlabs.org;
+	dkim=pass (2048-bit key;
+ secure) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=merlin.20170209 header.b=HOltQOJL;
+	dkim=fail reason="signature verification failed" (2048-bit key;
+ unprotected) header.d=hauke-m.de header.i=@hauke-m.de header.a=rsa-sha256
+ header.s=MBO0001 header.b=oe0P+E6w;
+	dkim-atps=neutral
+Received: from merlin.infradead.org (merlin.infradead.org
+ [IPv6:2001:8b0:10b:1231::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	by ozlabs.org (Postfix) with ESMTPS id 4C46lR5jHhz9sSG
+	for <incoming@patchwork.ozlabs.org>; Mon,  5 Oct 2020 02:16:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=OB7O+AHerMiaJxAtZxCpnNR+12BUxem5LOq9zRi+nLI=; b=HOltQOJL2Vae6dj34YaGiqVtZ
+	Nn+bcHX1qTtSsAV6LxR7Fkdnzs+Vh3zPtzYjA7R7wEI+nIQ8ozJ7ELKPXfZ6LAz7sqy5LGxpwM+w0
+	tZjfasZKNAVxVCOiLMiy6Decve9kkHvDRwQow7LjpFUu+dq6OYJbYHT22HbZufrVJdtxQPFWVgMj+
+	gTrg28a2iC18idYi6HJUoB8R6va0Lf5QSndeOe92YnssoNtNzbGzkbo/eBGo/Q8jWm2N2G3wdQC2I
+	DQYcAbdgDSmEUtzDptsBKeJwJa0ddlozfZqMBL6gAkj24T0pzW9jwZqrnzaEt/GLYmHMNdCGXB7gG
+	kFq0g0NdQ==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1kP5jf-0006Nd-UF; Sun, 04 Oct 2020 15:15:39 +0000
+Received: from mout-p-101.mailbox.org ([2001:67c:2050::465:101])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kP5jX-0006KH-FE
+ for openwrt-devel@lists.openwrt.org; Sun, 04 Oct 2020 15:15:33 +0000
+Received: from smtp1.mailbox.org (smtp1.mailbox.org
+ [IPv6:2001:67c:2050:105:465:1:1:0])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4C46jq40TqzKmj1;
+ Sun,  4 Oct 2020 17:15:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hauke-m.de; s=MBO0001;
+ t=1601824525;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=Vybxq5xVNHBok+cPi0gx1jwroi1FUKlllHapbO4wZMo=;
+ b=oe0P+E6wHAR2FsMwcFX/VYs9ERw0io2AXTG3B5CMNiK/nxNZkTndjwaH41myhAFW6629bN
+ g7bqivHEvu72rXHW4wlvSb4cBQCEMIke/H+MkatdXlKm/5+1CSXJmDLLqJBjHJ7adRqnp8
+ UsScHFznGHyCpc2cf903W2874MiFj0axS7K0+5TRv9TXVGuYavuBrsB88AVXb7+Sg8TD28
+ +2k6d80nS96D4A3YOuWSp7Qf10AVxCDIZd2sjjxuLwc6lS4doIo8o1efwGYc3jx2pSwR9R
+ e0+Y9OFEzMS6Tq7gp37IsgRO/uU1BTQTYL/3PqML3H7x2vesunA0VqQ4T2LzqA==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+ by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173])
+ (amavisd-new, port 10030)
+ with ESMTP id US4eqtqL95nE; Sun,  4 Oct 2020 17:15:24 +0200 (CEST)
+From: Hauke Mehrtens <hauke@hauke-m.de>
+To: openwrt-devel@lists.openwrt.org
+Subject: [PATCH uci v2 2/4] file: Check buffer size after strtok()
+Date: Sun,  4 Oct 2020 17:14:49 +0200
+Message-Id: <20201004151451.16015-3-hauke@hauke-m.de>
+In-Reply-To: <20201004151451.16015-1-hauke@hauke-m.de>
+References: <20201004151451.16015-1-hauke@hauke-m.de>
+MIME-Version: 1.0
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -4.80 / 15.00 / 15.00
+X-Rspamd-Queue-Id: AC46017E3
+X-Rspamd-UID: 583152
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201004_111531_631039_AFBF9FE0 
+X-CRM114-Status: GOOD (  23.71  )
+X-Spam-Score: -0.2 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on merlin.infradead.org summary:
+ Content analysis details:   (-0.2 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [2001:67c:2050:0:0:0:465:101 listed in]
+ [list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+ -0.1 DKIM_VALID_AU          Message has a valid DKIM or DK signature from
+ author's domain
+ -0.1 DKIM_VALID_EF          Message has a valid DKIM or DK signature from
+ envelope-from domain
+ -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+ 0.1 DKIM_SIGNED            Message has a DKIM or DK signature,
+ not necessarily
+ valid
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: OpenWrt Development List <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, ynezz@true.cz
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: 
+ openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+This fixes a heap overflow in the parsing of the uci line.
+
+The line which is parsed and put into pctx->buf is null terminated and
+stored on the heap. In the uci_parse_line() function we use strtok() to
+split this string in multiple parts after divided by a space or tab.
+strtok() replaces these characters with a NULL byte. If the next byte is
+NULL we assume that this NULL byte was added by strtok() and try to
+parse the string after this NULL byte. If this NULL byte was not added
+by strtok(), but by fgets() to mark the end of the string we would read
+over this end of the string in uninitialized memory and later over the
+allocated buffer.
+
+Fix this problem by storing how long the line we read was and check if
+we would read over the end of the string here.
+
+This also adds the input which detected this crash to the corpus of the
+fuzzer.
+
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+
+Changelog:
+v1:
+ - Add missing 2e18ecc3a759dedc9357b1298e9269eccc5c5a6b file
+ - Adapt tests for new fuzzer file
+ - Fix strlen() arguments
+ - Call uci_parse_error() instead of return in case of an error
+
+ file.c                                        | 19 ++++++++++++++++---
+ tests/cram/test-san_uci_import.t              |  1 +
+ tests/cram/test_uci_import.t                  |  1 +
+ .../2e18ecc3a759dedc9357b1298e9269eccc5c5a6b  |  1 +
+ uci_internal.h                                |  1 +
+ 5 files changed, 20 insertions(+), 3 deletions(-)
+ create mode 100644 tests/fuzz/corpus/2e18ecc3a759dedc9357b1298e9269eccc5c5a6b
+
+diff --git a/file.c b/file.c
+index 003f6c6..0946490 100644
+--- a/file.c
++++ b/file.c
+@@ -68,6 +68,7 @@ __private void uci_getln(struct uci_context *ctx, size_t offset)
+ 			return;
+ 
+ 		ofs += strlen(p);
++		pctx->buf_filled = ofs;
+ 		if (pctx->buf[ofs - 1] == '\n') {
+ 			pctx->line++;
+ 			return;
+@@ -125,6 +126,15 @@ static inline void addc(struct uci_context *ctx, size_t *pos_dest, size_t *pos_s
+ 	*pos_src += 1;
+ }
+ 
++static int uci_increase_pos(struct uci_parse_context *pctx, size_t add)
++{
++	if (pctx->pos + add > pctx->buf_filled)
++		return -EINVAL;
++
++	pctx->pos += add;
++	return 0;
++}
++
+ /*
+  * parse a double quoted string argument from the command line
+  */
+@@ -389,7 +399,8 @@ static void uci_parse_package(struct uci_context *ctx, bool single)
+ 	char *name;
+ 
+ 	/* command string null-terminated by strtok */
+-	pctx->pos += strlen(pctx_cur_str(pctx)) + 1;
++	if (uci_increase_pos(pctx, strlen(pctx_cur_str(pctx)) + 1))
++		uci_parse_error(ctx, "package without name");
+ 
+ 	ofs_name = next_arg(ctx, true, true, true);
+ 	assert_eol(ctx);
+@@ -421,7 +432,8 @@ static void uci_parse_config(struct uci_context *ctx)
+ 	}
+ 
+ 	/* command string null-terminated by strtok */
+-	pctx->pos += strlen(pctx_cur_str(pctx)) + 1;
++	if (uci_increase_pos(pctx, strlen(pctx_cur_str(pctx)) + 1))
++		uci_parse_error(ctx, "config without name");
+ 
+ 	ofs_type = next_arg(ctx, true, false, false);
+ 	type = pctx_str(pctx, ofs_type);
+@@ -471,7 +483,8 @@ static void uci_parse_option(struct uci_context *ctx, bool list)
+ 		uci_parse_error(ctx, "option/list command found before the first section");
+ 
+ 	/* command string null-terminated by strtok */
+-	pctx->pos += strlen(pctx_cur_str(pctx)) + 1;
++	if (uci_increase_pos(pctx, strlen(pctx_cur_str(pctx)) + 1))
++		uci_parse_error(ctx, "option without name");
+ 
+ 	ofs_name = next_arg(ctx, true, true, false);
+ 	ofs_value = next_arg(ctx, false, false, false);
+diff --git a/tests/cram/test-san_uci_import.t b/tests/cram/test-san_uci_import.t
+index da0e3f2..9259f5e 100644
+--- a/tests/cram/test-san_uci_import.t
++++ b/tests/cram/test-san_uci_import.t
+@@ -7,6 +7,7 @@ check that uci import is producing expected results:
+   $ for file in $(LC_ALL=C find $FUZZ_CORPUS -type f | sort ); do
+   >   uci-san import -f $file; \
+   > done
++  uci-san: Parse error (package without name) at line 0, byte 68
+   uci-san: I/O error
+   uci-san: Parse error (invalid command) at line 0, byte 0
+   uci-san: I/O error
+diff --git a/tests/cram/test_uci_import.t b/tests/cram/test_uci_import.t
+index c080eed..e851780 100644
+--- a/tests/cram/test_uci_import.t
++++ b/tests/cram/test_uci_import.t
+@@ -7,6 +7,7 @@ check that uci import is producing expected results:
+   $ for file in $(LC_ALL=C find $FUZZ_CORPUS -type f | sort ); do
+   >   valgrind --quiet --leak-check=full uci import -f $file; \
+   > done
++  uci: Parse error (package without name) at line 0, byte 68
+   uci: I/O error
+   uci: Parse error (invalid command) at line 0, byte 0
+   uci: I/O error
+diff --git a/tests/fuzz/corpus/2e18ecc3a759dedc9357b1298e9269eccc5c5a6b b/tests/fuzz/corpus/2e18ecc3a759dedc9357b1298e9269eccc5c5a6b
+new file mode 100644
+index 0000000..e14a79f
+--- /dev/null
++++ b/tests/fuzz/corpus/2e18ecc3a759dedc9357b1298e9269eccc5c5a6b
+@@ -0,0 +1 @@
++                                                                    p
+\ No newline at end of file
+diff --git a/uci_internal.h b/uci_internal.h
+index 3a94dbb..34528f0 100644
+--- a/uci_internal.h
++++ b/uci_internal.h
+@@ -33,6 +33,7 @@ struct uci_parse_context
+ 	const char *name;
+ 	char *buf;
+ 	size_t bufsz;
++	size_t buf_filled;
+ 	size_t pos;
+ };
+ #define pctx_pos(pctx)		((pctx)->pos)
+
+From patchwork Sun Oct  4 15:14:50 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Hauke Mehrtens <hauke@hauke-m.de>
+X-Patchwork-Id: 1376435
+X-Patchwork-Delegate: hauke@hauke-m.de
+Return-Path: 
+ <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2001:8b0:10b:1231::1; helo=merlin.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=hauke-m.de
+Authentication-Results: ozlabs.org;
+	dkim=pass (2048-bit key;
+ secure) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=merlin.20170209 header.b=LYe6ucTr;
+	dkim=fail reason="signature verification failed" (2048-bit key;
+ unprotected) header.d=hauke-m.de header.i=@hauke-m.de header.a=rsa-sha256
+ header.s=MBO0001 header.b=eYv7JrSq;
+	dkim-atps=neutral
+Received: from merlin.infradead.org (merlin.infradead.org
+ [IPv6:2001:8b0:10b:1231::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	by ozlabs.org (Postfix) with ESMTPS id 4C46lR5D5Fz9s1t
+	for <incoming@patchwork.ozlabs.org>; Mon,  5 Oct 2020 02:16:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=83pQIk1DFnSRRmRAa4vQxJC3875517MD206C5r6URCE=; b=LYe6ucTrVhG13lej/TTGxCtRW
+	/UnMO0rLYccx2iBpniN3DhCLYxmgO0fmmjISnC5eSGJf92tOWHlIoVOvtlHOH/CB7JkKiOS0jL6eN
+	U7ZEVDpjYAN0Bz4SwmP23JwOdluYzM47PrZhYTyXbK+vgmC8MMpNza2yItpIwo4ySU2W1oNsFqWOt
+	ct+9nrXhlBztdH1JZXlwibx9cPLrjlr+dB/hJmErJ/y2fhhsQv+2r4ow1+zCu/8UloQr4SK7DSCjl
+	opivd12SwBTmk6vwYJOKMeLyjyuQ9bkcphp3b4R17aHMkx3Dlo8onqJKQ+4q6KKyjAfDSQGiZ770U
+	eDuO7jZzg==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1kP5jd-0006Mu-8q; Sun, 04 Oct 2020 15:15:37 +0000
+Received: from mout-p-202.mailbox.org ([2001:67c:2050::465:202])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kP5jW-0006KC-V5
+ for openwrt-devel@lists.openwrt.org; Sun, 04 Oct 2020 15:15:33 +0000
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4C46jq1SbxzQlBH;
+ Sun,  4 Oct 2020 17:15:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hauke-m.de; s=MBO0001;
+ t=1601824525;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=dkZtV78iT29vuABNyyYMvAgI1xq9EA5wd868GBft9gc=;
+ b=eYv7JrSqApCPhOWUIUxqFAjxCoBSJ6A+NwmDk+nj0LuDlG76MBAAVBh68hv/uXyASDrxKz
+ 9B9LEcPXwa7JMWQYno6hkFutbt486Mf5BD7IG8Z89mAIU8O6jwHI19XNf1zR4ON7O2cVHq
+ gNQoXRJmzTMfqbG0WjL+iRl9HfEK0r66sqhSiq1GiY8fKpFHxZEvTeVOYyQWEKMJgG+3qK
+ 3M75Nvn9RwR92iVGu8S7H+hqnwg91VpjVrfz0RluztyE5nDQJ5e7+NkyIOMvUr93nPSovi
+ mTILGyRiKI+9OPWlw8dCddIeQ/qKHs5GCLkU5TzbwWgGgVC6Y6KibB9L9Aj/Cg==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+ by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de
+ [80.241.56.116]) (amavisd-new, port 10030)
+ with ESMTP id WQo_5IzYz076; Sun,  4 Oct 2020 17:15:24 +0200 (CEST)
+From: Hauke Mehrtens <hauke@hauke-m.de>
+To: openwrt-devel@lists.openwrt.org
+Subject: [PATCH uci v2 3/4] ucimap: Check return of malloc()
+Date: Sun,  4 Oct 2020 17:14:50 +0200
+Message-Id: <20201004151451.16015-4-hauke@hauke-m.de>
+In-Reply-To: <20201004151451.16015-1-hauke@hauke-m.de>
+References: <20201004151451.16015-1-hauke@hauke-m.de>
+MIME-Version: 1.0
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -4.74 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 579B017D9
+X-Rspamd-UID: d1255f
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201004_111531_132334_10F463B0 
+X-CRM114-Status: GOOD (  13.83  )
+X-Spam-Score: -0.2 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on merlin.infradead.org summary:
+ Content analysis details:   (-0.2 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [2001:67c:2050:0:0:0:465:202 listed in]
+ [list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+ -0.1 DKIM_VALID_AU          Message has a valid DKIM or DK signature from
+ author's domain
+ -0.1 DKIM_VALID_EF          Message has a valid DKIM or DK signature from
+ envelope-from domain
+ -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+ 0.1 DKIM_SIGNED            Message has a DKIM or DK signature,
+ not necessarily
+ valid
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: OpenWrt Development List <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, ynezz@true.cz
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: 
+ openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+Check the return value of malloc() before accessing it.
+
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ ucimap.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ucimap.c b/ucimap.c
+index 7c2b043..c46cf45 100644
+--- a/ucimap.c
++++ b/ucimap.c
+@@ -893,14 +893,16 @@ ucimap_parse(struct uci_map *map, struct uci_package *pkg)
+ 
+ 			if (sm->alloc) {
+ 				sd = sm->alloc(map, sm, s);
++				if (!sd)
++					continue;
+ 				memset(sd, 0, sizeof(struct ucimap_section_data));
+ 			} else {
+ 				sd = malloc(sm->alloc_len);
++				if (!sd)
++					continue;
+ 				memset(sd, 0, sm->alloc_len);
+ 				sd = ucimap_ptr_section(sm, sd);
+ 			}
+-			if (!sd)
+-				continue;
+ 
+ 			ucimap_parse_section(map, sm, sd, s);
+ 		}
+
+From patchwork Sun Oct  4 15:14:51 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Hauke Mehrtens <hauke@hauke-m.de>
+X-Patchwork-Id: 1376436
+X-Patchwork-Delegate: hauke@hauke-m.de
+Return-Path: 
+ <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2001:8b0:10b:1231::1; helo=merlin.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=none (p=none dis=none) header.from=hauke-m.de
+Authentication-Results: ozlabs.org;
+	dkim=pass (2048-bit key;
+ secure) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=merlin.20170209 header.b=b16CjzIk;
+	dkim=fail reason="signature verification failed" (2048-bit key;
+ unprotected) header.d=hauke-m.de header.i=@hauke-m.de header.a=rsa-sha256
+ header.s=MBO0001 header.b=DeADcwQQ;
+	dkim-atps=neutral
+Received: from merlin.infradead.org (merlin.infradead.org
+ [IPv6:2001:8b0:10b:1231::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	by ozlabs.org (Postfix) with ESMTPS id 4C46lS3LCsz9s1t
+	for <incoming@patchwork.ozlabs.org>; Mon,  5 Oct 2020 02:16:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=GZxgeXMuxjPm+C2zrQwPQotiv+WU0uZxmJYa9A4LDEI=; b=b16CjzIkCk0JGky6DPcMnxdIP
+	z2U3SlUOLkbx18R/bOTI/o12orGvpSO74jHJklVVrksfP1b4elyuslsXAkqoMP7gzq8WtUDnkNRQT
+	nzdOOGK2JMwSFjIEeyZUKrvB2Mq430nxMmmjNe2OlcqV8LGq/HRFjyEDPgHc67jMV0846bz/QvtCf
+	Z4d/2yZXaQHykTA634SU6kQYRenQyJWiYzJFn5SjfHtRxYXuUj4nl35r3UOqC4Cq4+cE8w80EIjqa
+	of4MKol9ACSqX/CYkVepomveK+tAGW3fr29c6rUYQP2p6YLvj0GTRMKlLM8nHobrWmY4GTZ4UjQL2
+	EWMth8NLQ==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1kP5jb-0006MU-54; Sun, 04 Oct 2020 15:15:35 +0000
+Received: from mout-p-102.mailbox.org ([2001:67c:2050::465:102])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kP5jW-0006KL-TM
+ for openwrt-devel@lists.openwrt.org; Sun, 04 Oct 2020 15:15:32 +0000
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4C46jr2330zQlWf;
+ Sun,  4 Oct 2020 17:15:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hauke-m.de; s=MBO0001;
+ t=1601824526;
+ h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+ to:to:cc:cc:mime-version:mime-version:
+ content-transfer-encoding:content-transfer-encoding:
+ in-reply-to:in-reply-to:references:references;
+ bh=Ju0jGLm9RUdzDPvP8SL4OZhVqsYDOTVBsws2yUxo4EY=;
+ b=DeADcwQQ9WYeLvjU9gBuLgQe6vIHJAHfOPS0XAxtdERA/gwqkUoOzcj0RQqcPlH0n2yyAf
+ efTVQKXsvi96OnyIRz4xpjVNjPBTeMxXxEuFdDxG26ajk/XIrOUw8ORs8rbCqEPoLzwCug
+ IQ7wxC1hVz+hcTmx4qLF5c/i0Vtyb9K21OT7kDcC3uaOdEMGnAEaLRmihcjPaCuVP7T43u
+ XdmMzIVo0WfbXN6RpigDR82ItxTchti9ocWrLWXZiNJvzZ2QmRiH/Ke5/ZcQYjgeLsIJR7
+ mSg/joGEIbE0whltibzpdvaprsRxFGrP28rBeCfUUGMeTO0ENo+D8hoRM3dPDQ==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+ by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173])
+ (amavisd-new, port 10030)
+ with ESMTP id ASXsRn7nbMvx; Sun,  4 Oct 2020 17:15:25 +0200 (CEST)
+From: Hauke Mehrtens <hauke@hauke-m.de>
+To: openwrt-devel@lists.openwrt.org
+Subject: [PATCH uci v2 4/4] Replace malloc() + memset() with calloc()
+Date: Sun,  4 Oct 2020 17:14:51 +0200
+Message-Id: <20201004151451.16015-5-hauke@hauke-m.de>
+In-Reply-To: <20201004151451.16015-1-hauke@hauke-m.de>
+References: <20201004151451.16015-1-hauke@hauke-m.de>
+MIME-Version: 1.0
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -4.79 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 66C2917DA
+X-Rspamd-UID: 3634af
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201004_111531_052472_531AC6B2 
+X-CRM114-Status: GOOD (  14.67  )
+X-Spam-Score: -0.2 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on merlin.infradead.org summary:
+ Content analysis details:   (-0.2 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [2001:67c:2050:0:0:0:465:102 listed in]
+ [list.dnswl.org]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+ -0.1 DKIM_VALID_AU          Message has a valid DKIM or DK signature from
+ author's domain
+ -0.1 DKIM_VALID_EF          Message has a valid DKIM or DK signature from
+ envelope-from domain
+ -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+ 0.1 DKIM_SIGNED            Message has a DKIM or DK signature,
+ not necessarily
+ valid
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: OpenWrt Development List <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, ynezz@true.cz
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: 
+ openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+Instead of manually clearing the memory with memset() use calloc().
+
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ cli.c    | 3 +--
+ libuci.c | 3 +--
+ ucimap.c | 6 ++----
+ util.c   | 3 +--
+ 4 files changed, 5 insertions(+), 10 deletions(-)
+
+diff --git a/cli.c b/cli.c
+index 6ba97ea..267437d 100644
+--- a/cli.c
++++ b/cli.c
+@@ -100,10 +100,9 @@ uci_lookup_section_ref(struct uci_section *s)
+ 		ti = ti->next;
+ 	}
+ 	if (!ti) {
+-		ti = malloc(sizeof(struct uci_type_list));
++		ti = calloc(1, sizeof(struct uci_type_list));
+ 		if (!ti)
+ 			return NULL;
+-		memset(ti, 0, sizeof(struct uci_type_list));
+ 		ti->next = type_list;
+ 		type_list = ti;
+ 		ti->name = s->type;
+diff --git a/libuci.c b/libuci.c
+index 786d035..ae4c964 100644
+--- a/libuci.c
++++ b/libuci.c
+@@ -48,11 +48,10 @@ struct uci_context *uci_alloc_context(void)
+ {
+ 	struct uci_context *ctx;
+ 
+-	ctx = (struct uci_context *) malloc(sizeof(struct uci_context));
++	ctx = (struct uci_context *) calloc(1, sizeof(struct uci_context));
+ 	if (!ctx)
+ 		return NULL;
+ 
+-	memset(ctx, 0, sizeof(struct uci_context));
+ 	uci_list_init(&ctx->root);
+ 	uci_list_init(&ctx->delta_path);
+ 	uci_list_init(&ctx->backends);
+diff --git a/ucimap.c b/ucimap.c
+index c46cf45..758a5ea 100644
+--- a/ucimap.c
++++ b/ucimap.c
+@@ -661,11 +661,10 @@ ucimap_parse_section(struct uci_map *map, struct uci_sectionmap *sm, struct ucim
+ 			size = sizeof(struct ucimap_list) +
+ 				n_elements * sizeof(union ucimap_data);
+ 
+-			data->list = malloc(size);
++			data->list = calloc(1, size);
+ 			if (!data->list)
+ 				goto error_mem;
+ 
+-			memset(data->list, 0, size);
+ 			data->list->size = n_elements;
+ 		} else {
+ 			ucimap_count_alloc(om, &n_alloc, &n_alloc_custom);
+@@ -897,10 +896,9 @@ ucimap_parse(struct uci_map *map, struct uci_package *pkg)
+ 					continue;
+ 				memset(sd, 0, sizeof(struct ucimap_section_data));
+ 			} else {
+-				sd = malloc(sm->alloc_len);
++				sd = calloc(1, sm->alloc_len);
+ 				if (!sd)
+ 					continue;
+-				memset(sd, 0, sm->alloc_len);
+ 				sd = ucimap_ptr_section(sm, sd);
+ 			}
+ 
+diff --git a/util.c b/util.c
+index 8572e81..61e42cd 100644
+--- a/util.c
++++ b/util.c
+@@ -36,10 +36,9 @@ __private void *uci_malloc(struct uci_context *ctx, size_t size)
+ {
+ 	void *ptr;
+ 
+-	ptr = malloc(size);
++	ptr = calloc(1, size);
+ 	if (!ptr)
+ 		UCI_THROW(ctx, UCI_ERR_MEM);
+-	memset(ptr, 0, size);
+ 
+ 	return ptr;
+ }
