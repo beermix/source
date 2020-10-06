@@ -19,10 +19,11 @@ PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=0
+PKG_ASLR_PIE:=0
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
+#TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
 
 define Package/stress-ng
   SECTION:=utils
