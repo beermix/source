@@ -19,9 +19,13 @@ PKG_NAME:=smartdns
 PKG_VERSION:=8.2020.33
 PKG_RELEASE:=1
 
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/pymumu/smartdns.git
+PKG_SOURCE_URL:=https://www.github.com/pymumu/smartdns.git
 PKG_SOURCE_VERSION:=86902d2e3415666246dae0286262e43923f58532
+PKG_MIRROR_HASH:=
 
 PKG_MAINTAINER:=Nick Peng <pymumu@gmail.com>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -31,7 +35,7 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
 
 MAKE_VARS += VER=$(PKG_VERSION)
 MAKE_PATH:=src
