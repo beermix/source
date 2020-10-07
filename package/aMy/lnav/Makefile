@@ -29,7 +29,10 @@ include $(INCLUDE_DIR)/package.mk
 #TARGET_CXXFLAGS += -ffunction-sections -fdata-sections -flto
 #TARGET_LDFLAGS += -Wl,--gc-sections  --disable-static
 
-CONFIGURE_ARGS += --disable-stativ
+export LDFLAGS="-Wl,--copy-dt-needed-entries"
+
+CONFIGURE_ARGS += --disable-static
+
 
 Package/lnav = $(Package/lnav/Default)
 define Package/lnav/Default
