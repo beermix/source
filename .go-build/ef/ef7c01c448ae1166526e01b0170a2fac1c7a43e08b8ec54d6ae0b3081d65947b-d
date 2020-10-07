@@ -1,0 +1,3 @@
+./atomic_386.go
+./stubs.go
+./asm_386.s
