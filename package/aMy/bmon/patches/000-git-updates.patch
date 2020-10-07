@@ -1,0 +1,256 @@
+diff --git a/README.md b/README.md
+index 24c8cd4..4d6acb7 100644
+--- a/README.md
++++ b/README.md
+@@ -25,7 +25,7 @@ make
+ make install
+ bmon
+ ```
+-## CentOS (6) Installation
++## CentOS 6 Installation
+ 
+ ```
+ git clone https://github.com/tgraf/bmon.git
+@@ -38,7 +38,26 @@ make install
+ bmon
+ ```
+ 
++## CentOS 7 Installation
++
++```
++yum install bmon
++```
++
++## Fedora Installation
++
++```
++dnf install bmon
++```
++
+ ## OSX Installation
++
++### Brew
++```
++brew install bmon
++```
++
++### Compile yourself
+ Install libconfuse
+ ```
+ wget https://github.com/martinh/libconfuse/releases/download/v2.8/confuse-2.8.zip
+diff --git a/configure.ac b/configure.ac
+index b9174eb..afc43c7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -175,7 +175,7 @@ case ${target_os} in
+ 	AC_DEFINE_UNQUOTED(SYS_SUNOS, "1", [operating system])
+     ;;
+ 
+-    *bsd*)
++    *bsd*|dragonfly*)
+ 	AC_DEFINE_UNQUOTED(SYS_BSD, "1", [operating system])
+     ;;
+ 
+diff --git a/examples/bmon.conf b/examples/bmon.conf
+index 93d64c3..7cf43b9 100644
+--- a/examples/bmon.conf
++++ b/examples/bmon.conf
+@@ -11,10 +11,10 @@
+ 
+ /* 
+  * element eth0 {
+- * 	description	= { "My description" }
+- * 	rxmax		= { 10000 }
+- * 	txmax		= { 10000 }
+- * 	max		= { 12500000 }
++ * 	description	= "My description"
++ * 	rxmax		= 10000
++ * 	txmax		= 10000
++ * 	max		= 12500000
+  * }
+  */
+ 
+diff --git a/include/bmon/config.h b/include/bmon/config.h
+index ad6a367..e1d749f 100644
+--- a/include/bmon/config.h
++++ b/include/bmon/config.h
+@@ -48,7 +48,7 @@
+ #include <dirent.h>
+ #ifdef SYS_BSD
+ # include <float.h>
+-#else
++#elif !defined(__ANDROID__)
+ # include <values.h>
+ #endif
+ 
+diff --git a/include/bmon/layout.h b/include/bmon/layout.h
+index cca2a4c..4633806 100644
+--- a/include/bmon/layout.h
++++ b/include/bmon/layout.h
+@@ -28,6 +28,8 @@ static int parse_color(const char* color)
+         color_code = COLOR_MAGENTA;
+     else if ((strcasestr(color, "cyan") != NULL))
+         color_code = COLOR_CYAN;
++    else if ((atoi(color) >= 0))
++        color_code = atoi(color);
+ 
+     return color_code;
+ }
+diff --git a/man/bmon.8 b/man/bmon.8
+index e371ad8..36e0d53 100644
+--- a/man/bmon.8
++++ b/man/bmon.8
+@@ -34,7 +34,7 @@ in parallel. bmon automatically loads a useful and working input module
+ by default. See INPUT MODULES for more details.
+ .RE
+ .PP
+-\fB \-o\fR, \fB\-\-output\fRMODULE[:OPTIONS][,MODULE...]
++\fB \-o\fR, \fB\-\-output=\fRMODULE[:OPTIONS][,MODULE...]
+ .RS 4
+ Set list of output modules to load and use. Multiple modules can be used
+ in parallel. By default, bmon will use the curses output mode, if that is
+@@ -58,7 +58,7 @@ Set policy defining which network interfaces to display. See
+ INTERFACE SELECTION for more details.
+ .RE
+ .PP
+-\fB \-a\fR, \fB\-\-show\-all=\fR
++\fB \-a\fR, \fB\-\-show\-all\fR
+ .RS 4
+ Display all interfaces, even interface that are administratively down.
+ .RE
+@@ -137,7 +137,7 @@ The following output modules exist:
+ .TP
+ \fBcurses\fR
+ Interactive curses based text user interface providing real time rate
+-estimations and a graphical representatio nof each attribute. Press '?'
++estimations and a graphical representation of each attribute. Press '?'
+ to display the quick reference guide. This is the default output mode.
+ 
+ .TP
+diff --git a/src/bmon.c b/src/bmon.c
+index 9fa684c..882ab67 100644
+--- a/src/bmon.c
++++ b/src/bmon.c
+@@ -67,14 +67,14 @@ static char *usage_text =
+ "   Examples:\n" \
+ "       -o curses:ngraph=2\n" \
+ "       -o list            # Shows a list of available modules\n" \
+-"       -o curses:help     # Shows a help text for html module\n" \
++"       -o curses:help     # Shows a help text for curses module\n" \
+ "\n" \
+ "Interface selection:\n" \
+ "   policy  := [!]simple_regexp,[!]simple_regexp,...\n" \
+ "\n" \
+ "   Example: -p 'eth*,lo*,!eth1'\n" \
+ "\n" \
+-"Please see the bmon(1) man pages for full documentation.\n";
++"Please see the bmon(8) man pages for full documentation.\n";
+ 
+ static void do_shutdown(void)
+ {
+diff --git a/src/in_sysctl.c b/src/in_sysctl.c
+index faf647a..1112e35 100644
+--- a/src/in_sysctl.c
++++ b/src/in_sysctl.c
+@@ -232,7 +232,7 @@ sysctl_read(void)
+ 		snprintf(info_buf, sizeof(info_buf), "%ju", (uintmax_t)ifm->ifm_data.ifi_metric);
+ 		element_update_info(e, "Metric", info_buf);
+ 
+-#ifndef __NetBSD__
++#if !(defined(__NetBSD__) || defined(__FreeBSD__))
+ 		snprintf(info_buf, sizeof(info_buf), "%u", ifm->ifm_data.ifi_recvquota);
+ 		element_update_info(e, "RX-Quota", info_buf);
+ 
+diff --git a/src/out_curses.c b/src/out_curses.c
+index 6d70ae3..330e8f6 100644
+--- a/src/out_curses.c
++++ b/src/out_curses.c
+@@ -45,6 +45,8 @@ enum {
+ 	KEY_TOGGLE_DETAILS	= 'd',
+ 	KEY_TOGGLE_INFO		= 'i',
+ 	KEY_COLLECT_HISTORY	= 'h',
++	KEY_CTRL_N	= 14,
++	KEY_CTRL_P	= 16,
+ };
+ 
+ #define DETAILS_COLS		40
+@@ -147,22 +149,24 @@ static char *float2str(double value, int width, int prec, char *buf, size_t len)
+ static void put_line(const char *fmt, ...)
+ {
+ 	va_list args;
+-	char buf[2048];
++	char *buf;
++	int len;
+ 	int x, y __unused__;
+ 
+-	memset(buf, 0, sizeof(buf));
+ 	getyx(stdscr, y, x);
+ 
++	len = cols - x;
++	buf = xcalloc(len+1, 1);
++
+ 	va_start(args, fmt);
+-	vsnprintf(buf, sizeof(buf), fmt, args);
++	vsnprintf(buf, len+1, fmt, args);
+ 	va_end(args);
+ 
+-	if (strlen(buf) > cols-x)
+-		buf[cols - x] = '\0';
+-	else
+-		memset(&buf[strlen(buf)], ' ', cols - strlen(buf)-x);
++	if (strlen(buf) < len)
++		memset(&buf[strlen(buf)], ' ', len - strlen(buf));
+ 
+ 	addstr(buf);
++	xfree(buf);
+ }
+ 
+ static void center_text(const char *fmt, ...)
+@@ -979,8 +983,10 @@ draw:
+ 	 */
+ 	NEXT_ROW();
+ 	hline(ACS_HLINE, cols);
+-	mvaddch(row, LIST_COL_1, ACS_BTEE);
+-	mvaddch(row, LIST_COL_2, ACS_BTEE);
++	if (c_show_list) {
++		mvaddch(row, LIST_COL_1, ACS_BTEE);
++		mvaddch(row, LIST_COL_2, ACS_BTEE);
++	}
+ 
+ 	if (!c_show_graph)
+ 		center_text(" Press %c to enable graphical statistics ",
+@@ -1022,6 +1028,12 @@ draw:
+ 	NEXT_ROW();
+ 	hline(ACS_HLINE, cols);
+ 
++	if (c_show_details) {
++		int i;
++		for (i = 1; i < detail_cols; i++)
++			mvaddch(row, (i * DETAILS_COLS) - 1, ACS_BTEE);
++	}
++
+ 	if (!c_show_info)
+ 		center_text(" Press %c to enable additional information ",
+ 			    KEY_TOGGLE_INFO);
+@@ -1176,10 +1188,12 @@ static int handle_input(int ch)
+ 			return 1;
+ 
+ 		case KEY_DOWN:
++		case KEY_CTRL_N:
+ 			element_select_next();
+ 			return 1;
+ 
+ 		case KEY_UP:
++		case KEY_CTRL_P:
+ 			element_select_prev();
+ 			return 1;
+ 
+@@ -1252,7 +1266,7 @@ static void print_module_help(void)
+ 	"  Author: Thomas Graf <tgraf@suug.ch>\n" \
+ 	"\n" \
+ 	"  Options:\n" \
+-	"    fgchar=CHAR    Foreground character (default: '*')\n" \
++	"    fgchar=CHAR    Foreground character (default: '|')\n" \
+ 	"    bgchar=CHAR    Background character (default: '.')\n" \
+ 	"    nchar=CHAR     Noise character (default: ':')\n" \
+ 	"    uchar=CHAR     Unknown character (default: '?')\n" \

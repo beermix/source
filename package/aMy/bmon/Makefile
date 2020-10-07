@@ -20,6 +20,9 @@ PKG_LICENSE:=MIT
 
 include $(INCLUDE_DIR)/package.mk
 
+PKG_FIXUP:=autoreconf
+PKG_REMOVE_FILES:=autom4te.cache
+
 define Package/bmon
   SECTION:=net
   CATEGORY:=Network
