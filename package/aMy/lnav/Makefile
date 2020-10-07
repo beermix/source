@@ -12,8 +12,7 @@ PKG_NAME:=lnav
 #PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 #PKG_SOURCE_URL:=https://github.com/tstack/lnav/releases/download/v$(PKG_VERSION)-rc1
 
-PKG_VERSION:=90ab6ea
-#PKG_VERSION:=73e902f
+PKG_VERSION:=rm src pkg
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tstack/lnav.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
@@ -30,7 +29,7 @@ include $(INCLUDE_DIR)/package.mk
 #TARGET_CXXFLAGS += -ffunction-sections -fdata-sections -flto
 #TARGET_LDFLAGS += -Wl,--gc-sections  --disable-static
 
-CONFIGURE_ARGS += --disable-silent-rules
+#CONFIGURE_ARGS += --disable-silent-rules
 
 Package/lnav = $(Package/lnav/Default)
 define Package/lnav/Default
@@ -39,7 +38,7 @@ define Package/lnav/Default
 	TITLE:=lnav
 	URL:=https://github.com/tstack/lnav
 	DEPENDS:=+libpthread +libstdcpp +librt +libncurses +libreadline \
-	+zlib +libsqlite3 +libpcre +libpcrecpp +libbz2 +libcurl +libopenssl
+	+zlib +libpcre +libpcrecpp +libbz2 +libcurl +libopenssl
 endef
 
 define Package/lnav/install
