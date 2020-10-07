@@ -1,0 +1,59 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 1ff6bb0..2e713d7 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -57,7 +57,7 @@ FORMAT_FILES = \
+     $()
+ 
+ default-formats.h default-formats.c: bin2c$(BUILD_EXEEXT) $(FORMAT_FILES)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) -n lnav_format_json default-formats $(FORMAT_FILES)
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) -n lnav_format_json default-formats $(FORMAT_FILES)
+ 
+ CONFIG_FILES = \
+     $(srcdir)/root-config.json \
+@@ -75,7 +75,7 @@ CONFIG_FILES = \
+     $()
+ 
+ default-config.h default-config.c: bin2c$(BUILD_EXEEXT) $(CONFIG_FILES)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) -n lnav_config_json default-config $(CONFIG_FILES)
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) -n lnav_config_json default-config $(CONFIG_FILES)
+ 
+ BUILTIN_LNAVSCRIPTS = \
+     $(srcdir)/scripts/dhclient-summary.lnav \
+@@ -86,29 +86,29 @@ BUILTIN_LNAVSCRIPTS = \
+     $()
+ 
+ builtin-scripts.h builtin-scripts.c: bin2c$(BUILD_EXEEXT) $(BUILTIN_LNAVSCRIPTS)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) -n lnav_scripts builtin-scripts $(BUILTIN_LNAVSCRIPTS)
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) -n lnav_scripts builtin-scripts $(BUILTIN_LNAVSCRIPTS)
+ 
+ BUILTIN_SHSCRIPTS = \
+     $(srcdir)/scripts/dump-pid.sh \
+     $()
+ 
+ builtin-sh-scripts.h builtin-sh-scripts.c: bin2c$(BUILD_EXEEXT) $(BUILTIN_SHSCRIPTS)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) -n lnav_sh_scripts builtin-sh-scripts $(BUILTIN_SHSCRIPTS)
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) -n lnav_sh_scripts builtin-sh-scripts $(BUILTIN_SHSCRIPTS)
+ 
+ %-sh.c: $(srcdir)/%.sh bin2c$(BUILD_EXEEXT)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) $(*)-sh $<
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) $(*)-sh $<
+ 
+ %-txt.c %-txt.h: $(srcdir)/%.txt bin2c$(BUILD_EXEEXT)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) $(*)-txt $<
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) $(*)-txt $<
+ 
+ %-sql.c %-sql.h: $(srcdir)/%.sql bin2c$(BUILD_EXEEXT)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) $(*)-sql $<
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) $(*)-sql $<
+ 
+ %-lnav.c %-lnav.h: $(srcdir)/%.lnav bin2c$(BUILD_EXEEXT)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) $(*)-lnav $<
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) $(*)-lnav $<
+ 
+ %-json.c %-json.h: $(srcdir)/%.json bin2c$(BUILD_EXEEXT)
+-	$(BIN2C_V)./bin2c$(BUILD_EXEEXT) $(*)-json $<
++	$(BIN2C_V) bin2c$(BUILD_EXEEXT) $(*)-json $<
+ 
+ TIME_FORMATS = \
+     "@%@" \
