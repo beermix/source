@@ -59,8 +59,8 @@ endif
 CMAKE_OPTIONS += \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
 	-DWITH_GZFILEOP=ON \
-	-DZLIB_COMPAT=OFF \
-	-DWITH_OPTIM=PN \
+	-DZLIB_COMPAT=ON \
+	-DWITH_OPTIM=ON \
 	-DWITH_NEW_STRATEGIES=ON \
 	-DWITH_AVX2=OFF \
 	-DWITH_SSE2=ON \
@@ -71,33 +71,33 @@ CMAKE_OPTIONS += \
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
-	$(CP)	$(PKG_INSTALL_DIR)/usr/include/z{conf-ng,lib-ng}.h \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/include/z{conf,lib}.h \
 		$(1)/usr/include/
 	mkdir -p $(1)/usr/lib
-	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/libz-ng.{a,so*} \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/libz.{a,so*} \
 		$(1)/usr/lib/
 	mkdir -p $(1)/usr/lib/pkgconfig
-	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib-ng.pc \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
 		$(1)/usr/lib/pkgconfig/
 endef
 
 # libz.so is needed for openssl (zlib-dynamic)
 define Package/zlib/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz-ng.so $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz-ng.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.so $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.so.* $(1)/usr/lib/
 endef
 
 define Package/zlib-dev/install
 	$(INSTALL_DIR) $(1)/usr/include
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/zconf-ng.h \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/zconf.h \
 	  $(1)/usr/include/
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/zlib-ng.h \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/zlib.h \
 	  $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz-ng.a $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.a $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib-ng.pc \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
 	  $(1)/usr/lib/pkgconfig/
 endef
 
