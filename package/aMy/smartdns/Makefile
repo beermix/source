@@ -35,7 +35,7 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-# TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
 
 MAKE_VARS += VER=$(PKG_VERSION)
 MAKE_PATH:=src
