@@ -38,7 +38,6 @@ define Package/f2fs-tools/SELinux
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=+libf2fs-selinux +libselinux
   URL:=http://git.kernel.org/cgit/linux/kernel/git/jaegeuk/f2fs-tools.git
   VARIANT:=selinux
 endef
@@ -91,7 +90,7 @@ define Package/libf2fs-selinux
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=Library for Flash-Friendly File System (F2FS) tools with SELinux support
-  DEPENDS:=+libuuid +libselinux
+  DEPENDS:=+libuuid
   ABI_VERSION:=6
 endef
 

@@ -58,7 +58,6 @@ endef
 
 define Package/procd-selinux
   $(call Package/procd/Default)
-  DEPENDS += +libselinux
   TITLE += with SELinux support
   PROVIDES:=procd
   VARIANT:=selinux
