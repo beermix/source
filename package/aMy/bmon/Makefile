@@ -1,0 +1,51 @@
+#
+# Copyright (C) 2007-2014 OpenWrt.org
+# Copyright (C) 2014-2016 Baptiste Jonglez
+#
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+#
+
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=bmon
+PKG_VERSION:=def45f5
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/tgraf/bmon.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+
+include $(INCLUDE_DIR)/package.mk
+
+define Package/bmon
+  SECTION:=net
+  CATEGORY:=Network
+  DEPENDS:=+libncursesw +libnl-core +libnl-route +confuse +terminfo
+  TITLE:=bmon is a portable bandwidth monitor
+  URL:=https://github.com/tgraf/bmon/
+endef
+
+define Package/bmon/description
+	bmon is a portable bandwidth monitor
+	and rate estimator running on various
+	operating systems. It supports various
+	input methods for different architectures.
+endef
+
+CONFIGURE_ARGS += \
+	--disable-cnt-workaround \
+
+CONFIGURE_VARS += \
+	ac_cv_lib_nl_nl_connect=no \
+
+# Needed to compile some objects
+TARGET_CFLAGS+= -std=gnu99
+
+define Package/bmon/install
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/bmon $(1)/usr/sbin/
+endef
+
+$(eval $(call BuildPackage,bmon))
