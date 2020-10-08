@@ -6,17 +6,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mc
-PKG_VERSION:=4.8.25
-PKG_RELEASE:=1
-PKG_MAINTAINER:=Dirk Brenken <dev@brenken.org>
-PKG_LICENSE:=GPL-3.0-or-later
-PKG_CPE_ID:=cpe:/a:midnight_commander:midnight_commander
+PKG_VERSION:=b05b4bb
 
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=http://ftp.midnight-commander.org/
-PKG_HASH:=ffc19617f20ebb23330acd3998b7fd559a042d172fa55746d53d246697b2548a
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_URL:=https://github.com/MidnightCommander/mc
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+
 PKG_BUILD_PARALLEL:=1
-PKG_FIXUP:=autoreconf gettext-version
+PKG_FIXUP:=autoreconf
+#gettext-version
 
 PKG_CONFIG_DEPENDS := \
 	CONFIG_PACKAGE_MC \
