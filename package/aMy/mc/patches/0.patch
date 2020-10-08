@@ -1,0 +1,1873 @@
+diff --git a/AUTHORS b/AUTHORS
+index 85309db39..e6df1dcc8 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -43,6 +43,9 @@ Alexander Serkov <serkov@ukrpost.net>
+ Alessandro Rubini <rubini@ipvvis.unipv.it>
+ 	Mouse support.
+ 
++Aleš Janda <ales.janda@kyblsoft.cz>
++	Shadows of dialog windows and menus.
++
+ Alexander Dong <ado@software-ag.de>
+ 	OS/2 port.
+ 
+diff --git a/doc/man/mc.1.in b/doc/man/mc.1.in
+index cc4c6c68b..cdd1f687b 100644
+--- a/doc/man/mc.1.in
++++ b/doc/man/mc.1.in
+@@ -2113,13 +2113,17 @@ overwriting files, execution by pressing enter, quitting the program,
+ directory hotlist entries deletion and history cleanup.
+ .\"NODE "    Appearance"
+ .SH "    Appearance"
+-In this dialog you can select the skin to be used.
++In this dialog you can select the skin to be used and enable shadow
++for dialogs and drop down menus.
+ .PP
+ See the
+ .\"LINK2"
+ Skins
+ .\"Skins"
+ section for technical details about the skin definition files.
++.PP
++.I Shadows.
++If this option is enabled, all dialogs and drop down menus will have a shadow.
+ .\"NODE "    Display bits"
+ .SH "    Display bits"
+ This is used to configure the range of visible characters on the
+diff --git a/doc/man/ru/mc.1.in b/doc/man/ru/mc.1.in
+index ea9c898be..f029b5f3e 100644
+--- a/doc/man/ru/mc.1.in
++++ b/doc/man/ru/mc.1.in
+@@ -2411,12 +2411,17 @@ Commander, выделены цветом, определённым ключев
+ на подтверждение.
+ .\"NODE "    Appearance"
+ .SH "    Оформление"
+-Используя это диалоговое окно, вы можете выбрать скин.
++Используя это диалоговое окно, вы можете выбрать скин и разрещить отрисовку
++теней у диалоговых окон и выпадающих меню.
+ .PP
+ Для получения более подробной информации о скинах обратитесь к разделу
+ .\"LINK2"
+ Внешний вид\&.
+ .\"Skins"
++.PP
++.I Тени.
++Если эта опция включена, все диалоговые окна и выпадающие меню будут иметь
++тени.
+ .\"NODE "    Display bits"
+ .SH "    Биты символов..."
+ Этот пункт меню используется для задания диапазона отображаемых на
+diff --git a/lib/global.c b/lib/global.c
+index 137bfbdd3..50ba893ba 100644
+--- a/lib/global.c
++++ b/lib/global.c
+@@ -85,6 +85,7 @@ mc_global_t mc_global = {
+     .tty =
+     {
+         .skin = NULL,
++        .shadows = TRUE,
+         .setup_color_string = NULL,
+         .term_color_string = NULL,
+         .color_terminal_string = NULL,
+diff --git a/lib/global.h b/lib/global.h
+index 846c724c6..6bf55952c 100644
+--- a/lib/global.h
++++ b/lib/global.h
+@@ -230,6 +230,8 @@ typedef struct
+     {
+         /* Use the specified skin */
+         char *skin;
++        /* Dialog window and frop down menu have a shadow */
++        gboolean shadows;
+ 
+         char *setup_color_string;
+         char *term_color_string;
+diff --git a/lib/skin.h b/lib/skin.h
+index 747a504ec..155a8db9c 100644
+--- a/lib/skin.h
++++ b/lib/skin.h
+@@ -22,92 +22,93 @@
+ #define REVERSE_COLOR             mc_skin_color__cache[6]
+ #define COMMAND_MARK_COLOR        mc_skin_color__cache[7]
+ #define HEADER_COLOR              mc_skin_color__cache[8]
++#define SHADOW_COLOR              mc_skin_color__cache[9]
+ 
+ /* Dialog colors */
+-#define COLOR_NORMAL              mc_skin_color__cache[9]
+-#define COLOR_FOCUS               mc_skin_color__cache[10]
+-#define COLOR_HOT_NORMAL          mc_skin_color__cache[11]
+-#define COLOR_HOT_FOCUS           mc_skin_color__cache[12]
+-#define COLOR_TITLE               mc_skin_color__cache[13]
++#define COLOR_NORMAL              mc_skin_color__cache[10]
++#define COLOR_FOCUS               mc_skin_color__cache[11]
++#define COLOR_HOT_NORMAL          mc_skin_color__cache[12]
++#define COLOR_HOT_FOCUS           mc_skin_color__cache[13]
++#define COLOR_TITLE               mc_skin_color__cache[14]
+ 
+ /* Error dialog colors */
+-#define ERROR_COLOR               mc_skin_color__cache[14]
+-#define ERROR_FOCUS               mc_skin_color__cache[15]
+-#define ERROR_HOT_NORMAL          mc_skin_color__cache[16]
+-#define ERROR_HOT_FOCUS           mc_skin_color__cache[17]
+-#define ERROR_TITLE               mc_skin_color__cache[18]
++#define ERROR_COLOR               mc_skin_color__cache[15]
++#define ERROR_FOCUS               mc_skin_color__cache[16]
++#define ERROR_HOT_NORMAL          mc_skin_color__cache[17]
++#define ERROR_HOT_FOCUS           mc_skin_color__cache[18]
++#define ERROR_TITLE               mc_skin_color__cache[19]
+ 
+ /* Menu colors */
+-#define MENU_ENTRY_COLOR          mc_skin_color__cache[19]
+-#define MENU_SELECTED_COLOR       mc_skin_color__cache[20]
+-#define MENU_HOT_COLOR            mc_skin_color__cache[21]
+-#define MENU_HOTSEL_COLOR         mc_skin_color__cache[22]
+-#define MENU_INACTIVE_COLOR       mc_skin_color__cache[23]
++#define MENU_ENTRY_COLOR          mc_skin_color__cache[20]
++#define MENU_SELECTED_COLOR       mc_skin_color__cache[21]
++#define MENU_HOT_COLOR            mc_skin_color__cache[22]
++#define MENU_HOTSEL_COLOR         mc_skin_color__cache[23]
++#define MENU_INACTIVE_COLOR       mc_skin_color__cache[24]
+ 
+ /* Popup menu colors */
+-#define PMENU_ENTRY_COLOR         mc_skin_color__cache[24]
+-#define PMENU_SELECTED_COLOR      mc_skin_color__cache[25]
+-#define PMENU_HOT_COLOR           mc_skin_color__cache[26]      /* unused: not implemented yet */
+-#define PMENU_HOTSEL_COLOR        mc_skin_color__cache[27]      /* unused: not implemented yet */
+-#define PMENU_TITLE_COLOR         mc_skin_color__cache[28]
++#define PMENU_ENTRY_COLOR         mc_skin_color__cache[25]
++#define PMENU_SELECTED_COLOR      mc_skin_color__cache[26]
++#define PMENU_HOT_COLOR           mc_skin_color__cache[27]      /* unused: not implemented yet */
++#define PMENU_HOTSEL_COLOR        mc_skin_color__cache[28]      /* unused: not implemented yet */
++#define PMENU_TITLE_COLOR         mc_skin_color__cache[29]
+ 
+-#define BUTTONBAR_HOTKEY_COLOR    mc_skin_color__cache[29]
+-#define BUTTONBAR_BUTTON_COLOR    mc_skin_color__cache[30]
++#define BUTTONBAR_HOTKEY_COLOR    mc_skin_color__cache[30]
++#define BUTTONBAR_BUTTON_COLOR    mc_skin_color__cache[31]
+ 
+-#define STATUSBAR_COLOR           mc_skin_color__cache[31]
++#define STATUSBAR_COLOR           mc_skin_color__cache[32]
+ 
+ /*
+  * This should be selectable independently. Default has to be black background
+  * foreground does not matter at all.
+  */
+-#define GAUGE_COLOR               mc_skin_color__cache[32]
+-#define INPUT_COLOR               mc_skin_color__cache[33]
+-#define INPUT_UNCHANGED_COLOR     mc_skin_color__cache[34]
+-#define INPUT_MARK_COLOR          mc_skin_color__cache[35]
+-#define INPUT_HISTORY_COLOR       mc_skin_color__cache[36]
+-#define COMMAND_HISTORY_COLOR     mc_skin_color__cache[37]
+-
+-#define HELP_NORMAL_COLOR         mc_skin_color__cache[38]
+-#define HELP_ITALIC_COLOR         mc_skin_color__cache[39]
+-#define HELP_BOLD_COLOR           mc_skin_color__cache[40]
+-#define HELP_LINK_COLOR           mc_skin_color__cache[41]
+-#define HELP_SLINK_COLOR          mc_skin_color__cache[42]
+-#define HELP_TITLE_COLOR          mc_skin_color__cache[43]
+-
+-
+-#define VIEW_NORMAL_COLOR         mc_skin_color__cache[44]
+-#define VIEW_BOLD_COLOR           mc_skin_color__cache[45]
+-#define VIEW_UNDERLINED_COLOR     mc_skin_color__cache[46]
+-#define VIEW_SELECTED_COLOR       mc_skin_color__cache[47]
++#define GAUGE_COLOR               mc_skin_color__cache[33]
++#define INPUT_COLOR               mc_skin_color__cache[34]
++#define INPUT_UNCHANGED_COLOR     mc_skin_color__cache[35]
++#define INPUT_MARK_COLOR          mc_skin_color__cache[36]
++#define INPUT_HISTORY_COLOR       mc_skin_color__cache[37]
++#define COMMAND_HISTORY_COLOR     mc_skin_color__cache[38]
++
++#define HELP_NORMAL_COLOR         mc_skin_color__cache[39]
++#define HELP_ITALIC_COLOR         mc_skin_color__cache[40]
++#define HELP_BOLD_COLOR           mc_skin_color__cache[41]
++#define HELP_LINK_COLOR           mc_skin_color__cache[42]
++#define HELP_SLINK_COLOR          mc_skin_color__cache[43]
++#define HELP_TITLE_COLOR          mc_skin_color__cache[44]
++
++
++#define VIEW_NORMAL_COLOR         mc_skin_color__cache[45]
++#define VIEW_BOLD_COLOR           mc_skin_color__cache[46]
++#define VIEW_UNDERLINED_COLOR     mc_skin_color__cache[47]
++#define VIEW_SELECTED_COLOR       mc_skin_color__cache[48]
+ 
+ /*
+  * editor colors - only 4 for normal, search->found, select, and whitespace
+  * respectively
+  * Last is defined to view color.
+  */
+-#define EDITOR_NORMAL_COLOR       mc_skin_color__cache[48]
+-#define EDITOR_BOLD_COLOR         mc_skin_color__cache[49]
+-#define EDITOR_MARKED_COLOR       mc_skin_color__cache[50]
+-#define EDITOR_WHITESPACE_COLOR   mc_skin_color__cache[51]
+-#define EDITOR_RIGHT_MARGIN_COLOR mc_skin_color__cache[52]
+-#define EDITOR_BACKGROUND         mc_skin_color__cache[53]
+-#define EDITOR_FRAME              mc_skin_color__cache[54]
+-#define EDITOR_FRAME_ACTIVE       mc_skin_color__cache[55]
+-#define EDITOR_FRAME_DRAG         mc_skin_color__cache[56]
++#define EDITOR_NORMAL_COLOR       mc_skin_color__cache[49]
++#define EDITOR_BOLD_COLOR         mc_skin_color__cache[50]
++#define EDITOR_MARKED_COLOR       mc_skin_color__cache[51]
++#define EDITOR_WHITESPACE_COLOR   mc_skin_color__cache[52]
++#define EDITOR_RIGHT_MARGIN_COLOR mc_skin_color__cache[53]
++#define EDITOR_BACKGROUND         mc_skin_color__cache[54]
++#define EDITOR_FRAME              mc_skin_color__cache[55]
++#define EDITOR_FRAME_ACTIVE       mc_skin_color__cache[56]
++#define EDITOR_FRAME_DRAG         mc_skin_color__cache[57]
+ /* color of left 8 char status per line */
+-#define LINE_STATE_COLOR          mc_skin_color__cache[57]
+-#define BOOK_MARK_COLOR           mc_skin_color__cache[58]
+-#define BOOK_MARK_FOUND_COLOR     mc_skin_color__cache[59]
++#define LINE_STATE_COLOR          mc_skin_color__cache[58]
++#define BOOK_MARK_COLOR           mc_skin_color__cache[59]
++#define BOOK_MARK_FOUND_COLOR     mc_skin_color__cache[60]
+ 
+ /* Diff colors */
+-#define DFF_ADD_COLOR             mc_skin_color__cache[60]
+-#define DFF_CHG_COLOR             mc_skin_color__cache[61]
+-#define DFF_CHH_COLOR             mc_skin_color__cache[62]
+-#define DFF_CHD_COLOR             mc_skin_color__cache[63]
+-#define DFF_DEL_COLOR             mc_skin_color__cache[64]
+-#define DFF_ERROR_COLOR           mc_skin_color__cache[65]
+-
+-#define MC_SKIN_COLOR_CACHE_COUNT 66
++#define DFF_ADD_COLOR             mc_skin_color__cache[61]
++#define DFF_CHG_COLOR             mc_skin_color__cache[62]
++#define DFF_CHH_COLOR             mc_skin_color__cache[63]
++#define DFF_CHD_COLOR             mc_skin_color__cache[64]
++#define DFF_DEL_COLOR             mc_skin_color__cache[65]
++#define DFF_ERROR_COLOR           mc_skin_color__cache[66]
++
++#define MC_SKIN_COLOR_CACHE_COUNT 67
+ 
+ /*** enums ***************************************************************************************/
+ 
+diff --git a/lib/skin/colors.c b/lib/skin/colors.c
+index b8d944a41..27e18bdda 100644
+--- a/lib/skin/colors.c
++++ b/lib/skin/colors.c
+@@ -249,6 +249,7 @@ mc_skin_color_cache_init (void)
+     REVERSE_COLOR = mc_skin_color_get ("core", "reverse");
+     HEADER_COLOR = mc_skin_color_get ("core", "header");
+     COMMAND_MARK_COLOR = mc_skin_color_get ("core", "commandlinemark");
++    SHADOW_COLOR = mc_skin_color_get ("core", "shadow");
+ 
+     COLOR_NORMAL = mc_skin_color_get ("dialog", "_default_");
+     COLOR_FOCUS = mc_skin_color_get ("dialog", "dfocus");
+diff --git a/lib/tty/tty-internal.h b/lib/tty/tty-internal.h
+index 662b0bcaf..77546cd5f 100644
+--- a/lib/tty/tty-internal.h
++++ b/lib/tty/tty-internal.h
+@@ -42,6 +42,8 @@ char *mc_tty_normalize_from_utf8 (const char *);
+ void tty_init_xterm_support (gboolean is_xterm);
+ int tty_lowlevel_getch (void);
+ 
++void tty_colorize_area (int y, int x, int rows, int cols, int color);
++
+ /*** inline functions ****************************************************************************/
+ 
+ #endif /* MC_TTY_INTERNAL_H */
+diff --git a/lib/tty/tty-ncurses.c b/lib/tty/tty-ncurses.c
+index 4383d1e74..03235cd5b 100644
+--- a/lib/tty/tty-ncurses.c
++++ b/lib/tty/tty-ncurses.c
+@@ -48,6 +48,7 @@
+ 
+ #include "tty-internal.h"       /* mc_tty_normalize_from_utf8() */
+ #include "tty.h"
++#include "color.h"              /* tty_setcolor */
+ #include "color-internal.h"
+ #include "key.h"
+ #include "mouse.h"
+@@ -119,6 +120,44 @@ sigwinch_handler (int dummy)
+     (void) n;
+ }
+ 
++/* --------------------------------------------------------------------------------------------- */
++
++/**
++ * Get visible part of area.
++ *
++ * @returns TRUE if any part of area is in screen bounds, FALSE otherwise.
++ */
++static gboolean
++tty_clip (int *y, int *x, int *rows, int *cols)
++{
++    if (*y < 0)
++    {
++        *rows += *y;
++
++        if (*rows <= 0)
++            return FALSE;
++
++        *y = 0;
++    }
++
++    if (*x < 0)
++    {
++        *cols += *x;
++
++        if (*cols <= 0)
++            return FALSE;
++
++        *x = 0;
++    }
++
++    if (*y + *rows > LINES)
++        *rows = LINES - *y;
++    if (*x + *cols > COLS)
++        *cols = COLS - *x;
++
++    return TRUE;
++}
++
+ /* --------------------------------------------------------------------------------------------- */
+ /*** public functions ****************************************************************************/
+ /* --------------------------------------------------------------------------------------------- */
+@@ -494,30 +533,8 @@ tty_fill_region (int y, int x, int rows, int cols, unsigned char ch)
+ {
+     int i;
+ 
+-    if (y < 0)
+-    {
+-        rows += y;
+-
+-        if (rows <= 0)
+-            return;
+-
+-        y = 0;
+-    }
+-
+-    if (x < 0)
+-    {
+-        cols += x;
+-
+-        if (cols <= 0)
+-            return;
+-
+-        x = 0;
+-    }
+-
+-    if (y + rows > LINES)
+-        rows = LINES - y;
+-    if (x + cols > COLS)
+-        cols = COLS - x;
++    if (!tty_clip (&y, &x, &rows, &cols))
++        return;
+ 
+     for (i = 0; i < rows; i++)
+     {
+@@ -533,6 +550,38 @@ tty_fill_region (int y, int x, int rows, int cols, unsigned char ch)
+ 
+ /* --------------------------------------------------------------------------------------------- */
+ 
++void
++tty_colorize_area (int y, int x, int rows, int cols, int color)
++{
++    cchar_t *ctext;
++    wchar_t wch[10];            /* TODO not sure if the length is correct */
++    attr_t attrs;
++    short color_pair;
++
++    if (!use_colors || !tty_clip (&y, &x, &rows, &cols))
++        return;
++
++    tty_setcolor (color);
++    ctext = g_malloc (sizeof (cchar_t) * (cols + 1));
++
++    for (int row = 0; row < rows; row++)
++    {
++        mvin_wchnstr (y + row, x, ctext, cols);
++
++        for (int col = 0; col < cols; col++)
++        {
++            getcchar (&ctext[col], wch, &attrs, &color_pair, NULL);
++            setcchar (&ctext[col], wch, attrs, color, NULL);
++        }
++
++        mvadd_wchnstr (y + row, x, ctext, cols);
++    }
++
++    g_free (ctext);
++}
++
++/* --------------------------------------------------------------------------------------------- */
++
+ void
+ tty_set_alt_charset (gboolean alt_charset)
+ {
+diff --git a/lib/tty/tty-slang.c b/lib/tty/tty-slang.c
+index 0d8e89ff7..6bf22a90d 100644
+--- a/lib/tty/tty-slang.c
++++ b/lib/tty/tty-slang.c
+@@ -622,6 +622,15 @@ tty_fill_region (int y, int x, int rows, int cols, unsigned char ch)
+ 
+ /* --------------------------------------------------------------------------------------------- */
+ 
++void
++tty_colorize_area (int y, int x, int rows, int cols, int color)
++{
++    if (use_colors)
++        SLsmg_set_color_in_region (color, y, x, rows, cols);
++}
++
++/* --------------------------------------------------------------------------------------------- */
++
+ void
+ tty_set_alt_charset (gboolean alt_charset)
+ {
+diff --git a/lib/tty/tty.c b/lib/tty/tty.c
+index a3929b011..d4a731343 100644
+--- a/lib/tty/tty.c
++++ b/lib/tty/tty.c
+@@ -264,6 +264,17 @@ tty_draw_box (int y, int x, int ys, int xs, gboolean single)
+ 
+ /* --------------------------------------------------------------------------------------------- */
+ 
++void
++tty_draw_box_shadow (int y, int x, int rows, int cols, int shadow_color)
++{
++    /* draw right shadow */
++    tty_colorize_area (y + 1, x + cols, rows - 1, 2, shadow_color);
++    /* draw bottom shadow */
++    tty_colorize_area (y + rows, x + 2, 1, cols, shadow_color);
++}
++
++/* --------------------------------------------------------------------------------------------- */
++
+ char *
+ mc_tty_normalize_from_utf8 (const char *str)
+ {
+diff --git a/lib/tty/tty.h b/lib/tty/tty.h
+index fb1d94da8..5b9bf684f 100644
+--- a/lib/tty/tty.h
++++ b/lib/tty/tty.h
+@@ -126,6 +126,7 @@ extern void tty_print_one_hline (gboolean single);
+ extern void tty_draw_hline (int y, int x, int ch, int len);
+ extern void tty_draw_vline (int y, int x, int ch, int len);
+ extern void tty_draw_box (int y, int x, int rows, int cols, gboolean single);
++extern void tty_draw_box_shadow (int y, int x, int rows, int cols, int shadow_color);
+ extern void tty_fill_region (int y, int x, int rows, int cols, unsigned char ch);
+ 
+ extern int tty_resize (int fd);
+diff --git a/lib/widget/frame.c b/lib/widget/frame.c
+index 1f4f14d8a..5d5a5acdf 100644
+--- a/lib/widget/frame.c
++++ b/lib/widget/frame.c
+@@ -76,6 +76,9 @@ frame_draw (const WFrame * f)
+ 
+     colors = widget_get_colors (w);
+ 
++    if (mc_global.tty.shadows)
++        tty_draw_box_shadow (w->y, w->x, w->lines, w->cols, SHADOW_COLOR);
++
+     tty_setcolor (colors[FRAME_COLOR_NORMAL]);
+     tty_fill_region (w->y, w->x, w->lines, w->cols, ' ');
+     tty_draw_box (w->y + d, w->x + d, w->lines - 2 * d, w->cols - 2 * d, f->single);
+diff --git a/lib/widget/menu.c b/lib/widget/menu.c
+index ca2ff472a..271832e9d 100644
+--- a/lib/widget/menu.c
++++ b/lib/widget/menu.c
+@@ -187,6 +187,10 @@ menubar_draw_drop (const WMenuBar * menubar)
+     if (column + menu->max_entry_len + 5 > (gsize) w->cols)
+         column = w->cols - menu->max_entry_len - 5;
+ 
++    if (mc_global.tty.shadows)
++        tty_draw_box_shadow (w->y + 1, w->x + column, count + 2, menu->max_entry_len + 5,
++                             SHADOW_COLOR);
++
+     tty_setcolor (MENU_ENTRY_COLOR);
+     tty_draw_box (w->y + 1, w->x + column, count + 2, menu->max_entry_len + 5, FALSE);
+ 
+diff --git a/misc/mc.default.keymap b/misc/mc.default.keymap
+index d05e97e65..1bf68b2df 100644
+--- a/misc/mc.default.keymap
++++ b/misc/mc.default.keymap
+@@ -1,5 +1,5 @@
+ [main]
+-ChangePanel = tab
++ChangePanel = tab; ctrl-i
+ Help = f1
+ UserMenu = f2
+ View = f3
+diff --git a/misc/mc.emacs.keymap b/misc/mc.emacs.keymap
+index 70935cd47..022de7698 100644
+--- a/misc/mc.emacs.keymap
++++ b/misc/mc.emacs.keymap
+@@ -1,5 +1,5 @@
+ [main]
+-ChangePanel = tab
++ChangePanel = tab; ctrl-i
+ Help = f1
+ UserMenu = f2
+ View = f3
+diff --git a/misc/skins/dark.ini b/misc/skins/dark.ini
+index 58d6f8351..0cfeb8ecf 100644
+--- a/misc/skins/dark.ini
++++ b/misc/skins/dark.ini
+@@ -39,6 +39,7 @@
+     header = yellow;black
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = brightcyan;blue
+diff --git a/misc/skins/darkfar.ini b/misc/skins/darkfar.ini
+index e0e1a5879..c6dcf68f2 100644
+--- a/misc/skins/darkfar.ini
++++ b/misc/skins/darkfar.ini
+@@ -39,6 +39,7 @@
+     header = yellow;black
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = brightcyan;blue
+diff --git a/misc/skins/default.ini b/misc/skins/default.ini
+index afc060ade..145eb998b 100644
+--- a/misc/skins/default.ini
++++ b/misc/skins/default.ini
+@@ -39,6 +39,7 @@
+     header = yellow;blue
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = black;lightgray
+diff --git a/misc/skins/double-lines.ini b/misc/skins/double-lines.ini
+index cad1e2807..7f35df0bc 100644
+--- a/misc/skins/double-lines.ini
++++ b/misc/skins/double-lines.ini
+@@ -39,6 +39,7 @@
+     header = yellow;blue
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = black;lightgray
+diff --git a/misc/skins/featured-plus.ini b/misc/skins/featured-plus.ini
+index be7dde7a6..a0dc07028 100644
+--- a/misc/skins/featured-plus.ini
++++ b/misc/skins/featured-plus.ini
+@@ -41,6 +41,7 @@
+     header = yellow;blue
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = black;lightgray
+diff --git a/misc/skins/featured.ini b/misc/skins/featured.ini
+index b37671899..43ce2f293 100644
+--- a/misc/skins/featured.ini
++++ b/misc/skins/featured.ini
+@@ -41,6 +41,7 @@
+     header = yellow;blue
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = black;lightgray
+diff --git a/misc/skins/gotar.ini b/misc/skins/gotar.ini
+index b9b8aa093..3b81867fc 100644
+--- a/misc/skins/gotar.ini
++++ b/misc/skins/gotar.ini
+@@ -36,6 +36,7 @@
+     header = brightred;
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = brightcyan;blue
+diff --git a/misc/skins/gray-green-purple256.ini b/misc/skins/gray-green-purple256.ini
+index 4a15b798c..3ae534cae 100644
+--- a/misc/skins/gray-green-purple256.ini
++++ b/misc/skins/gray-green-purple256.ini
+@@ -45,6 +45,7 @@
+     reverse =
+     commandlinemark = ;main1
+     header = main2
++    shadow = black;gray12
+ 
+ [dialog]
+     _default_ = black;bgdarker
+diff --git a/misc/skins/gray-orange-blue256.ini b/misc/skins/gray-orange-blue256.ini
+index cddd27b5f..fa491f014 100644
+--- a/misc/skins/gray-orange-blue256.ini
++++ b/misc/skins/gray-orange-blue256.ini
+@@ -45,6 +45,7 @@
+     reverse =
+     commandlinemark = ;main1
+     header = main2
++    shadow = black;gray12
+ 
+ [dialog]
+     _default_ = black;bgdarker
+diff --git a/misc/skins/julia256.ini b/misc/skins/julia256.ini
+index bf04dd9e6..a61701cfd 100644
+--- a/misc/skins/julia256.ini
++++ b/misc/skins/julia256.ini
+@@ -42,6 +42,7 @@
+     header = yellow;color237
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = black;lightgray
+diff --git a/misc/skins/mc46.ini b/misc/skins/mc46.ini
+index 0b1f099d7..f971310ed 100644
+--- a/misc/skins/mc46.ini
++++ b/misc/skins/mc46.ini
+@@ -39,6 +39,7 @@
+     header = yellow;blue
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = black;lightgray
+diff --git a/misc/skins/modarcon16-defbg.ini b/misc/skins/modarcon16-defbg.ini
+index 12391af2f..c004f6363 100644
+--- a/misc/skins/modarcon16-defbg.ini
++++ b/misc/skins/modarcon16-defbg.ini
+@@ -81,6 +81,7 @@
+     disabled = color8;color7
+     #inputhistory =
+     #commandhistory =
++    shadow = color7;color0
+ 
+ [dialog]
+     _default_ = color0;color7
+diff --git a/misc/skins/modarcon16.ini b/misc/skins/modarcon16.ini
+index f0fe8d9e8..8cf81ab8b 100644
+--- a/misc/skins/modarcon16.ini
++++ b/misc/skins/modarcon16.ini
+@@ -81,6 +81,7 @@
+     disabled = color8;color7
+     #inputhistory =
+     #commandhistory =
++    shadow = color7;color0
+ 
+ [dialog]
+     _default_ = color0;color7
+diff --git a/misc/skins/modarcon16root-defbg.ini b/misc/skins/modarcon16root-defbg.ini
+index f00351b36..b74700489 100644
+--- a/misc/skins/modarcon16root-defbg.ini
++++ b/misc/skins/modarcon16root-defbg.ini
+@@ -81,6 +81,7 @@
+     disabled = color8;color7
+     #inputhistory =
+     #commandhistory =
++    shadow = color7;color0
+ 
+ [dialog]
+     _default_ = color0;color7
+diff --git a/misc/skins/modarcon16root.ini b/misc/skins/modarcon16root.ini
+index f76c8d6c9..d9afd5a3d 100644
+--- a/misc/skins/modarcon16root.ini
++++ b/misc/skins/modarcon16root.ini
+@@ -81,6 +81,7 @@
+     disabled = color8;color7
+     #inputhistory =
+     #commandhistory =
++    shadow = color7;color0
+ 
+ [dialog]
+     _default_ = color0;color7
+diff --git a/misc/skins/modarin256-defbg.ini b/misc/skins/modarin256-defbg.ini
+index dcc6f265a..f12d33623 100644
+--- a/misc/skins/modarin256-defbg.ini
++++ b/misc/skins/modarin256-defbg.ini
+@@ -81,6 +81,7 @@
+     disabled = color246;color239
+     #inputhistory =
+     #commandhistory =
++    shadow = color240;color0
+ 
+ [dialog]
+     _default_ = color252;color239
+diff --git a/misc/skins/modarin256.ini b/misc/skins/modarin256.ini
+index fa2bf2e93..8d1872aa7 100644
+--- a/misc/skins/modarin256.ini
++++ b/misc/skins/modarin256.ini
+@@ -81,6 +81,7 @@
+     disabled = color246;color239
+     #inputhistory =
+     #commandhistory =
++    shadow = color240;color0
+ 
+ [dialog]
+     _default_ = color252;color239
+diff --git a/misc/skins/modarin256root-defbg.ini b/misc/skins/modarin256root-defbg.ini
+index dcf7a29b4..48a4e9927 100644
+--- a/misc/skins/modarin256root-defbg.ini
++++ b/misc/skins/modarin256root-defbg.ini
+@@ -81,6 +81,7 @@
+     disabled = color246;color239
+     #inputhistory =
+     #commandhistory =
++    shadow = color240;color0
+ 
+ [dialog]
+     _default_ = color252;color239
+diff --git a/misc/skins/modarin256root.ini b/misc/skins/modarin256root.ini
+index 9bb4feefe..0a361ed24 100644
+--- a/misc/skins/modarin256root.ini
++++ b/misc/skins/modarin256root.ini
+@@ -81,6 +81,7 @@
+     disabled = color246;color239
+     #inputhistory =
+     #commandhistory =
++    shadow = color240;color0
+ 
+ [dialog]
+     _default_ = color252;color239
+diff --git a/misc/skins/nicedark.ini b/misc/skins/nicedark.ini
+index fb2c076a5..0b5ee0107 100644
+--- a/misc/skins/nicedark.ini
++++ b/misc/skins/nicedark.ini
+@@ -39,6 +39,7 @@
+     header = lightgray;black
+     inputhistory =
+     commandhistory =
++    shadow = gray;black
+ 
+ [dialog]
+     _default_ = lightgray;black
+diff --git a/misc/skins/sand256.ini b/misc/skins/sand256.ini
+index f60ad44ab..94b1b77ca 100644
+--- a/misc/skins/sand256.ini
++++ b/misc/skins/sand256.ini
+@@ -94,6 +94,7 @@
+     reverse = ;rgb452
+     commandlinemark = white;gray
+     header = red;;italic
++    shadow = black;rgb221
+ 
+ [dialog]
+     _default_ = black;rgb553
+diff --git a/misc/skins/seasons-autumn16M.ini b/misc/skins/seasons-autumn16M.ini
+index 182e2219b..bc8dc65ea 100644
+--- a/misc/skins/seasons-autumn16M.ini
++++ b/misc/skins/seasons-autumn16M.ini
+@@ -65,6 +65,8 @@
+     DialogFocus = #69880c
+     Input = #b5c400
+     PaleFg = #555
++    ShadowFg = #7f7f55
++    ShadowBg = #4c1002
+     Error = #840000
+     ErrorFocus = #b00
+     Top = #ff9909
+@@ -106,6 +108,7 @@
+     reverse = #000;Bottom
+     commandlinemark = #000;DialogFocus
+     header = HeaderFg
++    shadow = ShadowFg;ShadowBg
+ 
+ [dialog]
+     _default_ = #000;Dialog
+diff --git a/misc/skins/seasons-spring16M.ini b/misc/skins/seasons-spring16M.ini
+index de5906e2b..2c44a243b 100644
+--- a/misc/skins/seasons-spring16M.ini
++++ b/misc/skins/seasons-spring16M.ini
+@@ -65,6 +65,8 @@
+     DialogFocus = #b3de85
+     Input = Main
+     PaleFg = #777
++    ShadowFg = #000
++    ShadowBg = #797f73
+     Error = #c62b41
+     ErrorFocus = #e16d7e
+     Top = #f699a6
+@@ -106,6 +108,7 @@
+     reverse = #000;Bottom
+     commandlinemark = #000;DialogFocus
+     header = HeaderFg
++    shadow = ShadowFg;ShadowBg
+ 
+ [dialog]
+     _default_ = #000;Dialog
+diff --git a/misc/skins/seasons-summer16M.ini b/misc/skins/seasons-summer16M.ini
+index a8a01caa3..e9c686dc1 100644
+--- a/misc/skins/seasons-summer16M.ini
++++ b/misc/skins/seasons-summer16M.ini
+@@ -65,6 +65,8 @@
+     DialogFocus = #f864f6
+     Input = #d7ffad
+     PaleFg = #777
++    ShadowFg = #000
++    ShadowBg = #7f7659
+     Error = #d40707
+     ErrorFocus = #db7b7b
+     Top = #46cef3
+@@ -106,6 +108,7 @@
+     reverse = #000;Bottom
+     commandlinemark = #000;DialogFocus
+     header = HeaderFg
++    shadow = ShadowFg;ShadowBg
+ 
+ [dialog]
+     _default_ = #000;Dialog
+diff --git a/misc/skins/seasons-winter16M.ini b/misc/skins/seasons-winter16M.ini
+index bebc50c79..2724b2f09 100644
+--- a/misc/skins/seasons-winter16M.ini
++++ b/misc/skins/seasons-winter16M.ini
+@@ -65,6 +65,8 @@
+     DialogFocus = #afbad8
+     Input = Main
+     PaleFg = #777
++    ShadowFg = #000
++    ShadowBg = #727176
+     Error = #3c4766
+     ErrorFocus = #586896
+     Top = #6b99d7
+@@ -106,6 +108,7 @@
+     reverse = #000;Bottom
+     commandlinemark = #000;DialogFocus
+     header = HeaderFg
++    shadow = ShadowFg;ShadowBg
+ 
+ [dialog]
+     _default_ = #000;Dialog
+diff --git a/misc/skins/xoria256.ini b/misc/skins/xoria256.ini
+index 771f39ca4..d0e6b8a9b 100644
+--- a/misc/skins/xoria256.ini
++++ b/misc/skins/xoria256.ini
+@@ -82,6 +82,8 @@
+     #commandhistory =
+     #commandlinemark = black;lightgray
+ 
++    shadow = color239;black
++
+ [dialog]
+     _default_ = black;color250
+     dhotnormal = color88;;
+diff --git a/misc/skins/yadt256-defbg.ini b/misc/skins/yadt256-defbg.ini
+index 8eec14c14..5de0aef57 100644
+--- a/misc/skins/yadt256-defbg.ini
++++ b/misc/skins/yadt256-defbg.ini
+@@ -48,6 +48,7 @@
+     disabled = color246;color239
+     #inputhistory =
+     #commandhistory =
++    shadow = color239;black
+ 
+ [dialog]
+     _default_ = color252;color239
+diff --git a/misc/skins/yadt256.ini b/misc/skins/yadt256.ini
+index 639576214..8fd2c70b7 100644
+--- a/misc/skins/yadt256.ini
++++ b/misc/skins/yadt256.ini
+@@ -47,6 +47,7 @@
+     disabled = color246;color239
+     #inputhistory =
+     #commandhistory =
++    shadow = color239;black
+ 
+ [dialog]
+     _default_ = color252;color239
+diff --git a/src/execute.c b/src/execute.c
+index d9b306e67..f35c53d94 100644
+--- a/src/execute.c
++++ b/src/execute.c
+@@ -551,7 +551,6 @@ toggle_subshell (void)
+     {
+         if (mc_global.mc_run_mode == MC_RUN_FULL)
+         {
+-            do_load_prompt ();
+             if (new_dir_vpath != NULL)
+                 do_possible_cd (new_dir_vpath);
+         }
+diff --git a/src/filemanager/boxes.c b/src/filemanager/boxes.c
+index e6a9abe1a..6dae3f04c 100644
+--- a/src/filemanager/boxes.c
++++ b/src/filemanager/boxes.c
+@@ -42,6 +42,7 @@
+ #include "lib/global.h"
+ 
+ #include "lib/tty/tty.h"
++#include "lib/tty/color.h"      /* tty_use_colors() */
+ #include "lib/tty/key.h"        /* XCTRL and ALT macros  */
+ #include "lib/skin.h"           /* INPUT_COLOR */
+ #include "lib/mcconfig.h"       /* Load/save user formats */
+@@ -119,6 +120,8 @@ static gchar *current_skin_name;
+ static WListbox *bg_list = NULL;
+ #endif /* ENABLE_BACKGROUND */
+ 
++static unsigned long shadows_id;
++
+ /* --------------------------------------------------------------------------------------------- */
+ /*** file scope functions ************************************************************************/
+ /* --------------------------------------------------------------------------------------------- */
+@@ -272,6 +275,38 @@ sel_skin_button (WButton * button, int action)
+ 
+ /* --------------------------------------------------------------------------------------------- */
+ 
++static cb_ret_t
++appearance_box_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *data)
++{
++    switch (msg)
++    {
++    case MSG_INIT:
++        if (!tty_use_colors ())
++        {
++            Widget *shadow;
++
++            shadow = widget_find_by_id (w, shadows_id);
++            CHECK (shadow)->state = FALSE;
++            widget_disable (shadow, TRUE);
++        }
++        return MSG_HANDLED;
++
++    case MSG_NOTIFY:
++        if (sender != NULL && sender->id == shadows_id)
++        {
++            mc_global.tty.shadows = CHECK (sender)->state;
++            repaint_screen ();
++            return MSG_HANDLED;
++        }
++        return MSG_NOT_HANDLED;
++
++    default:
++        return dlg_default_callback (w, sender, msg, parm, data);
++    }
++}
++
++/* --------------------------------------------------------------------------------------------- */
++
+ static cb_ret_t
+ panel_listing_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *data)
+ {
+@@ -590,6 +625,8 @@ configure_box (void)
+ void
+ appearance_box (void)
+ {
++    gboolean shadows = mc_global.tty.shadows;
++
+     current_skin_name = g_strdup (mc_skin__default.name);
+     skin_names = mc_skin_list ();
+ 
+@@ -602,6 +639,8 @@ appearance_box (void)
+                 QUICK_BUTTON (str_fit_to_term (skin_name_to_label (current_skin_name), 20, J_LEFT_FIT),
+                               B_USER, sel_skin_button, NULL),
+             QUICK_STOP_COLUMNS,
++            QUICK_SEPARATOR (TRUE),
++            QUICK_CHECKBOX (N_("&Shadows"), &mc_global.tty.shadows, &shadows_id),
+             QUICK_BUTTONS_OK_CANCEL,
+             QUICK_END
+             /* *INDENT-ON* */
+@@ -610,14 +649,17 @@ appearance_box (void)
+         quick_dialog_t qdlg = {
+             -1, -1, 54,
+             N_("Appearance"), "[Appearance]",
+-            quick_widgets, dlg_default_callback, NULL
++            quick_widgets, appearance_box_callback, NULL
+         };
+ 
+         if (quick_dialog (&qdlg) == B_ENTER)
+             mc_config_set_string (mc_global.main_config, CONFIG_APP_SECTION, "skin",
+                                   current_skin_name);
+         else
++        {
+             skin_apply (NULL);
++            mc_global.tty.shadows = shadows;
++        }
+     }
+ 
+     g_free (current_skin_name);
+diff --git a/src/filemanager/chattr.c b/src/filemanager/chattr.c
+index d68612211..7078e09b0 100644
+--- a/src/filemanager/chattr.c
++++ b/src/filemanager/chattr.c
+@@ -865,6 +865,8 @@ chattrboxes_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
+         break;
+ 
+     default:
++        /* return MOU_UNHANDLED */
++        event->result.abort = TRUE;
+         break;
+     }
+ }
+diff --git a/src/filemanager/cmd.c b/src/filemanager/cmd.c
+index 2b35f6783..43d07af4b 100644
+--- a/src/filemanager/cmd.c
++++ b/src/filemanager/cmd.c
+@@ -1415,7 +1415,7 @@ single_dirsize_cmd (void)
+         status_msg_init (STATUS_MSG (&dsm), _("Directory scanning"), 0, dirsize_status_init_cb,
+                          dirsize_status_update_cb, dirsize_status_deinit_cb);
+ 
+-        if (compute_dir_size (p, &dsm, &dir_count, &count, &total, TRUE) == FILE_CONT)
++        if (compute_dir_size (p, &dsm, &dir_count, &count, &total, FALSE) == FILE_CONT)
+         {
+             entry->st.st_size = (off_t) total;
+             entry->f.dir_size_computed = 1;
+@@ -1462,7 +1462,7 @@ dirsizes_cmd (void)
+             gboolean ok;
+ 
+             p = vfs_path_from_str (panel->dir.list[i].fname);
+-            ok = compute_dir_size (p, &dsm, &dir_count, &count, &total, TRUE) != FILE_CONT;
++            ok = compute_dir_size (p, &dsm, &dir_count, &count, &total, FALSE) != FILE_CONT;
+             vfs_path_free (p);
+             if (ok)
+                 break;
+diff --git a/src/filemanager/file.c b/src/filemanager/file.c
+index 4c4b20c38..5aeec2a02 100644
+--- a/src/filemanager/file.c
++++ b/src/filemanager/file.c
+@@ -614,7 +614,7 @@ make_symlink (file_op_context_t * ctx, const char *src_path, const char *dst_pat
+ static FileProgressStatus
+ do_compute_dir_size (const vfs_path_t * dirname_vpath, dirsize_status_msg_t * dsm,
+                      size_t * dir_count, size_t * ret_marked, uintmax_t * ret_total,
+-                     gboolean compute_symlinks)
++                     mc_stat_fn stat_func)
+ {
+     static guint64 timestamp = 0;
+     /* update with 25 FPS rate */
+@@ -627,21 +627,6 @@ do_compute_dir_size (const vfs_path_t * dirname_vpath, dirsize_status_msg_t * ds
+     struct dirent *dirent;
+     FileProgressStatus ret = FILE_CONT;
+ 
+-    if (!compute_symlinks)
+-    {
+-        res = mc_lstat (dirname_vpath, &s);
+-        if (res != 0)
+-            return ret;
+-
+-        /* don't scan symlink to directory */
+-        if (S_ISLNK (s.st_mode))
+-        {
+-            (*ret_marked)++;
+-            *ret_total += (uintmax_t) s.st_size;
+-            return ret;
+-        }
+-    }
+-
+     (*dir_count)++;
+ 
+     dir = mc_opendir (dirname_vpath);
+@@ -657,13 +642,13 @@ do_compute_dir_size (const vfs_path_t * dirname_vpath, dirsize_status_msg_t * ds
+ 
+         tmp_vpath = vfs_path_append_new (dirname_vpath, dirent->d_name, (char *) NULL);
+ 
+-        res = mc_lstat (tmp_vpath, &s);
++        res = stat_func (tmp_vpath, &s);
+         if (res == 0)
+         {
+             if (S_ISDIR (s.st_mode))
+                 ret =
+                     do_compute_dir_size (tmp_vpath, dsm, dir_count, ret_marked, ret_total,
+-                                         compute_symlinks);
++                                         stat_func);
+             else
+             {
+                 ret = FILE_CONT;
+@@ -700,27 +685,29 @@ do_compute_dir_size (const vfs_path_t * dirname_vpath, dirsize_status_msg_t * ds
+ 
+ static FileProgressStatus
+ panel_compute_totals (const WPanel * panel, dirsize_status_msg_t * sm, size_t * ret_count,
+-                      uintmax_t * ret_total, gboolean compute_symlinks)
++                      uintmax_t * ret_total, gboolean follow_symlinks)
+ {
+     int i;
+     size_t dir_count = 0;
++    mc_stat_fn stat_func = follow_symlinks ? mc_stat : mc_lstat;
+ 
+     for (i = 0; i < panel->dir.len; i++)
+     {
+-        struct stat *s;
++        const file_entry_t *fe = &panel->dir.list[i];
++        const struct stat *s;
+ 
+-        if (!panel->dir.list[i].f.marked)
++        if (fe->f.marked == 0)
+             continue;
+ 
+-        s = &panel->dir.list[i].st;
++        s = &fe->st;
+ 
+-        if (S_ISDIR (s->st_mode))
++        if (S_ISDIR (s->st_mode) || (follow_symlinks && link_isdir (fe) && fe->f.stale_link == 0))
+         {
+             vfs_path_t *p;
+             FileProgressStatus status;
+ 
+-            p = vfs_path_append_new (panel->cwd_vpath, panel->dir.list[i].fname, (char *) NULL);
+-            status = compute_dir_size (p, sm, &dir_count, ret_count, ret_total, compute_symlinks);
++            p = vfs_path_append_new (panel->cwd_vpath, fe->fname, (char *) NULL);
++            status = do_compute_dir_size (p, sm, &dir_count, ret_count, ret_total, stat_func);
+             vfs_path_free (p);
+ 
+             if (status != FILE_CONT)
+@@ -754,6 +741,7 @@ panel_operate_init_totals (const WPanel * panel, const vfs_path_t * source,
+     if (verbose && compute_totals)
+     {
+         dirsize_status_msg_t dsm;
++        gboolean stale_link = FALSE;
+ 
+         memset (&dsm, 0, sizeof (dsm));
+         dsm.allow_skip = TRUE;
+@@ -766,12 +754,15 @@ panel_operate_init_totals (const WPanel * panel, const vfs_path_t * source,
+         if (source == NULL)
+             status = panel_compute_totals (panel, &dsm, &ctx->progress_count, &ctx->progress_bytes,
+                                            ctx->follow_links);
+-        else if (S_ISDIR (source_stat->st_mode))
++        else if (S_ISDIR (source_stat->st_mode)
++                 || (ctx->follow_links
++                     && file_is_symlink_to_dir (source, (struct stat *) source_stat, &stale_link)
++                     && !stale_link))
+         {
+             size_t dir_count = 0;
+ 
+-            status = compute_dir_size (source, &dsm, &dir_count, &ctx->progress_count,
+-                                       &ctx->progress_bytes, ctx->follow_links);
++            status = do_compute_dir_size (source, &dsm, &dir_count, &ctx->progress_count,
++                                          &ctx->progress_bytes, ctx->stat_func);
+         }
+         else
+         {
+@@ -3196,10 +3187,10 @@ dirsize_status_deinit_cb (status_msg_t * sm)
+ FileProgressStatus
+ compute_dir_size (const vfs_path_t * dirname_vpath, dirsize_status_msg_t * sm,
+                   size_t * ret_dir_count, size_t * ret_marked_count, uintmax_t * ret_total,
+-                  gboolean compute_symlinks)
++                  gboolean follow_symlinks)
+ {
+     return do_compute_dir_size (dirname_vpath, sm, ret_dir_count, ret_marked_count, ret_total,
+-                                compute_symlinks);
++                                follow_symlinks ? mc_stat : mc_lstat);
+ }
+ 
+ /* --------------------------------------------------------------------------------------------- */
+diff --git a/src/filemanager/file.h b/src/filemanager/file.h
+index f54f5415c..ae12e1572 100644
+--- a/src/filemanager/file.h
++++ b/src/filemanager/file.h
+@@ -62,7 +62,7 @@ FileProgressStatus file_error (gboolean allow_retry, const char *format, const c
+ /* return value is FILE_CONT or FILE_ABORT */
+ FileProgressStatus compute_dir_size (const vfs_path_t * dirname_vpath, dirsize_status_msg_t * sm,
+                                      size_t * ret_dir_count, size_t * ret_marked_count,
+-                                     uintmax_t * ret_total, gboolean compute_symlinks);
++                                     uintmax_t * ret_total, gboolean follow_symlinks);
+ 
+ void dirsize_status_init_cb (status_msg_t * sm);
+ int dirsize_status_update_cb (status_msg_t * sm);
+diff --git a/src/filemanager/layout.c b/src/filemanager/layout.c
+index dfffa96f5..f6fc53b8d 100644
+--- a/src/filemanager/layout.c
++++ b/src/filemanager/layout.c
+@@ -1498,7 +1498,11 @@ load_prompt (int fd, void *unused)
+     (void) fd;
+     (void) unused;
+ 
+-    do_load_prompt ();
++    if (should_read_new_subshell_prompt)
++        do_load_prompt ();
++    else
++        flush_subshell (0, QUIETLY);
++
+     return 0;
+ }
+ #endif /* ENABLE_SUBSHELL */
+diff --git a/src/keybind-defaults.c b/src/keybind-defaults.c
+index 713a400da..c423e6be4 100644
+--- a/src/keybind-defaults.c
++++ b/src/keybind-defaults.c
+@@ -90,7 +90,7 @@ typedef struct global_keymap_ini_t
+ 
+ /* midnight */
+ static const global_keymap_ini_t default_main_keymap[] = {
+-    {"ChangePanel", "tab"},
++    {"ChangePanel", "tab; ctrl-i"},
+     {"Help", "f1"},
+     {"UserMenu", "f2"},
+     {"View", "f3"},
+diff --git a/src/setup.c b/src/setup.c
+index 37618a9cd..6c20c6e95 100644
+--- a/src/setup.c
++++ b/src/setup.c
+@@ -360,6 +360,7 @@ static const struct
+ #endif /* USE_INTERNAL_EDIT */
+     { "editor_ask_filename_before_edit", &editor_ask_filename_before_edit },
+     { "nice_rotating_dash", &nice_rotating_dash },
++    { "shadows", &mc_global.tty.shadows },
+     { "mcview_remember_file_position", &mcview_remember_file_position },
+     { "auto_fill_mkdir_name", &auto_fill_mkdir_name },
+     { "copymove_persistent_attr", &copymove_persistent_attr },
+diff --git a/src/subshell/common.c b/src/subshell/common.c
+index 06699233c..df3aedc03 100644
+--- a/src/subshell/common.c
++++ b/src/subshell/common.c
+@@ -15,6 +15,7 @@
+    Claes Nästén <me@pekdon.net>
+    Egmont Koblinger <egmont@gmail.com>
+    Enrico Weigelt, metux IT service <weigelt@metux.de>
++   Eric Roberts <ericmrobertsdeveloper@gmail.com>
+    Igor Urazov <z0rc3r@gmail.com>
+    Ilia Maslakov <il.smind@gmail.com>
+    Leonard den Ottolander <leonard@den.ottolander.nl>
+@@ -105,6 +106,9 @@
+ #include "lib/util.h"
+ #include "lib/widget.h"
+ 
++#include "src/filemanager/layout.h"     /* setup_cmdline() */
++#include "src/filemanager/command.h"    /* cmdline */
++
+ #include "subshell.h"
+ #include "internal.h"
+ 
+@@ -123,6 +127,10 @@ GString *subshell_prompt = NULL;
+ /* We need to paint it after CONSOLE_RESTORE, see: load_prompt */
+ gboolean update_subshell_prompt = FALSE;
+ 
++/* If set, then a command has just finished executing, and we need */
++/* to be on the lookout for a new prompt string from the subshell. */
++gboolean should_read_new_subshell_prompt;
++
+ /*** file scope macro definitions ****************************************************************/
+ 
+ #ifndef WEXITSTATUS
+@@ -151,6 +159,14 @@ enum
+     WRITE = 1
+ };
+ 
++/* This is the keybinding that is sent to the shell, to make the shell send us the contents of
++ * the current command buffer. */
++#define SHELL_BUFFER_KEYBINDING "_"
++
++/* This is the keybinding that is sent to the shell, to make the shell send us the location of
++ * the cursor. */
++#define SHELL_CURSOR_KEYBINDING "+"
++
+ /*** file scope variables ************************************************************************/
+ 
+ /* tcsh closes all non-standard file descriptors, so we have to use a pipe */
+@@ -169,6 +185,9 @@ static char pty_buffer[PTY_BUFFER_SIZE] = "\0";
+ /* To pass CWD info from the subshell to MC */
+ static int subshell_pipe[2];
+ 
++/* To pass command buffer info from the subshell to MC */
++static int command_buffer_pipe[2];
++
+ /* The subshell's process ID */
+ static pid_t subshell_pid = 1;
+ 
+@@ -178,6 +197,17 @@ static char subshell_cwd[MC_MAXPATHLEN + 1];
+ /* Flag to indicate whether the subshell is ready for next command */
+ static int subshell_ready;
+ 
++/* Flag to indicate if the subshell supports the persistent buffer feature. */
++static gboolean use_persistent_buffer = FALSE;
++
++/* Flag to indicate if the contents of the subshell command line need to be cleared before */
++/* executing a command. This should only end up set to true if there is some sort of error. */
++/* This allows us to recover gracefully from an error. */
++static gboolean subshell_should_clear_command_line = FALSE;
++
++/* This is the local variable where the subshell prompt is stored while we are working on it. */
++static GString *subshell_prompt_temp_buffer = NULL;
++
+ /* The following two flags can be changed by the SIGCHLD handler. This is */
+ /* OK, because the 'int' type is updated atomically on all known machines */
+ static volatile int subshell_alive, subshell_stopped;
+@@ -362,6 +392,10 @@ init_subshell_child (const char *pty_name)
+     dup2 (subshell_pty_slave, STDERR_FILENO);
+ 
+     close (subshell_pipe[READ]);
++
++    if (use_persistent_buffer)
++        close (command_buffer_pipe[READ]);
++
+     close (subshell_pty_slave); /* These may be FD_CLOEXEC, but just in case... */
+     /* Close master side of pty.  This is important; apart from */
+     /* freeing up the descriptor for use in the subshell, it also       */
+@@ -468,6 +502,216 @@ synchronize (void)
+     /* We can't do any better without modifying the shell(s) */
+ }
+ 
++/* --------------------------------------------------------------------------------------------- */
++/* Get the contents of the current subshell command line buffer, and */
++/* transfer the contents to the panel command prompt. */
++
++static gboolean
++read_command_line_buffer (gboolean test_mode)
++{
++    /* Make static to avoid allocation of large buffers in the stack each time */
++    static char subshell_command_buffer[BUF_LARGE];
++    static char subshell_cursor_buffer[BUF_SMALL];
++
++    fd_set read_set;
++    int i;
++    ssize_t bytes;
++    struct timeval subshell_prompt_timer = { 0, 0 };
++    int command_buffer_length;
++    int command_buffer_char_length;
++    int cursor_position;
++    int maxfdp;
++    int rc;
++    char *end;
++
++    if (!use_persistent_buffer)
++        return TRUE;
++
++    FD_ZERO (&read_set);
++    FD_SET (command_buffer_pipe[READ], &read_set);
++    maxfdp = command_buffer_pipe[READ];
++
++    /* First, flush the command buffer pipe. This pipe shouldn't be written
++     * to under normal circumstances, but if it somehow does get written
++     * to, we need to make sure to discard whatever data is there before
++     * we try to use it. */
++    while ((rc = select (maxfdp + 1, &read_set, NULL, NULL, &subshell_prompt_timer)) != 0)
++    {
++        if (rc == -1)
++        {
++            if (errno == EINTR)
++                continue;
++
++            return FALSE;
++        }
++
++        if (rc == 1)
++        {
++            bytes = read (command_buffer_pipe[READ], subshell_command_buffer,
++                          sizeof (subshell_command_buffer));
++            (void) bytes;
++        }
++    }
++
++    /* get contents of command line buffer */
++    write_all (mc_global.tty.subshell_pty, ESC_STR SHELL_BUFFER_KEYBINDING,
++               sizeof (ESC_STR SHELL_CURSOR_KEYBINDING) - 1);
++
++    subshell_prompt_timer.tv_sec = 1;
++    FD_ZERO (&read_set);
++    FD_SET (command_buffer_pipe[READ], &read_set);
++
++    while ((rc = select (maxfdp + 1, &read_set, NULL, NULL, &subshell_prompt_timer)) != 1)
++    {
++        if (rc == -1)
++        {
++            if (errno == EINTR)
++                continue;
++
++            return FALSE;
++        }
++
++        if (rc == 0)
++            return FALSE;
++    }
++
++    bytes =
++        read (command_buffer_pipe[READ], subshell_command_buffer, sizeof (subshell_command_buffer));
++    if (bytes == 0 || bytes == sizeof (subshell_command_buffer))
++        return FALSE;
++
++    command_buffer_char_length = bytes - 1;
++    subshell_command_buffer[command_buffer_char_length] = '\0';
++    command_buffer_length = str_length (subshell_command_buffer);
++
++    /* get cursor position */
++    write_all (mc_global.tty.subshell_pty, ESC_STR SHELL_CURSOR_KEYBINDING,
++               sizeof (ESC_STR SHELL_CURSOR_KEYBINDING) - 1);
++
++    subshell_prompt_timer.tv_sec = 1;
++    subshell_prompt_timer.tv_usec = 0;
++    FD_ZERO (&read_set);
++    FD_SET (command_buffer_pipe[READ], &read_set);
++
++    while ((rc = select (maxfdp + 1, &read_set, NULL, NULL, &subshell_prompt_timer)) != 1)
++    {
++        if (rc == -1)
++        {
++            if (errno == EINTR)
++                continue;
++
++            return FALSE;
++        }
++
++        if (rc == 0)
++            return FALSE;
++    }
++
++    bytes =
++        read (command_buffer_pipe[READ], subshell_cursor_buffer, sizeof (subshell_cursor_buffer));
++    if (bytes == 0)
++        return FALSE;
++
++    subshell_cursor_buffer[bytes - 1] = '\0';
++    cursor_position = strtol (subshell_cursor_buffer, &end, 10);
++    if (end == subshell_cursor_buffer)
++        return FALSE;
++
++    if (test_mode)
++        return TRUE;
++
++    /* Erase non-text characters in the command buffer, such as tab, or newline, as this
++     * could cause problems. */
++    for (i = 0; i < command_buffer_char_length; i++)
++        if ((unsigned char) subshell_command_buffer[i] < 32
++            || (unsigned char) subshell_command_buffer[i] == 127)
++            subshell_command_buffer[i] = ' ';
++
++    input_assign_text (cmdline, "");
++    input_insert (cmdline, subshell_command_buffer, FALSE);
++
++    if (mc_global.shell->type == SHELL_BASH)
++    {
++        /* We need to do this because bash gives the cursor position in a utf-8 string based
++         * on the location in bytes, not in unicode characters. */
++        for (i = 0; i < command_buffer_length; i++)
++            if (str_offset_to_pos (subshell_command_buffer, i) == cursor_position)
++                break;
++        cursor_position = i;
++    }
++    if (cursor_position > command_buffer_length)
++        cursor_position = command_buffer_length;
++    cmdline->point = cursor_position;
++    /* We send any remaining data to STDOUT before we finish. */
++    flush_subshell (0, VISIBLY);
++
++    /* Now we erase the current contents of the command line buffer */
++    if (mc_global.shell->type != SHELL_ZSH)
++    {
++        /* In zsh, we can just press c-u to clear the line, without needing to go to the end of
++         * the line first first. In all other shells, we must go to the end of the line first. */
++
++        /* If we are not at the end of the line, we go to the end. */
++        if (cursor_position != command_buffer_length)
++        {
++            write_all (mc_global.tty.subshell_pty, "\005", 1);
++            if (flush_subshell (1, VISIBLY) != 1)
++                return FALSE;
++        }
++    }
++
++    if (command_buffer_length > 0)
++    {
++        /* Now we clear the line. */
++        write_all (mc_global.tty.subshell_pty, "\025", 1);
++        if (flush_subshell (1, VISIBLY) != 1)
++            return FALSE;
++    }
++
++    return TRUE;
++}
++
++/* --------------------------------------------------------------------------------------------- */
++
++static void
++clear_subshell_prompt_string (void)
++{
++    if (subshell_prompt_temp_buffer != NULL)
++        g_string_set_size (subshell_prompt_temp_buffer, 0);
++}
++
++/* --------------------------------------------------------------------------------------------- */
++
++static void
++parse_subshell_prompt_string (const char *buffer, int bytes)
++{
++    int i;
++
++    /* First time through */
++    if (subshell_prompt == NULL)
++        subshell_prompt = g_string_sized_new (INITIAL_PROMPT_SIZE);
++    if (subshell_prompt_temp_buffer == NULL)
++        subshell_prompt_temp_buffer = g_string_sized_new (INITIAL_PROMPT_SIZE);
++
++    /* Extract the prompt from the shell output */
++    for (i = 0; i < bytes; i++)
++        if (buffer[i] == '\n' || buffer[i] == '\r')
++            g_string_set_size (subshell_prompt_temp_buffer, 0);
++        else if (buffer[i] != '\0')
++            g_string_append_c (subshell_prompt_temp_buffer, buffer[i]);
++}
++
++/* --------------------------------------------------------------------------------------------- */
++
++static void
++set_prompt_string (void)
++{
++    if (subshell_prompt_temp_buffer->len != 0)
++        g_string_assign (subshell_prompt, subshell_prompt_temp_buffer->str);
++
++    setup_cmdline ();
++}
++
+ /* --------------------------------------------------------------------------------------------- */
+ /** Feed the subshell our keyboard input until it says it's finished */
+ 
+@@ -481,6 +725,9 @@ feed_subshell (int how, gboolean fail_on_error)
+     struct timeval wtime;       /* Maximum time we wait for the subshell */
+     struct timeval *wptr;
+ 
++    should_read_new_subshell_prompt = FALSE;
++    subshell_should_clear_command_line = FALSE;
++
+     /* we wait up to 10 seconds if fail_on_error, forever otherwise */
+     wtime.tv_sec = 10;
+     wtime.tv_usec = 0;
+@@ -549,6 +796,9 @@ feed_subshell (int how, gboolean fail_on_error)
+ 
+             if (how == VISIBLY)
+                 write_all (STDOUT_FILENO, pty_buffer, bytes);
++
++            if (should_read_new_subshell_prompt)
++                parse_subshell_prompt_string (pty_buffer, bytes);
+         }
+ 
+         else if (FD_ISSET (subshell_pipe[READ], &read_set))
+@@ -563,10 +813,12 @@ feed_subshell (int how, gboolean fail_on_error)
+                 exit (EXIT_FAILURE);
+             }
+ 
+-            subshell_cwd[bytes - 1] = 0;        /* Squash the final '\n' */
++            subshell_cwd[bytes - 1] = '\0';     /* Squash the final '\n' */
+ 
+             synchronize ();
+ 
++            clear_subshell_prompt_string ();
++            should_read_new_subshell_prompt = TRUE;
+             subshell_ready = TRUE;
+             if (subshell_state == RUNNING_COMMAND)
+             {
+@@ -578,6 +830,7 @@ feed_subshell (int how, gboolean fail_on_error)
+         else if (FD_ISSET (STDIN_FILENO, &read_set))
+             /* Read from stdin, write to the subshell */
+         {
++            should_read_new_subshell_prompt = FALSE;
+             bytes = read (STDIN_FILENO, pty_buffer, sizeof (pty_buffer));
+             if (bytes <= 0)
+             {
+@@ -591,15 +844,33 @@ feed_subshell (int how, gboolean fail_on_error)
+                 if (pty_buffer[i] == subshell_switch_key)
+                 {
+                     write_all (mc_global.tty.subshell_pty, pty_buffer, i);
++
+                     if (subshell_ready)
++                    {
+                         subshell_state = INACTIVE;
++                        set_prompt_string ();
++                        if (subshell_ready && !read_command_line_buffer (FALSE))
++                        {
++                            /* If we got here, some unforseen error must have occurred. */
++                            flush_subshell (0, VISIBLY);
++                            input_assign_text (cmdline, "");
++                            subshell_should_clear_command_line = TRUE;
++                        }
++                    }
++
+                     return TRUE;
+                 }
+ 
+             write_all (mc_global.tty.subshell_pty, pty_buffer, bytes);
+ 
+             if (pty_buffer[bytes - 1] == '\n' || pty_buffer[bytes - 1] == '\r')
++            {
++                /* We should only clear the command line if we are using a shell that works
++                 * with persistent command buffer, otherwise we get awkward results. */
++                if (use_persistent_buffer)
++                    input_assign_text (cmdline, "");
+                 subshell_ready = FALSE;
++            }
+         }
+         else
+             return FALSE;
+@@ -784,8 +1055,11 @@ init_subshell_precmd (char *precmd, size_t buff_size)
+     {
+     case SHELL_BASH:
+         g_snprintf (precmd, buff_size,
++                    " bind -x '\"\\e" SHELL_BUFFER_KEYBINDING "\":\"echo $READLINE_LINE>&%d\"'\n"
++                    " bind -x '\"\\e" SHELL_CURSOR_KEYBINDING "\":\"echo $READLINE_POINT>&%d\"'\n"
+                     " PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND\n}'pwd>&%d;kill -STOP $$'\n"
+-                    "PS1='\\u@\\h:\\w\\$ '\n", subshell_pipe[WRITE]);
++                    "PS1='\\u@\\h:\\w\\$ '\n",
++                    command_buffer_pipe[WRITE], command_buffer_pipe[WRITE], subshell_pipe[WRITE]);
+         break;
+ 
+     case SHELL_ASH_BUSYBOX:
+@@ -844,25 +1118,33 @@ init_subshell_precmd (char *precmd, size_t buff_size)
+ 
+     case SHELL_ZSH:
+         g_snprintf (precmd, buff_size,
++                    " mc_print_command_buffer () { echo $BUFFER >&%d}\n"
++                    " zle -N mc_print_command_buffer\n"
++                    " bindkey '^[" SHELL_BUFFER_KEYBINDING "' mc_print_command_buffer\n"
++                    " mc_print_cursor_position () { echo $CURSOR >&%d}\n"
++                    " zle -N mc_print_cursor_position\n"
++                    " bindkey '^[" SHELL_CURSOR_KEYBINDING "' mc_print_cursor_position\n"
+                     " _mc_precmd(){ pwd>&%d;kill -STOP $$ }; precmd_functions+=(_mc_precmd)\n"
+-                    "PS1='%%n@%%m:%%~%%# '\n", subshell_pipe[WRITE]);
++                    "PS1='%%n@%%m:%%~%%# '\n",
++                    command_buffer_pipe[WRITE], command_buffer_pipe[WRITE], subshell_pipe[WRITE]);
+         break;
+ 
+     case SHELL_TCSH:
+         g_snprintf (precmd, buff_size,
+                     "set echo_style=both; "
+                     "set prompt='%%n@%%m:%%~%%# '; "
+-                    "alias precmd 'echo $cwd:q >>%s; kill -STOP $$'\n", tcsh_fifo);
++                    "alias precmd 'echo -n;echo $cwd:q >>%s; kill -STOP $$'\n", tcsh_fifo);
+         break;
+-
+     case SHELL_FISH:
+         g_snprintf (precmd, buff_size,
+                     " if not functions -q fish_prompt_mc;"
+                     "functions -e fish_right_prompt;"
+                     "functions -c fish_prompt fish_prompt_mc; end;"
+                     "function fish_prompt;"
++                    "bind \\e\\" SHELL_BUFFER_KEYBINDING " 'echo (commandline)>&%d'\n"
++                    "bind \\e\\" SHELL_CURSOR_KEYBINDING " 'echo (commandline -C)>&%d'\n"
+                     "echo \"$PWD\">&%d; fish_prompt_mc; kill -STOP %%self; end\n",
+-                    subshell_pipe[WRITE]);
++                    command_buffer_pipe[WRITE], command_buffer_pipe[WRITE], subshell_pipe[WRITE]);
+         break;
+ 
+     default:
+@@ -1034,7 +1316,17 @@ init_subshell (void)
+                 return;
+             }
+         }
+-        else if (pipe (subshell_pipe))  /* subshell_type is BASH, ASH_BUSYBOX, DASH or ZSH */
++        else if (pipe (subshell_pipe) != 0)     /* subshell_type is BASH, ASH_BUSYBOX, DASH or ZSH */
++        {
++            perror (__FILE__ ": couldn't create pipe");
++            mc_global.tty.use_subshell = FALSE;
++            return;
++        }
++
++        if (mc_global.shell->type == SHELL_BASH || mc_global.shell->type == SHELL_ZSH
++            || mc_global.shell->type == SHELL_FISH)
++            use_persistent_buffer = TRUE;
++        if (use_persistent_buffer && pipe (command_buffer_pipe) != 0)
+         {
+             perror (__FILE__ ": couldn't create pipe");
+             mc_global.tty.use_subshell = FALSE;
+@@ -1071,12 +1363,17 @@ init_subshell (void)
+     subshell_state = RUNNING_COMMAND;
+     tty_enable_interrupt_key ();
+     if (!feed_subshell (QUIETLY, TRUE))
+-    {
+         mc_global.tty.use_subshell = FALSE;
+-    }
+     tty_disable_interrupt_key ();
+     if (!subshell_alive)
+         mc_global.tty.use_subshell = FALSE;     /* Subshell died instantly, so don't use it */
++
++    /* Try out the persistent command buffer feature. If it doesn't work the first time, we
++     * assume there must be something wrong with the shell, and we turn persistent buffer off
++     * for good. This will save the user the trouble of having to wait for the persistent
++     * buffer function to time out every time they try to close the subshell. */
++    if (use_persistent_buffer && !read_command_line_buffer (TRUE))
++        use_persistent_buffer = FALSE;
+ }
+ 
+ /* --------------------------------------------------------------------------------------------- */
+@@ -1100,10 +1397,45 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
+             /* FIXME: possibly take out this hack; the user can re-play it by hitting C-hyphen a few times! */
+             if (subshell_ready && mc_global.mc_run_mode == MC_RUN_FULL)
+                 write_all (mc_global.tty.subshell_pty, " \b", 2);       /* Hack to make prompt reappear */
++
++            if (use_persistent_buffer)
++            {
++                size_t i;
++                int pos;
++
++                /* Check to make sure there are no non text characters in the command buffer,
++                 * such as tab, or newline, as this could cause problems. */
++                for (i = 0; cmdline->buffer[i] != '\0'; i++)
++                    if ((unsigned char) cmdline->buffer[i] < 32
++                        || (unsigned char) cmdline->buffer[i] == 127)
++                        cmdline->buffer[i] = ' ';
++
++                /* Write the command buffer to the subshell. */
++                write_all (mc_global.tty.subshell_pty, cmdline->buffer, strlen (cmdline->buffer));
++
++                /* Put the cursor in the correct place in the subshell. */
++                pos = str_length (cmdline->buffer) - cmdline->point;
++                for (i = 0; i < (size_t) pos; i++)
++                    write_all (mc_global.tty.subshell_pty, ESC_STR "[D", 3);
++            }
+         }
+     }
+     else                        /* MC has passed us a user command */
+     {
++        /* Before we write to the command prompt, we need to clear whatever */
++        /* data is there, but only if we are using one of the shells that */
++        /* doesn't support keeping command buffer contents, OR if there was */
++        /* some sort of error. */
++        if (!use_persistent_buffer || subshell_should_clear_command_line)
++        {
++            write_all (mc_global.tty.subshell_pty, "\003", 1);
++            subshell_state = RUNNING_COMMAND;
++            /* We need to call feed_subshell here if we are using fish, because of a quirk
++             * in the behavioral of that particular shell. */
++            if (mc_global.shell->type != SHELL_FISH)
++                feed_subshell (QUIETLY, FALSE);
++        }
++
+         if (how == QUIETLY)
+             write_all (mc_global.tty.subshell_pty, " ", 1);
+         /* FIXME: if command is long (>8KB ?) we go comma */
+@@ -1131,6 +1463,50 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
+     return subshell_get_mainloop_quit ();
+ }
+ 
++/* --------------------------------------------------------------------------------------------- */
++
++gboolean
++flush_subshell (int max_wait_length, int how)
++{
++    int rc = 0;
++    ssize_t bytes = 0;
++    struct timeval timeleft = { 0, 0 };
++    gboolean return_value = FALSE;
++    fd_set tmp;
++
++    timeleft.tv_sec = max_wait_length;
++    FD_ZERO (&tmp);
++    FD_SET (mc_global.tty.subshell_pty, &tmp);
++
++    while (subshell_alive
++           && (rc = select (mc_global.tty.subshell_pty + 1, &tmp, NULL, NULL, &timeleft)) != 0)
++    {
++        /* Check for 'select' errors */
++        if (rc == -1)
++        {
++            if (errno == EINTR)
++            {
++                if (tty_got_winch ())
++                    tty_change_screen_size ();
++
++                continue;
++            }
++
++            fprintf (stderr, "select (FD_SETSIZE, &tmp...): %s\r\n", unix_error_string (errno));
++            exit (EXIT_FAILURE);
++        }
++
++        return_value = TRUE;
++        timeleft.tv_sec = 0;
++        timeleft.tv_usec = 0;
++
++        bytes = read (mc_global.tty.subshell_pty, pty_buffer, sizeof (pty_buffer));
++        if (how == VISIBLY)
++            write_all (STDOUT_FILENO, pty_buffer, bytes);
++    }
++
++    return return_value;
++}
+ 
+ /* --------------------------------------------------------------------------------------------- */
+ 
+@@ -1140,24 +1516,16 @@ read_subshell_prompt (void)
+     int rc = 0;
+     ssize_t bytes = 0;
+     struct timeval timeleft = { 0, 0 };
+-    GString *p;
+-    gboolean prompt_was_reset = FALSE;
++    gboolean should_reset_prompt = TRUE;
++    gboolean got_new_prompt = FALSE;
+ 
+     fd_set tmp;
+     FD_ZERO (&tmp);
+     FD_SET (mc_global.tty.subshell_pty, &tmp);
+ 
+-    /* First time through */
+-    if (subshell_prompt == NULL)
+-        subshell_prompt = g_string_sized_new (INITIAL_PROMPT_SIZE);
+-
+-    p = g_string_sized_new (INITIAL_PROMPT_SIZE);
+-
+     while (subshell_alive
+            && (rc = select (mc_global.tty.subshell_pty + 1, &tmp, NULL, NULL, &timeleft)) != 0)
+     {
+-        ssize_t i;
+-
+         /* Check for 'select' errors */
+         if (rc == -1)
+         {
+@@ -1174,22 +1542,18 @@ read_subshell_prompt (void)
+         }
+ 
+         bytes = read (mc_global.tty.subshell_pty, pty_buffer, sizeof (pty_buffer));
++        if (should_reset_prompt)
++        {
++            should_reset_prompt = FALSE;
++            clear_subshell_prompt_string ();
++        }
+ 
+-        /* Extract the prompt from the shell output */
+-        for (i = 0; i < bytes; i++)
+-            if (pty_buffer[i] == '\n' || pty_buffer[i] == '\r')
+-            {
+-                g_string_set_size (p, 0);
+-                prompt_was_reset = TRUE;
+-            }
+-            else if (pty_buffer[i] != '\0')
+-                g_string_append_c (p, pty_buffer[i]);
++        parse_subshell_prompt_string (pty_buffer, bytes);
++        got_new_prompt = TRUE;
+     }
+ 
+-    if (p->len != 0 || prompt_was_reset)
+-        g_string_assign (subshell_prompt, p->str);
+-
+-    g_string_free (p, TRUE);
++    if (got_new_prompt)
++        set_prompt_string ();
+ 
+     return (rc != 0 || bytes != 0);
+ }
+@@ -1231,6 +1595,8 @@ exit_subshell (void)
+ 
+         g_string_free (subshell_prompt, TRUE);
+         subshell_prompt = NULL;
++        g_string_free (subshell_prompt_temp_buffer, TRUE);
++        subshell_prompt_temp_buffer = NULL;
+         pty_buffer[0] = '\0';
+     }
+ 
+@@ -1259,6 +1625,15 @@ do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
+         return;
+     }
+ 
++    /* If we are using a shell that doesn't support persistent command buffer, we need to clear
++     * the command prompt before we send the cd command. */
++    if (!use_persistent_buffer || subshell_should_clear_command_line)
++    {
++        write_all (mc_global.tty.subshell_pty, "\003", 1);
++        subshell_state = RUNNING_COMMAND;
++        if (mc_global.shell->type != SHELL_FISH)
++            feed_subshell (QUIETLY, FALSE);
++    }
+     /* The initial space keeps this out of the command history (in bash
+        because we set "HISTCONTROL=ignorespace") */
+     write_all (mc_global.tty.subshell_pty, " cd ", 4);
+diff --git a/src/subshell/subshell.h b/src/subshell/subshell.h
+index e0fdfb13e..bde19c469 100644
+--- a/src/subshell/subshell.h
++++ b/src/subshell/subshell.h
+@@ -36,10 +36,13 @@ extern GString *subshell_prompt;
+ 
+ extern gboolean update_subshell_prompt;
+ 
++extern gboolean should_read_new_subshell_prompt;
++
+ /*** declarations of public functions ************************************************************/
+ 
+ void init_subshell (void);
+ int invoke_subshell (const char *command, int how, vfs_path_t ** new_dir);
++gboolean flush_subshell (int max_wait_length, int how);
+ gboolean read_subshell_prompt (void);
+ void do_update_prompt (void);
+ gboolean exit_subshell (void);
