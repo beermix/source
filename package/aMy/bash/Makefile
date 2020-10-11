@@ -7,17 +7,11 @@
 
 include $(TOPDIR)/rules.mk
 
-#PKG_NAME:=bash
-#PKG_VERSION:=5.0
-#PKG_RELEASE:=5
-
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-#PKG_SOURCE_URL:=@GNU/bash
-#PKG_HASH:=b4a80f2ac66170b2913efbfb9f2594f1f76c7b1afd11f799e22035d63077fb4d
-
+PKG_NAME:=bash
 PKG_VERSION:=36f2c40
+
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/bminor/bash
+PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/bash.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
