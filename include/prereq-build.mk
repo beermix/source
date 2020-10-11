@@ -53,6 +53,7 @@ $(eval $(call TestHostCommand,working-g++, \
 	echo 'int main(int argc, char **argv) { return 0; }' | \
 		g++ -x c++ -o $(TMP_DIR)/a.out - -lstdc++ && \
 		$(TMP_DIR)/a.out))
+endif
 
 ifndef IB
 $(eval $(call TestHostCommand,ncurses, \
