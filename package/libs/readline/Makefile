@@ -22,7 +22,6 @@ PKG_CPE_ID:=cpe:/a:gnu:readline
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
-PKG_ASLR_PIE:=0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -46,8 +45,6 @@ define Package/libreadline/description
 	lines, to recall and perhaps reedit those lines, and perform csh-like
 	history expansion on previous commands.
 endef
-
-TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
 
 CONFIGURE_ARGS += --with-curses --disable-install-examples --enable-static --enable-shared
 
