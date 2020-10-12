@@ -71,6 +71,9 @@ define Package/shadowsocks-libev/Default
 
 endef
 
+TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
+
 DEPENDS_ss-local = +libpcre
 DEPENDS_ss-server = +libcares +libpcre
 

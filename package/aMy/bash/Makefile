@@ -46,6 +46,7 @@ define Package/bash/conffiles
 endef
 
 TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
 
 PKG_ASLR_PIE:=0
 
