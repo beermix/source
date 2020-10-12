@@ -22,8 +22,6 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
-
 define Package/shadowsocksr-libev
 	SECTION:=net
 	CATEGORY:=Network
@@ -36,8 +34,6 @@ endef
 Package/shadowsocksr-libev-server = $(Package/shadowsocksr-libev)
 Package/shadowsocksr-libev-alt = $(Package/shadowsocksr-libev)
 Package/shadowsocksr-libev-ssr-local = $(Package/shadowsocksr-libev)
-
-TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
 
 CONFIGURE_ARGS += --disable-documentation --disable-ssp --disable-assert
 

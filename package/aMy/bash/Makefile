@@ -21,6 +21,7 @@ PKG_LICENSE_FILES:=COPYING
 PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 PKG_CPE_ID:=cpe:/a:gnu:bash
 
+PKG_ASLR_PIE:=0
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -46,9 +47,6 @@ define Package/bash/conffiles
 endef
 
 TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
-TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
-
-PKG_ASLR_PIE:=0
 
 # Bash detects and enables certain features by runtest simple piece of code
 # which is not viable when doing cross compilation and default to no in many

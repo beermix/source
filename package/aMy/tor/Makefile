@@ -115,7 +115,6 @@ CONFIGURE_ARGS += \
 	--with-tor-group=tor \
 	--with-pic
 
-# TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS += -Wl,--gc-sections -flto
 

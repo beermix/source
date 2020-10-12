@@ -20,8 +20,6 @@ define Package/tinymembench
 	TITLE:=tinymembench
 endef
 
-TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
-
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS) -Wall" tinymembench
 endef
