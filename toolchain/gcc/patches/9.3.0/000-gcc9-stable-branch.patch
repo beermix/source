@@ -79,7 +79,8 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (213):
+GCC Administrator (214):
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
