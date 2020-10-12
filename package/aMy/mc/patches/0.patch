@@ -652,9 +652,58 @@ index 70935cd47..022de7698 100644
  UserMenu = f2
  View = f3
 diff --git a/misc/mc.ext.in b/misc/mc.ext.in
-index c938d0504..0faf24be2 100644
+index c938d0504..0311baae1 100644
 --- a/misc/mc.ext.in
 +++ b/misc/mc.ext.in
+@@ -361,16 +361,6 @@ shell/.info
+ shell/i/.3gp
+ 	Include=video
+ 
+-# Manual page
+-regex/(([^0-9]|^[^\.]*)\.([1-9][A-Za-z]*|[ln])|\.man)$
+-	Open=@EXTHELPERSDIR@/text.sh open man %var{PAGER:more}
+-	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view man %var{PAGER:more}
+-
+-# Perl pod page
+-shell/.pod
+-	Open=@EXTHELPERSDIR@/text.sh open pod %var{PAGER:more}
+-	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view pod %var{PAGER:more}
+-
+ # Troff with me macros.
+ # Exception - "read.me" is not a nroff file.
+ shell/read.me
+@@ -387,18 +377,28 @@ shell/.ms
+ 	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view nroff.ms %var{PAGER:more}
+ 
+ # Manual page - compressed
+-regex/([^0-9]|^[^\.]*)\.([1-9][A-Za-z]*|[ln])\.g?[Zz]$
++type/^(ASCII )?troff.*gzip compressed
+ 	Open=@EXTHELPERSDIR@/text.sh open man.gz %var{PAGER:more}
+ 	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view man.gz %var{PAGER:more}
+ 
+-regex/([^0-9]|^[^\.]*)\.([1-9][A-Za-z]*|[ln])\.bz$
++type/^(ASCII )?troff.*bzip compressed
+ 	Open=@EXTHELPERSDIR@/text.sh open man.bz %var{PAGER:more}
+ 	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view man.bz %var{PAGER:more}
+ 
+-regex/([^0-9]|^[^\.]*)\.([1-9][A-Za-z]*|[ln])\.bz2$
++type/^(ASCII )?troff.*bzip2 compressed
+ 	Open=@EXTHELPERSDIR@/text.sh open man.bz2 %var{PAGER:more}
+ 	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view man.bz2 %var{PAGER:more}
+ 
++# Manual page
++type/^(ASCII )?troff
++	Open=@EXTHELPERSDIR@/text.sh open man %var{PAGER:more}
++	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view man %var{PAGER:more}
++
++# Perl pod page
++shell/.pod
++	Open=@EXTHELPERSDIR@/text.sh open pod %var{PAGER:more}
++	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view pod %var{PAGER:more}
++
+ regex/([^0-9]|^[^\.]*)\.([1-9][A-Za-z]*|[ln])\.lz$
+ 	Open=@EXTHELPERSDIR@/text.sh open man.lz %var{PAGER:more}
+ 	View=%view{ascii,nroff} @EXTHELPERSDIR@/text.sh view man.lz %var{PAGER:more}
 @@ -671,10 +671,6 @@ regex/i/\.(epub|mobi)$
  shell/.class
  	View=%view{ascii} @EXTHELPERSDIR@/misc.sh view javaclass
@@ -677,6 +726,71 @@ index c938d0504..0faf24be2 100644
  # sqlite3.db
  type/^SQLite 3.x database
  	Open=@EXTHELPERSDIR@/misc.sh open sqlite
+@@ -761,38 +761,27 @@ shell/i/.zoo
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view zoo
+ 
+ # gzip
+-type/^gzip
++type/\(gzip compressed
+ 	Open=@EXTHELPERSDIR@/archive.sh view gz %var{PAGER:more}
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view gz
+ 
+-regex/\.(gz|Z)$
+-	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view gz
+-
+ # bzip2
+-type/^bzip2
++type/\(bzip2 compressed
+ 	Open=@EXTHELPERSDIR@/archive.sh view bzip2 %var{PAGER:more}
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view bz2
+ 
+-regex/\.bz2?$
+-	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view bz2
+-
+ # bzip
+-type/^bzip
++type/\(bzip compressed
+ 	Open=@EXTHELPERSDIR@/archive.sh view bzip %var{PAGER:more}
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view bzip
+ 
+ # compress
+-type/^compress
++type/\(compress'd
+ 	Open=@EXTHELPERSDIR@/archive.sh view gz %var{PAGER:more}
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view gz
+ 
+ # lz
+-regex/\.lz$
+-	Open=@EXTHELPERSDIR@/archive.sh view lz %var{PAGER:more}
+-	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view lz
+-
+-# lz
+-type/^LZIP
++type/\(lzip compressed
+ 	Open=@EXTHELPERSDIR@/archive.sh view lz %var{PAGER:more}
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view lz
+ 
+@@ -802,17 +791,17 @@ regex/\.lz4$
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view lz4
+ 
+ # lzma
+-regex/\.lzma$
++type/\(LZMA compressed
+ 	Open=@EXTHELPERSDIR@/archive.sh view lzma %var{PAGER:more}
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view lzma
+ 
+ # xz
+-regex/\.xz$
++type/\(XZ compressed
+ 	Open=@EXTHELPERSDIR@/archive.sh view xz %var{PAGER:more}
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view xz
+ 
+ # zstd
+-regex/\.zst$
++type/\(Zstandard compressed
+ 	Open=@EXTHELPERSDIR@/archive.sh view zst %var{PAGER:more}
+ 	View=%view{ascii} @EXTHELPERSDIR@/archive.sh view zst
+ 
 diff --git a/misc/skins/dark.ini b/misc/skins/dark.ini
 index 58d6f8351..0cfeb8ecf 100644
 --- a/misc/skins/dark.ini
@@ -1194,6 +1308,22 @@ index 2b35f6783..43d07af4b 100644
              vfs_path_free (p);
              if (ok)
                  break;
+diff --git a/src/filemanager/ext.c b/src/filemanager/ext.c
+index 8b00c0d9e..4e1520050 100644
+--- a/src/filemanager/ext.c
++++ b/src/filemanager/ext.c
+@@ -71,9 +71,9 @@
+ /*** file scope macro definitions ****************************************************************/
+ 
+ #ifdef FILE_L
+-#define FILE_CMD "file -L "
++#define FILE_CMD "file -L -z "
+ #else
+-#define FILE_CMD "file "
++#define FILE_CMD "file -z "
+ #endif
+ 
+ /*** file scope type declarations ****************************************************************/
 diff --git a/src/filemanager/file.c b/src/filemanager/file.c
 index 4c4b20c38..5aeec2a02 100644
 --- a/src/filemanager/file.c
@@ -1378,7 +1508,7 @@ index 37618a9cd..6c20c6e95 100644
      { "auto_fill_mkdir_name", &auto_fill_mkdir_name },
      { "copymove_persistent_attr", &copymove_persistent_attr },
 diff --git a/src/subshell/common.c b/src/subshell/common.c
-index 06699233c..aeb92f109 100644
+index 06699233c..e5a62b2ab 100644
 --- a/src/subshell/common.c
 +++ b/src/subshell/common.c
 @@ -15,6 +15,7 @@
@@ -1453,6 +1583,15 @@ index 06699233c..aeb92f109 100644
  /* The following two flags can be changed by the SIGCHLD handler. This is */
  /* OK, because the 'int' type is updated atomically on all known machines */
  static volatile int subshell_alive, subshell_stopped;
+@@ -353,7 +383,7 @@ init_subshell_child (const char *pty_name)
+ 
+     /* Attach all our standard file descriptors to the pty */
+ 
+-    /* This is done just before the fork, because stderr must still      */
++    /* This is done just before the exec, because stderr must still      */
+     /* be connected to the real tty during the above error messages; */
+     /* otherwise the user will never see them.                   */
+ 
 @@ -362,6 +392,10 @@ init_subshell_child (const char *pty_name)
      dup2 (subshell_pty_slave, STDERR_FILENO);
  
@@ -1464,7 +1603,7 @@ index 06699233c..aeb92f109 100644
      close (subshell_pty_slave); /* These may be FD_CLOEXEC, but just in case... */
      /* Close master side of pty.  This is important; apart from */
      /* freeing up the descriptor for use in the subshell, it also       */
-@@ -468,6 +502,222 @@ synchronize (void)
+@@ -468,6 +502,232 @@ synchronize (void)
      /* We can't do any better without modifying the shell(s) */
  }
  
@@ -1475,9 +1614,8 @@ index 06699233c..aeb92f109 100644
 +static gboolean
 +read_command_line_buffer (gboolean test_mode)
 +{
-+    /* Make static to avoid allocation of large buffers in the stack each time */
-+    static char subshell_command_buffer[BUF_LARGE];
-+    static char subshell_cursor_buffer[BUF_SMALL];
++    char subshell_command_buffer[BUF_LARGE];
++    char subshell_cursor_buffer[BUF_SMALL];
 +
 +    fd_set read_set;
 +    int i;
@@ -1485,10 +1623,10 @@ index 06699233c..aeb92f109 100644
 +    struct timeval subshell_prompt_timer = { 0, 0 };
 +    int command_buffer_length;
 +    int command_buffer_char_length;
++    int bash_version;
 +    int cursor_position;
 +    int maxfdp;
 +    int rc;
-+    char *end;
 +
 +    if (!use_persistent_buffer)
 +        return TRUE;
@@ -1579,14 +1717,22 @@ index 06699233c..aeb92f109 100644
 +        return FALSE;
 +
 +    subshell_cursor_buffer[bytes - 1] = '\0';
-+    cursor_position = strtol (subshell_cursor_buffer, &end, 10);
-+    if (end == subshell_cursor_buffer)
-+        return FALSE;
++    if (mc_global.shell->type == SHELL_BASH)
++    {
++        if (sscanf (subshell_cursor_buffer, "%d:%d", &bash_version, &cursor_position) != 2)
++            return FALSE;
++    }
++    else
++    {
++        if (sscanf (subshell_cursor_buffer, "%d", &cursor_position) != 1)
++            return FALSE;
++        bash_version = 1000;
++    }
 +
 +    if (test_mode)
 +        return TRUE;
 +
-+    /* Erase non-text characters in the command buffer, such as tab, or newline, as this
++    /* Substitute non-text characters in the command buffer, such as tab, or newline, as this
 +     * could cause problems. */
 +    for (i = 0; i < command_buffer_char_length; i++)
 +        if ((unsigned char) subshell_command_buffer[i] < 32
@@ -1596,14 +1742,17 @@ index 06699233c..aeb92f109 100644
 +    input_assign_text (cmdline, "");
 +    input_insert (cmdline, subshell_command_buffer, FALSE);
 +
-+    if (mc_global.shell->type == SHELL_BASH)
++    if (bash_version < 5)       /* implies SHELL_BASH */
 +    {
-+        /* We need to do this because bash gives the cursor position in a utf-8 string based
++        /* We need to do this because bash < v5 gives the cursor position in a utf-8 string based
 +         * on the location in bytes, not in unicode characters. */
-+        for (i = 0; i < command_buffer_length; i++)
-+            if (str_offset_to_pos (subshell_command_buffer, i) == cursor_position)
-+                break;
-+        cursor_position = i;
++        char *curr, *stop;
++
++        curr = subshell_command_buffer;
++        stop = curr + cursor_position;
++
++        for (cursor_position = 0; curr < stop; cursor_position++)
++            str_next_char_safe (&curr);
 +    }
 +    if (cursor_position > command_buffer_length)
 +        cursor_position = command_buffer_length;
@@ -1687,7 +1836,7 @@ index 06699233c..aeb92f109 100644
  /* --------------------------------------------------------------------------------------------- */
  /** Feed the subshell our keyboard input until it says it's finished */
  
-@@ -481,6 +731,9 @@ feed_subshell (int how, gboolean fail_on_error)
+@@ -481,6 +741,9 @@ feed_subshell (int how, gboolean fail_on_error)
      struct timeval wtime;       /* Maximum time we wait for the subshell */
      struct timeval *wptr;
  
@@ -1697,7 +1846,7 @@ index 06699233c..aeb92f109 100644
      /* we wait up to 10 seconds if fail_on_error, forever otherwise */
      wtime.tv_sec = 10;
      wtime.tv_usec = 0;
-@@ -549,6 +802,9 @@ feed_subshell (int how, gboolean fail_on_error)
+@@ -549,6 +812,9 @@ feed_subshell (int how, gboolean fail_on_error)
  
              if (how == VISIBLY)
                  write_all (STDOUT_FILENO, pty_buffer, bytes);
@@ -1707,7 +1856,7 @@ index 06699233c..aeb92f109 100644
          }
  
          else if (FD_ISSET (subshell_pipe[READ], &read_set))
-@@ -563,10 +819,12 @@ feed_subshell (int how, gboolean fail_on_error)
+@@ -563,10 +829,12 @@ feed_subshell (int how, gboolean fail_on_error)
                  exit (EXIT_FAILURE);
              }
  
@@ -1721,7 +1870,7 @@ index 06699233c..aeb92f109 100644
              subshell_ready = TRUE;
              if (subshell_state == RUNNING_COMMAND)
              {
-@@ -578,6 +836,7 @@ feed_subshell (int how, gboolean fail_on_error)
+@@ -578,6 +846,7 @@ feed_subshell (int how, gboolean fail_on_error)
          else if (FD_ISSET (STDIN_FILENO, &read_set))
              /* Read from stdin, write to the subshell */
          {
@@ -1729,7 +1878,7 @@ index 06699233c..aeb92f109 100644
              bytes = read (STDIN_FILENO, pty_buffer, sizeof (pty_buffer));
              if (bytes <= 0)
              {
-@@ -591,15 +850,33 @@ feed_subshell (int how, gboolean fail_on_error)
+@@ -591,15 +860,33 @@ feed_subshell (int how, gboolean fail_on_error)
                  if (pty_buffer[i] == subshell_switch_key)
                  {
                      write_all (mc_global.tty.subshell_pty, pty_buffer, i);
@@ -1763,24 +1912,35 @@ index 06699233c..aeb92f109 100644
          }
          else
              return FALSE;
-@@ -784,8 +1061,11 @@ init_subshell_precmd (char *precmd, size_t buff_size)
+@@ -784,8 +1071,13 @@ init_subshell_precmd (char *precmd, size_t buff_size)
      {
      case SHELL_BASH:
          g_snprintf (precmd, buff_size,
-+                    " bind -x '\"\\e" SHELL_BUFFER_KEYBINDING "\":\"echo $READLINE_LINE>&%d\"'\n"
-+                    " bind -x '\"\\e" SHELL_CURSOR_KEYBINDING "\":\"echo $READLINE_POINT>&%d\"'\n"
++                    " mc_print_command_buffer () { printf \"%%s\\\\n\" \"$READLINE_LINE\" >&%d; }\n"
++                    " bind -x '\"\\e" SHELL_BUFFER_KEYBINDING "\":\"mc_print_command_buffer\"'\n"
++                    " bind -x '\"\\e" SHELL_CURSOR_KEYBINDING
++                    "\":\"echo $BASH_VERSINFO:$READLINE_POINT >&%d\"'\n"
                      " PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND\n}'pwd>&%d;kill -STOP $$'\n"
 -                    "PS1='\\u@\\h:\\w\\$ '\n", subshell_pipe[WRITE]);
-+                    "PS1='\\u@\\h:\\w\\$ '\n",
-+                    command_buffer_pipe[WRITE], command_buffer_pipe[WRITE], subshell_pipe[WRITE]);
++                    "PS1='\\u@\\h:\\w\\$ '\n", command_buffer_pipe[WRITE],
++                    command_buffer_pipe[WRITE], subshell_pipe[WRITE]);
          break;
  
      case SHELL_ASH_BUSYBOX:
-@@ -844,25 +1124,33 @@ init_subshell_precmd (char *precmd, size_t buff_size)
+@@ -800,7 +1092,7 @@ init_subshell_precmd (char *precmd, size_t buff_size)
+          *    "PS1='$(precmd)\\u@\\h:\\w\\$ '\n",
+          *
+          * C: This works if user calls "ash" command because in sub-subshell
+-         *    PRECMD is unfedined, thus evaluated to empty string - no damage done.
++         *    PRECMD is undefined, thus evaluated to empty string - no damage done.
+          *    Attention: BusyBox must be built with FEATURE_EDITING_FANCY_PROMPT to
+          *    permit \u, \w, \h, \$ escape sequences. Unfortunately this cannot be guaranteed,
+          *    especially on embedded systems where people try to save space, so let's use
+@@ -844,25 +1136,33 @@ init_subshell_precmd (char *precmd, size_t buff_size)
  
      case SHELL_ZSH:
          g_snprintf (precmd, buff_size,
-+                    " mc_print_command_buffer () { echo $BUFFER >&%d}\n"
++                    " mc_print_command_buffer () { printf \"%%s\\\\n\" \"$BUFFER\" >&%d; }\n"
 +                    " zle -N mc_print_command_buffer\n"
 +                    " bindkey '^[" SHELL_BUFFER_KEYBINDING "' mc_print_command_buffer\n"
 +                    " mc_print_cursor_position () { echo $CURSOR >&%d}\n"
@@ -1802,19 +1962,20 @@ index 06699233c..aeb92f109 100644
 -
      case SHELL_FISH:
          g_snprintf (precmd, buff_size,
-                     " if not functions -q fish_prompt_mc;"
+-                    " if not functions -q fish_prompt_mc;"
++                    " bind \\e" SHELL_BUFFER_KEYBINDING " 'commandline >&%d';"
++                    "bind \\e" SHELL_CURSOR_KEYBINDING " 'commandline -C >&%d';"
++                    "if not functions -q fish_prompt_mc;"
                      "functions -e fish_right_prompt;"
                      "functions -c fish_prompt fish_prompt_mc; end;"
                      "function fish_prompt;"
-+                    "bind \\e\\" SHELL_BUFFER_KEYBINDING " 'echo (commandline)>&%d'\n"
-+                    "bind \\e\\" SHELL_CURSOR_KEYBINDING " 'echo (commandline -C)>&%d'\n"
                      "echo \"$PWD\">&%d; fish_prompt_mc; kill -STOP %%self; end\n",
 -                    subshell_pipe[WRITE]);
 +                    command_buffer_pipe[WRITE], command_buffer_pipe[WRITE], subshell_pipe[WRITE]);
          break;
  
      default:
-@@ -1034,7 +1322,18 @@ init_subshell (void)
+@@ -1034,7 +1334,18 @@ init_subshell (void)
                  return;
              }
          }
@@ -1834,7 +1995,7 @@ index 06699233c..aeb92f109 100644
          {
              perror (__FILE__ ": couldn't create pipe");
              mc_global.tty.use_subshell = FALSE;
-@@ -1071,12 +1370,17 @@ init_subshell (void)
+@@ -1071,12 +1382,17 @@ init_subshell (void)
      subshell_state = RUNNING_COMMAND;
      tty_enable_interrupt_key ();
      if (!feed_subshell (QUIETLY, TRUE))
@@ -1854,7 +2015,7 @@ index 06699233c..aeb92f109 100644
  }
  
  /* --------------------------------------------------------------------------------------------- */
-@@ -1100,10 +1404,45 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
+@@ -1100,10 +1416,45 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
              /* FIXME: possibly take out this hack; the user can re-play it by hitting C-hyphen a few times! */
              if (subshell_ready && mc_global.mc_run_mode == MC_RUN_FULL)
                  write_all (mc_global.tty.subshell_pty, " \b", 2);       /* Hack to make prompt reappear */
@@ -1900,7 +2061,7 @@ index 06699233c..aeb92f109 100644
          if (how == QUIETLY)
              write_all (mc_global.tty.subshell_pty, " ", 1);
          /* FIXME: if command is long (>8KB ?) we go comma */
-@@ -1131,6 +1470,50 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
+@@ -1131,6 +1482,50 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
      return subshell_get_mainloop_quit ();
  }
  
@@ -1951,7 +2112,7 @@ index 06699233c..aeb92f109 100644
  
  /* --------------------------------------------------------------------------------------------- */
  
-@@ -1140,24 +1523,16 @@ read_subshell_prompt (void)
+@@ -1140,24 +1535,16 @@ read_subshell_prompt (void)
      int rc = 0;
      ssize_t bytes = 0;
      struct timeval timeleft = { 0, 0 };
@@ -1978,7 +2139,7 @@ index 06699233c..aeb92f109 100644
          /* Check for 'select' errors */
          if (rc == -1)
          {
-@@ -1174,22 +1549,18 @@ read_subshell_prompt (void)
+@@ -1174,22 +1561,18 @@ read_subshell_prompt (void)
          }
  
          bytes = read (mc_global.tty.subshell_pty, pty_buffer, sizeof (pty_buffer));
@@ -2010,7 +2171,7 @@ index 06699233c..aeb92f109 100644
  
      return (rc != 0 || bytes != 0);
  }
-@@ -1229,8 +1600,18 @@ exit_subshell (void)
+@@ -1229,8 +1612,18 @@ exit_subshell (void)
                           tcsh_fifo, unix_error_string (errno));
          }
  
@@ -2031,7 +2192,7 @@ index 06699233c..aeb92f109 100644
          pty_buffer[0] = '\0';
      }
  
-@@ -1259,6 +1640,15 @@ do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
+@@ -1259,6 +1652,15 @@ do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
          return;
      }
  
