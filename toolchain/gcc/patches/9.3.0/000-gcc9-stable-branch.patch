@@ -346,7 +346,7 @@ Harald Anlauf (25):
 Hongyu Wang (1):
       Add missing FSF copyright notes for x86 intrinsic headers.
 
-Iain Buclaw (10):
+Iain Buclaw (11):
       d: Fix ICE in add_symbol_to_partition_1, at lto/lto-partition.c:215
       libphobos: Fix struct layout of stat32_t on sparc-*-solaris*
       libphobos: Fix struct layout of addrinfo on sparc-*-solaris*
@@ -357,6 +357,7 @@ Iain Buclaw (10):
       d: Fix ICE in uda_attribute_p when looking up unknown attribute
       d: Fix ICE during error recovery in semantic pass
       d: Fix ICE in expand_intrinsic_vaarg
+      d: Fix alias protection being ignored if used before declaration.
 
 Iain Sandoe (1):
       Darwin: Fix i686 bootstrap when the assembler supports GOTOFF in data.
@@ -19537,6 +19538,24 @@ index 572b3e24387..66869361dcb 100644
          return;
      }
      semanticRun = PASSsemantic;
+diff --git a/gcc/d/dmd/declaration.c b/gcc/d/dmd/declaration.c
+index d0911e21858..0e5fe6259fd 100644
+--- a/gcc/d/dmd/declaration.c
++++ b/gcc/d/dmd/declaration.c
+@@ -340,6 +340,13 @@
+ void AliasDeclaration::aliasSemantic(Scope *sc)
+ {
+     //printf("AliasDeclaration::semantic() %s\n", toChars());
++
++    // as AliasDeclaration::semantic, in case we're called first.
++    // see https://issues.dlang.org/show_bug.cgi?id=21001
++    storage_class |= sc->stc & STCdeprecated;
++    protection = sc->protection;
++    userAttribDecl = sc->userAttribDecl;
++
+     if (aliassym)
+     {
+         FuncDeclaration *fd = aliassym->isFuncLiteralDeclaration();
 diff --git a/gcc/d/dmd/expressionsem.c b/gcc/d/dmd/expressionsem.c
 index 19b7ccb7236..75794a03285 100644
 --- a/gcc/d/dmd/expressionsem.c
