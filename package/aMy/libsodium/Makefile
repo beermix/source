@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsodium
-PKG_VERSION:=6cf5e97
+PKG_VERSION:=ddce81d
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium
@@ -52,8 +52,8 @@ menu "Configuration"
 endmenu
 endef
 
-TARGET_CFLAGS := -Ofast $(filter-out -O%,$(TARGET_CFLAGS))
-TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := -Ofast $(filter-out -O%,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
 
 CONFIGURE_ARGS+= \
 	--disable-ssp \
