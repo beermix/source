@@ -173,8 +173,8 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
   TARGET_CFLAGS+=-fno-split-stack
 endif
 
-# TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
-# TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
+TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
 # TARGET_CFLAGS := $(filter-out -D_FORTIFY_SOURCE=%,$(TARGET_CFLAGS))
 
 GCC_MAKE:= \
