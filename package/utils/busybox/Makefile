@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=busybox
-PKG_VERSION:=1.32.0
-PKG_RELEASE:=2
+PKG_VERSION:=1.31.1
+PKG_RELEASE:=4
 PKG_FLAGS:=essential
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
 		http://sources.buildroot.net
-PKG_HASH:=c35d87f1d04b2b153d33c275c2632e40d388a88f19a9e71727e0bbbff51fe689
+PKG_HASH:=d0f940a72f648943c1f2211e0e3117387c31d765137d92bd8284a3fb9752a998
 
 PKG_BUILD_DEPENDS:=BUSYBOX_CONFIG_PAM:libpam
 PKG_BUILD_PARALLEL:=1
@@ -61,7 +61,7 @@ endef
 define Package/busybox-selinux
   $(call Package/busybox/Default)
   TITLE += with SELinux support
-  #DEPENDS += +libselinux
+  DEPENDS += +libselinux
   VARIANT:=selinux
   PROVIDES:=busybox
 endef
@@ -100,7 +100,6 @@ ifeq ($(BUILD_VARIANT),selinux)
   LDLIBS += selinux sepol
 endif
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -flto=jobserver -fuse-linker-plugin
 
