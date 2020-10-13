@@ -45,6 +45,7 @@ CONFIGURE_ARGS += \
 	--enable-color \
 	--enable-nanorc \
 	--disable-libmagic \
+	--disable-nls \
 
 CONFIGURE_VARS += \
 	ac_cv_header_regex_h=no \
