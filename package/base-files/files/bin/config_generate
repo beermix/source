@@ -242,7 +242,6 @@ generate_static_system() {
 		delete system.@system[0]
 		add system system
 		set system.@system[-1].hostname='owrt'
-		set system.@system[-1].zonename='Europe/Moscow'
 		set system.@system[-1].timezone='MSK-3'
 		set system.@system[-1].ttylogin='0'
 		set system.@system[-1].log_size='64'
