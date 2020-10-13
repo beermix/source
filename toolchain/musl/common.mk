@@ -9,11 +9,15 @@ include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=musl
 PKG_VERSION:=1.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=3
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://musl.libc.org/releases/
-PKG_HASH:=68af6e18539f646f9c41a3a2bb25be4a5cfa5a8f65f0bb647fd2bbfdf877e84b
+# wongsyrone: use git version
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=a5aff1972c9e3981566414b09a28e331ccd2be5d
+#PKG_MIRROR_HASH:=
+PKG_SOURCE_URL:=https://git.musl-libc.org/git/musl
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 LIBC_SO_VERSION:=$(PKG_VERSION)
 PATCH_DIR:=$(PATH_PREFIX)/patches
