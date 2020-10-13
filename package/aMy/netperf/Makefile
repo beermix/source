@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netperf
-PKG_VERSION:=f46c031
+PKG_VERSION:=netperf-2.7.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/HewlettPackard/netperf
