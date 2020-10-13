@@ -8,13 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=readline
-PKG_VERSION:=c5ad6be
+PKG_VERSION:=8.0
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/readline.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=@GNU/readline
+PKG_HASH:=e339f51971478d369f8a053a330a190781acb9864cf4c541060f12078948e461
 
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=COPYING
@@ -46,7 +45,7 @@ define Package/libreadline/description
 	history expansion on previous commands.
 endef
 
-CONFIGURE_ARGS += --with-curses --disable-install-examples --enable-static --enable-shared
+CONFIGURE_ARGS += --with-curses --disable-install-examples
 
 CONFIGURE_VARS += \
 	bash_cv_wcwidth_broken=no \
@@ -65,8 +64,8 @@ endef
 define Package/libreadline/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{history,readline}.so.* $(1)/usr/lib/
-	$(INSTALL_DIR) $(1)/etc
-	$(INSTALL_DATA) ./etc/inputrc $(1)/etc/
+	#$(INSTALL_DIR) $(1)/etc
+	#$(INSTALL_DATA) ./etc/inputrc $(1)/etc/
 endef
 
 $(eval $(call HostBuild))
