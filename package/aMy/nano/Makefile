@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/nano
-PKG_HASH:=
+PKG_HASH:=c5c1cbcf622d9a96b6030d66409ed12b204e8bc01ef5e6554ebbe6fb1d734352
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
@@ -31,7 +31,7 @@ define Package/nano
   CATEGORY:=Utilities
   TITLE:=An enhanced clone of the Pico text editor
   URL:=https://www.nano-editor.org/
-  DEPENDS:=+libslang2
+  DEPENDS:=+libncurses
 endef
 
 define Package/nano/description
@@ -40,8 +40,8 @@ define Package/nano/description
 endef
 
 CONFIGURE_ARGS += \
-	--enable-utf8 \
-	--with-slang \
+	--disable-utf8 \
+	--without-slang \
 	--enable-color \
 	--enable-nanorc \
 	--disable-libmagic \
