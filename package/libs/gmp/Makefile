@@ -28,6 +28,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/libgmp
   SECTION:=libs
   CATEGORY:=Libraries
+  DEPENDS:=+libstdcpp
   TITLE:=GNU multiprecision arithmetic library
   URL:=http://gmplib.org/
   ABI_VERSION:=10
