@@ -1,0 +1,40 @@
+--- a/lib/trace-cmd/trace-plugin.c
++++ b/lib/trace-cmd/trace-plugin.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
+  *
+  */
++#include <limits.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <dlfcn.h>
+--- a/lib/tracefs/tracefs-events.c
++++ b/lib/tracefs/tracefs-events.c
+@@ -6,6 +6,7 @@
+  * Copyright (C) 2019, VMware, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+  *
+  */
++#include <limits.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <dirent.h>
+--- a/tracecmd/trace-agent.c
++++ b/tracecmd/trace-agent.c
+@@ -10,6 +10,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <getopt.h>
++#include <limits.h>
+ #include <signal.h>
+ #include <stdbool.h>
+ #include <stdio.h>
+--- a/tracecmd/trace-setup-guest.c
++++ b/tracecmd/trace-setup-guest.c
+@@ -8,6 +8,7 @@
+ #include <fcntl.h>
+ #include <getopt.h>
+ #include <grp.h>
++#include <limits.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
