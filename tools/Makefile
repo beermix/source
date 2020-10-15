@@ -22,9 +22,9 @@ ifneq ($(CONFIG_SDK)$(CONFIG_PACKAGE_kmod-b43)$(CONFIG_PACKAGE_b43legacy-firmwar
 endif
 
 tools-y += autoconf autoconf-archive automake bc bison cmake dosfstools
-tools-y += e2fsprogs fakeroot findutils firmware-utils flex gengetopt
+tools-y += e2fsprogs findutils firmware-utils flex gengetopt
 tools-y += libressl libtool lzma m4 make-ext4fs missing-macros mkimage
-tools-y += mklibs mm-macros mtd-utils mtools padjffs2 patch-image
+tools-y += mklibs mm-macros fakeroot mtd-utils mtools padjffs2 patch-image
 tools-y += patchelf pkgconf quilt squashfskit4 sstrip zip zlib zstd
 tools-$(BUILD_B43_TOOLS) += b43-tools
 tools-$(BUILD_ISL) += isl
@@ -62,6 +62,7 @@ $(curdir)/missing-macros/compile := $(curdir)/autoconf/compile
 $(curdir)/mkimage/compile += $(curdir)/libressl/compile
 $(curdir)/mklibs/compile := $(curdir)/libtool/compile
 $(curdir)/mm-macros/compile := $(curdir)/libtool/compile
+$(curdir)/fakeroot/compile := $(curdir)/libtool/compile
 $(curdir)/mpc/compile := $(curdir)/mpfr/compile $(curdir)/gmp/compile
 $(curdir)/mpfr/compile := $(curdir)/gmp/compile
 $(curdir)/mtd-utils/compile := $(curdir)/libtool/compile $(curdir)/e2fsprogs/compile $(curdir)/zlib/compile
