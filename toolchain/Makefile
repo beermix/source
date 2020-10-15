@@ -25,7 +25,6 @@
 #    build & install libc utilities
 #
 # For musl, steps 2 and 4 are skipped, and step 3 is done after 5
-#  autoconf-lean
 
 curdir:=toolchain
 
@@ -52,7 +51,6 @@ ifeq ($(CONFIG_EXTERNAL_TOOLCHAIN),)
   $(curdir)/$(LIBC)/compile:=$(curdir)/gcc/initial/compile
   $(curdir)/gcc/final/compile:=$(curdir)/$(LIBC)/compile $(curdir)/kernel-headers/compile
   $(curdir)/$(LIBC)/utils/compile:=$(curdir)/gcc/final/compile
-  #$(curdir)/autoconf-lean/compile:=$(curdir)/gcc/final/compile
 endif
 
 ifndef DUMP_TARGET_DB
