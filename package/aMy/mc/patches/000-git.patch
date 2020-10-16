@@ -1027,6 +1027,19 @@ index 8930bb5c5..cc8ec121a 100644
  #endif
  #endif
  
+diff --git a/lib/strutil/strutilutf8.c b/lib/strutil/strutilutf8.c
+index efec6be54..5ac0015e6 100644
+--- a/lib/strutil/strutilutf8.c
++++ b/lib/strutil/strutilutf8.c
+@@ -70,7 +70,7 @@ str_unichar_iscombiningmark (gunichar uni)
+     GUnicodeType type;
+ 
+     type = g_unichar_type (uni);
+-    return (type == G_UNICODE_COMBINING_MARK)
++    return (type == G_UNICODE_SPACING_MARK)
+         || (type == G_UNICODE_ENCLOSING_MARK) || (type == G_UNICODE_NON_SPACING_MARK);
+ }
+ 
 diff --git a/lib/timer.c b/lib/timer.c
 index 25e4af6ec..f05f00e78 100644
 --- a/lib/timer.c
@@ -4422,3 +4435,38 @@ index 9cce9309d..b7bb9bce6 100644
  #include <sys/filsys.h>
  #endif
  
+diff --git a/src/viewer/ascii.c b/src/viewer/ascii.c
+index 67b653434..e2a3ce934 100644
+--- a/src/viewer/ascii.c
++++ b/src/viewer/ascii.c
+@@ -162,12 +162,6 @@
+ 
+ /*** file scope macro definitions ****************************************************************/
+ 
+-#if GLIB_CHECK_VERSION (2, 30, 0)
+-#define SPACING_MARK G_UNICODE_SPACING_MARK
+-#else
+-#define SPACING_MARK G_UNICODE_COMBINING_MARK
+-#endif
+-
+ /* The Unicode standard recommends that lonely combining characters are printed over a dotted
+  * circle. If the terminal is not UTF-8, this will be replaced by a dot anyway. */
+ #define BASE_CHARACTER_FOR_LONELY_COMBINING 0x25CC      /* dotted circle */
+@@ -266,7 +260,7 @@ mcview_is_spacing_mark (const WView * view, int c)
+ {
+ #ifdef HAVE_CHARSET
+     if (view->utf8)
+-        return g_unichar_type (c) == SPACING_MARK;
++        return g_unichar_type (c) == G_UNICODE_SPACING_MARK;
+ #else
+     (void) view;
+     (void) c;
+@@ -535,7 +529,7 @@ mcview_next_combining_char_sequence (WView * view, mcview_state_machine_t * stat
+             return i;
+         if (!mcview_ismark (view, cs[i]) || !mcview_isprint (view, cs[i]))
+             return i;
+-        if (g_unichar_type (cs[i]) == SPACING_MARK)
++        if (g_unichar_type (cs[i]) == G_UNICODE_SPACING_MARK)
+         {
+             /* Only allow as the first combining char. Stop processing in either case. */
+             if (i == 1)
