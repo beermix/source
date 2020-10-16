@@ -29,11 +29,10 @@ PKG_FLAGS:=nonshared
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_TARGET_INIT_PATH CONFIG_DROPBEAR_ECC CONFIG_DROPBEAR_ECC_FULL \
-	CONFIG_DROPBEAR_RSA CONFIG_DROPBEAR_CURVE25519 CONFIG_DROPBEAR_ZLIB \
-	CONFIG_DROPBEAR_ED25519 CONFIG_DROPBEAR_AES128 CONFIG_DROPBEAR_AES256 \
-	CONFIG_DROPBEAR_CHACHA20POLY1305 CONFIG_DROPBEAR_UTMP \
-	CONFIG_DROPBEAR_DH_GROUP14_SHA1 CONFIG_DROPBEAR_DH_GROUP14_SHA256 \
-	CONFIG_DROPBEAR_PUTUTLINE CONFIG_DROPBEAR_DBCLIENT CONFIG_DROPBEAR_SCP
+	CONFIG_DROPBEAR_CURVE25519 CONFIG_DROPBEAR_ZLIB \
+	CONFIG_DROPBEAR_ED25519 CONFIG_DROPBEAR_CHACHA20POLY1305 \
+	CONFIG_DROPBEAR_UTMP CONFIG_DROPBEAR_PUTUTLINE \
+	CONFIG_DROPBEAR_DBCLIENT CONFIG_DROPBEAR_SCP
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -68,9 +67,9 @@ define Package/dropbear/description
 endef
 
 define Package/dropbear/conffiles
-$(if $(CONFIG_DROPBEAR_RSA),/etc/dropbear/dropbear_rsa_host_key)
 $(if $(CONFIG_DROPBEAR_ED25519),/etc/dropbear/dropbear_ed25519_host_key)
 $(if $(CONFIG_DROPBEAR_ECC),/etc/dropbear/dropbear_ecdsa_host_key)
+/etc/dropbear/dropbear_rsa_host_key
 /etc/config/dropbear
 endef
 
@@ -108,7 +107,7 @@ define Build/Configure
 	echo '#define DEFAULT_PATH "$(TARGET_INIT_PATH)"' >> \
 		$(PKG_BUILD_DIR)/localoptions.h
 
-	echo '#define DROPBEAR_RSA $(if $(CONFIG_DROPBEAR_RSA),1,0)' >> \
+	echo '#define DROPBEAR_CURVE25519 $(if $(CONFIG_DROPBEAR_CURVE25519),1,0)' >> \
 		$(PKG_BUILD_DIR)/localoptions.h
 
 	for OPTION in DROPBEAR_ECDSA DROPBEAR_ECDH; do \
@@ -119,22 +118,7 @@ define Build/Configure
 	echo '#define DROPBEAR_ED25519 $(if $(CONFIG_DROPBEAR_ED25519),1,0)' >> \
 		$(PKG_BUILD_DIR)/localoptions.h
 
-	echo '#define DROPBEAR_AES128 $(if $(CONFIG_DROPBEAR_AES128),1,0)' >> \
-		$(PKG_BUILD_DIR)/localoptions.h
-
-	echo '#define DROPBEAR_AES256 $(if $(CONFIG_DROPBEAR_AES256),1,0)' >> \
-		$(PKG_BUILD_DIR)/localoptions.h
-
 	echo '#define DROPBEAR_CHACHA20POLY1305 $(if $(CONFIG_DROPBEAR_CHACHA20POLY1305),1,0)' >> \
-		$(PKG_BUILD_DIR)/localoptions.h
-
-	echo '#define DROPBEAR_DH_GROUP14_SHA1 $(if $(CONFIG_DROPBEAR_DH_GROUP14_SHA1),1,0)' >> \
-		$(PKG_BUILD_DIR)/localoptions.h
-
-	echo '#define DROPBEAR_DH_GROUP14_SHA256 $(if $(CONFIG_DROPBEAR_DH_GROUP14_SHA256),1,0)' >> \
-		$(PKG_BUILD_DIR)/localoptions.h
-
-	echo '#define DROPBEAR_CURVE25519 $(if $(CONFIG_DROPBEAR_CURVE25519),1,0)' >> \
 		$(PKG_BUILD_DIR)/localoptions.h
 
 	# remove protocol idented software version number
@@ -185,18 +169,10 @@ define Package/dropbear/install
 	$(INSTALL_DIR) $(1)/usr/lib/opkg/info
 	$(INSTALL_DIR) $(1)/etc/dropbear
 	$(INSTALL_DIR) $(1)/lib/preinit
-
-ifdef CONFIG_DROPBEAR_ED25519
-	$(INSTALL_DATA) ./files/dropbear.failsafe.ed25519 $(1)/lib/preinit/99_10_failsafe_dropbear
-else ifdef CONFIG_DROPBEAR_ECC
-	$(INSTALL_DATA) ./files/dropbear.failsafe.ecc $(1)/lib/preinit/99_10_failsafe_dropbear
-else ifdef CONFIG_DROPBEAR_RSA
-	$(INSTALL_DATA) ./files/dropbear.failsafe.rsa $(1)/lib/preinit/99_10_failsafe_dropbear
-endif
-
-	$(if $(CONFIG_DROPBEAR_ED25519),touch $(1)/etc/dropbear/dropbear_ed25519_host_key,)
-	$(if $(CONFIG_DROPBEAR_ECC),touch $(1)/etc/dropbear/dropbear_ecdsa_host_key,)
-	$(if $(CONFIG_DROPBEAR_RSA),touch $(1)/etc/dropbear/dropbear_rsa_host_key,)
+	$(INSTALL_DATA) ./files/dropbear.failsafe $(1)/lib/preinit/99_10_failsafe_dropbear
+	$(if $(CONFIG_DROPBEAR_ED25519),touch $(1)/etc/dropbear/dropbear_ed25519_host_key)
+	$(if $(CONFIG_DROPBEAR_ECC),touch $(1)/etc/dropbear/dropbear_ecdsa_host_key)
+	touch $(1)/etc/dropbear/dropbear_rsa_host_key
 endef
 
 define Package/dropbearconvert/install
