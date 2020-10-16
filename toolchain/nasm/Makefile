@@ -10,7 +10,7 @@ PKG_VERSION:=2.15.05
 PKG_SOURCE_URL:=https://www.nasm.us/pub/nasm/releasebuilds/$(PKG_VERSION)/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
-PKG_HASH:=
+PKG_HASH:=3caf6729c1073bf96629b57cee31eeb54f4f8129b01902c73428836550b30a3f
 
 HOST_BUILD_PARALLEL:=1
 
@@ -18,6 +18,7 @@ include $(INCLUDE_DIR)/toolchain-build.mk
 
 HOST_CONFIGURE_ARGS+= \
 		--target=$(REAL_GNU_TARGET_NAME) \
+		--with-sysroot=$(TOOLCHAIN_DIR) \
 		--disable-lto \
 		--disable-werror \
 		--disable-gdb \

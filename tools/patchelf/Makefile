@@ -15,6 +15,7 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/NixOS/patchelf.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
+HOST_BUILD_PARALLEL:=1
 HOST_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/host-build.mk
