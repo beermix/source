@@ -9,14 +9,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_VERSION:=2b0d1a2
+PKG_VERSION:=c63818f
 PKG_RELEASE:=1
 PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd
+PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
 PKG_MAINTAINER:=David Yang <mmyangfl@gmail.com>
