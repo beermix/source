@@ -1,9 +1,9 @@
 include $(TOPDIR)/rules.mk
+include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=fast-classifier
 PKG_RELEASE:=1
 
-include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
 
 define KernelPackage/$(PKG_NAME)/Default
@@ -49,7 +49,7 @@ Example user space program that communicates with fast
 classifier kernel module
 endef
 
-SFE_MAKE_OPTS:=SFE_SUPPORT_IPV6=y
+SFE_MAKE_OPTS:=SFE_SUPPORT_IPV6=n
 
 define Build/Compile/kmod
 	+$(MAKE) $(PKG_JOBS) -C "$(LINUX_DIR)" $(strip $(SFE_MAKE_OPTS)) \

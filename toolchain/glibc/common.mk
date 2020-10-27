@@ -12,8 +12,8 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=81c5484d93a7768a8acc4cfdc228d925d60cd906
-PKG_MIRROR_HASH:=
+PKG_SOURCE_VERSION:=0b9460d22e285432d232f42c7442a3226e1bf830
+PKG_MIRROR_HASH:=3e990ffb5e3beaa26fda8b7f490c79db1e1a11659226fdee56074e0d335a91cd
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -63,7 +63,7 @@ GLIBC_CONFIGURE:= \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_REGULAR),--enable-stack-protector=yes) \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
-		--enable-kernel=4.19.0
+		--enable-kernel=5.4
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
