@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcxxabi
-PKG_VERSION:=10.0.0
+PKG_VERSION:=11.0.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).src.tar.xz
 PKG_SOURCE_URL:=https://github.com/llvm/llvm-project/releases/download/llvmorg-$(PKG_VERSION)
-PKG_HASH:=e71bac75a88c9dde455ad3f2a2b449bf745eafd41d2d8432253b2964e0ca14e1
+PKG_HASH:=58697d4427b7a854ec7529337477eb4fba16407222390ad81a40d125673e4c15
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION).src
 
 PKG_MAINTAINER:=Rosen Penev <rosenp@gmail.com>
@@ -51,14 +51,13 @@ CMAKE_OPTIONS += \
 	-DLIBCXXABI_LIBDIR_SUFFIX="" \
 	-DLIBCXXABI_INSTALL_LIBRARY=ON \
 	-DLIBCXXABI_ENABLE_SHARED=OFF \
-	-DLIBCXXABI_LIBCXX_SRC_DIR=$(BUILD_DIR)/libcxx-$(PKG_VERSION).src \
 	-DLIBCXXABI_LIBCXX_INCLUDES=$(BUILD_DIR)/libcxx-$(PKG_VERSION).src/include
 
 TARGET_CXXFLAGS += -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 define Build/Prepare
-	$(MAKE) -C $(TOPDIR)/package/libs/libcxx prepare
+	$(MAKE) -C $(TOPDIR)/$(if $(CONFIG_IN_SDK),feeds/base/)package/libs/libcxx prepare
 	$(call Build/Prepare/Default)
 endef
 

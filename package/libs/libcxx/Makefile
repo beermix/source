@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcxx
-PKG_VERSION:=10.0.0
+PKG_VERSION:=11.0.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).src.tar.xz
 PKG_SOURCE_URL:=https://github.com/llvm/llvm-project/releases/download/llvmorg-$(PKG_VERSION)
-PKG_HASH:=270f8a3f176f1981b0f6ab8aa556720988872ec2b48ed3b605d0ced8d09156c7
+PKG_HASH:=6c1ee6690122f2711a77bc19241834a9219dda5036e1597bfa397f341a9b8b7a
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION).src
 
 PKG_MAINTAINER:=Rosen Penev <rosenp@gmail.com>
