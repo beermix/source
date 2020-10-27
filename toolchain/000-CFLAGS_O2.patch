@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index 947adf41..d2c4a154 100755
+--- a/configure
++++ b/configure
+@@ -436,7 +436,7 @@ xno|x) printf "disabled\n" ; optimize=no ;;
+ *) printf "custom\n" ;;
+ esac
+ 
+-test "$optimize" = no || tryflag CFLAGS_AUTO -Os || tryflag CFLAGS_AUTO -O2
++test "$optimize" = no || tryflag CFLAGS_AUTO -O2
+ test "$optimize" = yes && optimize="internal,malloc,string"
+ 
+ if fnmatch 'no|size' "$optimize" ; then :
