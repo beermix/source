@@ -15,6 +15,7 @@ DEVICE_TYPE?=router
 # Default packages - the really basic set
 DEFAULT_PACKAGES:=\
 	base-files \
+	busybox \
 	ca-bundle \
 	dropbear \
 	fstools \
