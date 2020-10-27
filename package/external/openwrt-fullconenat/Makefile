@@ -6,6 +6,7 @@
 #
 
 include $(TOPDIR)/rules.mk
+include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=fullconenat
 PKG_RELEASE:=3
@@ -18,17 +19,14 @@ PKG_SOURCE_VERSION:=0cf3b48fd7d2fa81d0297d1fff12bbd0580fc435
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=LICENSE
 
-include $(INCLUDE_DIR)/kernel-defaults.mk
-include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
-
 
 define Package/iptables-mod-fullconenat
   SUBMENU:=Firewall
   SECTION:=net
   CATEGORY:=Network
   TITLE:=FULLCONENAT iptables extension
-  DEPENDS:=iptables +kmod-ipt-fullconenat
+  DEPENDS:=+iptables +kmod-ipt-fullconenat
   MAINTAINER:=Chion Tang <tech@chionlab.moe>
 endef
 
@@ -46,7 +44,7 @@ define KernelPackage/ipt-fullconenat
   FILES:=$(PKG_BUILD_DIR)/xt_FULLCONENAT.ko
 endef
 
-
+include $(INCLUDE_DIR)/kernel-defaults.mk
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
