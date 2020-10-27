@@ -49,7 +49,7 @@ $(call Package/libslang2/Default/description)
 endef
 
 TARGET_CFLAGS+= $(FPIC)
-TARGET_CFLAGS:=-Os $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+TARGET_CFLAGS:=-Os $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
 CONFIGURE_ARGS+= \
 	--enable-warnings \

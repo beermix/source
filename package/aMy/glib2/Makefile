@@ -42,7 +42,7 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-TARGET_CFLAGS:=-Os $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+TARGET_CFLAGS:=-Os $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 HOST_LDFLAGS += -Wl,-rpath,$(STAGING_DIR_HOSTPKG)/lib
 TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
