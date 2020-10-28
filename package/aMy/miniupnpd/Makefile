@@ -43,7 +43,7 @@ define Build/Prepare
 	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
 endef
 
-TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
+# TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 TARGET_CFLAGS += $(FPIC) -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 MAKE_FLAGS += \
