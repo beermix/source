@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tinyproxy
-PKG_VERSION:=d98aabf
+PKG_VERSION:=adad565
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy
+PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
