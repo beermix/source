@@ -8,13 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tinyproxy
-PKG_VERSION:=adad565
+PKG_VERSION:=1.11.0-rc1
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy/releases/download/$(PKG_VERSION)
+PKG_HASH:=
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -22,7 +21,6 @@ PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:banu:tinyproxy
 
 PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -38,8 +36,6 @@ endef
 define Package/tinyproxy/conffiles
 /etc/config/tinyproxy
 endef
-
-# TARGET_CFLAGS += -D_GNU_SOURCE
 
 CONFIGURE_VARS += ac_cv_path_A2X=no
 
