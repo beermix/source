@@ -96,6 +96,9 @@ define Package/tor/conffiles
 /etc/config/tor
 endef
 
+#	--disable-gcc-hardening \
+#	--disable-linker-hardening \
+
 CONFIGURE_ARGS += \
 	--with-libevent-dir="$(STAGING_DIR)/usr" \
 	--with-openssl-dir="$(STAGING_DIR)/usr" \
@@ -109,8 +112,6 @@ CONFIGURE_ARGS += \
 	--disable-zstd \
 	--disable-module-dirauth \
 	--disable-systemd \
-	--disable-gcc-hardening \
-	--disable-linker-hardening \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--with-pic
@@ -119,7 +120,8 @@ TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 CONFIGURE_VARS += \
-	CROSS_COMPILE="yes"
+	CROSS_COMPILE="yes" \
+	ac_cv_func_mallinfo=no
 
 define Package/tor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
