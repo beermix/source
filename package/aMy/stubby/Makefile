@@ -5,14 +5,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=stubby
-PKG_VERSION:=5c37fa2
+PKG_VERSION:=0.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/getdnsapi/stubby
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_URL:=https://github.com/getdnsapi/$(PKG_NAME)
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_MIRROR_HASH:=f1585aa6881bf39c2c8f99df045d5739bb78403417a1e827644cb202fa4280f0
 
 PKG_MAINTAINER:=Jonathan Underwood <jonathan.underwood@gmail.com>
 PKG_LICENSE:=BSD-3-Clause
@@ -36,7 +35,7 @@ define Package/stubby
   SUBMENU:=IP Addresses and Names
   TITLE+= - (daemon that uses getdns)
   USERID:=stubby=410:stubby=410
-  DEPENDS:= +libyaml +getdns +ca-certs +libunbound
+  DEPENDS:= +libyaml +getdns +ca-certs
 endef
 
 define Package/stubby/description
