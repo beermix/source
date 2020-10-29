@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tinyproxy
-PKG_VERSION:=1.11.0-rc1
+PKG_VERSION:=1.10.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -37,7 +37,9 @@ define Package/tinyproxy/conffiles
 /etc/config/tinyproxy
 endef
 
-CONFIGURE_VARS += ac_cv_path_A2X=no
+CONFIGURE_ARGS+= \
+	--enable-upstream \
+	--enable-transparent
 
 define Package/tinyproxy/install
 	$(INSTALL_DIR) $(1)/usr/bin
