@@ -10,7 +10,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=35ae8d4
+PKG_VERSION:=adf81fb
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/torproject/tor.git
@@ -115,8 +115,7 @@ define Package/tor/conffiles
 /etc/config/tor
 endef
 
-#	--disable-gcc-hardening \
-#	--disable-linker-hardening \
+TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
 
 CONFIGURE_ARGS += \
 	--with-libevent-dir="$(STAGING_DIR)/usr" \
