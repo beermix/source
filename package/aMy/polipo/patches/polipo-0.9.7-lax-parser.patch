@@ -1,0 +1,173 @@
+Fri Jan 14 02:14:07 CET 2005  Juliusz Chroboczek <jch@pps.jussieu.fr>
+  * Move the lax parser docs to a more logical place.
+
+Fri Jan 14 02:07:27 CET 2005  Juliusz Chroboczek <jch@pps.jussieu.fr>
+  * Document the lax HTTP parser.
+
+Mon Sep  6 01:33:52 CEST 2004  Juliusz Chroboczek <jch@pps.jussieu.fr>
+  * Implement lax HTTP parsing.
+
+diff -rN -u polipo-stable-0.9-old/CHANGES polipo-stable-0.9-new/CHANGES
+--- polipo-stable-0.9-old/CHANGES	2005-01-14 02:15:19.000000000 +0100
++++ polipo-stable-0.9-new/CHANGES	2005-01-14 02:07:00.000000000 +0100
+@@ -1,3 +1,7 @@
++Polipo 0.9.8 (unreleased):
++
++        Backported the lax HTTP parser from the head branch.
++
+ 27 December 2004: Polipo 0.9.7:
+ 
+         Fixed a possible crash when tunnelling.
+diff -rN -u polipo-stable-0.9-old/http_parse.c polipo-stable-0.9-new/http_parse.c
+--- polipo-stable-0.9-old/http_parse.c	2005-01-14 02:15:19.000000000 +0100
++++ polipo-stable-0.9-new/http_parse.c	2005-01-14 02:02:06.000000000 +0100
+@@ -41,6 +41,7 @@
+     atomXPolipoBodyOffset;
+ 
+ int censorReferer = 0;
++int laxHttpParser = 1;
+ 
+ static AtomListPtr censoredHeaders;
+ 
+@@ -55,6 +56,8 @@
+     }
+     CONFIG_VARIABLE(censoredHeaders, CONFIG_ATOM_LIST_LOWER,
+                     "Headers to censor.");
++    CONFIG_VARIABLE(laxHttpParser, CONFIG_BOOLEAN,
++                    "Ignore unknown HTTP headers.");
+ }
+ 
+ void
+@@ -499,6 +502,8 @@
+     return i;
+ }
+ 
++/* Returned *name_start_return is -1 at end of headers, -2 if the line
++   couldn't be parsed. */
+ static int
+ parseHeaderLine(const char *restrict buf, int start,
+                 int *name_start_return, int *name_end_return,
+@@ -518,16 +523,33 @@
+ 
+     i = getNextToken(buf, start, &name_start, &name_end);
+     if(i < 0 || buf[i] != ':')
+-        return -1;
++        goto syntax;
+ 
+     i = getHeaderValue(buf, i + 2, &value_start, &value_end);
+-    if(i < 0) return -1;
++    if(i < 0)
++        goto syntax;
+ 
+     *name_start_return = name_start;
+     *name_end_return = name_end;
+     *value_start_return = value_start;
+     *value_end_return = value_end;
+     return i;
++
++ syntax:
++    i = start;
++    while(1) {
++        if(buf[i] == '\n') {
++            i++;
++            break;
++        }
++        if(buf[i] == '\r' && buf[i + 1] == '\n') {
++            i += 2;
++            break;
++        }
++        i++;
++    }
++    *name_start_return = -2;
++    return i;
+ }
+ 
+ int
+@@ -750,16 +772,19 @@
+     i = start;
+ 
+     while(1) {
+-        i = parseHeaderLine(buf, i, 
++        i = parseHeaderLine(buf, i,
+                             &name_start, &name_end, &value_start, &value_end);
+         if(i < 0) {
+-            do_log(L_ERROR, "Couldn't find end of header line\n");
++            do_log(L_ERROR, "Couldn't find end of header line.\n");
+             goto fail;
+         }
+ 
+-        if(name_start < 0)
++        if(name_start == -1)
+             break;
+ 
++        if(name_start < 0)
++            continue;
++
+         /* It's not worthwile to intern the name -- it will only be
+            compared once. */
+         
+@@ -806,13 +831,21 @@
+         i = parseHeaderLine(buf, i, 
+                             &name_start, &name_end, &value_start, &value_end);
+         if(i < 0) {
+-            do_log(L_ERROR, "Couldn't find end of header line\n");
++            do_log(L_ERROR, "Couldn't find end of header line.\n");
+             goto fail;
+         }
+ 
+-        if(name_start < 0)
++        if(name_start == -1)
+             break;
+ 
++        if(name_start < 0) {
++            do_log(L_WARN, "Couldn't parse header line.\n");
++            if(laxHttpParser)
++                continue;
++            else
++                goto fail;
++        }
++
+         name = internAtomLowerN(buf + name_start, name_end - name_start);
+         
+         if(name == atomProxyConnection) {
+diff -rN -u polipo-stable-0.9-old/polipo.texi polipo-stable-0.9-new/polipo.texi
+--- polipo-stable-0.9-old/polipo.texi	2005-01-14 02:15:19.000000000 +0100
++++ polipo-stable-0.9-new/polipo.texi	2005-01-14 02:13:07.000000000 +0100
+@@ -691,6 +691,7 @@
+ @menu
+ * Client connections::          Speaking to clients
+ * Contacting servers::          Contacting servers.
++* Tuning the HTTP parser::      
+ * Censoring headers::           Censoring headers.
+ * Offline browsing::            Browsing with poor connectivity.
+ * Server statistics::           Polipo keeps statistics about servers.
+@@ -807,7 +808,7 @@
+ and its optional integrity guarantees are impossible to implement
+ without significantly impairing latency.}.
+ 
+-@node Contacting servers, Censoring headers, Client connections, Network
++@node Contacting servers, Tuning the HTTP parser, Client connections, Network
+ @section Contacting servers
+ 
+ @cindex multiple addresses
+@@ -842,7 +843,19 @@
+ @samp{80-86, 1024-65535}.  Set this variable to @samp{1-65535} if your
+ clients (and the web pages they consult!) are fully trusted.
+ 
+-@node Censoring headers, Offline browsing, Contacting servers, Network
++@node Tuning the HTTP parser, Censoring headers, Contacting servers, Network
++@section Tuning the HTTP parser
++
++@vindex laxHttpParser
++
++As a number of HTTP servers and CGI scripts serve incorrect HTTP
++headers, Polipo uses a @emph{lax} parser by default, meaning that
++incorrect HTTP headers will be ignored (with a warning).  If the
++variable @code{laxHttpParser} is not set, Polipo will use a
++@emph{strict} parser, and refuse to serve an instance unless it could
++parse all the headers.
++
++@node Censoring headers, Offline browsing, Tuning the HTTP parser, Network
+ @section Censoring headers
+ @cindex privacy
+ @cindex anonymity
