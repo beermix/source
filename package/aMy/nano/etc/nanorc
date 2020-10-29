@@ -266,8 +266,8 @@ include "/usr/share/nanorc/*.nanorc"
 ## If you would like nano to have keybindings that are more "usual",
 ## such as ^O for Open, ^F for Find, ^H for Help, and ^Q for Quit,
 ## then uncomment these:
-bind ^Q exit all
-bind ^S savefile all
+bind ^Q exit main
+bind ^S savefile main
 #bind ^W writeout main
 #bind ^O insert main
 #bind ^H help all
