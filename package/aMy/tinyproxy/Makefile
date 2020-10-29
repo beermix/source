@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tinyproxy
 PKG_VERSION:=1.10.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy/releases/download/$(PKG_VERSION)
-PKG_HASH:=
+PKG_HASH:=59be87689c415ba0d9c9bc6babbdd3df3b372d60b21e526b118d722dbc995682
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -36,6 +36,8 @@ endef
 define Package/tinyproxy/conffiles
 /etc/config/tinyproxy
 endef
+
+CONFIGURE_VARS += ac_cv_path_A2X=no
 
 CONFIGURE_ARGS+= \
 	--enable-upstream \
