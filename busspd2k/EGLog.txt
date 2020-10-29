@@ -1,0 +1,78 @@
+Example log, Duron 750 MHz, Abit KT7 board, 512 MB PC133 RAM, CAS 2, turbo
+speed, 4-way interleaved, 4K page mode, Win2K:
+ 
+         Windows Bus Speed Test Version 2.1 by Roy Longbottom
+
+ Mov/AND 4 bytes Integer words and 8 bytes MMX words from cache/RAM via CPU
+ to 1, 2 or 8 registers. MovI address byte increments > Inc4 show effects
+ of burst reads, Real data rate might be 2 to 16 times faster than shown.
+ Reg1 vs Reg2 can show pipeline effects as can MMX MovM move data to 1 vs 8
+ registers. MB/S = 1000000's bytes per second for comparison with CPU MHz.
+
+  Minimum      0.100 seconds per test, Start Wed Sep  5 23:22:33 2001
+
+          MovI  MovI  MovI  MovI  MovI  MovI  AndI  AndI  MovM  MovM
+  Memory  Reg2  Reg2  Reg2  Reg2  Reg1  Reg2  Reg1  Reg2  Reg1  Reg8
+  KBytes Inc64 Inc32 Inc16  Inc8  Inc4  Inc4  Inc4  Inc4  Inc8  Inc8
+   Used   MB/S  MB/S  MB/S  MB/S  MB/S  MB/S  MB/S  MB/S  MB/S  MB/S
+
+      4   2727  5095  5436  5617  5321  5424  2928  5177 11140 11154
+      8   2848  5299  5518  5598  5525  5532  2958  5485 11258 11265
+     16   2916  5474  5421  5686  5557  5574  2970  5568 11311 11266
+     32   2946  5449  5529  5741  5580  5562  2976  5591 11332 11365
+     64   2816  5203  5423  5678  5537  5343  2964  5519 11145 11090
+    128    145   292   576  1098  2046  2042  1571  1567  2147  2170
+    256     64   129   260   517   693   691   465   419   994   960
+    512     64   129   259   519   691   686   465   416   992   963
+   1024     64   128   255   514   691   690   464   418   984   955
+   2048     63   125   249   498   682   677   462   416   951   925
+   4096     62   124   247   495   659   679   458   416   944   918
+   8192     63   124   246   493   679   679   460   416   941   917
+  16384     62   124   246   492   677   680   460   416   941   914
+  32768     62   124   246   493   679   678   461   415   941   914
+  65536     63   124   246   492   677   679   460   405   942   915
+ 131072     63   124   246   493   678   679   462   415   940   913
+ 262144     63   124   246   493   672   677   461   415   941   915
+
+                  End of test Wed Sep  5 23:23:14 2001
+
+  Windows NT Version 5.0, build 2195, 
+  CPU AuthenticAMD, Features Code 0183F9FF, Model Code 00000630, 750 MHz
+  From GlobalMemoryStatus: Size 523760 KB, Free 454688 KB, at end 191932 KB
+
+
+ CPU AuthenticAMD, Features Code 0183F9FF, Model Code 00000630, 750 MHz
+ Reliability Test  262144 KB, 5 seconds per test, Wed Sep  5 23:23:24 2001
+
+ Write/Read
+  1    458 MB/sec  Pattern 0000000000000000 	 Result OK         5 passes
+  2    465 MB/sec  Pattern FFFFFFFFFFFFFFFF 	 Result OK         5 passes
+  3    465 MB/sec  Pattern A5A5A5A5A5A5A5A5 	 Result OK         5 passes
+  4    465 MB/sec  Pattern 5555555555555555 	 Result OK         5 passes
+  5    465 MB/sec  Pattern 3333333333333333 	 Result OK         5 passes
+  6    465 MB/sec  Pattern F0F0F0F0F0F0F0F0 	 Result OK         5 passes
+ Read
+  1    976 MB/sec  Pattern 0000000000000000 	 Result OK        20 passes
+  2    976 MB/sec  Pattern FFFFFFFFFFFFFFFF 	 Result OK        20 passes
+  3    977 MB/sec  Pattern A5A5A5A5A5A5A5A5 	 Result OK        20 passes
+  4    977 MB/sec  Pattern 5555555555555555 	 Result OK        20 passes
+  5    976 MB/sec  Pattern 3333333333333333 	 Result OK        20 passes
+  6    976 MB/sec  Pattern F0F0F0F0F0F0F0F0 	 Result OK        20 passes
+
+ Minimum seconds each test to generate/check data   1.153, compare at end   0.426
+
+             Reliability Test Ended Wed Sep  5 23:24:43 2001
+
+
+  Configuration example Version 2.2:
+
+  CPUID and RDTSC Assembly Code
+  CPU GenuineIntel, Features Code BFEBFBFF, Model Code 000006F6
+  Intel(R) Core(TM)2 CPU          6600  @ 2.40GHz Measured 2402 MHz
+  Has MMX, Has SSE, Has SSE2, Has SSE3, No 3DNow,
+  Windows GetSystemInfo, GetVersionEx, GlobalMemoryStatus
+  Intel processor architecture, 2 CPUs 
+  Windows NT  Version 6.0, build 6001, Service Pack 1
+  Memory 4095 MB, Free 2692 MB
+  User Virtual Space 4096 MB, Free 4038 MB
+ 

@@ -1,0 +1,14 @@
+The source code is Copyright © Roy Longbottom 2007 but is free for 
+personal use or experimentation.
+
+The codes have been successfully compiled as Windowed Executable 
+via Microsoft 32-bit C/C++ Optimizing Compiler Version 13.10.3077 for 80x86. 
+Compilation was via Command Lines using included BAT files.
+
+The EXE file supplied in the main folder obtains configuration details as 
+used in newsource.zip. This overcomes an issue recognising 4 GB of RAM. 
+The EXE file here is from the code supplied here.
+
+roy@roylongbottom.org.uk
+
+ 
