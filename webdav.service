@@ -1,0 +1,13 @@
+[Unit]
+Description=Rclone
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/webdav --config "/home/user/.config/rclone/config.yml"
+Restart=on-abort
+User=user
+EnvironmentFile=/home/user
+
+[Install]
+WantedBy=default.target
