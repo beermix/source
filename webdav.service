@@ -5,9 +5,9 @@ After=network-online.target
 [Service]
 Type=simple
 User=user
-ExecStart=/usr/bin/webdav --config "/home/user/.config/rclone/config.yml"
-Restart=on-abort
 #EnvironmentFile=/home/user
+ExecStart=/usr/bin/rclone -v --no-check-certificate serve webdav --user user --pass 1 -L --addr=192.168.1.200:8080 --config=/home/user/.config/rclone/rclone.conf local:/home/user
+Restart=on-abort
 
 [Install]
 WantedBy=default.target
