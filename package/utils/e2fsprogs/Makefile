@@ -156,10 +156,7 @@ CONFIGURE_ARGS += \
 	--disable-tls		\
 	--disable-nls		\
 	--disable-rpath		\
-	--disable-fuse2fs	\
-	--without-udev-rules-dir \
-	--without-crond-dir \
-	--without-systemd-unit-dir
+	--disable-fuse2fs
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
