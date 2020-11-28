@@ -1,0 +1,11 @@
+--- a/Configure
++++ b/Configure
+@@ -1444,7 +1444,7 @@ if (!$disabled{asm} && !$predefined_C{__MACH__} && $^O ne 'VMS') {
+         # but it apparently recognizes the option in question on all
+         # supported platforms even when it's meaningless. In other words
+         # probe would fail, but probed option always accepted...
+-        push @{$config{cflags}}, "-Wa,--noexecstack", "-Qunused-arguments";
++        push @{$config{cflags}}, "-Wa,--noexecstack";
+     } else {
+         my $cc = $config{CROSS_COMPILE}.$config{CC};
+         open(PIPE, "$cc -Wa,--help -c -o null.$$.o -x assembler /dev/null 2>&1 |");
