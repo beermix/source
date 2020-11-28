@@ -1,3 +1,0 @@
-#!/bin/sh
-
-utpl -S -m fs -m uci -m ubus -m fw4 -i /usr/share/firewall4/main.utpl
