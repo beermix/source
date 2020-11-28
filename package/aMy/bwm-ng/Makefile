@@ -5,13 +5,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bwm-ng
-PKG_VERSION:=2062f94
+PKG_SOURCE_VERSION:=2062f94
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/vgropp/bwm-ng.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_URL:=https://github.com/vgropp/bwm-ng
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
