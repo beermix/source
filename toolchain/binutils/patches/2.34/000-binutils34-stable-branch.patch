@@ -2037,7 +2037,7 @@ index 5ed7302da7..9a3f352108 100644
  
  * Add support for z80-elf target.
 diff --git a/gas/config/tc-arm.c b/gas/config/tc-arm.c
-index bb0b03e35e..b6bb0debbe 100644
+index bb0b03e35e..d7849ba2fd 100644
 --- a/gas/config/tc-arm.c
 +++ b/gas/config/tc-arm.c
 @@ -230,6 +230,7 @@ static const arm_feature_set arm_ext_div = ARM_FEATURE_CORE_LOW (ARM_EXT_DIV);
@@ -2132,6 +2132,23 @@ index bb0b03e35e..b6bb0debbe 100644
        && !ARM_CPU_HAS_FEATURE (cpu_variant, arm_ext_m))
      {
        if (inst.instruction >= 0x10000)
+@@ -25992,14 +26002,14 @@ static const struct asm_opcode insns[] =
+ #define ARM_VARIANT  & fpu_vfp_ext_v1
+ #undef  THUMB_VARIANT
+ #define THUMB_VARIANT  & arm_ext_v6t2
+- mnCEF(vmla,     _vmla,    3, (RNSDQMQ, oRNSDQMQ, RNSDQ_RNSC_MQ_RR), neon_mac_maybe_scalar),
+- mnCEF(vmul,     _vmul,    3, (RNSDQMQ, oRNSDQMQ, RNSDQ_RNSC_MQ_RR), neon_mul),
+ 
+  mcCE(fcpyd,	eb00b40, 2, (RVD, RVD),	      vfp_dp_rd_rm),
+ 
+ #undef  ARM_VARIANT
+ #define ARM_VARIANT  & fpu_vfp_ext_v1xd
+ 
++ mnCEF(vmla,     _vmla,    3, (RNSDQMQ, oRNSDQMQ, RNSDQ_RNSC_MQ_RR), neon_mac_maybe_scalar),
++ mnCEF(vmul,     _vmul,    3, (RNSDQMQ, oRNSDQMQ, RNSDQ_RNSC_MQ_RR), neon_mul),
+  MNCE(vmov,   0,	1, (VMOV),	      neon_mov),
+  mcCE(fmrs,	e100a10, 2, (RR, RVS),	      vfp_reg_from_sp),
+  mcCE(fmsr,	e000a10, 2, (RVS, RR),	      vfp_sp_from_reg),
 @@ -26039,8 +26049,8 @@ static const struct asm_opcode insns[] =
  #define ARM_VARIANT & fpu_neon_ext_v1
   mnUF(vabd,      _vabd,		  3, (RNDQMQ, oRNDQMQ, RNDQMQ), neon_dyadic_if_su),
@@ -2847,6 +2864,32 @@ index 0000000000..5ba33fd29c
 +.bss
 +.fill 0x8000
 +
+diff --git a/gas/testsuite/gas/arm/pr26858.d b/gas/testsuite/gas/arm/pr26858.d
+new file mode 100644
+index 0000000000..dbe4d7122e
+--- /dev/null
++++ b/gas/testsuite/gas/arm/pr26858.d
+@@ -0,0 +1,8 @@
++# name: PR26858
++# objdump: -dr --prefix-addresses --show-raw-insn
++
++.*: +file format .*arm.*
++
++Disassembly of section .text:
++[^>]*> ee266a87 	vmul.f32	s12, s13, s14
++[^>]*> ee000a81 	vmla.f32	s0, s1, s2
+diff --git a/gas/testsuite/gas/arm/pr26858.s b/gas/testsuite/gas/arm/pr26858.s
+new file mode 100644
+index 0000000000..5a450e7bde
+--- /dev/null
++++ b/gas/testsuite/gas/arm/pr26858.s
+@@ -0,0 +1,6 @@
++.syntax unified
++.arch armv8-r
++.arm
++.fpu fpv5-sp-d16
++vmul.f32 s12, s13, s14
++vmla.f32 s0, s1, s2
 diff --git a/gas/testsuite/gas/i386/i386.exp b/gas/testsuite/gas/i386/i386.exp
 index 9be9c1a22e..a9b1d0c3b9 100644
 --- a/gas/testsuite/gas/i386/i386.exp

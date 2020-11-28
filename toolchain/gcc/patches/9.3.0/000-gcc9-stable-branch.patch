@@ -56,6 +56,10 @@ Claudiu Zissulescu (1):
 Clement Chigot (1):
       rs6000: Link with libc128.a for long-double-128.
 
+Cui,Lili (2):
+      Enable MOVDIRI, MOVDIR64B, CLDEMOTE and WAITPKG for march=tremont
+      Put PREFETCHW back to march=broadwell
+
 David Edelsohn (2):
       rs6000: AIX long double builtins for 64 bit long double.
       rs6000: Correct logic to disable NO_SUM_IN_TOC and NO_FP_IN_TOC [PR94065]
@@ -66,7 +70,7 @@ Dominique d'Humieres (1):
 Douglas Rupp (1):
       Require powerpc_vsx_ok in gcc.target/powerpc/pr71763.c
 
-Eric Botcazou (8):
+Eric Botcazou (12):
       Fix incorrect filling of delay slots in branchy code at -O2
       Fix wrong year in ChangeLog.
       Fix Ada bootstrap on Cygwin64
@@ -75,12 +79,43 @@ Eric Botcazou (8):
       Fix uninitialized variable with nested variant record types
       Adjust email address
       Fix crash on array component with nonstandard index type
+      Fix segfault on elaboration of empty 1-element array at -O
+      Fix biased integer arithmetic
+      Fix PR target/96607
+      Fix PR target/97939
 
 Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (232):
+GCC Administrator (259):
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -468,7 +503,7 @@ Jakub Jelinek (81):
       optabs: Don't reuse target for multi-word expansions if it overlaps operand(s) [PR97073]
       s390: Fix up s390_atomic_assign_expand_fenv
 
-Jason Merrill (12):
+Jason Merrill (14):
       c++: Fix CTAD with multiple-arg ctor template [93248].
       c++: Fix ICE-after-error on partial spec [92068]
       c++: Find parameter pack in typedef in lambda [92909].
@@ -481,6 +516,8 @@ Jason Merrill (12):
       c++: -fmerge-all-constants vs. destructors [PR91529]
       c++: Local class DMI using local static [PR90479]
       c++: constexpr and lambda capture [PR90212]
+      c++: Fix FE devirt with diamond inheritance [PR95158]
+      dwarf2: ICE with local class in unused function [PR97918]
 
 Jiufu Guo (1):
       rs6000: Check -+0 and NaN for smax/smin generation
@@ -488,7 +525,7 @@ Jiufu Guo (1):
 John David Anglin (1):
       Define __BIG_ENDIAN__
 
-Jonathan Wakely (49):
+Jonathan Wakely (53):
       libstdc++: Ensure root-dir converted to forward slash (PR93244)
       libstdc++: Fix FS-dependent filesystem tests
       libstdc++: Fix test failure due to -Wnonnull warnings
@@ -538,6 +575,10 @@ Jonathan Wakely (49):
       libstdc++: Fix out-of-bounds string_view access in filesystem::path [PR 97167]
       libstdc++: Fix non-reserved name in header
       libstdc++: Make std::assume_aligned a constexpr function [PR 97132]
+      libstdc++: Use non-throwing increment in recursive_directory_iterator [PR 97731]
+      libstdc++: Fix __numeric_traits_integer<__int20> [PR 97798]
+      libstdc++: Make pmr::synchronized_pool_resource work without libpthread (PR 94936)
+      libstdc++: Fix undefined FILE* operations in test
 
 Joseph Myers (1):
       Remove wrongly committed file.
@@ -619,7 +660,7 @@ Martin Jambor (2):
       gcc-9 sra: Cap number of sub-access propagations with a param (PR 93435)
       sra-9: Fix sra_modify_expr handling of partial writes (PR 94482)
 
-Martin Liska (20):
+Martin Liska (24):
       Backport 314b91220a07bd63f13c58e37f1b5b9430a3702b
       Backport 55a7380213a5c16120d5c674fb42b38a3d796b57
       Backport e9f799d25973fc38022c5ea71ed5a2bca58a847f
@@ -640,6 +681,10 @@ Martin Liska (20):
       GCOV: do not mangle .gcno files.
       IPA: fix profile handling in IRA
       IPA: compare VRP types.
+      Remove duplicate ChangeLog entry.
+      ASAN: disable -Wno-stringop-overflow for 2 tests
+      Sync gcc-changelog scripts.
+      changelog: fix parsing of a revert commit
 
 Martin Sebor (1):
       c++: reject scalar array initialization with nullptr [PR94510]
@@ -657,12 +702,20 @@ Michael Meissner (2):
       Backport PR target/93932 (variable vec_extract) to GCC 9
       Fix target/94557 PowerPC regression on GCC 9 (variable vec_extract)
 
+Monk Chiang (1):
+      PR target/97682 - Fix to reuse t1 register between call address and epilogue.
+
 Nathan Sidwell (2):
       c++: Fix ICE popping local scope [pr84733]
       c++: QT overload regression with attribute [PR94946]
 
-Patrick Palka (1):
+Patrick Palka (3):
       c++: zero_init_expr_p of dependent expression [PR95678]
+      c++: Distinguish alignof and __alignof__ in cp_tree_equal [PR97273]
+      libstdc++: Fix division by zero in std::sample
+
+Peter Bergner (1):
+      rs6000: Use the correct minimized testcase
 
 Qian Jianhua (1):
       aarch64: Add A64FX machine model
@@ -671,7 +724,7 @@ Rainer Orth (2):
       libstdc++: Update Solaris baselines for GCC 9.4
       libsanitizer: Fix GetPcSpBp determination of SP on 32-bit Solaris/x86
 
-Richard Biener (10):
+Richard Biener (11):
       tree-optimization/94163 constrain alignment set by PRE
       middle-end/94206 fix memset folding to avoid types with padding
       tree-optimization/94103 avoid CSE of loads with padding
@@ -682,6 +735,7 @@ Richard Biener (10):
       middle-end/94964 - avoid EH loop entry with CP_SIMPLE_PREHEADERS
       ipa/94947 - fix test for externally visible variables for IPA PTA
       ipa/94947 - avoid using externally_visible_p ()
+      testsuite/97688 - fix check_vect () with __AVX2__
 
 Richard Earnshaw (1):
       arm: correct constraints on movsi_compare0 [PR91913]
@@ -699,6 +753,10 @@ Romain Naour (1):
 
 Samuel Thibault (1):
       hurd: libgcc unwinding support over signal trampolines
+
+Sebastian Pop (2):
+      add --with-tune configure flag
+      add --with-{cpu,arch,tune}-{32,64} as alias flags for --with-{cpu,arch,tune}
 
 Segher Boessenkool (1):
       rs6000: Properly handle LE index munging in vec_shr (PR94710)
@@ -724,7 +782,7 @@ Szabolcs Nagy (13):
       doc: Clarify __builtin_return_address [PR94891]
       aarch64: Add missing ACLE support for PAC-RET
 
-Tamar Christina (9):
+Tamar Christina (11):
       AArch64: Break apart paradoxical subregs for VSTRUCT writes (PR target/94052)
       AArch64: Fix options canonicanization for assembler
       AArch64: Fix bugs in -mcpu=native detection.
@@ -734,6 +792,8 @@ Tamar Christina (9):
       Testuite: Document environment setting directives
       AArch64: Add test for -mcpu=native
       AArch64: Fix hwasan failure in readline.
+      AArch64: Fix overflow in memcopy expansion on aarch64.
+      AArch64: Skip test for pr97535 on ILP32 since it can't express the range.
 
 Thomas Koenig (9):
       Revert patch for PR fortran/93956.
@@ -755,16 +815,25 @@ Thomas Rodgers (3):
       libstdc++: Fix date of changelog entry
       libstdc++: Mark experimental::net::system_context ctor deleted
 
-Thomas Schwinge (3):
+Thomas Schwinge (10):
       Rename 'libgomp.oacc-c-c++-common/static-dynamic-lifetimes-*' to 'libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-*' [PR92843]
       'libgomp.oacc-fortran/{error_,}stop-{1,2,3}.f': initialize before the checkpoint
       [HSA] Avoid ICE when "HSA does not implement indirect calls"
+      libgomp testsuite: tell warning from error diagnostics, etc. [PR80219, PR85303]
+      Simplify and enhance 'libgomp.oacc-c-c++-common/pr85486*.c' [PR85486]
+      [testsuite] Enable column location checking for 'dg-optimized', 'dg-missed'
+      [testsuite] Emit 'warning' instead of 'error' diagnostics for 'dg-optimized', 'dg-missed'
+      Fix templatized C++ OpenACC 'cache' directive ICEs
+      Add 'g++.dg/gomp/map-{1,2}.C'
+      Don't create location wrapper nodes within OpenACC clauses
 
-Tobias Burnus (4):
+Tobias Burnus (6):
       [Fortran] Fix result-variable handling of MODULE PROCEDURE (PR94348)
       ICE in gfc_get_dataptr_offset, at fortran/trans-array.c:6951
       Fortran: Avoid double-free with parse error (PR96041, PR93423)
       configure: Fix in-tree building of GMP on BSD [PR97302]
+      Fortran: Fix type-decl for PDT / wrong-code pdt_14.f03 issue [PR97652]
+      Fortran: Fix function decl's location [PR95847]
 
 Uros Bizjak (6):
       i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
@@ -790,8 +859,9 @@ Xionghu Luo (1):
 Zackery Spytz (1):
       doc: Fix a typo in the documentation of the copy attribute
 
-liuhongt (1):
+liuhongt (2):
       If -mavx implies -mxsave, then -mno-xsave should imply -mno-avx.
+      Fix missing defination of PTA_CLDEMOTE, PTA_MOVDIRI, PTA_MOVDIR64B.
 
 diff --git a/ChangeLog b/ChangeLog
 index 9605d767a80..6615dbcc654 100644
@@ -850,10 +920,24 @@ index 9db4fd14aa2..4aab1482e34 100644
        with_gmp=/usr/local
      fi
 diff --git a/contrib/ChangeLog b/contrib/ChangeLog
-index fde2d2b76eb..17151424a88 100644
+index fde2d2b76eb..79e6d9bb1ec 100644
 --- a/contrib/ChangeLog
 +++ b/contrib/ChangeLog
-@@ -1,3 +1,53 @@
+@@ -1,3 +1,67 @@
++2020-11-25  Martin Liska  <mliska@suse.cz>
++
++	* gcc-changelog/git_commit.py: Use revert_regex instead
++	of string prefix.  Convert sets to literals.
++
++2020-11-06  Martin Liska  <mliska@suse.cz>
++
++	* gcc-changelog/git_commit.py: Sync.
++	* gcc-changelog/git_email.py: Likewise.
++	* gcc-changelog/git_repository.py: Likewise.
++	* gcc-changelog/test_email.py: Likewise.
++	* gcc-changelog/test_patches.txt: Likewise.
++	* gcc-changelog/setup.cfg: New file.
++
 +2020-07-29  Martin Liska  <mliska@suse.cz>
 +
 +	* git-backport.py: fix how are ChangeLog paths combined.
@@ -961,7 +1045,7 @@ index fde2d2b76eb..17151424a88 100644
 +exit(retval)
 --- /dev/null
 +++ b/contrib/gcc-changelog/git_commit.py
-@@ -0,0 +1,677 @@
+@@ -0,0 +1,692 @@
 +#!/usr/bin/env python3
 +#
 +# This file is part of GCC.
@@ -983,7 +1067,7 @@ index fde2d2b76eb..17151424a88 100644
 +import os
 +import re
 +
-+changelog_locations = set([
++changelog_locations = {
 +    'config',
 +    'contrib',
 +    'contrib/header-tools',
@@ -1036,9 +1120,9 @@ index fde2d2b76eb..17151424a88 100644
 +    'libvtv',
 +    'lto-plugin',
 +    'maintainer-scripts',
-+    'zlib'])
++    'zlib'}
 +
-+bug_components = set([
++bug_components = {
 +    'ada',
 +    'analyzer',
 +    'boehm-gc',
@@ -1087,9 +1171,9 @@ index fde2d2b76eb..17151424a88 100644
 +    'testsuite',
 +    'translation',
 +    'tree-optimization',
-+    'web'])
++    'web'}
 +
-+ignored_prefixes = [
++ignored_prefixes = {
 +    'gcc/d/dmd/',
 +    'gcc/go/gofrontend/',
 +    'gcc/testsuite/gdc.test/',
@@ -1098,18 +1182,18 @@ index fde2d2b76eb..17151424a88 100644
 +    'libphobos/libdruntime/',
 +    'libphobos/src/',
 +    'libsanitizer/',
-+    ]
++    }
 +
-+wildcard_prefixes = [
++wildcard_prefixes = {
 +    'gcc/testsuite/',
 +    'libstdc++-v3/doc/html/'
-+    ]
++    }
 +
-+misc_files = [
++misc_files = {
 +    'gcc/DATESTAMP',
 +    'gcc/BASE-VER',
 +    'gcc/DEV-PHASE'
-+    ]
++    }
 +
 +author_line_regex = \
 +        re.compile(r'^(?P<datetime>\d{4}-\d{2}-\d{2})\ {2}(?P<name>.*  <.*>)')
@@ -1119,12 +1203,14 @@ index fde2d2b76eb..17151424a88 100644
 +dr_regex = re.compile(r'\tDR ([0-9]+)$')
 +star_prefix_regex = re.compile(r'\t\*(?P<spaces>\ *)(?P<content>.*)')
 +end_of_location_regex = re.compile(r'[\[<(:]')
++item_empty_regex = re.compile(r'\t(\* \S+ )?\(\S+\):\s*$')
++item_parenthesis_regex = re.compile(r'\t(\*|\(\S+\):)')
++revert_regex = re.compile(r'This reverts commit (?P<hash>\w+).$')
 +
 +LINE_LIMIT = 100
 +TAB_WIDTH = 8
 +CO_AUTHORED_BY_PREFIX = 'co-authored-by: '
 +CHERRY_PICK_PREFIX = '(cherry picked from commit '
-+REVERT_PREFIX = 'This reverts commit '
 +
 +REVIEW_PREFIXES = ('reviewed-by: ', 'reviewed-on: ', 'signed-off-by: ',
 +                   'acked-by: ', 'tested-by: ', 'reported-by: ',
@@ -1236,8 +1322,9 @@ index fde2d2b76eb..17151424a88 100644
 +
 +        # Identify first if the commit is a Revert commit
 +        for line in self.info.lines:
-+            if line.startswith(REVERT_PREFIX):
-+                self.revert_commit = line[len(REVERT_PREFIX):].rstrip('.')
++            m = revert_regex.match(line)
++            if m:
++                self.revert_commit = m.group('hash')
 +                break
 +        if self.revert_commit:
 +            self.info = self.commit_to_info_hook(self.revert_commit)
@@ -1385,7 +1472,11 @@ index fde2d2b76eb..17151424a88 100644
 +                    continue
 +                elif line.startswith(CHERRY_PICK_PREFIX):
 +                    commit = line[len(CHERRY_PICK_PREFIX):].rstrip(')')
-+                    self.cherry_pick_commit = commit
++                    if self.cherry_pick_commit:
++                        self.errors.append(Error('multiple cherry pick lines',
++                                                 line))
++                    else:
++                        self.cherry_pick_commit = commit
 +                    continue
 +
 +                # ChangeLog name will be deduced later
@@ -1423,6 +1514,13 @@ index fde2d2b76eb..17151424a88 100644
 +                            msg = 'one space should follow asterisk'
 +                            self.errors.append(Error(msg, line))
 +                        else:
++                            content = m.group('content')
++                            parts = content.split(':')
++                            if len(parts) > 1:
++                                for needle in ('()', '[]', '<>'):
++                                    if ' ' + needle in parts[0]:
++                                        msg = f'empty group "{needle}" found'
++                                        self.errors.append(Error(msg, line))
 +                            last_entry.lines.append(line)
 +                    else:
 +                        if last_entry.is_empty:
@@ -1447,9 +1545,10 @@ index fde2d2b76eb..17151424a88 100644
 +    def check_for_empty_description(self):
 +        for entry in self.changelog_entries:
 +            for i, line in enumerate(entry.lines):
-+                if (star_prefix_regex.match(line) and line.endswith(':') and
++                if (item_empty_regex.match(line) and
 +                    (i == len(entry.lines) - 1
-+                     or star_prefix_regex.match(entry.lines[i + 1]))):
++                     or not entry.lines[i+1].strip()
++                     or item_parenthesis_regex.match(entry.lines[i+1]))):
 +                    msg = 'missing description of a change'
 +                    self.errors.append(Error(msg, line))
 +
@@ -1641,7 +1740,7 @@ index fde2d2b76eb..17151424a88 100644
 +            print(error)
 --- /dev/null
 +++ b/contrib/gcc-changelog/git_email.py
-@@ -0,0 +1,107 @@
+@@ -0,0 +1,108 @@
 +#!/usr/bin/env python3
 +#
 +# This file is part of GCC.
@@ -1668,10 +1767,11 @@ index fde2d2b76eb..17151424a88 100644
 +
 +from git_commit import GitCommit, GitInfo
 +
-+from unidiff import PatchSet
++from unidiff import PatchSet, PatchedFile
 +
 +DATE_PREFIX = 'Date: '
 +FROM_PREFIX = 'From: '
++unidiff_supports_renaming = hasattr(PatchedFile(), 'is_rename')
 +
 +
 +class GitEmail(GitCommit):
@@ -1702,7 +1802,7 @@ index fde2d2b76eb..17151424a88 100644
 +                t = 'A'
 +            elif f.is_removed_file:
 +                t = 'D'
-+            elif f.is_rename:
++            elif unidiff_supports_renaming and f.is_rename:
 +                # Consider that renamed files are two operations: the deletion
 +                # of the original name and the addition of the new one.
 +                modified_files.append((source, 'D'))
@@ -1783,7 +1883,7 @@ index fde2d2b76eb..17151424a88 100644
 +from git_commit import GitCommit, GitInfo
 +
 +
-+def parse_git_revisions(repo_path, revisions, strict=False):
++def parse_git_revisions(repo_path, revisions, strict=True):
 +    repo = Repo(repo_path)
 +
 +    def commit_to_info(commit):
@@ -1979,8 +2079,13 @@ index fde2d2b76eb..17151424a88 100644
 +            assert not repo.index.diff(None)
 +            print('branch is done\n', flush=True)
 --- /dev/null
++++ b/contrib/gcc-changelog/setup.cfg
+@@ -0,0 +1,2 @@
++[tool:pytest]
++addopts = -vv --flake8
+--- /dev/null
 +++ b/contrib/gcc-changelog/test_email.py
-@@ -0,0 +1,367 @@
+@@ -0,0 +1,386 @@
 +#!/usr/bin/env python3
 +#
 +# This file is part of GCC.
@@ -2345,12 +2450,31 @@ index fde2d2b76eb..17151424a88 100644
 +        assert '\t2020-06-11  Martin Liska  <mliska@suse.cz>' in entry
 +        assert '\t\t    Jakub Jelinek  <jakub@redhat.com>' in entry
 +
++    def test_backport_double_cherry_pick(self):
++        email = self.from_patch_glob('double-cherry-pick.patch')
++        assert email.errors[0].message.startswith('multiple cherry pick lines')
++
 +    def test_square_and_lt_gt(self):
 +        email = self.from_patch_glob('0001-Check-for-more-missing')
 +        assert not email.errors
++
++    def test_empty_parenthesis(self):
++        email = self.from_patch_glob('0001-tree-optimization-97633-fix')
++        assert len(email.errors) == 1
++        assert email.errors[0].message == 'empty group "()" found'
++
++    def test_emptry_entry_desc(self):
++        email = self.from_patch_glob('0001-c-Set-CALL_FROM_NEW_OR')
++        assert len(email.errors) == 1
++        assert email.errors[0].message == 'missing description of a change'
++
++    def test_emptry_entry_desc_2(self):
++        email = self.from_patch_glob('0001-lto-fix-LTO-debug')
++        assert not email.errors
++        assert len(email.changelog_entries) == 1
 --- /dev/null
 +++ b/contrib/gcc-changelog/test_patches.txt
-@@ -0,0 +1,3197 @@
+@@ -0,0 +1,3322 @@
 +=== 0342-ARC-Propagate-uncached-type-attribute-to-each-member.patch ===
 +From 62a715c706d8482560dadfa9ead0766f3c20e434 Mon Sep 17 00:00:00 2001
 +From: Claudiu Zissulescu <claziss@gmail.com>
@@ -5513,6 +5637,35 @@ index fde2d2b76eb..17151424a88 100644
 +-- 
 +2.27.0
 +
++=== double-cherry-pick.patch ===
++From e1d68582022cfa2b1dc76646724b397ba2739439 Mon Sep 17 00:00:00 2001
++From: Martin Liska <mliska@suse.cz>
++Date: Thu, 11 Jun 2020 09:34:41 +0200
++Subject: [PATCH] asan: fix RTX emission for ilp32
++
++gcc/ChangeLog:
++
++	PR sanitizer/95634
++	* asan.c (asan_emit_stack_protection): Fix emission for ilp32
++	by using Pmode instead of ptr_mode.
++
++Co-Authored-By: Jakub Jelinek <jakub@redhat.com>
++(cherry picked from commit 8cff672cb9a132d3d3158c2edfc9a64b55292b80)
++(cherry picked from commit 8cff672cb9a132d3d3158c2edfc9a64b55292b80)
++---
++ gcc/asan.c | 1 +
++ 1 file changed, 1 insertion(+)
++
++diff --git a/gcc/asan.c b/gcc/asan.c
++index 823eb539993..4ec22162c12 100644
++--- a/gcc/asan.c
+++++ b/gcc/asan.c
++@@ -1 +1,2 @@
++ 
+++
++-- 
++2.27.0
++
 +=== 0001-Check-for-more-missing-math-decls-on-vxworks.patch ===
 +From 0edfc1fd22405ee8e946101e44cd8edc0ee12047 Mon Sep 17 00:00:00 2001
 +From: Douglas B Rupp <douglas.b.rupp@gmail.com>
@@ -5546,7 +5699,103 @@ index fde2d2b76eb..17151424a88 100644
 + 
 ++
 +-- 
++=== 0001-tree-optimization-97633-fix-SLP-scheduling-of-single.patch ===
++From c0bfd9672e19caf08e45afeb4277f848488ced2b Mon Sep 17 00:00:00 2001
++From: Richard Biener <rguenther@suse.de>
++Date: Fri, 30 Oct 2020 09:57:02 +0100
++Subject: [PATCH] tree-optimization/97633 - fix SLP scheduling of single-node
++ cycles
++
++This makes sure to update backedges in single-node cycles.
++
++2020-10-30  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/97633
++	* tree-vect-slp.c (): Update backedges in single-node cycles.
++	Optimize processing of externals.
++
++	* g++.dg/vect/slp-pr97636.cc: New testcase.
++	* gcc.dg/vect/bb-slp-pr97633.c: Likewise.
++---
++ gcc/testsuite/g++.dg/vect/slp-pr97636.cc   |  83 +++++++++++
++ gcc/testsuite/gcc.dg/vect/bb-slp-pr97633.c |  27 ++++
++ gcc/tree-vect-slp.c                        | 162 +++++++++++----------
++ 3 files changed, 198 insertions(+), 74 deletions(-)
++ create mode 100644 gcc/testsuite/g++.dg/vect/slp-pr97636.cc
++ create mode 100644 gcc/testsuite/gcc.dg/vect/bb-slp-pr97633.c
++
++diff --git a/gcc/testsuite/g++.dg/vect/slp-pr97636.cc b/gcc/testsuite/g++.dg/vect/slp-pr97636.cc
++new file mode 100644
++index 00000000000..012342004f1
++--- /dev/null
+++++ b/gcc/testsuite/g++.dg/vect/slp-pr97636.cc
++@@ -0,0 +1 @@
+++
++diff --git a/gcc/tree-vect-slp.c b/gcc/tree-vect-slp.c
++index 5d69a98c2a9..714e50697bd 100644
++--- a/gcc/tree-vect-slp.c
+++++ b/gcc/tree-vect-slp.c
++@@ -1 +1,2 @@
++ 
+++
++-- 
++
 +2.7.4
++=== 0001-c-Set-CALL_FROM_NEW_OR_DELETE_P-on-more-calls.patch ===
++From 4f4ced28826ece7b7b76649522ee2a9601a63b90 Mon Sep 17 00:00:00 2001
++From: Jason Merrill <jason@redhat.com>
++Date: Fri, 2 Oct 2020 09:00:49 +0200
++Subject: [PATCH] c++: Set CALL_FROM_NEW_OR_DELETE_P on more calls.
++
++We were failing to set the flag on a delete call in a new expression, in a
++deleting destructor, and in a coroutine.  Fixed by setting it in the
++function that builds the call.
++
++2020-10-02  Jason Merril  <jason@redhat.com>
++
++gcc/cp/ChangeLog:
++	* init.c (build_new_1, build_vec_delete_1, build_delete): Not here.
++	(build_delete):
++
++---
++ gcc/cp/init.c                  |  1 -
++ 1 files changed, 0 insertions(+), 1 deletions(-)
++
++diff --git a/gcc/cp/init.c b/gcc/cp/init.c
++index e84e985492d..00fff3f7327 100644
++--- a/gcc/cp/init.c
+++++ b/gcc/cp/init.c
++@@ -3436,1 +3435,0 @@ build_new_1 (vec<tree, va_gc> **placement, tree type, tree nelts,
++-
++-- 
++2.25.1
++
++=== 0001-lto-fix-LTO-debug-sections-copying.patch ===
++From 190c04ba36d9c6c3dce41f12012aa97c6d7f22f5 Mon Sep 17 00:00:00 2001
++From: Martin Liska <mliska@suse.cz>
++Date: Mon, 5 Oct 2020 18:03:08 +0200
++Subject: [PATCH] lto: fix LTO debug sections copying.
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
++
++libiberty/ChangeLog:
++
++	PR lto/97290
++	* simple-object-elf.c (simple_object_elf_copy_lto_debug_sections):
++	Use sh_link of a .symtab_shndx section.
++---
++ libiberty/simple-object-elf.c | 1 -
++ 1 file changed, 0 insertions(+), 1 deletions(-)
++
++diff --git a/libiberty/simple-object-elf.c b/libiberty/simple-object-elf.c
++index 7c9d492f6a4..37e73348cb7 100644
++--- a/libiberty/simple-object-elf.c
+++++ b/libiberty/simple-object-elf.c
++@@ -1191,1 +1191,0 @@ simple_object_elf_copy_lto_debug_sections (simple_object_read *sobj,
++- 
++-- 
++2.25.1
 +
 --- /dev/null
 +++ b/contrib/git-backport.py
@@ -5617,10 +5866,86 @@ index fde2d2b76eb..17151424a88 100644
 +        else:
 +            print('Please resolve all remaining file conflicts.')
 diff --git a/gcc/ChangeLog b/gcc/ChangeLog
-index d8e53874e68..c8f8252f175 100644
+index d8e53874e68..09e34c725b3 100644
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2194 @@
+@@ -1,3 +1,2264 @@
++2020-11-24  Jason Merrill  <jason@redhat.com>
++
++	PR c++/97918
++	* dwarf2out.c (dwarf2out_early_finish): flush_limbo_die_list
++	after gen_scheduled_generic_parms_dies.
++
++2020-11-17  Sebastian Pop  <spop@amazon.com>
++
++	Backported from master:
++	2020-11-17  Sebastian Pop  <spop@amazon.com>
++
++	* config.gcc: add configure flags --with-{cpu,arch,tune}-{32,64}
++	as alias flags for --with-{cpu,arch,tune} on AArch64.
++	* doc/install.texi: Document new flags for aarch64.
++
++2020-11-17  Sebastian Pop  <spop@amazon.com>
++
++	Backported from master:
++	2020-11-17  Sebastian Pop  <spop@amazon.com>
++
++	* config.gcc: Add --with-tune to AArch64 configure flags.
++
++2020-11-17  Tamar Christina  <tamar.christina@arm.com>
++
++	Backported from master:
++	2020-10-27  Tamar Christina  <tamar.christina@arm.com>
++
++	PR target/97535
++	* config/aarch64/aarch64.c (aarch64_expand_cpymem): Use unsigned
++	arithmetic in check.
++
++2020-11-17  Monk Chiang  <monk.chiang@sifive.com>
++
++	Backported from master:
++	2020-11-14  Monk Chiang  <monk.chiang@sifive.com>
++
++	PR target/97682
++	* config/riscv/riscv.h (RISCV_PROLOGUE_TEMP_REGNUM): Change register
++	to t0.
++	(RISCV_CALL_ADDRESS_TEMP_REGNUM): New Marco, define t1 register.
++	(RISCV_CALL_ADDRESS_TEMP): Use it for call instructions.
++	* config/riscv/riscv.c (riscv_legitimize_call_address): Use
++	RISCV_CALL_ADDRESS_TEMP.
++	(riscv_compute_frame_info): Change temporary register to t0 form t1.
++	(riscv_trampoline_init): Adjust comment.
++
++2020-11-16  Cui,Lili  <lili.cui@intel.com>
++
++	* config/i386/i386.h: Add PREFETCHW to march=broadwell.
++	* doc/invoke.texi: Put PREFETCHW back to relation arch.
++
++2020-11-11  liuhongt  <hongtao.liu@intel.com>
++
++	* config/i386/i386.c (ix86_option_override_internal):
++	Handle PTA_CLDEMOTE, PTA_MOVDIRI, PTA_MOVDIR64B.
++	* config/i386/i386.h (PTA_CLDEMOTE, PTA_MOVDIRI,
++	PTA_MOVDIR64B.): Define.
++
++2020-11-09  Lili Cui  <lili.cui@intel.com>
++
++	PR target/97685
++	* config/i386/i386.h:
++	(PTA_BROADWELL): Delete PTA_PRFCHW.
++	(PTA_SILVERMONT): Add PTA_PRFCHW.
++	(PTA_KNL): Add PTA_PREFETCHWT1.
++	(PTA_TREMONT): Add PTA_MOVDIRI, PTA_MOVDIR64B, PTA_CLDEMOTE and PTA_WAITPKG.
++	* doc/invoke.texi: Delete PREFETCHW for broadwell, skylake, knl, knm,
++	skylake-avx512, cannonlake, icelake-client, icelake-server, cascadelake,
++	cooperlake, tigerlake and sapphirerapids.
++	Add PREFETCHW for silvermont, goldmont, goldmont-plus and tremont.
++	Add XSAVEC and XSAVES for goldmont, goldmont-plus and tremont.
++	Add MOVDIRI, MOVDIR64B, CLDEMOTE and WAITPKG for tremont.
++	Add KEYLOCKER and HREST for alderlake.
++	Add AMX-BF16, AMX-TILE, AMX-INT8 and UINTR for sapphirerapids.
++	Add KEYLOCKER for tigerlake.
++
 +2020-10-22  Andreas Krebbel  <krebbel@linux.ibm.com>
 +
 +	Backported from master:
@@ -5996,12 +6321,6 @@ index d8e53874e68..c8f8252f175 100644
 +
 +	Backported from master:
 +	2020-04-29  Richard Sandiford  <richard.sandiford@arm.com>
-+
-+	* config/arm/arm-builtins.c (arm_atomic_assign_expand_fenv): Use
-+	TARGET_EXPR instead of MODIFY_EXPR for the first assignments to
-+	fenv_var and new_fenv_var.
-+
-+2020-04-29  Richard Sandiford  <richard.sandiford@arm.com>
 +
 +	* config/arm/arm-builtins.c (arm_atomic_assign_expand_fenv): Use
 +	TARGET_EXPR instead of MODIFY_EXPR for the first assignments to
@@ -7840,10 +8159,23 @@ index abae872cd63..35d90f12d4c 100644
  # so that self-test failures are caught as early as possible.
  # Use "s-selftest-FE" to ensure that we only run the selftests if the
 diff --git a/gcc/ada/ChangeLog b/gcc/ada/ChangeLog
-index a819f57a2bf..f8f543e6d18 100644
+index a819f57a2bf..b3f43e1cd56 100644
 --- a/gcc/ada/ChangeLog
 +++ b/gcc/ada/ChangeLog
-@@ -1,3 +1,25 @@
+@@ -1,3 +1,38 @@
++2020-11-11  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gcc-interface/trans.c (build_binary_op_trapv): Convert operands
++	to the result type before doing generic overflow checking.
++	* gcc-interface/utils.c (can_materialize_object_renaming_p): Add
++	pair of missing parentheses.
++
++2020-11-11  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gcc-interface/trans.c (can_be_lower_p): Remove.
++	(Regular_Loop_to_gnu): Add ENTRY_COND unconditionally if
++	BOTTOM_COND is non-zero.
++
 +2020-09-11  Eric Botcazou  <ebotcazou@adacore.com>
 +
 +	* gcc-interface/decl.c (gnat_to_gnu_entity) <E_Array_Subtype>: Only
@@ -7928,10 +8260,76 @@ index 8118d119bab..9ca7884f3d3 100644
  	gnu_list.safe_push (s);
        }
 diff --git a/gcc/ada/gcc-interface/trans.c b/gcc/ada/gcc-interface/trans.c
-index 2581b71d6fa..c3a435464c4 100644
+index 2581b71d6fa..0ba3ad97ba6 100644
 --- a/gcc/ada/gcc-interface/trans.c
 +++ b/gcc/ada/gcc-interface/trans.c
-@@ -7636,9 +7636,8 @@
+@@ -3234,38 +3234,6 @@
+   return can_equal_min_or_max_val_p (val, type, !reverse);
+ }
+ 
+-/* Return true if VAL1 can be lower than VAL2.  */
+-
+-static bool
+-can_be_lower_p (tree val1, tree val2)
+-{
+-  if (TREE_CODE (val1) == NOP_EXPR)
+-    {
+-      tree type = TREE_TYPE (TREE_OPERAND (val1, 0));
+-      if (can_be_lower_p (TYPE_MAX_VALUE (type), TYPE_MIN_VALUE (type)))
+-	return true;
+-
+-      val1 = TYPE_MIN_VALUE (type);
+-    }
+-
+-  if (TREE_CODE (val1) != INTEGER_CST)
+-    return true;
+-
+-  if (TREE_CODE (val2) == NOP_EXPR)
+-    {
+-      tree type = TREE_TYPE (TREE_OPERAND (val2, 0));
+-      if (can_be_lower_p (TYPE_MAX_VALUE (type), TYPE_MIN_VALUE (type)))
+-	return true;
+-
+-      val2 = TYPE_MAX_VALUE (type);
+-    }
+-
+-  if (TREE_CODE (val2) != INTEGER_CST)
+-    return true;
+-
+-  return tree_int_cst_lt (val1, val2);
+-}
+-
+ /* Replace EXPR1 and EXPR2 by invariant expressions if possible.  Return
+    true if both expressions have been replaced and false otherwise.  */
+ 
+@@ -3691,19 +3659,16 @@
+ 	}
+ 
+       /* If we use the BOTTOM_COND, we can turn the test into an inequality
+-	 test but we may have to add ENTRY_COND to protect the empty loop.  */
++	 test but we have to add ENTRY_COND to protect the empty loop.  */
+       if (LOOP_STMT_BOTTOM_COND_P (gnu_loop_stmt))
+ 	{
+ 	  test_code = NE_EXPR;
+-	  if (can_be_lower_p (gnu_high, gnu_low))
+-	    {
+-	      gnu_cond_expr
+-		= build3 (COND_EXPR, void_type_node,
+-			  build_binary_op (LE_EXPR, boolean_type_node,
+-					   gnu_low, gnu_high),
+-			  NULL_TREE, alloc_stmt_list ());
+-	      set_expr_location_from_node (gnu_cond_expr, gnat_iter_scheme);
+-	    }
++	  gnu_cond_expr
++	    = build3 (COND_EXPR, void_type_node,
++		      build_binary_op (LE_EXPR, boolean_type_node,
++				       gnu_low, gnu_high),
++		      NULL_TREE, alloc_stmt_list ());
++	  set_expr_location_from_node (gnu_cond_expr, gnat_iter_scheme);
+ 	}
+ 
+       /* Open a new nesting level that will surround the loop to declare the
+@@ -7636,9 +7601,8 @@
  
      case N_Allocator:
        {
@@ -7943,7 +8341,7 @@ index 2581b71d6fa..c3a435464c4 100644
  
  	gnat_temp = Expression (gnat_node);
  
-@@ -7648,15 +7647,22 @@
+@@ -7648,15 +7612,22 @@
  	   initial value for the object.  */
  	if (Nkind (gnat_temp) == N_Identifier
  	    || Nkind (gnat_temp) == N_Expanded_Name)
@@ -7969,6 +8367,31 @@ index 2581b71d6fa..c3a435464c4 100644
  	    gnu_init = maybe_unconstrained_array (gnu_init);
  	    if (Do_Range_Check (Expression (gnat_temp)))
  	      gnu_init
+@@ -9830,6 +9801,11 @@
+   /* If no operand is a constant, we use the generic implementation.  */
+   if (TREE_CODE (lhs) != INTEGER_CST && TREE_CODE (rhs) != INTEGER_CST)
+     {
++      /* First convert the operands to the result type like build_binary_op.
++	 This is where the bias is made explicit for biased types.  */
++      lhs = convert (gnu_type, lhs);
++      rhs = convert (gnu_type, rhs);
++
+       /* Never inline a 64-bit mult for a 32-bit target, it's way too long.  */
+       if (code == MULT_EXPR && precision == 64 && BITS_PER_WORD < 64)
+ 	{
+diff --git a/gcc/ada/gcc-interface/utils.c b/gcc/ada/gcc-interface/utils.c
+index 2290f0413d5..98542fc1001 100644
+--- a/gcc/ada/gcc-interface/utils.c
++++ b/gcc/ada/gcc-interface/utils.c
+@@ -5624,7 +5624,7 @@
+     {
+       expr = Original_Node (expr);
+ 
+-      switch Nkind (expr)
++      switch (Nkind (expr))
+ 	{
+ 	case N_Identifier:
+ 	case N_Expanded_Name:
 diff --git a/gcc/ada/mingw32.h b/gcc/ada/mingw32.h
 index fe6464fd601..3dbf7974a67 100644
 --- a/gcc/ada/mingw32.h
@@ -8894,6 +9317,40 @@ index 087bb1520ed..c7841939e89 100644
  #define OPTION_MASK_ISA_XSAVEOPT_UNSET OPTION_MASK_ISA_XSAVEOPT
  #define OPTION_MASK_ISA_AVX2_UNSET \
    (OPTION_MASK_ISA_AVX2 | OPTION_MASK_ISA_AVX512F_UNSET)
+diff --git a/gcc/config.gcc b/gcc/config.gcc
+index b2282ecdf0b..e6c3cbffb34 100644
+--- a/gcc/config.gcc
++++ b/gcc/config.gcc
+@@ -3806,9 +3806,26 @@
+ supported_defaults=
+ case "${target}" in
+ 	aarch64*-*-*)
+-		supported_defaults="abi cpu arch"
+-		for which in cpu arch; do
+-
++		supported_defaults="abi cpu cpu_32 cpu_64 arch arch_32 arch_64 tune tune_32 tune_64"
++		if test x$with_cpu_64 != x && test x$with_cpu = x; then
++			with_cpu=$with_cpu_64
++		fi
++		if test x$with_cpu_32 != x && test x$with_cpu = x; then
++			with_cpu=$with_cpu_32
++		fi
++		if test x$with_arch_64 != x && test x$with_arch = x; then
++			with_arch=$with_arch_64
++		fi
++		if test x$with_arch_32 != x && test x$with_arch = x; then
++			with_arch=$with_arch_32
++		fi
++		if test x$with_tune_64 != x && test x$with_tune = x; then
++			with_tune=$with_tune_64
++		fi
++		if test x$with_tune_32 != x && test x$with_tune = x; then
++			with_tune=$with_tune_32
++		fi
++		for which in cpu arch tune; do
+ 			eval "val=\$with_$which"
+ 			base_val=`echo $val | sed -e 's/\+.*//'`
+ 			ext_val=`echo $val | sed -e 's/[a-z0-9.-]\+//'`
 diff --git a/gcc/config.in b/gcc/config.in
 index a718ceaf3da..bfef2340339 100644
 --- a/gcc/config.in
@@ -9542,7 +9999,7 @@ index 91a0ff5ea04..47852b509d3 100644
 +
  #undef AARCH64_EXTRA_TUNING_OPTION
 diff --git a/gcc/config/aarch64/aarch64.c b/gcc/config/aarch64/aarch64.c
-index b452a53af99..a77a70e1338 100644
+index b452a53af99..9189777da7e 100644
 --- a/gcc/config/aarch64/aarch64.c
 +++ b/gcc/config/aarch64/aarch64.c
 @@ -681,6 +681,17 @@
@@ -10246,7 +10703,45 @@ index b452a53af99..a77a70e1338 100644
      return false;
  
    size = (diff + 1) * GET_MODE_UNIT_SIZE (d->vmode);
-@@ -18900,6 +19232,231 @@
+@@ -17045,6 +17377,8 @@
+ bool
+ aarch64_expand_movmem (rtx *operands)
+ {
++  /* These need to be signed as we need to perform arithmetic on n as
++     signed operations.  */
+   int n, mode_bits;
+   rtx dst = operands[0];
+   rtx src = operands[1];
+@@ -17055,21 +17389,24 @@
+   /* When optimizing for size, give a better estimate of the length of a
+      memcpy call, but use the default otherwise.  Moves larger than 8 bytes
+      will always require an even number of instructions to do now.  And each
+-     operation requires both a load+store, so devide the max number by 2.  */
+-  int max_num_moves = (speed_p ? 16 : AARCH64_CALL_RATIO) / 2;
++     operation requires both a load+store, so divide the max number by 2.  */
++  unsigned int max_num_moves = (speed_p ? 16 : AARCH64_CALL_RATIO) / 2;
+ 
+   /* We can't do anything smart if the amount to copy is not constant.  */
+   if (!CONST_INT_P (operands[2]))
+     return false;
+ 
+-  n = INTVAL (operands[2]);
++  unsigned HOST_WIDE_INT tmp = INTVAL (operands[2]);
+ 
+   /* Try to keep the number of instructions low.  For all cases we will do at
+      most two moves for the residual amount, since we'll always overlap the
+      remainder.  */
+-  if (((n / 16) + (n % 16 ? 2 : 0)) > max_num_moves)
++  if (((tmp / 16) + (tmp % 16 ? 2 : 0)) > max_num_moves)
+     return false;
+ 
++  /* At this point tmp is known to have to fit inside an int.  */
++  n = tmp;
++
+   base = copy_to_mode_reg (Pmode, XEXP (dst, 0));
+   dst = adjust_automodify_address (dst, VOIDmode, base, 0);
+ 
+@@ -18900,6 +19237,231 @@
  #undef GNU_PROPERTY_AARCH64_FEATURE_1_BTI
  #undef GNU_PROPERTY_AARCH64_FEATURE_1_AND
  
@@ -10478,7 +10973,7 @@ index b452a53af99..a77a70e1338 100644
  /* Target-specific selftests.  */
  
  #if CHECKING_P
-@@ -19420,6 +19977,12 @@
+@@ -19420,6 +19982,12 @@
  #define TARGET_RUN_TARGET_SELFTESTS selftest::aarch64_run_selftests
  #endif /* #if CHECKING_P */
  
@@ -15112,7 +15607,7 @@ index 5e7e46fcebe..f06fea1a8a5 100644
  
    if (!TARGET_80387)
 diff --git a/gcc/config/i386/i386.c b/gcc/config/i386/i386.c
-index 1bca5a7eea6..f968d033972 100644
+index 1bca5a7eea6..bd61be61fdf 100644
 --- a/gcc/config/i386/i386.c
 +++ b/gcc/config/i386/i386.c
 @@ -2535,7 +2535,12 @@
@@ -15129,7 +15624,23 @@ index 1bca5a7eea6..f968d033972 100644
      {
        /* Queue ENDBR insertion to x86_function_profiler.  */
        if (crtl->profile && flag_fentry)
-@@ -5802,6 +5807,8 @@
+@@ -4053,6 +4058,15 @@
+ 	if (((processor_alias_table[i].flags & PTA_PTWRITE) != 0)
+ 	    && !(opts->x_ix86_isa_flags2_explicit & OPTION_MASK_ISA_PTWRITE))
+ 	  opts->x_ix86_isa_flags2 |= OPTION_MASK_ISA_PTWRITE;
++	if (((processor_alias_table[i].flags & PTA_MOVDIRI) != 0)
++	    && !(opts->x_ix86_isa_flags_explicit & OPTION_MASK_ISA_MOVDIRI))
++	  opts->x_ix86_isa_flags |= OPTION_MASK_ISA_MOVDIRI;
++	if (((processor_alias_table[i].flags & PTA_MOVDIR64B) != 0)
++	    && !(opts->x_ix86_isa_flags2_explicit & OPTION_MASK_ISA_MOVDIR64B))
++	  opts->x_ix86_isa_flags2 |= OPTION_MASK_ISA_MOVDIR64B;
++	if (((processor_alias_table[i].flags & PTA_CLDEMOTE) != 0)
++	    && !(opts->x_ix86_isa_flags2_explicit & OPTION_MASK_ISA_CLDEMOTE))
++	  opts->x_ix86_isa_flags2 |= OPTION_MASK_ISA_CLDEMOTE;
+ 
+ 	if ((processor_alias_table[i].flags
+ 	   & (PTA_PREFETCH_SSE | PTA_SSE)) != 0)
+@@ -5802,6 +5816,8 @@
  		? "thunk-extern" : "thunk"));
  
        if (cfun->machine->indirect_branch_type != indirect_branch_keep
@@ -15138,7 +15649,7 @@ index 1bca5a7eea6..f968d033972 100644
  	  && (flag_cf_protection & CF_RETURN))
  	error ("%<-mindirect-branch%> and %<-fcf-protection%> are not "
  	       "compatible");
-@@ -5845,6 +5852,8 @@
+@@ -5845,6 +5861,8 @@
  		? "thunk-extern" : "thunk"));
  
        if (cfun->machine->function_return_type != indirect_branch_keep
@@ -15147,7 +15658,7 @@ index 1bca5a7eea6..f968d033972 100644
  	  && (flag_cf_protection & CF_RETURN))
  	error ("%<-mfunction-return%> and %<-fcf-protection%> are not "
  	       "compatible");
-@@ -12274,10 +12283,12 @@
+@@ -12274,10 +12292,12 @@
  static rtx
  ix86_get_drap_rtx (void)
  {
@@ -15162,7 +15673,7 @@ index 1bca5a7eea6..f968d033972 100644
  	  && !ACCUMULATE_OUTGOING_ARGS))
      crtl->need_drap = true;
  
-@@ -14347,8 +14358,13 @@
+@@ -14347,8 +14367,13 @@
  	      t = plus_constant (Pmode, t, m->fs.fp_offset - UNITS_PER_WORD);
  	      emit_insn (gen_rtx_SET (sa, t));
  
@@ -15178,7 +15689,7 @@ index 1bca5a7eea6..f968d033972 100644
  
  	      /* Note that we use SA as a temporary CFA, as the return
  		 address is at the proper place relative to it.  We
-@@ -14363,7 +14379,7 @@
+@@ -14363,7 +14388,7 @@
  	      add_reg_note (insn, REG_CFA_DEF_CFA,
  			    plus_constant (Pmode, sa, UNITS_PER_WORD));
  	      ix86_add_queued_cfa_restore_notes (insn);
@@ -15187,7 +15698,7 @@ index 1bca5a7eea6..f968d033972 100644
  	      RTX_FRAME_RELATED_P (insn) = 1;
  
  	      m->fs.cfa_reg = sa;
-@@ -44150,43 +44166,51 @@
+@@ -44150,43 +44175,51 @@
        break;
      case E_V64QImode:
      case E_V32HImode:
@@ -15268,7 +15779,7 @@ index 1bca5a7eea6..f968d033972 100644
        break;
      default:
        gcc_unreachable ();
-@@ -46667,7 +46691,7 @@
+@@ -46667,7 +46700,7 @@
  	      /* vpshufb only works intra lanes, it is not
  		 possible to shuffle bytes in between the lanes.  */
  	      for (i = 0; i < nelt; ++i)
@@ -15277,7 +15788,7 @@ index 1bca5a7eea6..f968d033972 100644
  		  return false;
  	    }
  	}
-@@ -50265,7 +50289,9 @@
+@@ -50265,7 +50298,9 @@
    if ((TARGET_AVX512F && vector_size == 64)
        || (TARGET_AVX512VL && (vector_size == 32 || vector_size == 16)))
      {
@@ -15288,7 +15799,7 @@ index 1bca5a7eea6..f968d033972 100644
  	return smallest_int_mode_for_size (nunits);
      }
  
-@@ -50919,11 +50945,12 @@
+@@ -50919,11 +50954,12 @@
        *clear = build_call_expr (fnclex, 0);
        tree sw_var = create_tmp_var_raw (short_unsigned_type_node);
        tree fnstsw_call = build_call_expr (fnstsw, 0);
@@ -15305,7 +15816,7 @@ index 1bca5a7eea6..f968d033972 100644
        *update = build2 (COMPOUND_EXPR, integer_type_node,
  			sw_mod, update_mod);
        tree update_fldenv = build_call_expr (fldenv, 1, fenv_addr);
-@@ -50936,15 +50963,17 @@
+@@ -50936,15 +50972,17 @@
        tree stmxcsr = ix86_builtins[IX86_BUILTIN_STMXCSR];
        tree ldmxcsr = ix86_builtins[IX86_BUILTIN_LDMXCSR];
        tree stmxcsr_hold_call = build_call_expr (stmxcsr, 0);
@@ -15327,7 +15838,7 @@ index 1bca5a7eea6..f968d033972 100644
        tree ldmxcsr_hold_call = build_call_expr (ldmxcsr, 1, mxcsr_mod_var);
        tree hold_all = build2 (COMPOUND_EXPR, unsigned_type_node,
  			      hold_assign_orig, hold_assign_mod);
-@@ -50973,8 +51002,8 @@
+@@ -50973,8 +51011,8 @@
  			    exceptions_assign);
  	}
        else
@@ -15339,7 +15850,7 @@ index 1bca5a7eea6..f968d033972 100644
        *update = build2 (COMPOUND_EXPR, void_type_node, *update,
  			ldmxcsr_update_call);
 diff --git a/gcc/config/i386/i386.h b/gcc/config/i386/i386.h
-index 14e5a392f62..ad1949b2371 100644
+index 14e5a392f62..d138dfac05c 100644
 --- a/gcc/config/i386/i386.h
 +++ b/gcc/config/i386/i386.h
 @@ -2232,11 +2232,10 @@
@@ -15356,7 +15867,28 @@ index 14e5a392f62..ad1949b2371 100644
  
  /* Switch to init or fini section via SECTION_OP, emit a call to FUNC,
     and switch back.  For x86 we do this only to save a few bytes that
-@@ -2405,9 +2404,9 @@
+@@ -2380,6 +2379,9 @@
+ const wide_int_bitmask PTA_WBNOINVD (0, HOST_WIDE_INT_1U << 8);
+ const wide_int_bitmask PTA_WAITPKG (0, HOST_WIDE_INT_1U << 9);
+ const wide_int_bitmask PTA_PTWRITE (0, HOST_WIDE_INT_1U << 10);
++const wide_int_bitmask PTA_MOVDIRI (0, HOST_WIDE_INT_1U << 13);
++const wide_int_bitmask PTA_MOVDIR64B (0, HOST_WIDE_INT_1U << 14);
++const wide_int_bitmask PTA_CLDEMOTE (0, HOST_WIDE_INT_1U << 16);
+ 
+ const wide_int_bitmask PTA_CORE2 = PTA_64BIT | PTA_MMX | PTA_SSE | PTA_SSE2
+   | PTA_SSE3 | PTA_SSSE3 | PTA_CX16 | PTA_FXSR;
+@@ -2392,8 +2394,8 @@
+   | PTA_RDRND | PTA_F16C;
+ const wide_int_bitmask PTA_HASWELL = PTA_IVYBRIDGE | PTA_AVX2 | PTA_BMI
+   | PTA_BMI2 | PTA_LZCNT | PTA_FMA | PTA_MOVBE | PTA_HLE;
+-const wide_int_bitmask PTA_BROADWELL = PTA_HASWELL | PTA_ADX | PTA_PRFCHW
+-  | PTA_RDSEED;
++const wide_int_bitmask PTA_BROADWELL = PTA_HASWELL | PTA_ADX | PTA_RDSEED
++  | PTA_PRFCHW;
+ const wide_int_bitmask PTA_SKYLAKE = PTA_BROADWELL | PTA_AES | PTA_CLFLUSHOPT
+   | PTA_XSAVEC | PTA_XSAVES | PTA_SGX;
+ const wide_int_bitmask PTA_SKYLAKE_AVX512 = PTA_SKYLAKE | PTA_AVX512F
+@@ -2405,20 +2407,21 @@
    | PTA_AVX512VBMI | PTA_AVX512IFMA | PTA_SHA;
  const wide_int_bitmask PTA_ICELAKE_CLIENT = PTA_CANNONLAKE | PTA_AVX512VNNI
    | PTA_GFNI | PTA_VAES | PTA_AVX512VBMI2 | PTA_VPCLMULQDQ | PTA_AVX512BITALG
@@ -15366,8 +15898,23 @@ index 14e5a392f62..ad1949b2371 100644
 -  | PTA_WBNOINVD;
 +  | PTA_WBNOINVD | PTA_CLWB;
  const wide_int_bitmask PTA_KNL = PTA_BROADWELL | PTA_AVX512PF | PTA_AVX512ER
-   | PTA_AVX512F | PTA_AVX512CD;
+-  | PTA_AVX512F | PTA_AVX512CD;
++  | PTA_AVX512F | PTA_AVX512CD | PTA_PREFETCHWT1;
  const wide_int_bitmask PTA_BONNELL = PTA_CORE2 | PTA_MOVBE;
+-const wide_int_bitmask PTA_SILVERMONT = PTA_WESTMERE | PTA_MOVBE | PTA_RDRND;
++const wide_int_bitmask PTA_SILVERMONT = PTA_WESTMERE | PTA_MOVBE | PTA_RDRND
++  | PTA_PRFCHW;
+ const wide_int_bitmask PTA_GOLDMONT = PTA_SILVERMONT | PTA_AES | PTA_SHA | PTA_XSAVE
+   | PTA_RDSEED | PTA_XSAVEC | PTA_XSAVES | PTA_CLFLUSHOPT | PTA_XSAVEOPT
+   | PTA_FSGSBASE;
+ const wide_int_bitmask PTA_GOLDMONT_PLUS = PTA_GOLDMONT | PTA_RDPID
+   | PTA_SGX | PTA_PTWRITE;
+ const wide_int_bitmask PTA_TREMONT = PTA_GOLDMONT_PLUS | PTA_CLWB
+-  | PTA_GFNI;
++  | PTA_GFNI | PTA_MOVDIRI | PTA_MOVDIR64B | PTA_CLDEMOTE | PTA_WAITPKG;
+ const wide_int_bitmask PTA_KNM = PTA_KNL | PTA_AVX5124VNNIW
+   | PTA_AVX5124FMAPS | PTA_AVX512VPOPCNTDQ;
+ 
 diff --git a/gcc/config/i386/i386.md b/gcc/config/i386/i386.md
 index 698c31a0a97..8ae7ea68c16 100644
 --- a/gcc/config/i386/i386.md
@@ -15699,6 +16246,112 @@ index 548267179a1..13926ffe10d 100644
    *clear = build_call_expr (fsflags, 1, old_flags);
    *update = NULL_TREE;
  }
+diff --git a/gcc/config/riscv/riscv.c b/gcc/config/riscv/riscv.c
+index b3297a38114..93335aec83e 100644
+--- a/gcc/config/riscv/riscv.c
++++ b/gcc/config/riscv/riscv.c
+@@ -2906,7 +2906,7 @@
+ {
+   if (!call_insn_operand (addr, VOIDmode))
+     {
+-      rtx reg = RISCV_PROLOGUE_TEMP (Pmode);
++      rtx reg = RISCV_CALL_ADDRESS_TEMP (Pmode);
+       riscv_emit_move (reg, addr);
+       return reg;
+     }
+@@ -3466,18 +3466,18 @@
+ {
+   struct riscv_frame_info *frame;
+   HOST_WIDE_INT offset;
+-  bool interrupt_save_t1 = false;
++  bool interrupt_save_prologue_temp = false;
+   unsigned int regno, i, num_x_saved = 0, num_f_saved = 0;
+ 
+   frame = &cfun->machine->frame;
+ 
+   /* In an interrupt function, if we have a large frame, then we need to
+-     save/restore t1.  We check for this before clearing the frame struct.  */
++     save/restore t0.  We check for this before clearing the frame struct.  */
+   if (cfun->machine->interrupt_handler_p)
+     {
+       HOST_WIDE_INT step1 = riscv_first_stack_step (frame);
+       if (! SMALL_OPERAND (frame->total_size - step1))
+-	interrupt_save_t1 = true;
++	interrupt_save_prologue_temp = true;
+     }
+ 
+   memset (frame, 0, sizeof (*frame));
+@@ -3487,7 +3487,8 @@
+       /* Find out which GPRs we need to save.  */
+       for (regno = GP_REG_FIRST; regno <= GP_REG_LAST; regno++)
+ 	if (riscv_save_reg_p (regno)
+-	    || (interrupt_save_t1 && (regno == T1_REGNUM)))
++	    || (interrupt_save_prologue_temp
++		&& (regno == RISCV_PROLOGUE_TEMP_REGNUM)))
+ 	  frame->mask |= 1 << (regno - GP_REG_FIRST), num_x_saved++;
+ 
+       /* If this function calls eh_return, we must also save and restore the
+@@ -4621,9 +4622,9 @@
+ 
+       rtx target_function = force_reg (Pmode, XEXP (DECL_RTL (fndecl), 0));
+       /* lui     t2, hi(chain)
+-	 lui     t1, hi(func)
++	 lui     t0, hi(func)
+ 	 addi    t2, t2, lo(chain)
+-	 jr      r1, lo(func)
++	 jr      t0, lo(func)
+       */
+       unsigned HOST_WIDE_INT lui_hi_chain_code, lui_hi_func_code;
+       unsigned HOST_WIDE_INT lo_chain_code, lo_func_code;
+@@ -4648,7 +4649,7 @@
+       mem = adjust_address (m_tramp, SImode, 0);
+       riscv_emit_move (mem, lui_hi_chain);
+ 
+-      /* Gen lui t1, hi(func).  */
++      /* Gen lui t0, hi(func).  */
+       rtx hi_func = riscv_force_binary (SImode, PLUS, target_function,
+ 					fixup_value);
+       hi_func = riscv_force_binary (SImode, AND, hi_func,
+@@ -4675,7 +4676,7 @@
+       mem = adjust_address (m_tramp, SImode, 2 * GET_MODE_SIZE (SImode));
+       riscv_emit_move (mem, addi_lo_chain);
+ 
+-      /* Gen jr r1, lo(func).  */
++      /* Gen jr t0, lo(func).  */
+       rtx lo_func = riscv_force_binary (SImode, AND, target_function,
+ 					imm12_mask);
+       lo_func = riscv_force_binary (SImode, ASHIFT, lo_func, GEN_INT (20));
+@@ -4694,9 +4695,9 @@
+       target_function_offset = static_chain_offset + GET_MODE_SIZE (ptr_mode);
+ 
+       /* auipc   t2, 0
+-	 l[wd]   t1, target_function_offset(t2)
++	 l[wd]   t0, target_function_offset(t2)
+ 	 l[wd]   t2, static_chain_offset(t2)
+-	 jr      t1
++	 jr      t0
+       */
+       trampoline[0] = OPCODE_AUIPC | (STATIC_CHAIN_REGNUM << SHIFT_RD);
+       trampoline[1] = (Pmode == DImode ? OPCODE_LD : OPCODE_LW)
+diff --git a/gcc/config/riscv/riscv.h b/gcc/config/riscv/riscv.h
+index 5130dc826d7..701f5ea1544 100644
+--- a/gcc/config/riscv/riscv.h
++++ b/gcc/config/riscv/riscv.h
+@@ -306,9 +306,13 @@
+    The epilogue temporary mustn't conflict with the return registers,
+    the frame pointer, the EH stack adjustment, or the EH data registers. */
+ 
+-#define RISCV_PROLOGUE_TEMP_REGNUM (GP_TEMP_FIRST + 1)
++#define RISCV_PROLOGUE_TEMP_REGNUM (GP_TEMP_FIRST)
+ #define RISCV_PROLOGUE_TEMP(MODE) gen_rtx_REG (MODE, RISCV_PROLOGUE_TEMP_REGNUM)
+ 
++#define RISCV_CALL_ADDRESS_TEMP_REGNUM (GP_TEMP_FIRST + 1)
++#define RISCV_CALL_ADDRESS_TEMP(MODE) \
++  gen_rtx_REG (MODE, RISCV_CALL_ADDRESS_TEMP_REGNUM)
++
+ #define MCOUNT_NAME "_mcount"
+ 
+ #define NO_PROFILE_COUNTERS 1
 diff --git a/gcc/config/rs6000/aix61.h b/gcc/config/rs6000/aix61.h
 index 57ea9ecfc47..8101d0b0c0a 100644
 --- a/gcc/config/rs6000/aix61.h
@@ -18026,6 +18679,535 @@ index 5ec3fb4fe58..5b6246adc9f 100644
  
  
  
+diff --git a/gcc/config/sparc/predicates.md b/gcc/config/sparc/predicates.md
+index ee475800cfc..a0b498cb8f4 100644
+--- a/gcc/config/sparc/predicates.md
++++ b/gcc/config/sparc/predicates.md
+@@ -296,6 +296,8 @@
+   if (arith_double_operand (op, mode))
+     return true;
+ 
++  /* Turning an add/sub instruction into the other changes the Carry flag
++     so the 4096 trick cannot be used for double operations in 32-bit mode.  */
+   return TARGET_ARCH64 && const_4096_operand (op, mode);
+ })
+ 
+diff --git a/gcc/config/sparc/sparc-protos.h b/gcc/config/sparc/sparc-protos.h
+index ef1adb69ede..f1c120c4860 100644
+--- a/gcc/config/sparc/sparc-protos.h
++++ b/gcc/config/sparc/sparc-protos.h
+@@ -86,7 +86,6 @@
+ extern rtx widen_mem_for_ldd_peep (rtx, rtx, machine_mode);
+ extern int empty_delay_slot (rtx_insn *);
+ extern int emit_cbcond_nop (rtx_insn *);
+-extern int eligible_for_call_delay (rtx_insn *);
+ extern int eligible_for_return_delay (rtx_insn *);
+ extern int eligible_for_sibcall_delay (rtx_insn *);
+ extern int emit_move_sequence (rtx, machine_mode);
+diff --git a/gcc/config/sparc/sparc.c b/gcc/config/sparc/sparc.c
+index a993aab7639..0553dc501e6 100644
+--- a/gcc/config/sparc/sparc.c
++++ b/gcc/config/sparc/sparc.c
+@@ -3962,41 +3962,6 @@
+   return 1;
+ }
+ 
+-/* Return nonzero if TRIAL can go into the call delay slot.  */
+-
+-int
+-eligible_for_call_delay (rtx_insn *trial)
+-{
+-  rtx pat;
+-
+-  if (get_attr_in_branch_delay (trial) == IN_BRANCH_DELAY_FALSE)
+-    return 0;
+-
+-  /* The only problematic cases are TLS sequences with Sun as/ld.  */
+-  if ((TARGET_GNU_TLS && HAVE_GNU_LD) || !TARGET_TLS)
+-    return 1;
+-
+-  pat = PATTERN (trial);
+-
+-  /* We must reject tgd_add{32|64}, i.e.
+-       (set (reg) (plus (reg) (unspec [(reg) (symbol_ref)] UNSPEC_TLSGD)))
+-     and tldm_add{32|64}, i.e.
+-       (set (reg) (plus (reg) (unspec [(reg) (symbol_ref)] UNSPEC_TLSLDM)))
+-     for Sun as/ld.  */
+-  if (GET_CODE (pat) == SET
+-      && GET_CODE (SET_SRC (pat)) == PLUS)
+-    {
+-      rtx unspec = XEXP (SET_SRC (pat), 1);
+-
+-      if (GET_CODE (unspec) == UNSPEC
+-	  && (XINT (unspec, 1) == UNSPEC_TLSGD
+-	      || XINT (unspec, 1) == UNSPEC_TLSLDM))
+-	return 0;
+-    }
+-
+-  return 1;
+-}
+-
+ /* Return nonzero if TRIAL, an insn, can be combined with a 'restore'
+    instruction.  RETURN_P is true if the v9 variant 'return' is to be
+    considered in the test too.
+diff --git a/gcc/config/sparc/sparc.md b/gcc/config/sparc/sparc.md
+index 0a6e27ffa83..d9ef79c13cc 100644
+--- a/gcc/config/sparc/sparc.md
++++ b/gcc/config/sparc/sparc.md
+@@ -561,9 +561,9 @@
+    (set_attr "type" "multi")])
+ 
+ ;; Attributes for branch scheduling
+-(define_attr "in_call_delay" "false,true"
+-  (symbol_ref "(eligible_for_call_delay (insn)
+-		? IN_CALL_DELAY_TRUE : IN_CALL_DELAY_FALSE)"))
++(define_attr "tls_delay_slot" "false,true"
++  (symbol_ref "((TARGET_GNU_TLS && HAVE_GNU_LD) != 0
++		? TLS_DELAY_SLOT_TRUE : TLS_DELAY_SLOT_FALSE)"))
+ 
+ (define_attr "in_sibcall_delay" "false,true"
+   (symbol_ref "(eligible_for_sibcall_delay (insn)
+@@ -613,27 +613,24 @@
+ 	   (const_string "true")
+ 	] (const_string "false")))
+ 
+-(define_delay (eq_attr "type" "call")
+-  [(eq_attr "in_call_delay" "true") (nil) (nil)])
+-
+ (define_delay (eq_attr "type" "sibcall")
+   [(eq_attr "in_sibcall_delay" "true") (nil) (nil)])
+ 
+ (define_delay (eq_attr "type" "return")
+   [(eq_attr "in_return_delay" "true") (nil) (nil)])
+ 
+-(define_delay (and (eq_attr "type" "branch")
+-	      (not (eq_attr "branch_type" "icc")))
+-  [(eq_attr "in_branch_delay" "true") (nil) (eq_attr "in_branch_delay" "true")])
+-
+-(define_delay (and (eq_attr "type" "branch")
+-	      (eq_attr "branch_type" "icc"))
+-  [(eq_attr "in_branch_delay" "true") (nil)
+-  (eq_attr "in_integer_branch_annul_delay" "true")])
+-
+-(define_delay (eq_attr "type" "uncond_branch")
++(define_delay (ior (eq_attr "type" "call") (eq_attr "type" "uncond_branch"))
+   [(eq_attr "in_branch_delay" "true") (nil) (nil)])
+ 
++(define_delay (and (eq_attr "type" "branch") (not (eq_attr "branch_type" "icc")))
++  [(eq_attr "in_branch_delay" "true")
++   (nil)
++   (eq_attr "in_branch_delay" "true")])
++
++(define_delay (and (eq_attr "type" "branch") (eq_attr "branch_type" "icc"))
++  [(eq_attr "in_branch_delay" "true")
++   (nil)
++   (eq_attr "in_integer_branch_annul_delay" "true")])
+ 
+ ;; Include SPARC DFA schedulers
+ 
+@@ -3771,10 +3768,13 @@
+     }
+ })
+ 
++;; Turning an add/sub instruction into the other changes the Carry flag
++;; so the 4096 trick cannot be used for operations in CCXCmode.
++
+ (define_expand "uaddvdi4"
+   [(parallel [(set (reg:CCXC CC_REG)
+ 		   (compare:CCXC (plus:DI (match_operand:DI 1 "register_operand")
+-					  (match_operand:DI 2 "arith_add_operand"))
++					  (match_operand:DI 2 "arith_double_operand"))
+ 			         (match_dup 1)))
+ 	      (set (match_operand:DI 0 "register_operand")
+ 		   (plus:DI (match_dup 1) (match_dup 2)))])
+@@ -3793,10 +3793,13 @@
+     }
+ })
+ 
++;; Turning an add/sub instruction into the other does not change the Overflow
++;; flag so the 4096 trick can be used for operations in CCXVmode.
++
+ (define_expand "addvdi4"
+   [(parallel [(set (reg:CCXV CC_REG)
+ 		   (compare:CCXV (plus:DI (match_operand:DI 1 "register_operand")
+-					  (match_operand:DI 2 "arith_add_operand"))
++					  (match_operand:DI 2 "arith_double_add_operand"))
+ 			         (unspec:DI [(match_dup 1) (match_dup 2)]
+ 					    UNSPEC_ADDV)))
+ 	      (set (match_operand:DI 0 "register_operand")
+@@ -3969,9 +3972,10 @@
+   ""
+   "@
+    add\t%1, %2, %0
+-   sub\t%1, -%2, %0"
+-  [(set_attr "type" "*,*")
+-   (set_attr "fptype" "*,*")])
++   sub\t%1, -%2, %0")
++
++;; Turning an add/sub instruction into the other changes the Carry flag
++;; so the 4096 trick cannot be used for operations in CCCmode.
+ 
+ (define_expand "uaddvsi4"
+   [(parallel [(set (reg:CCC CC_REG)
+@@ -3985,10 +3989,13 @@
+ 			   (pc)))]
+  "")
+ 
++;; Turning an add/sub instruction into the other does not change the Overflow
++;; flag so the 4096 trick can be used for operations in CCVmode.
++
+ (define_expand "addvsi4"
+   [(parallel [(set (reg:CCV CC_REG)
+ 		   (compare:CCV (plus:SI (match_operand:SI 1 "register_operand")
+-					 (match_operand:SI 2 "arith_operand"))
++					 (match_operand:SI 2 "arith_add_operand"))
+ 			        (unspec:SI [(match_dup 1) (match_dup 2)]
+ 					   UNSPEC_ADDV)))
+ 	      (set (match_operand:SI 0 "register_operand")
+@@ -4097,42 +4104,50 @@
+ 
+ (define_insn "*cmp_ccv_plus"
+   [(set (reg:CCV CC_REG)
+-	(compare:CCV (plus:SI (match_operand:SI 0 "register_operand" "%r")
+-			      (match_operand:SI 1 "arith_operand" "rI"))
++	(compare:CCV (plus:SI (match_operand:SI 0 "register_operand" "%r,r")
++			      (match_operand:SI 1 "arith_add_operand" "rI,O"))
+ 		     (unspec:SI [(match_dup 0) (match_dup 1)] UNSPEC_ADDV)))]
+   ""
+-  "addcc\t%0, %1, %%g0"
++  "@
++   addcc\t%0, %1, %%g0
++   subcc\t%0, -%1, %%g0"
+   [(set_attr "type" "compare")])
+ 
+ (define_insn "*cmp_ccxv_plus"
+   [(set (reg:CCXV CC_REG)
+-	(compare:CCXV (plus:DI (match_operand:DI 0 "register_operand" "%r")
+-			       (match_operand:DI 1 "arith_operand" "rI"))
++	(compare:CCXV (plus:DI (match_operand:DI 0 "register_operand" "%r,r")
++			       (match_operand:DI 1 "arith_add_operand" "rI,O"))
+ 		      (unspec:DI [(match_dup 0) (match_dup 1)] UNSPEC_ADDV)))]
+   "TARGET_ARCH64"
+-  "addcc\t%0, %1, %%g0"
++  "@
++   addcc\t%0, %1, %%g0
++   subcc\t%0, -%1, %%g0"
+   [(set_attr "type" "compare")])
+ 
+ (define_insn "*cmp_ccv_plus_set"
+   [(set (reg:CCV CC_REG)
+-	(compare:CCV (plus:SI (match_operand:SI 1 "register_operand" "%r")
+-			      (match_operand:SI 2 "arith_operand" "rI"))
++	(compare:CCV (plus:SI (match_operand:SI 1 "register_operand" "%r,r")
++			      (match_operand:SI 2 "arith_add_operand" "rI,O"))
+ 		     (unspec:SI [(match_dup 1) (match_dup 2)] UNSPEC_ADDV)))
+-   (set (match_operand:SI 0 "register_operand" "=r")
++   (set (match_operand:SI 0 "register_operand" "=r,r")
+ 	(plus:SI (match_dup 1) (match_dup 2)))]
+   ""
+-  "addcc\t%1, %2, %0"
++  "@
++   addcc\t%1, %2, %0
++   subcc\t%1, -%2, %0"
+   [(set_attr "type" "compare")])
+ 
+ (define_insn "*cmp_ccxv_plus_set"
+   [(set (reg:CCXV CC_REG)
+-	(compare:CCXV (plus:DI (match_operand:DI 1 "register_operand" "%r")
+-			       (match_operand:DI 2 "arith_operand" "rI"))
++	(compare:CCXV (plus:DI (match_operand:DI 1 "register_operand" "%r,r")
++			       (match_operand:DI 2 "arith_add_operand" "rI,O"))
+ 		      (unspec:DI [(match_dup 1) (match_dup 2)] UNSPEC_ADDV)))
+-   (set (match_operand:DI 0 "register_operand" "=r")
++   (set (match_operand:DI 0 "register_operand" "=r,r")
+ 	(plus:DI (match_dup 1) (match_dup 2)))]
+   "TARGET_ARCH64"
+-  "addcc\t%1, %2, %0"
++  "@
++   addcc\t%1, %2, %0
++   subcc\t%1, -%2, %0"
+   [(set_attr "type" "compare")])
+ 
+ (define_insn "*cmp_ccv_plus_sltu_set"
+@@ -4164,10 +4179,13 @@
+     }
+ })
+ 
++;; Turning an add/sub instruction into the other changes the Carry flag
++;; so the 4096 trick cannot be used for operations in CCXmode.
++
+ (define_expand "usubvdi4"
+   [(parallel [(set (reg:CCX CC_REG)
+ 		   (compare:CCX (match_operand:DI 1 "register_or_zero_operand")
+-				(match_operand:DI 2 "arith_add_operand")))
++				(match_operand:DI 2 "arith_double_operand")))
+ 	      (set (match_operand:DI 0 "register_operand")
+ 		   (minus:DI (match_dup 1) (match_dup 2)))])
+    (set (pc) (if_then_else (ltu (reg:CCX CC_REG) (const_int 0))
+@@ -4191,10 +4209,13 @@
+     }
+ })
+ 
++;; Turning an add/sub instruction into the other does not change the Overflow
++;; flag so the 4096 trick can be used for operations in CCXVmode.
++
+ (define_expand "subvdi4"
+   [(parallel [(set (reg:CCXV CC_REG)
+ 		   (compare:CCXV (minus:DI (match_operand:DI 1 "register_operand")
+-					   (match_operand:DI 2 "arith_add_operand"))
++					   (match_operand:DI 2 "arith_double_add_operand"))
+ 			         (unspec:DI [(match_dup 1) (match_dup 2)]
+ 					    UNSPEC_SUBV)))
+ 	      (set (match_operand:DI 0 "register_operand")
+@@ -4365,9 +4386,10 @@
+   ""
+   "@
+    sub\t%1, %2, %0
+-   add\t%1, -%2, %0"
+-  [(set_attr "type" "*,*")
+-   (set_attr "fptype" "*,*")])
++   add\t%1, -%2, %0")
++
++;; Turning an add/sub instruction into the other changes the Carry flag
++;; so the 4096 trick cannot be used for operations in CCmode.
+ 
+ (define_expand "usubvsi4"
+   [(parallel [(set (reg:CC CC_REG)
+@@ -4387,10 +4409,13 @@
+     }
+ })
+ 
++;; Turning an add/sub instruction into the other does not change the Overflow
++;; flag so the 4096 trick can be used for operations in CCVmode.
++
+ (define_expand "subvsi4"
+   [(parallel [(set (reg:CCV CC_REG)
+ 		   (compare:CCV (minus:SI (match_operand:SI 1 "register_operand")
+-					  (match_operand:SI 2 "arith_operand"))
++					  (match_operand:SI 2 "arith_add_operand"))
+ 			        (unspec:SI [(match_dup 1) (match_dup 2)]
+ 					   UNSPEC_SUBV)))
+ 	      (set (match_operand:SI 0 "register_operand")
+@@ -4483,42 +4508,50 @@
+ 
+ (define_insn "*cmp_ccv_minus"
+   [(set (reg:CCV CC_REG)
+-	(compare:CCV (minus:SI (match_operand:SI 0 "register_or_zero_operand" "rJ")
+-			       (match_operand:SI 1 "arith_operand" "rI"))
++	(compare:CCV (minus:SI (match_operand:SI 0 "register_or_zero_operand" "rJ,rJ")
++			       (match_operand:SI 1 "arith_add_operand" "rI,O"))
+ 		     (unspec:SI [(match_dup 0) (match_dup 1)] UNSPEC_SUBV)))]
+   ""
+-  "subcc\t%r0, %1, %%g0"
++  "@
++   subcc\t%r0, %1, %%g0
++   addcc\t%r0, -%1, %%g0"
+   [(set_attr "type" "compare")])
+ 
+ (define_insn "*cmp_ccxv_minus"
+   [(set (reg:CCXV CC_REG)
+-	(compare:CCXV (minus:DI (match_operand:DI 0 "register_or_zero_operand" "rJ")
+-			        (match_operand:DI 1 "arith_operand" "rI"))
++	(compare:CCXV (minus:DI (match_operand:DI 0 "register_or_zero_operand" "rJ,rJ")
++			        (match_operand:DI 1 "arith_add_operand" "rI,O"))
+ 		      (unspec:DI [(match_dup 0) (match_dup 1)] UNSPEC_SUBV)))]
+   "TARGET_ARCH64"
+-  "subcc\t%r0, %1, %%g0"
++  "@
++   subcc\t%r0, %1, %%g0
++   addcc\t%r0, -%1, %%g0"
+   [(set_attr "type" "compare")])
+ 
+ (define_insn "*cmp_ccv_minus_set"
+   [(set (reg:CCV CC_REG)
+-	(compare:CCV (minus:SI (match_operand:SI 1 "register_or_zero_operand" "rJ")
+-			       (match_operand:SI 2 "arith_operand" "rI"))
++	(compare:CCV (minus:SI (match_operand:SI 1 "register_or_zero_operand" "rJ,rJ")
++			       (match_operand:SI 2 "arith_add_operand" "rI,O"))
+ 		     (unspec:SI [(match_dup 1) (match_dup 2)] UNSPEC_SUBV)))
+-   (set (match_operand:SI 0 "register_operand" "=r")
++   (set (match_operand:SI 0 "register_operand" "=r,r")
+ 	(minus:SI (match_dup 1) (match_dup 2)))]
+   ""
+-  "subcc\t%r1, %2, %0"
++  "@
++   subcc\t%r1, %2, %0
++   addcc\t%r1, -%2, %0"
+   [(set_attr "type" "compare")])
+ 
+ (define_insn "*cmp_ccxv_minus_set"
+   [(set (reg:CCXV CC_REG)
+-	(compare:CCXV (minus:DI (match_operand:DI 1 "register_or_zero_operand" "rJ")
+-			        (match_operand:DI 2 "arith_operand" "rI"))
++	(compare:CCXV (minus:DI (match_operand:DI 1 "register_or_zero_operand" "rJ,rJ")
++			        (match_operand:DI 2 "arith_add_operand" "rI,O"))
+ 		      (unspec:DI [(match_dup 1) (match_dup 2)] UNSPEC_SUBV)))
+-   (set (match_operand:DI 0 "register_operand" "=r")
++   (set (match_operand:DI 0 "register_operand" "=r,r")
+ 	(minus:DI (match_dup 1) (match_dup 2)))]
+   "TARGET_ARCH64"
+-  "subcc\t%r1, %2, %0"
++  "@
++   subcc\t%r1, %2, %0
++   addcc\t%r1, -%2, %0"
+   [(set_attr "type" "compare")])
+ 
+ (define_insn "*cmp_ccv_minus_sltu_set"
+@@ -5769,13 +5802,13 @@
+ 
+ (define_insn "negsi2"
+   [(set (match_operand:SI 0 "register_operand" "=r")
+-        (neg:SI (match_operand:SI 1 "arith_operand" "rI")))]
++        (neg:SI (match_operand:SI 1 "register_operand" "r")))]
+   ""
+   "sub\t%%g0, %1, %0")
+ 
+ (define_expand "unegvsi3"
+   [(parallel [(set (reg:CCC CC_REG)
+-		   (compare:CCC (not:SI (match_operand:SI 1 "arith_operand" ""))
++		   (compare:CCC (not:SI (match_operand:SI 1 "register_operand" ""))
+ 				(const_int -1)))
+ 	      (set (match_operand:SI 0 "register_operand" "")
+ 		   (neg:SI (match_dup 1)))])
+@@ -5787,7 +5820,7 @@
+ 
+ (define_expand "negvsi3"
+   [(parallel [(set (reg:CCV CC_REG)
+-		   (compare:CCV (neg:SI (match_operand:SI 1 "arith_operand" ""))
++		   (compare:CCV (neg:SI (match_operand:SI 1 "register_operand" ""))
+ 				(unspec:SI [(match_dup 1)] UNSPEC_NEGV)))
+ 	      (set (match_operand:SI 0 "register_operand" "")
+ 		   (neg:SI (match_dup 1)))])
+@@ -5799,7 +5832,7 @@
+ 
+ (define_insn "*cmp_ccnz_neg"
+   [(set (reg:CCNZ CC_REG)
+-	(compare:CCNZ (neg:SI (match_operand:SI 0 "arith_operand" "rI"))
++	(compare:CCNZ (neg:SI (match_operand:SI 0 "register_operand" "r"))
+ 		      (const_int 0)))]
+   ""
+   "subcc\t%%g0, %0, %%g0"
+@@ -5807,7 +5840,7 @@
+ 
+ (define_insn "*cmp_ccxnz_neg"
+   [(set (reg:CCXNZ CC_REG)
+-	(compare:CCXNZ (neg:DI (match_operand:DI 0 "arith_operand" "rI"))
++	(compare:CCXNZ (neg:DI (match_operand:DI 0 "register_operand" "r"))
+ 		       (const_int 0)))]
+   "TARGET_ARCH64"
+   "subcc\t%%g0, %0, %%g0"
+@@ -5815,7 +5848,7 @@
+ 
+ (define_insn "*cmp_ccnz_neg_set"
+   [(set (reg:CCNZ CC_REG)
+-	(compare:CCNZ (neg:SI (match_operand:SI 1 "arith_operand" "rI"))
++	(compare:CCNZ (neg:SI (match_operand:SI 1 "register_operand" "r"))
+ 		      (const_int 0)))
+    (set (match_operand:SI 0 "register_operand" "=r")
+ 	(neg:SI (match_dup 1)))]
+@@ -5825,7 +5858,7 @@
+ 
+ (define_insn "*cmp_ccxnz_neg_set"
+   [(set (reg:CCXNZ CC_REG)
+-	(compare:CCXNZ (neg:DI (match_operand:DI 1 "arith_operand" "rI"))
++	(compare:CCXNZ (neg:DI (match_operand:DI 1 "register_operand" "r"))
+ 		       (const_int 0)))
+    (set (match_operand:DI 0 "register_operand" "=r")
+ 	(neg:DI (match_dup 1)))]
+@@ -5835,7 +5868,7 @@
+ 
+ (define_insn "*cmp_ccc_neg_set"
+   [(set (reg:CCC CC_REG)
+-	(compare:CCC (not:SI (match_operand:SI 1 "arith_operand" "rI"))
++	(compare:CCC (not:SI (match_operand:SI 1 "register_operand" "r"))
+ 		     (const_int -1)))
+    (set (match_operand:SI 0 "register_operand" "=r")
+ 	(neg:SI (match_dup 1)))]
+@@ -5845,7 +5878,7 @@
+ 
+ (define_insn "*cmp_ccxc_neg_set"
+   [(set (reg:CCXC CC_REG)
+-	(compare:CCXC (not:DI (match_operand:DI 1 "arith_operand" "rI"))
++	(compare:CCXC (not:DI (match_operand:DI 1 "register_operand" "r"))
+ 		      (const_int -1)))
+    (set (match_operand:DI 0 "register_operand" "=r")
+ 	(neg:DI (match_dup 1)))]
+@@ -5856,7 +5889,7 @@
+ (define_insn "*cmp_ccc_neg_sltu_set"
+   [(set (reg:CCC CC_REG)
+ 	(compare:CCC (zero_extend:DI
+-		       (neg:SI (plus:SI (match_operand:SI 1 "arith_operand" "rI")
++		       (neg:SI (plus:SI (match_operand:SI 1 "register_operand" "r")
+ 				        (ltu:SI (reg:CCC CC_REG)
+ 						(const_int 0)))))
+ 		     (neg:DI (plus:DI (zero_extend:DI (match_dup 1))
+@@ -5871,7 +5904,7 @@
+ 
+ (define_insn "*cmp_ccv_neg"
+   [(set (reg:CCV CC_REG)
+-	(compare:CCV (neg:SI (match_operand:SI 0 "arith_operand" "rI"))
++	(compare:CCV (neg:SI (match_operand:SI 0 "register_operand" "r"))
+ 		     (unspec:SI [(match_dup 0)] UNSPEC_NEGV)))]
+   ""
+   "subcc\t%%g0, %0, %%g0"
+@@ -5879,7 +5912,7 @@
+ 
+ (define_insn "*cmp_ccxv_neg"
+   [(set (reg:CCXV CC_REG)
+-	(compare:CCXV (neg:DI (match_operand:DI 0 "arith_operand" "rI"))
++	(compare:CCXV (neg:DI (match_operand:DI 0 "register_operand" "r"))
+ 		      (unspec:DI [(match_dup 0)] UNSPEC_NEGV)))]
+   "TARGET_ARCH64"
+   "subcc\t%%g0, %0, %%g0"
+@@ -5887,7 +5920,7 @@
+ 
+ (define_insn "*cmp_ccv_neg_set"
+   [(set (reg:CCV CC_REG)
+-	(compare:CCV (neg:SI (match_operand:SI 1 "arith_operand" "rI"))
++	(compare:CCV (neg:SI (match_operand:SI 1 "register_operand" "r"))
+ 		     (unspec:SI [(match_dup 1)] UNSPEC_NEGV)))
+    (set (match_operand:SI 0 "register_operand" "=r")
+ 	(neg:SI (match_dup 1)))]
+@@ -5897,7 +5930,7 @@
+ 
+ (define_insn "*cmp_ccxv_neg_set"
+   [(set (reg:CCXV CC_REG)
+-	(compare:CCXV (neg:DI (match_operand:DI 1 "arith_operand" "rI"))
++	(compare:CCXV (neg:DI (match_operand:DI 1 "register_operand" "r"))
+ 		      (unspec:DI [(match_dup 1)] UNSPEC_NEGV)))
+    (set (match_operand:DI 0 "register_operand" "=r")
+ 	(neg:DI (match_dup 1)))]
+@@ -5907,7 +5940,7 @@
+ 
+ (define_insn "*cmp_ccv_neg_sltu_set"
+   [(set (reg:CCV CC_REG)
+-	(compare:CCV (neg:SI (plus:SI (match_operand:SI 1 "arith_operand" "rI")
++	(compare:CCV (neg:SI (plus:SI (match_operand:SI 1 "register_operand" "r")
+ 				      (ltu:SI (reg:CCC CC_REG) (const_int 0))))
+ 		     (unspec:SI [(plus:SI (match_dup 1)
+ 				          (ltu:SI (reg:CCC CC_REG)
+@@ -7935,7 +7968,9 @@
+    (clobber (reg:P O7_REG))]
+   "TARGET_TLS"
+   "call\t%a1, %%tgd_call(%a2)%#"
+-  [(set_attr "type" "call")])
++  [(set (attr "type") (if_then_else (eq_attr "tls_delay_slot" "true")
++                                    (const_string "call")
++                                    (const_string "call_no_delay_slot")))])
+ 
+ (define_insn "tldm_hi22<P:mode>"
+   [(set (match_operand:P 0 "register_operand" "=r")
+@@ -7966,7 +8001,9 @@
+    (clobber (reg:P O7_REG))]
+   "TARGET_TLS"
+   "call\t%a1, %%tldm_call(%&)%#"
+-  [(set_attr "type" "call")])
++  [(set (attr "type") (if_then_else (eq_attr "tls_delay_slot" "true")
++                                    (const_string "call")
++                                    (const_string "call_no_delay_slot")))])
+ 
+ (define_insn "tldo_hix22<P:mode>"
+   [(set (match_operand:P 0 "register_operand" "=r")
 diff --git a/gcc/config/tilegx/tilegx.md b/gcc/config/tilegx/tilegx.md
 index dce43eca074..7e3ef50dd4e 100644
 --- a/gcc/config/tilegx/tilegx.md
@@ -18204,10 +19386,47 @@ index 1ffefd5f482..c442e2fb008 100644
        if (!gcov_open (bbg_file_name, -1))
  	{
 diff --git a/gcc/cp/ChangeLog b/gcc/cp/ChangeLog
-index 6441d647a54..504737621a7 100644
+index 6441d647a54..d6cf4ac3912 100644
 --- a/gcc/cp/ChangeLog
 +++ b/gcc/cp/ChangeLog
-@@ -1,3 +1,231 @@
+@@ -1,3 +1,268 @@
++2020-11-26  Thomas Schwinge  <thomas@codesourcery.com>
++
++	Backported from master:
++	2020-11-26  Thomas Schwinge  <thomas@codesourcery.com>
++
++	* parser.c (cp_parser_omp_var_list_no_open): Assert that array
++	section's 'low_bound', 'length' are not location wrapper nodes.
++	(cp_parser_oacc_all_clauses, cp_parser_oacc_cache): Instantiate
++	'auto_suppress_location_wrappers'.
++
++2020-11-25  Thomas Schwinge  <thomas@codesourcery.com>
++
++	Backported from master:
++	2020-11-25  Thomas Schwinge  <thomas@codesourcery.com>
++
++	* pt.c (tsubst_omp_clauses): Handle 'OMP_CLAUSE__CACHE_'.
++	(tsubst_expr): Handle 'OACC_CACHE'.
++
++2020-11-24  Jason Merrill  <jason@redhat.com>
++
++	PR c++/95158
++	* class.c (lookup_vfn_in_binfo): New.
++	* call.c (build_over_call): Use it.
++	(build_new_method_call_1): Don't set LOOKUP_NONVIRTUAL.
++	* cp-tree.h (resolves_to_fixed_type_p): Add default argument.
++	(lookup_vfn_in_binfo): Declare.
++
++2020-11-13  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2020-10-07  Patrick Palka  <ppalka@redhat.com>
++
++	PR c++/88115
++	PR libstdc++/97273
++	* tree.c (cp_tree_equal) <case ALIGNOF_EXPR>: Return false if
++	ALIGNOF_EXPR_STD_P differ.
++
 +2020-09-16  Jakub Jelinek  <jakub@redhat.com>
 +
 +	Backported from master:
@@ -18439,6 +19658,69 @@ index 6441d647a54..504737621a7 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/gcc/cp/call.c b/gcc/cp/call.c
+index f365a5a7f7b..b8b4ae676fa 100644
+--- a/gcc/cp/call.c
++++ b/gcc/cp/call.c
+@@ -8292,6 +8292,15 @@
+ 	  || CLASSTYPE_FINAL (TYPE_METHOD_BASETYPE (TREE_TYPE (fn))))
+ 	flags |= LOOKUP_NONVIRTUAL;
+ 
++      /* If we know the dynamic type of the object, look up the final overrider
++	 in the BINFO.  */
++      if (DECL_VINDEX (fn) && (flags & LOOKUP_NONVIRTUAL) == 0
++	  && resolves_to_fixed_type_p (arg))
++	{
++	  fn = lookup_vfn_in_binfo (DECL_VINDEX (fn), cand->conversion_path);
++	  flags |= LOOKUP_NONVIRTUAL;
++	}
++
+       /* [class.mfct.nonstatic]: If a nonstatic member function of a class
+ 	 X is called for an object that is not of type X, or of a type
+ 	 derived from X, the behavior is undefined.
+@@ -9895,17 +9904,6 @@
+ 
+ 	  if (call != error_mark_node)
+ 	    {
+-	      /* Optimize away vtable lookup if we know that this
+-		 function can't be overridden.  We need to check if
+-		 the context and the type where we found fn are the same,
+-		 actually FN might be defined in a different class
+-		 type because of a using-declaration. In this case, we
+-		 do not want to perform a non-virtual call.  */
+-	      if (DECL_VINDEX (fn) && ! (flags & LOOKUP_NONVIRTUAL)
+-		  && same_type_ignoring_top_level_qualifiers_p
+-		  (DECL_CONTEXT (fn), BINFO_TYPE (binfo))
+-		  && resolves_to_fixed_type_p (instance, 0))
+-		flags |= LOOKUP_NONVIRTUAL;
+               if (explicit_targs)
+                 flags |= LOOKUP_EXPLICIT_TMPL_ARGS;
+ 	      /* Now we know what function is being called.  */
+diff --git a/gcc/cp/class.c b/gcc/cp/class.c
+index 6b57184e081..f7c8757c740 100644
+--- a/gcc/cp/class.c
++++ b/gcc/cp/class.c
+@@ -2391,6 +2391,20 @@
+   gcc_unreachable ();
+ }
+ 
++/* Given a DECL_VINDEX of a virtual function found in BINFO, return the final
++   overrider at that index in the vtable.  This should only be used when we
++   know that BINFO is correct for the dynamic type of the object.  */
++
++tree
++lookup_vfn_in_binfo (tree idx, tree binfo)
++{
++  int ix = tree_to_shwi (idx);
++  if (TARGET_VTABLE_USES_DESCRIPTORS)
++    ix /= MAX (TARGET_VTABLE_USES_DESCRIPTORS, 1);
++  tree virtuals = BINFO_VIRTUALS (binfo);
++  return TREE_VALUE (chain_index (ix, virtuals));
++}
++
+ /* Update an entry in the vtable for BINFO, which is in the hierarchy
+    dominated by T.  FN is the old function; VIRTUALS points to the
+    corresponding position in the new BINFO_VIRTUALS list.  IX is the index
 diff --git a/gcc/cp/constexpr.c b/gcc/cp/constexpr.c
 index bab5935a4eb..38b852681aa 100644
 --- a/gcc/cp/constexpr.c
@@ -18523,10 +19805,27 @@ index 4be45abca88..7525ee8d10f 100644
    /* Prevent that we try to fold an already folded result again.  */
    if (x != org_x)
 diff --git a/gcc/cp/cp-tree.h b/gcc/cp/cp-tree.h
-index f7c3eea4cdf..1f013c172ce 100644
+index f7c3eea4cdf..be291e99ce6 100644
 --- a/gcc/cp/cp-tree.h
 +++ b/gcc/cp/cp-tree.h
-@@ -6492,6 +6492,7 @@
+@@ -6272,7 +6272,7 @@
+ extern tree current_nonlambda_class_type	(void);
+ extern tree finish_struct			(tree, tree);
+ extern void finish_struct_1			(tree);
+-extern int resolves_to_fixed_type_p		(tree, int *);
++extern int resolves_to_fixed_type_p		(tree, int * = NULL);
+ extern void init_class_processing		(void);
+ extern int is_empty_class			(tree);
+ extern bool is_really_empty_class		(tree, bool);
+@@ -6286,6 +6286,7 @@
+ extern tree instantiate_type			(tree, tree, tsubst_flags_t);
+ extern void build_self_reference		(void);
+ extern int same_signature_p			(const_tree, const_tree);
++extern tree lookup_vfn_in_binfo			(tree, tree);
+ extern void maybe_add_class_template_decl_list	(tree, tree, int);
+ extern void unreverse_member_declarations	(tree);
+ extern void invalidate_class_lookup_cache	(void);
+@@ -6492,6 +6493,7 @@
  		       tree, bool, tree, tree);
  extern tree grokbitfield (const cp_declarator *, cp_decl_specifier_seq *,
  			  tree, tree, tree);
@@ -18534,7 +19833,7 @@ index f7c3eea4cdf..1f013c172ce 100644
  extern bool any_dependent_type_attributes_p	(tree);
  extern tree cp_reconstruct_complex_type		(tree, tree);
  extern bool attributes_naming_typedef_ok	(tree);
-@@ -6844,6 +6845,7 @@
+@@ -6844,6 +6846,7 @@
  extern bool alias_template_specialization_p     (const_tree);
  extern bool dependent_alias_template_spec_p     (const_tree);
  extern bool template_parm_object_p		(const_tree);
@@ -18542,7 +19841,7 @@ index f7c3eea4cdf..1f013c172ce 100644
  extern bool explicit_class_specialization_p     (tree);
  extern bool push_tinst_level                    (tree);
  extern bool push_tinst_level_loc                (tree, location_t);
-@@ -7216,6 +7218,7 @@
+@@ -7216,6 +7219,7 @@
  extern void maybe_warn_parm_abi			(tree, location_t);
  extern bool class_tmpl_impl_spec_p		(const_tree);
  extern int zero_init_p				(const_tree);
@@ -18550,7 +19849,7 @@ index f7c3eea4cdf..1f013c172ce 100644
  extern bool check_abi_tag_redeclaration		(const_tree, const_tree,
  						 const_tree);
  extern bool check_abi_tag_args			(tree, tree);
-@@ -7327,11 +7330,6 @@
+@@ -7327,11 +7331,6 @@
  
  extern void cxx_print_statistics		(void);
  extern bool maybe_warn_zero_as_null_pointer_constant (tree, location_t);
@@ -18852,7 +20151,7 @@ index 8999c5ad4a7..b8eb21e0f97 100644
  
        bindings = tree_cons (fnname, fns, bindings);
 diff --git a/gcc/cp/parser.c b/gcc/cp/parser.c
-index e1c02d7b718..aa64549698f 100644
+index e1c02d7b718..0a0b80a8388 100644
 --- a/gcc/cp/parser.c
 +++ b/gcc/cp/parser.c
 @@ -13495,7 +13495,7 @@
@@ -18976,7 +20275,43 @@ index e1c02d7b718..aa64549698f 100644
        if (decl == error_mark_node)
  	;
        else if (kind != 0)
-@@ -37828,9 +37820,9 @@
+@@ -32616,7 +32608,11 @@
+ 		  parser->colon_corrects_to_scope_p = false;
+ 		  cp_lexer_consume_token (parser->lexer);
+ 		  if (!cp_lexer_next_token_is (parser->lexer, CPP_COLON))
+-		    low_bound = cp_parser_expression (parser);
++		    {
++		      low_bound = cp_parser_expression (parser);
++		      /* Later handling is not prepared to see through these.  */
++		      gcc_checking_assert (!location_wrapper_p (low_bound));
++		    }
+ 		  if (!colon)
+ 		    parser->colon_corrects_to_scope_p
+ 		      = saved_colon_corrects_to_scope_p;
+@@ -32636,7 +32632,11 @@
+ 			cp_parser_commit_to_tentative_parse (parser);
+ 		      if (!cp_lexer_next_token_is (parser->lexer,
+ 						   CPP_CLOSE_SQUARE))
+-			length = cp_parser_expression (parser);
++			{
++			  length = cp_parser_expression (parser);
++			  /* Later handling is not prepared to see through these.  */
++			  gcc_checking_assert (!location_wrapper_p (length));
++			}
+ 		    }
+ 		  /* Look for the closing `]'.  */
+ 		  if (!cp_parser_require (parser, CPP_CLOSE_SQUARE,
+@@ -35087,6 +35087,9 @@
+   tree clauses = NULL;
+   bool first = true;
+ 
++  /* Don't create location wrapper nodes within OpenACC clauses.  */
++  auto_suppress_location_wrappers sentinel;
++
+   while (cp_lexer_next_token_is_not (parser->lexer, CPP_PRAGMA_EOL))
+     {
+       location_t here;
+@@ -37828,9 +37831,9 @@
  	  cp_parser_end_omp_structured_block (parser, save);
  	  stmt = finish_omp_parallel (cclauses[C_OMP_CLAUSE_SPLIT_PARALLEL],
  				      block);
@@ -18987,8 +20322,19 @@ index e1c02d7b718..aa64549698f 100644
  	  return stmt;
  	}
        else if (!flag_openmp)  /* flag_openmp_simd  */
+@@ -38768,6 +38771,10 @@
+ static tree
+ cp_parser_oacc_cache (cp_parser *parser, cp_token *pragma_tok)
+ {
++  /* Don't create location wrapper nodes within 'OMP_CLAUSE__CACHE_'
++     clauses.  */
++  auto_suppress_location_wrappers sentinel;
++
+   tree stmt, clauses;
+ 
+   clauses = cp_parser_omp_var_list (parser, OMP_CLAUSE__CACHE_, NULL_TREE);
 diff --git a/gcc/cp/pt.c b/gcc/cp/pt.c
-index 4787747b6ff..7f8138aa479 100644
+index 4787747b6ff..5116b0fe43d 100644
 --- a/gcc/cp/pt.c
 +++ b/gcc/cp/pt.c
 @@ -3773,10 +3773,18 @@
@@ -19160,7 +20506,23 @@ index 4787747b6ff..7f8138aa479 100644
  		SET_DECL_VALUE_EXPR (r, ve);
  	      }
  	    if (CP_DECL_THREAD_LOCAL_P (r)
-@@ -17838,8 +17921,10 @@
+@@ -16372,6 +16455,7 @@
+ 	case OMP_CLAUSE_FROM:
+ 	case OMP_CLAUSE_TO:
+ 	case OMP_CLAUSE_MAP:
++	case OMP_CLAUSE__CACHE_:
+ 	case OMP_CLAUSE_NONTEMPORAL:
+ 	case OMP_CLAUSE_USE_DEVICE_PTR:
+ 	case OMP_CLAUSE_IS_DEVICE_PTR:
+@@ -17815,6 +17899,7 @@
+       add_stmt (t);
+       break;
+ 
++    case OACC_CACHE:
+     case OACC_ENTER_DATA:
+     case OACC_EXIT_DATA:
+     case OACC_UPDATE:
+@@ -17838,8 +17923,10 @@
        add_stmt (t);
        break;
  
@@ -19172,7 +20534,7 @@ index 4787747b6ff..7f8138aa479 100644
        stmt = push_stmt_list ();
        RECUR (OMP_BODY (t));
        stmt = pop_stmt_list (stmt);
-@@ -27376,10 +27461,13 @@
+@@ -27376,10 +27463,13 @@
  				     complain, ctor);
  	  if (fparms == error_mark_node)
  	    ok = false;
@@ -19211,7 +20573,7 @@ index 4bfb5d15293..3c578fbfa60 100644
  		      || !TREE_THIS_VOLATILE (fndecl))
  		    abnormal = false;
 diff --git a/gcc/cp/tree.c b/gcc/cp/tree.c
-index 3f3583c825d..7c68706640c 100644
+index 3f3583c825d..fb32b33e39a 100644
 --- a/gcc/cp/tree.c
 +++ b/gcc/cp/tree.c
 @@ -2402,6 +2402,8 @@
@@ -19249,7 +20611,17 @@ index 3f3583c825d..7c68706640c 100644
  	  return false;
  	for (arg1 = first_call_expr_arg (t1, &iter1),
  	       arg2 = first_call_expr_arg (t2, &iter2);
-@@ -4364,6 +4376,33 @@
+@@ -3726,6 +3738,9 @@
+ 	    if (SIZEOF_EXPR_TYPE_P (t2))
+ 	      o2 = TREE_TYPE (o2);
+ 	  }
++	else if (ALIGNOF_EXPR_STD_P (t1) != ALIGNOF_EXPR_STD_P (t2))
++	  return false;
++
+ 	if (TREE_CODE (o1) != TREE_CODE (o2))
+ 	  return false;
+ 	if (TYPE_P (o1))
+@@ -4364,6 +4379,33 @@
    return 1;
  }
  
@@ -19283,7 +20655,7 @@ index 3f3583c825d..7c68706640c 100644
  /* Handle the C++17 [[nodiscard]] attribute, which is similar to the GNU
     warn_unused_result attribute.  */
  
-@@ -5492,76 +5531,6 @@
+@@ -5492,76 +5534,6 @@
    return false;
  }
  
@@ -20182,8 +21554,21 @@ index f5becf988d2..3ab83a1cf94 100644
  
  The @code{scalar_insert_exp}
  functions require a 64-bit environment supporting ISA 3.0 or later.
+diff --git a/gcc/doc/install.texi b/gcc/doc/install.texi
+index 0d08696c207..03cea999259 100644
+--- a/gcc/doc/install.texi
++++ b/gcc/doc/install.texi
+@@ -1294,7 +1294,7 @@
+ This option is only supported on some targets, including ARC, ARM, i386, M68k,
+ PowerPC, and SPARC@.  It is mandatory for ARC@.  The @option{--with-cpu-32} and
+ @option{--with-cpu-64} options specify separate default CPUs for
+-32-bit and 64-bit modes; these options are only supported for i386,
++32-bit and 64-bit modes; these options are only supported for aarch64, i386,
+ x86-64, PowerPC, and SPARC@.
+ 
+ @item --with-schedule=@var{cpu}
 diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index 0ab6c9c6449..2eb2c82dc47 100644
+index 0ab6c9c6449..280fcc910ad 100644
 --- a/gcc/doc/invoke.texi
 +++ b/gcc/doc/invoke.texi
 @@ -634,10 +634,12 @@
@@ -20302,7 +21687,74 @@ index 0ab6c9c6449..2eb2c82dc47 100644
  @end table
  
  @node AVR Options
-@@ -28711,9 +28749,9 @@
+@@ -27257,14 +27295,14 @@
+ 
+ @item broadwell
+ Intel Broadwell CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3, SSSE3,
+-SSE4.1, SSE4.2, POPCNT, AVX, AVX2, AES, PCLMUL, FSGSBASE, RDRND, FMA,
+-BMI, BMI2, F16C, RDSEED, ADCX and PREFETCHW instruction set support.
++SSE4.1, SSE4.2, POPCNT, AVX, AVX2, AES, PCLMUL, FSGSBASE, RDRND, FMA, BMI, BMI2,
++F16C, RDSEED ADCX and PREFETCHW instruction set support.
+ 
+ @item skylake
+ Intel Skylake CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3, SSSE3,
+ SSE4.1, SSE4.2, POPCNT, AVX, AVX2, AES, PCLMUL, FSGSBASE, RDRND, FMA,
+-BMI, BMI2, F16C, RDSEED, ADCX, PREFETCHW, CLFLUSHOPT, XSAVEC and
+-XSAVES instruction set support.
++BMI, BMI2, F16C, RDSEED, ADCX, PREFETCHW, CLFLUSHOPT, XSAVEC and XSAVES
++instruction set support.
+ 
+ @item bonnell
+ Intel Bonnell CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3 and SSSE3
+@@ -27272,34 +27310,36 @@
+ 
+ @item silvermont
+ Intel Silvermont CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3, SSSE3,
+-SSE4.1, SSE4.2, POPCNT, AES, PCLMUL and RDRND instruction set support.
++SSE4.1, SSE4.2, POPCNT, AES, PREFETCHW, PCLMUL and RDRND instruction set support.
+ 
+ @item goldmont
+ Intel Goldmont CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3, SSSE3,
+-SSE4.1, SSE4.2, POPCNT, AES, PCLMUL, RDRND, XSAVE, XSAVEOPT and FSGSBASE
+-instruction set support.
++SSE4.1, SSE4.2, POPCNT, AES, PREFETCHW, PCLMUL, RDRND, XSAVE, XSAVEC, XSAVES,
++XSAVEOPT and FSGSBASE instruction set support.
+ 
+ @item goldmont-plus
+ Intel Goldmont Plus CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3,
+-SSSE3, SSE4.1, SSE4.2, POPCNT, AES, PCLMUL, RDRND, XSAVE, XSAVEOPT, FSGSBASE,
+-PTWRITE, RDPID, SGX and UMIP instruction set support.
++SSSE3, SSE4.1, SSE4.2, POPCNT, AES, PREFETCHW, PCLMUL, RDRND, XSAVE, XSAVEC,
++XSAVES, XSAVEOPT, FSGSBASE, PTWRITE, RDPID, SGX and UMIP instruction set support.
+ 
+ @item tremont
+ Intel Tremont CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3, SSSE3,
+-SSE4.1, SSE4.2, POPCNT, AES, PCLMUL, RDRND, XSAVE, XSAVEOPT, FSGSBASE, PTWRITE,
+-RDPID, SGX, UMIP, GFNI-SSE, CLWB and ENCLV instruction set support.
++SSE4.1, SSE4.2, POPCNT, AES, PREFETCHW, PCLMUL, RDRND, XSAVE, XSAVEC, XSAVES,
++XSAVEOPT, FSGSBASE, PTWRITE, RDPID, SGX, UMIP, GFNI-SSE, CLWB, MOVDIRI,
++MOVDIR64B, CLDEMOTE and WAITPKG instruction set support.
+ 
+ @item knl
+ Intel Knight's Landing CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3,
+ SSSE3, SSE4.1, SSE4.2, POPCNT, AVX, AVX2, AES, PCLMUL, FSGSBASE, RDRND, FMA,
+-BMI, BMI2, F16C, RDSEED, ADCX, PREFETCHW, AVX512F, AVX512PF, AVX512ER and
+-AVX512CD instruction set support.
++BMI, BMI2, F16C, RDSEED, ADCX, PREFETCHW, PREFETCHWT1, AVX512F, AVX512PF,
++AVX512ER and AVX512CD instruction set support.
+ 
+ @item knm
+ Intel Knights Mill CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3,
+ SSSE3, SSE4.1, SSE4.2, POPCNT, AVX, AVX2, AES, PCLMUL, FSGSBASE, RDRND, FMA,
+-BMI, BMI2, F16C, RDSEED, ADCX, PREFETCHW, AVX512F, AVX512PF, AVX512ER, AVX512CD,
+-AVX5124VNNIW, AVX5124FMAPS and AVX512VPOPCNTDQ instruction set support.
++BMI, BMI2, F16C, RDSEED, ADCX, PREFETCHW, PREFETCHWT1, AVX512F, AVX512PF,
++AVX512ER, AVX512CD, AVX5124VNNIW, AVX5124FMAPS and AVX512VPOPCNTDQ instruction
++set support.
+ 
+ @item skylake-avx512
+ Intel Skylake Server CPU with 64-bit extensions, MOVBE, MMX, SSE, SSE2, SSE3,
+@@ -28711,9 +28751,9 @@
  @option{-mindirect-branch=thunk-extern} since the thunk function may
  not be reachable in the large code model.
  
@@ -20315,7 +21767,7 @@ index 0ab6c9c6449..2eb2c82dc47 100644
  
  @item -mfunction-return=@var{choice}
  @opindex mfunction-return
-@@ -28726,6 +28764,10 @@
+@@ -28726,6 +28766,10 @@
  using the function attribute @code{function_return}.
  @xref{Function Attributes}.
  
@@ -20507,7 +21959,7 @@ index d6aed358484..3831979e26d 100644
        add_cfi (cfi);
      }
 diff --git a/gcc/dwarf2out.c b/gcc/dwarf2out.c
-index 30c4c7007ee..3c6833419c6 100644
+index 30c4c7007ee..c18a325d760 100644
 --- a/gcc/dwarf2out.c
 +++ b/gcc/dwarf2out.c
 @@ -23011,11 +23011,22 @@
@@ -20610,6 +22062,23 @@ index 30c4c7007ee..3c6833419c6 100644
      }
    else
      cached_next_real_insn = NULL;
+@@ -32132,13 +32147,13 @@
+      emit full debugging info for them.  */
+   retry_incomplete_types ();
+ 
++  gen_scheduled_generic_parms_dies ();
++  gen_remaining_tmpl_value_param_die_attribute ();
++
+   /* The point here is to flush out the limbo list so that it is empty
+      and we don't need to stream it for LTO.  */
+   flush_limbo_die_list ();
+ 
+-  gen_scheduled_generic_parms_dies ();
+-  gen_remaining_tmpl_value_param_die_attribute ();
+-
+   /* Add DW_AT_linkage_name for all deferred DIEs.  */
+   for (limbo_die_node *node = deferred_asm_name; node; node = node->next)
+     {
 diff --git a/gcc/early-remat.c b/gcc/early-remat.c
 index 122891c1edb..712e39033f4 100644
 --- a/gcc/early-remat.c
@@ -20695,10 +22164,29 @@ index c717f24501e..8388bde0434 100644
  				    "when distributing negation across "
  				    "division"),
 diff --git a/gcc/fortran/ChangeLog b/gcc/fortran/ChangeLog
-index 8fefea2b63d..068db418077 100644
+index 8fefea2b63d..9bf5cf74bc9 100644
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,477 @@
+@@ -1,3 +1,496 @@
++2020-11-12  Tobias Burnus  <tobias@codesourcery.com>
++
++	Backported from master:
++	2020-11-10  Tobias Burnus  <tobias@codesourcery.com>
++
++	PR fortran/95847
++	* trans-decl.c (gfc_get_symbol_decl): Do not (re)set the location
++	of an external procedure.
++	(build_entry_thunks, generate_coarray_init, create_main_function,
++	gfc_generate_function_code): Use fndecl's location in BIND_EXPR.
++
++2020-11-06  Tobias Burnus  <tobias@codesourcery.com>
++
++	Backported from master:
++	2020-11-06  Tobias Burnus  <tobias@codesourcery.com>
++
++	PR fortran/97652
++	* module.c (mio_symbol): Fix symbol name for pdt_type.
++
 +2020-10-08  Harald Anlauf  <anlauf@gmx.de>
 +
 +	Backported from master:
@@ -21858,6 +23346,20 @@ index 088b69f8ec9..9cd5b5b9606 100644
  
  	  if (sym->attr.in_common)
  	    {
+diff --git a/gcc/fortran/module.c b/gcc/fortran/module.c
+index dccce4fe0a4..9d8e421226f 100644
+--- a/gcc/fortran/module.c
++++ b/gcc/fortran/module.c
+@@ -4393,6 +4393,9 @@
+ 
+   mio_symbol_attribute (&sym->attr);
+ 
++  if (sym->attr.pdt_type)
++    sym->name = gfc_dt_upper_string (sym->name);
++
+   /* Note that components are always saved, even if they are supposed
+      to be private.  Component access is checked during searching.  */
+   mio_component_list (&sym->components, sym->attr.vtype);
 diff --git a/gcc/fortran/parse.c b/gcc/fortran/parse.c
 index 9e662a66126..8426f3b2839 100644
 --- a/gcc/fortran/parse.c
@@ -22258,7 +23760,7 @@ index debdbd98ac0..38302f35ef4 100644
  	else
  	  c = NULL;
 diff --git a/gcc/fortran/trans-decl.c b/gcc/fortran/trans-decl.c
-index 71f751de76f..bfc8b72611e 100644
+index 71f751de76f..fb957d187d3 100644
 --- a/gcc/fortran/trans-decl.c
 +++ b/gcc/fortran/trans-decl.c
 @@ -1658,9 +1658,7 @@
@@ -22283,7 +23785,15 @@ index 71f751de76f..bfc8b72611e 100644
    if (sym->backend_decl)
      return sym->backend_decl;
  
-@@ -2062,12 +2064,17 @@
+@@ -1702,7 +1704,6 @@
+ 	  || sym->attr.if_source != IFSRC_DECL)
+ 	{
+ 	  decl = gfc_get_extern_function_decl (sym);
+-	  gfc_set_decl_location (decl, &sym->declared_at);
+ 	}
+       else
+ 	{
+@@ -2062,12 +2063,17 @@
        if (gsym && !gsym->bind_c)
  	gsym = NULL;
      }
@@ -22302,6 +23812,18 @@ index 71f751de76f..bfc8b72611e 100644
  
    if (gsym && !gsym->defined)
      gsym = NULL;
+@@ -2939,8 +2945,9 @@
+       poplevel (1, 1);
+       BLOCK_SUPERCONTEXT (DECL_INITIAL (thunk_fndecl)) = thunk_fndecl;
+       DECL_SAVED_TREE (thunk_fndecl)
+-	= build3_v (BIND_EXPR, tmp, DECL_SAVED_TREE (thunk_fndecl),
+-		    DECL_INITIAL (thunk_fndecl));
++	= fold_build3_loc (DECL_SOURCE_LOCATION (thunk_fndecl), BIND_EXPR,
++			   void_type_node, tmp, DECL_SAVED_TREE (thunk_fndecl),
++			   DECL_INITIAL (thunk_fndecl));
+ 
+       /* Output the GENERIC tree.  */
+       dump_function (TDI_original, thunk_fndecl);
 @@ -3142,6 +3149,9 @@
    else
      current_fake_result_decl = build_tree_list (NULL, decl);
@@ -22312,6 +23834,17 @@ index 71f751de76f..bfc8b72611e 100644
    return decl;
  }
  
+@@ -5683,8 +5693,8 @@
+   BLOCK_SUPERCONTEXT (DECL_INITIAL (fndecl)) = fndecl;
+ 
+   DECL_SAVED_TREE (fndecl)
+-    = build3_v (BIND_EXPR, decl, DECL_SAVED_TREE (fndecl),
+-                DECL_INITIAL (fndecl));
++    = fold_build3_loc (DECL_SOURCE_LOCATION (fndecl), BIND_EXPR, void_type_node,
++		       decl, DECL_SAVED_TREE (fndecl), DECL_INITIAL (fndecl));
+   dump_function (TDI_original, fndecl);
+ 
+   cfun->function_end_locus = input_location;
 @@ -6011,7 +6021,7 @@
        /* Unused procedure passed as dummy argument.  */
        if (sym->attr.flavor == FL_PROCEDURE)
@@ -22321,7 +23854,19 @@ index 71f751de76f..bfc8b72611e 100644
  	    {
  	      if (warn_unused_dummy_argument)
  		gfc_warning (OPT_Wunused_dummy_argument,
-@@ -6723,7 +6733,7 @@
+@@ -6409,8 +6419,9 @@
+   BLOCK_SUPERCONTEXT (DECL_INITIAL (ftn_main)) = ftn_main;
+ 
+   DECL_SAVED_TREE (ftn_main)
+-    = build3_v (BIND_EXPR, decl, DECL_SAVED_TREE (ftn_main),
+-		DECL_INITIAL (ftn_main));
++    = fold_build3_loc (DECL_SOURCE_LOCATION (ftn_main), BIND_EXPR,
++		       void_type_node, decl, DECL_SAVED_TREE (ftn_main),
++		       DECL_INITIAL (ftn_main));
+ 
+   /* Output the GENERIC tree.  */
+   dump_function (TDI_original, ftn_main);
+@@ -6723,7 +6734,7 @@
  		 || (sym->attr.entry_master
  		     && sym->ns->entries->sym->attr.recursive);
    if ((gfc_option.rtcheck & GFC_RTCHECK_RECURSION)
@@ -22330,6 +23875,17 @@ index 71f751de76f..bfc8b72611e 100644
      {
        char * msg;
  
+@@ -6901,8 +6912,8 @@
+   BLOCK_SUPERCONTEXT (DECL_INITIAL (fndecl)) = fndecl;
+ 
+   DECL_SAVED_TREE (fndecl)
+-    = build3_v (BIND_EXPR, decl, DECL_SAVED_TREE (fndecl),
+-		DECL_INITIAL (fndecl));
++    = fold_build3_loc (DECL_SOURCE_LOCATION (fndecl), BIND_EXPR, void_type_node,
++		       decl, DECL_SAVED_TREE (fndecl), DECL_INITIAL (fndecl));
+ 
+   /* Output the GENERIC tree.  */
+   dump_function (TDI_original, fndecl);
 diff --git a/gcc/fortran/trans-expr.c b/gcc/fortran/trans-expr.c
 index fe10d52dd16..b34e8c6020b 100644
 --- a/gcc/fortran/trans-expr.c
@@ -30150,10 +31706,38 @@ index 0335a165edc..1dea2f0e5f8 100644
        p = "Unknown error code";
        break;
 diff --git a/libgomp/ChangeLog b/libgomp/ChangeLog
-index 0156d5f7bc9..ea471e44b42 100644
+index 0156d5f7bc9..6c40461a895 100644
 --- a/libgomp/ChangeLog
 +++ b/libgomp/ChangeLog
-@@ -1,3 +1,167 @@
+@@ -1,3 +1,195 @@
++2020-11-25  Thomas Schwinge  <thomas@codesourcery.com>
++
++	Backported from master:
++	2020-11-25  Thomas Schwinge  <thomas@codesourcery.com>
++
++	* testsuite/libgomp.oacc-c++/cache-1.C: New.
++	* testsuite/libgomp.oacc-c-c++-common/cache-1.c: Update.
++
++2020-11-02  Thomas Schwinge  <thomas@codesourcery.com>
++
++	Backported from master:
++	2020-11-02  Thomas Schwinge  <thomas@codesourcery.com>
++
++	PR target/85486
++	* testsuite/libgomp.oacc-c-c++-common/pr85486-2.c: Simplify and enhance.
++	* testsuite/libgomp.oacc-c-c++-common/pr85486-3.c: Likewise.
++	* testsuite/libgomp.oacc-c-c++-common/pr85486.c: Likewise.
++
++2020-11-02  Thomas Schwinge  <thomas@codesourcery.com>
++
++	Backported from master:
++	2020-11-02  Thomas Schwinge  <thomas@codesourcery.com>
++
++	PR testsuite/80219
++	PR testsuite/85303
++	* testsuite/lib/libgomp.exp (libgomp_init): Set
++	'gcc_warning_prefix', 'gcc_error_prefix'.
++
 +2020-09-16  Jakub Jelinek  <jakub@redhat.com>
 +
 +	Backported from master:
@@ -30321,6 +31905,23 @@ index 0156d5f7bc9..ea471e44b42 100644
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+diff --git a/libgomp/testsuite/lib/libgomp.exp b/libgomp/testsuite/lib/libgomp.exp
+index 14d9b5f1305..bee273df3b0 100644
+--- a/libgomp/testsuite/lib/libgomp.exp
++++ b/libgomp/testsuite/lib/libgomp.exp
+@@ -229,6 +229,12 @@
+     if { $offload_additional_options != "" } {
+ 	lappend ALWAYS_CFLAGS "additional_flags=${offload_additional_options}"
+     }
++
++    # Tell warning from error diagnostics.  This fits for C, C++, and Fortran.
++    global gcc_warning_prefix
++    set gcc_warning_prefix "\[Ww\]arning:"
++    global gcc_error_prefix
++    set gcc_error_prefix "(\[Ff\]atal )?\[Ee\]rror:"
+ }
+ 
+ #
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.c++/pr93931.C
 @@ -0,0 +1,120 @@
@@ -30935,6 +32536,198 @@ index 91a604a6c25..f637fd3d760 100644
 +      end do
 +   end
 +end
+--- /dev/null
++++ b/libgomp/testsuite/libgomp.oacc-c++/cache-1.C
+@@ -0,0 +1,13 @@
++/* OpenACC 'cache' directive.  */
++
++/* See also corresponding C/C++ variant '../libgomp.oacc-c-c++-common/cache-1.c'.  */
++
++#include "../../../gcc/testsuite/g++.dg/goacc/cache-1.C"
++
++int
++main (int argc, char *argv[])
++{
++  test<0> ();
++
++  return 0;
++}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/cache-1.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/cache-1.c
+index 16aaed5df70..c0dddb3c4f3 100644
+--- a/libgomp/testsuite/libgomp.oacc-c-c++-common/cache-1.c
++++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/cache-1.c
+@@ -1,3 +1,13 @@
+-/* OpenACC cache directive.  */
++/* OpenACC 'cache' directive.  */
++
++/* See also corresponding C++ variant '../libgomp.oacc-c++/cache-1.C'.  */
+ 
+ #include "../../../gcc/testsuite/c-c++-common/goacc/cache-1.c"
++
++int
++main (int argc, char *argv[])
++{
++  test ();
++
++  return 0;
++}
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486-2.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486-2.c
+index f6ca263166d..d45326488cd 100644
+--- a/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486-2.c
++++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486-2.c
+@@ -1,52 +1,11 @@
+ /* { dg-do run { target openacc_nvidia_accel_selected } } */
++/* { dg-additional-options "-DVECTOR_LENGTH=" } */
+ /* { dg-additional-options "-fopenacc-dim=::128" } */
+ 
+-/* Minimized from ref-1.C.  */
++/* { dg-additional-options "-foffload=-fdump-tree-oaccdevlow" } */
++/* { dg-set-target-env-var "GOMP_DEBUG" "1" } */
+ 
+-#include <stdio.h>
++#include "pr85486.c"
+ 
+-#pragma acc routine vector
+-void __attribute__((noinline, noclone))
+-Vector (int *ptr, int n, const int inc)
+-{
+-  #pragma acc loop vector
+-  for (unsigned ix = 0; ix < n; ix++)
+-    ptr[ix] += inc;
+-}
+-
+-int
+-main (void)
+-{
+-  const int n = 32, m=32;
+-
+-  int ary[m][n];
+-  unsigned ix,  iy;
+-
+-  for (ix = m; ix--;)
+-    for (iy = n; iy--;)
+-      ary[ix][iy] = (1 << 16) + (ix << 8) + iy;
+-
+-  int err = 0;
+-
+-#pragma acc parallel copy (ary)
+-  {
+-    Vector (&ary[0][0], m * n, (1 << 24) - (1 << 16));
+-  }
+-
+-  for (ix = m; ix--;)
+-    for (iy = n; iy--;)
+-      if (ary[ix][iy] != ((1 << 24) + (ix << 8) + iy))
+-	{
+-	  printf ("ary[%u][%u] = %x expected %x\n",
+-		  ix, iy, ary[ix][iy], ((1 << 24) + (ix << 8) + iy));
+-	  err++;
+-	}
+-
+-  if (err)
+-    {
+-      printf ("%d failed\n", err);
+-      return 1;
+-    }
+-
+-  return 0;
+-}
++/* { dg-final { scan-offload-tree-dump "__attribute__\\(\\(oacc function \\(1, 1, 32\\)" "oaccdevlow" } } */
++/* { dg-output "nvptx_exec: kernel main\\\$_omp_fn\\\$0: launch gangs=1, workers=1, vectors=32" } */
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486-3.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486-3.c
+index a959b90c29a..33480a4ae68 100644
+--- a/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486-3.c
++++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486-3.c
+@@ -1,54 +1,11 @@
+ /* { dg-do run { target openacc_nvidia_accel_selected } } */
++/* { dg-additional-options "-DVECTOR_LENGTH=" } */
+ /* { dg-set-target-env-var "GOMP_OPENACC_DIM" "::128" } */
+ 
+-/* Minimized from ref-1.C.  */
++/* { dg-additional-options "-foffload=-fdump-tree-oaccdevlow" } */
++/* { dg-set-target-env-var "GOMP_DEBUG" "1" } */
+ 
+-#include <stdio.h>
++#include "pr85486.c"
+ 
+-#pragma acc routine vector
+-void __attribute__((noinline, noclone))
+-Vector (int *ptr, int n, const int inc)
+-{
+-  #pragma acc loop vector
+-  for (unsigned ix = 0; ix < n; ix++)
+-    ptr[ix] += inc;
+-}
+-
+-int
+-main (void)
+-{
+-  const int n = 32, m=32;
+-
+-  int ary[m][n];
+-  unsigned ix,  iy;
+-
+-  for (ix = m; ix--;)
+-    for (iy = n; iy--;)
+-      ary[ix][iy] = (1 << 16) + (ix << 8) + iy;
+-
+-  int err = 0;
+-
+-#pragma acc parallel copy (ary)
+-  {
+-    Vector (&ary[0][0], m * n, (1 << 24) - (1 << 16));
+-  }
+-
+-  for (ix = m; ix--;)
+-    for (iy = n; iy--;)
+-      if (ary[ix][iy] != ((1 << 24) + (ix << 8) + iy))
+-	{
+-	  printf ("ary[%u][%u] = %x expected %x\n",
+-		  ix, iy, ary[ix][iy], ((1 << 24) + (ix << 8) + iy));
+-	  err++;
+-	}
+-
+-  if (err)
+-    {
+-      printf ("%d failed\n", err);
+-      return 1;
+-    }
+-
+-  return 0;
+-}
+-
+-/* { dg-prune-output "using vector_length \\(32\\), ignoring runtime setting" } */
++/* { dg-final { scan-offload-tree-dump "__attribute__\\(\\(oacc function \\(1, 1, 32\\)" "oaccdevlow" } } */
++/* { dg-output "nvptx_exec: kernel main\\\$_omp_fn\\\$0: launch gangs=1, workers=1, vectors=32" } */
+diff --git a/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486.c b/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486.c
+index 99c08059d37..0d98b82f993 100644
+--- a/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486.c
++++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/pr85486.c
+@@ -1,4 +1,8 @@
+ /* { dg-do run { target openacc_nvidia_accel_selected } } */
++/* { dg-additional-options "-DVECTOR_LENGTH=vector_length(128)" } */
++
++/* { dg-additional-options "-foffload=-fdump-tree-oaccdevlow" } */
++/* { dg-set-target-env-var "GOMP_DEBUG" "1" } */
+ 
+ /* Minimized from ref-1.C.  */
+ 
+@@ -27,7 +31,7 @@
+ 
+   int err = 0;
+ 
+-#pragma acc parallel copy (ary) vector_length (128) /* { dg-warning "using vector_length \\(32\\) due to call to vector-partitionable routine, ignoring 128" } */
++#pragma acc parallel copy (ary) VECTOR_LENGTH /* { dg-warning "using vector_length \\(32\\) due to call to vector-partitionable routine, ignoring 128" } */
+   {
+     Vector (&ary[0][0], m * n, (1 << 24) - (1 << 16));
+   }
+@@ -49,3 +53,6 @@
+ 
+   return 0;
+ }
++
++/* { dg-final { scan-offload-tree-dump "__attribute__\\(\\(oacc function \\(1, 1, 32\\)" "oaccdevlow" } } */
++/* { dg-output "nvptx_exec: kernel main\\\$_omp_fn\\\$0: launch gangs=1, workers=1, vectors=32" } */
 --- /dev/null
 +++ b/libgomp/testsuite/libgomp.oacc-c-c++-common/structured-dynamic-lifetimes-1-lib.c
 @@ -0,0 +1,3 @@
@@ -32083,10 +33876,81 @@ index dc1e9849679..b798de7a820 100644
  #elif defined(__powerpc__) || defined(__powerpc64__)
    ucontext_t *ucontext = (ucontext_t*)context;
 diff --git a/libstdc++-v3/ChangeLog b/libstdc++-v3/ChangeLog
-index 45847172291..44307660a38 100644
+index 45847172291..1df7d6afc09 100644
 --- a/libstdc++-v3/ChangeLog
 +++ b/libstdc++-v3/ChangeLog
-@@ -1,3 +1,599 @@
+@@ -1,3 +1,670 @@
++2020-11-26  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-11-26  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/98001
++	* testsuite/ext/stdio_filebuf/char/79820.cc: Do not pass invalid
++	FILE* to constructor.
++
++2020-11-17  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-05-04  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/94936
++	* src/c++17/memory_resource.cc (synchronized_pool_resource::_TPools):
++	Add comment about single-threaded behaviour.
++	(synchronized_pool_resource::_TPools::move_nonempty_chunks()): Hoist
++	class member access out of loop.
++	(synchronized_pool_resource::synchronized_pool_resource())
++	(synchronized_pool_resource::~synchronized_pool_resource())
++	(synchronized_pool_resource::release()): Check __gthread_active_p
++	before creating and/or deleting the thread-specific data key.
++	(synchronized_pool_resource::_M_thread_specific_pools()): Adjust
++	assertions.
++	(synchronized_pool_resource::do_allocate(size_t, size_t)): Add fast
++	path for single-threaded case.
++	(synchronized_pool_resource::do_deallocate(void*, size_t, size_t)):
++	Likewise. Return if unable to find a pool that owns the allocation.
++	* testsuite/20_util/synchronized_pool_resource/allocate_single.cc:
++	New test.
++	* testsuite/20_util/synchronized_pool_resource/cons_single.cc: New
++	test.
++	* testsuite/20_util/synchronized_pool_resource/release_single.cc: New
++	test.
++
++2020-11-13  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-11-13  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/97798
++	* include/ext/numeric_traits.h (__glibcxx_signed)
++	(__glibcxx_digits, __glibcxx_min, __glibcxx_max): Remove
++	macros.
++	(__is_integer_nonstrict::__width): Define new constant.
++	(__numeric_traits_integer): Define constants in terms of each
++	other and __is_integer_nonstrict::__width, rather than the
++	removed macros.
++	(_GLIBCXX_INT_N_TRAITS): Macro to define explicit
++	specializations for non-standard integer types.
++
++2020-11-13  Patrick Palka  <ppalka@redhat.com>
++
++	Backported from master:
++	2020-09-22  Patrick Palka  <ppalka@redhat.com>
++
++	* include/bits/stl_algo.h (__sample): Exit early when the
++	input range is empty.
++	* testsuite/25_algorithms/sample/3.cc: New test.
++
++2020-11-09  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-11-05  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/97731
++	* src/filesystem/dir.cc (recursive_directory_iterator): Call the
++	right overload of _Dir::advance.
++	* testsuite/experimental/filesystem/iterators/97731.cc: New test.
++
 +2020-10-19  Jonathan Wakely  <jwakely@redhat.com>
 +
 +	Backported from master:
@@ -38513,6 +40377,20 @@ index 7576cd7a9c0..2bfed517d16 100644
      { return !(__m1 == __m2); }
  
    // [7.10.6] match_results swap
+diff --git a/libstdc++-v3/include/bits/stl_algo.h b/libstdc++-v3/include/bits/stl_algo.h
+index 61319d1fd15..48fde9d2627 100644
+--- a/libstdc++-v3/include/bits/stl_algo.h
++++ b/libstdc++-v3/include/bits/stl_algo.h
+@@ -5787,6 +5787,9 @@
+       using _Gen = remove_reference_t<_UniformRandomBitGenerator>;
+       using __uc_type = common_type_t<typename _Gen::result_type, _USize>;
+ 
++      if (__first == __last)
++	return __out;
++
+       __distrib_type __d{};
+       _Size __unsampled_sz = std::distance(__first, __last);
+       __n = std::min(__n, __unsampled_sz);
 diff --git a/libstdc++-v3/include/bits/stl_iterator.h b/libstdc++-v3/include/bits/stl_iterator.h
 index e9d90fa01f4..11dd9b0fd4c 100644
 --- a/libstdc++-v3/include/bits/stl_iterator.h
@@ -39135,6 +41013,147 @@ index e24539100f9..22c95efc2d5 100644
  	{ __p->~_Up(); }
  #else
        // _GLIBCXX_RESOLVE_LIB_DEFECTS
+diff --git a/libstdc++-v3/include/ext/numeric_traits.h b/libstdc++-v3/include/ext/numeric_traits.h
+index 67993fdc58e..206bcda46d0 100644
+--- a/libstdc++-v3/include/ext/numeric_traits.h
++++ b/libstdc++-v3/include/ext/numeric_traits.h
+@@ -39,29 +39,43 @@
+ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+ 
+   // Compile time constants for builtin types.
+-  // Sadly std::numeric_limits member functions cannot be used for this.
+-#define __glibcxx_signed(_Tp) ((_Tp)(-1) < 0)
+-#define __glibcxx_digits(_Tp) \
+-  (sizeof(_Tp) * __CHAR_BIT__ - __glibcxx_signed(_Tp))
+-
+-#define __glibcxx_min(_Tp) \
+-  (__glibcxx_signed(_Tp) ? (_Tp)1 << __glibcxx_digits(_Tp) : (_Tp)0)
++  // In C++98 std::numeric_limits member functions are not constant expressions
++  // (that changed in C++11 with the addition of 'constexpr').
++  // Even for C++11, this header is smaller than <limits> and can be used
++  // when only is_signed, digits, min, or max values are needed for integers,
++  // or is_signed, digits10, max_digits10, or max_exponent10 for floats.
++
++  // Unlike __is_integer (and std::is_integral) this trait is true for
++  // non-standard built-in integer types such as __int128 and __int20.
++  template<typename _Tp>
++    struct __is_integer_nonstrict
++    : public std::__is_integer<_Tp>
++    {
++      using std::__is_integer<_Tp>::__value;
+ 
+-#define __glibcxx_max(_Tp) \
+-  (__glibcxx_signed(_Tp) ? \
+-   (((((_Tp)1 << (__glibcxx_digits(_Tp) - 1)) - 1) << 1) + 1) : ~(_Tp)0)
++      // The number of bits in the value representation.
++      enum { __width = __value ? sizeof(_Tp) * __CHAR_BIT__ : 0 };
++    };
+ 
+   template<typename _Value>
+     struct __numeric_traits_integer
+     {
+-      // Only integers for initialization of member constant.
+-      static const _Value __min = __glibcxx_min(_Value);
+-      static const _Value __max = __glibcxx_max(_Value);
+-
+-      // NB: these two also available in std::numeric_limits as compile
+-      // time constants, but <limits> is big and we avoid including it.
+-      static const bool __is_signed = __glibcxx_signed(_Value);
+-      static const int __digits = __glibcxx_digits(_Value);      
++#if __cplusplus >= 201103L
++      static_assert(__is_integer_nonstrict<_Value>::__value,
++		    "invalid specialization");
++#endif
++
++      // NB: these two are also available in std::numeric_limits as compile
++      // time constants, but <limits> is big and we can avoid including it.
++      static const bool __is_signed = (_Value)(-1) < 0;
++      static const int __digits
++	= __is_integer_nonstrict<_Value>::__width - __is_signed;
++
++      // The initializers must be constants so that __max and __min are too.
++      static const _Value __max = __is_signed
++	? (((((_Value)1 << (__digits - 1)) - 1) << 1) + 1)
++	: ~(_Value)0;
++      static const _Value __min = __is_signed ? -__max - 1 : (_Value)0;
+     };
+ 
+   template<typename _Value>
+@@ -76,10 +90,51 @@
+   template<typename _Value>
+     const int __numeric_traits_integer<_Value>::__digits;
+ 
+-#undef __glibcxx_signed
+-#undef __glibcxx_digits
+-#undef __glibcxx_min
+-#undef __glibcxx_max
++  // Enable __numeric_traits_integer for types where the __is_integer_nonstrict
++  // primary template doesn't give the right answer.
++#define _GLIBCXX_INT_N_TRAITS(T, WIDTH)			\
++  template<> struct __is_integer_nonstrict<T>		\
++  {							\
++    enum { __value = 1 };				\
++    typedef std::__true_type __type;			\
++    enum { __width = WIDTH };				\
++  };							\
++  template<> struct __is_integer_nonstrict<unsigned T>	\
++  {							\
++    enum { __value = 1 };				\
++    typedef std::__true_type __type;			\
++    enum { __width = WIDTH };				\
++  };
++
++  // We need to specify the width for some __intNN types because they
++  // have padding bits, e.g. the object representation of __int20 has 32 bits,
++  // but its width (number of bits in the value representation) is only 20.
++#if defined __GLIBCXX_TYPE_INT_N_0 && __GLIBCXX_BITSIZE_INT_N_0 % __CHAR_BIT__
++  _GLIBCXX_INT_N_TRAITS(__GLIBCXX_TYPE_INT_N_0, __GLIBCXX_BITSIZE_INT_N_0)
++#endif
++#if defined __GLIBCXX_TYPE_INT_N_1 && __GLIBCXX_BITSIZE_INT_N_1 % __CHAR_BIT__
++  _GLIBCXX_INT_N_TRAITS(__GLIBCXX_TYPE_INT_N_1, __GLIBCXX_BITSIZE_INT_N_1)
++#endif
++#if defined __GLIBCXX_TYPE_INT_N_2 && __GLIBCXX_BITSIZE_INT_N_2 % __CHAR_BIT__
++  _GLIBCXX_INT_N_TRAITS(__GLIBCXX_TYPE_INT_N_2, __GLIBCXX_BITSIZE_INT_N_2)
++#endif
++#if defined __GLIBCXX_TYPE_INT_N_3 && __GLIBCXX_BITSIZE_INT_N_3 % __CHAR_BIT__
++  _GLIBCXX_INT_N_TRAITS(__GLIBCXX_TYPE_INT_N_3, __GLIBCXX_BITSIZE_INT_N_3)
++#endif
++
++#if defined __STRICT_ANSI__ && defined __SIZEOF_INT128__
++  // In strict modes __is_integer<__int128> is false,
++  // but we still want to define __numeric_traits_integer<__int128>.
++  _GLIBCXX_INT_N_TRAITS(__int128, 128)
++#endif
++
++#undef _GLIBCXX_INT_N_TRAITS
++
++#if __cplusplus >= 201103L
++  /// Convenience alias for __numeric_traits<integer-type>.
++  template<typename _Tp>
++    using __int_traits = __numeric_traits_integer<_Tp>;
++#endif
+ 
+ #define __glibcxx_floating(_Tp, _Fval, _Dval, _LDval) \
+   (std::__are_same<_Tp, float>::__value ? _Fval \
+@@ -96,10 +151,11 @@
+   __glibcxx_floating(_Tp, __FLT_MAX_10_EXP__, __DBL_MAX_10_EXP__, \
+ 		     __LDBL_MAX_10_EXP__)
+ 
++  // N.B. this only supports float, double and long double (no __float128 etc.)
+   template<typename _Value>
+     struct __numeric_traits_floating
+     {
+-      // Only floating point types. See N1822. 
++      // Only floating point types. See N1822.
+       static const int __max_digits10 = __glibcxx_max_digits10(_Value);
+ 
+       // See above comment...
+@@ -135,4 +191,4 @@
+ #undef __glibcxx_digits10
+ #undef __glibcxx_max_exponent10
+ 
+-#endif 
++#endif
 diff --git a/libstdc++-v3/include/std/bit b/libstdc++-v3/include/std/bit
 index c753e39b64a..c4af1cfcb4d 100644
 --- a/libstdc++-v3/include/std/bit
@@ -40062,7 +42081,7 @@ index 54bef75efd8..b44fae03da0 100644
    const auto orig_type = _M_type();
    const auto orig_size = _M_cmpts.size();
 diff --git a/libstdc++-v3/src/c++17/memory_resource.cc b/libstdc++-v3/src/c++17/memory_resource.cc
-index e28526d1bfe..4c5aafc7995 100644
+index e28526d1bfe..f8c7fcbcaa5 100644
 --- a/libstdc++-v3/src/c++17/memory_resource.cc
 +++ b/libstdc++-v3/src/c++17/memory_resource.cc
 @@ -228,8 +228,8 @@
@@ -40111,6 +42130,274 @@ index e28526d1bfe..4c5aafc7995 100644
  	// But don't exceed the requested max_blocks_per_chunk:
  	blocks_per_chunk
  	  = std::min(blocks_per_chunk, _M_opts.max_blocks_per_chunk);
+@@ -1043,7 +1052,8 @@
+    * exposition as _M_tpools[_M_key]).
+    * The first element, _M_tpools[0], contains "orphaned chunks" which were
+    * allocated by a thread which has since exited, and so there is no
+-   * _M_tpools[_M_key] for that thread.
++   * _M_tpools[_M_key] for that thread. Orphaned chunks are never reused,
++   * they're only held in _M_tpools[0] so they can be deallocated.
+    * A thread can access its own thread-specific set of pools via _M_key
+    * while holding a shared lock on _M_mx. Accessing _M_impl._M_unpooled
+    * or _M_tpools[0] or any other thread's _M_tpools[_M_key] requires an
+@@ -1052,6 +1062,10 @@
+    * any dereference of that pointer requires an exclusive lock.
+    * The _M_impl._M_opts and _M_impl._M_npools members are immutable,
+    * and can safely be accessed concurrently.
++   *
++   * In a single-threaded program (i.e. __gthread_active_p() == false)
++   * the pool resource only needs one set of pools and never has orphaned
++   * chunks, so just uses _M_tpools[0] directly, and _M_tpools->next is null.
+    */
+ 
+   extern "C" {
+@@ -1092,14 +1106,16 @@
+     void move_nonempty_chunks()
+     {
+       __glibcxx_assert(pools);
++      __glibcxx_assert(__gthread_active_p());
+       if (!pools)
+ 	return;
+-      memory_resource* r = owner.upstream_resource();
++      memory_resource* const r = owner.upstream_resource();
++      auto* const shared = owner._M_tpools->pools;
+       // move all non-empty chunks to the shared _TPools
+       for (int i = 0; i < owner._M_impl._M_npools; ++i)
+ 	for (auto& c : pools[i]._M_chunks)
+ 	  if (!c.empty())
+-	    owner._M_tpools->pools[i]._M_chunks.insert(std::move(c), r);
++	    shared[i]._M_chunks.insert(std::move(c), r);
+     }
+ 
+     synchronized_pool_resource& owner;
+@@ -1133,8 +1149,9 @@
+ 			     memory_resource* upstream)
+   : _M_impl(opts, upstream)
+   {
+-    if (int err = __gthread_key_create(&_M_key, destroy_TPools))
+-      __throw_system_error(err);
++    if (__gthread_active_p())
++      if (int err = __gthread_key_create(&_M_key, destroy_TPools))
++	__throw_system_error(err);
+     exclusive_lock l(_M_mx);
+     _M_tpools = _M_alloc_shared_tpools(l);
+   }
+@@ -1143,7 +1160,8 @@
+   synchronized_pool_resource::~synchronized_pool_resource()
+   {
+     release();
+-    __gthread_key_delete(_M_key); // does not run destroy_TPools
++    if (__gthread_active_p())
++      __gthread_key_delete(_M_key); // does not run destroy_TPools
+   }
+ 
+   void
+@@ -1152,8 +1170,11 @@
+     exclusive_lock l(_M_mx);
+     if (_M_tpools)
+       {
+-	__gthread_key_delete(_M_key); // does not run destroy_TPools
+-	__gthread_key_create(&_M_key, destroy_TPools);
++	if (__gthread_active_p())
++	  {
++	    __gthread_key_delete(_M_key); // does not run destroy_TPools
++	    __gthread_key_create(&_M_key, destroy_TPools);
++	  }
+ 	polymorphic_allocator<_TPools> a(upstream_resource());
+ 	// destroy+deallocate each _TPools
+ 	do
+@@ -1175,10 +1196,11 @@
+   synchronized_pool_resource::_M_thread_specific_pools() noexcept
+   {
+     __pool_resource::_Pool* pools = nullptr;
++    __glibcxx_assert(__gthread_active_p());
+     if (auto tp = static_cast<_TPools*>(__gthread_getspecific(_M_key)))
+       {
+-      pools = tp->pools;
+-      __glibcxx_assert(tp->pools);
++	pools = tp->pools;
++	// __glibcxx_assert(tp->pools);
+       }
+     return pools;
+   }
+@@ -1189,24 +1211,34 @@
+   do_allocate(size_t bytes, size_t alignment)
+   {
+     const auto block_size = std::max(bytes, alignment);
+-    if (block_size <= _M_impl._M_opts.largest_required_pool_block)
++    const pool_options opts = _M_impl._M_opts;
++    if (block_size <= opts.largest_required_pool_block)
+       {
+ 	const ptrdiff_t index = pool_index(block_size, _M_impl._M_npools);
+-	memory_resource* const r = upstream_resource();
+-	const pool_options opts = _M_impl._M_opts;
+-	{
+-	  // Try to allocate from the thread-specific pool
+-	  shared_lock l(_M_mx);
+-	  if (auto pools = _M_thread_specific_pools()) // [[likely]]
+-	    {
+-	      // Need exclusive lock to replenish so use try_allocate:
+-	      if (void* p = pools[index].try_allocate())
+-		return p;
+-	      // Need to take exclusive lock and replenish pool.
+-	    }
+-	  // Need to allocate or replenish thread-specific pools using
+-	  // upstream resource, so need to hold exclusive lock.
+-	}
++	if (__gthread_active_p())
++	  {
++	    // Try to allocate from the thread-specific pool.
++	    shared_lock l(_M_mx);
++	    if (auto pools = _M_thread_specific_pools()) // [[likely]]
++	      {
++		// Need exclusive lock to replenish so use try_allocate:
++		if (void* p = pools[index].try_allocate())
++		  return p;
++		// Need to take exclusive lock and replenish pool.
++	      }
++	    // Need to allocate or replenish thread-specific pools using
++	    // upstream resource, so need to hold exclusive lock.
++	  }
++	else // single-threaded
++	  {
++	    if (!_M_tpools) // [[unlikely]]
++	      {
++		exclusive_lock dummy(_M_mx);
++		_M_tpools = _M_alloc_shared_tpools(dummy);
++	      }
++	    return _M_tpools->pools[index].allocate(upstream_resource(), opts);
++	  }
++
+ 	// N.B. Another thread could call release() now lock is not held.
+ 	exclusive_lock excl(_M_mx);
+ 	if (!_M_tpools) // [[unlikely]]
+@@ -1214,7 +1246,7 @@
+ 	auto pools = _M_thread_specific_pools();
+ 	if (!pools)
+ 	  pools = _M_alloc_tpools(excl)->pools;
+-	return pools[index].allocate(r, opts);
++	return pools[index].allocate(upstream_resource(), opts);
+       }
+     exclusive_lock l(_M_mx);
+     return _M_impl.allocate(bytes, alignment); // unpooled allocation
+@@ -1230,30 +1262,45 @@
+       {
+ 	const ptrdiff_t index = pool_index(block_size, _M_impl._M_npools);
+ 	__glibcxx_assert(index != -1);
+-	{
+-	  shared_lock l(_M_mx);
+-	  auto pools = _M_thread_specific_pools();
+-	  if (pools)
+-	    {
+-	      // No need to lock here, no other thread is accessing this pool.
+-	      if (pools[index].deallocate(upstream_resource(), p))
+-		return;
+-	    }
+-	  // Block might have come from a different thread's pool,
+-	  // take exclusive lock and check every pool.
+-	}
++	if (__gthread_active_p())
++	  {
++	    shared_lock l(_M_mx);
++	    if (auto pools = _M_thread_specific_pools())
++	      {
++		// No need to lock here, no other thread is accessing this pool.
++		if (pools[index].deallocate(upstream_resource(), p))
++		  return;
++	      }
++	    // Block might have come from a different thread's pool,
++	    // take exclusive lock and check every pool.
++	  }
++	else // single-threaded
++	  {
++	    __glibcxx_assert(_M_tpools != nullptr);
++	    if (_M_tpools) // [[likely]]
++	      _M_tpools->pools[index].deallocate(upstream_resource(), p);
++	    return;
++	  }
++
+ 	// TODO store {p, bytes, alignment} somewhere and defer returning
+ 	// the block to the correct thread-specific pool until we next
+ 	// take the exclusive lock.
++
+ 	exclusive_lock excl(_M_mx);
++	auto my_pools = _M_thread_specific_pools();
+ 	for (_TPools* t = _M_tpools; t != nullptr; t = t->next)
+ 	  {
+-	    if (t->pools) // [[likely]]
+-	      {
+-		if (t->pools[index].deallocate(upstream_resource(), p))
+-		  return;
+-	      }
++	    if (t->pools != my_pools)
++	      if (t->pools) // [[likely]]
++		{
++		  if (t->pools[index].deallocate(upstream_resource(), p))
++		    return;
++		}
+ 	  }
++	// Not necessarily an error to reach here, release() could have been
++	// called on another thread between releasing the shared lock and
++	// acquiring the exclusive lock.
++	return;
+       }
+     exclusive_lock l(_M_mx);
+     _M_impl.deallocate(p, bytes, alignment);
+@@ -1265,6 +1312,7 @@
+   -> _TPools*
+   {
+     __glibcxx_assert(_M_tpools != nullptr);
++    __glibcxx_assert(__gthread_active_p());
+     // dump_list(_M_tpools);
+     polymorphic_allocator<_TPools> a(upstream_resource());
+     _TPools* p = a.allocate(1);
+diff --git a/libstdc++-v3/src/filesystem/dir.cc b/libstdc++-v3/src/filesystem/dir.cc
+index ac3bd3aafb3..d7d8eb74066 100644
+--- a/libstdc++-v3/src/filesystem/dir.cc
++++ b/libstdc++-v3/src/filesystem/dir.cc
+@@ -187,16 +187,16 @@
+ 
+ fs::recursive_directory_iterator::
+ recursive_directory_iterator(const path& p, directory_options options,
+-                             error_code* ec)
++                             error_code* ecptr)
+ : _M_options(options), _M_pending(true)
+ {
+-  if (ec)
+-    ec->clear();
+   if (posix::DIR* dirp = posix::opendir(p.c_str()))
+     {
++      if (ecptr)
++	ecptr->clear();
+       auto sp = std::make_shared<_Dir_stack>();
+       sp->push(_Dir{ dirp, p });
+-      if (sp->top().advance(ec))
++      if (ecptr ? sp->top().advance(*ecptr) : sp->top().advance())
+ 	_M_dirs.swap(sp);
+     }
+   else
+@@ -204,14 +204,18 @@
+       const int err = errno;
+       if (err == EACCES
+ 	  && is_set(options, fs::directory_options::skip_permission_denied))
+-	return;
++	{
++	  if (ecptr)
++	    ecptr->clear();
++	  return;
++	}
+ 
+-      if (!ec)
++      if (!ecptr)
+ 	_GLIBCXX_THROW_OR_ABORT(filesystem_error(
+ 	      "recursive directory iterator cannot open directory", p,
+ 	      std::error_code(err, std::generic_category())));
+ 
+-      ec->assign(err, std::generic_category());
++      ecptr->assign(err, std::generic_category());
+     }
+ }
+ 
 diff --git a/libstdc++-v3/src/filesystem/ops-common.h b/libstdc++-v3/src/filesystem/ops-common.h
 index 21d0bbabb43..5c907fbca1e 100644
 --- a/libstdc++-v3/src/filesystem/ops-common.h
@@ -40670,6 +42957,87 @@ index a352dc87ed4..ee9f5f773e0 100644
 +{
 +  std::variant<std::variant<Foo, Boo>, std::string> err{std::string("aaa")};
 +}
+--- /dev/null
++++ b/libstdc++-v3/testsuite/20_util/synchronized_pool_resource/allocate_single.cc
+@@ -0,0 +1,24 @@
++// Copyright (C) 2018-2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// { dg-do run }
++// { dg-options "-std=gnu++17" }
++// { dg-require-effective-target c++17 }
++// { dg-require-gthreads "" }
++
++// This runs the same tests as allocate.cc but without -pthread
++#include "./allocate.cc"
+--- /dev/null
++++ b/libstdc++-v3/testsuite/20_util/synchronized_pool_resource/cons_single.cc
+@@ -0,0 +1,24 @@
++// Copyright (C) 2018-2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// { dg-do run }
++// { dg-options "-std=gnu++17" }
++// { dg-require-effective-target c++17 }
++// { dg-require-gthreads "" }
++
++// This runs the same tests as cons.cc but without -pthread
++#include "./cons.cc"
+--- /dev/null
++++ b/libstdc++-v3/testsuite/20_util/synchronized_pool_resource/release_single.cc
+@@ -0,0 +1,24 @@
++// Copyright (C) 2018-2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// { dg-do run }
++// { dg-options "-std=gnu++17" }
++// { dg-require-effective-target c++17 }
++// { dg-require-gthreads "" }
++
++// This runs the same tests as release.cc but without -pthread
++#include "./release.cc"
 diff --git a/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc b/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc
 index 0954ac7b458..092413e6581 100644
 --- a/libstdc++-v3/testsuite/20_util/to_address/1_neg.cc
@@ -41319,6 +43687,59 @@ index d9d558b9dea..c6408f523e0 100644
 -#if __cpp_lib_parallel_algorithm != 201603L
 -# error "Feature-test macro for parallel algorithms has wrong value in <execution>"
 -#endif
+--- /dev/null
++++ b/libstdc++-v3/testsuite/25_algorithms/sample/3.cc
+@@ -0,0 +1,50 @@
++// Copyright (C) 2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// { dg-options "-std=gnu++17" }
++// { dg-do run { target c++17 } }
++// { dg-require-cstdint "" }
++
++#include <algorithm>
++#include <random>
++#include <testsuite_hooks.h>
++#include <testsuite_iterators.h>
++
++std::mt19937 rng;
++
++using std::sample;
++using __gnu_test::test_container;
++using __gnu_test::output_iterator_wrapper;
++using __gnu_test::forward_iterator_wrapper;
++
++void
++test01()
++{
++  const int in = 0;
++  test_container<const int, forward_iterator_wrapper> pop(&in, &in);
++  int out;
++  test_container<int, output_iterator_wrapper> samp(&out, &out + 1);
++
++  auto it = sample(pop.begin(), pop.end(), samp.begin(), 1, rng);
++  VERIFY( it.ptr == &out );
++}
++
++int
++main()
++{
++  test01();
++}
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/26_numerics/bit/header-2.cc
 @@ -0,0 +1,27 @@
@@ -42235,6 +44656,58 @@ index 640ff737330..19a42360b11 100644
 +  }
 +  VERIFY( caught );
 +}
+--- /dev/null
++++ b/libstdc++-v3/testsuite/experimental/filesystem/iterators/97731.cc
+@@ -0,0 +1,49 @@
++// Copyright (C) 2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// { dg-options "-DUSE_FILESYSTEM_TS -lstdc++fs" }
++// { dg-do run { target c++11 } }
++// { dg-require-filesystem-ts "" }
++
++#include <experimental/filesystem>
++#include <cerrno>
++#include <testsuite_hooks.h>
++
++bool used_custom_readdir = false;
++
++extern "C" void* readdir(void*)
++{
++  used_custom_readdir = true;
++  errno = EIO;
++  return nullptr;
++}
++
++void
++test01()
++{
++  using std::experimental::filesystem::recursive_directory_iterator;
++  std::error_code ec;
++  recursive_directory_iterator it(".", ec);
++  if (used_custom_readdir)
++    VERIFY( ec.value() == EIO );
++}
++
++int
++main()
++{
++  test01();
++}
 diff --git a/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc b/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc
 index 1bbc37408c3..82061f9e7e9 100644
 --- a/libstdc++-v3/testsuite/experimental/filesystem/operations/last_write_time.cc
@@ -43094,6 +45567,23 @@ index 0f89bec16cd..76aff0abb7e 100644
 +static_assert( ! noexcept(AT::construct(a, zp)), "" );
 +static_assert( ! noexcept(AT::construct(a, zp, 1)), "" );
 +static_assert( ! noexcept(AT::destroy(a, zp)), "" );
+diff --git a/libstdc++-v3/testsuite/ext/stdio_filebuf/char/79820.cc b/libstdc++-v3/testsuite/ext/stdio_filebuf/char/79820.cc
+index e16cddc1ea4..03f95d3c265 100644
+--- a/libstdc++-v3/testsuite/ext/stdio_filebuf/char/79820.cc
++++ b/libstdc++-v3/testsuite/ext/stdio_filebuf/char/79820.cc
+@@ -26,10 +26,11 @@
+ test01()
+ {
+   FILE* f = std::fopen("79820.txt", "w");
+-  std::fclose(f);
+   errno = 127;
+   __gnu_cxx::stdio_filebuf<char> b(f, std::ios::out, BUFSIZ);
+   VERIFY(errno == 127); // PR libstdc++/79820
++  b.close();
++  std::fclose(f);
+ }
+ 
+ int
 diff --git a/libstdc++-v3/testsuite/lib/libstdc++.exp b/libstdc++-v3/testsuite/lib/libstdc++.exp
 index 1ab896d3deb..a616227ae7b 100644
 --- a/libstdc++-v3/testsuite/lib/libstdc++.exp
