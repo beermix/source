@@ -6,13 +6,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atop
-PKG_VERSION:=23642fc
+PKG_SOURCE_VERSION:=23642fc
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://github.com/Atoptool/atop
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
