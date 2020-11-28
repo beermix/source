@@ -22,7 +22,7 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-MAKE_VARS += VER=$(PKG_VERSION)
+MAKE_VARS += VER=$(PKG_VERSION) 
 MAKE_PATH:=src
 
 define Package/smartdns
@@ -36,7 +36,7 @@ endef
 define Package/smartdns/description
 SmartDNS is a local DNS server which accepts DNS query requests from local network clients,
 gets DNS query results from multiple upstream DNS servers concurrently, and returns the fastest IP to clients.
-Unlike dnsmasq's all-servers, smartdns returns the fastest IP.
+Unlike dnsmasq's all-servers, smartdns returns the fastest IP. 
 endef
 
 define Package/smartdns/conffiles

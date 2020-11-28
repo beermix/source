@@ -8,16 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lm-sensors
-PKG_VERSION:=00a5fad
+PKG_VERSION:=3.6.0
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/lm-sensors/lm-sensors.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_VERSION_SUBST=$(subst .,-,$(PKG_VERSION))
+PKG_SOURCE_URL:=https://codeload.github.com/lm-sensors/lm-sensors/tar.gz/V$(PKG_VERSION_SUBST)?
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_HASH:=0591f9fa0339f0d15e75326d0365871c2d4e2ed8aa1ff759b3a55d3734b7d197
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION_SUBST)
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0+ LGPL-2.1+
+PKG_CPE_ID:=cpe:/a:lm_sensors:lm_sensors
 
 PKG_BUILD_PARALLEL:=1
 
@@ -25,7 +27,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/lm-sensors/Default
   DEPENDS:=+sysfsutils
-  URL:=http://www.lm-sensors.org/
+  URL:=https://hwmon.wiki.kernel.org/lm_sensors
 endef
 
 define Package/lm-sensors
@@ -49,6 +51,7 @@ define Package/libsensors
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=libsensors
+  ABI_VERSION:=5
 endef
 
 define Package/lm-sensors/description
@@ -65,6 +68,7 @@ endef
 
 define Package/lm-sensors/conffiles
 /etc/sensors.conf
+/etc/sensors3.conf
 endef
 
 define Build/Compile
@@ -100,6 +104,8 @@ ifeq ($(ARCH),i386)
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_CONF) ./files/sensors.conf $(1)/etc/sensors.conf
 endif
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/lm-sensors.init $(1)/etc/init.d/lm-sensors
 endef
 
 define Package/lm-sensors-detect/install
@@ -109,7 +115,7 @@ endef
 
 define Package/libsensors/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/lib/libsensors.so* $(1)/usr/lib
+	$(CP) $(PKG_BUILD_DIR)/lib/libsensors.so* $(1)/usr/lib
 endef
 
 $(eval $(call BuildPackage,lm-sensors))

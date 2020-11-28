@@ -72,8 +72,6 @@ define Package/git-gitweb/conffiles
 /etc/gitweb.conf
 endef
 
-TARGET_CFLAGS:=-Os $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
-
 MAKE_FLAGS := \
 	CC="$(TARGET_CC)" \
 	CFLAGS="$(TARGET_CFLAGS)" \

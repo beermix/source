@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-#PKG_VERSION:=7ae967a
+#PKG_VERSION:=5ee6875
 PKG_SOURCE_VERSION:=03b773b
 
 PKG_SOURCE_PROTO:=git

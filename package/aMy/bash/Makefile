@@ -44,8 +44,6 @@ define Package/bash/conffiles
 /etc/bash.bash_logout
 endef
 
-TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
-
 # Bash detects and enables certain features by runtest simple piece of code
 # which is not viable when doing cross compilation and default to no in many
 # cases.  Grep for 'cross.compil' in aclocal.m4 and config-bot.h for details

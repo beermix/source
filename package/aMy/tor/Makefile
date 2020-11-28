@@ -15,9 +15,11 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://dist.torproject.org/ \
-        https://archive.torproject.org/tor-package-archive
-PKG_HASH:=
-
+	https://archive.torproject.org/tor-package-archive
+PKG_HASH:=5f154c155803adf5c89e87cab53017b6908c5ebe50c65839e8cf4fbd2abe1fdc
+PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
+		Peter Wagner <tripolar@gmx.at>
+PKG_CPE_ID:=cpe:/a:torproject:tor
 
 #PKG_VERSION:=adf81fb
 #PKG_SOURCE_PROTO:=git
@@ -42,11 +44,11 @@ define Package/tor/Default
 endef
 
 define Package/tor/Default/description
- Tor is a toolset for a wide range of organizations and people that want to
- improve their safety and security on the Internet. Using Tor can help you
- anonymize web browsing and publishing, instant messaging, IRC, SSH, and
- more. Tor also provides a platform on which software developers can build
- new applications with built-in anonymity, safety, and privacy features.
+Tor is a toolset for a wide range of organizations and people that want to
+improve their safety and security on the Internet. Using Tor can help you
+anonymize web browsing and publishing, instant messaging, IRC, SSH, and
+more. Tor also provides a platform on which software developers can build
+new applications with built-in anonymity, safety, and privacy features.
 endef
 
 define Package/tor
@@ -112,7 +114,7 @@ endef
 define Package/tor-geoip/description
 $(call Package/tor/Default/description)
 
- This package contains a GeoIP database mapping IP addresses to countries.
+This package contains a GeoIP database mapping IP addresses to countries.
 
 endef
 
@@ -123,7 +125,7 @@ define Package/tor/conffiles
 /etc/config/tor
 endef
 
-# TARGET_CFLAGS := -O2 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
+Package/tor-basic/conffiles = $(Package/tor/conffiles)
 
 CONFIGURE_ARGS += \
 	--with-libevent-dir="$(STAGING_DIR)/usr" \
@@ -164,6 +166,8 @@ define Package/tor/install
 	$(INSTALL_CONF) ./files/tor.conf $(1)/etc/config/tor
 endef
 
+Package/tor-basic/install = $(Package/tor/install)
+
 define Package/tor-gencert/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/tor-gencert $(1)/usr/sbin/
@@ -181,8 +185,6 @@ define Package/tor-geoip/install
 	  $(PKG_INSTALL_DIR)/usr/share/tor/geoip6 \
 	$(1)/usr/share/tor/
 endef
-
-Package/tor-basic/install = $(Package/tor/install)
 
 $(eval $(call BuildPackage,tor))
 $(eval $(call BuildPackage,tor-basic))
