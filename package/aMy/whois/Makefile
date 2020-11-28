@@ -1,50 +1,48 @@
-#
-# Copyright (C) 2011-2020 Entware
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=whois
-PKG_VERSION:=5.5.6
+PKG_VERSION:=5.5.7
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/w/whois
-PKG_HASH:=cba1e9000c60950f46a96ba23e8eea8aee240a2b8560e63a6bfb33f9034af14e
+PKG_HASH:=3efa700dbf38d127c31b21af3176cd6e5a69f96a056be60ac1dcd13df7717393
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DEPENDS:=perl/host
+
+PKG_MAINTAINER:=Paul Spooren <mail@aparcar.org>
+PKG_LICENSE:=GPL-2.0-only
+PKG_LICENSE_FILES:=COPYING
+
+PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xf $(DL_DIR)/$(PKG_SOURCE)
-
 define Package/whois
-	SECTION:=net
-	CATEGORY:=Network
-	#DEPENDS:=+libidn2
-	TITLE:=intelligent WHOIS client
-	URL:=http://ftp.debian.org/debian/pool/main/w/whois
-	MAINTAINER:=Entware team, https://entware.net
+  SECTION:=utils
+  CATEGORY:=Utilities
+  TITLE:=Intelligent WHOIS client
+  URL:=https://github.com/rfc1036/whois
 endef
 
 define Package/whois/description
- This package provides a commandline client for the WHOIS (RFC 3912) protocol,
- which queries online servers for information such as contact details
- for domains and IP address assignments. It can intelligently select
- the appropriate WHOIS server for most queries.
+This client is intelligent and can automatically select the appropriate whois
+server for most queries.
+
+The internal database is often more accurate than IANA's published one, but
+please send me any information you have regarding domains and network resources
+which are not correctly handled by the program.
 endef
 
-define Package/whois/conffiles
-/etc/whois.conf
-endef
+EXTRA_CFLAGS+=-DHAVE_GETOPT_LONG
+MAKE_FLAGS += PERL=$(STAGING_DIR_HOSTPKG)/usr/bin/perl
 
 define Package/whois/install
-	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/whois $(1)/sbin
-	$(INSTALL_DIR) $(1)/etc
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/whois.conf $(1)/etc/whois.conf
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/whois $(1)/usr/bin/whois
 endef
 
 $(eval $(call BuildPackage,whois))
