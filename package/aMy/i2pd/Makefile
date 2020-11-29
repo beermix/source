@@ -9,26 +9,30 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_SOURCE_VERSION:=ff97156
+PKG_SOURCE_VERSION:=746f53b
+PKG_BUILD_PARALLEL:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
 
-#PKG_BUILD_PARALLEL:=1
+PKG_MAINTAINER:=David Yang <mmyangfl@gmail.com>
+PKG_LICENSE:=BSD-3-Clause
+PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
-#include $(INCLUDE_DIR)/cmake.mk
-#
-#CMAKE_SOURCE_SUBDIR:=build
-#
-#CMAKE_OPTIONS += \
-#	-DCMAKE_BUILD_TYPE='None' \
-#	-DBUILD_SHARED_LIBS=0 \
-#	-DWITH_UPNP=0 \
-#	-DWITH_AESNI=0 \
-#	-DWITH_AVX=0 \
-#	-DBoost_USE_STATIC_RUNTIME=1 \
-#	-Wno-dev
+include $(INCLUDE_DIR)/cmake.mk
+
+CMAKE_SOURCE_SUBDIR:=build
+
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE='None' \
+	-DWITH_BINARY=ON \
+	-DWITH_LIBRARY=OFF \
+	-DWITH_UPNP=OFF \
+	-DWITH_AESNI=OFF \
+	-DWITH_AVX=OFF \
+	-DBoost_USE_STATIC_RUNTIME=ON \
+	-Wno-dev
 
 define Package/i2pd
 	SECTION:=net
@@ -54,7 +58,7 @@ define Package/i2pd/conffiles
 endef
 
 TARGET_LDFLAGS+=-latomic
-MAKE_FLAGS+=USE_AESNI=no USE_AVX=no DEBUG=no
+#MAKE_FLAGS+=USE_AESNI=no USE_AVX=no DEBUG=no
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
