@@ -10,17 +10,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=slang
-PKG_VERSION:=2.3.2
-PKG_RELEASE:=4
+PKG_SOURCE_VERSION:=b567e09
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=https://www.jedsoft.org/releases/slang \
-	https://www.jedsoft.org/releases/slang/old
-PKG_HASH:=fc9e3b0fc4f67c3c1f6d43c90c16a5c42d117b8e28457c5b46831b8b5d3ae31a
-
-PKG_LICENSE:=GPL-2.0-or-later
-PKG_LICENSE_FILES:=COPYING
-PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=git://git.jedsoft.org/git/slang.git
 
 PKG_BUILD_PARALLEL:=0
 
@@ -41,7 +34,7 @@ endef
 
 define Package/libslang2
 $(call Package/libslang2/Default)
-  DEPENDS:=+terminfo
+  DEPENDS:=+terminfo +libreadline +zlib
 endef
 
 define Package/libslang2/description
@@ -52,25 +45,25 @@ TARGET_CFLAGS+= $(FPIC)
 # TARGET_CFLAGS:=-Os $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
 CONFIGURE_ARGS+= \
-	--enable-warnings \
+	--disable-warnings \
 	--with-terminfo=default \
-	--with-readline=slang \
+	--with-readline\
 	--without-iconv \
 	--without-onig \
 	--without-pcre \
 	--without-png \
-	--without-z \
+	--with-z \
 	--without-x
 
 define Build/Compile
-	$(call Build/Compile/Default,)
+#	$(call Build/Compile/Default,)
 	$(call Build/Compile/Default,static)
 endef
 
 # Default install last, so that the dynamic slsh is installed
 define Build/Install
 	$(call Build/Install/Default,install-static)
-	$(call Build/Install/Default,)
+#	$(call Build/Install/Default,)
 endef
 
 define Build/InstallDev
@@ -78,7 +71,7 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/*.h $(1)/usr/include/
 
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libslang.{a,so*} $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libslang.a $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/slang.pc $(1)/usr/lib/pkgconfig/
@@ -86,7 +79,7 @@ endef
 
 define Package/libslang2/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libslang.so* $(1)/usr/lib/
+#	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libslang.so* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libslang2))
