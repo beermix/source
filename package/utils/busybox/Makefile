@@ -17,7 +17,7 @@ PKG_SOURCE_URL:=https://www.busybox.net/downloads \
 		http://sources.buildroot.net
 PKG_HASH:=c35d87f1d04b2b153d33c275c2632e40d388a88f19a9e71727e0bbbff51fe689
 
-#PKG_SOURCE_VERSION:=112453a
+#PKG_SOURCE_VERSION:=eb77305
 #PKG_SOURCE_PROTO:=git
 #PKG_SOURCE_URL:=git://git.busybox.net/busybox
 
