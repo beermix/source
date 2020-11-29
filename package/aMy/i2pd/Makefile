@@ -14,7 +14,7 @@ PKG_SOURCE_VERSION:=ff97156
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
 
-PKG_BUILD_PARALLEL:=1
+#PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 #include $(INCLUDE_DIR)/cmake.mk
