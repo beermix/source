@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-#PKG_VERSION:=5ee6875
-PKG_SOURCE_VERSION:=03b773b
+PKG_SOURCE_VERSION:=5ee6875
+#PKG_SOURCE_VERSION:=03b773b
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/htop-dev/htop
@@ -28,7 +28,7 @@ define Package/htop
   SECTION:=admin
   CATEGORY:=Administration
   TITLE:=Interactive processes viewer
-  DEPENDS:=+libncurses
+  DEPENDS:=+libncurses +libsensors
   URL:=https://hisham.hm/htop/
   MAINTAINER:=Etienne CHAMPETIER <champetier.etienne@gmail.com>
 endef
