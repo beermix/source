@@ -4,7 +4,6 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://github.com/torproject/tor/tree/release-0.4.4
-# https://github.com/torproject/tor/tree/release-0.4.3
 # https://archive.torproject.org/tor-package-archive/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
