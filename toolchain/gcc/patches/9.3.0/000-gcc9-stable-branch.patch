@@ -763,6 +763,9 @@ Sebastian Pop (2):
 Segher Boessenkool (1):
       rs6000: Properly handle LE index munging in vec_shr (PR94710)
 
+Stam Markianos-Wright (1):
+      Backport of the patch for PR target/91816
+
 Stefan Schulze Frielinghaus (1):
       S/390: Emit vector alignment hints for z13 if AS accepts them
 
@@ -13548,6 +13551,17 @@ index 3a55f6ac6d2..f87044fd25c 100644
  # V8 M-profile implementations.
  begin cpu cortex-m23
   cname cortexm23
+diff --git a/gcc/config/arm/arm-protos.h b/gcc/config/arm/arm-protos.h
+index 98beb6109b9..3e8bba5caea 100644
+--- a/gcc/config/arm/arm-protos.h
++++ b/gcc/config/arm/arm-protos.h
+@@ -575,4 +575,6 @@
+ 
+ void arm_initialize_isa (sbitmap, const enum isa_feature *);
+ 
++const char * arm_gen_far_branch (rtx *, int, const char * , const char *);
++
+ #endif /* ! GCC_ARM_PROTOS_H */
 diff --git a/gcc/config/arm/arm-tables.opt b/gcc/config/arm/arm-tables.opt
 index bba54aea3d6..5befadddf9e 100644
 --- a/gcc/config/arm/arm-tables.opt
@@ -13579,7 +13593,7 @@ index b9dfb66ec84..102765e6568 100644
 +	cortexm23,cortexm33,cortexr52"
  	(const (symbol_ref "((enum attr_tune) arm_tune)")))
 diff --git a/gcc/config/arm/arm.c b/gcc/config/arm/arm.c
-index cdfc0f9e72f..d4e2ad2a317 100644
+index cdfc0f9e72f..04edd637d43 100644
 --- a/gcc/config/arm/arm.c
 +++ b/gcc/config/arm/arm.c
 @@ -18408,6 +18408,7 @@
@@ -13698,8 +13712,48 @@ index cdfc0f9e72f..d4e2ad2a317 100644
  		return "ldrd%?\t%0, [%1]";
  
  	      return "ldmia%?\t%1, %M0";
+@@ -31803,6 +31807,39 @@
+   emit_library_call (speculation_barrier_libfunc, LCT_NORMAL, VOIDmode);
+ }
+ 
++/* Generate code to enable conditional branches in functions over 1 MiB.
++   Parameters are:
++     operands: is the operands list of the asm insn (see arm_cond_branch or
++       arm_cond_branch_reversed).
++     pos_label: is an index into the operands array where operands[pos_label] is
++       the asm label of the final jump destination.
++     dest: is a string which is used to generate the asm label of the intermediate
++       destination
++   branch_format: is a string denoting the intermediate branch format, e.g.
++     "beq", "bne", etc.  */
++
++const char *
++arm_gen_far_branch (rtx * operands, int pos_label, const char * dest,
++		    const char * branch_format)
++{
++  rtx_code_label * tmp_label = gen_label_rtx ();
++  char label_buf[256];
++  char buffer[128];
++  ASM_GENERATE_INTERNAL_LABEL (label_buf, dest , \
++			CODE_LABEL_NUMBER (tmp_label));
++  const char *label_ptr = arm_strip_name_encoding (label_buf);
++  rtx dest_label = operands[pos_label];
++  operands[pos_label] = tmp_label;
++
++  snprintf (buffer, sizeof (buffer), "%s%s", branch_format , label_ptr);
++  output_asm_insn (buffer, operands);
++
++  snprintf (buffer, sizeof (buffer), "b\t%%l0%d\n%s:", pos_label, label_ptr);
++  operands[pos_label] = dest_label;
++  output_asm_insn (buffer, operands);
++  return "";
++}
++
+ #if CHECKING_P
+ namespace selftest {
+ 
 diff --git a/gcc/config/arm/arm.md b/gcc/config/arm/arm.md
-index 53e54874c12..aa1f23c8e9e 100644
+index 53e54874c12..b5df489dca4 100644
 --- a/gcc/config/arm/arm.md
 +++ b/gcc/config/arm/arm.md
 @@ -6362,16 +6362,21 @@
@@ -13727,7 +13781,151 @@ index 53e54874c12..aa1f23c8e9e 100644
  )
  
  ;; Subroutine to store a half word from a register into memory.
-@@ -8898,6 +8903,8 @@
+@@ -7308,9 +7313,15 @@
+ ;; And for backward branches we have 
+ ;;   (neg_range - neg_base_offs + pc_offs) = (neg_range - (-2 or -4) + 4).
+ ;;
++;; In 16-bit Thumb these ranges are:
+ ;; For a 'b'       pos_range = 2046, neg_range = -2048 giving (-2040->2048).
+ ;; For a 'b<cond>' pos_range = 254,  neg_range = -256  giving (-250 ->256).
+ 
++;; In 32-bit Thumb these ranges are:
++;; For a 'b'       +/- 16MB is not checked for.
++;; For a 'b<cond>' pos_range = 1048574,  neg_range = -1048576  giving
++;; (-1048568 -> 1048576).
++
+ (define_expand "cbranchsi4"
+   [(set (pc) (if_then_else
+ 	      (match_operator 0 "expandable_comparison_operator"
+@@ -7568,23 +7579,50 @@
+ 		      (label_ref (match_operand 0 "" ""))
+ 		      (pc)))]
+   "TARGET_32BIT"
+-  "*
+-  if (arm_ccfsm_state == 1 || arm_ccfsm_state == 2)
++  {
++    if (arm_ccfsm_state == 1 || arm_ccfsm_state == 2)
+     {
+       arm_ccfsm_state += 2;
+-      return \"\";
++      return "";
+     }
+-  return \"b%d1\\t%l0\";
+-  "
++    switch (get_attr_length (insn))
++      {
++	case 2: /* Thumb2 16-bit b{cond}.  */
++	case 4: /* Thumb2 32-bit b{cond} or A32 b{cond}.  */
++	  return "b%d1\t%l0";
++	  break;
++
++	/* Thumb2 b{cond} out of range.  Use 16-bit b{cond} and
++	   unconditional branch b.  */
++	default: return arm_gen_far_branch (operands, 0, "Lbcond", "b%D1\t");
++      }
++  }
+   [(set_attr "conds" "use")
+    (set_attr "type" "branch")
+    (set (attr "length")
+-	(if_then_else
+-	   (and (match_test "TARGET_THUMB2")
+-		(and (ge (minus (match_dup 0) (pc)) (const_int -250))
+-		     (le (minus (match_dup 0) (pc)) (const_int 256))))
+-	   (const_int 2)
+-	   (const_int 4)))]
++    (if_then_else (match_test "!TARGET_THUMB2")
++
++      ;;Target is not Thumb2, therefore is A32.  Generate b{cond}.
++      (const_int 4)
++
++      ;; Check if target is within 16-bit Thumb2 b{cond} range.
++      (if_then_else (and (ge (minus (match_dup 0) (pc)) (const_int -250))
++		         (le (minus (match_dup 0) (pc)) (const_int 256)))
++
++	;; Target is Thumb2, within narrow range.
++	;; Generate b{cond}.
++	(const_int 2)
++
++	;; Check if target is within 32-bit Thumb2 b{cond} range.
++	(if_then_else (and (ge (minus (match_dup 0) (pc))(const_int -1048568))
++			   (le (minus (match_dup 0) (pc)) (const_int 1048576)))
++
++	  ;; Target is Thumb2, within wide range.
++	  ;; Generate b{cond}
++	  (const_int 4)
++	  ;; Target is Thumb2, out of range.
++	  ;; Generate narrow b{cond} and unconditional branch b.
++	  (const_int 6)))))]
+ )
+ 
+ (define_insn "*arm_cond_branch_reversed"
+@@ -7594,23 +7632,50 @@
+ 		      (pc)
+ 		      (label_ref (match_operand 0 "" ""))))]
+   "TARGET_32BIT"
+-  "*
+-  if (arm_ccfsm_state == 1 || arm_ccfsm_state == 2)
+-    {
+-      arm_ccfsm_state += 2;
+-      return \"\";
+-    }
+-  return \"b%D1\\t%l0\";
+-  "
+-  [(set_attr "conds" "use")
++  {
++    if (arm_ccfsm_state == 1 || arm_ccfsm_state == 2)
++      {
++	arm_ccfsm_state += 2;
++	return "";
++      }
++    switch (get_attr_length (insn))
++      {
++	case 2: /* Thumb2 16-bit b{cond}.  */
++	case 4: /* Thumb2 32-bit b{cond} or A32 b{cond}.  */
++	  return "b%D1\t%l0";
++	  break;
++
++	/* Thumb2 b{cond} out of range.  Use 16-bit b{cond} and
++	   unconditional branch b.  */
++	default: return arm_gen_far_branch (operands, 0, "Lbcond", "b%d1\t");
++      }
++  }
++[(set_attr "conds" "use")
+    (set_attr "type" "branch")
+    (set (attr "length")
+-	(if_then_else
+-	   (and (match_test "TARGET_THUMB2")
+-		(and (ge (minus (match_dup 0) (pc)) (const_int -250))
+-		     (le (minus (match_dup 0) (pc)) (const_int 256))))
+-	   (const_int 2)
+-	   (const_int 4)))]
++    (if_then_else (match_test "!TARGET_THUMB2")
++
++      ;;Target is not Thumb2, therefore is A32.  Generate b{cond}.
++      (const_int 4)
++
++      ;; Check if target is within 16-bit Thumb2 b{cond} range.
++      (if_then_else (and (ge (minus (match_dup 0) (pc)) (const_int -250))
++			 (le (minus (match_dup 0) (pc)) (const_int 256)))
++
++	;; Target is Thumb2, within narrow range.
++	;; Generate b{cond}.
++	(const_int 2)
++
++	;; Check if target is within 32-bit Thumb2 b{cond} range.
++	(if_then_else (and (ge (minus (match_dup 0) (pc))(const_int -1048568))
++			   (le (minus (match_dup 0) (pc)) (const_int 1048576)))
++
++	  ;; Target is Thumb2, within wide range.
++	  ;; Generate b{cond}.
++	  (const_int 4)
++	  ;; Target is Thumb2, out of range.
++	  ;; Generate narrow b{cond} and unconditional branch b.
++	  (const_int 6)))))]
+ )
+ 
+ 
+@@ -8898,6 +8963,8 @@
    [(set_attr "arch" "t1,32")]
  )
  
@@ -13736,7 +13934,7 @@ index 53e54874c12..aa1f23c8e9e 100644
  (define_insn "arm_stack_protect_test_insn"
    [(set (reg:CC_Z CC_REGNUM)
  	(compare:CC_Z (unspec:SI [(match_operand:SI 1 "memory_operand" "m,m")
-@@ -8907,8 +8914,8 @@
+@@ -8907,8 +8974,8 @@
     (clobber (match_operand:SI 0 "register_operand" "=&l,&r"))
     (clobber (match_dup 2))]
    "TARGET_32BIT"
