@@ -8,10 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_SOURCE_VERSION:=efd8bd1
+PKG_VERSION:=1.9.9-b1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_CONFIG_DEPENDS:= CONFIG_ZLIB_OPTIMIZE_SPEED
 
@@ -56,44 +59,45 @@ endif
 CMAKE_OPTIONS += \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
 	-DWITH_GZFILEOP=ON \
-	-DZLIB_COMPAT=ON \
+	-DZLIB_COMPAT=OFF \
 	-DWITH_OPTIM=ON \
 	-DWITH_NEW_STRATEGIES=ON \
 	-DWITH_AVX2=OFF \
 	-DWITH_SSE2=ON \
 	-DWITH_SSE4=OFF \
-	-DWITH_SSSE3=ON \
-	-DWITH_PCLMULQDQ=OFF
+	-DWITH_PCLMULQDQ=OFF \
+	-DWITH_NEON=OFF \
+	-DWITH_POWER8=OFF
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
-	$(CP)	$(PKG_INSTALL_DIR)/usr/include/z{conf,lib}.h \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/include/z{conf-ng,lib-ng}.h \
 		$(1)/usr/include/
 	mkdir -p $(1)/usr/lib
-	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/libz.{a,so*} \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/libz-ng.{a,so*} \
 		$(1)/usr/lib/
 	mkdir -p $(1)/usr/lib/pkgconfig
-	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib-ng.pc \
 		$(1)/usr/lib/pkgconfig/
 endef
 
 # libz.so is needed for openssl (zlib-dynamic)
 define Package/zlib/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.so $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz-ng.so $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz-ng.so.* $(1)/usr/lib/
 endef
 
 define Package/zlib-dev/install
 	$(INSTALL_DIR) $(1)/usr/include
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/zconf.h \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/zconf-ng.h \
 	  $(1)/usr/include/
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/zlib.h \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/zlib-ng.h \
 	  $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.a $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz-ng.a $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib-ng.pc \
 	  $(1)/usr/lib/pkgconfig/
 endef
 

@@ -17,6 +17,9 @@ PKG_SOURCE_URL:=git://git.jedsoft.org/git/slang.git
 
 PKG_BUILD_PARALLEL:=0
 
+SLANG_MODULES:= base64 chksum csv fcntl fork histogram iconv json onig pcre \
+	png rand select slsmg socket stats sysconf termios varray zlib
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libslang2/Default
@@ -34,7 +37,7 @@ endef
 
 define Package/libslang2
 $(call Package/libslang2/Default)
-  DEPENDS:=+terminfo +libreadline +zlib
+  DEPENDS:=+terminfo +zlib +libpcre
 endef
 
 define Package/libslang2/description
@@ -42,28 +45,28 @@ $(call Package/libslang2/Default/description)
 endef
 
 TARGET_CFLAGS+= $(FPIC)
-# TARGET_CFLAGS:=-Os $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
 CONFIGURE_ARGS+= \
-	--disable-warnings \
+	--enable-largefile \
+	--enable-warnings \
 	--with-terminfo=default \
-	--with-readline\
+	--with-readline=slang \
 	--without-iconv \
 	--without-onig \
-	--without-pcre \
+	--with-pcre="$(STAGING_DIR)/usr" \
 	--without-png \
-	--with-z \
+	--with-z="$(STAGING_DIR)/usr" \
 	--without-x
 
 define Build/Compile
-#	$(call Build/Compile/Default,)
+	$(call Build/Compile/Default,)
 	$(call Build/Compile/Default,static)
 endef
 
 # Default install last, so that the dynamic slsh is installed
 define Build/Install
 	$(call Build/Install/Default,install-static)
-#	$(call Build/Install/Default,)
+	$(call Build/Install/Default,)
 endef
 
 define Build/InstallDev
@@ -79,7 +82,6 @@ endef
 
 define Package/libslang2/install
 	$(INSTALL_DIR) $(1)/usr/lib
-#	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libslang.so* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libslang2))
