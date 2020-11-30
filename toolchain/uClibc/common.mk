@@ -7,17 +7,17 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/target.mk
 
-PKG_VERSION:=1.0.34
+PKG_VERSION:=1.0.36
 PKG_RELEASE:=1
 
 PKG_NAME:=uClibc-ng
-PKG_SOURCE_URL = http://downloads.uclibc-ng.org/releases/$(PKG_VERSION)/
+PKG_SOURCE_URL = https://downloads.uclibc-ng.org/releases/$(PKG_VERSION)/
 PATCH_DIR:=$(PATH_PREFIX)/patches
 CONFIG_DIR:=$(PATH_PREFIX)/config
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 LIBC_SO_VERSION:=$(PKG_VERSION)
 
-PKG_HASH:=e6776229eee8d3f5a1cd29fb4286630e3cb9e97dded4e8f4a3a9bb4fa8c0d5e3
+PKG_HASH:=010f40841669809422e01b47e7169d49c61bf3382f493c2571a8a96634ed300c
 
 HOST_BUILD_DIR:=$(BUILD_DIR_TOOLCHAIN)/$(PKG_NAME)-$(PKG_VERSION)
 
