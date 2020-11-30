@@ -22,8 +22,8 @@ PKG_CPE_ID:=cpe:/a:gnome:glib
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=meson/host gettext-full libiconv/host
-HOST_BUILD_DEPENDS:=meson/host gettext-full/host libiconv/host libffi/host
+PKG_BUILD_DEPENDS:=meson/host libiconv/host
+HOST_BUILD_DEPENDS:=meson/host libiconv/host libffi/host
 PKG_CONFIG_DEPENDS:=CONFIG_BUILD_NLS
 PKG_INSTALL:=1
 
@@ -35,7 +35,7 @@ include ../../../feeds/packages/devel/meson/meson.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
