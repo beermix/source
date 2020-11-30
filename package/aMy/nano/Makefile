@@ -31,7 +31,7 @@ define Package/nano
   CATEGORY:=Utilities
   TITLE:=An enhanced clone of the Pico text editor
   URL:=https://www.nano-editor.org/
-  DEPENDS:=+libslang2 +libmagic
+  DEPENDS:=+libncurses +libmagic
 endef
 
 define Package/nano/description
@@ -40,7 +40,8 @@ define Package/nano/description
 endef
 
 CONFIGURE_ARGS += \
-	--with-slang \
+	--without-slang \
+	--with-wordbounds \
 	--enable-color \
 	--enable-nanorc \
 	--enable-libmagic \
