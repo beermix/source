@@ -45,7 +45,7 @@ define Package/libreadline/description
 	history expansion on previous commands.
 endef
 
-CONFIGURE_ARGS += --with-curses --disable-install-examples --disable-static
+CONFIGURE_ARGS += --with-curses --disable-install-examples
 
 CONFIGURE_VARS += \
 	bash_cv_wcwidth_broken=no \
