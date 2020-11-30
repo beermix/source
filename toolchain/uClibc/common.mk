@@ -50,7 +50,6 @@ CPU_CFLAGS = \
 	-funsigned-char -fno-builtin -fno-asm \
 	--std=gnu99 -ffunction-sections -fdata-sections \
 	-Wno-unused-but-set-variable \
-	-mstackrealign \
 	$(TARGET_CFLAGS) -ggdb
 
 UCLIBC_MAKE = PATH='$(TOOLCHAIN_DIR)/initial/bin:$(TARGET_PATH)' $(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) \
