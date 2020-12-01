@@ -59,14 +59,12 @@ CONFIGURE_ARGS+= \
 	--without-x
 
 define Build/Compile
-	$(call Build/Compile/Default,)
 	$(call Build/Compile/Default,static)
 endef
 
 # Default install last, so that the dynamic slsh is installed
 define Build/Install
 	$(call Build/Install/Default,install-static)
-	$(call Build/Install/Default,)
 endef
 
 define Build/InstallDev
