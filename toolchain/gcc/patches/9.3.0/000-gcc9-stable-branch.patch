@@ -88,7 +88,8 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (261):
+GCC Administrator (262):
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -5871,10 +5872,17 @@ index fde2d2b76eb..79e6d9bb1ec 100644
 +        else:
 +            print('Please resolve all remaining file conflicts.')
 diff --git a/gcc/ChangeLog b/gcc/ChangeLog
-index d8e53874e68..03df19e5b94 100644
+index d8e53874e68..929037b9562 100644
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2314 @@
+@@ -1,3 +1,2321 @@
++2020-11-30  Stam Markianos-Wright  <stam.markianos-wright@arm.com>
++
++	* config/arm/arm-protos.h: New function arm_gen_far_branch prototype.
++	* config/arm/arm.c (arm_gen_far_branch): New function
++	arm_gen_far_branch.
++	* config/arm/arm.md: Update b<cond> for Thumb2 range checks.
++
 +2020-11-28  Eric Botcazou  <ebotcazou@adacore.com>
 +
 +	PR target/97939
