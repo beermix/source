@@ -174,7 +174,9 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
   TARGET_CFLAGS+=-fno-split-stack
 endif
 
-# TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+ifneq ($(GCC_USE_VERSION_10),)
+	TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+endif
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
