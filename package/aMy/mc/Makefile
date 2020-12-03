@@ -55,8 +55,15 @@ CONFIGURE_ARGS += \
 	--enable-silent-rules \
 	--disable-tests \
 	--disable-doxygen-doc \
+	--disable-doxygen-rtf \
+	--disable-doxygen-xml \
+	--disable-doxygen-chm \
+	--disable-doxygen-chi \
+	--disable-doxygen-dot \
+	--disable-doxygen-html \
 	--with-homedir=/etc/mc \
 	--with-screen=slang \
+	--with-glib-static \
 	--without-x \
 
 CONFIGURE_VARS += \
@@ -104,8 +111,7 @@ define Package/mc/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/hlp/mc.hlp $(1)/usr/share/mc/help
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/mc.menu $(1)/etc/mc
 	$(INSTALL_DIR) $(1)/etc/mc/skins
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/skins/modarin256root.ini $(1)/etc/mc/skins
-	#$(INSTALL_DATA) ./skins/* $(1)/etc/mc/skins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/misc/skins/*.ini $(1)/etc/mc/skins
 	$(INSTALL_DIR) $(1)/etc/mc/mcedit/Syntax
 ifeq ($(CONFIG_MC_DIFFVIEWER),y)
 	ln -sf mc $(1)/usr/bin/mcdiff
