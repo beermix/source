@@ -63,7 +63,6 @@ CONFIGURE_ARGS += \
 	--disable-doxygen-html \
 	--with-homedir=/etc/mc \
 	--with-screen=slang \
-	--with-glib-static \
 	--without-x \
 
 CONFIGURE_VARS += \
@@ -127,7 +126,7 @@ endef
 
 define Package/mc/conffiles
 /etc/mc/mc.menu
-/etc/mc/skins/default.ini
+/etc/mc/skins/*.ini
 endef
 
 $(eval $(call BuildPackage,mc))
