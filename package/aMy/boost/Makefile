@@ -164,7 +164,7 @@ define Package/boost/config
 
 		choice
 			prompt "Compile Boost libraries."
-				default boost-static-and-shared-libs
+				default boost-static-libs
 				help
 					Choose which version to compile.
 					-> Shared:
@@ -186,7 +186,7 @@ define Package/boost/config
 
 		choice
 			prompt "Selects Boost Runtime linkage."
-			default boost-runtime-shared
+			default boost-runtime-static
 			help
 				Choose which C and C++ runtimes to use:
 				-> Use Shared runtimes.
