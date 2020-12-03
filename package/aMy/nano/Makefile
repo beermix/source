@@ -41,13 +41,12 @@ endef
 
 CONFIGURE_ARGS += \
 	--without-slang \
-	--with-wordbounds \
 	--enable-color \
 	--enable-nanorc \
 	--enable-libmagic \
 
-CONFIGURE_VARS += \
-	ac_cv_header_regex_h=no \
+#CONFIGURE_VARS += \
+#	ac_cv_header_regex_h=no \
 
 define Package/nano/install
 	$(INSTALL_DIR) $(1)/usr/bin
