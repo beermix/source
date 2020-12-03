@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libstatgrab
-PKG_VERSION:=74a42a2
+PKG_SOURCE_VERSION:=74a42a2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/libstatgrab/libstatgrab.git
