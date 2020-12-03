@@ -88,7 +88,9 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (262):
+GCC Administrator (264):
+      Daily bump.
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -423,7 +425,7 @@ Iain Sandoe (1):
 Ian Lance Taylor (1):
       go.test: update issue4085b.go to version from Go 1.13
 
-Jakub Jelinek (81):
+Jakub Jelinek (82):
       Bump BASE-VER to 9.3.1.
       tailcall: Fix up process_assignment [PR94001]
       inliner: Copy DECL_BY_REFERENCE in copy_decl_to_var [PR93888]
@@ -505,6 +507,7 @@ Jakub Jelinek (81):
       store-merging: Consider also overlapping stores earlier in the by bitpos sorting [PR97053]
       optabs: Don't reuse target for multi-word expansions if it overlaps operand(s) [PR97073]
       s390: Fix up s390_atomic_assign_expand_fenv
+      testsuite: add another test for the rotate vectorization miscompilation
 
 Jason Merrill (14):
       c++: Fix CTAD with multiple-arg ctor template [93248].
@@ -727,7 +730,7 @@ Rainer Orth (2):
       libstdc++: Update Solaris baselines for GCC 9.4
       libsanitizer: Fix GetPcSpBp determination of SP on 32-bit Solaris/x86
 
-Richard Biener (11):
+Richard Biener (21):
       tree-optimization/94163 constrain alignment set by PRE
       middle-end/94206 fix memset folding to avoid types with padding
       tree-optimization/94103 avoid CSE of loads with padding
@@ -739,6 +742,16 @@ Richard Biener (11):
       ipa/94947 - fix test for externally visible variables for IPA PTA
       ipa/94947 - avoid using externally_visible_p ()
       testsuite/97688 - fix check_vect () with __AVX2__
+      middle-end/97554 - avoid overflow in alloc size compute
+      testsuite/98002 - fix gcc.dg/strncmp-2.c
+      tree-optimization/96514 - avoid if-converting control-altering calls
+      tree-optimization/96370 - make reassoc expr rewrite more robust
+      tree-optimization/96579 - another special-operands fix in reassoc
+      tree-optimization/97081 - fix wrong-code with vectorized shift
+      tree-optimization/97255 - missing vector bool pattern of SRAed bool
+      tree-optimization/97812 - fix range query in VRP assert discovery
+      middle-end/96369 - fix missed short-circuiting during range folding
+      tree-optimization/96075 - fix bogus misalignment calculation
 
 Richard Earnshaw (1):
       arm: correct constraints on movsi_compare0 [PR91913]
@@ -5872,10 +5885,94 @@ index fde2d2b76eb..79e6d9bb1ec 100644
 +        else:
 +            print('Please resolve all remaining file conflicts.')
 diff --git a/gcc/ChangeLog b/gcc/ChangeLog
-index d8e53874e68..929037b9562 100644
+index d8e53874e68..d0fd7bd2005 100644
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2321 @@
+@@ -1,3 +1,2405 @@
++2020-12-02  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-07-06  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/96075
++	* tree-vect-data-refs.c (vect_compute_data_ref_alignment): Use
++	TYPE_SIZE_UNIT of the vector component type instead of DR_STEP
++	for the misalignment calculation for negative step.
++
++2020-12-02  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-07-31  Richard Biener  <rguenther@suse.de>
++
++	PR middle-end/96369
++	* fold-const.c (fold_range_test): Special-case constant
++	LHS for short-circuiting operations.
++
++2020-12-02  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-11-13  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/97812
++	* tree-vrp.c (register_edge_assert_for_2): Extend the range
++	according to its sign before seeing whether it fits.
++
++2020-12-02  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-10-01  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/97255
++	* tree-vect-patterns.c (vect_recog_bool_pattern): Also handle
++	VIEW_CONVERT_EXPR.
++
++2020-12-02  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-09-18  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/97081
++	* tree-vect-patterns.c (vect_recog_rotate_pattern): Use the
++	precision of the shifted operand to determine the mask.
++
++2020-12-02  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-08-27  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/96579
++	* tree-ssa-reassoc.c (linearize_expr_tree): If we expand
++	rhs via special ops make sure to swap operands.
++
++2020-12-02  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-07-30  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/96370
++	* tree-ssa-reassoc.c (rewrite_expr_tree): Add operation
++	code parameter and use it instead of picking it up from
++	the stmt that is being rewritten.
++	(reassociate_bb): Pass down the operation code.
++
++2020-12-02  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-08-07  Richard Biener  <rguenther@suse.de>
++
++	PR tree-optimization/96514
++	* tree-if-conv.c (if_convertible_bb_p): If the last stmt
++	is a call that is control-altering, fail.
++
++2020-12-01  Richard Biener  <rguenther@suse.de>
++
++	Backported from master:
++	2020-10-26  Richard Biener  <rguenther@suse.de>
++
++	PR middle-end/97554
++	* sbitmap.c (sbitmap_vector_alloc): Use size_t for byte
++	quantities to avoid overflow.
++
 +2020-11-30  Stam Markianos-Wright  <stam.markianos-wright@arm.com>
 +
 +	* config/arm/arm-protos.h: New function arm_gen_far_branch prototype.
@@ -22365,7 +22462,7 @@ index 7b1cecd3c44..b8a07d21d37 100644
       (ignoring the prologue and epilogue).  This is set prior to
       register allocation in IRA and is valid for the remaining
 diff --git a/gcc/fold-const.c b/gcc/fold-const.c
-index c717f24501e..8388bde0434 100644
+index c717f24501e..613553e1a05 100644
 --- a/gcc/fold-const.c
 +++ b/gcc/fold-const.c
 @@ -5423,8 +5423,22 @@
@@ -22393,7 +22490,21 @@ index c717f24501e..8388bde0434 100644
        default:
  	gcc_assert (TREE_CODE_CLASS (comp_code) == tcc_comparison);
  	break;
-@@ -10376,11 +10390,11 @@
+@@ -5570,6 +5584,13 @@
+     return 0;
+ 
+   lhs = make_range (op0, &in0_p, &low0, &high0, &strict_overflow_p);
++  /* If op0 is known true or false and this is a short-circuiting
++     operation we must not merge with op1 since that makes side-effects
++     unconditional.  So special-case this.  */
++  if (!lhs
++      && ((code == TRUTH_ORIF_EXPR && in0_p)
++	  || (code == TRUTH_ANDIF_EXPR && !in0_p)))
++    return op0;
+   rhs = make_range (op1, &in1_p, &low1, &high1, &strict_overflow_p);
+ 
+   /* If this is an OR operation, invert both sides; we will invert
+@@ -10376,11 +10397,11 @@
  
        /* Convert -A / -B to A / B when the type is signed and overflow is
  	 undefined.  */
@@ -22407,7 +22518,7 @@ index c717f24501e..8388bde0434 100644
  	    fold_overflow_warning (("assuming signed overflow does not occur "
  				    "when distributing negation across "
  				    "division"),
-@@ -10390,11 +10404,11 @@
+@@ -10390,11 +10411,11 @@
  						    TREE_OPERAND (arg0, 0)),
  				  negate_expr (op1));
  	}
@@ -24975,6 +25086,20 @@ index 7916344c584..3e969e52176 100644
  extern void incr_ticks_for_insn (rtx_insn *);
  extern void mark_end_of_function_resources (rtx, bool);
  extern void init_resource_info (rtx_insn *);
+diff --git a/gcc/sbitmap.c b/gcc/sbitmap.c
+index 5e3d6b83afa..fc9d554cf0b 100644
+--- a/gcc/sbitmap.c
++++ b/gcc/sbitmap.c
+@@ -139,7 +139,8 @@
+ sbitmap *
+ sbitmap_vector_alloc (unsigned int n_vecs, unsigned int n_elms)
+ {
+-  unsigned int i, bytes, offset, elm_bytes, size, amt, vector_bytes;
++  unsigned int i, size;
++  size_t amt, bytes, vector_bytes, elm_bytes, offset;
+   sbitmap *bitmap_vector;
+ 
+   size = SBITMAP_SET_SIZE (n_elms);
 diff --git a/gcc/stor-layout.c b/gcc/stor-layout.c
 index 5d6f2e0166c..125fc66b5ce 100644
 --- a/gcc/stor-layout.c
@@ -25118,10 +25243,22 @@ index d00c1bd31e6..efd720b9609 100644
  
        if (DDR_NB_LOOPS (ddr) > 1)
 diff --git a/gcc/tree-if-conv.c b/gcc/tree-if-conv.c
-index 2780a4b243f..699b48b8124 100644
+index 2780a4b243f..56c0905093e 100644
 --- a/gcc/tree-if-conv.c
 +++ b/gcc/tree-if-conv.c
-@@ -2913,9 +2913,12 @@
+@@ -1139,6 +1139,11 @@
+   if (EDGE_COUNT (bb->succs) > 2)
+     return false;
+ 
++  gimple *last = last_stmt (bb);
++  if (gcall *call = safe_dyn_cast <gcall *> (last))
++    if (gimple_call_ctrl_altering_p (call))
++      return false;
++
+   if (exit_bb)
+     {
+       if (bb != loop->latch)
+@@ -2913,9 +2918,12 @@
    for (gsi = gsi_start_bb (bb); !gsi_end_p (gsi); gsi_next (&gsi))
      {
        stmt = gsi_stmt (gsi);
@@ -25137,7 +25274,7 @@ index 2780a4b243f..699b48b8124 100644
  	{
  	  gimple_set_plf (stmt, GF_PLF_2, true);
  	  worklist.safe_push (stmt);
-@@ -2936,7 +2939,7 @@
+@@ -2936,7 +2944,7 @@
  	  FOR_EACH_IMM_USE_FAST (use_p, imm_iter, lhs)
  	    {
  	      stmt1 = USE_STMT (use_p);
@@ -25146,7 +25283,7 @@ index 2780a4b243f..699b48b8124 100644
  		{
  		  gimple_set_plf (stmt, GF_PLF_2, true);
  		  worklist.safe_push (stmt);
-@@ -2959,21 +2962,22 @@
+@@ -2959,21 +2967,22 @@
  	  if (TREE_CODE (use) != SSA_NAME)
  	    continue;
  	  stmt1 = SSA_NAME_DEF_STMT (use);
@@ -25173,7 +25310,7 @@ index 2780a4b243f..699b48b8124 100644
  	  continue;
  	}
        if (dump_file && (dump_flags & TDF_DETAILS))
-@@ -2983,6 +2987,7 @@
+@@ -2983,6 +2992,7 @@
  	}
        gsi_remove (&gsi, true);
        release_defs (stmt);
@@ -25885,10 +26022,78 @@ index 8bd17b82368..7b171bc4e8f 100644
  					halign, hmisalign);
  	    }
 diff --git a/gcc/tree-ssa-reassoc.c b/gcc/tree-ssa-reassoc.c
-index 6794fbde29e..9bb04d65387 100644
+index 6794fbde29e..4bc691d5797 100644
 --- a/gcc/tree-ssa-reassoc.c
 +++ b/gcc/tree-ssa-reassoc.c
-@@ -5872,8 +5872,11 @@
+@@ -4492,7 +4492,7 @@
+    recursive invocations.  */
+ 
+ static tree
+-rewrite_expr_tree (gimple *stmt, unsigned int opindex,
++rewrite_expr_tree (gimple *stmt, enum tree_code rhs_code, unsigned int opindex,
+ 		   vec<operand_entry *> ops, bool changed, bool next_changed)
+ {
+   tree rhs1 = gimple_assign_rhs1 (stmt);
+@@ -4539,7 +4539,7 @@
+ 		= find_insert_point (stmt, oe1->op, oe2->op);
+ 	      lhs = make_ssa_name (TREE_TYPE (lhs));
+ 	      stmt
+-		= gimple_build_assign (lhs, gimple_assign_rhs_code (stmt),
++		= gimple_build_assign (lhs, rhs_code,
+ 				       oe1->op, oe2->op);
+ 	      gimple_set_uid (stmt, uid);
+ 	      gimple_set_visited (stmt, true);
+@@ -4583,7 +4583,7 @@
+   /* Recurse on the LHS of the binary operator, which is guaranteed to
+      be the non-leaf side.  */
+   tree new_rhs1
+-    = rewrite_expr_tree (SSA_NAME_DEF_STMT (rhs1), opindex + 1, ops,
++    = rewrite_expr_tree (SSA_NAME_DEF_STMT (rhs1), rhs_code, opindex + 1, ops,
+ 			 changed || oe->op != rhs2 || next_changed,
+ 			 false);
+ 
+@@ -4609,7 +4609,7 @@
+ 	  gimple *insert_point = find_insert_point (stmt, new_rhs1, oe->op);
+ 
+ 	  lhs = make_ssa_name (TREE_TYPE (lhs));
+-	  stmt = gimple_build_assign (lhs, gimple_assign_rhs_code (stmt),
++	  stmt = gimple_build_assign (lhs, rhs_code,
+ 				      new_rhs1, oe->op);
+ 	  gimple_set_uid (stmt, uid);
+ 	  gimple_set_visited (stmt, true);
+@@ -5162,13 +5162,20 @@
+ 
+       if (!binrhsisreassoc)
+ 	{
+-	  if (!try_special_add_to_ops (ops, rhscode, binrhs, binrhsdef))
++	  bool swap = false;
++	  if (try_special_add_to_ops (ops, rhscode, binrhs, binrhsdef))
++	    /* If we add ops for the rhs we expect to be able to recurse
++	       to it via the lhs during expression rewrite so swap
++	       operands.  */
++	    swap = true;
++	  else
+ 	    add_to_ops_vec (ops, binrhs);
+ 
+ 	  if (!try_special_add_to_ops (ops, rhscode, binlhs, binlhsdef))
+ 	    add_to_ops_vec (ops, binlhs);
+ 
+-	  return;
++	  if (!swap)
++	    return;
+ 	}
+ 
+       if (dump_file && (dump_flags & TDF_DETAILS))
+@@ -5187,6 +5194,8 @@
+ 	  fprintf (dump_file, " is now ");
+ 	  print_gimple_stmt (dump_file, stmt, 0);
+ 	}
++      if (!binrhsisreassoc)
++	return;
+ 
+       /* We want to make it so the lhs is always the reassociative op,
+ 	 so swap.  */
+@@ -5872,8 +5881,11 @@
    if (stmt && !gimple_visited_p (stmt))
      cfg_cleanup_needed |= maybe_optimize_range_tests (stmt);
  
@@ -25901,7 +26106,7 @@ index 6794fbde29e..9bb04d65387 100644
        stmt = gsi_stmt (gsi);
  
        if (is_gimple_assign (stmt)
-@@ -5899,15 +5902,12 @@
+@@ -5899,15 +5911,12 @@
  		  release_defs (stmt);
  		  /* We might end up removing the last stmt above which
  		     places the iterator to the end of the sequence.
@@ -25920,6 +26125,15 @@ index 6794fbde29e..9bb04d65387 100644
  		    }
  		}
  	      continue;
+@@ -6051,7 +6060,7 @@
+                       if (len >= 3)
+                         swap_ops_for_binary_stmt (ops, len - 3, stmt);
+ 
+-		      new_lhs = rewrite_expr_tree (stmt, 0, ops,
++		      new_lhs = rewrite_expr_tree (stmt, rhs_code, 0, ops,
+ 						   powi_result != NULL
+ 						   || negate_result,
+ 						   len != orig_len);
 diff --git a/gcc/tree-ssa-sccvn.c b/gcc/tree-ssa-sccvn.c
 index 32f45c95cdf..1e7de65dcd9 100644
 --- a/gcc/tree-ssa-sccvn.c
@@ -26070,6 +26284,19 @@ index 255575f1198..4f42817f7de 100644
  	   && (non_ass_var = independent_of_stmt_p (op0, stmt, call,
  						    to_move)))
      ;
+diff --git a/gcc/tree-vect-data-refs.c b/gcc/tree-vect-data-refs.c
+index 17a4fc8e279..f2e1766432b 100644
+--- a/gcc/tree-vect-data-refs.c
++++ b/gcc/tree-vect-data-refs.c
+@@ -1045,7 +1045,7 @@
+   if (tree_int_cst_sgn (drb->step) < 0)
+     /* PLUS because STEP is negative.  */
+     misalignment += ((TYPE_VECTOR_SUBPARTS (vectype) - 1)
+-		     * TREE_INT_CST_LOW (drb->step));
++		     * -TREE_INT_CST_LOW (TYPE_SIZE_UNIT (TREE_TYPE (vectype))));
+ 
+   unsigned int const_misalignment;
+   if (!known_misalignment (misalignment, vect_align_c, &const_misalignment))
 diff --git a/gcc/tree-vect-generic.c b/gcc/tree-vect-generic.c
 index ad1ea4e7b97..1f255fa70c2 100644
 --- a/gcc/tree-vect-generic.c
@@ -26240,10 +26467,27 @@ index 0308b26b808..ed6586753c5 100644
    /* Replace use of lhs with newly computed result.  If the use stmt is a
       single arg PHI, just replace all uses of PHI result.  It's necessary
 diff --git a/gcc/tree-vect-patterns.c b/gcc/tree-vect-patterns.c
-index badf4e7104e..c74888ed9af 100644
+index badf4e7104e..4a6ef5377f2 100644
 --- a/gcc/tree-vect-patterns.c
 +++ b/gcc/tree-vect-patterns.c
-@@ -2969,8 +2969,8 @@
+@@ -2093,7 +2093,6 @@
+       append_pattern_def_seq (stmt_vinfo, def_stmt);
+     }
+   stype = TREE_TYPE (def);
+-  scalar_int_mode smode = SCALAR_INT_TYPE_MODE (stype);
+ 
+   if (TREE_CODE (def) == INTEGER_CST)
+     {
+@@ -2122,7 +2121,7 @@
+ 	append_pattern_def_seq (stmt_vinfo, def_stmt, vecstype);
+ 
+       def2 = vect_recog_temp_ssa_var (stype, NULL);
+-      tree mask = build_int_cst (stype, GET_MODE_PRECISION (smode) - 1);
++      tree mask = build_int_cst (stype, GET_MODE_PRECISION (mode) - 1);
+       def_stmt = gimple_build_assign (def2, BIT_AND_EXPR,
+ 				      gimple_assign_lhs (def_stmt), mask);
+       if (ext_def)
+@@ -2969,8 +2968,8 @@
  	  d = abs_d;
  	  oprnd1 = build_int_cst (itype, abs_d);
  	}
@@ -26254,6 +26498,48 @@ index badf4e7104e..c74888ed9af 100644
  	/* This case is not handled correctly below.  */
  	return NULL;
  
+@@ -3710,14 +3709,18 @@
+ 
+   var = gimple_assign_rhs1 (last_stmt);
+   lhs = gimple_assign_lhs (last_stmt);
++  rhs_code = gimple_assign_rhs_code (last_stmt);
++
++  if (rhs_code == VIEW_CONVERT_EXPR)
++    var = TREE_OPERAND (var, 0);
+ 
+   if (!VECT_SCALAR_BOOLEAN_TYPE_P (TREE_TYPE (var)))
+     return NULL;
+ 
+   hash_set<gimple *> bool_stmts;
+ 
+-  rhs_code = gimple_assign_rhs_code (last_stmt);
+-  if (CONVERT_EXPR_CODE_P (rhs_code))
++  if (CONVERT_EXPR_CODE_P (rhs_code)
++      || rhs_code == VIEW_CONVERT_EXPR)
+     {
+       if (! INTEGRAL_TYPE_P (TREE_TYPE (lhs))
+ 	  || TYPE_PRECISION (TREE_TYPE (lhs)) == 1)
+diff --git a/gcc/tree-vrp.c b/gcc/tree-vrp.c
+index 2140101d7d2..324673b780c 100644
+--- a/gcc/tree-vrp.c
++++ b/gcc/tree-vrp.c
+@@ -3019,8 +3019,14 @@
+ 	      && ((TYPE_PRECISION (TREE_TYPE (name))
+ 		   > TYPE_PRECISION (TREE_TYPE (rhs1)))
+ 		  || (get_range_info (rhs1, &rmin, &rmax) == VR_RANGE
+-		      && wi::fits_to_tree_p (rmin, TREE_TYPE (name))
+-		      && wi::fits_to_tree_p (rmax, TREE_TYPE (name)))))
++		      && wi::fits_to_tree_p
++			   (widest_int::from (rmin,
++					      TYPE_SIGN (TREE_TYPE (rhs1))),
++			    TREE_TYPE (name))
++		      && wi::fits_to_tree_p
++			   (widest_int::from (rmax,
++					      TYPE_SIGN (TREE_TYPE (rhs1))),
++			    TREE_TYPE (name)))))
+ 	    add_assert_info (asserts, rhs1, rhs1,
+ 		 	     comp_code, fold_convert (TREE_TYPE (rhs1), val));
+ 	}
 diff --git a/gcc/tree.c b/gcc/tree.c
 index 32e94e48132..d747a0bf685 100644
 --- a/gcc/tree.c
