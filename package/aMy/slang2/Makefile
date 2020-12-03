@@ -77,4 +77,8 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/slang.pc $(1)/usr/lib/pkgconfig/
 endef
 
+define Package/libslang2/install
+       $(INSTALL_DIR) $(1)/usr/lib
+endef
+
 $(eval $(call BuildPackage,libslang2))
