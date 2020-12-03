@@ -10,7 +10,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=slang
-PKG_SOURCE_VERSION:=b567e09
+PKG_SOURCE_VERSION:=44b7bc7
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git://git.jedsoft.org/git/slang.git
@@ -47,7 +47,6 @@ endef
 TARGET_CFLAGS+= $(FPIC)
 
 CONFIGURE_ARGS+= \
-	--enable-largefile \
 	--enable-warnings \
 	--with-terminfo=default \
 	--with-readline=slang \
