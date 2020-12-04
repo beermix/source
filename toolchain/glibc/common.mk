@@ -12,8 +12,8 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=5c36293f067d2af16e4eb9f9465be36f346ea6d0
-PKG_MIRROR_HASH:=f01b467843af97fe29dd67d0dc52e8f2effc968258ae806af37be085239a3e4c
+PKG_SOURCE_VERSION:=050022910be1d1f5c11cd5168f1685ad4f9580d2
+PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -42,8 +42,8 @@ endif
 
 TARGET_CFLAGS := ${TARGET_CFLAGS/-Wl,-z,now/}
 TARGET_LDFLAGS := ${TARGET_LDFLAGS/-znow/}
-# TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
-# TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
+TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
+TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
@@ -52,7 +52,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -mstackrealign -march=bonnell -O2 -m32 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -mstackrealign -march=bonnell -O2 -m32 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -68,7 +68,7 @@ GLIBC_CONFIGURE:= \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_REGULAR),--enable-stack-protector=yes) \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
-		--enable-kernel=4.14.0
+		--enable-kernel=4.19.0
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
