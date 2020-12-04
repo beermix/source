@@ -61,8 +61,6 @@ CONFIGURE_ARGS = \
   --localstatedir=/var \
   --release-channel=nightly \
   --enable-lld \
-  --disable-docs \
-  --disable-compiler-docs \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \

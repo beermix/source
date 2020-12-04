@@ -15,7 +15,7 @@ index 5b045d4e..91606e78 100644
  # If chosen tool failed to build the installation fails. If `extended = false`, this
  # option is ignored.
 -#tools = ["cargo", "rls", "clippy", "rustfmt", "analysis", "src"]
-+tools = ["cargo", "rls", "clippy", "rustfmt", "analysis", "src"]
++tools = ["cargo", "analysis", "src"]
  
  # Verbosity level: 0 == not verbose, 1 == verbose, 2 == very verbose
  #verbose = 0
