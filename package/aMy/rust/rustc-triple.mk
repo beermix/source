@@ -21,14 +21,6 @@ armv7-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf \
 armv7-unknown-linux-musleabi \
 \
 x86_64-unknown-linux-gnu x86_64-unknown-linux-musl
-\
-i386-unknown-linux-gnu i386-unknown-linux-musl \
-\
-i486-unknown-linux-gnu i486-unknown-linux-musl \
-\
-i586-unknown-linux-gnu i586-unknown-linux-musl \
-\
-i686-unknown-linux-gnu i686-unknown-linux-musl \
 
 #RUSTC_ARCH_TARGETS:= \
 aarch64-unknown-linux-gnu aarch64-unknown-linux-musl \
@@ -44,10 +36,6 @@ armv7-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf \
 armv7-unknown-linux-musleabi \
 \
 hexagon-unknown-linux-musl \
-\
-i386-unknown-linux-gnu i386-unknown-linux-musl \
-\
-i486-unknown-linux-gnu i486-unknown-linux-musl \
 \
 i586-unknown-linux-gnu i586-unknown-linux-musl \
 \
