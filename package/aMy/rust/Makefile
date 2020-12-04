@@ -46,6 +46,7 @@ CONFIGURE_ARGS = \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
   --release-channel=nightly \
+  --enable-lld \
   --enable-llvm-link-shared \
   --llvm-root=/usr/lib/llvm-8 \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
@@ -93,8 +94,8 @@ define Host/Compile
 	  ( cd $(HOST_BUILD_DIR) && \
 	     ( RUST_BACKTRACE=full \
 		$(PYTHON) x.py --config ./config.toml dist cargo extended \
-		   library/std miri rust-dev rustc-dev src \
-		   src/librustc src/tools/build-manifest ) && \
+		   library/std llvm-tools miri rust-dev rustc-dev src \
+		   src/librustc src/lldb_batchmode.py src/tools/build-manifest ) && \
 		   ( $(RUST_INSTALL_BINARIES)))
 endef
 
