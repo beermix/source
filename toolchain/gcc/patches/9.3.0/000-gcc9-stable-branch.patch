@@ -88,7 +88,8 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (264):
+GCC Administrator (265):
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -5886,10 +5887,17 @@ index fde2d2b76eb..79e6d9bb1ec 100644
 +        else:
 +            print('Please resolve all remaining file conflicts.')
 diff --git a/gcc/ChangeLog b/gcc/ChangeLog
-index d8e53874e68..d0fd7bd2005 100644
+index d8e53874e68..5a06c0021e4 100644
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2405 @@
+@@ -1,3 +1,2412 @@
++2020-12-03  Uroš Bizjak  <ubizjak@gmail.com>
++	    Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/98086
++	* config/i386/i386.c (ix86_md_asm_adjustmd): Rewrite
++	zero-extension part to use convert_to_mode.
++
 +2020-12-02  Richard Biener  <rguenther@suse.de>
 +
 +	Backported from master:
