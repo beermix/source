@@ -134,8 +134,8 @@ define Package/rust
   CATEGORY:=Languages
   TITLE:=Rust Programming Language Compiler
   URL:=https://www.rust-lang.org/
-  DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml \
-+libyaml-cpp +libunwind +openssl-util +python3-yaml
+  #DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml \
+    +libyaml-cpp +libunwind +openssl-util +python3-yaml
 endef
 
 define Package/rust/description
