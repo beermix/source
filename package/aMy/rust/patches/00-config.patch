@@ -1,0 +1,175 @@
+diff --git a/config.toml.example b/config.toml.example
+index 5b045d4e..d2912e08 100644
+--- a/config.toml.example
++++ b/config.toml.example
+@@ -92,13 +92,13 @@ changelog-seen = 2
+ # support. You'll need to write a target specification at least, and most
+ # likely, teach rustc about the C ABI of the target. Get in touch with the
+ # Rust team and file an issue if you need assistance in porting!
+-#targets = "AArch64;ARM;Hexagon;MSP430;Mips;NVPTX;PowerPC;RISCV;Sparc;SystemZ;WebAssembly;X86"
++targets = "X86"
+ 
+ # LLVM experimental targets to build support for. These targets are specified in
+ # the same format as above, but since these targets are experimental, they are
+ # not built by default and the experimental Rust compilation targets that depend
+ # on them will not work unless the user opts in to building them.
+-#experimental-targets = "AVR"
++experimental-targets = ""
+ 
+ # Cap the number of parallel linker invocations when compiling LLVM.
+ # This can be useful when building LLVM with debug info, which significantly
+@@ -204,18 +204,18 @@ changelog-seen = 2
+ # Flag to specify whether any documentation is built. If false, rustdoc and
+ # friends will still be compiled but they will not be used to generate any
+ # documentation.
+-#docs = true
++docs = false
+ 
+ # Indicate whether the compiler should be documented in addition to the standard
+ # library and facade crates.
+-#compiler-docs = false
++compiler-docs = false
+ 
+ # Indicate whether git submodules are managed and updated automatically.
+-#submodules = true
++submodules = true
+ 
+ # Update git submodules only when the checked out commit in the submodules differs
+ # from what is committed in the main rustc repo.
+-#fast-submodules = true
++fast-submodules = true
+ 
+ # The path to (or name of) the GDB executable to use. This is only used for
+ # executing the debuginfo test suite.
+@@ -228,15 +228,15 @@ changelog-seen = 2
+ # Python interpreter to use for various tasks throughout the build, notably
+ # rustdoc tests, the lldb python interpreter, and some dist bits and pieces.
+ #
+-# Defaults to the Python interpreter used to execute x.py
+-#python = "python"
++# Defaults to the Python interpreter used to execute x.py.
++python = "python"
+ 
+ # Force Cargo to check that Cargo.lock describes the precise dependency
+ # set that all the Cargo.toml files create, instead of updating it.
+ #locked-deps = false
+ 
+ # Indicate whether the vendored sources are used for Rust dependencies or not
+-#vendor = false
++vendor = true
+ 
+ # Typically the build system will build the Rust compiler twice. The second
+ # compiler, however, will simply use its own libraries to link against. If you
+@@ -250,7 +250,7 @@ changelog-seen = 2
+ # which are used to install Rust and Cargo together. This is disabled by
+ # default. The `tools` option (immediately below) specifies which tools should
+ # be built if `extended = true`.
+-#extended = false
++extended = true
+ 
+ # Installs chosen set of extended tools if `extended = true`. By default builds all.
+ # If chosen tool failed to build the installation fails. If `extended = false`, this
+@@ -258,10 +258,10 @@ changelog-seen = 2
+ #tools = ["cargo", "rls", "clippy", "rustfmt", "analysis", "src"]
+ 
+ # Verbosity level: 0 == not verbose, 1 == verbose, 2 == very verbose
+-#verbose = 0
++verbose = 0
+ 
+ # Build the sanitizer runtimes
+-#sanitizers = false
++sanitizers = false
+ 
+ # Build the profiler runtime (required when compiling with options that depend
+ # on this runtime, such as `-C profile-generate` or `-Z instrument-coverage`).
+@@ -354,7 +354,7 @@ changelog-seen = 2
+ #       "maximally debuggable" environment (notably libstd) takes
+ #       hours to build.
+ #
+-#debug = false
++debug = false
+ 
+ # Number of codegen units to use for each compiler invocation. A value of 0
+ # means "the number of cores on this machine", and 1+ is passed through to the
+@@ -405,26 +405,26 @@ changelog-seen = 2
+ # and will slow down the linking process significantly.
+ #
+ # Defaults to 1 if debug is true
+-#debuginfo-level = 0
++debuginfo-level = 0
+ 
+ # Debuginfo level for the compiler.
+ #
+ # Defaults to rust.debuginfo-level value
+-#debuginfo-level-rustc = 0
++debuginfo-level-rustc = 0
+ 
+ # Debuginfo level for the standard library.
+ #
+ # Defaults to rust.debuginfo-level value
+-#debuginfo-level-std = 0
++ebuginfo-level-std = 0
+ 
+ # Debuginfo level for the tools.
+ #
+ # Defaults to rust.debuginfo-level value
+-#debuginfo-level-tools = 0
++debuginfo-level-tools = 0
+ 
+ # Debuginfo level for the test suites run with compiletest.
+ # FIXME(#61117): Some tests fail when this option is enabled.
+-#debuginfo-level-tests = 0
++debuginfo-level-tests = 0
+ 
+ # Whether or not `panic!`s generate backtraces (RUST_BACKTRACE)
+ #backtrace = true
+@@ -478,7 +478,7 @@ changelog-seen = 2
+ #ignore-git = true
+ 
+ # When creating source tarballs whether or not to create a source tarball.
+-#dist-src = false
++dist-src = false
+ 
+ # After building or testing extended tools (e.g. clippy and rustfmt), append the
+ # result (broken, compiling, testing) into this JSON file.
+@@ -507,7 +507,7 @@ changelog-seen = 2
+ #llvm-tools = false
+ 
+ # Whether to deny warnings in crates
+-#deny-warnings = true
++deny-warnings = true
+ 
+ # Print backtrace on internal compiler errors during bootstrap
+ #backtrace-on-ice = false
+@@ -523,7 +523,7 @@ changelog-seen = 2
+ #thin-lto-import-instr-limit = 100
+ 
+ # Map debuginfo paths to `/rust/$sha/...`, generally only set for releases
+-#remap-debuginfo = false
++remap-debuginfo = false
+ 
+ # Link the compiler against `jemalloc`, where on Linux and OSX it should
+ # override the default allocator for rustc and LLVM.
+@@ -536,11 +536,11 @@ changelog-seen = 2
+ 
+ # Use LLVM libunwind as the implementation for Rust's unwinder.
+ # Accepted values are 'in-tree' (formerly true), 'system' or 'no' (formerly false).
+-#llvm-libunwind = 'no'
++llvm-libunwind = 'no'
+ 
+ # Enable Windows Control Flow Guard checks in the standard library.
+ # This only applies from stage 1 onwards, and only for Windows targets.
+-#control-flow-guard = false
++control-flow-guard = false
+ 
+ # Enable symbol-mangling-version v0. This can be helpful when profiling rustc,
+ # as generics will be preserved in symbols (rather than erased into opaque T).
+@@ -604,7 +604,7 @@ changelog-seen = 2
+ # this target is a host for rustc, this will also affect the linkage of the
+ # compiler itself. This is useful for building rustc on targets that normally
+ # only use static libraries. If unset, the target's default linkage is used.
+-#crt-static = false
++crt-static = false
+ 
+ # The root location of the musl installation directory. The library directory
+ # will also need to contain libunwind.a for an unwinding implementation. Note
