@@ -46,7 +46,11 @@ CONFIGURE_ARGS = \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
   --release-channel=nightly \
-  --enable-lld \
+  --enable-sccache \
+  --enable-optimize-llvm \
+  --enable-optimize \
+  --enable-llvm-link-shared \
+  --llvm-root=/usr/lib/llvm-8 \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
