@@ -6,7 +6,7 @@
 #
 include $(TOPDIR)/rules.mk
 
-ARCH:=i686
+ARCH:=i386
 BOARD:=x86
 BOARDNAME:=x86
 FEATURES:=squashfs ext4 vdi vmdk pcmcia targz fpu boot-part rootfs-part
