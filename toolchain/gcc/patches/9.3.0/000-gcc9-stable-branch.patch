@@ -731,7 +731,7 @@ Rainer Orth (2):
       libstdc++: Update Solaris baselines for GCC 9.4
       libsanitizer: Fix GetPcSpBp determination of SP on 32-bit Solaris/x86
 
-Richard Biener (21):
+Richard Biener (22):
       tree-optimization/94163 constrain alignment set by PRE
       middle-end/94206 fix memset folding to avoid types with padding
       tree-optimization/94103 avoid CSE of loads with padding
@@ -753,6 +753,7 @@ Richard Biener (21):
       tree-optimization/97812 - fix range query in VRP assert discovery
       middle-end/96369 - fix missed short-circuiting during range folding
       tree-optimization/96075 - fix bogus misalignment calculation
+      tree-optimization/96075 - adjust testcase
 
 Richard Earnshaw (1):
       arm: correct constraints on movsi_compare0 [PR91913]
@@ -27691,8 +27692,6 @@ index a6c56392acd..de4a2e06102 100644
 diff --git a/libgcc/configure b/libgcc/configure
 old mode 100644
 new mode 100755
-index 36dbbc1f699..8ceec1d047f
---- a/libgcc/configure
 +++ b/libgcc/configure
 @@ -674,6 +674,7 @@
  docdir
