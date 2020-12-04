@@ -5,24 +5,7 @@
 # You will need to add --host=$(RUSTC_TARGET_ARCH) to your packages
 # CONFIGURE_VARS to cross-compile for the target architecture
 
-ifeq ($(CONFIG_X86),y)
-RUST_ARCH:=i686
-else
-RUST_ARCH:=$(ARCH)
-endif
-
-CONFIG_HOST_SUFFIX:=$(shell cut -d"-" -f4 <<<"$(GNU_HOST_NAME)")
-
 RUSTC_ARCH_TARGETS:= \
-mips64-unknown-linux-gnuabi64 mips64-unknown-linux-muslabi64 \
-mips64-unknown-linux-gnuabi64sf mips64-unknown-linux-muslabi64sf \
-\
-armv7-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf \
-armv7-unknown-linux-musleabi \
-\
-i686-unknown-linux-gnu i686-unknown-linux-musl
-
-#RUSTC_ARCH_TARGETS:= \
 aarch64-unknown-linux-gnu aarch64-unknown-linux-musl \
 \
 arm-unknown-linux-gnueabi arm-unknown-linux-gnueabihf \
@@ -44,7 +27,6 @@ i686-unknown-linux-gnu i686-unknown-linux-musl \
 mips-unknown-linux-gnu mips-unknown-linux-musl mips-unknown-linux-uclibc \
 \
 mips64-unknown-linux-gnuabi64 mips64-unknown-linux-muslabi64 \
-mips64-unknown-linux-gnuabi64sf mips64-unknown-linux-muslabi64sf \
 \
 mips64el-unknown-linux-gnuabi64 mips64el-unknown-linux-muslabi64 \
 \
@@ -73,29 +55,12 @@ thumbv7neon-unknown-linux-gnueabihf thumbv7neon-unknown-linux-musleabihf \
 \
 x86_64-unknown-linux-gnu x86_64-unknown-linux-musl
 
-RUSTC_HOST_ARCH:= \
-	$(strip $(foreach \
-		v, \
-		$(filter $(HOST_ARCH)-%, $(RUSTC_ARCH_TARGETS)), \
-		$(if $(findstring -$(CONFIG_HOST_SUFFIX:"%"=%),$v),$v) \
-		) \
-	)
-
-RUSTC_TARGET_ARCH_BASE:= \
-	$(strip $(foreach \
-		v, \
-		$(filter $(RUST_ARCH)-%, $(RUSTC_ARCH_TARGETS)), \
-		$(if $(findstring -$(CONFIG_TARGET_SUFFIX:"%"=%),$v),$v) \
-		) \
-	)
-
-#$(info 1 Arch:$(ARCH) RustArch:$(RUST_ARCH) HSuffix:$(CONFIG_HOST_SUFFIX:"%"=%) TSuffix:$(CONFIG_TARGET_SUFFIX:"%"=%) RUSTC_HOST_ARCH:$(RUSTC_HOST_ARCH) RUSTC_TARGET_ARCH_BASE:$(RUSTC_TARGET_ARCH_BASE))
-
-# Check to see if it's a soft-float target
-ifeq ($(CONFIG_SOFT_FLOAT),y)
-RUSTC_TARGET_ARCH:=$(strip $(filter %sf, $(RUSTC_TARGET_ARCH_BASE)))
+ifeq ($(CONFIG_LIBC_USE_MUSL),y)
+RUSTC_TARGET_ARCH:=$(strip $(foreach v,$(filter $(ARCH)-%, $(RUSTC_ARCH_TARGETS)), $(if $(findstring -musl,$v),$v)))
+else ifeq ($(CONFIG_LIBC_USE_GLIBC),y)
+RUSTC_TARGET_ARCH:=$(strip $(foreach v,$(filter $(ARCH)-%, $(RUSTC_ARCH_TARGETS)), $(if $(findstring -gnu,$v),$v)))
 else
-RUSTC_TARGET_ARCH:=$(strip $(filter-out %sf, $(RUSTC_TARGET_ARCH_BASE)))
+RUSTC_TARGET_ARCH:=$(strip $(foreach v,$(filter $(ARCH)-%, $(RUSTC_ARCH_TARGETS)), $(if $(findstring -uclibc,$v),$v)))
 endif
 
 # For Testing - Override
