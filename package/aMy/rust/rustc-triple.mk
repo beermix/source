@@ -5,8 +5,8 @@
 # You will need to add --host=$(RUSTC_TARGET_ARCH) to your packages
 # CONFIGURE_VARS to cross-compile for the target architecture
 
-ifeq ($(CONFIG_arm_v7),y)
-RUST_ARCH:=armv7
+ifeq ($(CONFIG_X86),y)
+RUST_ARCH:=i686
 else
 RUST_ARCH:=$(ARCH)
 endif
@@ -36,8 +36,6 @@ armv7-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf \
 armv7-unknown-linux-musleabi \
 \
 hexagon-unknown-linux-musl \
-\
-i386-unknown-linux-gnu i386-unknown-linux-musl \
 \
 i586-unknown-linux-gnu i586-unknown-linux-musl \
 \
@@ -101,7 +99,7 @@ RUSTC_TARGET_ARCH:=$(strip $(filter-out %sf, $(RUSTC_TARGET_ARCH_BASE)))
 endif
 
 # For Testing - Override
-#RUSTC_TARGET_ARCH:=mips64-unknown-linux-muslabi64
+#RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
 
 # More than one triple-target remains.
 ifneq ($(word 2, $(RUSTC_TARGET_ARCH)),)
