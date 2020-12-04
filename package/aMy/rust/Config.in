@@ -116,6 +116,6 @@ menu "Compiler Options"
 
 	config RUST_FULL_BOOTSTRAP
 		bool "Full Bootstrap - Build three compilers instead of two (--enable-full-bootstrap)"
-		default y
+		default n
 
 endmenu
