@@ -5,14 +5,13 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
 PKG_VERSION:=1.49.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENSE:=Apache-2.0 MIT
 PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
-PKG_SOURCE_DATE:=2020-11-11
-#PKG_SOURCE_VERSION:=b2d115f6db5172c961dfeb50de15f35784dbc7c9
+PKG_SOURCE_DATE:=2020-12-04
 PKG_SOURCE_VERSION:=5be3f9f10e9fd59ea03816840a6051413fbdefae
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
@@ -139,8 +138,7 @@ define Package/rust
   CATEGORY:=Languages
   TITLE:=Rust Programming Language Compiler
   URL:=https://www.rust-lang.org/
-  DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml \
-    +libyaml-cpp +libunwind +openssl-util +python3-yaml
+  DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml +libyaml-cpp +libunwind +openssl-util +python3-yaml
 endef
 
 define Package/rust/description
