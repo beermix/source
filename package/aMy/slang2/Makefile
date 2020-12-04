@@ -10,7 +10,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=slang
-PKG_SOURCE_VERSION:=44b7bc7
+PKG_SOURCE_VERSION:=v2.3.2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git://git.jedsoft.org/git/slang.git
