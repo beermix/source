@@ -5,10 +5,10 @@
 # You will need to add --host=$(RUSTC_TARGET_ARCH) to your packages
 # CONFIGURE_VARS to cross-compile for the target architecture
 
-ifeq ($(CONFIG_X86),y)
+ifeq ($(CONFIG_X86_32),y)
 RUST_ARCH:=i686
 else
-RUST_ARCH:=i686
+RUST_ARCH:=$(ARCH)
 endif
 
 CONFIG_HOST_SUFFIX:=$(shell cut -d"-" -f4 <<<"$(GNU_HOST_NAME)")
@@ -103,7 +103,7 @@ RUSTC_TARGET_ARCH:=$(strip $(filter-out %sf, $(RUSTC_TARGET_ARCH_BASE)))
 endif
 
 # For Testing - Override
-#RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
+#RUSTC_TARGET_ARCH:=mips64-unknown-linux-muslabi64
 
 # More than one triple-target remains.
 ifneq ($(word 2, $(RUSTC_TARGET_ARCH)),)
