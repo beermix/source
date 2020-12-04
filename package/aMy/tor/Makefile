@@ -18,6 +18,7 @@ PKG_SOURCE_URL:=https://dist.torproject.org/ \
 PKG_HASH:=5f154c155803adf5c89e87cab53017b6908c5ebe50c65839e8cf4fbd2abe1fdc
 PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
 		Peter Wagner <tripolar@gmx.at>
+PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:torproject:tor
 
 #PKG_VERSION:=adf81fb
@@ -138,7 +139,6 @@ CONFIGURE_ARGS += \
 	--disable-unittests \
 	--disable-lzma \
 	--disable-zstd \
-	--disable-systemd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--enable-pic
