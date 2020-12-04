@@ -376,7 +376,7 @@ H.J. Lu (10):
 Haijian Zhang (1):
       pr94780.c fails with ICE on aarch64 [PR94820]
 
-Harald Anlauf (26):
+Harald Anlauf (27):
       PR fortran/93364 - ICE in gfc_set_array_spec, at fortran/array.c:879
       PR fortran/95104 - Segfault on a legal WAIT statement
       PR fortran/95104 - Segfault on a legal WAIT statement
@@ -403,6 +403,7 @@ Harald Anlauf (26):
       PR fortran/93423 - ICE on invalid with argument list for module procedure
       PR fortran/97272 - Wrong answer from MAXLOC with character arg
       PR libfortran/97063 - Wrong result for vector (step size is negative) * matrix
+      PR fortran/95342 - ICE in gfc_match_subroutine, at fortran/decl.c:7913
 
 Hongyu Wang (1):
       Add missing FSF copyright notes for x86 intrinsic headers.
@@ -23220,7 +23221,7 @@ index 9117121e5fe..ab3df62170a 100644
    if ((derived->attr.use_assoc || derived->attr.used_in_submodule)
         && !derived->attr.vtype && !derived->attr.is_class)
 diff --git a/gcc/fortran/decl.c b/gcc/fortran/decl.c
-index abff4af9f67..b7987fb24ba 100644
+index abff4af9f67..00321da827e 100644
 --- a/gcc/fortran/decl.c
 +++ b/gcc/fortran/decl.c
 @@ -668,6 +668,10 @@
@@ -23352,7 +23353,23 @@ index abff4af9f67..b7987fb24ba 100644
  	      m = MATCH_ERROR;
  	      goto cleanup;
  	    }
-@@ -8962,7 +8991,7 @@
+@@ -7281,6 +7310,7 @@
+      procedure interface body.  */
+     if (sym->attr.is_bind_c && sym->attr.module_procedure && sym->old_symbol
+   	&& strcmp (sym->name, sym->old_symbol->name) == 0
++	&& sym->binding_label && sym->old_symbol->binding_label
+ 	&& strcmp (sym->binding_label, sym->old_symbol->binding_label) != 0)
+       {
+ 	  const char *null = "NULL", *s1, *s2;
+@@ -7796,6 +7826,7 @@
+ 	 procedure interface body.  */
+       if (sym->attr.module_procedure && sym->old_symbol
+   	  && strcmp (sym->name, sym->old_symbol->name) == 0
++	  && sym->binding_label && sym->old_symbol->binding_label
+ 	  && strcmp (sym->binding_label, sym->old_symbol->binding_label) != 0)
+ 	{
+ 	  const char *null = "NULL", *s1, *s2;
+@@ -8962,7 +8993,7 @@
  	  else
  	    {
  	      gfc_error ("Access specification of the .%s. operator at %C "
@@ -23361,7 +23378,7 @@ index abff4af9f67..b7987fb24ba 100644
  	      goto done;
  	    }
  
-@@ -9602,13 +9631,20 @@
+@@ -9602,13 +9633,20 @@
    if (get_proc_name (name, &sym, false))
      return MATCH_ERROR;
  
@@ -23387,7 +23404,7 @@ index abff4af9f67..b7987fb24ba 100644
        else
  	sym->result = sym;
      }
-@@ -9657,6 +9693,15 @@
+@@ -9657,6 +9695,15 @@
  
    if (gfc_match_eos () != MATCH_YES)
      {
