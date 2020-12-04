@@ -4,16 +4,30 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
-PKG_VERSION:=1.48.0
-PKG_RELEASE:=1
-PKG_LICENSE:=Apache-2.0 MIT
-PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
+#PKG_VERSION:=1.49.0
+#PKG_RELEASE:=1
+#PKG_LICENSE:=Apache-2.0 MIT
+#PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
-PKG_SOURCE_DATE:=2020-11-11
-#PKG_SOURCE_VERSION:=b2d115f6db5172c961dfeb50de15f35784dbc7c9
-PKG_SOURCE_VERSION:=5a6a41e7847ff5f85a31b87431ce2af29c567f1d
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
+#PKG_SOURCE_DATE:=2020-12-04
+#PKG_SOURCE_VERSION:=2218520b8adf8b8e64b817537d9eb0a84840e2f1
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
+
+
+PKG_VERSION:=1.48.0
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)c-$(PKG_VERSION)-src
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://static.rust-lang.org/dist
+#PKG_BUILD_DIR:=$(PKG_NAME)c-$(PKG_VERSION)-src
+
+#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+#PKG_SOURCE_VERSION:=d94c245ea47859cda5b4b7373308589206b97bdc
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
+#PKG_MAINTAINER:=semigodking <semigodking@gmail.com>
+#PKG_BUIL#_DIR:=$(BUILD_DIR)/$(PKG_NAME)/$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
 
@@ -46,6 +60,7 @@ CONFIGURE_ARGS = \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
   --release-channel=stable \
+  --enable-lld \
   --enable-extended \
   --tools="analysis,cargo,src" \
   --enable-locked-deps \
