@@ -96,7 +96,7 @@ menu "Compiler Options"
 
 	config RUST_OPTIMIZE_LLVM
 		bool "Build optimized LLVM (--enable-optimize-llvm)"
-		default y
+		default n
 
 	config RUST_LLVM_ASSERTIONS
 		bool "Build LLVM with assertions (--enable-llvm-assertions)"
@@ -116,6 +116,6 @@ menu "Compiler Options"
 
 	config RUST_FULL_BOOTSTRAP
 		bool "Full Bootstrap - Build three compilers instead of two (--enable-full-bootstrap)"
-		default n
+		default y
 
 endmenu
