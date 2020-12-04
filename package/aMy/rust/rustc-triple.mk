@@ -99,7 +99,7 @@ RUSTC_TARGET_ARCH:=$(strip $(filter-out %sf, $(RUSTC_TARGET_ARCH_BASE)))
 endif
 
 # For Testing - Override
-#RUSTC_TARGET_ARCH:=mips64-unknown-linux-muslabi64
+RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
 
 # More than one triple-target remains.
 ifneq ($(word 2, $(RUSTC_TARGET_ARCH)),)
