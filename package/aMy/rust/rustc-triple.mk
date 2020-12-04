@@ -6,7 +6,7 @@
 # CONFIGURE_VARS to cross-compile for the target architecture
 
 ifeq ($(CONFIG_X86),y)
-RUST_ARCH:=i686
+RUST_ARCH:=i486
 else
 RUST_ARCH:=$(ARCH)
 endif
@@ -37,7 +37,7 @@ armv7-unknown-linux-musleabi \
 \
 hexagon-unknown-linux-musl \
 \
-i586-unknown-linux-gnu i586-unknown-linux-musl \
+i486-unknown-linux-gnu i486-unknown-linux-musl \
 \
 i686-unknown-linux-gnu i686-unknown-linux-musl \
 \
