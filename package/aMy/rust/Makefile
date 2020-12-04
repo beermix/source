@@ -46,9 +46,7 @@ CONFIGURE_ARGS = \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
   --release-channel=stable \
-  --enable-extended \
-  --tools="analysis,cargo,src" \
-  --enable-locked-deps \
+  --enable-lld \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
