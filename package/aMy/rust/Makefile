@@ -59,7 +59,7 @@ CONFIGURE_ARGS = \
   --mandir=$(CARGO_HOME)/man \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
-  --release-channel=nightly \
+  --release-channel=stable \
   --enable-lld \
   --enable-extended \
   --tools="analysis,cargo,src" \
