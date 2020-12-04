@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsodium
-PKG_SOURCE_VERSION:=04b44a4
+PKG_SOURCE_VERSION:=3a832c1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium
@@ -49,7 +49,7 @@ menu "Configuration"
 endmenu
 endef
 
-# TARGET_CFLAGS := -Ofast $(filter-out -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := -Ofast $(filter-out -O%,$(TARGET_CFLAGS))
 # TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
 
 CONFIGURE_ARGS+= \
