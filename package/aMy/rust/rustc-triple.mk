@@ -5,7 +5,24 @@
 # You will need to add --host=$(RUSTC_TARGET_ARCH) to your packages
 # CONFIGURE_VARS to cross-compile for the target architecture
 
+ifeq ($(CONFIG_arm_v7),y)
+RUST_ARCH:=armv7
+else
+RUST_ARCH:=$(ARCH)
+endif
+
+CONFIG_HOST_SUFFIX:=$(shell cut -d"-" -f4 <<<"$(GNU_HOST_NAME)")
+
 RUSTC_ARCH_TARGETS:= \
+mips64-unknown-linux-gnuabi64 mips64-unknown-linux-muslabi64 \
+mips64-unknown-linux-gnuabi64sf mips64-unknown-linux-muslabi64sf \
+\
+armv7-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf \
+armv7-unknown-linux-musleabi \
+\
+i686-unknown-linux-gnu i686-unknown-linux-musl
+
+#RUSTC_ARCH_TARGETS:= \
 aarch64-unknown-linux-gnu aarch64-unknown-linux-musl \
 \
 arm-unknown-linux-gnueabi arm-unknown-linux-gnueabihf \
@@ -27,6 +44,7 @@ i686-unknown-linux-gnu i686-unknown-linux-musl \
 mips-unknown-linux-gnu mips-unknown-linux-musl mips-unknown-linux-uclibc \
 \
 mips64-unknown-linux-gnuabi64 mips64-unknown-linux-muslabi64 \
+mips64-unknown-linux-gnuabi64sf mips64-unknown-linux-muslabi64sf \
 \
 mips64el-unknown-linux-gnuabi64 mips64el-unknown-linux-muslabi64 \
 \
