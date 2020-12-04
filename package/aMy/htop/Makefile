@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-PKG_SOURCE_VERSION:=1f9e2de
+PKG_SOURCE_VERSION:=bc16fa0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/htop-dev/htop.git
@@ -39,10 +39,10 @@ define Package/htop/description
 endef
 
 CONFIGURE_ARGS += \
-	--disable-unicode \
 	--enable-setuid \
 	--enable-taskstats \
-	--enable-linux-affinity
+	--enable-linux-affinity \
+	--with-sensors
 
 CONFIGURE_VARS += \
 	ac_cv_file__proc_stat=yes \

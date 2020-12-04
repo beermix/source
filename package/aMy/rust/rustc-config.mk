@@ -28,7 +28,7 @@ CONFIGURE_ARGS += --enable-verbose-tests
 endif
 
 ifeq ($(CONFIG_RUST_CCACHE),y)
-CONFIGURE_ARGS += --enable-ccache
+CONFIGURE_ARGS += --enable-ccache --enable-sccache
 endif
 
 ifeq ($(CONFIG_RUST_LLVM_STATIC),y)
