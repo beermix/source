@@ -37,6 +37,8 @@ armv7-unknown-linux-musleabi \
 \
 hexagon-unknown-linux-musl \
 \
+i386-unknown-linux-gnu i386-unknown-linux-musl \
+\
 i586-unknown-linux-gnu i586-unknown-linux-musl \
 \
 i686-unknown-linux-gnu i686-unknown-linux-musl \
