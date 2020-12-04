@@ -202,7 +202,7 @@ config ARCH
 	default "arceb"     if arceb
 	default "arm"       if arm
 	default "armeb"     if armeb
-	default "i686"      if i686
+	default "i386"      if i386
 	default "i686"      if i686
 	default "m68k"      if m68k
 	default "mips"      if mips
