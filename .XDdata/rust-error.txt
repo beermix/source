@@ -1,0 +1,18 @@
+Compiling build-manifest v0.1.0 (/home/user/ledex/build_dir/hostpkg/rust-1.48.0/src/tools/build-manifest)
+    Finished release [optimized] target(s) in 18.54s
+Build completed successfully in 1:03:21
+tar (child): rust-1.48.0-x86_64-unknown-linux-gnu_i686-unknown-linux-musl-install.tar.xz: Cannot open: No such file or directory
+tar (child): Error is not recoverable: exiting now
+tar: Child returned status 2
+tar: Error is not recoverable: exiting now
+find: './*': No such file or directory
+make[2]: *** [Makefile:151: /home/user/ledex/build_dir/hostpkg/rust-1.48.0/.built] Error 1
+make[2]: Leaving directory '/home/user/ledex/package/aMy/rust'
+time: package/aMy/rust/host-compile#25171.71#907.53#3810.39
+    ERROR: package/aMy/rust [host] failed to build.
+make[1]: *** [package/Makefile:112: package/aMy/rust/host/compile] Error 1
+make[1]: Leaving directory '/home/user/ledex'
+make: *** [/home/user/ledex/include/toplevel.mk:242: package/rust/host/compile] Error 2
+noti: exit status 2
+noti --time ionice -c 3 nice -n19 make package/rust/host/compile V=s -j8  25182.27s user 909.63s system 682% cpu 1:03:43.24 total
+~/ledex (master ✔)
