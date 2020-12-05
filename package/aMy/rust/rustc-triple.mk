@@ -2,7 +2,7 @@
 # include $(TOPDIR)/feeds/packages/lang/rustup/rustc-triple.mk
 # below include $(TOPDIR)/rules.mk
 #
-# You will need to add --host=i686-unknown-linux-musl to your packages
+# You will need to add --host=$(RUSTC_TARGET_ARCH) to your packages
 # CONFIGURE_VARS to cross-compile for the target architecture
 
 ifeq ($(CONFIG_arm_v7),y)
