@@ -47,8 +47,6 @@ CONFIGURE_ARGS = \
   --localstatedir=/var \
   --release-channel=nightly \
   --enable-lld \
-  --enable-llvm-link-shared \
-  --llvm-root=/usr/lib/llvm-11 \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
@@ -131,7 +129,8 @@ define Package/rust
   CATEGORY:=Languages
   TITLE:=Rust Programming Language Compiler
   URL:=https://www.rust-lang.org/
-  DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml +libyaml-cpp +libunwind +openssl-util +python3-yaml
+  DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml \
+    +libyaml-cpp +libunwind +openssl-util +python3-yaml
 endef
 
 define Package/rust/description
