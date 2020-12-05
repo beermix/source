@@ -45,7 +45,7 @@ CONFIGURE_ARGS = \
   --mandir=$(CARGO_HOME)/man \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
-  --release-channel=stable \
+  --release-channel=nightly \
   --enable-lld \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
@@ -57,9 +57,10 @@ CONFIGURE_ARGS = \
 include ./rustc-config.mk
 
 RUST_TMP_DIR:=$(TMP_DIR)/rust-install
-RUST_INSTALL_FILE_NAME:=$(PKG_NAME)-$(PKG_VERSION)-install.tar.xz
+RUST_INSTALL_FILE_NAME:=$(PKG_NAME)-$(PKG_VERSION)-$(RUSTC_HOST_ARCH)_$(RUSTC_TARGET_ARCH)-install.tar.xz
 RUST_INSTALL_FILE_VERIFY:=$(call check_hash,$(RUST_INSTALL_FILE_NAME),$(RUST_INSTALL_FILE_HASH),RUST_INSTALL_FILE_HASH)
 RUST_INSTALL_UNINSTALL:=$(CARGO_HOME)/lib/rustlib/uninstall.sh
+RUST_INSTALL_BINARIES:=$(CURDIR)/install_binaries.sh $(RUST_TMP_DIR) $(RUST_INSTALL_FILE_NAME) $(CARGO_HOME)
 RUST_INSTALL_FILE_HASH:=skip
 
 RUST_BINARY=$(or $(and $(wildcard $(DL_DIR)/$(RUST_INSTALL_FILE_NAME)),true),false)
@@ -78,21 +79,22 @@ define Host/Configure
 	$(info In Configure)
 	# Required because OpenWrt Default CONFIGURE_ARGS contain extra
 	# args that cause errors
-	[ $(RUST_BINARY) = true ] && true || \
-	   cd $(HOST_BUILD_DIR) && \
+	[ $(RUST_BINARY) = true ] && \
+	( true ) || \
+	  ( cd $(HOST_BUILD_DIR) && \
 	     RUST_BACKTRACE=full \
-		./configure $(CONFIGURE_ARGS)
+		./configure $(CONFIGURE_ARGS) )
 endef
 
 define Host/Compile
 	$(info In Compile)
-	[ $(RUST_BINARY) = true ] && true || \
-	  cd $(HOST_BUILD_DIR) && \
-	     RUST_BACKTRACE=full \
+	[ $(RUST_BINARY) = true ] && ( true ) || \
+	  ( cd $(HOST_BUILD_DIR) && \
+	     ( RUST_BACKTRACE=full \
 		$(PYTHON) x.py --config ./config.toml dist cargo extended \
 		   library/std llvm-tools miri rust-dev rustc-dev src \
-		   src/librustc src/lldb_batchmode.py src/tools/build-manifest
-	$(call Host/CreateBinaries)
+		   src/librustc src/lldb_batchmode.py src/tools/build-manifest ) && \
+		   ( $(RUST_INSTALL_BINARIES)))
 endef
 
 define Host/CreateBinaries
@@ -120,6 +122,9 @@ define Host/Prepare
 	# rather than needing the version number.
 	[ -L $(BUILD_DIR_HOST)/rust ] || \
 	   (cd $(BUILD_DIR_HOST); ln -s "$(PKG_NAME)-$(PKG_VERSION)" rust)
+
+	[ -d $(RUST_TMP_DIR) ] || \
+	   mkdir -p $(RUST_TMP_DIR)
 
 	$(call Host/Prepare/Default)
 endef
