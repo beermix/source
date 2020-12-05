@@ -26,8 +26,8 @@ include ./rustc-triple.mk
 HOST_BUILD_DEPENDS:=rust/host ninja/host python3/host
 CMAKE_INSTALL:=1
 
-gen_sha256sum=$(shell mkhash sha256 $(DL_DIR)/$(1))
-fixup_rust_hash=$(shell $(SCRIPT_DIR)/fixup-makefile.pl $(1) fix-hash $(2) $(3))
+#gen_sha256sum=$(shell mkhash sha256 $(DL_DIR)/$(1))
+#fixup_rust_hash=$(shell $(SCRIPT_DIR)/fixup-makefile.pl $(1) fix-hash $(2) $(3))
 
 # Basic Configuration Args that are used across all builds.
 # Other build arguments are found in ./rustc-config.mk
@@ -59,10 +59,9 @@ CONFIGURE_ARGS = \
 include ./rustc-config.mk
 
 RUST_TMP_DIR:=$(TMP_DIR)/rust-install
-RUST_INSTALL_FILE_NAME:=$(PKG_NAME)-$(PKG_VERSION)-$(RUSTC_HOST_ARCH)_$(RUSTC_TARGET_ARCH)-install.tar.xz
+RUST_INSTALL_FILE_NAME:=$(PKG_NAME)-$(PKG_VERSION)-install.tar.xz
 RUST_INSTALL_FILE_VERIFY:=$(call check_hash,$(RUST_INSTALL_FILE_NAME),$(RUST_INSTALL_FILE_HASH),RUST_INSTALL_FILE_HASH)
 RUST_INSTALL_UNINSTALL:=$(CARGO_HOME)/lib/rustlib/uninstall.sh
-RUST_INSTALL_BINARIES:=$(CURDIR)/install_binaries.sh $(RUST_TMP_DIR) $(RUST_INSTALL_FILE_NAME) $(CARGO_HOME)
 RUST_INSTALL_FILE_HASH:=skip
 
 RUST_BINARY=$(or $(and $(wildcard $(DL_DIR)/$(RUST_INSTALL_FILE_NAME)),true),false)
@@ -81,22 +80,21 @@ define Host/Configure
 	$(info In Configure)
 	# Required because OpenWrt Default CONFIGURE_ARGS contain extra
 	# args that cause errors
-	[ $(RUST_BINARY) = true ] && \
-	( true ) || \
-	  ( cd $(HOST_BUILD_DIR) && \
+	[ $(RUST_BINARY) = true ] && true || \
+	   cd $(HOST_BUILD_DIR) && \
 	     RUST_BACKTRACE=full \
-		./configure $(CONFIGURE_ARGS) )
+		./configure $(CONFIGURE_ARGS)
 endef
 
 define Host/Compile
 	$(info In Compile)
-	[ $(RUST_BINARY) = true ] && ( true ) || \
-	  ( cd $(HOST_BUILD_DIR) && \
-	     ( RUST_BACKTRACE=full \
+	[ $(RUST_BINARY) = true ] && true || \
+	  cd $(HOST_BUILD_DIR) && \
+	     RUST_BACKTRACE=full \
 		$(PYTHON) x.py --config ./config.toml dist cargo extended \
 		   library/std llvm-tools miri rust-dev rustc-dev src \
-		   src/librustc src/lldb_batchmode.py src/tools/build-manifest ) && \
-		   ( $(RUST_INSTALL_BINARIES)))
+		   src/librustc src/lldb_batchmode.py src/tools/build-manifest
+	$(call Host/CreateBinaries)
 endef
 
 define Host/CreateBinaries
@@ -125,9 +123,6 @@ define Host/Prepare
 	[ -L $(BUILD_DIR_HOST)/rust ] || \
 	   (cd $(BUILD_DIR_HOST); ln -s "$(PKG_NAME)-$(PKG_VERSION)" rust)
 
-	[ -d $(RUST_TMP_DIR) ] || \
-	   mkdir -p $(RUST_TMP_DIR)
-
 	$(call Host/Prepare/Default)
 endef
 
@@ -136,8 +131,7 @@ define Package/rust
   CATEGORY:=Languages
   TITLE:=Rust Programming Language Compiler
   URL:=https://www.rust-lang.org/
-  #DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml \
-    +libyaml-cpp +libunwind +openssl-util +python3-yaml
+  DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml +libyaml-cpp +libunwind +openssl-util +python3-yaml
 endef
 
 define Package/rust/description

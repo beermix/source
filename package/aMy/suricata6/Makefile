@@ -28,7 +28,7 @@ HOST_BUILD_DEPENDS:=rust/host python3/host luajit/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
-include ../../lang/rust/rustc-triple.mk
+include ../rust/rustc-triple.mk
 
 define Package/suricata6
     SUBMENU:=Firewall

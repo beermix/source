@@ -32,7 +32,7 @@ define Package/libunwind
   CATEGORY:=Libraries
   TITLE:=The libunwind project
   URL:=http://www.nongnu.org/libunwind/
-  DEPENDS:=@((mips||mipsel||x86_64||arm||aarch64)||(USE_GLIBC&&(powerpc||i386)))
+  #DEPENDS:=@((mips||mipsel||x86_64||arm||aarch64)||(USE_GLIBC&&(powerpc||i386)))
   ABI_VERSION:=8
 endef
 
