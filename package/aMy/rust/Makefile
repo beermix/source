@@ -4,7 +4,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
-PKG_VERSION:=1.48.0
+PKG_VERSION:=1.49.1
 PKG_RELEASE:=1
 PKG_LICENSE:=Apache-2.0 MIT
 PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
@@ -13,7 +13,7 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
 PKG_SOURCE_DATE:=2020-11-11
 #PKG_SOURCE_VERSION:=b2d115f6db5172c961dfeb50de15f35784dbc7c9
-PKG_SOURCE_VERSION:=7eac88abb2e57e752f3302f02be5f3ce3d7adfb4
+PKG_SOURCE_VERSION:=bd26e4e
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
 
@@ -26,12 +26,12 @@ include ./rustc-triple.mk
 HOST_BUILD_DEPENDS:=rust/host ninja/host python3/host
 CMAKE_INSTALL:=1
 
-#gen_sha256sum=$(shell mkhash sha256 $(DL_DIR)/$(1))
-#fixup_rust_hash=$(shell $(SCRIPT_DIR)/fixup-makefile.pl $(1) fix-hash $(2) $(3))
+gen_sha256sum=$(shell mkhash sha256 $(DL_DIR)/$(1))
+fixup_rust_hash=$(shell $(SCRIPT_DIR)/fixup-makefile.pl $(1) fix-hash $(2) $(3))
 
 # Basic Configuration Args that are used across all builds.
 # Other build arguments are found in ./rustc-config.mk
-#   --enable-llvm-link-shared \  --llvm-root=/usr/lib/llvm-8 \
+#   --enable-llvm-link-shared \  --llvm-root=/usr/lib/llvm-11 \
 # Default CONFIGURE_ARGS introduces unknown options - Use this instead
 CONFIGURE_ARGS = \
   --host=$(RUSTC_HOST_ARCH) \
@@ -47,6 +47,8 @@ CONFIGURE_ARGS = \
   --localstatedir=/var \
   --release-channel=nightly \
   --enable-lld \
+  --enable-llvm-link-shared \
+  --llvm-root=/usr/lib/llvm-11 \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
