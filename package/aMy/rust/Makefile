@@ -5,9 +5,14 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
 PKG_VERSION:=1.49.0
+PKG_RELEASE:=1
+PKG_LICENSE:=Apache-2.0 MIT
+PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
 PKG_SOURCE_DATE:=2020-11-11
+#PKG_SOURCE_VERSION:=b2d115f6db5172c961dfeb50de15f35784dbc7c9
 PKG_SOURCE_VERSION:=5a6a41e7847ff5f85a31b87431ce2af29c567f1d
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
@@ -35,7 +40,7 @@ CMAKE_INSTALL:=1
 
 # Basic Configuration Args that are used across all builds.
 # Other build arguments are found in ./rustc-config.mk
-#
+#   --enable-llvm-link-shared \  --llvm-root=/usr/lib/llvm-8 \
 # Default CONFIGURE_ARGS introduces unknown options - Use this instead
 CONFIGURE_ARGS = \
   --host=$(RUSTC_HOST_ARCH) \
@@ -51,8 +56,6 @@ CONFIGURE_ARGS = \
   --localstatedir=/var \
   --release-channel=nightly \
   --enable-lld \
-  --enable-llvm-link-shared \
-  --llvm-root=/usr/lib/llvm-8 \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
