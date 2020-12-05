@@ -18,16 +18,6 @@ index 5b045d4e..5ce95ada 100644
  
  # Cap the number of parallel linker invocations when compiling LLVM.
  # This can be useful when building LLVM with debug info, which significantly
-@@ -507,7 +507,7 @@ changelog-seen = 2
- #llvm-tools = false
- 
- # Whether to deny warnings in crates
--#deny-warnings = true
-+deny-warnings = true
- 
- # Print backtrace on internal compiler errors during bootstrap
- #backtrace-on-ice = false
-@@ -604,7 +604,7 @@ changelog-seen = 2
  # this target is a host for rustc, this will also affect the linkage of the
  # compiler itself. This is useful for building rustc on targets that normally
  # only use static libraries. If unset, the target's default linkage is used.
