@@ -76,8 +76,6 @@ endef
 define Package/iperf3/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/iperf3 $(1)/usr/bin/
-	#$(INSTALL_DIR) $(1)/usr/lib
-	#$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/libiperf.so* $(1)/usr/lib/
 endef
 
 define Package/iperf3-ssl/install

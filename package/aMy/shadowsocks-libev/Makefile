@@ -122,6 +122,7 @@ endef
 CONFIGURE_ARGS += \
 	--disable-documentation \
 	--disable-silent-rules \
+	--disable-assert \
 	--disable-ssp \
 
 TARGET_CFLAGS += -flto

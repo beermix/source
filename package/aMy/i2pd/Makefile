@@ -9,8 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_SOURCE_VERSION:=ce14ea6
-PKG_BUILD_PARALLEL:=1
+PKG_SOURCE_VERSION:=2.35.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
@@ -18,6 +17,9 @@ PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
 PKG_MAINTAINER:=David Yang <mmyangfl@gmail.com>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
+
+PKG_BUILD_PARALLEL:=1
+PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -57,8 +59,14 @@ define Package/i2pd/conffiles
 /etc/i2pd/tunnels.d/
 endef
 
+define Build/Prepare
+	$(Build/Prepare/Default)
+	# race condition
+	cd $(PKG_BUILD_DIR); $(MAKE) mk_obj_dir
+endef
+
 TARGET_LDFLAGS+=-latomic
-#MAKE_FLAGS+=USE_AESNI=no USE_AVX=no DEBUG=no
+MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
