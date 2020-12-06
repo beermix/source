@@ -32,7 +32,7 @@ define Package/stubby
   SUBMENU:=IP Addresses and Names
   TITLE+= - (daemon that uses getdns)
   USERID:=stubby=410:stubby=410
-  DEPENDS:= +libyaml +getdns +ca-certs
+  DEPENDS:= +libyaml +getdns +ca-certs +libunbound
 endef
 
 define Package/stubby/description
@@ -44,6 +44,8 @@ define Package/stubby/conffiles
 /etc/stubby/stubby.yml
 /etc/config/stubby
 endef
+
+CMAKE_OPTIONS += -DENABLE_GETDNS_STATIC_LINK=0
 
 define Package/stubby/install
 	$(INSTALL_DIR) $(1)/usr/sbin

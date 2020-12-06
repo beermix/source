@@ -30,7 +30,8 @@ define Package/getdns
 	SECTION:=libs
 	CATEGORY:=Libraries
 	TITLE+= (library)
-	DEPENDS+= +libopenssl +!GETDNS_ENABLE_STUB_ONLY:libunbound +GETDNS_ENABLE_IDN_LIBIDN2:libidn2
+	DEPENDS+= +libopenssl +!GETDNS_ENABLE_STUB_ONLY:libunbound +GETDNS_ENABLE_IDN_LIBIDN2:libidn2 \
+	+libev +libevent2 +libuv
 	MENU:=1
 endef
 
@@ -45,9 +46,9 @@ endef
 
 # CMAKE options for GetDNS are described in this document:
 # https://getdnsapi.net/quick-start/cmake-quick-start/
-CMAKE_OPTIONS += -DBUILD_LIBEV=OFF
-CMAKE_OPTIONS += -DBUILD_LIBEVENT2=OFF
-CMAKE_OPTIONS += -DBUILD_LIBUV=OFF
+CMAKE_OPTIONS += -DBUILD_LIBEV=ON
+CMAKE_OPTIONS += -DBUILD_LIBEVENT2=ON
+CMAKE_OPTIONS += -DBUILD_LIBUV=ON
 
 CMAKE_OPTIONS += -DENABLE_STUB_ONLY=$(if $(CONFIG_GETDNS_ENABLE_STUB_ONLY),ON,OFF)
 CMAKE_OPTIONS += -DUSE_LIBIDN2=$(if $(CONFIG_GETDNS_ENABLE_IDN_LIBIDN2),ON,OFF)
@@ -56,7 +57,9 @@ CMAKE_OPTIONS += -DUSE_LIBIDN2=$(if $(CONFIG_GETDNS_ENABLE_IDN_LIBIDN2),ON,OFF)
 # present, otherwise it will use builtin code for these functions. In order to
 # force the use of the built in code and remove the libbsd dependency disable
 # the test for libbsd.
-CMAKE_OPTIONS += -DBSD_LIBRARY=OFF
+# CMAKE_OPTIONS += -DBSD_LIBRARY=OFF
+CMAKE_OPTIONS += -DENABLE_SHARED=1
+CMAKE_OPTIONS += -DENABLE_STATIC=0
 
 define Package/getdns/install
 	$(INSTALL_DIR) $(1)/usr/lib
