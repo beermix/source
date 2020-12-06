@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -769,6 +769,10 @@ function(cxx_link_system_libraries targe
+@@ -760,6 +760,10 @@ function(cxx_link_system_libraries targe
      target_link_libraries(${target} PRIVATE atomic)
    endif()
  
