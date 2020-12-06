@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=stubby
-PKG_SOURCE_VERSION:=5c37fa2
+PKG_SOURCE_VERSION:=v0.3.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/getdnsapi/stubby
@@ -32,7 +32,7 @@ define Package/stubby
   SUBMENU:=IP Addresses and Names
   TITLE+= - (daemon that uses getdns)
   USERID:=stubby=410:stubby=410
-  DEPENDS:= +libyaml +getdns +ca-certs +libunbound
+  DEPENDS:= +libyaml +getdns +ca-certs
 endef
 
 define Package/stubby/description
@@ -44,8 +44,6 @@ define Package/stubby/conffiles
 /etc/stubby/stubby.yml
 /etc/config/stubby
 endef
-
-CMAKE_OPTIONS += -DENABLE_GETDNS_STATIC_LINK=0
 
 define Package/stubby/install
 	$(INSTALL_DIR) $(1)/usr/sbin

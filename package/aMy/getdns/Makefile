@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=getdns
-PKG_SOURCE_VERSION:=7fe308f
+PKG_SOURCE_VERSION:=v1.6.0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/getdnsapi/getdns
@@ -31,7 +31,7 @@ define Package/getdns
 	CATEGORY:=Libraries
 	TITLE+= (library)
 	DEPENDS+= +libopenssl +!GETDNS_ENABLE_STUB_ONLY:libunbound +GETDNS_ENABLE_IDN_LIBIDN2:libidn2 \
-	+libev +libevent2 +libuv
+	+libev +libevent2 +libuv +libbsd
 	MENU:=1
 endef
 
@@ -58,8 +58,8 @@ CMAKE_OPTIONS += -DUSE_LIBIDN2=$(if $(CONFIG_GETDNS_ENABLE_IDN_LIBIDN2),ON,OFF)
 # force the use of the built in code and remove the libbsd dependency disable
 # the test for libbsd.
 # CMAKE_OPTIONS += -DBSD_LIBRARY=OFF
-CMAKE_OPTIONS += -DENABLE_SHARED=1
-CMAKE_OPTIONS += -DENABLE_STATIC=0
+# CMAKE_OPTIONS += -DENABLE_SHARED=1
+# CMAKE_OPTIONS += -DENABLE_STATIC=0
 
 define Package/getdns/install
 	$(INSTALL_DIR) $(1)/usr/lib
