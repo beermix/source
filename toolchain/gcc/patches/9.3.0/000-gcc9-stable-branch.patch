@@ -27720,8 +27720,6 @@ index a6c56392acd..de4a2e06102 100644
 diff --git a/libgcc/configure b/libgcc/configure
 old mode 100644
 new mode 100755
-index 36dbbc1f699..8ceec1d047f
---- a/libgcc/configure
 +++ b/libgcc/configure
 @@ -674,6 +674,7 @@
  docdir
