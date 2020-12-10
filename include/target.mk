@@ -16,32 +16,19 @@ DEVICE_TYPE?=router
 DEFAULT_PACKAGES:=\
 	base-files \
 	ca-bundle \
-	ca-certificates \
-	coreutils \
 	dropbear \
 	fstools \
-	kmod-ipt-raw \
-	kmod-nf-nathelper \
-	kmod-nf-nathelper-extra \
 	libc \
 	libgcc \
-	libustream-openssl \
+	libustream-wolfssl \
 	logd \
-	luci \
-	luci-app-cpufreq \
-	luci-compat \
-	luci-lib-base \
-	luci-lib-fs \
-	luci-lib-ipkg \
-	luci-proto-relay \
 	mtd \
 	netifd \
 	opkg \
 	uci \
 	uclient-fetch \
 	urandom-seed \
-	urngd \
-	wget
+	urngd
 
 ifneq ($(CONFIG_SELINUX),)
 DEFAULT_PACKAGES+=busybox-selinux procd-selinux
@@ -59,7 +46,7 @@ DEFAULT_PACKAGES.nas:=\
 	mdadm
 # For router targets
 DEFAULT_PACKAGES.router:=\
-	dnsmasq-full \
+	dnsmasq \
 	firewall \
 	ip6tables \
 	iptables \

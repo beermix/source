@@ -5,10 +5,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=getdns
-PKG_SOURCE_VERSION:=v1.6.0
+PKG_VERSION:=1.6.0
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/getdnsapi/getdns
+PKG_LICENSE:=BSD-3-Clause
+PKG_LICENSE_FILES:=LICENSE
+PKG_MAINTAINER:=Jonathan Underwood <jonathan.underwood@gmail.com>
+
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://getdnsapi.net/dist/
+PKG_HASH:=40e5737471a3902ba8304b0fd63aa7c95802f66ebbc6eae53c487c8e8a380f4a
+
+#PKG_SOURCE_VERSION:=v1.6.0
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=https://github.com/getdnsapi/getdns
 
 CMAKE_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
@@ -31,7 +41,7 @@ define Package/getdns
 	CATEGORY:=Libraries
 	TITLE+= (library)
 	DEPENDS+= +libopenssl +!GETDNS_ENABLE_STUB_ONLY:libunbound +GETDNS_ENABLE_IDN_LIBIDN2:libidn2 \
-	+libev +libevent2 +libuv +libbsd
+	+libev +libevent2 +libuv
 	MENU:=1
 endef
 
@@ -57,9 +67,7 @@ CMAKE_OPTIONS += -DUSE_LIBIDN2=$(if $(CONFIG_GETDNS_ENABLE_IDN_LIBIDN2),ON,OFF)
 # present, otherwise it will use builtin code for these functions. In order to
 # force the use of the built in code and remove the libbsd dependency disable
 # the test for libbsd.
-# CMAKE_OPTIONS += -DBSD_LIBRARY=OFF
-# CMAKE_OPTIONS += -DENABLE_SHARED=1
-# CMAKE_OPTIONS += -DENABLE_STATIC=0
+CMAKE_OPTIONS += -DBSD_LIBRARY=OFF
 
 define Package/getdns/install
 	$(INSTALL_DIR) $(1)/usr/lib

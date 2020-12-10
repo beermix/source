@@ -5,17 +5,24 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=stubby
-PKG_SOURCE_VERSION:=v0.3.0
+PKG_VERSION:=0.3.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/getdnsapi/stubby
+PKG_SOURCE_URL:=https://github.com/getdnsapi/$(PKG_NAME)
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_MIRROR_HASH:=f1585aa6881bf39c2c8f99df045d5739bb78403417a1e827644cb202fa4280f0
+
+#PKG_SOURCE_VERSION:=v0.3.0
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=https://github.com/getdnsapi/stubby
 
 PKG_MAINTAINER:=Jonathan Underwood <jonathan.underwood@gmail.com>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=COPYING
 
 CMAKE_INSTALL:=1
-PKG_BUILD_PARALLEL:=0
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
