@@ -13,14 +13,15 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/bash
-PKG_HASH:=
+PKG_HASH:=cc012bc860406dcf42f64431bcd3d2fa7560c02915a601aba9cd597a39329baa
 
+PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
-PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 PKG_CPE_ID:=cpe:/a:gnu:bash
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -75,7 +76,6 @@ CONFIGURE_VARS += \
 	bash_cv_printf_a_format=yes \
 
 CONFIGURE_ARGS+= \
-	--with-installed-readline="$(STAGING_DIR)/usr" \
 	--with-curses \
 	--without-bash-malloc \
 	--bindir=/bin \
