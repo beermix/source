@@ -70,7 +70,7 @@ Dominique d'Humieres (1):
 Douglas Rupp (1):
       Require powerpc_vsx_ok in gcc.target/powerpc/pr71763.c
 
-Eric Botcazou (12):
+Eric Botcazou (13):
       Fix incorrect filling of delay slots in branchy code at -O2
       Fix wrong year in ChangeLog.
       Fix Ada bootstrap on Cygwin64
@@ -83,12 +83,17 @@ Eric Botcazou (12):
       Fix biased integer arithmetic
       Fix PR target/96607
       Fix PR target/97939
+      Fix internal error on library-level type extended locally
 
 Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (267):
+GCC Administrator (271):
+      Daily bump.
+      Daily bump.
+      Daily bump.
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -8332,10 +8337,15 @@ index abae872cd63..35d90f12d4c 100644
  # so that self-test failures are caught as early as possible.
  # Use "s-selftest-FE" to ensure that we only run the selftests if the
 diff --git a/gcc/ada/ChangeLog b/gcc/ada/ChangeLog
-index a819f57a2bf..b3f43e1cd56 100644
+index a819f57a2bf..89174bb76ec 100644
 --- a/gcc/ada/ChangeLog
 +++ b/gcc/ada/ChangeLog
-@@ -1,3 +1,38 @@
+@@ -1,3 +1,43 @@
++2020-12-07  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gcc-interface/trans.c (maybe_make_gnu_thunk): Return false if the
++	target is local and thunk and target do not have the same context.
++
 +2020-11-11  Eric Botcazou  <ebotcazou@adacore.com>
 +
 +	* gcc-interface/trans.c (build_binary_op_trapv): Convert operands
@@ -8433,7 +8443,7 @@ index 8118d119bab..9ca7884f3d3 100644
  	gnu_list.safe_push (s);
        }
 diff --git a/gcc/ada/gcc-interface/trans.c b/gcc/ada/gcc-interface/trans.c
-index 2581b71d6fa..0ba3ad97ba6 100644
+index 2581b71d6fa..cefe1b8478c 100644
 --- a/gcc/ada/gcc-interface/trans.c
 +++ b/gcc/ada/gcc-interface/trans.c
 @@ -3234,38 +3234,6 @@
@@ -8552,6 +8562,20 @@ index 2581b71d6fa..0ba3ad97ba6 100644
        /* Never inline a 64-bit mult for a 32-bit target, it's way too long.  */
        if (code == MULT_EXPR && precision == 64 && BITS_PER_WORD < 64)
  	{
+@@ -11267,8 +11243,11 @@
+ 
+   tree gnu_target = gnat_to_gnu_entity (gnat_target, NULL_TREE, false);
+ 
+-  /* Thunk and target must have the same nesting level, if any.  */
+-  gcc_assert (DECL_CONTEXT (gnu_thunk) == DECL_CONTEXT (gnu_target));
++  /* If the target is local, then thunk and target must have the same context
++     because cgraph_node::expand_thunk can only forward the static chain.  */
++  if (DECL_STATIC_CHAIN (gnu_target)
++      && DECL_CONTEXT (gnu_thunk) != DECL_CONTEXT (gnu_target))
++    return false;
+ 
+   /* If the target returns by invisible reference and is external, apply the
+      same transformation as Subprogram_Body_to_gnu here.  */
 diff --git a/gcc/ada/gcc-interface/utils.c b/gcc/ada/gcc-interface/utils.c
 index 2290f0413d5..98542fc1001 100644
 --- a/gcc/ada/gcc-interface/utils.c
