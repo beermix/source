@@ -45,7 +45,7 @@ CONFIGURE_ARGS = \
   --mandir=$(CARGO_HOME)/man \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
-  --release-channel=nightly \
+  --release-channel=beta \
   --enable-lld \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
@@ -91,9 +91,7 @@ define Host/Compile
 	[ $(RUST_BINARY) = true ] && ( true ) || \
 	  ( cd $(HOST_BUILD_DIR) && \
 	     ( RUST_BACKTRACE=full \
-		$(PYTHON) x.py --config ./config.toml dist cargo extended \
-		   library/std llvm-tools miri rust-dev rustc-dev src \
-		   src/librustc src/lldb_batchmode.py src/tools/build-manifest ) && \
+		$(PYTHON) x.py --config ./config.toml build --verbose -j8 ) && \
 		   ( $(RUST_INSTALL_BINARIES)))
 endef
 
