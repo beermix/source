@@ -189,8 +189,6 @@ define Build/CoreTargets
   $(call Build/Autoclean)
   $(call DefaultTargets)
 
-  $(DL_DIR)/$(FILE): FORCE
-
   download:
 	$(foreach hook,$(Hooks/Download),
 		$(call $(hook))$(sep)
