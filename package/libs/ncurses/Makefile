@@ -4,6 +4,7 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # https://github.com/mirror/ncurses
+# https://invisible-mirror.net/archives/ncurses/current/?C=M;O=D
 
 include $(TOPDIR)/rules.mk
 
@@ -63,18 +64,17 @@ endef
 CONFIGURE_ARGS += \
 	--enable-echo \
 	--enable-const \
+	--without-cxx \
 	--enable-overwrite \
 	--enable-pc-files \
 	--disable-rpath \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
-	--without-profile \
 	--with-progs \
 	--without-tests \
-	--disable-big-core \
-	--disable-home-terminfo \
 	--with-normal \
+	--disable-home-terminfo \
 	--with-shared \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
@@ -89,14 +89,10 @@ HOST_CFLAGS += $(HOST_FPIC)
 
 HOST_CONFIGURE_ARGS += \
 	--without-cxx \
-	--without-cxx-binding \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
-	--without-profile \
 	--without-tests \
-	--without-curses-h
-
 
 ifeq ($(HOST_OS),FreeBSD)
 	CONFIGURE_ARGS +=
