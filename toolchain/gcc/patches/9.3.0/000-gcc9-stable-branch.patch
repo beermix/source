@@ -70,6 +70,9 @@ Dominique d'Humieres (1):
 Douglas Rupp (1):
       Require powerpc_vsx_ok in gcc.target/powerpc/pr71763.c
 
+Ed Schonberg (1):
+      Fix PR ada/98230
+
 Eric Botcazou (13):
       Fix incorrect filling of delay slots in branchy code at -O2
       Fix wrong year in ChangeLog.
