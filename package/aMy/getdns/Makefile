@@ -41,7 +41,7 @@ define Package/getdns
 	CATEGORY:=Libraries
 	TITLE+= (library)
 	DEPENDS+= +libopenssl +!GETDNS_ENABLE_STUB_ONLY:libunbound +GETDNS_ENABLE_IDN_LIBIDN2:libidn2 \
-	+libev +libevent2 +libuv
+	+libev +libevent2 +libuv +libbsd
 	MENU:=1
 endef
 
@@ -67,7 +67,7 @@ CMAKE_OPTIONS += -DUSE_LIBIDN2=$(if $(CONFIG_GETDNS_ENABLE_IDN_LIBIDN2),ON,OFF)
 # present, otherwise it will use builtin code for these functions. In order to
 # force the use of the built in code and remove the libbsd dependency disable
 # the test for libbsd.
-CMAKE_OPTIONS += -DBSD_LIBRARY=OFF
+# CMAKE_OPTIONS += -DBSD_LIBRARY=OFF
 
 define Package/getdns/install
 	$(INSTALL_DIR) $(1)/usr/lib
