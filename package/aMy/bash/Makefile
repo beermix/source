@@ -44,6 +44,8 @@ define Package/bash/conffiles
 /etc/bash.bash_logout
 endef
 
+TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+
 # Bash detects and enables certain features by runtest simple piece of code
 # which is not viable when doing cross compilation and default to no in many
 # cases.  Grep for 'cross.compil' in aclocal.m4 and config-bot.h for details
@@ -61,7 +63,7 @@ endef
 # bash_cv_sys_named_pipes: Required for process substituion
 CONFIGURE_VARS += \
 	ac_cv_rl_prefix="$(STAGING_DIR)/usr" \
-	ac_cv_rl_version="8.0" \
+	ac_cv_rl_version="8.1" \
 	bash_cv_getcwd_malloc=yes \
 	bash_cv_job_control_missing=present \
 	bash_cv_dev_fd=whacky \
