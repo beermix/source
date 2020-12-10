@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_SOURCE_VERSION:=2.35.0
+PKG_SOURCE_VERSION:=ba79b94
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd.git
@@ -66,7 +66,7 @@ define Build/Prepare
 endef
 
 TARGET_LDFLAGS+=-latomic
-MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
+#MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
