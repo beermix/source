@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsodium
-PKG_SOURCE_VERSION:=3a832c1
+PKG_SOURCE_VERSION:=16a0bdc
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium
