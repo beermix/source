@@ -49,10 +49,27 @@ ifeq ($(PKG_VERSION),10.2.0)
 endif
 
 ifeq ($(PKG_VERSION),10.2.1)
-  PKG_HASH:=
-  PKG_SOURCE_URL:=https://dev.alpinelinux.org/~nenolod/gcc-$(PKG_VERSION)_pre1.tar.xz
-  PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)_pre1.tar.xz
+  PKG_REV:=10.2.1_pre1
+  PKG_SOURCE_URL:=https://dev.alpinelinux.org/~nenolod
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
+
+#ifeq ($(PKG_VERSION),10.2.1)
+#  PKG_REV:=10-20200801
+#  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
+#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+#  PKG_REV:=dda1e9d
+#  PKG_SOURCE_PROTO:=git
+#  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
+#  PKG_SOURCE_VERSION:=$(PKG_REV)
+#  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+#  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+#endif
 
 PATCH_DIR=../patches/$(GCC_VERSION)
 
@@ -180,9 +197,9 @@ ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
   TARGET_CFLAGS+=-fno-split-stack
 endif
 
-#ifneq ($(GCC_USE_VERSION_10),y)
-#	TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
-#endif
+ifneq ($(GCC_USE_VERSION_10),y)
+	TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+endif
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
