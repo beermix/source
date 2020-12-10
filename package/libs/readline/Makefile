@@ -8,10 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=readline
-PKG_SOURCE_VERSION:=c5ad6be
+PKG_VERSION:=8.1
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/readline.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=@GNU/readline
+PKG_HASH:=
 
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=COPYING
