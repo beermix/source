@@ -13,6 +13,7 @@ PKG_VERSION:=Release33
 
 PKG_SOURCE:=$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/pymumu/smartdns/archive
+PKG_HASH:=49f8d1c34186bfa1f3d50116b1516d868db741e45ab0540d776c624103789251
 
 
 PKG_MAINTAINER:=Nick Peng <pymumu@gmail.com>

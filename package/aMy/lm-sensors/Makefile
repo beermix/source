@@ -12,6 +12,7 @@ PKG_SOURCE_VERSION:=4ea3cfe
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/lm-sensors/lm-sensors
+PKG_MIRROR_HASH:=8e3921dbfac9651938cf12a674f90fc8996bbb670ccb3aef2aa58e4e5ba536fb
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0+ LGPL-2.1+
