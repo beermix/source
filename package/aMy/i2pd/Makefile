@@ -32,8 +32,8 @@ CMAKE_OPTIONS += \
 	-DWITH_LIBRARY=OFF \
 	-DWITH_UPNP=OFF \
 	-DWITH_AESNI=OFF \
-	-DWITH_AVX=OFF \
-	-DBoost_USE_STATIC_RUNTIME=ON \
+	-DWITH_STATIC=ON \
+	-DBoost_USE_STATIC_RUNTIME=1 \
 	-Wno-dev
 
 define Package/i2pd
@@ -66,7 +66,7 @@ define Build/Prepare
 endef
 
 TARGET_LDFLAGS+=-latomic
-#MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
+#MAKE_FLAGS+=USE_AESNI=no USE_AVX=no USE_STATIC=yes
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
