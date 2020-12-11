@@ -47,8 +47,8 @@ endef
 TARGET_CFLAGS+= $(FPIC)
 
 CONFIGURE_ARGS+= \
-	--disable-largefile \
-	--disable-warnings \
+	--enable-largefile \
+	--enable-warnings \
 	--with-terminfo=default \
 	--with-readline=slang \
 	--without-iconv \
