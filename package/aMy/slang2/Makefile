@@ -37,7 +37,7 @@ endef
 
 define Package/libslang2
 $(call Package/libslang2/Default)
-  DEPENDS:=$(ICONV_DEPENDS) +terminfo +zlib +libpcre
+  DEPENDS:=+terminfo
 endef
 
 define Package/libslang2/description
@@ -47,15 +47,15 @@ endef
 TARGET_CFLAGS+= $(FPIC)
 
 CONFIGURE_ARGS+= \
-	--enable-largefile \
-	--enable-warnings \
+	--disable-largefile \
+	--disable-warnings \
 	--with-terminfo=default \
 	--with-readline=slang \
-	--with-iconv="$(ICONV_PREFIX)" \
+	--without-iconv \
 	--without-onig \
-	--with-pcre="$(STAGING_DIR)/usr" \
+	--without-pcre \
 	--without-png \
-	--with-z="$(STAGING_DIR)/usr" \
+	--without-z \
 	--without-x
 
 define Build/Compile
