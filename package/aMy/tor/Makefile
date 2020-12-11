@@ -2,7 +2,7 @@
 # Copyright (C) 2008-2019 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
+# See /LICENSE for more information.  +liblzma 
 # https://github.com/torproject/tor/tree/release-0.4.4
 # https://archive.torproject.org/tor-package-archive/?C=M;O=D
 
@@ -40,7 +40,7 @@ define Package/tor/Default
   CATEGORY:=Network
   URL:=https://www.torproject.org/
   USERID:=tor=52:tor=52
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +liblzma +libzstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libzstd
   TITLE:=Tor routing daemon
 endef
 
@@ -138,7 +138,7 @@ CONFIGURE_ARGS += \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-unittests \
-	--enable-lzma \
+	--disable-lzma \
 	--enable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
