@@ -126,6 +126,7 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
+		--disable-largefile \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
@@ -144,6 +145,7 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--disable-libstdcxx-pch \
+		--disable-fixed-point \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
