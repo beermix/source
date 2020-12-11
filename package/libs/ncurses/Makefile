@@ -71,10 +71,12 @@ CONFIGURE_ARGS += \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
+	--without-profile \
 	--with-progs \
 	--without-tests \
-	--with-normal \
+	--enable-big-core \
 	--disable-home-terminfo \
+	--with-normal \
 	--with-shared \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
@@ -89,10 +91,14 @@ HOST_CFLAGS += $(HOST_FPIC)
 
 HOST_CONFIGURE_ARGS += \
 	--without-cxx \
+	--without-cxx-binding \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
+	--without-profile \
 	--without-tests \
+	--without-curses-h
+
 
 ifeq ($(HOST_OS),FreeBSD)
 	CONFIGURE_ARGS +=

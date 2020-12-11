@@ -20,8 +20,8 @@ endef
 define Host/Install
 	+$(GCC_MAKE) $(HOST_JOBS) -C $(GCC_BUILD_DIR) \
 		prefix="$(TOOLCHAIN_DIR)/initial" \
-		install-gcc \
-		install-target-libgcc
+		install-strip-gcc \
+		install-strip-target-libgcc
 
 	# XXX: glibc insists on linking against libgcc_eh
 	( cd $(TOOLCHAIN_DIR)/initial/lib/gcc/$(REAL_GNU_TARGET_NAME)/$(PKG_VERSION) ; \
