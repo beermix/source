@@ -485,7 +485,7 @@ true
 endef
 
 define Package/boost-test/install
-true
+trueq
 endef
 
 define BuildBoostLibrary
