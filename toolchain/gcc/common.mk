@@ -129,7 +129,6 @@ GCC_CONFIGURE:= \
 		--disable-libstdcxx-pch \
 		--disable-fixed-point \
 		--with-linker-hash-style=gnu \
-		--with-arch=bonnell \
 		--with-tune=generic \
 		--enable-cld \
 		--disable-libgomp \
