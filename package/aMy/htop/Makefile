@@ -8,14 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-PKG_SOURCE_VERSION:=db5687a
+PKG_VERSION:=3.0.3
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/htop-dev/htop.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/htop-dev/htop/tar.gz/$(PKG_VERSION)?
+PKG_HASH:=725103929c925a7252b4dedeb29b3a1da86a2f74e96c50eb9ea6c8fec1942cd2
 
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:htop:htop
+
 
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
@@ -27,7 +30,7 @@ define Package/htop
   SECTION:=admin
   CATEGORY:=Administration
   TITLE:=Interactive processes viewer
-  DEPENDS:=+libncurses +libsensors
+  DEPENDS:=+libncurses
   URL:=https://hisham.hm/htop/
   MAINTAINER:=Etienne CHAMPETIER <champetier.etienne@gmail.com>
 endef
@@ -39,10 +42,8 @@ define Package/htop/description
 endef
 
 CONFIGURE_ARGS += \
-	--enable-setuid \
-	--enable-taskstats \
-	--enable-linux-affinity \
-	--with-sensors
+	--disable-unicode \
+	--disable-hwloc
 
 CONFIGURE_VARS += \
 	ac_cv_file__proc_stat=yes \
