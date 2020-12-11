@@ -92,7 +92,8 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (271):
+GCC Administrator (272):
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -8340,10 +8341,16 @@ index abae872cd63..35d90f12d4c 100644
  # so that self-test failures are caught as early as possible.
  # Use "s-selftest-FE" to ensure that we only run the selftests if the
 diff --git a/gcc/ada/ChangeLog b/gcc/ada/ChangeLog
-index a819f57a2bf..89174bb76ec 100644
+index a819f57a2bf..521f3e8009f 100644
 --- a/gcc/ada/ChangeLog
 +++ b/gcc/ada/ChangeLog
-@@ -1,3 +1,43 @@
+@@ -1,3 +1,49 @@
++2020-12-10  Ed Schonberg  <schonberg@adacore.com>
++
++	PR ada/98230
++	* exp_attr.adb (Expand_N_Attribute_Reference, case Mod): Use base
++	type of argument to obtain static bound and required size.
++
 +2020-12-07  Eric Botcazou  <ebotcazou@adacore.com>
 +
 +	* gcc-interface/trans.c (maybe_make_gnu_thunk): Return false if the
