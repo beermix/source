@@ -6,12 +6,7 @@
 			"path": "smartdns/smartdns"
 		},
 		"depends": {
-			"uci": {
-				"smartdns": true
-			},
-			"acl": [
-				"luci-app-smartdns"
-			]
+			"uci": { "smartdns": true }
 		}
 	}
 }
