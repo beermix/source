@@ -345,7 +345,7 @@ endif
 ifeq ($(CONFIG_IPV6),y)
   DISABLE_IPV6:=
 else
-  DISABLE_IPV6:=--disable-ipv6 --disable-largefile
+  DISABLE_IPV6:=--disable-ipv6
 endif
 
 TAR_OPTIONS:=-xf -
