@@ -126,7 +126,6 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--disable-largefile \
 		--disable-libstdcxx-pch \
 		--disable-fixed-point \
 		--with-linker-hash-style=gnu \
