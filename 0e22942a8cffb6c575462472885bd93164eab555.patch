@@ -1,0 +1,38 @@
+From 0e22942a8cffb6c575462472885bd93164eab555 Mon Sep 17 00:00:00 2001
+From: Rosen Penev <rosenp@gmail.com>
+Date: Fri, 24 Jul 2020 18:18:14 -0700
+Subject: [PATCH] gettext-full: use included glib
+
+If gettext-full happens to be built after glib2/host, it picks up the
+host build and tries to link to it with an inappropriate rpath. Instead
+of working around the issue, just use the included glib to avoid it.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ package/libs/gettext-full/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/package/libs/gettext-full/Makefile b/package/libs/gettext-full/Makefile
+index 2e65571701e4..b5699c33e3aa 100644
+--- a/package/libs/gettext-full/Makefile
++++ b/package/libs/gettext-full/Makefile
+@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=gettext-full
+ PKG_VERSION:=0.19.8.1
+-PKG_RELEASE:=2
++PKG_RELEASE:=3
+ 
+ PKG_SOURCE:=gettext-$(PKG_VERSION).tar.xz
+ PKG_SOURCE_URL:=@GNU/gettext
+@@ -69,8 +69,8 @@ HOST_CONFIGURE_ARGS += \
+ 	--disable-native-java \
+ 	--disable-openmp \
+ 	--without-emacs \
+-	--without-libxml2-prefix
+-
++	--without-libxml2-prefix \
++	--with-included-glib
+ 
+ HOST_CONFIGURE_VARS += \
+ 	EMACS="no" \
