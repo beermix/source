@@ -387,7 +387,7 @@ H.J. Lu (10):
 Haijian Zhang (1):
       pr94780.c fails with ICE on aarch64 [PR94820]
 
-Harald Anlauf (27):
+Harald Anlauf (28):
       PR fortran/93364 - ICE in gfc_set_array_spec, at fortran/array.c:879
       PR fortran/95104 - Segfault on a legal WAIT statement
       PR fortran/95104 - Segfault on a legal WAIT statement
@@ -415,6 +415,7 @@ Harald Anlauf (27):
       PR fortran/97272 - Wrong answer from MAXLOC with character arg
       PR libfortran/97063 - Wrong result for vector (step size is negative) * matrix
       PR fortran/95342 - ICE in gfc_match_subroutine, at fortran/decl.c:7913
+      PR fortran/98017 - Suspected regression using PACK
 
 Hongyu Wang (1):
       Add missing FSF copyright notes for x86 intrinsic headers.
@@ -23535,10 +23536,20 @@ index ebd73110e2d..f4a7d9adb51 100644
  	}
      }
 diff --git a/gcc/fortran/expr.c b/gcc/fortran/expr.c
-index 94f9eb00f71..0fa1eca010c 100644
+index 94f9eb00f71..8996e40560c 100644
 --- a/gcc/fortran/expr.c
 +++ b/gcc/fortran/expr.c
-@@ -4225,7 +4225,20 @@
+@@ -2063,6 +2063,9 @@
+ 
+   e->rank = p->rank;
+ 
++  if (e->ts.type == BT_CHARACTER && p->ts.u.cl)
++    e->ts = p->ts;
++
+   /* Do not copy subobject refs for constant.  */
+   if (e->expr_type != EXPR_CONSTANT && p->ref != NULL)
+     e->ref = gfc_copy_ref (p->ref);
+@@ -4225,7 +4228,20 @@
        gfc_symbol *sym;
        bool target;
  
@@ -23560,7 +23571,7 @@ index 94f9eb00f71..0fa1eca010c 100644
        sym = rvalue->symtree->n.sym;
  
        if (sym->ts.type == BT_CLASS && sym->attr.class_ok)
-@@ -4300,7 +4313,9 @@
+@@ -4300,7 +4316,9 @@
       contiguous.  Be lenient in the definition of what counts as
       contiguous.  */
  
