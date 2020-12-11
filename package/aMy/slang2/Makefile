@@ -38,7 +38,7 @@ endef
 
 define Package/libslang2
 $(call Package/libslang2/Default)
-  DEPENDS:=+terminfo +libpcre +zlib
+  DEPENDS:=+terminfo +libpcre
 endef
 
 define Package/libslang2/description
@@ -48,7 +48,6 @@ endef
 TARGET_CFLAGS+= $(FPIC)
 
 CONFIGURE_ARGS+= \
-	--enable-largefile \
 	--enable-warnings \
 	--with-terminfo=default \
 	--with-readline=slang \
@@ -56,7 +55,7 @@ CONFIGURE_ARGS+= \
 	--without-onig \
 	--with-pcre="$(STAGING_DIR)/usr" \
 	--without-png \
-	--with-z="$(STAGING_DIR)/usr" \
+	--without-z \
 	--without-x
 
 define Build/Compile
