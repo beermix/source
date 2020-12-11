@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=1.9.9-b1
+PKG_VERSION:=efd8bd1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng.git
@@ -62,12 +62,15 @@ CMAKE_OPTIONS += \
 	-DZLIB_COMPAT=ON \
 	-DWITH_OPTIM=ON \
 	-DWITH_NEW_STRATEGIES=ON \
-	-DWITH_AVX2=OFF \
-	-DWITH_SSE2=ON \
-	-DWITH_SSE4=OFF \
+	-DWITH_SANITIZERS=OFF \
 	-DWITH_PCLMULQDQ=OFF \
-	-DWITH_NEON=OFF \
-	-DWITH_POWER8=OFF
+	-DSSSE3_ADLER32=1 \
+	-DSSE42_COMPARE258=1 \
+	-DSSE42_CRC=1 \
+	-DWITH_SSE4=1 \
+	-DWITH_SSSE3=1 \
+	-DWITH_SSE2=1 \
+	-DWITH_AVX2=0
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
