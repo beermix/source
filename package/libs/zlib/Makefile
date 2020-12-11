@@ -8,16 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_VERSION:=1.2.11
-PKG_RELEASE:=3
+PKG_VERSION:=1.9.9-b1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@SF/libpng http://www.zlib.net
-PKG_HASH:=4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066
-
-PKG_LICENSE:=Zlib
-PKG_LICENSE_FILES:=README
-PKG_CPE_ID:=cpe:/a:gnu:zlib
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_CONFIG_DEPENDS:= CONFIG_ZLIB_OPTIMIZE_SPEED
 
@@ -56,11 +53,21 @@ endef
 TARGET_CFLAGS += $(FPIC)
 
 ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
-	TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
+	TARGET_CFLAGS := -O3 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
 endif
 
 CMAKE_OPTIONS += \
-	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
+	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DWITH_GZFILEOP=ON \
+	-DZLIB_COMPAT=ON \
+	-DWITH_OPTIM=ON \
+	-DWITH_NEW_STRATEGIES=ON \
+	-DWITH_AVX2=OFF \
+	-DWITH_SSE2=ON \
+	-DWITH_SSE4=OFF \
+	-DWITH_PCLMULQDQ=OFF \
+	-DWITH_NEON=OFF \
+	-DWITH_POWER8=OFF
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
@@ -70,7 +77,7 @@ define Build/InstallDev
 	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/libz.{a,so*} \
 		$(1)/usr/lib/
 	mkdir -p $(1)/usr/lib/pkgconfig
-	$(CP)	$(PKG_INSTALL_DIR)/usr/share/pkgconfig/zlib.pc \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
 		$(1)/usr/lib/pkgconfig/
 endef
 
@@ -90,7 +97,7 @@ define Package/zlib-dev/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.a $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/pkgconfig/zlib.pc \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
 	  $(1)/usr/lib/pkgconfig/
 endef
 
