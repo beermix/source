@@ -37,7 +37,7 @@ endef
 
 define Package/libslang2
 $(call Package/libslang2/Default)
-  DEPENDS:=+terminfo +libpcre
+  DEPENDS:=+terminfo +libpcre +zlib
 endef
 
 define Package/libslang2/description
@@ -55,7 +55,7 @@ CONFIGURE_ARGS+= \
 	--without-onig \
 	--with-pcre="$(STAGING_DIR)/usr" \
 	--without-png \
-	--without-z \
+	--with-z="$(STAGING_DIR)/usr" \
 	--without-x
 
 define Build/Compile
