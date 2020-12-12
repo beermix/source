@@ -8,12 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=polipo
-PKG_VERSION:=1.1.1
-PKG_RELEASE:=2
+PKG_SOURCE_VERSION:=771e908
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.pps.jussieu.fr/~jch/software/files/$(PKG_NAME)/
-PKG_HASH:=a259750793ab79c491d05fcee5a917faf7d9030fb5d15e05b3704e9c9e4ee015
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/ssb22/polipo2
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
 
@@ -41,7 +39,7 @@ define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
-		polipo
+		polipo2
 endef
 
 define Package/polipo/conffiles
@@ -51,7 +49,7 @@ endef
 
 define Package/polipo/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo2 $(1)/usr/sbin/polipo
 	$(INSTALL_DIR) $(1)/etc/polipo
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
 	$(INSTALL_DIR) $(1)/etc/config

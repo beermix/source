@@ -1,0 +1,15 @@
+diff --git a/server.c b/server.c
+index f9f678e..da9cbe5 100644
+--- a/server.c
++++ b/server.c
+@@ -1954,10 +1954,6 @@ httpServerHandlerHeaders(int eof,
+         goto fail;
+     }
+ 
+-    if(via && !checkVia(proxyName, via)) {
+-        httpServerAbort(connection, 1, 504, internAtom("Proxy loop detected"));
+-        goto fail;
+-    }
+     full_len = content_range.full_length;
+ 
+     if(code == 206) {
