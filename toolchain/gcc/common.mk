@@ -126,8 +126,10 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--disable-libstdcxx-pch \
 		--with-linker-hash-style=gnu \
+		--disable-libstdcxx-debug \
+		--with-tune=generic \
+		--enable-cld \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
@@ -144,6 +146,7 @@ GCC_CONFIGURE:= \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
+		--disable-decimal-float \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
