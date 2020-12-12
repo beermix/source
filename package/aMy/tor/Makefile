@@ -40,7 +40,7 @@ define Package/tor/Default
   CATEGORY:=Network
   URL:=https://www.torproject.org/
   USERID:=tor=52:tor=52
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libzstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap
   TITLE:=Tor routing daemon
 endef
 
@@ -139,7 +139,7 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-lzma \
-	--enable-zstd \
+	--disable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--enable-pic
