@@ -40,7 +40,7 @@ endef
 define Package/nsd
   $(Package/nsd/default)
   TITLE += (with SSL support)
-  DEPENDS += +libopenssl
+  DEPENDS += +libopenssl +libevent2
   VARIANT:=ssl
 endef
 
@@ -65,7 +65,7 @@ endef
 define Package/nsd-control
   $(Package/nsd/default)
   TITLE += remote control utility
-  DEPENDS += +libopenssl
+  DEPENDS += +libopenssl +libevent2
 endef
 
 define Package/nsd-control/description
@@ -75,7 +75,7 @@ endef
 define Package/nsd-control-setup
   $(Package/nsd/default)
   TITLE += SSL keys setup script
-  DEPENDS += +openssl-util
+  DEPENDS += +openssl-util +libevent2
 endef
 
 define Package/nsd-control-setup/description
@@ -86,9 +86,10 @@ CONFIGURE_ARGS+= \
 	--enable-packed \
 	--enable-recvmmsg \
 	--enable-tcp-fastopen \
-	--disable-checking \
 	--with-user="network" \
-	--without-libevent \
+	--with-libevent="$(STAGING_DIR)/usr" \
+	--enable-root-server \
+	--with-configdir=/etc/nsd \
 	$(if $(CONFIG_IPV6),--with,--without)-ipv6
 
 CONFIGURE_VARS+= \
@@ -111,6 +112,7 @@ define Package/nsd/install
 	$(INSTALL_DIR) $(1)/etc/nsd
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/nsd/nsd.conf.sample $(1)/etc/nsd/nsd.conf
 	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_DIR) $(1)/etc/nsd
 	$(INSTALL_BIN) ./files/nsd.init $(1)/etc/init.d/nsd
 	$(INSTALL_BIN) ./files/opennic.conf $(1)/etc/nsd/
 endef
