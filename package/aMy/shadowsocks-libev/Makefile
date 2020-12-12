@@ -125,7 +125,7 @@ CONFIGURE_ARGS += \
 	--disable-silent-rules \
 	--disable-assert \
 	--disable-ssp \
-	--enable-connmarktos \
+	--disable-connmarktos \
 
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
