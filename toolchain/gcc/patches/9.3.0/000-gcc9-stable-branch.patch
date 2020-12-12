@@ -92,7 +92,8 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (272):
+GCC Administrator (273):
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -22630,10 +22631,18 @@ index c717f24501e..613553e1a05 100644
  				    "when distributing negation across "
  				    "division"),
 diff --git a/gcc/fortran/ChangeLog b/gcc/fortran/ChangeLog
-index 8fefea2b63d..305a4ea4192 100644
+index 8fefea2b63d..f17da00d225 100644
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,505 @@
+@@ -1,3 +1,513 @@
++2020-12-11  Harald Anlauf  <anlauf@gmx.de>
++
++	Backported from master:
++	2020-11-29  Harald Anlauf  <anlauf@gmx.de>
++
++	* expr.c (simplify_parameter_variable): Fix up character length
++	after copying an array-valued expression.
++
 +2020-12-04  Harald Anlauf  <anlauf@gmx.de>
 +
 +	Backported from master:
