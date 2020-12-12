@@ -1,0 +1,261 @@
+diff --git a/asyncsendto.c b/asyncsendto.c
+index 7abef30..b76d0db 100644
+--- a/asyncsendto.c
++++ b/asyncsendto.c
+@@ -22,6 +22,8 @@
+ #include "asyncsendto.h"
+ #include "upnputils.h"
+ 
++enum send_state {ESCHEDULED=1, EWAITREADY=2, ESENDNOW=3} state;
++
+ /* state diagram for a packet :
+  *
+  *                     |
+@@ -34,7 +36,7 @@
+ struct scheduled_send {
+ 	LIST_ENTRY(scheduled_send) entries;
+ 	struct timeval ts;
+-	enum {ESCHEDULED=1, EWAITREADY=2, ESENDNOW=3} state;
++	enum send_state state;
+ 	int sockfd;
+ 	const void * buf;
+ 	size_t len;
+@@ -96,7 +98,7 @@ sendto_schedule2(int sockfd, const void *buf, size_t len, int flags,
+                  const struct sockaddr_in6 *src_addr,
+                  unsigned int delay)
+ {
+-	enum {ESCHEDULED, EWAITREADY, ESENDNOW} state;
++	enum send_state state;
+ 	ssize_t n;
+ 	size_t alloc_len;
+ 	struct timeval tv;
+diff --git a/commonrdr.h b/commonrdr.h
+index cc10f93..6d8ebab 100644
+--- a/commonrdr.h
++++ b/commonrdr.h
+@@ -57,13 +57,13 @@ unsigned short *
+ get_portmappings_in_range(unsigned short startport, unsigned short endport,
+                           int proto, unsigned int * number);
+ 
+-/* update the port mapping internal port, decription and timestamp */
++/* update the port mapping internal port, description and timestamp */
+ int
+ update_portmapping(const char * ifname, unsigned short eport, int proto,
+                    unsigned short iport, const char * desc,
+                    unsigned int timestamp);
+ 
+-/* update the port mapping decription and timestamp */
++/* update the port mapping description and timestamp */
+ int
+ update_portmapping_desc_timestamp(const char * ifname,
+                    unsigned short eport, int proto,
+diff --git a/gitrev.mk b/gitrev.mk
+index a1f48b9..fa09314 100644
+--- a/gitrev.mk
++++ b/gitrev.mk
+@@ -3,7 +3,6 @@
+ 
+ ISGITREPO := $(shell git rev-parse --is-inside-work-tree)
+ ifeq ($(ISGITREPO),true)
+-GITREF := $(shell git rev-parse --short HEAD)
+-GITBRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+-CPPFLAGS += -DMINIUPNPD_GIT_REF=\"$(GITBRANCH)-$(GITREF)\"
++GITREF := $(shell git describe --exact-match --tags 2> /dev/null || echo "`git rev-parse --abbrev-ref HEAD`-`git rev-parse --short HEAD`" )
++CPPFLAGS += -DMINIUPNPD_GIT_REF=\"$(GITREF)\"
+ endif
+diff --git a/ipf/ipfrdr.c b/ipf/ipfrdr.c
+index 653cb6a..4b10c31 100644
+--- a/ipf/ipfrdr.c
++++ b/ipf/ipfrdr.c
+@@ -804,7 +804,7 @@ get_portmappings_in_range(unsigned short startport, unsigned short endport,
+ 	return array;
+ }
+ 
+-/* update the port mapping internal port, decription and timestamp */
++/* update the port mapping internal port, description and timestamp */
+ int
+ update_portmapping(const char * ifname, unsigned short eport, int proto,
+                    unsigned short iport, const char * desc,
+@@ -817,7 +817,7 @@ update_portmapping(const char * ifname, unsigned short eport, int proto,
+ 	return -1;
+ }
+ 
+-/* update the port mapping decription and timestamp */
++/* update the port mapping description and timestamp */
+ int
+ update_portmapping_desc_timestamp(const char * ifname,
+                    unsigned short eport, int proto,
+diff --git a/netfilter/iptcrdr.c b/netfilter/iptcrdr.c
+index d44db5b..c54a5d2 100644
+--- a/netfilter/iptcrdr.c
++++ b/netfilter/iptcrdr.c
+@@ -9,7 +9,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <syslog.h>
+-#include <sys/errno.h>
++#include <errno.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+diff --git a/netfilter_nft/nftnlrdr.c b/netfilter_nft/nftnlrdr.c
+index bd8b849..7f26abf 100644
+--- a/netfilter_nft/nftnlrdr.c
++++ b/netfilter_nft/nftnlrdr.c
+@@ -15,7 +15,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <syslog.h>
+-#include <sys/errno.h>
++#include <errno.h>
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ #include <netinet/in.h>
+diff --git a/netfilter_nft/nftpinhole.c b/netfilter_nft/nftpinhole.c
+index f287cb1..95cf5b5 100644
+--- a/netfilter_nft/nftpinhole.c
++++ b/netfilter_nft/nftpinhole.c
+@@ -10,7 +10,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <syslog.h>
+-#include <sys/errno.h>
++#include <errno.h>
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ #include <netinet/in.h>
+diff --git a/pf/obsdrdr.c b/pf/obsdrdr.c
+index 26fb92e..f064ee2 100644
+--- a/pf/obsdrdr.c
++++ b/pf/obsdrdr.c
+@@ -1379,7 +1379,7 @@ get_portmappings_in_range(unsigned short startport, unsigned short endport,
+ 	return array;
+ }
+ 
+-/* update the port mapping internal port, decription and timestamp */
++/* update the port mapping internal port, description and timestamp */
+ int
+ update_portmapping(const char * ifname, unsigned short eport, int proto,
+                    unsigned short iport, const char * desc,
+@@ -1406,7 +1406,7 @@ update_portmapping(const char * ifname, unsigned short eport, int proto,
+ 	return 0;
+ }
+ 
+-/* update the port mapping decription and timestamp */
++/* update the port mapping description and timestamp */
+ int
+ update_portmapping_desc_timestamp(const char * ifname,
+                    unsigned short eport, int proto,
+diff --git a/portinuse.c b/portinuse.c
+index 927da1d..fafd93f 100644
+--- a/portinuse.c
++++ b/portinuse.c
+@@ -1,4 +1,4 @@
+-/* $Id: portinuse.c,v 1.11 2020/10/30 21:11:52 nanard Exp $ */
++/* $Id: portinuse.c,v 1.12 2020/11/04 21:29:50 nanard Exp $ */
+ /* vim: tabstop=4 shiftwidth=4 noexpandtab
+  * MiniUPnP project
+  * (c) 2007-2020 Thomas Bernard
+@@ -268,7 +268,7 @@ static struct nlist list[] = {
+ 		/* no support for IPv6 */
+ 		if (INP_ISIPV6(inp) != 0)
+ 			continue;
+-		syslog(LOG_DEBUG, "%08lx:%hu %08lx:%hu <=> %hu %08lx:%hu",
++		syslog(LOG_DEBUG, "%08lx:%hu %08lx:%hu <=> %u %08lx:%u",
+ 		       (u_long)inp->inp_laddr.s_addr, ntohs(inp->inp_lport),
+ 		       (u_long)inp->inp_faddr.s_addr, ntohs(inp->inp_fport),
+ 		       eport, (u_long)ip_addr.s_addr, iport
+@@ -367,7 +367,7 @@ static struct nlist list[] = {
+ 		/* no support for IPv6 */
+ 		if ((xip->inp_vflag & INP_IPV6) != 0)
+ 			continue;
+-		syslog(LOG_DEBUG, "%08lx:%hu %08lx:%hu <=> %hu %08lx:%hu",
++		syslog(LOG_DEBUG, "%08lx:%hu %08lx:%hu <=> %u %08lx:%u",
+ 		       (u_long)inc->inc_laddr.s_addr, ntohs(inc->inc_lport),
+ 		       (u_long)inc->inc_faddr.s_addr, ntohs(inc->inc_fport),
+ 		       eport, (u_long)ip_addr.s_addr, iport
+diff --git a/testupnpdescgen.c b/testupnpdescgen.c
+index 238a272..12d7aa0 100644
+--- a/testupnpdescgen.c
++++ b/testupnpdescgen.c
+@@ -37,7 +37,7 @@ char model_description[] = ROOTDEV_MODELDESCRIPTION;
+ char model_url[] = ROOTDEV_MODELURL;
+ #endif /* ENABLE_MANUFACTURER_INFO_CONFIGURATION */
+ #ifdef RANDOMIZE_URLS
+-char random_url[] = "RANDOM";
++char random_url[RANDOM_URL_MAX_LEN] = "RANDOM";
+ #endif /* RANDOMIZE_URLS */
+ unsigned int upnp_configid = 666;
+ 
+diff --git a/upnphttp.c b/upnphttp.c
+index fc8ccb6..e40bb7b 100644
+--- a/upnphttp.c
++++ b/upnphttp.c
+@@ -949,7 +949,19 @@ Process_upnphttp(struct upnphttp * h)
+ 		}
+ 		else if(n==0)
+ 		{
+-			syslog(LOG_WARNING, "HTTP Connection from %s closed unexpectedly", inet_ntoa(h->clientaddr));
++#ifdef ENABLE_IPV6
++			if (h->ipv6)
++			{
++				char clientaddr_str[INET6_ADDRSTRLEN];
++				if(inet_ntop(AF_INET6, &(h->clientaddr_v6), clientaddr_str, INET6_ADDRSTRLEN) == NULL)
++					strncpy(clientaddr_str, "*inet_ntop error*", sizeof(clientaddr_str));
++				syslog(LOG_WARNING, "HTTP Connection from %s closed unexpectedly", clientaddr_str);
++			}
++			else
++#endif
++			{
++				syslog(LOG_WARNING, "HTTP Connection from %s closed unexpectedly", inet_ntoa(h->clientaddr));
++			}
+ 			h->state = EToDelete;
+ 		}
+ 		else
+@@ -1019,7 +1031,19 @@ Process_upnphttp(struct upnphttp * h)
+ 		}
+ 		else if(n==0)
+ 		{
+-			syslog(LOG_WARNING, "HTTP Connection from %s closed unexpectedly", inet_ntoa(h->clientaddr));
++#ifdef ENABLE_IPV6
++			if (h->ipv6)
++			{
++				char clientaddr_str[INET6_ADDRSTRLEN];
++				if(inet_ntop(AF_INET6, &(h->clientaddr_v6), clientaddr_str, INET6_ADDRSTRLEN) == NULL)
++					strncpy(clientaddr_str, "*inet_ntop error*", sizeof(clientaddr_str));
++				syslog(LOG_WARNING, "HTTP Connection from %s closed unexpectedly", clientaddr_str);
++			}
++			else
++#endif
++			{
++				syslog(LOG_WARNING, "HTTP Connection from %s closed unexpectedly", inet_ntoa(h->clientaddr));
++			}
+ 			h->state = EToDelete;
+ 		}
+ 		else
+diff --git a/upnpredirect.c b/upnpredirect.c
+index e504803..07fa229 100644
+--- a/upnpredirect.c
++++ b/upnpredirect.c
+@@ -588,7 +588,7 @@ upnp_get_portmapping_number_of_entries()
+ #else
+ 	int n = 0, r = 0;
+ 	unsigned short eport, iport;
+-	char protocol[4], iaddr[32], desc[64], rhost[32];
++	char protocol[8], iaddr[32], desc[64], rhost[32];
+ 	unsigned int leaseduration;
+ 	do {
+ 		protocol[0] = '\0'; iaddr[0] = '\0'; desc[0] = '\0';
+diff --git a/upnpstun.c b/upnpstun.c
+index 4ec625e..c87ac40 100644
+--- a/upnpstun.c
++++ b/upnpstun.c
+@@ -252,7 +252,7 @@ static int wait_for_stun_responses(int fds[4], unsigned char *transaction_ids[4]
+ 			FD_SET(fds[i], &fdset);
+ 		}
+ 
+-		syslog(LOG_DEBUG, "%s: waiting %ld secs and %ld usecs", "wait_for_stun_responses", timeout.tv_sec, timeout.tv_usec);
++		syslog(LOG_DEBUG, "%s: waiting %ld secs and %ld usecs", "wait_for_stun_responses", (long)timeout.tv_sec, (long)timeout.tv_usec);
+ 		ret = select(max_fd+1, &fdset, NULL, NULL, &timeout);
+ 		if (ret < 0) {
+ 			if (errno == EINTR)
