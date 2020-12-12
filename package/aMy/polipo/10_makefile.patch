@@ -25,7 +25,7 @@ Subject: Change description
  DEFINES = $(FILE_DEFINES) $(PLATFORM_DEFINES)
  
 -CFLAGS = $(MD5INCLUDES) $(CDEBUGFLAGS) $(DEFINES) $(EXTRA_DEFINES)
-+override CFLAGS += $(MD5INCLUDES) $(CDEBUGFLAGS) $(DEFINES) $(EXTRA_DEFINES)
++override CFLAGS += $(MD5INCLUDES) $(DEFINES) $(EXTRA_DEFINES)
  
  SRCS = util.c event.c io.c chunk.c atom.c object.c log.c diskcache.c main.c \
         config.c local.c http.c client.c server.c auth.c tunnel.c \

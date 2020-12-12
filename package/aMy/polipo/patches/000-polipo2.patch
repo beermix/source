@@ -1,0 +1,219 @@
+diff --git a/Makefile b/Makefile
+index 0afb3b3..3c7607c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -67,12 +67,19 @@ SRCS = util.c event.c io.c chunk.c atom.c object.c log.c diskcache.c main.c \
+        http_parse.c parse_time.c dns.c forbidden.c \
+        md5import.c md5.c ftsimport.c fts_compat.c socks.c mingw.c
+ 
++HEADERS = atom.h auth.h chunk.h client.h config.h \
++       dirent_compat.h diskcache.h dns.h event.h \
++       forbidden.h fts_compat.h ftsimport.h http.h \
++       http_parse.h io.h local.h log.h md5.h md5import.h \
++       mingw.h object.h parse_time.h polipo.h server.h \
++       socks.h tunnel.h util.h
++
+ OBJS = util.o event.o io.o chunk.o atom.o object.o log.o diskcache.o main.o \
+        config.o local.o http.o client.o server.o auth.o tunnel.o \
+        http_parse.o parse_time.o dns.o forbidden.o \
+        md5import.o ftsimport.o socks.o mingw.o
+ 
+-polipo$(EXE): $(OBJS)
++polipo$(EXE): $(OBJS) $(HEADERS)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o polipo$(EXE) $(OBJS) $(MD5LIBS) $(LDLIBS)
+ 
+ ftsimport.o: ftsimport.c fts_compat.c
+diff --git a/chunk.c b/chunk.c
+index 8dd4c47..3b4218d 100644
+--- a/chunk.c
++++ b/chunk.c
+@@ -60,8 +60,11 @@ initChunksCommon()
+             chunkHighMark = mem / 4;
+         else
+             chunkHighMark = 24 * MB;
+-        chunkHighMark = MIN(chunkHighMark, 24 * MB);
+-        chunkHighMark = MAX(chunkHighMark, 8 * CHUNK_SIZE);
++        extern AtomPtr diskCacheRoot;
++        if (*diskCacheRoot->string) /* there's disk cache */
++          chunkHighMark = MIN(chunkHighMark, 24 * MB);
++        /* else leave it at 25% of the physical RAM */
++        chunkHighMark = MAX(chunkHighMark, 8 * CHUNK_SIZE); /* chunk.h defaults (can be overriden at compile time) 8*4K on 32-bit, 8*8K on 64 */
+     }
+ 
+     if(chunkHighMark < MB / 2)
+diff --git a/client.c b/client.c
+index 7de174e..1191721 100644
+--- a/client.c
++++ b/client.c
+@@ -230,7 +230,7 @@ httpClientFinish(HTTPConnectionPtr connection, int s)
+            into the queue */
+         if(connection->request) {
+             if(connection->request->object != NULL)
+-                httpClientNoticeRequest(connection->request, 1);
++              httpClientNoticeRequest(connection->request, 1,0);
+             else
+                 assert(connection->flags & CONN_READER);
+         }
+@@ -500,7 +500,7 @@ httpClientNoticeErrorHeaders(HTTPRequestPtr request, int code, AtomPtr message,
+     request->error_code = code;
+     request->error_message = message;
+     request->error_headers = headers;
+-    httpClientNoticeRequest(request, 0);
++    httpClientNoticeRequest(request, 0,0);
+     return 1;
+ }
+ 
+@@ -557,7 +557,7 @@ httpClientNewError(HTTPConnectionPtr connection, int method, int persist,
+     request->error_message = message;
+ 
+     httpQueueRequest(connection, request);
+-    httpClientNoticeRequest(request, 0);
++    httpClientNoticeRequest(request, 0,0);
+     return 1;
+ }
+         
+@@ -947,7 +947,7 @@ httpClientRequestContinue(int forbidden_code, AtomPtr url,
+     request->object = object;
+ 
+     httpClientDiscardBody(connection);
+-    httpClientNoticeRequest(request, 0);
++    httpClientNoticeRequest(request, 0,0);
+     return 1;
+ }
+ 
+@@ -1075,7 +1075,7 @@ httpClientDiscardHandler(int status,
+ }
+ 
+ int
+-httpClientNoticeRequest(HTTPRequestPtr request, int novalidate)
++httpClientNoticeRequest(HTTPRequestPtr request, int novalidate, int recursionLevel)
+ {
+     HTTPConnectionPtr connection = request->connection;
+     ObjectPtr object = request->object;
+@@ -1208,7 +1208,7 @@ httpClientNoticeRequest(HTTPRequestPtr request, int novalidate)
+         if(serveNow) {
+             connection->flags |= CONN_WRITER;
+             lockChunk(request->object, request->from / CHUNK_SIZE);
+-            return httpServeObject(connection);
++            return httpServeObject(connection,recursionLevel+1);
+         } else {
+             return 1;
+         }
+@@ -1275,7 +1275,7 @@ static int
+ httpClientNoticeRequestDelayed(TimeEventHandlerPtr event)
+ {
+     HTTPRequestPtr request = *(HTTPRequestPtr*)event->data;
+-    httpClientNoticeRequest(request, 0);
++    httpClientNoticeRequest(request, 0,0);
+     return 1;
+ }
+ 
+@@ -1502,7 +1502,7 @@ httpClientSideRequest(HTTPRequestPtr request)
+         return 1;
+     }
+         
+-    return httpClientNoticeRequest(request, 0);
++    return httpClientNoticeRequest(request, 0,0);
+ }
+ 
+ int 
+@@ -1575,7 +1575,7 @@ httpClientSideHandler(int status,
+ }
+ 
+ int 
+-httpServeObject(HTTPConnectionPtr connection)
++httpServeObject(HTTPConnectionPtr connection,int recursionLevel)
+ {
+     HTTPRequestPtr request = connection->request;
+     ObjectPtr object = request->object;
+@@ -1590,6 +1590,12 @@ httpServeObject(HTTPConnectionPtr connection)
+ 
+     httpSetTimeout(connection, -1);
+ 
++    if (recursionLevel > 20 ) {
++      unlockChunk(object, i);
++      return httpClientRawError(connection,
++                                      500, internAtom("polipo recursionLevel guard failed."), 0);
++    }
++
+     if((request->error_code && relaxTransparency <= 0) ||
+        object->flags & OBJECT_INITIAL) {
+         object->flags &= ~OBJECT_FAILED;
+@@ -1663,7 +1669,7 @@ httpServeObject(HTTPConnectionPtr connection)
+         }
+         request->object = object;
+         connection->flags &= ~CONN_WRITER;
+-        return httpClientNoticeRequest(request, 1);
++        return httpClientNoticeRequest(request, 1,recursionLevel+1);
+     }
+ 
+     if(object->flags & OBJECT_ABORTED) {
+@@ -1829,7 +1835,7 @@ static int
+ httpServeObjectDelayed(TimeEventHandlerPtr event)
+ {
+     HTTPConnectionPtr connection = *(HTTPConnectionPtr*)event->data;
+-    httpServeObject(connection);
++    httpServeObject(connection,0);
+     return 1;
+ }
+ 
+diff --git a/client.h b/client.h
+index f62601e..4cc4f2a 100644
+--- a/client.h
++++ b/client.h
+@@ -49,8 +49,8 @@ int httpClientGetHandler(int, ConditionHandlerPtr);
+ int httpClientHandlerHeaders(FdEventHandlerPtr event, 
+                                 StreamRequestPtr request,
+                                 HTTPConnectionPtr connection);
+-int httpClientNoticeRequest(HTTPRequestPtr request, int);
+-int httpServeObject(HTTPConnectionPtr);
++int httpClientNoticeRequest(HTTPRequestPtr request, int,int);
++int httpServeObject(HTTPConnectionPtr,int);
+ int delayedHttpServeObject(HTTPConnectionPtr connection);
+ int httpServeObjectStreamHandler(int status, 
+                                  FdEventHandlerPtr event,
+diff --git a/object.c b/object.c
+index ec9835a..28cc7da 100644
+--- a/object.c
++++ b/object.c
+@@ -84,6 +84,11 @@ void
+ initObject()
+ {
+     int q;
++    if(objectHighMark == 0) {
++      extern int chunkHighMark;
++      objectHighMark = chunkHighMark / 12288; /* 2048 for every 24M in chunkHighMark */
++      if (objectHighMark < 2048) objectHighMark = 2048;
++    }
+     if(objectHighMark < 16) {
+         objectHighMark = 16;
+         do_log(L_WARN, "Impossibly low objectHighMark -- setting to %d.\n",
+@@ -129,9 +134,14 @@ findObject(int type, const void *key, int key_size)
+     int h;
+     ObjectPtr object;
+ 
+-    if(key_size >= 50000)
++    if(key == NULL || key_size >= 50000)
+         return NULL;
+ 
++    /* The following line will segfault if key is a dangling
++       pointer or key_size is incorrect.  recursionLevel
++       check added to client.c because gdb notices thousands
++       of mutual calls between httpServeObject and
++       httpClientNoticeRequest when this happens. */
+     h = hash(type, key, key_size, log2ObjectHashTableSize);
+     object = objectHashTable[h];
+     if(!object)
+@@ -659,7 +669,11 @@ destroyObject(ObjectPtr object)
+         if(object->etag) free(object->etag);
+         if(object->via) releaseAtom(object->via);
+         for(i = 0; i < object->numchunks; i++) {
+-            assert(!object->chunks[i].locked);
++            if (object->chunks[i].locked) {
++              /* This is bad news.  How did we end up with a
++                 reference count of 0 when we're locked ? */
++              do_log(L_ERROR, "Object still locked when no references left: forgotten unlockChunk?\n");
++            }
+             if(object->chunks[i].data)
+                 dispose_chunk(object->chunks[i].data);
+             object->chunks[i].data = NULL;
