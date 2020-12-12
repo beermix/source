@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.nlnetlabs.nl/downloads/nsd
-#PKG_HASH:=9ebd6d766765631a56c0eb332eac26b310fa39f662e5582c8210488cf91ef27c
+PKG_HASH:=3be834a97151a7ba8185e46bc37ff12c2f25f399755ae8a2d0e3711801528b50
 
 PKG_MAINTAINER:=Vasilis Tsiligiannis <acinonyx@openwrt.gr>
 PKG_LICENSE:=BSD-3-Clause
@@ -112,6 +112,7 @@ define Package/nsd/install
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/nsd/nsd.conf.sample $(1)/etc/nsd/nsd.conf
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/nsd.init $(1)/etc/init.d/nsd
+	$(INSTALL_BIN) ./files/opennic.conf $(1)/etc/nsd/
 endef
 
 define Package/nsd-control/install
