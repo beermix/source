@@ -128,8 +128,6 @@ GCC_CONFIGURE:= \
 		--enable-target-optspace \
 		--with-linker-hash-style=gnu \
 		--disable-libstdcxx-debug \
-		--with-tune=generic \
-		--enable-cld \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \

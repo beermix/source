@@ -100,6 +100,25 @@ dhcp_calc() {
 	echo "$res"
 }
 
+dhcp_check() {
+	local ifname="$1"
+	local stamp="${BASEDHCPSTAMPFILE_CFG}.${ifname}.dhcp"
+	local rv=0
+
+	[ -s "$stamp" ] && return $(cat "$stamp")
+
+	# If interface is down, skip it.
+	# The init script will be called again once the link is up
+	case "$(devstatus "$ifname" | jsonfilter -e @.up)" in
+		false) return 1;;
+	esac
+
+	udhcpc -n -q -s /bin/true -t 1 -i "$ifname" >&- && rv=1 || rv=0
+
+	echo $rv > "$stamp"
+	return $rv
+}
+
 log_once() {
 	pidof dnsmasq >/dev/null || \
 		logger -t dnsmasq "$@"
@@ -496,6 +515,15 @@ dhcp_add() {
 	# Override interface netmask with dhcp config if applicable
 	config_get netmask "$cfg" netmask "${subnet##*/}"
 
+	#check for an already active dhcp server on the interface, unless 'force' is set
+	config_get_bool force "$cfg" force 0
+	[ $force -gt 0 ] || dhcp_check "$ifname" || {
+		logger -t dnsmasq \
+			"found already running DHCP-server on interface '$ifname'" \
+			"refusing to start, use 'option force 1' to override"
+		return 0
+	}
+
 	config_get start "$cfg" start 100
 	config_get limit "$cfg" limit 150
 	config_get leasetime "$cfg" leasetime 12h
@@ -868,11 +896,7 @@ dnsmasq_start()
 	append_bool "$cfg" rapidcommit "--dhcp-rapid-commit"
 	append_bool "$cfg" scriptarp "--script-arp"
 
-	append_bool "$cfg" filter_aaaa "--filter-aaaa"
-
 	append_parm "$cfg" logfacility "--log-facility"
-
-	append_parm "$cfg" mini_ttl "--min-ttl"
 
 	append_parm "$cfg" cachesize "--cache-size"
 	append_parm "$cfg" dnsforwardmax "--dns-forward-max"
@@ -1086,10 +1110,6 @@ dnsmasq_start()
 	procd_add_jail_mount_rw /var/run/dnsmasq/ $leasefile
 
 	procd_close_instance
-
-	config_get_bool dns_redirect "$cfg" dns_redirect 0
-	config_get dns_port "$cfg" port 53
-	[ "$dns_redirect" = 1 ] && iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
 }
 
 dnsmasq_stop()
@@ -1105,23 +1125,6 @@ dnsmasq_stop()
 	[ "$localuse" -gt 0 ] && ln -sf "/tmp/resolv.conf.d/resolv.conf.auto" /tmp/resolv.conf
 
 	rm -f ${BASEDHCPSTAMPFILE}.${cfg}.*.dhcp
-}
-
-iptables_clear()
-{
-	nums=$(iptables -t nat -n -L PREROUTING 2>/dev/null | grep -c "DNSMASQ")
-	if [ -n "$nums" ]; then
-		until [ "$nums" = 0 ]
-		do
-			rules=$(iptables -t nat -n -L PREROUTING --line-num 2>/dev/null | grep "DNSMASQ" | awk '{print $1}')
-			for rule in $rules
-			do
-				iptables -t nat -D PREROUTING $rule 2> /dev/null
-				break
-			done
-			nums=$(expr $nums - 1)
-		done
-	fi
 }
 
 add_interface_trigger()
@@ -1176,7 +1179,6 @@ start_service() {
 }
 
 reload_service() {
-	iptables_clear
 	rc_procd start_service "$@"
 	procd_send_signal dnsmasq "$@"
 }
@@ -1203,5 +1205,4 @@ stop_service() {
 	else
 		config_foreach dnsmasq_stop dnsmasq
 	fi
-	iptables_clear
 }
