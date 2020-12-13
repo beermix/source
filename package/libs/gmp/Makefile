@@ -28,7 +28,6 @@ include $(INCLUDE_DIR)/package.mk
 define Package/libgmp
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+libstdcpp
   TITLE:=GNU multiprecision arithmetic library
   URL:=http://gmplib.org/
   ABI_VERSION:=10
@@ -45,7 +44,7 @@ CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
 	--without-readline \
-	--enable-cxx \
+	--disable-fft \
 
 define Build/Compile
 	$(call Build/Compile/Default, \
@@ -60,13 +59,11 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/gmp* $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgmp.{a,so*} $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgmpxx.{a,so*} $(1)/usr/lib/
 endef
 
 define Package/libgmp/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgmp.so.* $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgmpxx.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libgmp))
