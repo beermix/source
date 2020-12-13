@@ -20,10 +20,10 @@ start() {
 	config_foreach polipo_config 'polipo'
 
 	# handle values that are disabled when not defined or empty
-	echo "### VALUES THAT ARE DISABLED WHEN EMPTY" >> $CFGFILE
-	polipo_atom "cache" "diskCacheRoot" '"' "1" >> $CFGFILE
-	polipo_atom "general" "logFile" '"' "1" >> $CFGFILE
-	polipo_atom "general" "localDocumentRoot" '"' "1" >> $CFGFILE
+	# echo "### VALUES THAT ARE DISABLED WHEN EMPTY" >> $CFGFILE
+	# polipo_atom "cache" "diskCacheRoot" '"' "1" >> $CFGFILE
+	# polipo_atom "general" "logFile" '"' "1" >> $CFGFILE
+	# polipo_atom "general" "localDocumentRoot" '"' "1" >> $CFGFILE
 
 	service_start /usr/sbin/polipo -c "$CFGFILE"
 }
