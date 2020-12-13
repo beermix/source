@@ -1,0 +1,33 @@
+diff --git a/client.c b/client.c
+index a336e5a..0cbe445 100644
+--- a/client.c
++++ b/client.c
+@@ -935,13 +935,6 @@ httpClientRequestContinue(int forbidden_code, AtomPtr url,
+             return 1;
+         }
+ 
+-        if(!checkVia(proxyName, request->via)) {
+-            httpClientDiscardBody(connection);
+-            httpClientNoticeError(request, 504, 
+-                                  internAtom("Proxy loop detected"));
+-            releaseObject(object);
+-            return 1;
+-        }
+     }
+ 
+     request->object = object;
+diff --git a/server.c b/server.c
+index 4ce1d17..a8f3b8e 100644
+--- a/server.c
++++ b/server.c
+@@ -2007,10 +2007,6 @@ httpServerHandlerHeaders(int eof,
+         goto fail;
+     }
+ 
+-    if(via && !checkVia(proxyName, via)) {
+-        httpServerAbort(connection, 1, 504, internAtom("Proxy loop detected"));
+-        goto fail;
+-    }
+     full_len = content_range.full_length;
+ 
+     if(code == 206) {

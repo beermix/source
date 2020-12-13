@@ -39,7 +39,7 @@ endef
 
 CONFIGURE_VARS += ac_cv_path_A2X=no
 
-CONFIGURE_ARGS += --enable-transparent
+CONFIGURE_ARGS += --enable-transparent --disable-manpage_support --disable-debug
 
 define Package/tinyproxy/install
 	$(INSTALL_DIR) $(1)/usr/bin
