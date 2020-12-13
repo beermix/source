@@ -1,5 +1,5 @@
 diff --git a/config.toml.example b/config.toml.example
-index 5b045d4e..5ce95ada 100644
+index 5b045d4e..0fae341d 100644
 --- a/config.toml.example
 +++ b/config.toml.example
 @@ -92,13 +92,13 @@ changelog-seen = 2
@@ -18,11 +18,3 @@ index 5b045d4e..5ce95ada 100644
  
  # Cap the number of parallel linker invocations when compiling LLVM.
  # This can be useful when building LLVM with debug info, which significantly
- # this target is a host for rustc, this will also affect the linkage of the
- # compiler itself. This is useful for building rustc on targets that normally
- # only use static libraries. If unset, the target's default linkage is used.
--#crt-static = false
-+#crt-static = false 
- 
- # The root location of the musl installation directory. The library directory
- # will also need to contain libunwind.a for an unwinding implementation. Note
