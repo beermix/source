@@ -48,37 +48,7 @@ define Package/nsd/description
   $(Package/nsd/default/description)
 endef
 
-define Package/nsd-nossl
-  $(Package/nsd/default)
-  TITLE += (without SSL support)
-  VARIANT:=nossl
-endef
-
-define Package/nsd-nossl/description
-  $(Package/nsd/default/description)
-endef
-
 define Package/nsd-checkconf/description
-  $(Package/nsd/default/description)
-endef
-
-define Package/nsd-control
-  $(Package/nsd/default)
-  TITLE += remote control utility
-  DEPENDS += +libopenssl +libevent2
-endef
-
-define Package/nsd-control/description
-  $(Package/nsd/default/description)
-endef
-
-define Package/nsd-control-setup
-  $(Package/nsd/default)
-  TITLE += SSL keys setup script
-  DEPENDS += +openssl-util +libevent2
-endef
-
-define Package/nsd-control-setup/description
   $(Package/nsd/default/description)
 endef
 
@@ -108,7 +78,7 @@ endef
 
 define Package/nsd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{nsd,nsd-checkconf} $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{nsd,nsd-checkconf,nsd-checkzone,nsd-control,nsd-control-setup} $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/nsd
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/nsd/nsd.conf.sample $(1)/etc/nsd/nsd.conf
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -117,20 +87,4 @@ define Package/nsd/install
 	$(INSTALL_BIN) ./files/opennic.conf $(1)/etc/nsd/
 endef
 
-define Package/nsd-control/install
-	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/nsd-control $(1)/usr/sbin/
-endef
-
-define Package/nsd-control-setup/install
-	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/nsd-control-setup $(1)/usr/sbin/
-endef
-
-Package/nsd-nossl/install = $(Package/nsd/install)
-Package/nsd-nossl/conffiles = $(Package/nsd/conffiles)
-
 $(eval $(call BuildPackage,nsd))
-$(eval $(call BuildPackage,nsd-nossl))
-$(eval $(call BuildPackage,nsd-control))
-$(eval $(call BuildPackage,nsd-control-setup))
