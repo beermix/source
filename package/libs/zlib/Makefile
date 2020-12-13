@@ -56,7 +56,7 @@ endef
 TARGET_CFLAGS += $(FPIC)
 
 ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
-	TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
+	TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
 endif
 
 CMAKE_OPTIONS += \
