@@ -91,7 +91,7 @@ define Host/Compile
 	[ $(RUST_BINARY) = true ] && ( true ) || \
 	  ( cd $(HOST_BUILD_DIR) && \
 	     ( RUST_BACKTRACE=full \
-		$(PYTHON) x.py --config ./config.toml build --verbose -j8 ) && \
+		noti ionice -c 3 nice $(PYTHON) x.py --config ./config.toml build --verbose -j8 ) && \
 		   ( $(RUST_INSTALL_BINARIES)))
 endef
 
