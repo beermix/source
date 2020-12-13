@@ -12,12 +12,10 @@ PKG_VERSION:=1.48.0
 #PKG_SOURCE_DATE:=2020-12-13
 #PKG_SOURCE_VERSION:=d149b6579fb118ea75b16cb7a6afa62695d88992
 
-
+PKG_SOURCE:=rustc-$(PKG_VERSION)-src.tar.xz
 PKG_SOURCE_URL:=https://static.rust-lang.org/dist
-
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)c-$(PKG_VERSION)-src
-PKG_SOURCE:=$(PKG_NAME)c-$(PKG_VERSION)-src.tar.xz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_SOURCE_SUBDIR)
+PKG_BUILD_DIR:=$(BUILD_DIR)/rustc-$(PKG_VERSION)-src
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/rustc-$(PKG_VERSION)-src
 
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
@@ -34,6 +32,7 @@ CMAKE_INSTALL:=1
 #gen_sha256sum=$(shell mkhash sha256 $(DL_DIR)/$(1))
 #fixup_rust_hash=$(shell $(SCRIPT_DIR)/fixup-makefile.pl $(1) fix-hash $(2) $(3))
 
+#   --set="target.$(RUSTC_TARGET_ARCH).crt-static=false" --set="target.$(RUSTC_HOST_ARCH).crt-static=false" \
 # Basic Configuration Args that are used across all builds.
 # Other build arguments are found in ./rustc-config.mk
 #   --enable-llvm-link-shared \  --llvm-root=/usr/lib/llvm-7 \
@@ -52,13 +51,6 @@ CONFIGURE_ARGS = \
   --localstatedir=/var \
   --release-channel="stable" \
   --enable-lld \
-  --enable-extended \
-  --tools="analysis,cargo,src" \
-  --enable-option-checking \
-  --enable-locked-deps \
-  --enable-vendor \
-  --set="target.$(RUSTC_TARGET_ARCH).crt-static=false" \
-  --set="target.$(RUSTC_HOST_ARCHcrt-static=false" \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
@@ -103,7 +95,9 @@ define Host/Compile
 	[ $(RUST_BINARY) = true ] && ( true ) || \
 	  ( cd $(HOST_BUILD_DIR) && \
 	     ( RUST_BACKTRACE=full \
-		$(PYTHON) x.py --config ./config.toml build --verbose  -j8 ) && \
+		$(PYTHON) x.py --config ./config.toml dist cargo extended \
+		   library/std llvm-tools miri rust-dev rustc-dev src \
+		   src/librustc src/lldb_batchmode.py src/tools/build-manifest ) && \
 		   ( $(RUST_INSTALL_BINARIES)))
 endef
 

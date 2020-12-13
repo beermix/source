@@ -76,11 +76,11 @@ menu "Compiler Options"
 
 	config RUST_FULL_TOOLS
 		bool "Build all tools (--enable-full-tools)"
-		default n
+		default y
 
 	config RUST_MISSING_TOOLS
 		bool "Allow failures when building tools (--enable-missing-tools)"
-		default n
+		default y
 
 	config RUST_USE_LIBCXX
 		bool "Build LLMV with libc++ (--enable-use-libcxx)"
@@ -112,7 +112,7 @@ menu "Compiler Options"
 
 	config RUST_MANAGE_SUBMODULES
 		bool "Let the build manage the git submodules (--enable-manage-submodules)"
-		default n
+		default y
 
 	config RUST_FULL_BOOTSTRAP
 		bool "Full Bootstrap - Build three compilers instead of two (--enable-full-bootstrap)"
