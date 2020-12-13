@@ -8,12 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=polipo
-PKG_VERSION:=1.1.1
-PKG_RELEASE:=2
+PKG_SOURCE_VERSION:=f048871
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.pps.jussieu.fr/~jch/software/files/$(PKG_NAME)/
-PKG_HASH:=a259750793ab79c491d05fcee5a917faf7d9030fb5d15e05b3704e9c9e4ee015
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/zhangchn/polipo
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
 
