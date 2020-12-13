@@ -92,9 +92,9 @@ CONFIGURE_ARGS+= \
 	--with-libevent="$(STAGING_DIR)/usr" \
 	--enable-root-server
 
-CONFIGURE_VARS+= \
-	ac_cv_c_va_list_def=no \
-	ac_cv_c_strptime_needs_defs=no
+#CONFIGURE_VARS+= \
+#	ac_cv_c_va_list_def=no \
+#	ac_cv_c_strptime_needs_defs=no
 
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS += --with-ssl="$(STAGING_DIR)/usr"
