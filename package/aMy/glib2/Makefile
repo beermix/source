@@ -47,7 +47,7 @@ TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
-	-Ddefault_library=both \
+	-Ddefault_library=shared \
 	-Dxattr=false \
 	-Dselinux=disabled \
 	-Dlibmount=disabled \
@@ -64,8 +64,8 @@ COMP_ARGS= \
 	-Dglib_assert=false \
 	-Dglib_checks=false
 
-MESON_HOST_ARGS += $(COMP_ARGS) -Dxattr=false
-MESON_ARGS += $(COMP_ARGS) -Dxattr=true -Db_lto=true
+MESON_HOST_ARGS += $(COMP_ARGS)
+MESON_ARGS += $(COMP_ARGS) -Db_lto=true
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/bin

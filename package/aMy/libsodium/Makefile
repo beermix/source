@@ -8,17 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsodium
-PKG_SOURCE_VERSION:=899c3a6
+PKG_VERSION:=1.0.18
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://download.libsodium.org/libsodium/releases \
+		https://github.com/jedisct1/libsodium/releases/download/$(PKG_VERSION)
+PKG_HASH:=6f504490b342a4f8a4c4a02fc9b866cbef8622d5df4e5452b46be121e46636c1
 
 PKG_MAINTAINER:=Damiano Renfer <damiano.renfer@gmail.com>
 PKG_LICENSE:=ISC
 PKG_LICENSE_FILES:=LICENSE
 
 PKG_USE_MIPS16:=0
-+PKG_FIXUP:=autoreconf
+PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
@@ -49,8 +52,7 @@ menu "Configuration"
 endmenu
 endef
 
-# TARGET_CFLAGS := -Ofast $(filter-out -O%,$(TARGET_CFLAGS))
-# TARGET_CFLAGS := $(filter-out -fno-caller-saves,$(TARGET_CFLAGS))
+TARGET_CFLAGS := -O2 $(filter-out -O%,$(TARGET_CFLAGS))
 
 CONFIGURE_ARGS+= \
 	--disable-ssp \
