@@ -1,0 +1,13 @@
+diff --git a/config.toml.example b/config.toml.example
+index 5b045d4e..689adbf2 100644
+--- a/config.toml.example
++++ b/config.toml.example
+@@ -604,7 +604,7 @@ changelog-seen = 2
+ # this target is a host for rustc, this will also affect the linkage of the
+ # compiler itself. This is useful for building rustc on targets that normally
+ # only use static libraries. If unset, the target's default linkage is used.
+-#crt-static = false
++crt-static = false
+ 
+ # The root location of the musl installation directory. The library directory
+ # will also need to contain libunwind.a for an unwinding implementation. Note

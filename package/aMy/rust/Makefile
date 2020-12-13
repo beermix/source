@@ -4,16 +4,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
-PKG_VERSION:=1.49.0
-PKG_RELEASE:=2
-PKG_LICENSE:=Apache-2.0 MIT
-PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
+#PKG_VERSION:=1.49.0
+#PKG_RELEASE:=2
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
-PKG_SOURCE_DATE:=2020-12-13
-#PKG_SOURCE_VERSION:=b2d115f6db5172c961dfeb50de15f35784dbc7c9
-PKG_SOURCE_VERSION:=d149b6579fb118ea75b16cb7a6afa62695d88992
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
+#PKG_SOURCE_DATE:=2020-12-13
+#PKG_SOURCE_VERSION:=d149b6579fb118ea75b16cb7a6afa62695d88992
+
+PKG_VERSION:=1.48.0
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://static.rust-lang.org/dist
+
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
 
@@ -31,7 +33,7 @@ CMAKE_INSTALL:=1
 
 # Basic Configuration Args that are used across all builds.
 # Other build arguments are found in ./rustc-config.mk
-#   --enable-llvm-link-shared \  --llvm-root=/usr/lib/llvm-11 \
+#   --enable-llvm-link-shared \  --llvm-root=/usr/lib/llvm-7 \
 # Default CONFIGURE_ARGS introduces unknown options - Use this instead
 CONFIGURE_ARGS = \
   --host=$(RUSTC_HOST_ARCH) \
@@ -45,8 +47,13 @@ CONFIGURE_ARGS = \
   --mandir=$(CARGO_HOME)/man \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
-  --release-channel=nightly \
+  --release-channel="stable" \
   --enable-lld \
+  --enable-extended \
+  --tools="analysis,cargo,src" \
+  --enable-option-checking \
+  --enable-locked-deps \
+  --enable-vendor \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
@@ -91,7 +98,7 @@ define Host/Compile
 	[ $(RUST_BINARY) = true ] && ( true ) || \
 	  ( cd $(HOST_BUILD_DIR) && \
 	     ( RUST_BACKTRACE=full \
-		noti ionice -c 3 nice $(PYTHON) x.py --config ./config.toml build --verbose -j8 ) && \
+		$(PYTHON) x.py --config ./config.toml build --verbose  -j8 ) && \
 		   ( $(RUST_INSTALL_BINARIES)))
 endef
 
@@ -132,8 +139,6 @@ define Package/rust
   CATEGORY:=Languages
   TITLE:=Rust Programming Language Compiler
   URL:=https://www.rust-lang.org/
-  DEPENDS:=+python3 +ninja +pkg-config +libopenssl +libyaml \
-    +libyaml-cpp +openssl-util +python3-yaml
 endef
 
 define Package/rust/description
