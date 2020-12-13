@@ -57,6 +57,8 @@ CONFIGURE_ARGS = \
   --enable-option-checking \
   --enable-locked-deps \
   --enable-vendor \
+  --set="target.$(RUSTC_TARGET_ARCH).crt-static=false" \
+  --set="target.$(RUSTC_HOST_ARCHcrt-static=false" \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
