@@ -8,11 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsodium
-PKG_SOURCE_VERSION:=16a0bdc
+PKG_SOURCE_VERSION:=899c3a6
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium
-PKG_MIRROR_HASH:=437138b600ed358b3b8dd27870a24517747e74e0e4061c0e497e4ef7d5811ba6
+PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium.git
 
 PKG_MAINTAINER:=Damiano Renfer <damiano.renfer@gmail.com>
 PKG_LICENSE:=ISC
@@ -55,6 +54,7 @@ endef
 
 CONFIGURE_ARGS+= \
 	--disable-ssp \
+	--disable-debug \
 	$(if $(CONFIG_LIBSODIUM_MINIMAL),--enable,--disable)-minimal
 
 define Build/InstallDev

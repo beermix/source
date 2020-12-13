@@ -16,7 +16,7 @@ PKG_BUILD_DEPENDS:=meson/host
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include ../../devel/meson/meson.mk
+include ../../../feeds/packages/devel/meson/meson.mk
 
 MESON_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/build/meson/openwrt-build
 
