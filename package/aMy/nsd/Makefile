@@ -30,7 +30,7 @@ define Package/nsd/default
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=IP Addresses and Names
-  USERID:=_nsd:_nsd
+  USERID:=nsd:nsd
 endef
 
 define Package/nsd/default/description
@@ -59,7 +59,7 @@ CONFIGURE_ARGS+= \
 	--enable-tcp-fastopen \
 	--disable-checking \
 	--disable-ipv6 \
-	--with-user="_nsd" \
+	--with-user="nsd" \
 	--with-libevent="$(STAGING_DIR)/usr" \
 	--enable-root-server
 
