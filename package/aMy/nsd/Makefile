@@ -86,11 +86,11 @@ CONFIGURE_ARGS+= \
 	--enable-packed \
 	--enable-recvmmsg \
 	--enable-tcp-fastopen \
+	--disable-checking \
+	--disable-ipv6 \
 	--with-user="network" \
 	--with-libevent="$(STAGING_DIR)/usr" \
-	--enable-root-server \
-	--with-configdir=/etc/nsd \
-	$(if $(CONFIG_IPV6),--with,--without)-ipv6
+	--enable-root-server
 
 CONFIGURE_VARS+= \
 	ac_cv_c_va_list_def=no \
