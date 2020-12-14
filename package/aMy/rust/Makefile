@@ -26,7 +26,7 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/download.mk
 include ./rustc-triple.mk
 
-HOST_BUILD_DEPENDS:=rust/host ninja/host python3/host
+HOST_BUILD_DEPENDS:=rust/host ninja/host libffi/host python3/host
 CMAKE_INSTALL:=1
 
 #gen_sha256sum=$(shell mkhash sha256 $(DL_DIR)/$(1))
