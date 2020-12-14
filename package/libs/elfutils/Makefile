@@ -22,6 +22,7 @@ PKG_CPE_ID:=cpe:/a:elfutils_project:elfutils
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 PKG_USE_MIPS16:=0
+PKG_BUILD_DEPENDS:=!USE_GLIBC:argp-standalone
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -38,18 +39,18 @@ endef
 define Package/libasm
   $(call Package/elfutils/Default)
   TITLE+= (libasm)
-  DEPENDS:=+libelf +libdw +musl-fts
+  DEPENDS:=+libelf +libdw
 endef
 
 define Package/libdw
   $(call Package/elfutils/Default)
-  DEPENDS:=+libelf +libbz2 +musl-fts
+  DEPENDS:=+libelf +libbz2
   TITLE+= (libdw)
 endef
 
 define Package/libelf
   $(call Package/elfutils/Default)
-  DEPENDS:=$(INTL_DEPENDS) +zlib +musl-fts +argp-standalone +libbsd +musl-obstack
+  DEPENDS:=$(INTL_DEPENDS) +zlib
   TITLE+= (libelf)
   PROVIDES:=libelf1
 endef
@@ -62,7 +63,6 @@ endif
 
 CONFIGURE_ARGS += \
 	--program-prefix=eu- \
-	--disable-nls \
 	--disable-debuginfod \
 	--disable-libdebuginfod \
 	--without-lzma
