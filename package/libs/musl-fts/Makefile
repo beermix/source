@@ -43,18 +43,20 @@ define Package/musl-fts/description
   The musl-fts package implements the fts(3) functions fts_open, fts_read, fts_children, fts_set and fts_close, which are missing in musl libc.
 endef
 
+CONFIGURE_ARGS += \
+	--disable-shared \
+	--enable-static \
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/fts.h $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libfts.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libfts.a $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/musl-fts.pc $(1)/usr/lib/pkgconfig/
 endef
 
 define Package/musl-fts/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libfts.so* $(1)/usr/lib/
+true
 endef
 
 $(eval $(call BuildPackage,musl-fts))

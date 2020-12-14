@@ -6,12 +6,14 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=rust
 PKG_VERSION:=1.49.0
 PKG_RELEASE:=1
+PKG_LICENSE:=Apache-2.0 MIT
+PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
 PKG_SOURCE_DATE:=2020-11-11
 PKG_SOURCE_VERSION:=7feab000b283139b5b7ba131a2495515bc80c627
-PKG_SOURCE:=rust-$(PKG_SOURCE_VERSION).tar.xz
+#PKG_SOURCE:=rust-$(PKG_SOURCE_VERSION).tar.xz
 
 #PKG_SOURCE:=rustc-$(PKG_VERSION)-src.tar.xz
 #PKG_SOURCE_URL:=https://static.rust-lang.org/dist
