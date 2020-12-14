@@ -123,6 +123,8 @@ start_proxy() {
 
 	proxy_string "$1" ViaProxyName
 	proxy_flag "$1" DisableViaHeader Yes No
+	proxy_flag "$1" ReverseOnly Yes No
+	proxy_flag "$1" ReverseMagic Yes No
 	proxy_string "$1" Filter
 
 	proxy_flag "$1" FilterURLs
