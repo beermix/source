@@ -51,7 +51,7 @@ define Package/libncurses-dev
   TITLE:=Development files for the ncurses library
 endef
 
-TARGET_CFLAGS += $(FPIC) -flto
+TARGET_CFLAGS += $(FPIC)
 
 define Package/ncurses-bin
   SECTION:=utils
