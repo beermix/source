@@ -13,16 +13,15 @@ endif
 
 CONFIG_HOST_SUFFIX:=$(shell cut -d"-" -f4 <<<"$(GNU_HOST_NAME)")
 
-RUSTC_ARCH_TARGETS:= \
+#RUSTC_ARCH_TARGETS:= \
 mips64-unknown-linux-gnuabi64 mips64-unknown-linux-muslabi64 \
-mips64-unknown-linux-gnuabi64sf mips64-unknown-linux-muslabi64sf \
 \
 armv7-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf \
 armv7-unknown-linux-musleabi \
 \
 x86_64-unknown-linux-gnu x86_64-unknown-linux-musl
 
-#RUSTC_ARCH_TARGETS:= \
+RUSTC_ARCH_TARGETS:= \
 aarch64-unknown-linux-gnu aarch64-unknown-linux-musl \
 \
 arm-unknown-linux-gnueabi arm-unknown-linux-gnueabihf \
@@ -44,7 +43,6 @@ i686-unknown-linux-gnu i686-unknown-linux-musl \
 mips-unknown-linux-gnu mips-unknown-linux-musl mips-unknown-linux-uclibc \
 \
 mips64-unknown-linux-gnuabi64 mips64-unknown-linux-muslabi64 \
-mips64-unknown-linux-gnuabi64sf mips64-unknown-linux-muslabi64sf \
 \
 mips64el-unknown-linux-gnuabi64 mips64el-unknown-linux-muslabi64 \
 \
@@ -81,30 +79,15 @@ RUSTC_HOST_ARCH:= \
 		) \
 	)
 
-RUSTC_TARGET_ARCH_BASE:= \
-	$(strip $(foreach \
-		v, \
-		$(filter $(RUST_ARCH)-%, $(RUSTC_ARCH_TARGETS)), \
-		$(if $(findstring -$(CONFIG_TARGET_SUFFIX:"%"=%),$v),$v) \
-		) \
-	)
-
-#$(info 1 Arch:$(ARCH) RustArch:$(RUST_ARCH) HSuffix:$(CONFIG_HOST_SUFFIX:"%"=%) TSuffix:$(CONFIG_TARGET_SUFFIX:"%"=%) RUSTC_HOST_ARCH:$(RUSTC_HOST_ARCH) RUSTC_TARGET_ARCH_BASE:$(RUSTC_TARGET_ARCH_BASE))
-
-# Check to see if it's a soft-float target
-ifeq ($(CONFIG_SOFT_FLOAT),y)
-RUSTC_TARGET_ARCH:=$(strip $(filter %sf, $(RUSTC_TARGET_ARCH_BASE)))
-else
-RUSTC_TARGET_ARCH:=$(strip $(filter-out %sf, $(RUSTC_TARGET_ARCH_BASE)))
-endif
-
 # For Testing - Override
-RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
+# RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
 
 # More than one triple-target remains.
 ifneq ($(word 2, $(RUSTC_TARGET_ARCH)),)
 $(error RUSTC ERROR: Unsupported or Unknown Target Triple: $(RUSTC_TARGET_ARCH))
 endif
+
+RUSTC_TARGET_ARCH:=$(REAL_GNU_TARGET_NAME)
 
 # These are environment variables that are used by other packages to
 # define where rustc/cargo are kept.

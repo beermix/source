@@ -5,12 +5,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
 PKG_VERSION:=1.48.0
-#PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 #PKG_SOURCE_PROTO:=git
 #PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
-#PKG_SOURCE_DATE:=2020-12-13
-#PKG_SOURCE_VERSION:=d149b6579fb118ea75b16cb7a6afa62695d88992
+#PKG_SOURCE_DATE:=2020-11-11
+#PKG_SOURCE_VERSION:=7feab000b283139b5b7ba131a2495515bc80c627
 
 PKG_SOURCE:=rustc-$(PKG_VERSION)-src.tar.xz
 PKG_SOURCE_URL:=https://static.rust-lang.org/dist
@@ -51,6 +51,11 @@ CONFIGURE_ARGS = \
   --localstatedir=/var \
   --release-channel=stable \
   --enable-lld \
+  --enable-ccache \
+  --enable-ninja \
+  --enable-option-checking \
+  --enable-missing-tools \
+  --enable-manage-submodules \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
