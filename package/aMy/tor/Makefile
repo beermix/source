@@ -140,7 +140,7 @@ CONFIGURE_ARGS += \
 	--with-pic
 
 ifeq ($(BUILD_VARIANT),basic)
-  CONFIGURE_ARGS += --disable-module-relay #--disable-module-dirauth
+  CONFIGURE_ARGS += --disable-module-relay --disable-module-dirauth
 endif
 
 #TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
@@ -149,8 +149,8 @@ endif
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes" \
 	ac_cv_func_mallinfo=no \
-	tor_cv_cflags__fPIE=no \
-	tor_cv_ldflags__pie=no
+	tor_cv_cflags__fPIE=yes \
+	tor_cv_ldflags__pie=yes
 
 define Package/tor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
