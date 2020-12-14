@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=elfutils
-PKG_VERSION:=0.179
+PKG_VERSION:=0.182
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://sourceware.org/$(PKG_NAME)/ftp/$(PKG_VERSION)
-PKG_HASH:=25a545566cbacaa37ae6222e58f1c48ea4570f53ba991886e2f5ce96e22a23a2
+PKG_HASH:=
 
 PKG_MAINTAINER:=Luiz Angelo Daros de Luca <luizluca@gmail.com>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -22,7 +22,6 @@ PKG_CPE_ID:=cpe:/a:elfutils_project:elfutils
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 PKG_USE_MIPS16:=0
-PKG_BUILD_DEPENDS:=!USE_GLIBC:argp-standalone
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -39,18 +38,18 @@ endef
 define Package/libasm
   $(call Package/elfutils/Default)
   TITLE+= (libasm)
-  DEPENDS:=+libelf +libdw
+  DEPENDS:=+libelf +libdw +musl-fts
 endef
 
 define Package/libdw
   $(call Package/elfutils/Default)
-  DEPENDS:=+libelf +libbz2
+  DEPENDS:=+libelf +libbz2 +musl-fts
   TITLE+= (libdw)
 endef
 
 define Package/libelf
   $(call Package/elfutils/Default)
-  DEPENDS:=$(INTL_DEPENDS) +zlib
+  DEPENDS:=$(INTL_DEPENDS) +zlib +musl-fts +argp-standalone +libbsd +musl-obstack
   TITLE+= (libelf)
   PROVIDES:=libelf1
 endef
@@ -63,7 +62,9 @@ endif
 
 CONFIGURE_ARGS += \
 	--program-prefix=eu- \
+	--disable-nls \
 	--disable-debuginfod \
+	--disable-libdebuginfod \
 	--without-lzma
 
 TARGET_CFLAGS += -D_GNU_SOURCE -Wno-unused-result -Wno-format-nonliteral
