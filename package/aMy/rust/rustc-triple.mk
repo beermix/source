@@ -79,15 +79,17 @@ RUSTC_HOST_ARCH:= \
 		) \
 	)
 
-# For Testing - Override
-# RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
-
 # More than one triple-target remains.
 ifneq ($(word 2, $(RUSTC_TARGET_ARCH)),)
 $(error RUSTC ERROR: Unsupported or Unknown Target Triple: $(RUSTC_TARGET_ARCH))
 endif
 
 RUSTC_TARGET_ARCH:=$(REAL_GNU_TARGET_NAME)
+
+
+# For Testing - Override
+RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
+
 
 # These are environment variables that are used by other packages to
 # define where rustc/cargo are kept.
