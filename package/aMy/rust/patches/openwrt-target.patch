@@ -70,7 +70,7 @@ and distribution-specific quirks instead of polluting the main musl target of
 +    base.target_vendor = "openwrt".to_string();
 +    base.options.crt_static_default = false;
 +    base.options.static_position_independent_executables = true;
-+    base.options.need_rpath = true;
++
 +
 +    Ok(base)
 +}
