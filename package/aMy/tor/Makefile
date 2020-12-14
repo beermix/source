@@ -9,18 +9,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-#PKG_VERSION:=0.4.4.6
-#PKG_RELEASE:=1
+PKG_VERSION:=0.4.4.6
+PKG_RELEASE:=1
 
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-#PKG_SOURCE_URL:=https://dist.torproject.org/ \
-#	https://archive.torproject.org/tor-package-archive
-#PKG_HASH:=5f154c155803adf5c89e87cab53017b6908c5ebe50c65839e8cf4fbd2abe1fdc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://dist.torproject.org/ \
+	https://archive.torproject.org/tor-package-archive
+PKG_HASH:=5f154c155803adf5c89e87cab53017b6908c5ebe50c65839e8cf4fbd2abe1fdc
 PKG_CPE_ID:=cpe:/a:torproject:tor
 
-PKG_SOURCE_VERSION:=8970d7f
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/torproject/tor.git
+#PKG_SOURCE_VERSION:=8970d7f
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=https://github.com/torproject/tor.git
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
@@ -136,7 +136,8 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--disable-largefile \
-	--enable-silent-rules
+	--enable-silent-rules \
+	--with-pic
 
 ifeq ($(BUILD_VARIANT),basic)
   CONFIGURE_ARGS += --disable-module-relay \
