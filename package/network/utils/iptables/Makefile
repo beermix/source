@@ -9,12 +9,12 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=iptables
-PKG_VERSION:=1.8.6
-PKG_RELEASE:=1
+PKG_VERSION:=1.8.4
+PKG_RELEASE:=2
 
 PKG_SOURCE_URL:=https://netfilter.org/projects/iptables/files
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_HASH:=a0f4fe0c3eb8faa5bd9c8376d132f340b9558e750c91deb2d5028aa3d0047767
+PKG_HASH:=993a3a5490a544c2cbf2ef15cf7e7ed21af1845baf228318d5c36ef8827e157c
 
 PKG_FIXUP:=autoreconf
 PKG_FLAGS:=nonshared
@@ -166,6 +166,32 @@ Includes support for:
  Matches:
   - string
   - bpf
+
+endef
+
+define Package/iptables-mod-cgroup
+$(call Package/iptables/Module, +kmod-ipt-cgroup)
+  TITLE:=cgroup extension
+  endef
+
+define Package/iptables-mod-cgroup/description
+iptables extension for cgroup support.
+
+ Matches:
+   - cgroup
+
+endef
+
+define Package/iptables-mod-imq
+$(call Package/iptables/Module, +kmod-ipt-imq)
+  TITLE:=IMQ support
+endef
+
+define Package/iptables-mod-imq/description
+iptables extension for IMQ support.
+
+ Targets:
+   - IMQ
 
 endef
 
@@ -664,6 +690,8 @@ $(eval $(call BuildPlugin,iptables-mod-conntrack-label,$(IPT_CONNTRACK_LABEL-m))
 $(eval $(call BuildPlugin,iptables-mod-extra,$(IPT_EXTRA-m)))
 $(eval $(call BuildPlugin,iptables-mod-physdev,$(IPT_PHYSDEV-m)))
 $(eval $(call BuildPlugin,iptables-mod-filter,$(IPT_FILTER-m)))
+$(eval $(call BuildPlugin,iptables-mod-cgroup,$(IPT_CGROUP-m)))
+$(eval $(call BuildPlugin,iptables-mod-imq,$(IPT_IMQ-m)))
 $(eval $(call BuildPlugin,iptables-mod-ipopt,$(IPT_IPOPT-m)))
 $(eval $(call BuildPlugin,iptables-mod-ipsec,$(IPT_IPSEC-m)))
 $(eval $(call BuildPlugin,iptables-mod-nat-extra,$(IPT_NAT_EXTRA-m)))
