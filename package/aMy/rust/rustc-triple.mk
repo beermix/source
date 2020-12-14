@@ -88,8 +88,7 @@ RUSTC_TARGET_ARCH:=$(REAL_GNU_TARGET_NAME)
 
 
 # For Testing - Override
-RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
-
+#RUSTC_TARGET_ARCH:=i686-unknown-linux-musl
 
 # These are environment variables that are used by other packages to
 # define where rustc/cargo are kept.

@@ -4,18 +4,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
-PKG_VERSION:=1.48.0
+PKG_VERSION:=1.49.0
 PKG_RELEASE:=1
 
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
-#PKG_SOURCE_DATE:=2020-11-11
-#PKG_SOURCE_VERSION:=7feab000b283139b5b7ba131a2495515bc80c627
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
+PKG_SOURCE_DATE:=2020-11-11
+PKG_SOURCE_VERSION:=7feab000b283139b5b7ba131a2495515bc80c627
+PKG_SOURCE:=rust-$(PKG_SOURCE_VERSION).tar.xz
 
-PKG_SOURCE:=rustc-$(PKG_VERSION)-src.tar.xz
-PKG_SOURCE_URL:=https://static.rust-lang.org/dist
-PKG_BUILD_DIR:=$(BUILD_DIR)/rustc-$(PKG_VERSION)-src
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/rustc-$(PKG_VERSION)-src
+#PKG_SOURCE:=rustc-$(PKG_VERSION)-src.tar.xz
+#PKG_SOURCE_URL:=https://static.rust-lang.org/dist
+#PKG_BUILD_DIR:=$(BUILD_DIR)/rustc-$(PKG_VERSION)-src
+#HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/rustc-$(PKG_VERSION)-src
 
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
@@ -49,7 +50,7 @@ CONFIGURE_ARGS = \
   --mandir=$(CARGO_HOME)/man \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
-  --release-channel=stable \
+  --release-channel=nightly \
   --enable-lld \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
