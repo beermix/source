@@ -136,14 +136,13 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--disable-largefile \
-	--enable-silent-rules \
-	--with-pic
+	--enable-silent-rules
 
 ifeq ($(BUILD_VARIANT),basic)
-  CONFIGURE_ARGS += --disable-module-relay \
-  			--disable-module-dirauth
+  CONFIGURE_ARGS += --disable-module-relay --disable-module-dirauth
 endif
 
+TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
 TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS += -latomic -Wl,--gc-sections -flto
 
