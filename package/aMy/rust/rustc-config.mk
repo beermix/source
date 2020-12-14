@@ -27,6 +27,10 @@ ifeq ($(CONFIG_RUST_VERBOSE_TESTS),y)
 CONFIGURE_ARGS += --enable-verbose-tests
 endif
 
+ifeq ($(filter $(CONFIG_RUST_CCACHE) $(CCACHE),y),)
+CONFIGURE_ARGS += --enable-ccache
+endif
+
 ifeq ($(CONFIG_RUST_CCACHE),y)
 CONFIGURE_ARGS += --enable-ccache
 endif
