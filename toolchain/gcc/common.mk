@@ -143,7 +143,12 @@ GCC_CONFIGURE:= \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
+		--disable-libstdcxx-pch \
 		--with-linker-hash-style=gnu \
+		--with-arch=bonnell \
+		--with-tune=generic \
+		--enable-cld \
+		--disable-fixed-point \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
