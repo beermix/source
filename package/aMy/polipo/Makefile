@@ -37,7 +37,7 @@ define Package/polipo/description
  by a larger group.
 endef
 
-TARGET_CFLAGS += -DNO_IPv6 -DNO_SYSLOG -flto
+TARGET_CFLAGS += -DNO_IPv6 -DNO_SYSLOG
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
