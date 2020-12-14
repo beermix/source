@@ -65,7 +65,6 @@ endef
 CONFIGURE_ARGS += \
 	--enable-echo \
 	--enable-const \
-	--without-cxx \
 	--enable-overwrite \
 	--enable-pc-files \
 	--disable-rpath \
@@ -75,7 +74,7 @@ CONFIGURE_ARGS += \
 	--without-profile \
 	--with-progs \
 	--without-tests \
-	--enable-big-core \
+	--disable-big-core \
 	--disable-home-terminfo \
 	--with-normal \
 	--with-shared \
