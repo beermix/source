@@ -147,7 +147,9 @@ TARGET_LDFLAGS += -latomic -Wl,--gc-sections -flto
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes" \
-	ac_cv_func_mallinfo=no
+	ac_cv_func_mallinfo=no \
+	tor_cv_cflags__fPIE=no \
+	tor_cv_ldflags__pie=no
 
 define Package/tor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
