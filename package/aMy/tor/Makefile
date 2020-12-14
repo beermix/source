@@ -33,7 +33,7 @@ define Package/tor/Default
   CATEGORY:=Network
   URL:=https://www.torproject.org/
   USERID:=tor=52:tor=52
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libzstd +liblzma +libatomic
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libzstd +liblzma
   TITLE:=Tor routing daemon
 endef
 
@@ -136,14 +136,15 @@ CONFIGURE_ARGS += \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--disable-largefile \
-	--enable-silent-rules
+	--enable-silent-rules \
+	--with-pic
 
 ifeq ($(BUILD_VARIANT),basic)
   CONFIGURE_ARGS += --disable-module-relay --disable-module-dirauth
 endif
 
 TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -latomic -Wl,--gc-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes" \
