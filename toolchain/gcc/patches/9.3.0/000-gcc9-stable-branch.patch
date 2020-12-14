@@ -788,9 +788,10 @@ Romain Naour (1):
 Samuel Thibault (1):
       hurd: libgcc unwinding support over signal trampolines
 
-Sebastian Pop (2):
+Sebastian Pop (3):
       add --with-tune configure flag
       add --with-{cpu,arch,tune}-{32,64} as alias flags for --with-{cpu,arch,tune}
+      disable --with-{cpu,arch,tune}-32
 
 Segher Boessenkool (1):
       rs6000: Properly handle LE index munging in vec_shr (PR94710)
@@ -883,6 +884,9 @@ Uros Bizjak (7):
 
 Ville Voutilainen (1):
       PR libstdc++/91807
+
+Wilco Dijkstra (1):
+      AArch64: Add support for --with-tune
 
 Will Schmidt (5):
       backport PR90763: PowerPC vec_xl_len should take const argument.
@@ -9529,39 +9533,59 @@ index 087bb1520ed..c7841939e89 100644
  #define OPTION_MASK_ISA_AVX2_UNSET \
    (OPTION_MASK_ISA_AVX2 | OPTION_MASK_ISA_AVX512F_UNSET)
 diff --git a/gcc/config.gcc b/gcc/config.gcc
-index b2282ecdf0b..e6c3cbffb34 100644
+index b2282ecdf0b..c4380681d5a 100644
 --- a/gcc/config.gcc
 +++ b/gcc/config.gcc
-@@ -3806,9 +3806,26 @@
+@@ -3806,9 +3806,17 @@
  supported_defaults=
  case "${target}" in
  	aarch64*-*-*)
 -		supported_defaults="abi cpu arch"
 -		for which in cpu arch; do
 -
-+		supported_defaults="abi cpu cpu_32 cpu_64 arch arch_32 arch_64 tune tune_32 tune_64"
++		supported_defaults="abi cpu cpu_64 arch arch_64 tune tune_64"
 +		if test x$with_cpu_64 != x && test x$with_cpu = x; then
 +			with_cpu=$with_cpu_64
-+		fi
-+		if test x$with_cpu_32 != x && test x$with_cpu = x; then
-+			with_cpu=$with_cpu_32
 +		fi
 +		if test x$with_arch_64 != x && test x$with_arch = x; then
 +			with_arch=$with_arch_64
 +		fi
-+		if test x$with_arch_32 != x && test x$with_arch = x; then
-+			with_arch=$with_arch_32
-+		fi
 +		if test x$with_tune_64 != x && test x$with_tune = x; then
 +			with_tune=$with_tune_64
-+		fi
-+		if test x$with_tune_32 != x && test x$with_tune = x; then
-+			with_tune=$with_tune_32
 +		fi
 +		for which in cpu arch tune; do
  			eval "val=\$with_$which"
  			base_val=`echo $val | sed -e 's/\+.*//'`
  			ext_val=`echo $val | sed -e 's/[a-z0-9.-]\+//'`
+@@ -3847,6 +3855,12 @@
+ 				  sed -e 's/,.*$//'`
+ 			  fi
+ 
++			  # Disallow extensions in --with-tune=cortex-a53+crc.
++			  if [ $which = tune ] && [ x"$ext_val" != x ]; then
++			    echo "Architecture extensions not supported in --with-$which=$val" 1>&2
++			    exit 1
++			  fi
++
+ 			  while [ x"$ext_val" != x ]
+ 			  do
+ 				ext_val=`echo $ext_val | sed -e 's/\+//'`
+@@ -3896,8 +3910,13 @@
+ 			  fi
+ 			  true
+ 			else
+-			  echo "Unknown $which used in --with-$which=$val" 1>&2
+-			  exit 1
++			  # Allow --with-$which=native.
++			  if [ "$val" = native ]; then
++			    true
++			  else
++			    echo "Unknown $which used in --with-$which=$val" 1>&2
++			    exit 1
++			  fi
+ 			fi
+ 		done
+ 		;;
 diff --git a/gcc/config.in b/gcc/config.in
 index a718ceaf3da..bfef2340339 100644
 --- a/gcc/config.in
@@ -11198,7 +11222,7 @@ index b452a53af99..9189777da7e 100644
  
  #include "gt-aarch64.h"
 diff --git a/gcc/config/aarch64/aarch64.h b/gcc/config/aarch64/aarch64.h
-index 772a9729688..036f3cc176f 100644
+index 772a9729688..af0bc3f1881 100644
 --- a/gcc/config/aarch64/aarch64.h
 +++ b/gcc/config/aarch64/aarch64.h
 @@ -234,7 +234,9 @@
@@ -11312,6 +11336,25 @@ index 772a9729688..036f3cc176f 100644
      fun = gen_rtx_SYMBOL_REF (Pmode, MCOUNT_NAME);			\
      emit_library_call (fun, LCT_NORMAL, VOIDmode, lr, Pmode);		\
    }
+@@ -1036,12 +1067,14 @@
+ #define ENDIAN_LANE_N(NUNITS, N) \
+   (BYTES_BIG_ENDIAN ? NUNITS - 1 - N : N)
+ 
+-/* Support for a configure-time default CPU, etc.  We currently support
+-   --with-arch and --with-cpu.  Both are ignored if either is specified
+-   explicitly on the command line at run time.  */
++/* Support for configure-time --with-arch, --with-cpu and --with-tune.
++   --with-arch and --with-cpu are ignored if either -mcpu or -march is used.
++   --with-tune is ignored if either -mtune or -mcpu is used (but is not
++   affected by -march).  */
+ #define OPTION_DEFAULT_SPECS				\
+   {"arch", "%{!march=*:%{!mcpu=*:-march=%(VALUE)}}" },	\
+-  {"cpu",  "%{!march=*:%{!mcpu=*:-mcpu=%(VALUE)}}" },
++  {"cpu",  "%{!march=*:%{!mcpu=*:-mcpu=%(VALUE)}}" },   \
++  {"tune", "%{!mcpu=*:%{!mtune=*:-mtune=%(VALUE)}}"},
+ 
+ #define MCPU_TO_MARCH_SPEC \
+    " %{mcpu=*:-march=%:rewrite_mcpu(%{mcpu=*:%*})}"
 diff --git a/gcc/config/aarch64/aarch64.md b/gcc/config/aarch64/aarch64.md
 index cc5a887d404..78288abfd92 100644
 --- a/gcc/config/aarch64/aarch64.md
