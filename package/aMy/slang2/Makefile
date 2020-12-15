@@ -45,10 +45,9 @@ define Package/libslang2/description
 $(call Package/libslang2/Default/description)
 endef
 
-TARGET_CFLAGS+= $(FPIC)
+TARGET_CFLAGS+= $(FPIC) -Wno-cast-function-type
 
 CONFIGURE_ARGS+= \
-	--enable-warnings \
 	--with-terminfo=default \
 	--with-readline=slang \
 	--without-iconv \
