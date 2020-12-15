@@ -132,16 +132,18 @@ CONFIGURE_ARGS += \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-unittests \
-	--enable-lzma \
+	--disable-lzma \
 	--enable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--disable-largefile \
+	--disable-tool-name-check \
+	--disable-rust \
 	--disable-silent-rules \
 	--with-pic
 
 ifeq ($(BUILD_VARIANT),basic)
-  CONFIGURE_ARGS += --disable-module-relay --disable-module-dirauth
+  CONFIGURE_ARGS += --disable-module-relay ## --disable-module-dirauth
 endif
 
 TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
