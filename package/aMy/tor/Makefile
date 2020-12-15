@@ -149,8 +149,8 @@ endif
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes" \
 	ac_cv_func_mallinfo=no \
-	tor_cv_cflags__fPIE=yes \
-	tor_cv_ldflags__pie=yes
+	tor_cv_cflags__fPIE=no \
+	tor_cv_ldflags__pie=no
 
 define Package/tor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
