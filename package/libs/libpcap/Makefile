@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libpcap
 PKG_VERSION:=1.9.1
-PKG_RELEASE:=3
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.us.tcpdump.org/release/ \
@@ -70,15 +70,6 @@ CMAKE_OPTIONS += $(if $(CONFIG_PCAP_HAS_BT)        ,,-DDISABLE_BLUETOOTH=ON)
 CMAKE_OPTIONS += $(if $(CONFIG_PCAP_HAS_NETFILTER) ,,-DPCAP_SUPPORT_NETFILTER=OFF)
 
 CMAKE_OPTIONS += $(if $(CONFIG_IPV6),-DINET6=ON,-DINET6=OFF)
-
-define Build/InstallDev
-	$(call Build/InstallDev/cmake,$(1))
-	$(SED) \
-		's,^\(prefix\|exec_prefix\)=.*,\1=$(STAGING_DIR)/usr,g' \
-		$(1)/usr/bin/pcap-config
-	$(INSTALL_DIR) $(2)/bin
-	$(LN) ../../usr/bin/pcap-config $(2)/bin/pcap-config
-endef
 
 define Package/libpcap/install
 	$(INSTALL_DIR) $(1)/usr/lib
