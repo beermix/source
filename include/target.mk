@@ -28,8 +28,6 @@ DEFAULT_PACKAGES:=\
 	libustream-openssl \
 	logd \
 	luci \
-	luci-app-cpufreq \
-	luci-app-turboacc \
 	luci-compat \
 	luci-lib-base \
 	luci-lib-fs \
