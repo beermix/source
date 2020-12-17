@@ -92,7 +92,9 @@ Fritz Reese (2):
       Fix fortran/85982 ICE in resolve_component.
       Fix fortran/93686 -- ICE matching data statements with derived-type pointers.
 
-GCC Administrator (276):
+GCC Administrator (278):
+      Daily bump.
+      Daily bump.
       Daily bump.
       Daily bump.
       Daily bump.
@@ -424,7 +426,7 @@ Harald Anlauf (28):
 Hongyu Wang (1):
       Add missing FSF copyright notes for x86 intrinsic headers.
 
-Iain Buclaw (11):
+Iain Buclaw (12):
       d: Fix ICE in add_symbol_to_partition_1, at lto/lto-partition.c:215
       libphobos: Fix struct layout of stat32_t on sparc-*-solaris*
       libphobos: Fix struct layout of addrinfo on sparc-*-solaris*
@@ -436,6 +438,7 @@ Iain Buclaw (11):
       d: Fix ICE during error recovery in semantic pass
       d: Fix ICE in expand_intrinsic_vaarg
       d: Fix alias protection being ignored if used before declaration.
+      d: Fix ICE in gimplify_expr, at gimplify.c (PR98277)
 
 Iain Sandoe (1):
       Darwin: Fix i686 bootstrap when the assembler supports GOTOFF in data.
@@ -729,9 +732,10 @@ Michael Meissner (2):
 Monk Chiang (1):
       PR target/97682 - Fix to reuse t1 register between call address and epilogue.
 
-Nathan Sidwell (2):
+Nathan Sidwell (3):
       c++: Fix ICE popping local scope [pr84733]
       c++: QT overload regression with attribute [PR94946]
+      c++: Fix template parm ICE [PR 98297]
 
 Patrick Palka (3):
       c++: zero_init_expr_p of dependent expression [PR95678]
@@ -19894,10 +19898,15 @@ index 1ffefd5f482..c442e2fb008 100644
        if (!gcov_open (bbg_file_name, -1))
  	{
 diff --git a/gcc/cp/ChangeLog b/gcc/cp/ChangeLog
-index 6441d647a54..d6cf4ac3912 100644
+index 6441d647a54..f87ae3bac64 100644
 --- a/gcc/cp/ChangeLog
 +++ b/gcc/cp/ChangeLog
-@@ -1,3 +1,268 @@
+@@ -1,3 +1,273 @@
++2020-12-16  Nathan Sidwell  <nathan@acm.org>
++
++	* parser.c (cp_parser_elaborated_type_specifier): Test
++	BOUND_TEMPLATE_TEMPLATE_PARM before checking for instantiation.
++
 +2020-11-26  Thomas Schwinge  <thomas@codesourcery.com>
 +
 +	Backported from master:
@@ -20659,7 +20668,7 @@ index 8999c5ad4a7..b8eb21e0f97 100644
  
        bindings = tree_cons (fnname, fns, bindings);
 diff --git a/gcc/cp/parser.c b/gcc/cp/parser.c
-index e1c02d7b718..0a0b80a8388 100644
+index e1c02d7b718..d6fb5749d9d 100644
 --- a/gcc/cp/parser.c
 +++ b/gcc/cp/parser.c
 @@ -13495,7 +13495,7 @@
@@ -20671,7 +20680,18 @@ index e1c02d7b718..0a0b80a8388 100644
  	    /* Skip tokens until we reach the end of the statement.  */
  	    cp_parser_skip_to_end_of_statement (parser);
  	    /* If the next token is now a `;', consume it.  */
-@@ -18705,9 +18705,7 @@
+@@ -18631,7 +18631,9 @@
+       if (TREE_CODE (type) == TYPENAME_TYPE)
+ 	warning (OPT_Wattributes,
+ 		 "attributes ignored on uninstantiated type");
+-      else if (tag_type != enum_type && CLASSTYPE_TEMPLATE_INSTANTIATION (type)
++      else if (tag_type != enum_type
++	       && TREE_CODE (type) != BOUND_TEMPLATE_TEMPLATE_PARM
++	       && CLASSTYPE_TEMPLATE_INSTANTIATION (type)
+ 	       && ! processing_explicit_instantiation)
+ 	warning (OPT_Wattributes,
+ 		 "attributes ignored on template instantiation");
+@@ -18705,9 +18707,7 @@
    bool is_unnamed = false;
    tree underlying_type = NULL_TREE;
    cp_token *type_start_token = NULL;
@@ -20682,7 +20702,7 @@ index e1c02d7b718..0a0b80a8388 100644
  
    /* Parse tentatively so that we can back up if we don't find a
       enum-specifier.  */
-@@ -18747,24 +18745,24 @@
+@@ -18747,24 +18747,24 @@
  
    push_deferring_access_checks (dk_no_check);
    nested_name_specifier
@@ -20719,7 +20739,7 @@ index e1c02d7b718..0a0b80a8388 100644
        if (name && name != error_mark_node)
  	{
  	  type = TREE_TYPE (name);
-@@ -18844,23 +18842,21 @@
+@@ -18844,23 +18844,21 @@
      {
        if (cxx_dialect < cxx11 || (!scoped_enum_p && !underlying_type))
  	{
@@ -20749,7 +20769,7 @@ index e1c02d7b718..0a0b80a8388 100644
  	}
      }
  
-@@ -18876,9 +18872,7 @@
+@@ -18876,9 +18874,7 @@
  	  push_scope (nested_name_specifier);
  	}
        else if (TREE_CODE (nested_name_specifier) == NAMESPACE_DECL)
@@ -20760,7 +20780,7 @@ index e1c02d7b718..0a0b80a8388 100644
      }
  
    /* Issue an error message if type-definitions are forbidden here.  */
-@@ -19038,12 +19032,8 @@
+@@ -19038,12 +19034,8 @@
  	  pop_scope (nested_name_specifier);
  	}
        else if (TREE_CODE (nested_name_specifier) == NAMESPACE_DECL)
@@ -20774,7 +20794,7 @@ index e1c02d7b718..0a0b80a8388 100644
    return type;
  }
  
-@@ -32573,6 +32563,8 @@
+@@ -32573,6 +32565,8 @@
  					   token->location);
  	    }
  	}
@@ -20783,7 +20803,7 @@ index e1c02d7b718..0a0b80a8388 100644
        if (decl == error_mark_node)
  	;
        else if (kind != 0)
-@@ -32616,7 +32608,11 @@
+@@ -32616,7 +32610,11 @@
  		  parser->colon_corrects_to_scope_p = false;
  		  cp_lexer_consume_token (parser->lexer);
  		  if (!cp_lexer_next_token_is (parser->lexer, CPP_COLON))
@@ -20796,7 +20816,7 @@ index e1c02d7b718..0a0b80a8388 100644
  		  if (!colon)
  		    parser->colon_corrects_to_scope_p
  		      = saved_colon_corrects_to_scope_p;
-@@ -32636,7 +32632,11 @@
+@@ -32636,7 +32634,11 @@
  			cp_parser_commit_to_tentative_parse (parser);
  		      if (!cp_lexer_next_token_is (parser->lexer,
  						   CPP_CLOSE_SQUARE))
@@ -20809,7 +20829,7 @@ index e1c02d7b718..0a0b80a8388 100644
  		    }
  		  /* Look for the closing `]'.  */
  		  if (!cp_parser_require (parser, CPP_CLOSE_SQUARE,
-@@ -35087,6 +35087,9 @@
+@@ -35087,6 +35089,9 @@
    tree clauses = NULL;
    bool first = true;
  
@@ -20819,7 +20839,7 @@ index e1c02d7b718..0a0b80a8388 100644
    while (cp_lexer_next_token_is_not (parser->lexer, CPP_PRAGMA_EOL))
      {
        location_t here;
-@@ -37828,9 +37831,9 @@
+@@ -37828,9 +37833,9 @@
  	  cp_parser_end_omp_structured_block (parser, save);
  	  stmt = finish_omp_parallel (cclauses[C_OMP_CLAUSE_SPLIT_PARALLEL],
  				      block);
@@ -20830,7 +20850,7 @@ index e1c02d7b718..0a0b80a8388 100644
  	  return stmt;
  	}
        else if (!flag_openmp)  /* flag_openmp_simd  */
-@@ -38768,6 +38771,10 @@
+@@ -38768,6 +38773,10 @@
  static tree
  cp_parser_oacc_cache (cp_parser *parser, cp_token *pragma_tok)
  {
@@ -21301,10 +21321,20 @@ index 2169f8c4efd..ab703a3ff07 100644
        return build_nop_reinterpret (type, expr);
      }
 diff --git a/gcc/d/ChangeLog b/gcc/d/ChangeLog
-index f8268e87d4d..a5c233804fe 100644
+index f8268e87d4d..f082fc4019e 100644
 --- a/gcc/d/ChangeLog
 +++ b/gcc/d/ChangeLog
-@@ -1,3 +1,87 @@
+@@ -1,3 +1,97 @@
++2020-12-15  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	Backported from master:
++	2020-12-15  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/98277
++	* decl.cc (DeclVisitor::visit (VarDeclaration *)): Move setting of
++	DECL_INITIAL for manifest constants to ...
++	(get_symbol_decl): ... here.
++
 +2020-10-12  Iain Buclaw  <ibuclaw@gdcproject.org>
 +
 +	Backported from master:
@@ -21555,10 +21585,71 @@ index a514bc3902f..7a54dfbc59e 100644
  /* In d-incpath.cc.  */
  extern void add_import_paths (const char *, const char *, bool);
 diff --git a/gcc/d/decl.cc b/gcc/d/decl.cc
-index 49723649230..d1dfce25c68 100644
+index 49723649230..d24f5dcd958 100644
 --- a/gcc/d/decl.cc
 +++ b/gcc/d/decl.cc
-@@ -1803,8 +1803,11 @@
+@@ -673,31 +673,13 @@
+ 	return;
+       }
+ 
+-    /* Do not store variables we cannot take the address of,
+-       but keep the values for purposes of debugging.  */
+     if (!d->canTakeAddressOf ())
+       {
+-	/* Don't know if there is a good way to handle instantiations.  */
+-	if (d->isInstantiated ())
+-	  return;
+-
+-	/* Cannot make an expression out of a void initializer.  */
+-	if (!d->_init || d->_init->isVoidInitializer ())
+-	  return;
+-
+-	tree decl = get_symbol_decl (d);
+-	Expression *ie = initializerToExpression (d->_init);
+-
+-	/* CONST_DECL was initially intended for enumerals and may be used for
+-	   scalars in general, but not for aggregates.  Here a non-constant
+-	   value is generated anyway so as the CONST_DECL only serves as a
+-	   placeholder for the value, however the DECL itself should never be
+-	   referenced in any generated code, or passed to the back-end.  */
++	/* Do not store variables we cannot take the address of,
++	   but keep the values for purposes of debugging.  */
+ 	if (!d->type->isscalar ())
+-	  DECL_INITIAL (decl) = build_expr (ie, false);
+-	else
+ 	  {
+-	    DECL_INITIAL (decl) = build_expr (ie, true);
++	    tree decl = get_symbol_decl (d);
+ 	    d_pushdecl (decl);
+ 	    rest_of_decl_compilation (decl, 1, 0);
+ 	  }
+@@ -1135,6 +1117,25 @@
+ 
+       if (vd->storage_class & STCextern)
+ 	DECL_EXTERNAL (decl->csym) = 1;
++
++      /* CONST_DECL was initially intended for enumerals and may be used for
++	 scalars in general, but not for aggregates.  Here a non-constant
++	 value is generated anyway so as the CONST_DECL only serves as a
++	 placeholder for the value, however the DECL itself should never be
++	 referenced in any generated code, or passed to the back-end.  */
++      if (vd->storage_class & STCmanifest)
++	{
++	  /* Cannot make an expression out of a void initializer.  */
++	  if (vd->_init && !vd->_init->isVoidInitializer ())
++	    {
++	      Expression *ie = initializerToExpression (vd->_init);
++
++	      if (!vd->type->isscalar ())
++		DECL_INITIAL (decl->csym) = build_expr (ie, false);
++	      else
++		DECL_INITIAL (decl->csym) = build_expr (ie, true);
++	    }
++	}
+     }
+ 
+   /* Set the declaration mangled identifier if static.  */
+@@ -1803,8 +1804,11 @@
  
    DECL_CONTEXT (thunk) = d_decl_context (decl);
  
