@@ -6,7 +6,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atop
-PKG_SOURCE_VERSION:=23642fc
+PKG_SOURCE_VERSION:=462cc2b
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/Atoptool/atop
