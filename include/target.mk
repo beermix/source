@@ -27,20 +27,13 @@ DEFAULT_PACKAGES:=\
 	libgcc \
 	libustream-openssl \
 	logd \
-	luci \
-	luci-compat \
-	luci-lib-base \
-	luci-lib-fs \
-	luci-lib-ipkg \
-	luci-proto-relay \
 	mtd \
 	netifd \
 	opkg \
 	uci \
 	uclient-fetch \
 	urandom-seed \
-	urngd \
-	wget
+	urngd
 
 ifneq ($(CONFIG_SELINUX),)
 DEFAULT_PACKAGES+=busybox-selinux procd-selinux
