@@ -1,6 +1,6 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-# https://github.com/rust-lang/rust/tree/beta
+#
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
@@ -12,14 +12,9 @@ PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
 PKG_SOURCE_DATE:=2020-11-11
-PKG_SOURCE_VERSION:=7feab000b283139b5b7ba131a2495515bc80c627
-#PKG_SOURCE:=rust-$(PKG_SOURCE_VERSION).tar.xz
-
-#PKG_SOURCE:=rustc-$(PKG_VERSION)-src.tar.xz
-#PKG_SOURCE_URL:=https://static.rust-lang.org/dist
-#PKG_BUILD_DIR:=$(BUILD_DIR)/rustc-$(PKG_VERSION)-src
-#HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/rustc-$(PKG_VERSION)-src
-
+#PKG_SOURCE_VERSION:=b2d115f6db5172c961dfeb50de15f35784dbc7c9
+#PKG_SOURCE_VERSION:=5a6a41e7847ff5f85a31b87431ce2af29c567f1d
+PKG_SOURCE_VERSION:=fa55f668e5ea5388ec98b9340969527252239151
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
 
@@ -29,16 +24,16 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/download.mk
 include ./rustc-triple.mk
 
-HOST_BUILD_DEPENDS:=rust/host ninja/host python3/host
+HOST_BUILD_DEPENDS:=ninja/host python3/host
+PKG_BUILD_DEPENDS:=rust/host
 CMAKE_INSTALL:=1
 
 #gen_sha256sum=$(shell mkhash sha256 $(DL_DIR)/$(1))
 #fixup_rust_hash=$(shell $(SCRIPT_DIR)/fixup-makefile.pl $(1) fix-hash $(2) $(3))
 
-#   --set="target.$(RUSTC_TARGET_ARCH).crt-static=false" --set="target.$(RUSTC_HOST_ARCH).crt-static=false" \
 # Basic Configuration Args that are used across all builds.
 # Other build arguments are found in ./rustc-config.mk
-#   --enable-llvm-link-shared \  --llvm-root=/usr/lib/llvm-7 \
+#
 # Default CONFIGURE_ARGS introduces unknown options - Use this instead
 CONFIGURE_ARGS = \
   --host=$(RUSTC_HOST_ARCH) \

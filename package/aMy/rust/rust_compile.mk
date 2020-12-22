@@ -8,7 +8,8 @@ endef
 define Host/Compile
 	cd $(HOST_BUILD_DIR) && \
 	  RUST_BACKTRACE=full $(PYTHON) x.py --config ./config.toml dist \
-	  cargo
+	     cargo extended library/std llvm-tools miri rust-dev rustc-dev \
+		src src/librustc src/lldb_batchmode.py src/tools/build-manifest
 endef
 
 define Host/Install
