@@ -965,11 +965,11 @@ define KernelPackage/tcp-bbr2/description
  For kernel 4.13+, TCP internal pacing is implemented as fallback.
 endef
 
-TCP_bbr2_SYSCTL_CONF:=sysctl-tcp-bbr2.conf
+TCP_BBR2_SYSCTL_CONF:=sysctl-tcp-bbr2.conf
 
 define KernelPackage/tcp-bbr2/install
 	$(INSTALL_DIR) $(1)/etc/sysctl.d
-	$(INSTALL_DATA) ./files/$(TCP_BBR2_SYSCTL_CONF) $(1)/etc/sysctl.d/12-tcp-bbr2.conf
+	$(INSTALL_DATA) ./files/$(TCP_BBR2_SYSCTL_CONF) $(1)/etc/sysctl.d/13-tcp-bbr2.conf
 endef
 
 $(eval $(call KernelPackage,tcp-bbr2))
