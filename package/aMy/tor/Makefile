@@ -24,7 +24,7 @@ PKG_CPE_ID:=cpe:/a:torproject:tor
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
-#PKG_ASLR_PIE_REGULAR:=1
+PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -150,7 +150,9 @@ endif
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes" \
-	ac_cv_func_mallinfo=no
+	ac_cv_func_mallinfo=no \
+	tor_cv_cflags__fPIE=no \
+	tor_cv_ldflags__pie=no
 
 #tor_cv_cflags__fPIE=no tor_cv_ldflags__pie=no
 
