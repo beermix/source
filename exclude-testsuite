@@ -5,9 +5,6 @@
 */gcc/testsuite/config*
 */gcc/testsuite/g*
 */gcc/testsuite/jit.dg*
-*/gcc/testsuite/lib*
+*/gcc/testsuite/lib
 */gcc/testsuite/o*
-*gcc/ada/*.ad*
-*libjava*
 *gcc/BASE-VER*
-*/maintainer-scripts/*

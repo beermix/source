@@ -884,7 +884,7 @@ Tobias Burnus (6):
       Fortran: Fix type-decl for PDT / wrong-code pdt_14.f03 issue [PR97652]
       Fortran: Fix function decl's location [PR95847]
 
-Uros Bizjak (7):
+Uros Bizjak (8):
       i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
       i386: Fix REDUC_SSE_SMINMAX_MODE mode conditions.
       i386: Require OPTION_MASK_ISA_SSE2 for __builtin_ia32_movq128 [PR94603]
@@ -892,6 +892,7 @@ Uros Bizjak (7):
       alpha: Implement the PR94780 fix for alpha.
       i386: Fix restore_stack_nonlocal expander [PR96536].
       i386: Fix up ix86_md_asm_adjust for TImode [PR98086]
+      i386: Fix __builtin_floor with FE_DOWNWARD rounding direction [PR96793]
 
 Ville Voutilainen (1):
       PR libstdc++/91807
@@ -16076,7 +16077,7 @@ index 5e7e46fcebe..f06fea1a8a5 100644
  
    if (!TARGET_80387)
 diff --git a/gcc/config/i386/i386.c b/gcc/config/i386/i386.c
-index 1bca5a7eea6..e8982c507e4 100644
+index 1bca5a7eea6..e0f924e50b2 100644
 --- a/gcc/config/i386/i386.c
 +++ b/gcc/config/i386/i386.c
 @@ -2535,7 +2535,12 @@
@@ -16297,7 +16298,73 @@ index 1bca5a7eea6..e8982c507e4 100644
    rtx_insn *seq = get_insns ();
    end_sequence ();
  
-@@ -46667,7 +46678,7 @@
+@@ -45500,12 +45511,14 @@
+           return x;
+         xa = xa + TWO52 - TWO52;
+         x2 = copysign (xa, x);
++
+      Compensate.  Floor:
+         if (x2 > x)
+           x2 -= 1;
+      Compensate.  Ceil:
+         if (x2 < x)
+           x2 += 1;
++
+ 	if (HONOR_SIGNED_ZEROS (mode))
+ 	  x2 = copysign (x2, x);
+ 	return x2;
+@@ -45542,8 +45555,14 @@
+   emit_insn (gen_rtx_SET (tmp, gen_rtx_AND (mode, one, tmp)));
+   tmp = expand_simple_binop (mode, do_floor ? MINUS : PLUS,
+ 			     xa, tmp, NULL_RTX, 0, OPTAB_DIRECT);
+-  if (!do_floor && HONOR_SIGNED_ZEROS (mode))
+-    ix86_sse_copysign_to_positive (tmp, tmp, res, mask);
++  if (HONOR_SIGNED_ZEROS (mode))
++    {
++      /* Remove the sign with FE_DOWNWARD, where x - x = -0.0.  */
++      if (do_floor && flag_rounding_math)
++	tmp = ix86_expand_sse_fabs (tmp, NULL);
++
++      ix86_sse_copysign_to_positive (tmp, tmp, res, mask);
++    }
+   emit_move_insn (res, tmp);
+ 
+   emit_label (label);
+@@ -45562,12 +45581,14 @@
+         if (!isless (xa, TWO52))
+           return x;
+ 	x2 = (double)(long)x;
++
+      Compensate.  Floor:
+ 	if (x2 > x)
+ 	  x2 -= 1;
+      Compensate.  Ceil:
+ 	if (x2 < x)
+ 	  x2 += 1;
++
+ 	if (HONOR_SIGNED_ZEROS (mode))
+ 	  return copysign (x2, x);
+ 	return x2;
+@@ -45602,10 +45623,15 @@
+   emit_insn (gen_rtx_SET (tmp, gen_rtx_AND (mode, one, tmp)));
+   tmp = expand_simple_binop (mode, do_floor ? MINUS : PLUS,
+ 			     xa, tmp, NULL_RTX, 0, OPTAB_DIRECT);
+-  emit_move_insn (res, tmp);
+-
+   if (HONOR_SIGNED_ZEROS (mode))
+-    ix86_sse_copysign_to_positive (res, res, force_reg (mode, operand1), mask);
++    {
++      /* Remove the sign with FE_DOWNWARD, where x - x = -0.0.  */
++      if (do_floor && flag_rounding_math)
++	tmp = ix86_expand_sse_fabs (tmp, NULL);
++
++      ix86_sse_copysign_to_positive (tmp, tmp, res, mask);
++    }
++  emit_move_insn (res, tmp);
+ 
+   emit_label (label);
+   LABEL_NUSES (label) = 1;
+@@ -46667,7 +46693,7 @@
  	      /* vpshufb only works intra lanes, it is not
  		 possible to shuffle bytes in between the lanes.  */
  	      for (i = 0; i < nelt; ++i)
@@ -16306,7 +16373,7 @@ index 1bca5a7eea6..e8982c507e4 100644
  		  return false;
  	    }
  	}
-@@ -50265,7 +50276,9 @@
+@@ -50265,7 +50291,9 @@
    if ((TARGET_AVX512F && vector_size == 64)
        || (TARGET_AVX512VL && (vector_size == 32 || vector_size == 16)))
      {
@@ -16317,7 +16384,7 @@ index 1bca5a7eea6..e8982c507e4 100644
  	return smallest_int_mode_for_size (nunits);
      }
  
-@@ -50919,11 +50932,12 @@
+@@ -50919,11 +50947,12 @@
        *clear = build_call_expr (fnclex, 0);
        tree sw_var = create_tmp_var_raw (short_unsigned_type_node);
        tree fnstsw_call = build_call_expr (fnstsw, 0);
@@ -16334,7 +16401,7 @@ index 1bca5a7eea6..e8982c507e4 100644
        *update = build2 (COMPOUND_EXPR, integer_type_node,
  			sw_mod, update_mod);
        tree update_fldenv = build_call_expr (fldenv, 1, fenv_addr);
-@@ -50936,15 +50950,17 @@
+@@ -50936,15 +50965,17 @@
        tree stmxcsr = ix86_builtins[IX86_BUILTIN_STMXCSR];
        tree ldmxcsr = ix86_builtins[IX86_BUILTIN_LDMXCSR];
        tree stmxcsr_hold_call = build_call_expr (stmxcsr, 0);
@@ -16356,7 +16423,7 @@ index 1bca5a7eea6..e8982c507e4 100644
        tree ldmxcsr_hold_call = build_call_expr (ldmxcsr, 1, mxcsr_mod_var);
        tree hold_all = build2 (COMPOUND_EXPR, unsigned_type_node,
  			      hold_assign_orig, hold_assign_mod);
-@@ -50973,8 +50989,8 @@
+@@ -50973,8 +51004,8 @@
  			    exceptions_assign);
  	}
        else
