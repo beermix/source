@@ -5406,19 +5406,40 @@ index 000000000000..3717a9fc7c23
 +if __name__ == '__main__':
 +    sys.exit(main())
 diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 358deb4ff..f1c339edb 100644
+old mode 100644
+new mode 100755
+index 358deb4ff..145b15f5d
 --- a/include/linux/tcp.h
 +++ b/include/linux/tcp.h
-@@ -215,7 +215,8 @@ struct tcp_sock {
- 		   advanced:1;	 /* mstamp advanced since last lost marking */
+@@ -216,8 +216,8 @@ struct tcp_sock {
  	} rack;
  	u16	advmss;		/* Advertised MSS			*/
--	u8	compressed_ack;
+ 	u8	compressed_ack;
+-	u8	tlp_retrans:1,	/* TLP is a retransmission */
+-		unused_1:7;
 +	u8	fast_ack_mode:2, /* which fast ack mode ? */
 +		unused:6;
- 	u8	tlp_retrans:1,	/* TLP is a retransmission */
- 		unused_1:7;
  	u32	chrono_start;	/* Start time in jiffies of a TCP chrono */
+ 	u32	chrono_stat[3];	/* Time in jiffies for chrono_stat stats */
+ 	u8	chrono_type:2,	/* current chronograph type */
+@@ -225,7 +225,7 @@ struct tcp_sock {
+ 		fastopen_connect:1, /* FASTOPEN_CONNECT sockopt */
+ 		fastopen_no_cookie:1, /* Allow send/recv SYN+data without a cookie */
+ 		is_sack_reneg:1,    /* in recovery from loss with SACK reneg? */
+-		unused:2;
++		fastopen_client_fail:2; /* reason why fastopen failed */
+ 	u8	nonagle     : 4,/* Disable Nagle algorithm?             */
+ 		thin_lto    : 1,/* Use linear timeouts for thin streams */
+ 		recvmsg_inq : 1,/* Indicate # of bytes in queue upon recvmsg */
+@@ -240,7 +240,7 @@ struct tcp_sock {
+ 		save_syn:1,	/* Save headers of SYN packet */
+ 		is_cwnd_limited:1,/* forward progress limited by snd_cwnd? */
+ 		syn_smc:1;	/* SYN includes SMC */
+-	u32	tlp_high_seq;	/* snd_nxt at the time of TLP */
++	u32	tlp_high_seq;	/* snd_nxt at the time of TLP retransmit. */
+ 
+ 	u32	tcp_tx_delay;	/* delay (in usec) added to TX packets */
+ 	u64	tcp_wstamp_ns;	/* departure time for next sent data packet */
 diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
 index 895546058a20..1038f192cd09 100644
 --- a/include/net/inet_connection_sock.h
