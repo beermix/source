@@ -6,7 +6,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.zst
 PKG_SOURCE_URL:=https://github.com/facebook/zstd/releases/download/v$(PKG_VERSION)
-PKG_HASH:=
+PKG_HASH:=c7ea10e20dd61b457220455e3cf553069987b968b7c63d1b9d46acbdb45623eb
 
 PKG_MAINTAINER:=
 PKG_LICENSE:=GPL-2.0-or-later
@@ -16,7 +16,7 @@ PKG_BUILD_DEPENDS:=meson/host
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include ../../../feeds/packages/devel/meson/meson.mk
+include ../../devel/meson/meson.mk
 
 MESON_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/build/meson/openwrt-build
 
@@ -60,8 +60,8 @@ define Package/zstd/description
   This package provides the zstd binaries.
 endef
 
-ifeq ($(CONFIG_ZSTD_OPTIMIZE_O2),y)
-TARGET_CFLAGS:= -O2 $(filter-out -O%,$(TARGET_CFLAGS))
+ifeq ($(CONFIG_ZSTD_OPTIMIZE_O3),y)
+TARGET_CFLAGS:= $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -fno-strict-aliasing
 endif
 
 TARGET_CFLAGS += $(if $(CONFIG_USE_UCLIBC),-D_BSD_SOURCE)
