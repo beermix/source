@@ -8,3 +8,5 @@
 */gcc/testsuite/lib
 */gcc/testsuite/o*
 *gcc/BASE-VER*
+*gcc/ada/*.ad*
+*libjava*
