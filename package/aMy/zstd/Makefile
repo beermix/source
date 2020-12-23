@@ -60,7 +60,7 @@ define Package/zstd/description
   This package provides the zstd binaries.
 endef
 
-ifeq ($(CONFIG_ZSTD_OPTIMIZE_O3),y)
+ifeq ($(CONFIG_ZSTD_OPTIMIZE_O2),y)
 TARGET_CFLAGS:= $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -fno-strict-aliasing
 endif
 
