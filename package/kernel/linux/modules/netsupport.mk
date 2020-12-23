@@ -953,7 +953,6 @@ define KernelPackage/tcp-bbr2
   TITLE:=BBR2 TCP congestion control
   KCONFIG:= \
 	CONFIG_TCP_CONG_ADVANCED=y \
-	CONFIG_TCP_CONG_BBR=y \
 	CONFIG_TCP_CONG_BBR2
   FILES:=$(LINUX_DIR)/net/ipv4/tcp_bbr2.ko
   AUTOLOAD:=$(call AutoLoad,75,tcp_bbr2)
