@@ -76,7 +76,7 @@ menu "Compiler Options"
 
 	config RUST_FULL_TOOLS
 		bool "Build all tools (--enable-full-tools)"
-		default n
+		default y
 
 	config RUST_MISSING_TOOLS
 		bool "Allow failures when building tools (--enable-missing-tools)"
