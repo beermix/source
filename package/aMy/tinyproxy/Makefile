@@ -21,6 +21,7 @@ PKG_CPE_ID:=cpe:/a:banu:tinyproxy
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
+PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 
