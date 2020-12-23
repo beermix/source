@@ -24,7 +24,7 @@ PKG_CPE_ID:=cpe:/a:torproject:tor
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
-PKG_ASLR_PIE_REGULAR:=1
+# PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -145,14 +145,12 @@ ifeq ($(BUILD_VARIANT),basic)
   CONFIGURE_ARGS += --disable-module-relay ## --disable-module-dirauth
 endif
 
-# TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-# TARGET_LDFLAGS += -Wl,--gc-sections -flto
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes" \
-	ac_cv_func_mallinfo=no \
-	tor_cv_cflags__fPIE=no \
-	tor_cv_ldflags__pie=no
+	ac_cv_func_mallinfo=no
 
 #tor_cv_cflags__fPIE=no tor_cv_ldflags__pie=no
 
