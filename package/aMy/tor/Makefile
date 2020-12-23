@@ -34,7 +34,7 @@ define Package/tor/Default
   CATEGORY:=Network
   URL:=https://www.torproject.org/
   USERID:=tor=52:tor=52
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libzstd # +liblzma
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap # +libzstd +liblzma
   TITLE:=Tor routing daemon
 endef
 
