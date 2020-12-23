@@ -6,12 +6,7 @@ GCCBRANCH = releases/gcc-9
 
 update:
 	git -C $(GCCGIT) fetch origin +$(GCCBRANCH):$(GCCBRANCH) +refs/tags/$(GCCTAG):refs/tags/$(GCCTAG)
-	git -C $(GCCGIT) diff $(GCCTAG)..$(GCCBRANCH) -- \* ':!*/DATESTAMP' | filterdiff --exclude-from-file="exclude-testsuite" --clean > new.patch~
-	git show HEAD:gcc-stable-branch.patch | sed -n '/^diff --git/,$$p' > current.patch~
-	! diff current.patch~ new.patch~ > /dev/null
-	git -C $(GCCGIT) shortlog $(GCCTAG)..$(GCCBRANCH) > gcc-stable-branch.patch
-	cat new.patch~ >> gcc-stable-branch.patch
-	rm -f *.patch~
+	LANG=C git -C $(GCCGIT) diff $(GCCTAG)..$(GCCBRANCH) | awk '/^diff .*\.texi/ {skip=1; next} /^diff / { skip=0 } skip==0' | grep -v -E '^(diff|index)' | filterdiff --exclude-from-file="exclude-testsuite" > gcc-stable-branch.patch
 	mv gcc-stable-branch.patch 000-gcc9-stable-branch.patch
 	mv -f 000-gcc9-stable-branch.patch ./toolchain/gcc/patches/9.3.0/000-gcc9-stable-branch.patch
 
