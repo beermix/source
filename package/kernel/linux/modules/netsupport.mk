@@ -956,7 +956,7 @@ define KernelPackage/tcp-bbr2
 	CONFIG_TCP_CONG_BBR=y \
 	CONFIG_TCP_CONG_BBR2
   FILES:=$(LINUX_DIR)/net/ipv4/tcp_bbr2.ko
-  AUTOLOAD:=$(call AutoLoad,74,tcp_bbr2)
+  AUTOLOAD:=$(call AutoLoad,75,tcp_bbr2)
 endef
 
 define KernelPackage/tcp-bbr2/description
