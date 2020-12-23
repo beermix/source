@@ -5,7 +5,7 @@
 */gcc/testsuite/config*
 */gcc/testsuite/g*
 */gcc/testsuite/jit.dg*
-*/gcc/testsuite/lib
+*/gcc/testsuite/lib*
 */gcc/testsuite/o*
 *gcc/BASE-VER*
 *gcc/ada/*.ad*
