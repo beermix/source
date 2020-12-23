@@ -141,7 +141,6 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--with-linker-hash-style=gnu \
 		--disable-libstdcxx-pch \
-		--with-arch=bonnell \
 		--with-tune=generic \
 		--enable-cld \
 		--with-diagnostics-color=always \
