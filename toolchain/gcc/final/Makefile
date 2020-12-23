@@ -7,6 +7,7 @@ GCC_CONFIGURE += \
 	--enable-languages=$(TARGET_LANGUAGES) \
 	--enable-shared \
 	--enable-threads \
+	--disable-libstdcxx-pch \
 	--with-slibdir=$(TOOLCHAIN_DIR)/lib \
 	--enable-lto \
 	--with-libelf=$(TOPDIR)/staging_dir/host
