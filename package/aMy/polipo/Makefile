@@ -8,20 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=polipo
-PKG_SOURCE_VERSION:=4d42ca1
+#PKG_SOURCE_VERSION:=4d42ca1
 #PKG_SOURCE_VERSION:=f048871
 #PKG_SOURCE_VERSION:=2aa12cb
-#PKG_SOURCE_VERSION:=771e908
+PKG_SOURCE_VERSION:=771e908
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/jech/polipo.git
+#PKG_SOURCE_URL:=https://github.com/jech/polipo.git
 #PKG_SOURCE_URL:=https://github.com/zhangchn/polipo.git
 #PKG_SOURCE_URL:=https://github.com/love-ginger/polipo.git
-#PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
+PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
-
-PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -47,7 +45,7 @@ define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
-		polipo
+		polipo2
 endef
 
 define Package/polipo/conffiles
@@ -57,7 +55,7 @@ endef
 
 define Package/polipo/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo2 $(1)/usr/sbin/polipo
 	$(INSTALL_DIR) $(1)/etc/polipo
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
 	$(INSTALL_DIR) $(1)/etc/config
