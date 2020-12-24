@@ -103,5 +103,4 @@ endef
 
 $(eval $(call BuildPackage,iperf3))
 $(eval $(call BuildPackage,iperf3-ssl))
-$(eval $(call BuildPackage,iperf3-sctp
-
+$(eval $(call BuildPackage,iperf3-sctp))
