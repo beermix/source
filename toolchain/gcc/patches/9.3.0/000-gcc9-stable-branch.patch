@@ -5003,7 +5003,14 @@ new file mode 100755
 +            print('Please resolve all remaining file conflicts.')
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2421 @@
+@@ -1,3 +1,2428 @@
++2020-12-23  Uroš Bizjak  <ubizjak@gmail.com>
++
++	PR target/96793
++	* config/i386/i386.c (ix86_expand_floorceil):
++	Remove the sign of the intermediate value for flag_rounding_math.
++	(ix86_expand_floorceildf_32): Ditto.
++
 +2020-12-14  Wilco Dijkstra  <wdijkstr@arm.com>
 +
 +	* config.gcc (aarch64*-*-*): Add --with-tune. Support --with-cpu=native.
@@ -7429,7 +7436,7 @@ new file mode 100755
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20201223
++20201224
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -1687,6 +1687,10 @@ $(FULL_DRIVER_NAME): ./xgcc
@@ -21174,7 +21181,16 @@ new file mode 100755
  				    "division"),
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,513 @@
+@@ -1,3 +1,522 @@
++2020-12-23  Harald Anlauf  <anlauf@gmx.de>
++
++	Backported from master:
++	2020-12-17  Harald Anlauf  <anlauf@gmx.de>
++
++	PR fortran/98307
++	* trans-stmt.c (check_forall_dependencies): Extend dependency
++	check to allocatable components of derived types.
++
 +2020-12-11  Harald Anlauf  <anlauf@gmx.de>
 +
 +	Backported from master:
