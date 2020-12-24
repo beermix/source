@@ -8,16 +8,16 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lnav
 
-#PKG_VERSION:=0.9.0
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-#PKG_SOURCE_URL:=https://github.com/tstack/lnav/releases/download/v$(PKG_VERSION)-rc1
+PKG_VERSION:=0.9.0
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/tstack/lnav/releases/download/v$(PKG_VERSION)
 
-PKG_VERSION:=d8a083f
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/tstack/lnav.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+#PKG_VERSION:=v0.9.0
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=https://github.com/tstack/lnav.git
+#PKG_SOURCE_VERSION:=$(PKG_VERSION)
+#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
@@ -29,9 +29,9 @@ include $(INCLUDE_DIR)/package.mk
 #TARGET_CXXFLAGS += -ffunction-sections -fdata-sections -flto
 #TARGET_LDFLAGS += -Wl,--gc-sections  --disable-static
 
-export LDFLAGS="-Wl,--copy-dt-needed-entries"
+#export LDFLAGS="-Wl,--copy-dt-needed-entries"
 
-CONFIGURE_ARGS += --disable-static
+#CONFIGURE_ARGS += --disable-static
 
 
 Package/lnav = $(Package/lnav/Default)
