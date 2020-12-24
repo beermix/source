@@ -140,9 +140,6 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-linker-hash-style=gnu \
-		--disable-libstdcxx-pch \
-		--with-tune=generic \
-		--enable-cld \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
