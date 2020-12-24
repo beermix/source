@@ -4595,7 +4595,7 @@ index 000000000000..ed107c2fa245
 +    c += 'ip netns exec srt ethtool -K srt.r tso off gso off gro off\n'
 +    c += 'ip netns exec mid ethtool -K mid.l tso off gso off gro off\n'
 +    c += 'ip netns exec mid ethtool -K mid.r tso off gso off gro off\n'
-+    c += 'ip netns exec crt ethtool -K crt.l tso off gso off gro off\n'
++    c += 'ip netns exec srt ethtool -K crt.l tso off gso off gro off\n'
 +
 +    # server
 +    c += 'ip netns exec srv ip addr add 192.168.0.1/24 dev srv.r\n'
@@ -5405,6 +5405,19 @@ index 000000000000..3717a9fc7c23
 +
 +if __name__ == '__main__':
 +    sys.exit(main())
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index ca6f01531e64..145b15f5d07e 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -216,6 +216,8 @@ struct tcp_sock {
+ 	} rack;
+ 	u16	advmss;		/* Advertised MSS			*/
+ 	u8	compressed_ack;
++	u8	fast_ack_mode:2, /* which fast ack mode ? */
++		unused:6;
+ 	u32	chrono_start;	/* Start time in jiffies of a TCP chrono */
+ 	u32	chrono_stat[3];	/* Time in jiffies for chrono_stat stats */
+ 	u8	chrono_type:2,	/* current chronograph type */
 diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
 index 895546058a20..1038f192cd09 100644
 --- a/include/net/inet_connection_sock.h
@@ -5581,13 +5594,6 @@ index a1ff345b3f33..ffc88b01868d 100644
 +	struct tcp_bbr2_info	bbr2;
  };
  #endif /* _UAPI_INET_DIAG_H_ */
-diff --git a/net/ipv4/Gconfig.bbr2 b/net/ipv4/Gconfig.bbr2
-new file mode 100644
-index 000000000000..1cdc3953f2be
---- /dev/null
-+++ b/net/ipv4/Gconfig.bbr2
-@@ -0,0 +1 @@
-+CONFIG_TCP_CONG_BBR2=y
 diff --git a/net/ipv4/Kconfig b/net/ipv4/Kconfig
 index 03381f3e12ba..a638dee76e8b 100644
 --- a/net/ipv4/Kconfig
