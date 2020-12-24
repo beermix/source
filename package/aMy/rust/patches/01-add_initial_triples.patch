@@ -1,0 +1,102 @@
+--- a/compiler/rustc_target/src/spec/mod.rs
++++ b/compiler/rustc_target/src/spec/mod.rs
+@@ -662,6 +662,12 @@
+     ("mipsel-sony-psp", mipsel_sony_psp),
+     ("mipsel-unknown-none", mipsel_unknown_none),
+     ("thumbv4t-none-eabi", thumbv4t_none_eabi),
++
++	("arm-openwrt-linux-muslgnueabi", arm_openwrt_linux_muslgnueabi),
++	("mips64-openwrt-linux-musl", mips64_openwrt_linux_musl),
++	("mips-openwrt-linux-musl", mips_openwrt_linux_musl),
++	("x86_64-openwrt-linux-musl", x86_64_openwrt_linux_musl),
++
+ }
+
+ /// Everything `rustc` knows about how to compile for a specific target.
+--- /dev/null
++++ b/compiler/rustc_target/src/spec/mips64_openwrt_linux_musl.rs
+@@ -0,0 +1,16 @@
++use crate::spec::{Target, TargetOptions};
++
++pub fn target() -> Target {
++    let mut base = super::linux_musl_base::opts();
++    base.cpu = "mips64r2".to_string();
++    base.features = "+mips64r2,+soft-float".to_string();
++    base.max_atomic_width = Some(64);
++    Target {
++        // LLVM doesn't recognize "muslabi64" yet.
++        llvm_target: "mips64-unknown-linux-musl".to_string(),
++        pointer_width: 64,
++        data_layout: "E-m:e-i8:8:32-i16:16:32-i64:64-n32:64-S128".to_string(),
++        arch: "mips64".to_string(),
++        options: TargetOptions { endian: "big".to_string(), mcount: "_mcount".to_string(), ..base },
++    }
++}
+--- /dev/null	2020-12-13 01:13:35.284086516 -0500
++++ b/compiler/rustc_target/src/spec/arm_openwrt_linux_muslgnueabi.rs
+@@ -0,0 +1,24 @@
++use crate::spec::{Target, TargetOptions};
++
++pub fn target() -> Target {
++    let mut base = super::linux_musl_base::opts();
++
++    // Most of these settings are copied from the arm_unknown_linux_gnueabi
++    // target.
++    base.features = "+strict-align,+v6".to_string();
++    base.max_atomic_width = Some(64);
++    Target {
++        // It's important we use "gnueabi" and not "musleabi" here. LLVM uses it
++        // to determine the calling convention and float ABI, and it doesn't
++        // support the "musleabi" value.
++        llvm_target: "arm-unknown-linux-gnueabi".to_string(),
++        pointer_width: 32,
++        data_layout: "e-m:e-p:32:32-Fi8-i64:64-v128:64:128-a:0:32-n32-S64".to_string(),
++        arch: "arm".to_string(),
++        options: TargetOptions {
++            unsupported_abis: super::arm_base::unsupported_abis(),
++            mcount: "\u{1}mcount".to_string(),
++            ..base
++        },
++    }
++}
+--- /dev/null
++++ b/compiler/rustc_target/src/spec/mips_openwrt_linux_musl.rs
+@@ -0,0 +1,16 @@
++use crate::spec::{Target, TargetOptions};
++
++pub fn target() -> Target {
++    let mut base = super::linux_musl_base::opts();
++    base.cpu = "mips32r2".to_string();
++    base.features = "+mips32r2,+soft-float".to_string();
++    base.max_atomic_width = Some(32);
++    base.crt_static_default = false;
++    Target {
++        llvm_target: "mips-unknown-linux-musl".to_string(),
++        pointer_width: 32,
++        data_layout: "E-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32-S64".to_string(),
++        arch: "mips".to_string(),
++        options: TargetOptions { endian: "big".to_string(), mcount: "_mcount".to_string(), ..base },
++    }
++}
+--- /dev/null	2020-12-22 06:55:13.881825284 -0500
++++ b/compiler/rustc_target/src/spec/x86_64_openwrt_linux_musl.rs
+@@ -0,0 +1,19 @@
++use crate::spec::{LinkerFlavor, Target};
++
++pub fn target() -> Target {
++    let mut base = super::linux_musl_base::opts();
++    base.cpu = "x86-64".to_string();
++    base.max_atomic_width = Some(64);
++    base.pre_link_args.get_mut(&LinkerFlavor::Gcc).unwrap().push("-m64".to_string());
++    base.stack_probes = true;
++    base.static_position_independent_executables = true;
++
++    Target {
++        llvm_target: "x86_64-unknown-linux-musl".to_string(),
++        pointer_width: 64,
++        data_layout: "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
++            .to_string(),
++        arch: "x86_64".to_string(),
++        options: base,
++    }
++}
