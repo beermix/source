@@ -19,13 +19,6 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 include ../rust/rustc-triple.mk
 
-define Build/Make
-	$(call Build/Make/Default)
-	cd $(PKG_BUILD_DIR) && git clone https://github.com/OISF/libhtp.git
-	$(CONFIGURE_VARS) cargo install cbindgen
-endef
-
-
 define Package/bandwhich/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata $(1)/usr/bin/suricata
