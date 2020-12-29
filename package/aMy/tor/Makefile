@@ -34,7 +34,7 @@ define Package/tor/Default
   CATEGORY:=Network
   URL:=https://www.torproject.org/
   USERID:=tor=52:tor=52
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap # +libzstd # +liblzma
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libzstd # +liblzma
   TITLE:=Tor routing daemon
 endef
 
@@ -133,7 +133,7 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-lzma \
-	--disable-zstd \
+	--enable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--disable-largefile \
@@ -150,7 +150,9 @@ TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes" \
-	ac_cv_func_mallinfo=no
+	ac_cv_func_mallinfo=no \
+	tor_cv_cflags__fPIE=no \
+	tor_cv_ldflags__pie=no
 
 # tor_cv_cflags__fPIE=no tor_cv_ldflags__pie=no
 
