@@ -5003,7 +5003,45 @@ new file mode 100755
 +            print('Please resolve all remaining file conflicts.')
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2428 @@
+@@ -1,3 +1,2466 @@
++2020-12-28  Uroš Bizjak  <ubizjak@gmail.com>
++
++	PR target/96793
++	* config/i386/i386.c (ix86_expand_rint):
++	Remove the sign of the intermediate value for flag_rounding_math.
++
++2020-12-28  Piotr Kubaj  <pkubaj@FreeBSD.org>
++
++	Backported from master:
++	2020-12-16  Piotr Kubaj  <pkubaj@FreeBSD.org>
++
++	* config.gcc (powerpc*le-*-freebsd*): Add.
++	* configure.ac (powerpc*le-*-freebsd*): Ditto.
++	* configure: Regenerate.
++	* config/rs6000/freebsd64.h (ASM_SPEC_COMMON): Use ENDIAN_SELECT.
++	(DEFAULT_ASM_ENDIAN): Add little endian support.
++	(LINK_OS_FREEBSD_SPEC64): Ditto.
++
++2020-12-27  Uroš Bizjak  <ubizjak@gmail.com>
++
++	PR target/96793
++	* config/i386/i386.c (ix86_expand_truncdf_32):
++	Remove the sign of the intermediate value for flag_rounding_math.
++
++2020-12-24  Roman Zhuykov  <zhroma@ispras.ru>
++
++	Backported from master:
++	2020-12-05  Roman Zhuykov  <zhroma@ispras.ru>
++
++	PR rtl-optimization/97421
++	* modulo-sched.c (generate_prolog_epilog): Remove forward
++	declaration, adjust last argument name and type.
++	(const_iteration_count): Add bool pointer parameter to return
++	whether count register is read in pre-header after its
++	initialization.
++	(sms_schedule): Fix count register initialization adjustment
++	procedure according to what const_iteration_count said.
++
 +2020-12-23  Uroš Bizjak  <ubizjak@gmail.com>
 +
 +	PR target/96793
@@ -7436,7 +7474,7 @@ new file mode 100755
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20201224
++20201229
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -1687,6 +1687,10 @@ $(FULL_DRIVER_NAME): ./xgcc
@@ -8601,7 +8639,18 @@ new file mode 100755
    (OPTION_MASK_ISA_AVX2 | OPTION_MASK_ISA_AVX512F_UNSET)
 --- a/gcc/config.gcc
 +++ b/gcc/config.gcc
-@@ -3806,9 +3806,17 @@ fi
+@@ -2617,6 +2617,10 @@ powerpc*-*-freebsd*)
+ 	tm_file="${tm_file} dbxelf.h elfos.h gnu-user.h ${fbsd_tm_file} rs6000/sysv4.h"
+ 	extra_options="${extra_options} rs6000/sysv4.opt"
+ 	tmake_file="rs6000/t-fprules rs6000/t-ppcos ${tmake_file} rs6000/t-ppccomm"
++	case ${target} in
++	    powerpc*le-*-*)
++		tm_file="${tm_file} rs6000/sysv4le.h" ;;
++	esac
+ 	case ${target} in
+ 	     powerpc64*)
+ 	    	tm_file="${tm_file} rs6000/default64.h rs6000/freebsd64.h"
+@@ -3806,9 +3810,17 @@ fi
  supported_defaults=
  case "${target}" in
  	aarch64*-*-*)
@@ -8622,7 +8671,7 @@ new file mode 100755
  			eval "val=\$with_$which"
  			base_val=`echo $val | sed -e 's/\+.*//'`
  			ext_val=`echo $val | sed -e 's/[a-z0-9.-]\+//'`
-@@ -3847,6 +3855,12 @@ case "${target}" in
+@@ -3847,6 +3859,12 @@ case "${target}" in
  				  sed -e 's/,.*$//'`
  			  fi
  
@@ -8635,7 +8684,7 @@ new file mode 100755
  			  while [ x"$ext_val" != x ]
  			  do
  				ext_val=`echo $ext_val | sed -e 's/\+//'`
-@@ -3896,8 +3910,13 @@ case "${target}" in
+@@ -3896,8 +3914,13 @@ case "${target}" in
  			  fi
  			  true
  			else
@@ -15250,7 +15299,40 @@ new file mode 100755
    rtx_insn *seq = get_insns ();
    end_sequence ();
  
-@@ -45500,12 +45511,14 @@ ix86_expand_floorceildf_32 (rtx operand0, rtx operand1, bool do_floor)
+@@ -45457,7 +45468,7 @@ ix86_expand_rint (rtx operand0, rtx operand1)
+         return copysign (xa, operand1);
+    */
+   machine_mode mode = GET_MODE (operand0);
+-  rtx res, xa, TWO52, two52, mask;
++  rtx res, xa, TWO52, mask;
+   rtx_code_label *label;
+ 
+   res = gen_reg_rtx (mode);
+@@ -45470,16 +45481,18 @@ ix86_expand_rint (rtx operand0, rtx operand1)
+   TWO52 = ix86_gen_TWO52 (mode);
+   label = ix86_expand_sse_compare_and_jump (UNLE, TWO52, xa, false);
+ 
+-  two52 = TWO52;
+   if (flag_rounding_math)
+     {
+-      two52 = gen_reg_rtx (mode);
+-      ix86_sse_copysign_to_positive (two52, TWO52, res, mask);
++      ix86_sse_copysign_to_positive (TWO52, TWO52, res, mask);
+       xa = res;
+     }
+ 
+-  xa = expand_simple_binop (mode, PLUS, xa, two52, NULL_RTX, 0, OPTAB_DIRECT);
+-  xa = expand_simple_binop (mode, MINUS, xa, two52, xa, 0, OPTAB_DIRECT);
++  xa = expand_simple_binop (mode, PLUS, xa, TWO52, NULL_RTX, 0, OPTAB_DIRECT);
++  xa = expand_simple_binop (mode, MINUS, xa, TWO52, xa, 0, OPTAB_DIRECT);
++
++  /* Remove the sign with FE_DOWNWARD, where x - x = -0.0.  */
++  if (HONOR_SIGNED_ZEROS (mode) && flag_rounding_math)
++    xa = ix86_expand_sse_fabs (xa, NULL);
+ 
+   ix86_sse_copysign_to_positive (res, xa, res, mask);
+ 
+@@ -45500,12 +45513,14 @@ ix86_expand_floorceildf_32 (rtx operand0, rtx operand1, bool do_floor)
            return x;
          xa = xa + TWO52 - TWO52;
          x2 = copysign (xa, x);
@@ -15265,7 +15347,7 @@ new file mode 100755
  	if (HONOR_SIGNED_ZEROS (mode))
  	  x2 = copysign (x2, x);
  	return x2;
-@@ -45542,8 +45555,14 @@ ix86_expand_floorceildf_32 (rtx operand0, rtx operand1, bool do_floor)
+@@ -45542,8 +45557,14 @@ ix86_expand_floorceildf_32 (rtx operand0, rtx operand1, bool do_floor)
    emit_insn (gen_rtx_SET (tmp, gen_rtx_AND (mode, one, tmp)));
    tmp = expand_simple_binop (mode, do_floor ? MINUS : PLUS,
  			     xa, tmp, NULL_RTX, 0, OPTAB_DIRECT);
@@ -15282,7 +15364,7 @@ new file mode 100755
    emit_move_insn (res, tmp);
  
    emit_label (label);
-@@ -45562,12 +45581,14 @@ ix86_expand_floorceil (rtx operand0, rtx operand1, bool do_floor)
+@@ -45562,12 +45583,14 @@ ix86_expand_floorceil (rtx operand0, rtx operand1, bool do_floor)
          if (!isless (xa, TWO52))
            return x;
  	x2 = (double)(long)x;
@@ -15297,7 +15379,7 @@ new file mode 100755
  	if (HONOR_SIGNED_ZEROS (mode))
  	  return copysign (x2, x);
  	return x2;
-@@ -45602,10 +45623,15 @@ ix86_expand_floorceil (rtx operand0, rtx operand1, bool do_floor)
+@@ -45602,10 +45625,15 @@ ix86_expand_floorceil (rtx operand0, rtx operand1, bool do_floor)
    emit_insn (gen_rtx_SET (tmp, gen_rtx_AND (mode, one, tmp)));
    tmp = expand_simple_binop (mode, do_floor ? MINUS : PLUS,
  			     xa, tmp, NULL_RTX, 0, OPTAB_DIRECT);
@@ -15316,7 +15398,58 @@ new file mode 100755
  
    emit_label (label);
    LABEL_NUSES (label) = 1;
-@@ -46667,7 +46693,7 @@ expand_vec_perm_pshufb (struct expand_vec_perm_d *d)
+@@ -45736,7 +45764,7 @@ void
+ ix86_expand_truncdf_32 (rtx operand0, rtx operand1)
+ {
+   machine_mode mode = GET_MODE (operand0);
+-  rtx xa, mask, TWO52, one, res, smask, tmp;
++  rtx xa, xa2, TWO52, tmp, one, res, mask;
+   rtx_code_label *label;
+ 
+   /* C code for SSE variant we expand below.
+@@ -45759,28 +45787,29 @@ ix86_expand_truncdf_32 (rtx operand0, rtx operand1)
+   emit_move_insn (res, operand1);
+ 
+   /* xa = abs (operand1) */
+-  xa = ix86_expand_sse_fabs (res, &smask);
++  xa = ix86_expand_sse_fabs (res, &mask);
+ 
+   /* if (!isless (xa, TWO52)) goto label; */
+   label = ix86_expand_sse_compare_and_jump (UNLE, TWO52, xa, false);
+ 
+-  /* res = xa + TWO52 - TWO52; */
+-  tmp = expand_simple_binop (mode, PLUS, xa, TWO52, NULL_RTX, 0, OPTAB_DIRECT);
+-  tmp = expand_simple_binop (mode, MINUS, tmp, TWO52, tmp, 0, OPTAB_DIRECT);
+-  emit_move_insn (res, tmp);
++  /* xa2 = xa + TWO52 - TWO52; */
++  xa2 = expand_simple_binop (mode, PLUS, xa, TWO52, NULL_RTX, 0, OPTAB_DIRECT);
++  xa2 = expand_simple_binop (mode, MINUS, xa2, TWO52, xa2, 0, OPTAB_DIRECT);
+ 
+   /* generate 1.0 */
+   one = force_reg (mode, const_double_from_real_value (dconst1, mode));
+ 
+-  /* Compensate: res = xa2 - (res > xa ? 1 : 0)  */
+-  mask = ix86_expand_sse_compare_mask (UNGT, res, xa, false);
+-  emit_insn (gen_rtx_SET (mask, gen_rtx_AND (mode, mask, one)));
++  /* Compensate: xa2 = xa2 - (xa2 > xa ? 1 : 0)  */
++  tmp = ix86_expand_sse_compare_mask (UNGT, xa2, xa, false);
++  emit_insn (gen_rtx_SET (tmp, gen_rtx_AND (mode, one, tmp)));
+   tmp = expand_simple_binop (mode, MINUS,
+-			     res, mask, NULL_RTX, 0, OPTAB_DIRECT);
+-  emit_move_insn (res, tmp);
++			     xa2, tmp, NULL_RTX, 0, OPTAB_DIRECT);
++  /* Remove the sign with FE_DOWNWARD, where x - x = -0.0.  */
++  if (HONOR_SIGNED_ZEROS (mode) && flag_rounding_math)
++    tmp = ix86_expand_sse_fabs (tmp, NULL);
+ 
+-  /* res = copysign (res, operand1) */
+-  ix86_sse_copysign_to_positive (res, res, force_reg (mode, operand1), smask);
++  /* res = copysign (xa2, operand1) */
++  ix86_sse_copysign_to_positive (res, tmp, res, mask);
+ 
+   emit_label (label);
+   LABEL_NUSES (label) = 1;
+@@ -46667,7 +46696,7 @@ expand_vec_perm_pshufb (struct expand_vec_perm_d *d)
  	      /* vpshufb only works intra lanes, it is not
  		 possible to shuffle bytes in between the lanes.  */
  	      for (i = 0; i < nelt; ++i)
@@ -15325,7 +15458,7 @@ new file mode 100755
  		  return false;
  	    }
  	}
-@@ -50265,7 +50291,9 @@ ix86_get_mask_mode (poly_uint64 nunits, poly_uint64 vector_size)
+@@ -50265,7 +50294,9 @@ ix86_get_mask_mode (poly_uint64 nunits, poly_uint64 vector_size)
    if ((TARGET_AVX512F && vector_size == 64)
        || (TARGET_AVX512VL && (vector_size == 32 || vector_size == 16)))
      {
@@ -15336,7 +15469,7 @@ new file mode 100755
  	return smallest_int_mode_for_size (nunits);
      }
  
-@@ -50919,11 +50947,12 @@ ix86_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
+@@ -50919,11 +50950,12 @@ ix86_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
        *clear = build_call_expr (fnclex, 0);
        tree sw_var = create_tmp_var_raw (short_unsigned_type_node);
        tree fnstsw_call = build_call_expr (fnstsw, 0);
@@ -15353,7 +15486,7 @@ new file mode 100755
        *update = build2 (COMPOUND_EXPR, integer_type_node,
  			sw_mod, update_mod);
        tree update_fldenv = build_call_expr (fldenv, 1, fenv_addr);
-@@ -50936,15 +50965,17 @@ ix86_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
+@@ -50936,15 +50968,17 @@ ix86_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
        tree stmxcsr = ix86_builtins[IX86_BUILTIN_STMXCSR];
        tree ldmxcsr = ix86_builtins[IX86_BUILTIN_LDMXCSR];
        tree stmxcsr_hold_call = build_call_expr (stmxcsr, 0);
@@ -15375,7 +15508,7 @@ new file mode 100755
        tree ldmxcsr_hold_call = build_call_expr (ldmxcsr, 1, mxcsr_mod_var);
        tree hold_all = build2 (COMPOUND_EXPR, unsigned_type_node,
  			      hold_assign_orig, hold_assign_mod);
-@@ -50973,8 +51004,8 @@ ix86_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
+@@ -50973,8 +51007,8 @@ ix86_atomic_assign_expand_fenv (tree *hold, tree *clear, tree *update)
  			    exceptions_assign);
  	}
        else
@@ -16043,6 +16176,36 @@ new file mode 100755
  extern __inline int __attribute__((__gnu_inline__, __always_inline__, __artificial__))
  _mm_movemask_epi8 (__m128i __A)
  {
+--- a/gcc/config/rs6000/freebsd64.h
++++ b/gcc/config/rs6000/freebsd64.h
+@@ -160,8 +160,8 @@ extern int dot_symbols;
+ #define ASM_SPEC64 "-a64"
+ 
+ #define ASM_SPEC_COMMON "%(asm_cpu) \
+-%{,assembler|,assembler-with-cpp: %{mregnames} %{mno-regnames}} \
+-%{mlittle} %{mlittle-endian} %{mbig} %{mbig-endian}"
++%{,assembler|,assembler-with-cpp: %{mregnames} %{mno-regnames}}" \
++  ENDIAN_SELECT(" -mbig", " -mlittle", DEFAULT_ASM_ENDIAN)
+ 
+ #undef	SUBSUBTARGET_EXTRA_SPECS
+ #define SUBSUBTARGET_EXTRA_SPECS					\
+@@ -183,9 +183,15 @@ extern int dot_symbols;
+     %{static:-Bstatic}} \
+   %{symbolic:-Bsymbolic}"
+ 
++#undef  DEFAULT_ASM_ENDIAN
+ #define LINK_OS_FREEBSD_SPEC32 "-melf32ppc_fbsd " LINK_OS_FREEBSD_SPEC_DEF
+-  
++#if (TARGET_DEFAULT & MASK_LITTLE_ENDIAN)
++#define DEFAULT_ASM_ENDIAN " -mlittle"
++#define LINK_OS_FREEBSD_SPEC64 "-melf64lppc_fbsd " LINK_OS_FREEBSD_SPEC_DEF
++#else
++#define DEFAULT_ASM_ENDIAN " -mbig"
+ #define LINK_OS_FREEBSD_SPEC64 "-melf64ppc_fbsd " LINK_OS_FREEBSD_SPEC_DEF
++#endif
+ 
+ #undef	MULTILIB_DEFAULTS
+ #define MULTILIB_DEFAULTS { "m64" }
 --- a/gcc/config/rs6000/rs6000-builtin.def
 +++ b/gcc/config/rs6000/rs6000-builtin.def
 @@ -947,6 +947,7 @@ BU_ALTIVEC_3 (VMLADDUHM,      "vmladduhm",      CONST, 	fmav8hi4)
@@ -18774,6 +18937,16 @@ new file mode 100755
  fi
  
  
+@@ -28919,6 +28950,9 @@ case "$target:$tm_file" in
+      *-*-linux*)
+      emul_name="-melf64ppc"
+       ;;
++     *le-*-freebsd*)
++     emul_name="-melf64lppc_fbsd"
++      ;;
+      *-*-freebsd*)
+      emul_name="-melf64ppc_fbsd"
+       ;;
 --- a/gcc/configure.ac
 +++ b/gcc/configure.ac
 @@ -4908,6 +4908,11 @@ pointers into PC-relative form.])
@@ -18788,6 +18961,16 @@ new file mode 100755
  
      ;;
  esac
+@@ -5674,6 +5679,9 @@ case "$target:$tm_file" in
+      *-*-linux*)
+      emul_name="-melf64ppc"
+       ;;
++     *le-*-freebsd*)
++     emul_name="-melf64lppc_fbsd"
++      ;;
+      *-*-freebsd*)
+      emul_name="-melf64ppc_fbsd"
+       ;;
 --- a/gcc/coverage.c
 +++ b/gcc/coverage.c
 @@ -1201,6 +1201,13 @@ coverage_obj_finish (vec<constructor_elt, va_gc> *ctor)
@@ -21181,7 +21364,20 @@ new file mode 100755
  				    "division"),
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,522 @@
+@@ -1,3 +1,535 @@
++2020-12-28  Paul Thomas  <pault@gcc.gnu.org>
++
++	Backported from master:
++	2020-08-20  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/96100
++	PR fortran/96101
++	* trans-array.c (get_array_charlen): Tidy up the evaluation of
++	the string length for array constructors. Avoid trailing array
++	references. Ensure string lengths of deferred length components
++	are set. For parentheses operator apply string  length to both
++	the primary expression and the enclosed expression.
++
 +2020-12-23  Harald Anlauf  <anlauf@gmx.de>
 +
 +	Backported from master:
@@ -22746,6 +22942,48 @@ new file mode 100755
  	    default:
  	      gcc_unreachable ();
  	      break;
+@@ -6991,7 +7009,12 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
+       e = gfc_constructor_first (expr->value.constructor)->expr;
+ 
+       gfc_init_se (&tse, NULL);
++
++      /* Avoid evaluating trailing array references since all we need is
++	 the string length.  */
+       if (e->rank)
++	tse.descriptor_only = 1;
++      if (e->rank && e->expr_type != EXPR_VARIABLE)
+ 	gfc_conv_expr_descriptor (&tse, e);
+       else
+ 	gfc_conv_expr (&tse, e);
+@@ -7009,14 +7032,26 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
+       gfc_add_modify (&se->pre, expr->ts.u.cl->backend_decl,
+ 		      tse.string_length);
+ 
++      /* Make sure that deferred length components point to the hidden
++	 string_length component.  */
++      if (TREE_CODE (tse.expr) == COMPONENT_REF
++	  && TREE_CODE (tse.string_length) == COMPONENT_REF
++	  && TREE_OPERAND (tse.expr, 0) == TREE_OPERAND (tse.string_length, 0))
++	e->ts.u.cl->backend_decl = expr->ts.u.cl->backend_decl;
++
+       return;
+ 
+     case EXPR_OP:
+       get_array_charlen (expr->value.op.op1, se);
+ 
+-      /* For parentheses the expression ts.u.cl is identical.  */
++      /* For parentheses the expression ts.u.cl should be identical.  */
+       if (expr->value.op.op == INTRINSIC_PARENTHESES)
+-	return;
++	{
++	  if (expr->value.op.op1->ts.u.cl != expr->ts.u.cl)
++	    expr->ts.u.cl->backend_decl
++			= expr->value.op.op1->ts.u.cl->backend_decl;
++	  return;
++	}
+ 
+       expr->ts.u.cl->backend_decl =
+ 		gfc_create_var (gfc_charlen_type_node, "sln");
 --- a/gcc/fortran/trans-common.c
 +++ b/gcc/fortran/trans-common.c
 @@ -242,8 +242,9 @@ static tree
@@ -23382,6 +23620,168 @@ new file mode 100755
      }
    static void
    mark_empty (value_range_base *&p)
+--- a/gcc/modulo-sched.c
++++ b/gcc/modulo-sched.c
+@@ -211,8 +211,6 @@ static int sms_order_nodes (ddg_ptr, int, int *, int *);
+ static void set_node_sched_params (ddg_ptr);
+ static partial_schedule_ptr sms_schedule_by_order (ddg_ptr, int, int, int *);
+ static void permute_partial_schedule (partial_schedule_ptr, rtx_insn *);
+-static void generate_prolog_epilog (partial_schedule_ptr, struct loop *,
+-                                    rtx, rtx);
+ static int calculate_stage_count (partial_schedule_ptr, int);
+ static void calculate_must_precede_follow (ddg_node_ptr, int, int,
+ 					   int, int, sbitmap, sbitmap, sbitmap);
+@@ -392,30 +390,40 @@ doloop_register_get (rtx_insn *head, rtx_insn *tail)
+    this constant.  Otherwise return 0.  */
+ static rtx_insn *
+ const_iteration_count (rtx count_reg, basic_block pre_header,
+-		       int64_t * count)
++		       int64_t *count, bool* adjust_inplace)
+ {
+   rtx_insn *insn;
+   rtx_insn *head, *tail;
+ 
++  *adjust_inplace = false;
++  bool read_after = false;
++
+   if (! pre_header)
+     return NULL;
+ 
+   get_ebb_head_tail (pre_header, pre_header, &head, &tail);
+ 
+   for (insn = tail; insn != PREV_INSN (head); insn = PREV_INSN (insn))
+-    if (NONDEBUG_INSN_P (insn) && single_set (insn) &&
+-	rtx_equal_p (count_reg, SET_DEST (single_set (insn))))
++    if (single_set (insn) && rtx_equal_p (count_reg,
++					  SET_DEST (single_set (insn))))
+       {
+ 	rtx pat = single_set (insn);
+ 
+ 	if (CONST_INT_P (SET_SRC (pat)))
+ 	  {
+ 	    *count = INTVAL (SET_SRC (pat));
++	    *adjust_inplace = !read_after;
+ 	    return insn;
+ 	  }
+ 
+ 	return NULL;
+       }
++    else if (NONDEBUG_INSN_P (insn) && reg_mentioned_p (count_reg, insn))
++      {
++	read_after = true;
++	if (reg_set_p (count_reg, insn))
++	   break;
++      }
+ 
+   return NULL;
+ }
+@@ -1125,7 +1133,7 @@ duplicate_insns_of_cycles (partial_schedule_ptr ps, int from_stage,
+ /* Generate the instructions (including reg_moves) for prolog & epilog.  */
+ static void
+ generate_prolog_epilog (partial_schedule_ptr ps, struct loop *loop,
+-                        rtx count_reg, rtx count_init)
++			rtx count_reg, bool adjust_init)
+ {
+   int i;
+   int last_stage = PS_STAGE_COUNT (ps) - 1;
+@@ -1134,12 +1142,12 @@ generate_prolog_epilog (partial_schedule_ptr ps, struct loop *loop,
+   /* Generate the prolog, inserting its insns on the loop-entry edge.  */
+   start_sequence ();
+ 
+-  if (!count_init)
++  if (adjust_init)
+     {
+       /* Generate instructions at the beginning of the prolog to
+-         adjust the loop count by STAGE_COUNT.  If loop count is constant
+-         (count_init), this constant is adjusted by STAGE_COUNT in
+-         generate_prolog_epilog function.  */
++	 adjust the loop count by STAGE_COUNT.  If loop count is constant
++	 and it not used anywhere in prologue, this constant is adjusted by
++	 STAGE_COUNT outside of generate_prolog_epilog function.  */
+       rtx sub_reg = NULL_RTX;
+ 
+       sub_reg = expand_simple_binop (GET_MODE (count_reg), MINUS, count_reg,
+@@ -1530,7 +1538,8 @@ sms_schedule (void)
+       rtx_insn *count_init;
+       int mii, rec_mii, stage_count, min_cycle;
+       int64_t loop_count = 0;
+-      bool opt_sc_p;
++      bool opt_sc_p, adjust_inplace = false;
++      basic_block pre_header;
+ 
+       if (! (g = g_arr[loop->num]))
+         continue;
+@@ -1571,19 +1580,13 @@ sms_schedule (void)
+ 	}
+ 
+ 
+-      /* In case of th loop have doloop register it gets special
+-	 handling.  */
+-      count_init = NULL;
+-      if ((count_reg = doloop_register_get (head, tail)))
+-	{
+-	  basic_block pre_header;
+-
+-	  pre_header = loop_preheader_edge (loop)->src;
+-	  count_init = const_iteration_count (count_reg, pre_header,
+-					      &loop_count);
+-	}
++      count_reg = doloop_register_get (head, tail);
+       gcc_assert (count_reg);
+ 
++      pre_header = loop_preheader_edge (loop)->src;
++      count_init = const_iteration_count (count_reg, pre_header, &loop_count,
++					  &adjust_inplace);
++
+       if (dump_file && count_init)
+         {
+           fprintf (dump_file, "SMS const-doloop ");
+@@ -1703,9 +1706,20 @@ sms_schedule (void)
+ 	      print_partial_schedule (ps, dump_file);
+ 	    }
+  
+-          /* case the BCT count is not known , Do loop-versioning */
+-	  if (count_reg && ! count_init)
++	  if (count_init)
++	    {
++	       if (adjust_inplace)
++		{
++		  /* When possible, set new iteration count of loop kernel in
++		     place.  Otherwise, generate_prolog_epilog creates an insn
++		     to adjust.  */
++		  SET_SRC (single_set (count_init)) = GEN_INT (loop_count
++							    - stage_count + 1);
++		}
++	    }
++	  else
+             {
++	      /* case the BCT count is not known , Do loop-versioning */
+ 	      rtx comp_rtx = gen_rtx_GT (VOIDmode, count_reg,
+ 					 gen_int_mode (stage_count,
+ 						       GET_MODE (count_reg)));
+@@ -1715,12 +1729,7 @@ sms_schedule (void)
+ 	      loop_version (loop, comp_rtx, &condition_bb,
+ 	  		    prob, prob.invert (),
+ 			    prob, prob.invert (), true);
+-	     }
+-
+-	  /* Set new iteration count of loop kernel.  */
+-          if (count_reg && count_init)
+-	    SET_SRC (single_set (count_init)) = GEN_INT (loop_count
+-						     - stage_count + 1);
++	    }
+ 
+ 	  /* Now apply the scheduled kernel to the RTL of the loop.  */
+ 	  permute_partial_schedule (ps, g->closing_branch->first_note);
+@@ -1737,7 +1746,7 @@ sms_schedule (void)
+ 	  if (dump_file)
+ 	    print_node_sched_params (dump_file, g->num_nodes, ps);
+ 	  /* Generate prolog and epilog.  */
+-          generate_prolog_epilog (ps, loop, count_reg, count_init);
++	  generate_prolog_epilog (ps, loop, count_reg, !adjust_inplace);
+ 	  break;
+ 	}
+ 
 --- a/gcc/omp-low.c
 +++ b/gcc/omp-low.c
 @@ -9050,7 +9050,7 @@ lower_omp_taskreg (gimple_stmt_iterator *gsi_p, omp_context *ctx)
@@ -23726,6 +24126,12 @@ new file mode 100755
      warning (OPT_Wpadded, "padding struct size to alignment boundary");
  
    if (warn_packed && TREE_CODE (rli->t) == RECORD_TYPE
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
 new file mode 100644
 new file mode 100644
 new file mode 100644
