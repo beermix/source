@@ -67,7 +67,7 @@ endif
 TARGET_CFLAGS += $(if $(CONFIG_USE_UCLIBC),-D_BSD_SOURCE)
 
 MESON_ARGS += \
-	-Dlegacy_level=1 \
+	-Dlegacy_level=0 \
 	-Ddebug_level=0 \
 	-Dbacktrace=false \
 	-Dstatic_runtime=false \
