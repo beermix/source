@@ -19,6 +19,9 @@ include $(INCLUDE_DIR)/host-build.mk
 
 unexport PKG_CONFIG
 
+HOST_CONFIGURE_ARGS += \
+	--disable-shared
+
 define Host/Install
 	$(MAKE) -C $(HOST_BUILD_DIR) install
 	mv $(STAGING_DIR_HOST)/bin/pkgconf $(STAGING_DIR_HOST)/bin/pkg-config.real

@@ -926,11 +926,9 @@ $(eval $(call KernelPackage,sched))
 define KernelPackage/tcp-bbr
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=BBR TCP congestion control
-  KCONFIG:= \
-	CONFIG_TCP_CONG_ADVANCED=y \
-	CONFIG_TCP_CONG_BBR
+  KCONFIG:=CONFIG_TCP_CONG_BBR
   FILES:=$(LINUX_DIR)/net/ipv4/tcp_bbr.ko
-  AUTOLOAD:=$(call AutoLoad,74,tcp_bbr)
+  AUTOLOAD:=$(call AutoProbe,tcp_bbr)
 endef
 
 define KernelPackage/tcp-bbr/description
@@ -948,6 +946,7 @@ endef
 
 $(eval $(call KernelPackage,tcp-bbr))
 
+
 define KernelPackage/tcp-hybla
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=TCP-Hybla congestion control algorithm
@@ -964,6 +963,7 @@ define KernelPackage/tcp-hybla/description
 endef
 
 $(eval $(call KernelPackage,tcp-hybla))
+
 
 define KernelPackage/ax25
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
