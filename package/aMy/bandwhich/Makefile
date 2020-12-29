@@ -21,7 +21,7 @@ include ../rust/rustc-triple.mk
 
 define Package/bandwhich/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata $(1)/usr/bin/suricata
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/bandwhich $(1)/usr/bin/bandwhich
 endef
 
 $(eval $(call BuildPackage,bandwhich))
