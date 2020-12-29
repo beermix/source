@@ -136,8 +136,6 @@ CONFIGURE_ARGS += \
 	--enable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
-	--disable-largefile \
-	--disable-rust \
 	--disable-silent-rules \
 	--enable-pic
 
@@ -150,9 +148,7 @@ TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes" \
-	ac_cv_func_mallinfo=no \
-	tor_cv_cflags__fPIE=no \
-	tor_cv_ldflags__pie=no
+	ac_cv_func_mallinfo=no
 
 # tor_cv_cflags__fPIE=no tor_cv_ldflags__pie=no
 
