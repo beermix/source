@@ -2,13 +2,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tinymembench
-PKG_VERSION:=a2cf6d7
+PKG_SOURCE_VERSION:=a2cf6d7
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/ssvb/tinymembench
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE_URL:=https://github.com/sun409/tinymembench-pthread
 
 PKG_BUILD_PARALLEL:=0
 
@@ -20,8 +17,10 @@ define Package/tinymembench
 	TITLE:=tinymembench
 endef
 
+TARGET_LDFLAGS+=-lpthread
+
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS) -Wall" tinymembench
+	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS)" tinymembench
 endef
 
 define Package/tinymembench/install
