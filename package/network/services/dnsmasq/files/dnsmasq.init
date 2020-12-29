@@ -107,9 +107,9 @@ dhcp_check() {
 
 	[ -s "$stamp" ] && return $(cat "$stamp")
 
-	# If interface is down, skip it.
+	# If there's no carrier yet, skip this interface.
 	# The init script will be called again once the link is up
-	case "$(devstatus "$ifname" | jsonfilter -e @.up)" in
+	case "$(devstatus "$ifname" | jsonfilter -e @.carrier)" in
 		false) return 1;;
 	esac
 
@@ -1097,7 +1097,6 @@ dnsmasq_start()
 			echo "search $DOMAIN" >> /tmp/resolv.conf
 		}
 		DNS_SERVERS="$DNS_SERVERS 127.0.0.1"
-		[ -e /proc/sys/net/ipv6 ] && DNS_SERVERS="$DNS_SERVERS ::1"
 		for DNS_SERVER in $DNS_SERVERS ; do
 			echo "nameserver $DNS_SERVER" >> /tmp/resolv.conf
 		done
