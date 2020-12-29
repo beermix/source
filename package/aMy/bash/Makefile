@@ -18,6 +18,7 @@ PKG_NAME:=bash
 PKG_SOURCE_VERSION:=76404c8
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/bash.git
+PKG_MIRROR_HASH:=297590554f506a11cffbf5a14a10d48badbba10a654bb4eae76f124f5056c6f0
 
 PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 PKG_LICENSE:=GPL-3.0-or-later

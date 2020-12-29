@@ -10,6 +10,7 @@ PKG_SOURCE_VERSION:=462cc2b
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/Atoptool/atop
+PKG_MIRROR_HASH:=ca280e4686b655cadf47183d13230690770bd2fc6cdd5467640e401c1614f71d
 
 include $(INCLUDE_DIR)/package.mk
 
