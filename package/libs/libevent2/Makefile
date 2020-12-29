@@ -20,10 +20,10 @@ PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:libevent_project:libevent
-# PKG_ASLR_PIE_REGULAR:=1
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_libevent2-openssl \
+	CONFIG_PACKAGE_libevent2-pthreads \
 	CONFIG_PACKAGE_libevent2-mbedtls
 
 include $(INCLUDE_DIR)/package.mk
