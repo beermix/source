@@ -22021,6 +22021,24 @@ new file mode 100755
    /* Find the gsymbol for the module of use associated derived types.  */
    if ((derived->attr.use_assoc || derived->attr.used_in_submodule)
         && !derived->attr.vtype && !derived->attr.is_class)
+--- a/gcc/fortran/data.c
++++ b/gcc/fortran/data.c
+@@ -498,12 +498,11 @@ gfc_assign_data_value (gfc_expr *lvalue, gfc_expr *rvalue, mpz_t index,
+ 	return false;
+     }
+ 
+-  if (ref || last_ts->type == BT_CHARACTER)
++  if (ref || (last_ts->type == BT_CHARACTER
++	      && rvalue->expr_type == EXPR_CONSTANT))
+     {
+       /* An initializer has to be constant.  */
+-      if (rvalue->expr_type != EXPR_CONSTANT
+-	  || (lvalue->ts.u.cl->length == NULL
+-	      && !(ref && ref->u.ss.length != NULL)))
++      if (lvalue->ts.u.cl->length == NULL && !(ref && ref->u.ss.length != NULL))
+ 	return false;
+       expr = create_character_initializer (init, last_ts, ref, rvalue);
+     }
 --- a/gcc/fortran/decl.c
 +++ b/gcc/fortran/decl.c
 @@ -668,6 +668,10 @@ gfc_match_data (void)
@@ -23138,7 +23156,27 @@ new file mode 100755
    dump_function (TDI_original, fndecl);
 --- a/gcc/fortran/trans-expr.c
 +++ b/gcc/fortran/trans-expr.c
-@@ -8558,6 +8558,7 @@ gfc_conv_expr_reference (gfc_se * se, gfc_expr * expr, bool add_clobber)
+@@ -7462,12 +7462,14 @@ gfc_conv_initializer (gfc_expr * expr, gfc_typespec * ts, tree type,
+ 	  return se.expr;
+ 
+ 	case BT_CHARACTER:
+-	  {
+-	    tree ctor = gfc_conv_string_init (ts->u.cl->backend_decl,expr);
+-	    TREE_STATIC (ctor) = 1;
+-	    return ctor;
+-	  }
++	  if (expr->expr_type == EXPR_CONSTANT)
++	    {
++	      tree ctor = gfc_conv_string_init (ts->u.cl->backend_decl, expr);
++	      TREE_STATIC (ctor) = 1;
++	      return ctor;
++	    }
+ 
++	  /* Fallthrough.  */
+ 	default:
+ 	  gfc_init_se (&se, NULL);
+ 	  gfc_conv_constant (&se, expr);
+@@ -8558,6 +8560,7 @@ gfc_conv_expr_reference (gfc_se * se, gfc_expr * expr, bool add_clobber)
  
    if (expr->expr_type == EXPR_FUNCTION
        && ((expr->value.function.esym
@@ -24126,6 +24164,8 @@ new file mode 100755
      warning (OPT_Wpadded, "padding struct size to alignment boundary");
  
    if (warn_packed && TREE_CODE (rli->t) == RECORD_TYPE
+new file mode 100644
+new file mode 100644
 new file mode 100644
 new file mode 100644
 new file mode 100644
