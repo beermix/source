@@ -90,7 +90,7 @@ define Build/InstallDev
 		$(1)/usr/lib/
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/*.so* \
+		$(PKG_INSTALL_DIR)/usr/lib/*.{so*,a} \
 		$(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
