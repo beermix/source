@@ -8,19 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=iperf
-PKG_VERSION:=3.9
-PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://downloads.es.net/pub/iperf
-PKG_HASH:=24b63a26382325f759f11d421779a937b63ca1bc17c44587d2fcfedab60ac038
+#PKG_VERSION:=3.9
+#PKG_RELEASE:=1
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+#PKG_SOURCE_URL:=https://downloads.es.net/pub/iperf
+#PKG_HASH:=24b63a26382325f759f11d421779a937b63ca1bc17c44587d2fcfedab60ac038
 
-#PKG_VERSION:=a9c2803
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/esnet/iperf
-#PKG_SOURCE_VERSION:=$(PKG_VERSION)
-#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+PKG_SOURCE_VERSION:=21581a7
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/esnet/iperf
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
@@ -52,7 +49,7 @@ $(call Package/iperf3/default)
 endef
 
 TARGET_CFLAGS += -D_GNU_SOURCE
-CONFIGURE_ARGS += --disable-shared
+CONFIGURE_ARGS += --disable-shared --with-sctp
 
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS += --with-openssl="$(STAGING_DIR)/usr"
