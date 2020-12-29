@@ -1,0 +1,89 @@
+From 835f0bdd983c193dd708771164856db8ccae6e42 Mon Sep 17 00:00:00 2001
+From: rofl0r <rofl0r@users.noreply.github.com>
+Date: Tue, 11 Aug 2020 16:35:40 +0100
+Subject: [PATCH 1/2] add support for outgoing connections with HTTP/1.1
+
+since there are numerous changes in HTTP/1.1, the proxyserver will
+stick to using HTTP/1.0 for internal usage, however when a connection
+is requested with HTTP/1.x from now on we will duplicate the minor revision
+the client requested, because apparently some servers refuse to accept
+HTTP/1.0
+
+addresses #152.
+---
+ src/reqs.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/src/reqs.c b/src/reqs.c
+index 370b3758..76209db0 100644
+--- a/src/reqs.c
++++ b/src/reqs.c
+@@ -266,28 +266,34 @@ establish_http_connection (struct conn_s *connptr, struct request_s *request)
+                 /* host is an IPv6 address literal, so surround it with
+                  * [] */
+                 return write_message (connptr->server_fd,
+-                                      "%s %s HTTP/1.0\r\n"
++                                      "%s %s HTTP/1.%u\r\n"
+                                       "Host: [%s]%s\r\n"
+                                       "Connection: close\r\n",
+                                       request->method, request->path,
++                                      connptr->protocol.major != 1 ? 0 :
++                                               connptr->protocol.minor,
+                                       request->host, portbuff);
+         } else if (connptr->upstream_proxy &&
+                    connptr->upstream_proxy->type == PT_HTTP &&
+                    connptr->upstream_proxy->ua.authstr) {
+                 return write_message (connptr->server_fd,
+-                                      "%s %s HTTP/1.0\r\n"
++                                      "%s %s HTTP/1.%u\r\n"
+                                       "Host: %s%s\r\n"
+                                       "Connection: close\r\n"
+                                       "Proxy-Authorization: Basic %s\r\n",
+                                       request->method, request->path,
++                                      connptr->protocol.major != 1 ? 0 :
++                                               connptr->protocol.minor,
+                                       request->host, portbuff,
+                                       connptr->upstream_proxy->ua.authstr);
+         } else {
+                 return write_message (connptr->server_fd,
+-                                      "%s %s HTTP/1.0\r\n"
++                                      "%s %s HTTP/1.%u\r\n"
+                                       "Host: %s%s\r\n"
+                                       "Connection: close\r\n",
+                                       request->method, request->path,
++                                      connptr->protocol.major != 1 ? 0 :
++                                               connptr->protocol.minor,
+                                       request->host, portbuff);
+         }
+ }
+
+From 12403a9a19db8c3a31c92d57199e316e4d7a27a3 Mon Sep 17 00:00:00 2001
+From: rofl0r <rofl0r@users.noreply.github.com>
+Date: Tue, 8 Sep 2020 15:02:25 +0100
+Subject: [PATCH 2/2] duplicate HTTP version also in error messages
+
+---
+ src/html-error.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/html-error.c b/src/html-error.c
+index c94dbd70..95ee9cf8 100644
+--- a/src/html-error.c
++++ b/src/html-error.c
+@@ -131,7 +131,7 @@ send_html_file (FILE *infile, struct conn_s *connptr)
+ int send_http_headers (struct conn_s *connptr, int code, const char *message)
+ {
+         const char headers[] =
+-            "HTTP/1.0 %d %s\r\n"
++            "HTTP/1.%u %d %s\r\n"
+             "Server: %s/%s\r\n"
+             "Content-Type: text/html\r\n"
+             "%s"
+@@ -150,6 +150,7 @@ int send_http_headers (struct conn_s *connptr, int code, const char *message)
+         const char *add = code == 407 ? p_auth_str : (code == 401 ? w_auth_str : "");
+ 
+         return (write_message (connptr->client_fd, headers,
++                               connptr->protocol.major != 1 ? 0 : connptr->protocol.minor,
+                                code, message, PACKAGE, VERSION,
+                                add));
+ }
