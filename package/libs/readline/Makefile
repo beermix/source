@@ -15,6 +15,10 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/readline
 PKG_HASH:=f8ceb4ee131e3232226a17f51b164afc46cd0b9e6cef344be87c65962cb82b02
 
+#PKG_SOURCE_VERSION:=c5ad6b
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=git://git.savannah.gnu.org/readline.git
+
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:gnu:readline
