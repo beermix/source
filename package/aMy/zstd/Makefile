@@ -39,12 +39,12 @@ define Package/libzstd/description
 endef
 
 define Package/libzstd/config
-	config ZSTD_OPTIMIZE_O2
-		bool "Use all optimizations (-O2)"
+	config ZSTD_OPTIMIZE_O3
+		bool "Use all optimizations (-O3)"
 		depends on PACKAGE_libzstd
 		default y
 		help
-			This enables additional optmizations using the -O2 compilation flag.
+			This enables additional optmizations using the -O3 compilation flag.
 endef
 
 define Package/zstd
@@ -60,8 +60,8 @@ define Package/zstd/description
   This package provides the zstd binaries.
 endef
 
-ifeq ($(CONFIG_ZSTD_OPTIMIZE_O2),y)
-TARGET_CFLAGS:= $(filter-out -O%,$(TARGET_CFLAGS)) -O2 -fno-strict-aliasing
+ifeq ($(CONFIG_ZSTD_OPTIMIZE_O3),y)
+TARGET_CFLAGS:= $(filter-out -O%,$(TARGET_CFLAGS)) -O3
 endif
 
 TARGET_CFLAGS += $(if $(CONFIG_USE_UCLIBC),-D_BSD_SOURCE)
