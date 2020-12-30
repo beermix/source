@@ -31,9 +31,9 @@ Change-Id: I37221506f5166877c2b110753d39bb0757985e68
 
 --- a/net/ipv4/tcp_input.c
 +++ b/net/ipv4/tcp_input.c
-@@ -3624,6 +3624,7 @@ static int tcp_ack(struct sock *sk, cons
+@@ -3637,6 +3637,7 @@ static int tcp_ack(struct sock *sk, cons
  
- 	prior_fackets = tp->fackets_out;
+ 	prior_fack = tcp_is_sack(tp) ? tcp_highest_sack_seq(tp) : tp->snd_una;
  	rs.prior_in_flight = tcp_packets_in_flight(tp);
 +	tcp_rate_check_app_limited(sk);
  
@@ -41,7 +41,7 @@ Change-Id: I37221506f5166877c2b110753d39bb0757985e68
  	 * is in window.
 --- a/net/ipv4/tcp_timer.c
 +++ b/net/ipv4/tcp_timer.c
-@@ -564,6 +564,7 @@ void tcp_write_timer_handler(struct sock
+@@ -585,6 +585,7 @@ void tcp_write_timer_handler(struct sock
  		goto out;
  	}
  

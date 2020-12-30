@@ -20,7 +20,7 @@ Signed-off-by: Yuchung Cheng <ycheng@google.com>
 
 --- a/net/ipv4/tcp_bbr.c
 +++ b/net/ipv4/tcp_bbr.c
-@@ -308,30 +308,19 @@ static void bbr_cwnd_event(struct sock *
+@@ -315,30 +315,19 @@ static void bbr_cwnd_event(struct sock *
  	}
  }
  
@@ -55,7 +55,7 @@ Signed-off-by: Yuchung Cheng <ycheng@google.com>
  	u64 w;
  
  	/* If we've never had a valid RTT sample, cap cwnd at the initial
-@@ -346,8 +335,23 @@ static u32 bbr_target_cwnd(struct sock *
+@@ -353,8 +342,23 @@ static u32 bbr_target_cwnd(struct sock *
  	w = (u64)bw * bbr->min_rtt_us;
  
  	/* Apply a gain to the given value, then remove the BW_SCALE shift. */
@@ -80,7 +80,7 @@ Signed-off-by: Yuchung Cheng <ycheng@google.com>
  	/* Allow enough full-sized skbs in flight to utilize end systems. */
  	cwnd += 3 * bbr_tso_segs_goal(sk);
  
-@@ -361,6 +365,17 @@ static u32 bbr_target_cwnd(struct sock *
+@@ -368,6 +372,17 @@ static u32 bbr_target_cwnd(struct sock *
  	return cwnd;
  }
  
@@ -98,7 +98,7 @@ Signed-off-by: Yuchung Cheng <ycheng@google.com>
  /* An optimization in BBR to reduce losses: On the first round of recovery, we
   * follow the packet conservation principle: send P packets per P packets acked.
   * After that, we slow-start and send at most 2*P packets per P packets acked.
-@@ -428,7 +443,8 @@ static void bbr_set_cwnd(struct sock *sk
+@@ -429,7 +444,8 @@ static void bbr_set_cwnd(struct sock *sk
  		goto done;
  
  	/* If we're below target cwnd, slow start cwnd toward target cwnd. */
@@ -108,7 +108,7 @@ Signed-off-by: Yuchung Cheng <ycheng@google.com>
  	if (bbr_full_bw_reached(sk))  /* only cut cwnd if we filled the pipe */
  		cwnd = min(cwnd + acked, target_cwnd);
  	else if (cwnd < target_cwnd || tp->delivered < TCP_INIT_CWND)
-@@ -469,14 +485,14 @@ static bool bbr_is_next_cycle_phase(stru
+@@ -470,14 +486,14 @@ static bool bbr_is_next_cycle_phase(stru
  	if (bbr->pacing_gain > BBR_UNIT)
  		return is_full_length &&
  			(rs->losses ||  /* perhaps pacing_gain*BDP won't fit */
@@ -125,7 +125,7 @@ Signed-off-by: Yuchung Cheng <ycheng@google.com>
  }
  
  static void bbr_advance_cycle_phase(struct sock *sk)
-@@ -736,11 +752,11 @@ static void bbr_check_drain(struct sock
+@@ -737,11 +753,11 @@ static void bbr_check_drain(struct sock
  		bbr->pacing_gain = bbr_drain_gain;	/* pace slow to drain */
  		bbr->cwnd_gain = bbr_high_gain;	/* maintain cwnd */
  		tcp_sk(sk)->snd_ssthresh =

@@ -26,7 +26,7 @@ Change-Id: Ic8ccfdbe4010ee8d4bf6a6334c48a2fceb2171ea
 
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -1016,8 +1016,8 @@ struct tcp_congestion_ops {
+@@ -1029,8 +1029,8 @@ struct tcp_congestion_ops {
  	u32  (*undo_cwnd)(struct sock *sk);
  	/* hook for packet ack accounting (optional) */
  	void (*pkts_acked)(struct sock *sk, const struct ack_sample *sample);
@@ -39,7 +39,7 @@ Change-Id: Ic8ccfdbe4010ee8d4bf6a6334c48a2fceb2171ea
  	/* call when packets are delivered to update cwnd and pacing rate,
 --- a/net/ipv4/tcp_bbr.c
 +++ b/net/ipv4/tcp_bbr.c
-@@ -299,25 +299,40 @@ static void bbr_set_pacing_rate(struct s
+@@ -304,25 +304,40 @@ static void bbr_set_pacing_rate(struct s
  		sk->sk_pacing_rate = rate;
  }
  
@@ -90,7 +90,7 @@ Change-Id: Ic8ccfdbe4010ee8d4bf6a6334c48a2fceb2171ea
  }
  
  /* Save "last known good" cwnd so we can restore it after losses or PROBE_RTT */
-@@ -1165,7 +1180,7 @@ static struct tcp_congestion_ops tcp_bbr
+@@ -1176,7 +1191,7 @@ static struct tcp_congestion_ops tcp_bbr
  	.undo_cwnd	= bbr_undo_cwnd,
  	.cwnd_event	= bbr_cwnd_event,
  	.ssthresh	= bbr_ssthresh,
@@ -101,7 +101,7 @@ Change-Id: Ic8ccfdbe4010ee8d4bf6a6334c48a2fceb2171ea
  };
 --- a/net/ipv4/tcp_output.c
 +++ b/net/ipv4/tcp_output.c
-@@ -1715,13 +1715,12 @@ static u32 tcp_tso_autosize(const struct
+@@ -1731,13 +1731,12 @@ static u32 tcp_tso_autosize(const struct
  static u32 tcp_tso_segs(struct sock *sk, unsigned int mss_now)
  {
  	const struct tcp_congestion_ops *ca_ops = inet_csk(sk)->icsk_ca_ops;
@@ -110,13 +110,13 @@ Change-Id: Ic8ccfdbe4010ee8d4bf6a6334c48a2fceb2171ea
  
 -	min_tso = ca_ops->min_tso_segs ?
 -			ca_ops->min_tso_segs(sk) :
--			sysctl_tcp_min_tso_segs;
+-			sock_net(sk)->ipv4.sysctl_tcp_min_tso_segs;
 -
 -	tso_segs = tcp_tso_autosize(sk, mss_now, min_tso);
 +	tso_segs = ca_ops->tso_segs ?
 +		ca_ops->tso_segs(sk, mss_now) :
 +		tcp_tso_autosize(sk, mss_now,
-+				 sysctl_tcp_min_tso_segs);
++				 sock_net(sk)->ipv4.sysctl_tcp_min_tso_segs);
  	return min_t(u32, tso_segs, sk->sk_gso_max_segs);
  }
  

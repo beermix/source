@@ -17,7 +17,7 @@ Reviewed-by: Priyaranjan Jha <priyarjha@google.com>
 
 --- a/net/ipv4/tcp_bbr.c
 +++ b/net/ipv4/tcp_bbr.c
-@@ -150,6 +150,11 @@ static const int bbr_drain_gain = BBR_UN
+@@ -149,6 +149,11 @@ static const int bbr_drain_gain = BBR_UN
  /* The gain for deriving steady-state cwnd tolerates delayed/stretched ACKs: */
  static const int bbr_cwnd_gain  = BBR_UNIT * 2;
  /* The pacing_gain values for the PROBE_BW gain cycle, to discover/share bw: */

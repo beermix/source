@@ -17,7 +17,7 @@ Reviewed-by: Yuchung Cheng <ycheng@google.com>
 
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -543,6 +543,8 @@ __u32 cookie_v6_init_sequence(const stru
+@@ -545,6 +545,8 @@ __u32 cookie_v6_init_sequence(const stru
  #endif
  /* tcp_output.c */
  
@@ -28,7 +28,7 @@ Reviewed-by: Yuchung Cheng <ycheng@google.com>
  int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs);
 --- a/net/ipv4/tcp_output.c
 +++ b/net/ipv4/tcp_output.c
-@@ -1824,9 +1824,8 @@ static inline bool tcp_nagle_test(const
+@@ -1840,9 +1840,8 @@ static inline bool tcp_nagle_test(const
  }
  
  /* Does at least the first segment of SKB fit into the send window? */
@@ -40,7 +40,7 @@ Reviewed-by: Yuchung Cheng <ycheng@google.com>
  {
  	u32 end_seq = TCP_SKB_CB(skb)->end_seq;
  
-@@ -1835,6 +1834,7 @@ static bool tcp_snd_wnd_test(const struc
+@@ -1851,6 +1850,7 @@ static bool tcp_snd_wnd_test(const struc
  
  	return !after(end_seq, tcp_wnd_end(tp));
  }
