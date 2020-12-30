@@ -139,7 +139,7 @@ CONFIGURE_ARGS += \
 	--enable-pic
 
 ifeq ($(BUILD_VARIANT),basic)
-  CONFIGURE_ARGS += --disable-module-relay  # --disable-module-dirauth
+  CONFIGURE_ARGS += --disable-module-relay --disable-module-dirauth
 endif
 
 TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
