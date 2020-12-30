@@ -12,7 +12,6 @@ PKG_SOURCE_VERSION:=adad565
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy.git
-PKG_HASH:=
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -20,6 +19,7 @@ PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:banu:tinyproxy
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=0
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
@@ -37,8 +37,9 @@ define Package/tinyproxy/conffiles
 endef
 
 CONFIGURE_VARS += ac_cv_path_A2X=no
-
-CONFIGURE_ARGS += --enable-transparent --disable-manpage_support --disable-debug
+CONFIGURE_VARS += --enable-transparent
+CONFIGURE_VARS += --disable-manpage_support
+CONFIGURE_VARS += --disable-debug
 
 define Package/tinyproxy/install
 	$(INSTALL_DIR) $(1)/usr/bin
