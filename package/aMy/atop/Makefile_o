@@ -6,13 +6,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atop
-PKG_RELEASE:=1
-PKG_VERSION:=2.6.0
-PKG_LICENSE:=GPL-2.0-or-later
-PKG_SOURCE_URL:=https://www.atoptool.nl/download/
+PKG_SOURCE_VERSION:=462cc2b
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MAINTAINER:=Toni Uhlig <matzeton@googlemail.com>
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/Atoptool/atop
+PKG_MIRROR_HASH:=ca280e4686b655cadf47183d13230690770bd2fc6cdd5467640e401c1614f71d
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -42,7 +40,7 @@ define Package/atop/description
 endef
 
 MAKE_FLAGS += \
-	CFLAGS+="-Wno-misleading-indentation -Wno-unused-const-variable -Wno-format-truncation"
+	CFLAGS+="-Wno-misleading-indentation -Wno-unused-const-variable -Wno-format-truncation -flto"
 
 define Package/atop/install
 	$(INSTALL_DIR) $(1)/usr/bin
