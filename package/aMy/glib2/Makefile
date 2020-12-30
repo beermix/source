@@ -35,7 +35,7 @@ include ../../../feeds/packages/devel/meson/meson.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef
