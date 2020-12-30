@@ -12,6 +12,8 @@ PKG_MAINTAINER:=Dirk Brenken <dev@brenken.org>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_CPE_ID:=cpe:/a:midnight_commander:midnight_commander
 
+PKG_BUILD_DEPENDS:=gettext-full/host
+
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ftp.midnight-commander.org/
 PKG_HASH:=ffc19617f20ebb23330acd3998b7fd559a042d172fa55746d53d246697b2548a
@@ -33,7 +35,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/mc
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+glib2 +libslang2 +gettext-full/host
+	DEPENDS:=+glib2 +libslang2
 	TITLE:=Midnight Commander - a powerful visual file manager
 	URL:=https://www.midnight-commander.org/
 	MENU:=1
