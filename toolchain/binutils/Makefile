@@ -46,7 +46,6 @@ HOST_CONFIGURE_ARGS = \
 	--disable-nls \
 	--disable-sim \
 	--disable-gdb \
-	--enable-gold=yes \
 	--enable-relro \
 	--with-pic \
 	$(GRAPHITE_CONFIGURE) \
