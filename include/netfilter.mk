@@ -109,17 +109,6 @@ $(eval $(call nf_add,IPT_PHYSDEV,CONFIG_NETFILTER_XT_MATCH_PHYSDEV, $(P_XT)xt_ph
 $(eval $(call nf_add,IPT_FILTER,CONFIG_NETFILTER_XT_MATCH_STRING, $(P_XT)xt_string))
 $(eval $(call nf_add,IPT_FILTER,CONFIG_NETFILTER_XT_MATCH_BPF, $(P_XT)xt_bpf))
 
-# imq
-
-$(eval $(call nf_add,IPT_IMQ,CONFIG_IP_NF_TARGET_IMQ, $(P_V4)ipt_IMQ))
-$(eval $(call nf_add,IPT_IMQ,CONFIG_NETFILTER_XT_TARGET_IMQ, $(P_XT)xt_IMQ))
-
-# gargoyle-qos
-
-$(eval $(call nf_add,IPT_BANDWIDTH,CONFIG_IP_NF_MATCH_BANDWIDTH, $(P_V4)ipt_bandwidth))
-$(eval $(call nf_add,IPT_TIMERANGE,CONFIG_IP_NF_MATCH_TIMERANGE, $(P_V4)ipt_timerange))
-$(eval $(call nf_add,IPT_WEBMON,CONFIG_IP_NF_MATCH_WEBMON, $(P_V4)ipt_webmon))
-$(eval $(call nf_add,IPT_WEBURL,CONFIG_IP_NF_MATCH_WEBURL, $(P_V4)ipt_weburl))
 
 # ipopt
 
@@ -391,6 +380,7 @@ $(eval $(if $(NF_KMOD),$(call nf_add,NFT_FIB,CONFIG_NFT_FIB_INET, $(P_XT)nft_fib
 $(eval $(if $(NF_KMOD),$(call nf_add,NFT_FIB,CONFIG_NFT_FIB_IPV4, $(P_V4)nft_fib_ipv4),))
 $(eval $(if $(NF_KMOD),$(call nf_add,NFT_FIB,CONFIG_NFT_FIB_IPV6, $(P_V6)nft_fib_ipv6),))
 
+$(eval $(if $(NF_KMOD),$(call nf_add,NFT_QUEUE,CONFIG_NFT_QUEUE, $(P_XT)nft_queue),))
 
 # userland only
 IPT_BUILTIN += $(NF_IPT-y) $(NF_IPT-m)

@@ -47,7 +47,7 @@ $(call Package/iproute2/Default)
  VARIANT:=full
  PROVIDES:=ip
  ALTERNATIVES:=300:/sbin/ip:/usr/libexec/ip-full
- DEPENDS:=+libnl-tiny +libelf +(PACKAGE_devlink||PACKAGE_rdma):libmnl +libcap
+ DEPENDS:=+libnl-tiny +libelf +(PACKAGE_devlink||PACKAGE_rdma):libmnl
 endef
 
 define Package/tc
@@ -55,43 +55,43 @@ $(call Package/iproute2/Default)
   TITLE:=Traffic control utility
   VARIANT:=tc
   PROVIDES:=tc
-  DEPENDS:=+kmod-sched-core +libxtables +libelf +(PACKAGE_devlink||PACKAGE_rdma):libmnl +PACKAGE_ip-full:libcap
+  DEPENDS:=+kmod-sched-core +libxtables +libelf +(PACKAGE_devlink||PACKAGE_rdma):libmnl
 endef
 
 define Package/genl
 $(call Package/iproute2/Default)
   TITLE:=General netlink utility frontend
-  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf +PACKAGE_ip-full:libcap
+  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf
 endef
 
 define Package/ip-bridge
 $(call Package/iproute2/Default)
   TITLE:=Bridge configuration utility from iproute2
-  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf +PACKAGE_ip-full:libcap
+  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf
 endef
 
 define Package/ss
 $(call Package/iproute2/Default)
   TITLE:=Socket statistics utility
-  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf +PACKAGE_ip-full:libcap +kmod-netlink-diag
+  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf +kmod-netlink-diag
 endef
 
 define Package/nstat
 $(call Package/iproute2/Default)
   TITLE:=Network statistics utility
-  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf +PACKAGE_ip-full:libcap
+  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf
 endef
 
 define Package/devlink
 $(call Package/iproute2/Default)
   TITLE:=Network devlink utility
-  DEPENDS:=+libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf +PACKAGE_ip-full:libcap
+  DEPENDS:=+libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf
 endef
 
 define Package/rdma
 $(call Package/iproute2/Default)
   TITLE:=Network rdma utility
-  DEPENDS:=+libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf +PACKAGE_ip-full:libcap
+  DEPENDS:=+libmnl +(PACKAGE_tc||PACKAGE_ip-full):libelf
 endef
 
 ifeq ($(BUILD_VARIANT),tiny)
@@ -100,7 +100,7 @@ endif
 
 ifeq ($(BUILD_VARIANT),full)
   HAVE_ELF:=y
-  HAVE_CAP:=y
+  HAVE_CAP:=n
 endif
 
 ifeq ($(BUILD_VARIANT),tc)
@@ -145,10 +145,6 @@ define Build/InstallDev
 	$(CP) $(PKG_BUILD_DIR)/include/{libgenl,libnetlink}.h $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_BUILD_DIR)/lib/libnetlink.a $(1)/usr/lib/
-	# Hack for qos-gargoyle
-	$(INSTALL_DIR) $(1)/usr/lib/iproute2/{tc,lib,include}
-	$(CP) $(PKG_BUILD_DIR)/{tc,include,lib} $(1)/usr/lib/iproute2
-	# Hack end
 endef
 
 define Package/ip-tiny/install
