@@ -33,7 +33,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/mc
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+glib2 +libslang2
+	DEPENDS:=+glib2 +libslang2 +gettext-full/host
 	TITLE:=Midnight Commander - a powerful visual file manager
 	URL:=https://www.midnight-commander.org/
 	MENU:=1
