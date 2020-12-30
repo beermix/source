@@ -82,7 +82,7 @@ define Host/Install
 		install
 	$(MAKE) -C $(HOST_BUILD_DIR) \
 		prefix=$(TOOLCHAIN_DIR) \
-		install-strip
+		install
 	$(call FixupLibdir,$(TOOLCHAIN_DIR)/initial)
 	$(RM) $(TOOLCHAIN_DIR)/initial/lib/libiberty.a
 	$(CP) $(TOOLCHAIN_DIR)/bin/$(REAL_GNU_TARGET_NAME)-readelf $(HOST_BUILD_PREFIX)/bin/readelf
