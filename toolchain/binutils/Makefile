@@ -48,9 +48,7 @@ HOST_CONFIGURE_ARGS = \
 	--disable-gdb \
 	--enable-gold=yes \
 	--enable-relro \
-	--enable-deterministic-archives \
 	--with-pic \
-	--with-mmap \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
