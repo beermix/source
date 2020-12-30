@@ -7474,7 +7474,7 @@ new file mode 100755
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20201229
++20201230
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -1687,6 +1687,10 @@ $(FULL_DRIVER_NAME): ./xgcc
@@ -21364,7 +21364,18 @@ new file mode 100755
  				    "division"),
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,535 @@
+@@ -1,3 +1,546 @@
++2020-12-29  Harald Anlauf  <anlauf@gmx.de>
++
++	Backported from master:
++	2020-12-25  Harald Anlauf  <anlauf@gmx.de>
++
++	* data.c (gfc_assign_data_value): Restrict use of
++	create_character_initializer to constant initializers.
++	* trans-expr.c (gfc_conv_initializer): Ensure that character
++	initializer is constant, otherwise fall through to get the same
++	error handling as for non-character cases.
++
 +2020-12-28  Paul Thomas  <pault@gcc.gnu.org>
 +
 +	Backported from master:
@@ -27262,7 +27273,15 @@ new mode 100755
        __builtin_eh_return (offset, handler);				\
 --- a/libgfortran/ChangeLog
 +++ b/libgfortran/ChangeLog
-@@ -1,3 +1,96 @@
+@@ -1,3 +1,104 @@
++2020-12-29  Iain Sandoe  <iain@sandoe.co.uk>
++
++	Backported from master:
++	2020-11-21  Iain Sandoe  <iain@sandoe.co.uk>
++
++	* intrinsics/execute_command_line.c (environ): Use
++	_NSGetEnviron to get the environment pointer on Darwin.
++
 +2020-10-24  Harald Anlauf  <anlauf@gmx.de>
 +
 +	Backported from master:
@@ -33530,6 +33549,20 @@ new file mode 100644
 +GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI)
 +# endif
  #endif
+--- a/libobjc/ChangeLog
++++ b/libobjc/ChangeLog
+@@ -1,3 +1,11 @@
++2020-12-29  Iain Sandoe  <iain@sandoe.co.uk>
++
++	Backported from master:
++	2020-10-11  Iain Sandoe  <iain@sandoe.co.uk>
++
++	* encoding.c (_darwin_rs6000_special_round_type_align):
++	Use DFMode in the emulation of the special round type.
++
+ 2020-03-12  Release Manager
+ 
+ 	* GCC 9.3.0 released.
 --- a/libobjc/encoding.c
 +++ b/libobjc/encoding.c
 @@ -146,7 +146,6 @@ static int __attribute__ ((__unused__)) not_target_flags = 0;
