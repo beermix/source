@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/bin/ccache gcc "$@"
+/usr/bin/ccache /usr/bin/gcc "$@"
