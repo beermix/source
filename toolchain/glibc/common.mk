@@ -12,8 +12,8 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=050022910be1d1f5c11cd5168f1685ad4f9580d2
-PKG_MIRROR_HASH:=b0a8c79acbb371badcc8477e840ab32bf796d5e7a0eab224bc8fd5aca6b1e631
+PKG_SOURCE_VERSION:=1d49bede4d8a5448067e8579b14fedf437e75aee
+PKG_MIRROR_HASH:=1f8b04585eaf36b06783f36550fc24689224ffd35f8f650f3954797a7002481a
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
@@ -40,11 +40,6 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-TARGET_CFLAGS := ${TARGET_CFLAGS/-Wl,-z,now/}
-TARGET_LDFLAGS := ${TARGET_LDFLAGS/-znow/}
-TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
-TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
-
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
 # "Optimize i386 syscall inlining for GCC 5"
@@ -52,7 +47,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 -march=bonnell -mstackrealign $(filter-out -fomit-frame-pointer -fno-caller-saves -fno-plt -mstackrealign -march=bonnell -O2 -m32 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 $(filter-out -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
@@ -68,7 +63,7 @@ GLIBC_CONFIGURE:= \
 		--$(if $(CONFIG_SOFT_FLOAT),without,with)-fp \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_REGULAR),--enable-stack-protector=yes) \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
-		--enable-kernel=4.19.0
+		--enable-kernel=4.14.0
 
 export libc_cv_ssp=no
 export libc_cv_ssp_strong=no
