@@ -21,6 +21,8 @@ PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
 
+PKG_ASLR_PIE_REGULAR:=1
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/polipo

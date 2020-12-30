@@ -22,6 +22,7 @@ PKG_CPE_ID:=cpe:/a:miniupnp_project:miniupnpd
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
+PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/version.mk

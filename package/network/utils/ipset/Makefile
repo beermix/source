@@ -21,6 +21,7 @@ PKG_LICENSE:=GPL-2.0
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 
