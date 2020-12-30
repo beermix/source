@@ -1,0 +1,12 @@
+diff --color -Naur linux-4.14.213-orig/include/linux/init_task.h linux-4.14.213/include/linux/init_task.h
+--- linux-4.14.213-orig/include/linux/init_task.h	2020-12-30 03:49:20.416331195 +0300
++++ linux-4.14.213/include/linux/init_task.h	2020-12-30 03:50:19.428645289 +0300
+@@ -275,7 +275,7 @@
+ 	.journal_info	= NULL,						\
+ 	INIT_CPU_TIMERS(tsk)						\
+ 	.pi_lock	= __RAW_SPIN_LOCK_UNLOCKED(tsk.pi_lock),	\
+-	.timer_slack_ns = 50000, /* 50 usec default slack */		\
++	.timer_slack_ns = 1000, /* 1 usec default slack */		\
+ 	.pids = {							\
+ 		[PIDTYPE_PID]  = INIT_PID_LINK(PIDTYPE_PID),		\
+ 		[PIDTYPE_PGID] = INIT_PID_LINK(PIDTYPE_PGID),		\
