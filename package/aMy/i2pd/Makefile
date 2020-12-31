@@ -22,16 +22,16 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
 CMAKE_SOURCE_SUBDIR:=build
-# 	-DCMAKE_BUILD_TYPE='None' \
 
 CMAKE_OPTIONS += \
-	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DCMAKE_BUILD_TYPE='None' \
+	-DCMAKE_VERBOSE_MAKEFILE=0 \
 	-DWITH_LIBRARY=OFF \
-	-DWITH_HARDENING=ON \
+	-DWITH_HARDENING=OFF \
 	-DBUILD_SHARED_LIBS=OFF \
 	-DWITH_UPNP=OFF \
 	-DWITH_AESNI=OFF \
-	-DWITH_STATIC=OFF \
+	-DBoost_USE_STATIC_LIBS=ON \
 	-DBoost_USE_STATIC_RUNTIME=ON \
 	-Wno-dev
 
@@ -58,14 +58,8 @@ define Package/i2pd/conffiles
 /etc/i2pd/tunnels.d/
 endef
 
-define Build/Prepare
-	$(Build/Prepare/Default)
-	# race condition
-	cd $(PKG_BUILD_DIR); $(MAKE) mk_obj_dir
-endef
-
-TARGET_LDFLAGS+=-latomic
-MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
+#TARGET_LDFLAGS+=-latomic
+#MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
