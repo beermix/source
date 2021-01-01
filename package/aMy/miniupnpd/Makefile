@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://miniupnp.tuxfamily.org/files
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=
+PKG_HASH:=f158dc73b718ca72da69e25ef23c57c3a10a0d7e7d1b4b9b57d5690823040ec2
 
 PKG_MAINTAINER:=
 PKG_LICENSE:=BSD-3-Clause
@@ -22,7 +22,6 @@ PKG_CPE_ID:=cpe:/a:miniupnp_project:miniupnpd
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
-PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/version.mk
