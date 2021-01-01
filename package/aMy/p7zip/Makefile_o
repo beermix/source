@@ -8,22 +8,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=p7zip
-PKG_SOURCE_VERSION:=be1a54f
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/jinfeihan57/p7zip
+PKG_VERSION:=16.02
+
+PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION)_src_all.tar.bz2
+PKG_SOURCE_URL:=@SF/p7zip/p7zip/$(PKG_VERSION)
+PKG_MD5SUM:=a0128d661cfe7cc8c121e73519c54fbf
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)_$(PKG_VERSION)
 
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
 
-CMAKE_SOURCE_SUBDIR:=CPP/7zip/CMAKE
-
-TARGET_CFLAGS:=-O3 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
-
-#define Build/Compile
-#	+$(MAKE_FLAGS) $(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LDFLAGS="$(TARGET_LDFLAGS)" 7za
-#endef
+define Build/Compile
+	+$(MAKE_FLAGS) $(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LDFLAGS="$(TARGET_LDFLAGS)" 7za
+endef
 
 define Package/p7zip
 	SECTION:=utils
