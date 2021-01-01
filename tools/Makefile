@@ -24,11 +24,12 @@ endif
 tools-y += autoconf autoconf-archive automake bc bison cmake dosfstools
 tools-y += e2fsprogs fakeroot findutils firmware-utils flex gengetopt
 tools-y += libressl libtool lzma m4 make-ext4fs missing-macros mkimage
-tools-y += mklibs mm-macros mtd-utils mtools padjffs2 patch-image
-tools-y += patchelf pkgconf quilt squashfskit4 sstrip zip zlib zstd
+tools-y += mklibs mm-macros mtd-utils mtools padjffs2 patch-image patchelf
+tools-y += pkgconf quilt squashfskit4 sstrip ucl upx zip zlib zstd
 tools-$(BUILD_B43_TOOLS) += b43-tools
 tools-$(BUILD_ISL) += isl
 tools-$(BUILD_TOOLCHAIN) += expat gmp libelf mpc mpfr
+tools-$(CONFIG_EFI_IMAGES) += gptfdisk popt
 tools-$(CONFIG_TARGET_apm821xx)$(CONFIG_TARGET_gemini) += genext2fs
 tools-$(CONFIG_TARGET_ath79) += lzma-old squashfs
 tools-$(CONFIG_TARGET_mxs) += elftosb sdimage
@@ -52,6 +53,7 @@ $(curdir)/firmware-utils/compile += $(curdir)/libressl/compile $(curdir)/zlib/co
 $(curdir)/flex/compile := $(curdir)/libtool/compile
 $(curdir)/gengetopt/compile := $(curdir)/libtool/compile
 $(curdir)/gmp/compile := $(curdir)/libtool/compile
+$(curdir)/gptfdisk/compile += $(curdir)/e2fsprogs/compile $(curdir)/popt/compile
 $(curdir)/isl/compile := $(curdir)/gmp/compile
 $(curdir)/libelf/compile := $(curdir)/libtool/compile
 $(curdir)/libressl/compile := $(curdir)/pkgconf/compile
@@ -72,6 +74,7 @@ $(curdir)/quilt/compile := $(curdir)/autoconf/compile $(curdir)/findutils/compil
 $(curdir)/sdcc/compile := $(curdir)/bison/compile
 $(curdir)/squashfs/compile := $(curdir)/lzma-old/compile
 $(curdir)/squashfskit4/compile := $(curdir)/xz/compile $(curdir)/zlib/compile
+$(curdir)/upx/compile := $(curdir)/ucl/compile
 $(curdir)/zlib/compile := $(curdir)/cmake/compile
 
 ifneq ($(HOST_OS),Linux)
@@ -80,8 +83,9 @@ ifneq ($(HOST_OS),Linux)
 endif
 
 ifneq ($(CONFIG_CCACHE)$(CONFIG_SDK),)
-$(foreach tool, $(filter-out xz patch,$(tools-y)), $(eval $(curdir)/$(tool)/compile += $(curdir)/ccache/compile))
+$(foreach tool, $(filter-out xz zstd patch pkgconf libressl cmake,$(tools-y)), $(eval $(curdir)/$(tool)/compile += $(curdir)/ccache/compile))
 tools-y += ccache
+$(curdir)/ccache/compile := $(curdir)/cmake/compile $(curdir)/zstd/compile
 endif
 
 # in case there is no patch tool on the host we need to make patch tool a

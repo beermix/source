@@ -19,8 +19,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 unexport PKG_CONFIG
 
-HOST_CONFIGURE_ARGS += \
-	--disable-shared
+HOSTCC := $(HOSTCC_NOCACHE)
 
 define Host/Install
 	$(MAKE) -C $(HOST_BUILD_DIR) install

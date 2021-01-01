@@ -1,8 +1,17 @@
 diff --git a/bfd/ChangeLog b/bfd/ChangeLog
-index 9fac12538a..6114b73a05 100644
+index 9fac12538a..4c629d4be6 100644
 --- a/bfd/ChangeLog
 +++ b/bfd/ChangeLog
-@@ -1,3 +1,88 @@
+@@ -1,3 +1,97 @@
++2021-01-01  Alan Modra  <amodra@gmail.com>
++
++	Apply from master
++	2020-08-22  H.J. Lu  <hongjiu.lu@intel.com>
++	PR ld/26382
++	* elflink.c (elf_link_output_symstrtab): Keep only one '@' for
++	versioned symbols, which are defined in shared objects, in
++	symbol string table.
++
 +2020-12-04  H.J. Lu  <hongjiu.lu@intel.com>
 +
 +	PR ld/27016
@@ -1278,6 +1287,41 @@ index 311fb28a90..7eb1afe614 100644
  	    to_reloc_pc32 = FALSE;
  
  	  if (to_reloc_pc32)
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index 998b72f228..222a4573b0 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+@@ -9636,9 +9636,29 @@ elf_link_output_symstrtab (struct elf_final_link_info *flinfo,
+     {
+       /* Call _bfd_elf_strtab_offset after _bfd_elf_strtab_finalize
+ 	 to get the final offset for st_name.  */
++      char *versioned_name = (char *) name;
++      if (h != NULL && h->versioned == versioned && h->def_dynamic)
++	{
++	  /* Keep only one '@' for versioned symbols defined in shared
++	     objects.  */
++	  char *version = strrchr (name, ELF_VER_CHR);
++	  char *base_end = strchr (name, ELF_VER_CHR);
++	  if (version != base_end)
++	    {
++	      size_t base_len;
++	      size_t len = strlen (name);
++	      versioned_name = bfd_alloc (flinfo->output_bfd, len);
++	      if (versioned_name == NULL)
++		return 0;
++	      base_len = base_end - name;
++	      memcpy (versioned_name, name, base_len);
++	      memcpy (versioned_name + base_len, version,
++		      len - base_len);
++	    }
++	}
+       elfsym->st_name
+ 	= (unsigned long) _bfd_elf_strtab_add (flinfo->symstrtab,
+-					       name, FALSE);
++					       versioned_name, FALSE);
+       if (elfsym->st_name == (unsigned long) -1)
+ 	return 0;
+     }
 diff --git a/bfd/elfxx-x86.c b/bfd/elfxx-x86.c
 index e58ddc19cf..143aae4b5c 100644
 --- a/bfd/elfxx-x86.c
@@ -1329,10 +1373,35 @@ index e58ddc19cf..143aae4b5c 100644
  	    {
  	      if (aprop != NULL)
 diff --git a/binutils/ChangeLog b/binutils/ChangeLog
-index 76ba6d9840..9dc7136863 100644
+index 76ba6d9840..4b6cd9f755 100644
 --- a/binutils/ChangeLog
 +++ b/binutils/ChangeLog
-@@ -1,3 +1,117 @@
+@@ -1,3 +1,142 @@
++2021-01-01  Alan Modra  <amodra@gmail.com>
++
++	Apply from master
++	2020-12-31  Alan Modra  <amodra@gmail.com>
++	PR 27128
++	* nm.c (print_symname): Append version string to symbol name
++	before printing the lot under control of "form".  Append version
++	to demangled names too.
++
++	2020-08-22  H.J. Lu  <hongjiu.lu@intel.com>
++	PR ld/26382
++	* nm.c (print_symname): Display only one '@' for undefined
++	versioned symbols.
++	* doc/binutils.texi: Update nm version information.
++
++	2020-08-10  H.J. Lu  <hongjiu.lu@intel.com>
++	PR binutils/26302
++	* nm.c (with_symbol_versions): Removed.
++	(long_option_values): Add OPTION_WITH_SYMBOL_VERSIONS.
++	(long_options): Update --with-symbol-versions entry.
++	(print_symbol): Remove the with_symbol_versions check.
++	(main): Add OPTION_WITH_SYMBOL_VERSIONS for backward
++	compatibility.
++	* doc/binutils.texi: Remove --with-symbol-versions.
++
 +2020-11-22  Alan Modra  <amodra@gmail.com>
 +
 +	PR 26929
@@ -1450,6 +1519,49 @@ index 76ba6d9840..9dc7136863 100644
  2020-09-19  Nick Clifton  <nickc@redhat.com>
  
  	This is the 2.35.1 point release.
+diff --git a/binutils/doc/binutils.texi b/binutils/doc/binutils.texi
+index f19862655b..cf8d0ea7f1 100644
+--- a/binutils/doc/binutils.texi
++++ b/binutils/doc/binutils.texi
+@@ -796,7 +796,7 @@ nm [@option{-A}|@option{-o}|@option{--print-file-name}] [@option{-a}|@option{--d
+    [@option{--plugin} @var{name}]
+    [@option{--no-recurse-limit}|@option{--recurse-limit}]]
+    [@option{--size-sort}] [@option{--special-syms}]
+-   [@option{--synthetic}] [@option{--with-symbol-versions}] [@option{--target=}@var{bfdname}]
++   [@option{--synthetic}] [@option{--target=}@var{bfdname}]
+    [@var{objfile}@dots{}]
+ @c man end
+ @end smallexample
+@@ -924,7 +924,13 @@ The symbol type is unknown, or object file format specific.
+ @end table
+ 
+ @item
+-The symbol name.
++The symbol name.  If a symbol has version information associated with it,
++then the version information is displayed as well.  If the versioned
++symbol is undefined or hidden from linker, the version string is displayed
++as a suffix to the symbol name, preceded by an @@ character.  For example
++@samp{foo@@VER_1}.  If the version is the default version to be used when
++resolving unversioned references to the symbol, then it is displayed as a
++suffix preceded by two @@ characters.  For example @samp{foo@@@@VER_2}.
+ @end itemize
+ 
+ @c man end
+@@ -1130,14 +1136,6 @@ Include synthetic symbols in the output.  These are special symbols
+ created by the linker for various purposes.  They are not shown by
+ default since they are not part of the binary's original source code.
+ 
+-@item --with-symbol-versions
+-Enables the display of symbol version information if any exists.  The
+-version string is displayed as a suffix to the symbol name, preceeded by
+-an @@ character.  For example @samp{foo@@VER_1}.  If the version is
+-the default version to be used when resolving unversioned references
+-to the symbol then it is displayed as a suffix preceeded by two @@
+-characters.  For example @samp{foo@@@@VER_2}.
+-
+ @item --target=@var{bfdname}
+ @cindex object code format
+ Specify an object code format other than your system's default format.
 diff --git a/binutils/dwarf.c b/binutils/dwarf.c
 index cc13fe067f..91b61e3fdf 100644
 --- a/binutils/dwarf.c
@@ -2438,6 +2550,117 @@ index cc13fe067f..91b61e3fdf 100644
    for (i = 0; i < max; i++)
      free_debug_section ((enum dwarf_section_display_enum) i);
  
+diff --git a/binutils/nm.c b/binutils/nm.c
+index 1b5122d56a..a5144faba6 100644
+--- a/binutils/nm.c
++++ b/binutils/nm.c
+@@ -161,7 +161,6 @@ static int show_version = 0;	/* Show the version number.  */
+ static int show_synthetic = 0;	/* Display synthesized symbols too.  */
+ static int line_numbers = 0;	/* Print line numbers for symbols.  */
+ static int allow_special_symbols = 0;  /* Allow special symbols.  */
+-static int with_symbol_versions = 0; /* Include symbol version information in the output.  */
+ 
+ static int demangle_flags = DMGL_ANSI | DMGL_PARAMS;
+ 
+@@ -192,7 +191,8 @@ enum long_option_values
+   OPTION_PLUGIN,
+   OPTION_SIZE_SORT,
+   OPTION_RECURSE_LIMIT,
+-  OPTION_NO_RECURSE_LIMIT
++  OPTION_NO_RECURSE_LIMIT,
++  OPTION_WITH_SYMBOL_VERSIONS
+ };
+ 
+ static struct option long_options[] =
+@@ -226,7 +226,8 @@ static struct option long_options[] =
+   {"defined-only", no_argument, &defined_only, 1},
+   {"undefined-only", no_argument, &undefined_only, 1},
+   {"version", no_argument, &show_version, 1},
+-  {"with-symbol-versions", no_argument, &with_symbol_versions, 1},
++  {"with-symbol-versions", no_argument, NULL,
++   OPTION_WITH_SYMBOL_VERSIONS},
+   {0, no_argument, 0, 0}
+ };
+ 
+@@ -396,21 +397,17 @@ static void
+ print_symname (const char *form, struct extended_symbol_info *info,
+ 	       const char *name, bfd *abfd)
+ {
++  char *alloc = NULL;
++
+   if (name == NULL)
+     name = info->sinfo->name;
+   if (do_demangle && *name)
+     {
+-      char *res = bfd_demangle (abfd, name, demangle_flags);
+-
+-      if (res != NULL)
+-	{
+-	  printf (form, res);
+-	  free (res);
+-	  return;
+-	}
++      alloc = bfd_demangle (abfd, name, demangle_flags);
++      if (alloc != NULL)
++	name = alloc;
+     }
+ 
+-  printf (form, name);
+   if (info != NULL && info->elfinfo)
+     {
+       const char *version_string;
+@@ -420,8 +417,17 @@ print_symname (const char *form, struct extended_symbol_info *info,
+ 	= bfd_get_symbol_version_string (abfd, &info->elfinfo->symbol,
+ 					 FALSE, &hidden);
+       if (version_string && version_string[0])
+-	printf ("%s%s", hidden ? "@" : "@@", version_string);
++	{
++	  const char *at = "@@";
++	  if (hidden || bfd_is_und_section (info->elfinfo->symbol.section))
++	    at = "@";
++	  alloc = reconcat (alloc, name, at, version_string, NULL);
++	  if (alloc != NULL)
++	    name = alloc;
++	}
+     }
++  printf (form, name);
++  free (alloc);
+ }
+ 
+ static void
+@@ -901,22 +907,6 @@ print_symbol (bfd *        abfd,
+ 
+   format->print_symbol_info (&info, abfd);
+ 
+-  if (with_symbol_versions)
+-    {
+-      const char *  version_string = NULL;
+-      bfd_boolean   hidden = FALSE;
+-
+-      if ((sym->flags & (BSF_SECTION_SYM | BSF_SYNTHETIC)) == 0)
+-	version_string = bfd_get_symbol_version_string (abfd, sym,
+-							TRUE, &hidden);
+-
+-      if (bfd_is_und_section (bfd_asymbol_section (sym)))
+-	hidden = TRUE;
+-
+-      if (version_string && *version_string != '\0')
+-	printf (hidden ? "@%s" : "@@%s", version_string);
+-    }
+-
+   if (line_numbers)
+     {
+       static asymbol **syms;
+@@ -1761,6 +1751,9 @@ main (int argc, char **argv)
+ 	case OPTION_NO_RECURSE_LIMIT:
+ 	  demangle_flags |= DMGL_NO_RECURSE_LIMIT;
+ 	  break;
++	case OPTION_WITH_SYMBOL_VERSIONS:
++	  /* Ignored for backward compatibility.  */
++	  break;
+ 	case 'D':
+ 	  dynamic = 1;
+ 	  break;
 diff --git a/binutils/readelf.c b/binutils/readelf.c
 index 6057515a89..41547a2594 100644
 --- a/binutils/readelf.c
@@ -10874,10 +11097,42 @@ index 882453dce0..3f271fb0f7 100644
  }
  #endif /* __cplusplus */
 diff --git a/ld/ChangeLog b/ld/ChangeLog
-index 4eec7d2977..89ec0798db 100644
+index 4eec7d2977..d8abc62717 100644
 --- a/ld/ChangeLog
 +++ b/ld/ChangeLog
-@@ -1,3 +1,75 @@
+@@ -1,3 +1,107 @@
++2021-01-01  Alan Modra  <amodra@gmail.com>
++
++	Apply from master
++	2020-12-31  H.J. Lu  <hongjiu.lu@intel.com>
++		    Alan Modra  <amodra@gmail.com>
++	PR 27128
++	* testsuite/ld-elf/pr27128.s: New file.
++	* testsuite/ld-elf/pr27128.t: Likewise.
++	* testsuite/ld-elf/pr27128a.d: Likewise.
++	* testsuite/ld-elf/pr27128b.d: Likewise.
++	* testsuite/ld-elf/pr27128c.d: Likewise.
++	* testsuite/ld-elf/pr27128d.d: Likewise.
++	* testsuite/ld-elf/pr27128e.d: Likewise.
++
++	2020-08-24  Alan Modra  <amodra@gmail.com>
++	* testsuite/ld-sparc/tlssunbin32.rd: Update for new readelf output.
++	* testsuite/ld-sparc/tlssunbin64.rd: Likewise.
++
++	2020-08-22  H.J. Lu  <hongjiu.lu@intel.com>
++	PR ld/26382
++	* testsuite/ld-elf/pr26302.nd: Updated.
++	* testsuite/ld-elf/pr26302.rd: New file.
++	* testsuite/ld-elf/shared.exp: Add a test for readelf -sW.
++
++	2020-08-10  H.J. Lu  <hongjiu.lu@intel.com>
++	PR binutils/26302
++	* testsuite/ld-elf/pr26302.nd: New file.
++	* testsuite/ld-elf/pr26302.ver: Likewise.
++	* testsuite/ld-elf/pr26302a.c: Likewise.
++	* testsuite/ld-elf/pr26302b.c: Likewise.
++	* testsuite/ld-elf/shared.exp: Run binutils/26302 tests.
++
 +2020-12-04  H.J. Lu  <hongjiu.lu@intel.com>
 +
 +	PR ld/27016
@@ -11062,6 +11317,238 @@ index bada3ade2d..831d032fe5 100644
  	      ehdr_start->u.def.section = bfd_abs_section_ptr;
  	      ehdr_start->u.def.value = 0;
  	    }
+diff --git a/ld/testsuite/ld-elf/pr26302.nd b/ld/testsuite/ld-elf/pr26302.nd
+new file mode 100644
+index 0000000000..bc9a675789
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr26302.nd
+@@ -0,0 +1,3 @@
++#...
++ +U foo@FOO
++#pass
+diff --git a/ld/testsuite/ld-elf/pr26302.rd b/ld/testsuite/ld-elf/pr26302.rd
+new file mode 100644
+index 0000000000..8f7b8a96e7
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr26302.rd
+@@ -0,0 +1,12 @@
++#...
++Symbol table '\.dynsym' contains [0-9]+ entries:
++ +Num: +Value +Size Type +Bind +Vis +Ndx Name
++#...
++ +[0-9]+: +[a-f0-9]+ +0 +FUNC +GLOBAL +DEFAULT +UND +foo@FOO \([0-9]+\)
++#...
++
++Symbol table '\.symtab' contains [0-9]+ entries:
++ +Num: +Value +Size Type +Bind +Vis +Ndx Name
++#...
++ +[0-9]+: +[a-f0-9]+ +0 +FUNC +GLOBAL +DEFAULT +UND +foo@FOO
++#pass
+diff --git a/ld/testsuite/ld-elf/pr26302.ver b/ld/testsuite/ld-elf/pr26302.ver
+new file mode 100644
+index 0000000000..f2c03ac7a1
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr26302.ver
+@@ -0,0 +1,5 @@
++FOO
++{
++global:
++  foo;
++};
+diff --git a/ld/testsuite/ld-elf/pr26302a.c b/ld/testsuite/ld-elf/pr26302a.c
+new file mode 100644
+index 0000000000..cd0130cacd
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr26302a.c
+@@ -0,0 +1,4 @@
++void
++foo (void)
++{
++}
+diff --git a/ld/testsuite/ld-elf/pr26302b.c b/ld/testsuite/ld-elf/pr26302b.c
+new file mode 100644
+index 0000000000..eae278df96
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr26302b.c
+@@ -0,0 +1,7 @@
++extern void foo (void);
++
++void
++bar (void)
++{
++  foo ();
++}
+diff --git a/ld/testsuite/ld-elf/pr27128.s b/ld/testsuite/ld-elf/pr27128.s
+new file mode 100644
+index 0000000000..7af5be183b
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr27128.s
+@@ -0,0 +1,13 @@
++	.text
++	.globl	foo
++	.type	foo,%function
++foo:
++	.space 16
++	.size foo, .-foo
++	.symver foo,foo@@VERS_2.0,remove
++	.globl	_Zrm1XS_
++	.type	_Zrm1XS_,%function
++_Zrm1XS_:
++	.space 16
++	.size _Zrm1XS_, .-_Zrm1XS_
++	.symver _Zrm1XS_,_Zrm1XS_@@VERS_2.0,remove
+diff --git a/ld/testsuite/ld-elf/pr27128.t b/ld/testsuite/ld-elf/pr27128.t
+new file mode 100644
+index 0000000000..27669a505b
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr27128.t
+@@ -0,0 +1,6 @@
++VERS_2.0 {
++global:
++  foo; _Zrm1XS_;
++local:
++  *;
++};
+diff --git a/ld/testsuite/ld-elf/pr27128a.d b/ld/testsuite/ld-elf/pr27128a.d
+new file mode 100644
+index 0000000000..9ce8eaa546
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr27128a.d
+@@ -0,0 +1,16 @@
++#source: pr27128.s
++#ld: -shared -version-script pr27128.t
++#nm: -n -P
++#target: [check_shared_lib_support]
++#notarget: [is_underscore_target]
++# _Zrm1XS_ doesn't have an extra underscore.
++#xfail: hppa64-*-* tic6x-*-*
++# hppa64 uses dot-symbols, tic6x DYN lacks dynamic sections for this testcase
++
++#...
++VERS_2\.0 A 0+ 
++#...
++foo@@VERS_2\.0 T [0-9a-f]+ 10
++#...
++_Zrm1XS_@@VERS_2\.0 T [0-9a-f]+ 10
++#pass
+diff --git a/ld/testsuite/ld-elf/pr27128b.d b/ld/testsuite/ld-elf/pr27128b.d
+new file mode 100644
+index 0000000000..934f8330d7
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr27128b.d
+@@ -0,0 +1,16 @@
++#source: pr27128.s
++#ld: -shared -version-script pr27128.t
++#nm: -n -D --format=posix
++#target: [check_shared_lib_support]
++#notarget: [is_underscore_target]
++# _Zrm1XS_ doesn't have an extra underscore.
++#xfail: hppa64-*-* tic6x-*-*
++# hppa64 uses dot-symbols, tic6x DYN lacks dynamic sections for this testcase
++
++#...
++VERS_2\.0 A 0+ 
++#...
++foo@@VERS_2\.0 T [0-9a-f]+ 10
++#...
++_Zrm1XS_@@VERS_2\.0 T [0-9a-f]+ 10
++#pass
+diff --git a/ld/testsuite/ld-elf/pr27128c.d b/ld/testsuite/ld-elf/pr27128c.d
+new file mode 100644
+index 0000000000..f80c57b64c
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr27128c.d
+@@ -0,0 +1,16 @@
++#source: pr27128.s
++#ld: -shared -version-script pr27128.t
++#nm: -n --format=sysv
++#target: [check_shared_lib_support]
++#notarget: [is_underscore_target]
++# _Zrm1XS_ doesn't have an extra underscore.
++#xfail: hppa64-*-* tic6x-*-*
++# hppa64 uses dot-symbols, tic6x DYN lacks dynamic sections for this testcase
++
++#...
++VERS_2\.0 +\|0+\| +A +\| +OBJECT\| +\| +\|\*ABS\*
++#...
++foo@@VERS_2\.0 +\|[0-9a-f]+\| +T +\| +FUNC\|0+10\| +\|\.text
++#...
++_Zrm1XS_@@VERS_2\.0 +\|[0-9a-f]+\| +T +\| +FUNC\|0+10\| +\|\.text
++#pass
+diff --git a/ld/testsuite/ld-elf/pr27128d.d b/ld/testsuite/ld-elf/pr27128d.d
+new file mode 100644
+index 0000000000..ba628d22de
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr27128d.d
+@@ -0,0 +1,16 @@
++#source: pr27128.s
++#ld: -shared -version-script pr27128.t
++#nm: -n -D --format=sysv
++#target: [check_shared_lib_support]
++#notarget: [is_underscore_target]
++# _Zrm1XS_ doesn't have an extra underscore.
++#xfail: hppa64-*-* tic6x-*-*
++# hppa64 uses dot-symbols, tic6x DYN lacks dynamic sections for this testcase
++
++#...
++VERS_2\.0 +\|0+\| +A +\| +OBJECT\| +\| +\|\*ABS\*
++#...
++foo@@VERS_2\.0 +\|[0-9a-f]+\| +T +\| +FUNC\|0+10\| +\|\.text
++#...
++_Zrm1XS_@@VERS_2\.0 +\|[0-9a-f]+\| +T +\| +FUNC\|0+10\| +\|\.text
++#pass
+diff --git a/ld/testsuite/ld-elf/pr27128e.d b/ld/testsuite/ld-elf/pr27128e.d
+new file mode 100644
+index 0000000000..b8b1657fe7
+--- /dev/null
++++ b/ld/testsuite/ld-elf/pr27128e.d
+@@ -0,0 +1,16 @@
++#source: pr27128.s
++#ld: -shared -version-script pr27128.t
++#nm: -n --demangle -D --format=posix
++#target: [check_shared_lib_support]
++#notarget: [is_underscore_target]
++# _Zrm1XS_ doesn't have an extra underscore.
++#xfail: hppa64-*-* tic6x-*-*
++# hppa64 uses dot-symbols, tic6x DYN lacks dynamic sections for this testcase
++
++#...
++VERS_2\.0 A 0+ 
++#...
++foo@@VERS_2\.0 T [0-9a-f]+ 10
++#...
++operator%\(X, X\)@@VERS_2\.0 T [0-9a-f]+ 10
++#pass
+diff --git a/ld/testsuite/ld-elf/shared.exp b/ld/testsuite/ld-elf/shared.exp
+index e9e9012058..4de5b34183 100644
+--- a/ld/testsuite/ld-elf/shared.exp
++++ b/ld/testsuite/ld-elf/shared.exp
+@@ -843,6 +843,25 @@ run_cc_link_tests [list \
+ 	{{readelf {--dyn-syms --wide} pr26094-1b.rd}} \
+ 	"pr26094-1" \
+     ] \
++    [list \
++	"Build pr26302a.so" \
++	"-shared -Wl,--version-script=pr26302.ver" \
++	"-fPIC" \
++	{pr26302a.c} \
++	{} \
++	"pr26302a.so"
++    ] \
++    [list \
++	"Build pr26302b.so" \
++	"-shared -Wl,--no-as-needed tmpdir/pr26302a.so" \
++	"-fPIC" \
++	{pr26302b.c} \
++	{{readelf {-sW} pr26302.rd} \
++	 {nm {-u} pr26302.nd} \
++	 {nm {-u -D} pr26302.nd} \
++	 {nm {-u -D --with-symbol-versions} pr26302.nd}} \
++	"pr26302b.so" \
++    ] \
+ ]
+ 
+ run_ld_link_tests [list \
 diff --git a/ld/testsuite/ld-i386/i386.exp b/ld/testsuite/ld-i386/i386.exp
 index 164c099cbb..f031b01ffe 100644
 --- a/ld/testsuite/ld-i386/i386.exp
@@ -11396,6 +11883,32 @@ index abb414a633..c2b9616352 100644
    DW_CFA_restore_extended: r65
  
  0+64 0+10 0+68 FDE cie=0+ pc=.*
+diff --git a/ld/testsuite/ld-sparc/tlssunbin32.rd b/ld/testsuite/ld-sparc/tlssunbin32.rd
+index 937611da91..a41f27d644 100644
+--- a/ld/testsuite/ld-sparc/tlssunbin32.rd
++++ b/ld/testsuite/ld-sparc/tlssunbin32.rd
+@@ -111,7 +111,7 @@ Symbol table '\.symtab' contains [0-9]+ entries:
+ .* FUNC +GLOBAL +DEFAULT +8 _start
+ .* TLS +GLOBAL +HIDDEN +9 sh4
+ .* TLS +GLOBAL +DEFAULT +10 bg7
+-.* FUNC +GLOBAL +DEFAULT +UND __tls_get_addr@@SUNWprivate_1.1
++.* FUNC +GLOBAL +DEFAULT +UND __tls_get_addr@SUNWprivate_1.1
+ .* TLS +GLOBAL +HIDDEN +9 sh5
+ .* NOTYPE +GLOBAL +DEFAULT +12 __bss_start
+ .* TLS +GLOBAL +DEFAULT +UND sG6
+diff --git a/ld/testsuite/ld-sparc/tlssunbin64.rd b/ld/testsuite/ld-sparc/tlssunbin64.rd
+index 07a632c5ec..4d792b8410 100644
+--- a/ld/testsuite/ld-sparc/tlssunbin64.rd
++++ b/ld/testsuite/ld-sparc/tlssunbin64.rd
+@@ -111,7 +111,7 @@ Symbol table '\.symtab' contains [0-9]+ entries:
+ .* FUNC +GLOBAL +DEFAULT +8 _start
+ .* TLS +GLOBAL +HIDDEN +9 sh4
+ .* TLS +GLOBAL +DEFAULT +10 bg7
+-.* FUNC +GLOBAL +DEFAULT +UND __tls_get_addr@@SUNWprivate_1.1
++.* FUNC +GLOBAL +DEFAULT +UND __tls_get_addr@SUNWprivate_1.1
+ .* TLS +GLOBAL +HIDDEN +9 sh5
+ .* NOTYPE +GLOBAL +DEFAULT +12 __bss_start
+ .* TLS +GLOBAL +DEFAULT +UND sG6
 diff --git a/ld/testsuite/ld-x86-64/pr26711-1-x32.d b/ld/testsuite/ld-x86-64/pr26711-1-x32.d
 new file mode 100644
 index 0000000000..67013195b2
