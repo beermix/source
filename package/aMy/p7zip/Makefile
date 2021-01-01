@@ -15,15 +15,15 @@ PKG_SOURCE_URL:=https://github.com/jinfeihan57/p7zip
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
+#include $(INCLUDE_DIR)/cmake.mk
 
-CMAKE_SOURCE_SUBDIR:=CPP/7zip/CMAKE
+#CMAKE_SOURCE_SUBDIR:=CPP/7zip/CMAKE
 
 TARGET_CFLAGS:=-O3 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
-#define Build/Compile
-#	+$(MAKE_FLAGS) $(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LDFLAGS="$(TARGET_LDFLAGS)" 7za
-#endef
+define Build/Compile
+	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LDFLAGS="$(TARGET_LDFLAGS)" -j7
+endef
 
 define Package/p7zip
 	SECTION:=utils

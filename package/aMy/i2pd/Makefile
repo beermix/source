@@ -58,7 +58,7 @@ define Package/i2pd/conffiles
 /etc/i2pd/tunnels.d/
 endef
 
-#TARGET_LDFLAGS+=-latomic
+TARGET_LDFLAGS+=-latomic
 #MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
