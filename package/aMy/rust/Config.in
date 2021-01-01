@@ -28,7 +28,7 @@ menu "Compiler Options"
 
 	config RUST_CCACHE
 		bool "Build with ccache enabled (--enable-ccache)"
-		default y
+		default n
 
 	config RUST_LLVM_STATIC
 		bool "Statically link to libstdc++ to LLVM (--enable-llvm-static-stdccp)"
