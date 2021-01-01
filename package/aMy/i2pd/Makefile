@@ -19,7 +19,7 @@ PKG_INSTALL:=1
 PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
+#include $(INCLUDE_DIR)/cmake.mk
 
 CMAKE_SOURCE_SUBDIR:=build
 
@@ -59,7 +59,7 @@ define Package/i2pd/conffiles
 endef
 
 TARGET_LDFLAGS+=-latomic
-#MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
+MAKE_FLAGS+=USE_AESNI=no USE_AVX=no
 
 define Package/i2pd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
