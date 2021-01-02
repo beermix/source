@@ -12,6 +12,7 @@ PKG_SOURCE_VERSION:=adad565
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy.git
+PKG_MIRROR_HASH:=9bbd9d0022f597646cde102a1ceb2cc6131214b5ecf237cc334457b019c7c2d3
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0-or-later

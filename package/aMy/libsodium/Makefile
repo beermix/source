@@ -12,6 +12,7 @@ PKG_SOURCE_VERSION:=bfcfa87
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/jedisct1/libsodium.git
+PKG_MIRROR_HASH:=bcc9436bc3573a14d72dad3251b118a2a05b5509702984d99e16296853e0ebff
 
 PKG_MAINTAINER:=Damiano Renfer <damiano.renfer@gmail.com>
 PKG_LICENSE:=ISC

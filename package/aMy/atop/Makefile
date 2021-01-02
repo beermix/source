@@ -10,6 +10,7 @@ PKG_RELEASE:=1
 PKG_VERSION:=2.6.0
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_SOURCE_URL:=https://www.atoptool.nl/download/
+PKG_HASH:=9ec2ca3a571692f7efaa095f99a5106432bcb71cc22cd6c49597ef0481058f72
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_MAINTAINER:=Toni Uhlig <matzeton@googlemail.com>
