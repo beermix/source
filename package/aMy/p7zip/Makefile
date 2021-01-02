@@ -19,10 +19,10 @@ include $(INCLUDE_DIR)/package.mk
 
 #CMAKE_SOURCE_SUBDIR:=CPP/7zip/CMAKE
 
-TARGET_CFLAGS:=-O3 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LDFLAGS="$(TARGET_LDFLAGS)" -j7
+	$(MAKE) -C $(PKG_BUILD_DIR) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" LDFLAGS="$(TARGET_LDFLAGS)" OPTFLAGS="$(TARGET_CFLAGS)" -j7
 endef
 
 define Package/p7zip
