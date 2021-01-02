@@ -20,7 +20,7 @@ PKG_SOURCE_URL:=https://github.com/zhangchn/polipo.git
 #PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
-PKG_ASLR_PIE_REGULAR:=1
+PKG_ASLR_PIE_REGULAR:=0
 
 include $(INCLUDE_DIR)/package.mk
 
