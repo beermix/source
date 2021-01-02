@@ -12,9 +12,7 @@ PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
 PKG_SOURCE_DATE:=2020-11-11
-#PKG_SOURCE_VERSION:=b2d115f6db5172c961dfeb50de15f35784dbc7c9
-#PKG_SOURCE_VERSION:=5a6a41e7847ff5f85a31b87431ce2af29c567f1d
-PKG_SOURCE_VERSION:=206ee1eea3467fd1d7f1efdbeafe27880897bb2c
+PKG_SOURCE_VERSION:=e1884a8e3c3e813aada8254edfa120e85bf5ffca
 PKG_HASH:=skip
 PKG_HOST_ONLY:=1
 
@@ -47,7 +45,7 @@ CONFIGURE_ARGS = \
   --mandir=$(CARGO_HOME)/man \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
-  --release-channel=nightly \
+  --release-channel=stable \
   --enable-lld \
   --enable-ccache \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
