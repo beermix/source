@@ -26087,8 +26087,6 @@ rtl8168_init_one(struct pci_dev *pdev,
         if (rc)
                 goto err_out;
 
-        printk(KERN_INFO "%s:", MODULENAME);
-
         rtl8168_disable_rxdvgate(dev);
 
         device_set_wakeup_enable(&pdev->dev, tp->wol_enabled);
