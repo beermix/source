@@ -9,7 +9,6 @@ PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/w/whois
 PKG_HASH:=3efa700dbf38d127c31b21af3176cd6e5a69f96a056be60ac1dcd13df7717393
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-#PKG_BUILD_DEPENDS:=perl/host
 
 PKG_MAINTAINER:=Paul Spooren <mail@aparcar.org>
 PKG_LICENSE:=GPL-2.0-only
@@ -19,7 +18,6 @@ PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
-# include $(INCLUDE_DIR)/nls.mk
 
 define Package/whois
   SECTION:=utils
@@ -38,7 +36,6 @@ which are not correctly handled by the program.
 endef
 
 EXTRA_CFLAGS+=-DHAVE_GETOPT_LONG
-#MAKE_FLAGS += PERL=$(STAGING_DIR_HOSTPKG)/usr/bin/perl
 
 define Package/whois/install
 	$(INSTALL_DIR) $(1)/usr/bin
