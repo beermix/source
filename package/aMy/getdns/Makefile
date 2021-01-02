@@ -56,12 +56,11 @@ CONFIGURE_ARGS += \
 		$(if $(CONFIG_GETDNS_ENABLE_IDN_LIBIDN2), , --without-libidn2 ) \
 		--with-ssl="$(STAGING_DIR)/usr" \
 		--disable-rpath \
-		--enable-static=no \
 		--with-libev \
 		--with-libevent \
 		--with-libuv \
 		--with-trust-anchor=/etc/trusted-key.key
-		
+
 #		--with-current-date=$(date -u --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" "+%Y-%m-%dT%H:%M:%S")
 
 # This will make 'configure' think that our libbsd.so is missing the

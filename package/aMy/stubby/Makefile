@@ -22,7 +22,7 @@ PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=COPYING
 
 CMAKE_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
+PKG_BUILD_PARALLEL:=0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -51,6 +51,10 @@ define Package/stubby/conffiles
 /etc/stubby/stubby.yml
 /etc/config/stubby
 endef
+
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_VERBOSE_MAKEFILE=1
 
 define Package/stubby/install
 	$(INSTALL_DIR) $(1)/usr/sbin
