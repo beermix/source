@@ -28,7 +28,7 @@ menu "Compiler Options"
 
 	config RUST_CCACHE
 		bool "Build with ccache enabled (--enable-ccache)"
-		default n
+		default y
 
 	config RUST_LLVM_STATIC
 		bool "Statically link to libstdc++ to LLVM (--enable-llvm-static-stdccp)"
@@ -92,11 +92,11 @@ menu "Compiler Options"
 
 	config RUST_OPTIMIZE
 		bool "Build optimized rust code (--enable-optimize)"
-		default n
+		default y
 
 	config RUST_OPTIMIZE_LLVM
 		bool "Build optimized LLVM (--enable-optimize-llvm)"
-		default n
+		default y
 
 	config RUST_LLVM_ASSERTIONS
 		bool "Build LLVM with assertions (--enable-llvm-assertions)"
@@ -112,7 +112,7 @@ menu "Compiler Options"
 
 	config RUST_MANAGE_SUBMODULES
 		bool "Let the build manage the git submodules (--enable-manage-submodules)"
-		default y
+		default n
 
 	config RUST_FULL_BOOTSTRAP
 		bool "Full Bootstrap - Build three compilers instead of two (--enable-full-bootstrap)"
