@@ -15,24 +15,23 @@ PKG_SOURCE_URL:=https://github.com/jinfeihan57/p7zip
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
+#include $(INCLUDE_DIR)/cmake.mk
 
-CMAKE_SOURCE_SUBDIR:=CPP/7zip/CMAKE
+#CMAKE_SOURCE_SUBDIR:=CPP/7zip/CMAKE
 
 CMAKE_OPTIONS += \
 	-DCMAKE_BUILD_TYPE='Release' \
-	-DCMAKE_VERBOSE_MAKEFILE=1
+	-DCMAKE_VERBOSE_MAKEFILE=0
 
-#TARGET_CFLAGS:=-O3 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS))) -mfpmath=sse
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections -flto
+#TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+#TARGET_LDFLAGS += -Wl,--gc-sections -flto
 
 #MAKE_PATH:=7za
-
-define Build/Compile
-	+$(MAKE_FLAGS) $(MAKE) -C $(PKG_BUILD_DIR)/7za -j7
-endef
+#          OPTFLAGS="-mfpmath=sse $(TARGET_CFLAGS)" 
+MAKE_FLAGS += \
+	OPTFLAGS="$(TARGET_CFLAGS)"
 
 define Package/p7zip
 	SECTION:=utils

@@ -80,7 +80,7 @@ define Build/InstallDev
 endef
 
 define Package/libslang2/install
-true
+	true
 endef
 
 $(eval $(call BuildPackage,libslang2))
