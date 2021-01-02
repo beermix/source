@@ -24,7 +24,6 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=meson/host
 HOST_BUILD_DEPENDS:=meson/host libffi/host
-PKG_CONFIG_DEPENDS:=CONFIG_BUILD_NLS
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
@@ -48,7 +47,7 @@ TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 COMP_ARGS= \
-	-Ddefault_library=shared \
+	-Ddefault_library=static \
 	-Dxattr=false \
 	-Dselinux=disabled \
 	-Dlibmount=disabled \
@@ -61,7 +60,7 @@ COMP_ARGS= \
 	-Dforce_posix_threads=true \
 	-Dfam=false \
 	-Dinstalled_tests=false \
-	-Dnls=$(if $(CONFIG_BUILD_NLS),en,dis)abled \
+	-Dnls=disabled \
 	-Doss_fuzz=disabled \
 	-Dglib_assert=false \
 	-Dglib_checks=false
@@ -92,7 +91,7 @@ define Build/InstallDev
 		$(1)/usr/lib/
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/*.so* \
+		$(PKG_INSTALL_DIR)/usr/lib/*.a \
 		$(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
@@ -116,10 +115,7 @@ define Build/InstallDev
 endef
 
 define Package/glib2/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/*.so* \
-		$(1)/usr/lib/
+  true
 endef
 
 $(eval $(call HostBuild))
