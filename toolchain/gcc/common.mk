@@ -121,6 +121,7 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
+		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-multilib \
@@ -137,11 +138,9 @@ GCC_CONFIGURE:= \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
-		--enable-checking=release \
+		--disable-decimal-float \
 		--with-linker-hash-style=gnu \
 		--with-arch=bonnell \
-		--with-tune=generic \
-		--enable-cld \
 		--disable-fixed-point \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
