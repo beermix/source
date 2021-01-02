@@ -339,8 +339,7 @@ do { \
 #define MODULENAME "r8168"
 #define PFX MODULENAME ": "
 
-#define GPL_CLAIM "\
- \n"
+#define GPL_CLAIM "\ \n"
 
 #ifdef RTL8168_DEBUG
 #define assert(expr) \
