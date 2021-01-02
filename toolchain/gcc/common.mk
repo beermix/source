@@ -138,6 +138,7 @@ GCC_CONFIGURE:= \
 		--with-gmp=$(TOPDIR)/staging_dir/host \
 		--with-mpfr=$(TOPDIR)/staging_dir/host \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
+		--enable-checking=release \
 		--with-linker-hash-style=gnu \
 		--with-arch=bonnell \
 		--with-tune=generic \
