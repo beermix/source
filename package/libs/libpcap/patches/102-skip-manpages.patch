@@ -1,21 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 50bf1713..d720ad0a 100644
+index 50bf1713..88412738 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2689,69 +2689,6 @@ if(NOT MSVC)
-     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/pcap-config DESTINATION bin)
-     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc DESTINATION lib/pkgconfig)
- 
--    #
--    # Man pages.
--    #
--    # For each section of the manual for which we have man pages
--    # that require macro expansion, do the expansion.
--    #
--    # If this is MinGW, maybe we have a UN*X-style ln command and
--    # maybe we don't.  (No, we do *NOT* require MSYS!)  If we don't
--    # have it, don't do the man pages.
--    #
+@@ -2699,60 +2699,7 @@ if(NOT MSVC)
+     # maybe we don't.  (No, we do *NOT* require MSYS!)  If we don't
+     # have it, don't do the man pages.
+     #
 -    if(MINGW)
 -        find_program(LINK_EXECUTABLE ln)
 -    endif(MINGW)
@@ -69,6 +59,8 @@ index 50bf1713..d720ad0a 100644
 -            set(MANMISC ${MANMISC} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE})
 -        endforeach(TEMPLATE_MANPAGE)
 -        install(FILES ${MANMISC} DESTINATION ${CMAKE_INSTALL_MANDIR}/man${MAN_MISC_INFO})
-     endif(UNIX OR (MINGW AND LINK_EXECUTABLE))
+-    endif(UNIX OR (MINGW AND LINK_EXECUTABLE))
++
  endif(NOT MSVC)
  
+ # uninstall target
