@@ -20,7 +20,7 @@ PKG_SOURCE_URL:=https://github.com/zhangchn/polipo.git
 #PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
-PKG_ASLR_PIE_REGULAR:=0
+PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -40,7 +40,7 @@ define Package/polipo/description
  by a larger group.
 endef
 
-TARGET_CFLAGS += -DNO_IPv6 -DNO_SYSLOG
+TARGET_CFLAGS += -DHAVE_IPv6
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
@@ -56,7 +56,7 @@ endef
 
 define Package/polipo/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/polipo
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/polipo
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
 	$(INSTALL_DIR) $(1)/etc/config
