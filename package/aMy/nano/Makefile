@@ -39,6 +39,9 @@ define Package/nano/description
   of the Pico text editor.
 endef
 
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
+
 CONFIGURE_ARGS += \
 	--without-slang \
 	--enable-color \

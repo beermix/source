@@ -46,6 +46,8 @@ $(call Package/libslang2/Default/description)
 endef
 
 TARGET_CFLAGS+= $(FPIC) -Wno-cast-function-type
+TARGET_CFLAGS+= -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS+= -Wl,--gc-sections -flto
 
 CONFIGURE_ARGS+= \
 	--with-terminfo=default \
