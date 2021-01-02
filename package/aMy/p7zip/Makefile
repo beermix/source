@@ -13,16 +13,26 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/jinfeihan57/p7zip
 
 PKG_BUILD_PARALLEL:=1
-PKG_INSTALL:=0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
 CMAKE_SOURCE_SUBDIR:=CPP/7zip/CMAKE
 
-TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+CMAKE_OPTIONS += \
+	-DCMAKE_BUILD_TYPE='Release' \
+	-DCMAKE_VERBOSE_MAKEFILE=1
 
-MAKE_PATH:=7za
+#TARGET_CFLAGS:=-O3 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFLAGS)))
+
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
+
+#MAKE_PATH:=7za
+
+define Build/Compile
+	+$(MAKE_FLAGS) $(MAKE) -C $(PKG_BUILD_DIR)/7za -j7
+endef
 
 define Package/p7zip
 	SECTION:=utils
