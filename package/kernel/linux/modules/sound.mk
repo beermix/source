@@ -24,7 +24,8 @@ SOUNDCORE_FILES ?= \
 	$(LINUX_DIR)/sound/soundcore.ko \
 	$(LINUX_DIR)/sound/core/snd.ko \
 	$(LINUX_DIR)/sound/core/snd-hwdep.ko \
-	$(LINUX_DIR)/sound/core/snd-seq-device.ko \
+	$(LINUX_DIR)/sound/core/seq/snd-seq-device.ko@lt4.13 \
+	$(LINUX_DIR)/sound/core/snd-seq-device.ko@ge4.13 \
 	$(LINUX_DIR)/sound/core/snd-rawmidi.ko \
 	$(LINUX_DIR)/sound/core/snd-timer.ko \
 	$(LINUX_DIR)/sound/core/snd-pcm.ko \
@@ -252,20 +253,6 @@ define KernelPackage/sound-soc-imx-sgtl5000/description
 endef
 
 $(eval $(call KernelPackage,sound-soc-imx-sgtl5000))
-
-
-define KernelPackage/sound-soc-spdif
-  TITLE:=SoC S/PDIF codec support
-  KCONFIG:=CONFIG_SND_SOC_SPDIF
-  FILES:= \
-	$(LINUX_DIR)/sound/soc/codecs/snd-soc-spdif-tx.ko \
-	$(LINUX_DIR)/sound/soc/codecs/snd-soc-spdif-rx.ko
-  DEPENDS:=+kmod-sound-soc-core
-  AUTOLOAD:=$(call AutoProbe,snd-soc-spdif-tx snd-soc-spdif-rx)
-  $(call AddDepends/sound)
-endef
-
-$(eval $(call KernelPackage,sound-soc-spdif))
 
 
 define KernelPackage/pcspkr
@@ -522,7 +509,7 @@ define KernelPackage/sound-hda-intel
 	CONFIG_SND_HDA_INTEL
   FILES:= \
 	$(LINUX_DIR)/sound/pci/hda/snd-hda-intel.ko \
-	$(LINUX_DIR)/sound/hda/snd-intel-nhlt.ko
+	$(LINUX_DIR)/sound/hda/snd-intel-nhlt.ko@ge5.4
   AUTOLOAD:=$(call AutoProbe,snd-hda-intel)
   $(call AddDepends/sound,kmod-sound-hda-core)
 endef
