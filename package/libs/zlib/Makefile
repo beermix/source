@@ -13,6 +13,10 @@ PKG_SOURCE_VERSION:=ca85c57
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng.git
 
+PKG_LICENSE:=Zlib
+PKG_LICENSE_FILES:=README
+PKG_CPE_ID:=cpe:/a:gnu:zlib
+
 PKG_CONFIG_DEPENDS:= CONFIG_ZLIB_OPTIMIZE_SPEED
 
 include $(INCLUDE_DIR)/package.mk
@@ -50,7 +54,7 @@ endef
 TARGET_CFLAGS += $(FPIC)
 
 ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
-	TARGET_CFLAGS := -O3 $(filter-out -fno-caller-saves -O%,$(TARGET_CFLAGS))
+	TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -O3
 endif
 
 CMAKE_OPTIONS += \
