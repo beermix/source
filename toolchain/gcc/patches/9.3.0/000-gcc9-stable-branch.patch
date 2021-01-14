@@ -33501,6 +33501,17 @@ new mode 100755
  	esac
  	;;
        hsa*)
+--- a/libgomp/libgomp_g.h
++++ b/libgomp/libgomp_g.h
+@@ -31,7 +31,7 @@
+ 
+ #include <stdbool.h>
+ #include <stddef.h>
+-#include "gstdint.h"
++#include <stdint.h>
+ 
+ /* barrier.c */
+ 
 --- a/libgomp/plugin/configfrag.ac
 +++ b/libgomp/plugin/configfrag.ac
 @@ -158,44 +158,61 @@ if test x"$enable_offload_targets" != x; then
