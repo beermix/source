@@ -140,8 +140,6 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-linker-hash-style=gnu \
-		--with-arch=bonnell \
-		--disable-fixed-point \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
@@ -170,9 +168,9 @@ ifdef CONFIG_sparc
 		--with-long-double-128
 endif
 
-#ifneq ($(GCC_ARCH),)
-#  GCC_CONFIGURE+= --with-arch=$(GCC_ARCH)
-#endif
+ifneq ($(GCC_ARCH),)
+  GCC_CONFIGURE+= --with-arch=$(GCC_ARCH)
+endif
 
 ifeq ($(CONFIG_arm),y)
   GCC_CONFIGURE+= \
