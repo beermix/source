@@ -50,7 +50,15 @@
      fi
 --- a/contrib/ChangeLog
 +++ b/contrib/ChangeLog
-@@ -1,3 +1,67 @@
+@@ -1,3 +1,75 @@
++2021-01-07  Martin Liska  <mliska@suse.cz>
++
++	* gcc-changelog/git_commit.py: Sync from master.
++	* gcc-changelog/git_email.py: Likewise.
++	* gcc-changelog/git_repository.py: Likewise.
++	* gcc-changelog/test_email.py: Likewise.
++	* gcc-changelog/test_patches.txt: Likewise.
++
 +2020-11-25  Martin Liska  <mliska@suse.cz>
 +
 +	* gcc-changelog/git_commit.py: Use revert_regex instead
@@ -174,7 +182,7 @@ new file mode 100755
 new file mode 100755
 --- /dev/null
 +++ b/contrib/gcc-changelog/git_commit.py
-@@ -0,0 +1,692 @@
+@@ -0,0 +1,723 @@
 +#!/usr/bin/env python3
 +#
 +# This file is part of GCC.
@@ -193,10 +201,12 @@ new file mode 100755
 +# along with GCC; see the file COPYING3.  If not see
 +# <http://www.gnu.org/licenses/>.  */
 +
++import difflib
 +import os
 +import re
 +
 +changelog_locations = {
++    'c++tools',
 +    'config',
 +    'contrib',
 +    'contrib/header-tools',
@@ -227,6 +237,7 @@ new file mode 100755
 +    'libatomic',
 +    'libbacktrace',
 +    'libcc1',
++    'libcody',
 +    'libcpp',
 +    'libcpp/po',
 +    'libdecnumber',
@@ -315,7 +326,8 @@ new file mode 100755
 +
 +wildcard_prefixes = {
 +    'gcc/testsuite/',
-+    'libstdc++-v3/doc/html/'
++    'libstdc++-v3/doc/html/',
++    'libstdc++-v3/testsuite/'
 +    }
 +
 +misc_files = {
@@ -335,16 +347,34 @@ new file mode 100755
 +item_empty_regex = re.compile(r'\t(\* \S+ )?\(\S+\):\s*$')
 +item_parenthesis_regex = re.compile(r'\t(\*|\(\S+\):)')
 +revert_regex = re.compile(r'This reverts commit (?P<hash>\w+).$')
++cherry_pick_regex = re.compile(r'cherry picked from commit (?P<hash>\w+)')
 +
 +LINE_LIMIT = 100
 +TAB_WIDTH = 8
 +CO_AUTHORED_BY_PREFIX = 'co-authored-by: '
-+CHERRY_PICK_PREFIX = '(cherry picked from commit '
 +
 +REVIEW_PREFIXES = ('reviewed-by: ', 'reviewed-on: ', 'signed-off-by: ',
 +                   'acked-by: ', 'tested-by: ', 'reported-by: ',
 +                   'suggested-by: ')
 +DATE_FORMAT = '%Y-%m-%d'
++
++
++def decode_path(path):
++    # When core.quotepath is true (default value), utf8 chars are encoded like:
++    # "b/ko\304\215ka.txt"
++    #
++    # The upstream bug is fixed:
++    # https://github.com/gitpython-developers/GitPython/issues/1099
++    #
++    # but we still need a workaround for older versions of the library.
++    # Please take a look at the explanation of the transformation:
++    # https://stackoverflow.com/questions/990169/how-do-convert-unicode-escape-sequences-to-unicode-characters-in-a-python-string
++
++    if path.startswith('"') and path.endswith('"'):
++        return (path.strip('"').encode('utf8').decode('unicode-escape')
++                .encode('latin-1').decode('utf8'))
++    else:
++        return path
 +
 +
 +class Error:
@@ -448,6 +478,10 @@ new file mode 100755
 +        self.cherry_pick_commit = None
 +        self.revert_commit = None
 +        self.commit_to_info_hook = commit_to_info_hook
++
++        # Skip Update copyright years commits
++        if self.info.lines and self.info.lines[0] == 'Update copyright years.':
++            return
 +
 +        # Identify first if the commit is a Revert commit
 +        for line in self.info.lines:
@@ -599,14 +633,16 @@ new file mode 100755
 +                    continue
 +                elif lowered_line.startswith(REVIEW_PREFIXES):
 +                    continue
-+                elif line.startswith(CHERRY_PICK_PREFIX):
-+                    commit = line[len(CHERRY_PICK_PREFIX):].rstrip(')')
-+                    if self.cherry_pick_commit:
-+                        self.errors.append(Error('multiple cherry pick lines',
-+                                                 line))
-+                    else:
-+                        self.cherry_pick_commit = commit
-+                    continue
++                else:
++                    m = cherry_pick_regex.search(line)
++                    if m:
++                        commit = m.group('hash')
++                        if self.cherry_pick_commit:
++                            msg = 'multiple cherry pick lines'
++                            self.errors.append(Error(msg, line))
++                        else:
++                            self.cherry_pick_commit = commit
++                        continue
 +
 +                # ChangeLog name will be deduced later
 +                if not last_entry:
@@ -667,7 +703,7 @@ new file mode 100755
 +        for entry in self.changelog_entries:
 +            for pattern in entry.file_patterns:
 +                name = os.path.join(entry.folder, pattern)
-+                if name not in wildcard_prefixes:
++                if not [name.startswith(pr) for pr in wildcard_prefixes]:
 +                    msg = 'unsupported wildcard prefix'
 +                    self.errors.append(Error(msg, name))
 +
@@ -735,7 +771,7 @@ new file mode 100755
 +        mentioned_patterns = []
 +        used_patterns = set()
 +        for entry in self.changelog_entries:
-+            if not entry.files:
++            if not entry.files and not entry.file_patterns:
 +                msg = 'no files mentioned for ChangeLog in directory'
 +                self.errors.append(Error(msg, entry.folder))
 +            assert not entry.folder.endswith('/')
@@ -750,6 +786,9 @@ new file mode 100755
 +        changed_files = set(cand)
 +        for file in sorted(mentioned_files - changed_files):
 +            msg = 'unchanged file mentioned in a ChangeLog'
++            candidates = difflib.get_close_matches(file, changed_files, 1)
++            if candidates:
++                msg += f' (did you mean "{candidates[0]}"?)'
 +            self.errors.append(Error(msg, file))
 +        for file in sorted(changed_files - mentioned_files):
 +            if not self.in_ignored_location(file):
@@ -791,7 +830,7 @@ new file mode 100755
 +
 +        for pattern in mentioned_patterns:
 +            if pattern not in used_patterns:
-+                error = 'pattern doesn''t match any changed files'
++                error = "pattern doesn't match any changed files"
 +                self.errors.append(Error(error, pattern))
 +
 +    def check_for_correct_changelog(self):
@@ -895,7 +934,7 @@ new file mode 100755
 +
 +from dateutil.parser import parse
 +
-+from git_commit import GitCommit, GitInfo
++from git_commit import GitCommit, GitInfo, decode_path
 +
 +from unidiff import PatchSet, PatchedFile
 +
@@ -925,8 +964,8 @@ new file mode 100755
 +        modified_files = []
 +        for f in diff:
 +            # Strip "a/" and "b/" prefixes
-+            source = f.source_file[2:]
-+            target = f.target_file[2:]
++            source = decode_path(f.source_file)[2:]
++            target = decode_path(f.target_file)[2:]
 +
 +            if f.is_added_file:
 +                t = 'A'
@@ -1011,7 +1050,7 @@ new file mode 100755
 +    print('  Debian, Ubuntu: python3-git')
 +    exit(1)
 +
-+from git_commit import GitCommit, GitInfo
++from git_commit import GitCommit, GitInfo, decode_path
 +
 +
 +def parse_git_revisions(repo_path, revisions, strict=True):
@@ -1036,11 +1075,11 @@ new file mode 100755
 +                    # Consider that renamed files are two operations:
 +                    # the deletion of the original name
 +                    # and the addition of the new one.
-+                    modified_files.append((file.a_path, 'D'))
++                    modified_files.append((decode_path(file.a_path), 'D'))
 +                    t = 'A'
 +                else:
 +                    t = 'M'
-+                modified_files.append((file.b_path, t))
++                modified_files.append((decode_path(file.b_path), t))
 +
 +            date = datetime.utcfromtimestamp(c.committed_date)
 +            author = '%s  <%s>' % (c.author.name, c.author.email)
@@ -1219,7 +1258,7 @@ new file mode 100644
 new file mode 100755
 --- /dev/null
 +++ b/contrib/gcc-changelog/test_email.py
-@@ -0,0 +1,386 @@
+@@ -0,0 +1,406 @@
 +#!/usr/bin/env python3
 +#
 +# This file is part of GCC.
@@ -1335,7 +1374,9 @@ new file mode 100755
 +        email = self.from_patch_glob('0096')
 +        assert email.errors
 +        err = email.errors[0]
-+        assert err.message == 'unchanged file mentioned in a ChangeLog'
++        assert err.message == 'unchanged file mentioned in a ChangeLog (did ' \
++            'you mean "gcc/testsuite/gcc.target/aarch64/' \
++            'advsimd-intrinsics/vdot-3-1.c"?)'
 +        assert err.line == 'gcc/testsuite/gcc.target/aarch64/' \
 +                           'advsimd-intrinsics/vdot-compile-3-1.c'
 +
@@ -1555,7 +1596,7 @@ new file mode 100755
 +        assert not email.errors
 +        email = self.from_patch_glob('0002-libstdc-Fake-test-change-1.patch')
 +        assert len(email.errors) == 1
-+        msg = 'pattern doesn''t match any changed files'
++        msg = "pattern doesn't match any changed files"
 +        assert email.errors[0].message == msg
 +        assert email.errors[0].line == 'libstdc++-v3/doc/html/'
 +        email = self.from_patch_glob('0003-libstdc-Fake-test-change-2.patch')
@@ -1577,6 +1618,8 @@ new file mode 100755
 +    def test_backport(self):
 +        email = self.from_patch_glob('0001-asan-fix-RTX-emission.patch')
 +        assert not email.errors
++        expected_hash = '8cff672cb9a132d3d3158c2edfc9a64b55292b80'
++        assert email.cherry_pick_commit == expected_hash
 +        assert len(email.changelog_entries) == 1
 +        entry = list(email.to_changelog_entries())[0][1]
 +        assert entry.startswith('2020-06-11  Martin Liska  <mliska@suse.cz>')
@@ -1606,10 +1649,26 @@ new file mode 100755
 +        email = self.from_patch_glob('0001-lto-fix-LTO-debug')
 +        assert not email.errors
 +        assert len(email.changelog_entries) == 1
++
++    def test_wildcard_in_subdir(self):
++        email = self.from_patch_glob('0001-Wildcard-subdirs.patch')
++        assert len(email.changelog_entries) == 1
++        err = email.errors[0]
++        assert err.message == "pattern doesn't match any changed files"
++        assert err.line == 'libstdc++-v3/testsuite/28_regex_not-existing/'
++
++    def test_unicode_chars_in_filename(self):
++        email = self.from_patch_glob('0001-Add-horse.patch')
++        assert not email.errors
++
++    def test_bad_unicode_chars_in_filename(self):
++        email = self.from_patch_glob('0001-Add-horse2.patch')
++        assert not email.errors
++        assert email.changelog_entries[0].files == ['koníček.txt']
 new file mode 100644
 --- /dev/null
 +++ b/contrib/gcc-changelog/test_patches.txt
-@@ -0,0 +1,3322 @@
+@@ -0,0 +1,3401 @@
 +=== 0342-ARC-Propagate-uncached-type-attribute-to-each-member.patch ===
 +From 62a715c706d8482560dadfa9ead0766f3c20e434 Mon Sep 17 00:00:00 2001
 +From: Claudiu Zissulescu <claziss@gmail.com>
@@ -4757,7 +4816,7 @@ new file mode 100644
 +	by using Pmode instead of ptr_mode.
 +
 +Co-Authored-By: Jakub Jelinek <jakub@redhat.com>
-+(cherry picked from commit 8cff672cb9a132d3d3158c2edfc9a64b55292b80)
++(cherry picked from commit 8cff672cb9a132d3d3158c2edfc9a64b55292b80 (only part))
 +---
 + gcc/asan.c | 1 +
 + 1 file changed, 1 insertion(+)
@@ -4932,6 +4991,85 @@ new file mode 100644
 +-- 
 +2.25.1
 +
++=== 0001-Wildcard-subdirs.patch ===
++From b798205595426c53eb362065f6ed6c320dcc161d Mon Sep 17 00:00:00 2001
++From: Martin Liska <mliska@suse.cz>
++Date: Mon, 30 Nov 2020 13:27:51 +0100
++Subject: [PATCH] Fix it.
++
++libstdc++-v3/ChangeLog:
++
++	* testsuite/28_regex/*: Fix them all.
++	* testsuite/28_regex_not-existing/*: Fix them all.
++---
++ contrib/gcc-changelog/git_commit.py          | 1 +
++ libstdc++-v3/testsuite/28_regex/init-list.cc | 1 +
++ 2 files changed, 2 insertions(+)
++
++diff --git a/libstdc++-v3/testsuite/28_regex/init-list.cc b/libstdc++-v3/testsuite/28_regex/init-list.cc
++index f51453f019a..d10ecf483f4 100644
++--- a/libstdc++-v3/testsuite/28_regex/init-list.cc
+++++ b/libstdc++-v3/testsuite/28_regex/init-list.cc
++@@ -1 +1,2 @@
++ 
+++
++--
++2.29.2
++
++=== 0001-Add-horse.patch ===
++From 2884248d07e4e2c922e137365253e2e521c425b0 Mon Sep 17 00:00:00 2001
++From: Martin Liska <mliska@suse.cz>
++Date: Mon, 21 Dec 2020 10:14:46 +0100
++Subject: [PATCH] Add horse.
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
++
++ChangeLog:
++
++	* koníček.txt: New file.
++---
++ koníček.txt | 1 +
++ 1 file changed, 1 insertion(+)
++ create mode 100644 koníček.txt
++
++diff --git a/koníček.txt b/koníček.txt
++new file mode 100644
++index 00000000000..56c67f58752
++--- /dev/null
+++++ b/koníček.txt
++@@ -0,0 +1 @@
+++I'm a horse.
++-- 
++2.29.2
++=== 0001-Add-horse2.patch ===
++From 2884248d07e4e2c922e137365253e2e521c425b0 Mon Sep 17 00:00:00 2001
++From: Martin Liska <mliska@suse.cz>
++Date: Mon, 21 Dec 2020 10:14:46 +0100
++Subject: [PATCH] Add horse.
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
++
++ChangeLog:
++
++	* koníček.txt: New file.
++---
++ "kon\303\255\304\215ek.txt" | 1 +
++ 1 file changed, 1 insertion(+)
++ create mode 100644 "kon\303\255\304\215ek.txt"
++
++diff --git "a/kon\303\255\304\215ek.txt" "b/kon\303\255\304\215ek.txt"
++new file mode 100644
++index 00000000000..56c67f58752
++--- /dev/null
+++++ "b/kon\303\255\304\215ek.txt"
++@@ -0,0 +1 @@
+++I'm a horse.
++-- 
++2.29.2
++
++
 new file mode 100755
 --- /dev/null
 +++ b/contrib/git-backport.py
@@ -5003,7 +5141,21 @@ new file mode 100755
 +            print('Please resolve all remaining file conflicts.')
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2466 @@
+@@ -1,3 +1,2480 @@
++2021-01-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
++
++	Backported from master:
++	2021-01-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
++
++	* config.gcc [$target == *-*-gnu*]: Enable
++	'default_gnu_indirect_function'.
++
++2021-01-06  2019-07-10  Marc Glisse  <marc.glisse@inria.fr>
++
++	PR testsuite/90806
++	Backport from mainline
++	* wide-int.h (wi::lshift): Reject negative values for the fast path.
++
 +2020-12-28  Uroš Bizjak  <ubizjak@gmail.com>
 +
 +	PR target/96793
@@ -7474,7 +7626,7 @@ new file mode 100755
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20210102
++20210114
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -1687,6 +1687,10 @@ $(FULL_DRIVER_NAME): ./xgcc
@@ -8650,7 +8802,18 @@ new file mode 100755
  	case ${target} in
  	     powerpc64*)
  	    	tm_file="${tm_file} rs6000/default64.h rs6000/freebsd64.h"
-@@ -3806,9 +3810,17 @@ fi
+@@ -3279,7 +3283,9 @@ esac
+ case ${target} in
+ *-*-linux*android*|*-*-linux*uclibc*|*-*-linux*musl*)
+         ;;
+-*-*-linux*)
++*-*-kfreebsd*-gnu | *-*-kopensolaris*-gnu)
++        ;;
++*-*-linux* | *-*-gnu*)
+ 	case ${target} in
+ 	aarch64*-* | arm*-* | i[34567]86-* | powerpc*-* | s390*-* | sparc*-* | x86_64-*)
+ 		default_gnu_indirect_function=yes
+@@ -3806,9 +3812,17 @@ fi
  supported_defaults=
  case "${target}" in
  	aarch64*-*-*)
@@ -8671,7 +8834,7 @@ new file mode 100755
  			eval "val=\$with_$which"
  			base_val=`echo $val | sed -e 's/\+.*//'`
  			ext_val=`echo $val | sed -e 's/[a-z0-9.-]\+//'`
-@@ -3847,6 +3859,12 @@ case "${target}" in
+@@ -3847,6 +3861,12 @@ case "${target}" in
  				  sed -e 's/,.*$//'`
  			  fi
  
@@ -8684,7 +8847,7 @@ new file mode 100755
  			  while [ x"$ext_val" != x ]
  			  do
  				ext_val=`echo $ext_val | sed -e 's/\+//'`
-@@ -3896,8 +3914,13 @@ case "${target}" in
+@@ -3896,8 +3916,13 @@ case "${target}" in
  			  fi
  			  true
  			else
@@ -21364,7 +21527,129 @@ new file mode 100755
  				    "division"),
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,546 @@
+@@ -1,3 +1,668 @@
++2021-01-07  Harald Anlauf  <anlauf@gmx.de>
++
++	Backported from master:
++	2021-01-06  Harald Anlauf  <anlauf@gmx.de>
++
++	* resolve.c (resolve_component): Add check for valid CLASS
++	reference before trying to access CLASS data.
++
++2021-01-07  Paul Thomas  <pault@gcc.gnu.org>
++
++	Backported from master:
++	2020-08-02  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/96325
++	* primary.c (gfc_match_varspec): In the case that a component
++	reference is added to an intrinsic type component, emit the
++	error message in this function.
++
++2021-01-07  Paul Thomas  <pault@gcc.gnu.org>
++
++	Backported from master:
++	2020-12-26  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/83118
++	* trans-array.c (gfc_alloc_allocatable_for_assignment): Make
++	sure that class expressions are captured for dummy arguments by
++	use of gfc_get_class_from_gfc_expr otherwise the wrong vptr is
++	used.
++	* trans-expr.c (gfc_get_class_from_gfc_expr): New function.
++	(gfc_get_class_from_expr): If a constant expression is
++	encountered, return NULL_TREE;
++	(gfc_trans_assignment_1): Deallocate rhs allocatable components
++	after passing derived type function results to class lhs.
++	* trans.h : Add prototype for gfc_get_class_from_gfc_expr.
++
++2021-01-07  Paul Thomas  <pault@gcc.gnu.org>
++
++	Backported from master:
++	2020-12-18  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/83118
++	PR fortran/96012
++	* resolve.c (resolve_ordinary_assign): Generate a vtable if
++	necessary for scalar non-polymorphic rhs's to unlimited lhs's.
++	* trans-array.c (get_class_info_from_ss): New function.
++	(gfc_trans_allocate_array_storage): Defer obtaining class
++	element type until all sources of class exprs are tried. Use
++	class API rather than TREE_OPERAND. Look for class expressions
++	in ss->info by calling get_class_info_from_ss. After, obtain
++	the element size for class descriptors. Where the element type
++	is unknown, cast the data as character(len=size) to overcome
++	unlimited polymorphic problems.
++	(gfc_conv_ss_descriptor): Do not fix class variable refs.
++	(build_class_array_ref, structure_alloc_comps): Replace code
++	replicating the new function gfc_resize_class_size_with_len.
++	(gfc_alloc_allocatable_for_assignment): Obtain element size
++	for lhs in cases of deferred characters and class enitities.
++	Move code for the element size of rhs to start of block. Clean
++	up extraction of class parameters throughout this function.
++	After the shape check test whether or not the lhs and rhs
++	element sizes are the same. Use earlier evaluation of
++	'cond_null'. Reallocation of lhs only to happen if size changes
++	or element size changes.
++	* trans-expr.c (gfc_resize_class_size_with_len): New function.
++	(gfc_get_class_from_expr): If a constant expression is
++	encountered, return NULL_TREE;
++	(trans_scalar_class_assign): New function.
++	(gfc_conv_procedure_call): Ensure the vtable is present for
++	passing a non-class actual to an unlimited formal.
++	(trans_class_vptr_len_assignment): For expressions of type
++	BT_CLASS, extract the class expression if necessary. Use a
++	statement block outside the loop body. Ensure that 'rhs' is
++	of the correct type. Obtain rhs vptr in all circumstances.
++	(gfc_trans_scalar_assign): Call trans_scalar_class_assign to
++	make maximum use of the vptr copy in place of assignment.
++	(trans_class_assignment): Actually do reallocation if needed.
++	(gfc_trans_assignment_1): Simplify some of the logic with
++	'realloc_flag'. Set 'vptr_copy' for all array assignments to
++	unlimited polymorphic lhs.
++	* trans.c (gfc_build_array_ref): Call gfc_resize_class_size_
++	with_len to correct span for unlimited polymorphic decls.
++	* trans.h : Add prototype for gfc_resize_class_size_with_len.
++
++2021-01-06  Tobias Burnus  <tobias@codesourcery.com>
++
++	Backported from master:
++	2020-04-14  Tobias Burnus  <tobias@codesourcery.com>
++
++	* module.c (gfc_match_use): Fix name-conflict check for use-associating
++	the same symbol again in a submodule.
++
++2021-01-04  Harald Anlauf  <anlauf@gmx.de>
++
++	Backported from master:
++	2021-01-01  Harald Anlauf  <anlauf@gmx.de>
++
++	* class.c (gfc_find_vtab): Add check on attribute is_class.
++
++2021-01-04  Tobias Burnus  <tobias@codesourcery.com>
++
++	Backported from master:
++	2020-12-17  Tobias Burnus  <tobias@codesourcery.com>
++
++	PR fortran/92587
++	* match.c (gfc_match_assignment): Move gfc_find_vtab call from here ...
++	* resolve.c (gfc_resolve_code): ... to here.
++
++2021-01-04  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/96320
++	* interface.c (gfc_check_dummy_characteristics): If a module
++	procedure arrives with assumed shape in the interface and
++	deferred shape in the procedure itself, update the latter and
++	copy the lower bounds.
++
++2021-01-04  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/94246
++	* expr.c (scalarize_intrinsic_call): Remove the error checking.
++	Make a copy of the expression to be simplified and only replace
++	the original if the simplification succeeds.
++
 +2020-12-29  Harald Anlauf  <anlauf@gmx.de>
 +
 +	Backported from master:
@@ -22032,6 +22317,17 @@ new file mode 100755
    /* Find the gsymbol for the module of use associated derived types.  */
    if ((derived->attr.use_assoc || derived->attr.used_in_submodule)
         && !derived->attr.vtype && !derived->attr.is_class)
+@@ -2864,7 +2885,9 @@ gfc_find_vtab (gfc_typespec *ts)
+     case BT_DERIVED:
+       return gfc_find_derived_vtab (ts->u.derived);
+     case BT_CLASS:
+-      if (ts->u.derived->components && ts->u.derived->components->ts.u.derived)
++      if (ts->u.derived->attr.is_class
++	  && ts->u.derived->components
++	  && ts->u.derived->components->ts.u.derived)
+ 	return gfc_find_derived_vtab (ts->u.derived->components->ts.u.derived);
+       else
+ 	return NULL;
 --- a/gcc/fortran/data.c
 +++ b/gcc/fortran/data.c
 @@ -498,12 +498,11 @@ gfc_assign_data_value (gfc_expr *lvalue, gfc_expr *rvalue, mpz_t index,
@@ -22327,7 +22623,40 @@ new file mode 100755
    /* Do not copy subobject refs for constant.  */
    if (e->expr_type != EXPR_CONSTANT && p->ref != NULL)
      e->ref = gfc_copy_ref (p->ref);
-@@ -4225,7 +4228,20 @@ gfc_check_pointer_assign (gfc_expr *lvalue, gfc_expr *rvalue,
+@@ -2278,7 +2281,7 @@ scalarize_intrinsic_call (gfc_expr *e, bool init_flag)
+   gfc_constructor *ci, *new_ctor;
+   gfc_expr *expr, *old;
+   int n, i, rank[5], array_arg;
+-  int errors = 0;
++  gfc_expr *p;
+ 
+   if (e == NULL)
+     return false;
+@@ -2346,8 +2349,6 @@ scalarize_intrinsic_call (gfc_expr *e, bool init_flag)
+       n++;
+     }
+ 
+-  gfc_get_errors (NULL, &errors);
+-
+   /* Using the array argument as the master, step through the array
+      calling the function for each element and advancing the array
+      constructors together.  */
+@@ -2381,8 +2382,12 @@ scalarize_intrinsic_call (gfc_expr *e, bool init_flag)
+       /* Simplify the function calls.  If the simplification fails, the
+ 	 error will be flagged up down-stream or the library will deal
+ 	 with it.  */
+-      if (errors == 0)
+-	gfc_simplify_expr (new_ctor->expr, 0);
++      p = gfc_copy_expr (new_ctor->expr);
++
++      if (!gfc_simplify_expr (p, init_flag))
++	gfc_free_expr (p);
++      else
++	gfc_replace_expr (new_ctor->expr, p);
+ 
+       for (i = 0; i < n; i++)
+ 	if (args[i])
+@@ -4225,7 +4230,20 @@ gfc_check_pointer_assign (gfc_expr *lvalue, gfc_expr *rvalue,
        gfc_symbol *sym;
        bool target;
  
@@ -22349,7 +22678,7 @@ new file mode 100755
        sym = rvalue->symtree->n.sym;
  
        if (sym->ts.type == BT_CLASS && sym->attr.class_ok)
-@@ -4300,7 +4316,9 @@ gfc_check_pointer_assign (gfc_expr *lvalue, gfc_expr *rvalue,
+@@ -4300,7 +4318,9 @@ gfc_check_pointer_assign (gfc_expr *lvalue, gfc_expr *rvalue,
       contiguous.  Be lenient in the definition of what counts as
       contiguous.  */
  
@@ -22519,7 +22848,54 @@ new file mode 100755
  
 --- a/gcc/fortran/interface.c
 +++ b/gcc/fortran/interface.c
-@@ -4979,7 +4979,8 @@ gfc_find_typebound_dtio_proc (gfc_symbol *derived, bool write, bool formatted)
+@@ -1464,6 +1464,19 @@ gfc_check_dummy_characteristics (gfc_symbol *s1, gfc_symbol *s2,
+       int i, compval;
+       gfc_expr *shape1, *shape2;
+ 
++      /* Sometimes the ambiguity between deferred shape and assumed shape
++	 does not get resolved in module procedures, where the only explicit
++	 declaration of the dummy is in the interface.  */
++      if (s1->ns->proc_name && s1->ns->proc_name->attr.module_procedure
++	  && s1->as->type == AS_ASSUMED_SHAPE
++	  && s2->as->type == AS_DEFERRED)
++	{
++	  s2->as->type = AS_ASSUMED_SHAPE;
++	  for (i = 0; i < s2->as->rank; i++)
++	    if (s1->as->lower[i] != NULL)
++	      s2->as->lower[i] = gfc_copy_expr (s1->as->lower[i]);
++	}
++
+       if (s1->as->type != s2->as->type)
+ 	{
+ 	  snprintf (errmsg, err_len, "Shape mismatch in argument '%s'",
+@@ -2424,7 +2437,7 @@ compare_parameter (gfc_symbol *formal, gfc_expr *actual,
+ 	       && formal->ts.u.derived->intmod_sym_id == ISOFORTRAN_LOCK_TYPE)
+ 	      || formal->attr.lock_comp))
+ 
+-    	{
++	{
+ 	  if (where)
+ 	    gfc_error ("Actual argument to non-INTENT(INOUT) dummy %qs at %L, "
+ 		       "which is LOCK_TYPE or has a LOCK_TYPE component",
+@@ -2439,7 +2452,7 @@ compare_parameter (gfc_symbol *formal, gfc_expr *actual,
+ 	       && formal->ts.u.derived->intmod_sym_id == ISOFORTRAN_EVENT_TYPE)
+ 	      || formal->attr.event_comp))
+ 
+-    	{
++	{
+ 	  if (where)
+ 	    gfc_error ("Actual argument to non-INTENT(INOUT) dummy %qs at %L, "
+ 		       "which is EVENT_TYPE or has a EVENT_TYPE component",
+@@ -3798,7 +3811,7 @@ gfc_procedure_use (gfc_symbol *sym, gfc_actual_arglist **ap, locus *where)
+   if (!compare_actual_formal (ap, dummy_args, 0, sym->attr.elemental,
+ 			      sym->attr.proc == PROC_ST_FUNCTION, where))
+     return false;
+- 
++
+   if (!check_intents (dummy_args, *ap))
+     return false;
+ 
+@@ -4979,7 +4992,8 @@ gfc_find_typebound_dtio_proc (gfc_symbol *derived, bool write, bool formatted)
    gfc_symtree *tb_io_st = NULL;
    bool t = false;
  
@@ -22563,7 +22939,17 @@ new file mode 100755
  libgfortran_error_codes;
 --- a/gcc/fortran/match.c
 +++ b/gcc/fortran/match.c
-@@ -2200,9 +2200,9 @@ gfc_match_type_spec (gfc_typespec *ts)
+@@ -1374,9 +1374,6 @@ gfc_match_assignment (void)
+ 
+   gfc_check_do_variable (lvalue->symtree);
+ 
+-  if (lvalue->ts.type == BT_CLASS)
+-    gfc_find_vtab (&rvalue->ts);
+-
+   return MATCH_YES;
+ }
+ 
+@@ -2200,9 +2197,9 @@ gfc_match_type_spec (gfc_typespec *ts)
  
  found:
  
@@ -22575,7 +22961,7 @@ new file mode 100755
  
        /* If a comma appears, it is an intrinsic subprogram. */
        gfc_gobble_whitespace ();
-@@ -2217,7 +2217,10 @@ found:
+@@ -2217,7 +2214,10 @@ found:
  	 a scalar integer initialization-expr and valid kind parameter. */
        if (c == ')')
  	{
@@ -22587,7 +22973,7 @@ new file mode 100755
  	    {
  	      gfc_free_expr (e);
  	      return MATCH_NO;
-@@ -5575,6 +5578,11 @@ gfc_match_equivalence (void)
+@@ -5575,6 +5575,11 @@ gfc_match_equivalence (void)
  
  	  if (!gfc_add_in_equivalence (&sym->attr, sym->name, NULL))
  	    goto cleanup;
@@ -22601,7 +22987,47 @@ new file mode 100755
  	    {
 --- a/gcc/fortran/module.c
 +++ b/gcc/fortran/module.c
-@@ -4393,6 +4393,9 @@ mio_symbol (gfc_symbol *sym)
+@@ -646,18 +646,6 @@ gfc_match_use (void)
+ 	  if (type == INTERFACE_USER_OP)
+ 	    new_use->op = INTRINSIC_USER;
+ 
+-	  st = gfc_find_symtree (gfc_current_ns->sym_root, name);
+-	  if (st && type != INTERFACE_USER_OP)
+-	    {
+-	      if (m == MATCH_YES)
+-		gfc_error ("Symbol %qs at %L conflicts with the rename symbol "
+-			   "at %L", name, &st->n.sym->declared_at, &loc);
+-	      else
+-		gfc_error ("Symbol %qs at %L conflicts with the symbol "
+-			   "at %L", name, &st->n.sym->declared_at, &loc);
+-	      goto cleanup;
+-	    }
+-
+ 	  if (use_list->only_flag)
+ 	    {
+ 	      if (m != MATCH_YES)
+@@ -689,6 +677,20 @@ gfc_match_use (void)
+ 		goto cleanup;
+ 	    }
+ 
++	  st = gfc_find_symtree (gfc_current_ns->sym_root, name);
++	  if (st && type != INTERFACE_USER_OP
++	      && (st->n.sym->module != use_list->module_name
++		  || strcmp (st->n.sym->name, new_use->use_name) != 0))
++	    {
++	      if (m == MATCH_YES)
++		gfc_error ("Symbol %qs at %L conflicts with the rename symbol "
++			   "at %L", name, &st->n.sym->declared_at, &loc);
++	      else
++		gfc_error ("Symbol %qs at %L conflicts with the symbol "
++			   "at %L", name, &st->n.sym->declared_at, &loc);
++	      goto cleanup;
++	    }
++
+ 	  if (strcmp (new_use->use_name, use_list->module_name) == 0
+ 	      || strcmp (new_use->local_name, use_list->module_name) == 0)
+ 	    {
+@@ -4393,6 +4395,9 @@ mio_symbol (gfc_symbol *sym)
  
    mio_symbol_attribute (&sym->attr);
  
@@ -22652,7 +23078,17 @@ new file mode 100755
  
 --- a/gcc/fortran/primary.c
 +++ b/gcc/fortran/primary.c
-@@ -2206,6 +2206,27 @@ gfc_match_varspec (gfc_expr *primary, int equiv_flag, bool sub_flag,
+@@ -1984,7 +1984,8 @@ gfc_match_varspec (gfc_expr *primary, int equiv_flag, bool sub_flag,
+ {
+   char name[GFC_MAX_SYMBOL_LEN + 1];
+   gfc_ref *substring, *tail, *tmp;
+-  gfc_component *component;
++  gfc_component *component = NULL;
++  gfc_component *previous = NULL;
+   gfc_symbol *sym = primary->symtree->n.sym;
+   gfc_expr *tgt_expr = NULL;
+   match m;
+@@ -2206,6 +2207,27 @@ gfc_match_varspec (gfc_expr *primary, int equiv_flag, bool sub_flag,
  	    {
  	      if (tmp)
  		{
@@ -22680,6 +23116,29 @@ new file mode 100755
  		  if ((tmp->u.i == INQUIRY_RE || tmp->u.i == INQUIRY_IM)
  		      && primary->ts.type != BT_COMPLEX)
  		    {
+@@ -2283,15 +2305,19 @@ gfc_match_varspec (gfc_expr *primary, int equiv_flag, bool sub_flag,
+ 	  break;
+ 	}
+ 
++      previous = component;
++
+       if (!inquiry && !intrinsic)
+ 	component = gfc_find_component (sym, name, false, false, &tmp);
+       else
+ 	component = NULL;
+ 
+-      /* In some cases, returning MATCH_NO gives a better error message. Most
+-	 cases return "Unclassifiable statement at..."  */
+       if (intrinsic && !inquiry)
+-	return MATCH_NO;
++       {
++	  gfc_error ("%qs at %C is not an inquiry reference to an intrinsic "
++		     "type component %qs", name, previous->name);
++	  return MATCH_ERROR;
++       }
+       else if (component == NULL && !inquiry)
+ 	return MATCH_ERROR;
+ 
 --- a/gcc/fortran/resolve.c
 +++ b/gcc/fortran/resolve.c
 @@ -1754,9 +1754,11 @@ gfc_resolve_intrinsic (gfc_symbol *sym, locus *loc)
@@ -22772,6 +23231,15 @@ new file mode 100755
  	  attr.class_ok = 0;
  	  attr.associate_var = 1;
  	  attr.dimension = attr.codimension = 0;
+@@ -10648,7 +10679,7 @@ resolve_ordinary_assign (gfc_code *code, gfc_namespace *ns)
+ 
+   /* Make sure there is a vtable and, in particular, a _copy for the
+      rhs type.  */
+-  if (UNLIMITED_POLY (lhs) && lhs->rank && rhs->ts.type != BT_CLASS)
++  if (lhs->ts.type == BT_CLASS && rhs->ts.type != BT_CLASS)
+     gfc_find_vtab (&rhs->ts);
+ 
+   bool caf_convert_to_send = flag_coarray == GFC_FCOARRAY_LIB
 @@ -11449,10 +11480,18 @@ start:
  	case EXEC_GOTO:
  	  if (code->expr1 != NULL)
@@ -22795,7 +23263,17 @@ new file mode 100755
  		gfc_error ("Variable %qs has not been assigned a target "
  			   "label at %L", code->expr1->symtree->n.sym->name,
  			   &code->expr1->where);
-@@ -12000,7 +12039,7 @@ resolve_charlen (gfc_charlen *cl)
+@@ -11476,6 +11515,9 @@ start:
+ 	  if (!t)
+ 	    break;
+ 
++	  if (code->expr1->ts.type == BT_CLASS)
++	   gfc_find_vtab (&code->expr2->ts);
++
+ 	  /* Remove a GFC_ISYM_CAF_GET inserted for a coindexed variable on
+ 	     the LHS.  */
+ 	  if (code->expr1->expr_type == EXPR_FUNCTION
+@@ -12000,7 +12042,7 @@ resolve_charlen (gfc_charlen *cl)
  	}
  
        /* cl->length has been resolved.  It should have an integer type.  */
@@ -22804,7 +23282,7 @@ new file mode 100755
  	{
  	  gfc_error ("Scalar INTEGER expression expected at %L",
  		     &cl->length->where);
-@@ -12629,6 +12668,7 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
+@@ -12629,6 +12671,7 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
  	{
  	  if (arg->sym
  	      && arg->sym->ts.type == BT_DERIVED
@@ -22812,7 +23290,7 @@ new file mode 100755
  	      && !arg->sym->ts.u.derived->attr.use_assoc
  	      && !gfc_check_symbol_access (arg->sym->ts.u.derived)
  	      && !gfc_notify_std (GFC_STD_F2003, "%qs is of a PRIVATE type "
-@@ -12755,8 +12795,10 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
+@@ -12755,8 +12798,10 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
      {
        if (sym->attr.proc_pointer)
  	{
@@ -22824,7 +23302,7 @@ new file mode 100755
  	  return false;
  	}
        if (sym->attr.dummy)
-@@ -12843,7 +12885,7 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
+@@ -12843,7 +12888,7 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
        if (sym->attr.subroutine && sym->attr.result)
  	{
  	  gfc_error ("PROCEDURE attribute conflicts with RESULT attribute "
@@ -22833,7 +23311,7 @@ new file mode 100755
  	  return false;
  	}
        if (sym->attr.external && sym->attr.function && !sym->attr.module_procedure
-@@ -13541,7 +13583,7 @@ resolve_typebound_procedure (gfc_symtree* stree)
+@@ -13541,7 +13586,7 @@ resolve_typebound_procedure (gfc_symtree* stree)
      {
        /* If proc has not been resolved at this point, proc->name may
  	 actually be a USE associated entity. See PR fortran/89647. */
@@ -22842,7 +23320,16 @@ new file mode 100755
  	  && proc->attr.function == 0 && proc->attr.subroutine == 0)
  	{
  	  gfc_symbol *tmp;
-@@ -14791,9 +14833,9 @@ resolve_symbol (gfc_symbol *sym)
+@@ -13929,7 +13974,7 @@ resolve_component (gfc_component *c, gfc_symbol *sym)
+   /* F2008, C448.  */
+   if (c->ts.type == BT_CLASS)
+     {
+-      if (CLASS_DATA (c))
++      if (c->attr.class_ok && CLASS_DATA (c))
+ 	{
+ 	  attr = &(CLASS_DATA (c)->attr);
+ 
+@@ -14791,9 +14836,9 @@ resolve_symbol (gfc_symbol *sym)
    gfc_array_spec *as;
    bool saved_specification_expr;
  
@@ -22854,7 +23341,7 @@ new file mode 100755
  
    /* No symbol will ever have union type; only components can be unions.
       Union type declaration symbols have type BT_UNKNOWN but flavor FL_UNION
-@@ -14805,6 +14847,7 @@ resolve_symbol (gfc_symbol *sym)
+@@ -14805,6 +14850,7 @@ resolve_symbol (gfc_symbol *sym)
    if (flag_coarray == GFC_FCOARRAY_LIB && sym->ts.type == BT_CLASS
        && sym->ts.u.derived && CLASS_DATA (sym)
        && CLASS_DATA (sym)->attr.codimension
@@ -22862,7 +23349,7 @@ new file mode 100755
        && (CLASS_DATA (sym)->ts.u.derived->attr.alloc_comp
  	  || CLASS_DATA (sym)->ts.u.derived->attr.pointer_comp))
      {
-@@ -15534,7 +15577,7 @@ resolve_symbol (gfc_symbol *sym)
+@@ -15534,7 +15580,7 @@ resolve_symbol (gfc_symbol *sym)
        if (formal)
  	{
  	  sym->formal_ns = formal->sym->ns;
@@ -22871,7 +23358,7 @@ new file mode 100755
  	    sym->formal_ns->refs++;
  	}
      }
-@@ -16510,7 +16553,8 @@ resolve_equivalence (gfc_equiv *eq)
+@@ -16510,7 +16556,8 @@ resolve_equivalence (gfc_equiv *eq)
  	  && !gfc_notify_std (GFC_STD_GNU, msg, sym->name, &e->where))
  		continue;
  
@@ -22881,7 +23368,7 @@ new file mode 100755
        last_ts =&sym->ts;
        last_where = &e->where;
  
-@@ -16518,8 +16562,7 @@ resolve_equivalence (gfc_equiv *eq)
+@@ -16518,8 +16565,7 @@ resolve_equivalence (gfc_equiv *eq)
  	continue;
  
        /* Shall not be an automatic array.  */
@@ -22946,7 +23433,244 @@ new file mode 100755
  
 --- a/gcc/fortran/trans-array.c
 +++ b/gcc/fortran/trans-array.c
-@@ -6945,6 +6945,24 @@ gfc_get_dataptr_offset (stmtblock_t *block, tree parm, tree desc, tree offset,
+@@ -1099,7 +1099,6 @@ gfc_trans_allocate_array_storage (stmtblock_t * pre, stmtblock_t * post,
+ 	      gcc_assert (TREE_CODE (tmp) == POINTER_TYPE);
+ 	      tmp = TREE_TYPE (tmp); /* The descriptor itself.  */
+ 	      tmp = gfc_get_element_type (tmp);
+-	      gcc_assert (tmp == gfc_get_element_type (TREE_TYPE (desc)));
+ 	      packed = gfc_create_var (build_pointer_type (tmp), "data");
+ 
+ 	      tmp = build_call_expr_loc (input_location,
+@@ -1208,6 +1207,123 @@ get_array_ref_dim_for_loop_dim (gfc_ss *ss, int loop_dim)
+ }
+ 
+ 
++/* Use the information in the ss to obtain the required information about
++   the type and size of an array temporary, when the lhs in an assignment
++   is a class expression.  */
++
++static tree
++get_class_info_from_ss (stmtblock_t * pre, gfc_ss *ss, tree *eltype)
++{
++  gfc_ss *lhs_ss;
++  gfc_ss *rhs_ss;
++  tree tmp;
++  tree tmp2;
++  tree vptr;
++  tree rhs_class_expr = NULL_TREE;
++  tree lhs_class_expr = NULL_TREE;
++  bool unlimited_rhs = false;
++  bool unlimited_lhs = false;
++  bool rhs_function = false;
++  gfc_symbol *vtab;
++
++  /* The second element in the loop chain contains the source for the
++     temporary; ie. the rhs of the assignment.  */
++  rhs_ss = ss->loop->ss->loop_chain;
++
++  if (rhs_ss != gfc_ss_terminator
++      && rhs_ss->info
++      && rhs_ss->info->expr
++      && rhs_ss->info->expr->ts.type == BT_CLASS
++      && rhs_ss->info->data.array.descriptor)
++    {
++      rhs_class_expr
++	= gfc_get_class_from_expr (rhs_ss->info->data.array.descriptor);
++      unlimited_rhs = UNLIMITED_POLY (rhs_ss->info->expr);
++      if (rhs_ss->info->expr->expr_type == EXPR_FUNCTION)
++	rhs_function = true;
++    }
++
++  /* For an assignment the lhs is the next element in the loop chain.
++     If we have a class rhs, this had better be a class variable
++     expression!  */
++  lhs_ss = rhs_ss->loop_chain;
++  if (lhs_ss != gfc_ss_terminator
++      && lhs_ss->info
++      && lhs_ss->info->expr
++      && lhs_ss->info->expr->expr_type ==EXPR_VARIABLE
++      && lhs_ss->info->expr->ts.type == BT_CLASS)
++    {
++      tmp = lhs_ss->info->data.array.descriptor;
++      unlimited_lhs = UNLIMITED_POLY (rhs_ss->info->expr);
++    }
++  else
++    tmp = NULL_TREE;
++
++  /* Get the lhs class expression.  */
++  if (tmp != NULL_TREE && lhs_ss->loop_chain == gfc_ss_terminator)
++    lhs_class_expr = gfc_get_class_from_expr (tmp);
++  else
++    return rhs_class_expr;
++
++  gcc_assert (GFC_CLASS_TYPE_P (TREE_TYPE (lhs_class_expr)));
++
++  /* Set the lhs vptr and, if necessary, the _len field.  */
++  if (rhs_class_expr)
++    {
++      /* Both lhs and rhs are class expressions.  */
++      tmp = gfc_class_vptr_get (lhs_class_expr);
++      gfc_add_modify (pre, tmp,
++		      fold_convert (TREE_TYPE (tmp),
++				    gfc_class_vptr_get (rhs_class_expr)));
++      if (unlimited_lhs)
++	{
++	  tmp = gfc_class_len_get (lhs_class_expr);
++	  if (unlimited_rhs)
++	    tmp2 = gfc_class_len_get (rhs_class_expr);
++	  else
++	    tmp2 = build_int_cst (TREE_TYPE (tmp), 0);
++	  gfc_add_modify (pre, tmp, tmp2);
++	}
++
++      if (rhs_function)
++	{
++	  tmp = gfc_class_data_get (rhs_class_expr);
++	  gfc_conv_descriptor_offset_set (pre, tmp, gfc_index_zero_node);
++	}
++    }
++  else
++   {
++      /* lhs is class and rhs is intrinsic or derived type.  */
++      *eltype = TREE_TYPE (rhs_ss->info->data.array.descriptor);
++      *eltype = gfc_get_element_type (*eltype);
++      vtab = gfc_find_vtab (&rhs_ss->info->expr->ts);
++      vptr = vtab->backend_decl;
++      if (vptr == NULL_TREE)
++	vptr = gfc_get_symbol_decl (vtab);
++      vptr = gfc_build_addr_expr (NULL_TREE, vptr);
++      tmp = gfc_class_vptr_get (lhs_class_expr);
++      gfc_add_modify (pre, tmp,
++		      fold_convert (TREE_TYPE (tmp), vptr));
++
++      if (unlimited_lhs)
++	{
++	  tmp = gfc_class_len_get (lhs_class_expr);
++	  if (rhs_ss->info
++	      && rhs_ss->info->expr
++	      && rhs_ss->info->expr->ts.type == BT_CHARACTER)
++	    tmp2 = build_int_cst (TREE_TYPE (tmp),
++				  rhs_ss->info->expr->ts.kind);
++	  else
++	    tmp2 = build_int_cst (TREE_TYPE (tmp), 0);
++	  gfc_add_modify (pre, tmp, tmp2);
++	}
++    }
++
++  return rhs_class_expr;
++}
++
++
++
+ /* Generate code to create and initialize the descriptor for a temporary
+    array.  This is used for both temporaries needed by the scalarizer, and
+    functions returning arrays.  Adjusts the loop variables to be
+@@ -1253,13 +1369,46 @@ gfc_trans_create_temp_array (stmtblock_t * pre, stmtblock_t * post, gfc_ss * ss,
+     {
+       gcc_assert (POINTER_TYPE_P (TREE_TYPE (initial)));
+       class_expr = build_fold_indirect_ref_loc (input_location, initial);
+-      eltype = TREE_TYPE (class_expr);
+-      eltype = gfc_get_element_type (eltype);
+       /* Obtain the structure (class) expression.  */
+-      class_expr = TREE_OPERAND (class_expr, 0);
++      class_expr = gfc_get_class_from_expr (class_expr);
+       gcc_assert (class_expr);
+     }
+ 
++  /* Otherwise, some expressions, such as class functions, arising from
++     dependency checking in assignments come here with class element type.
++     The descriptor can be obtained from the ss->info and then converted
++     to the class object.  */
++  if (class_expr == NULL_TREE && GFC_CLASS_TYPE_P (eltype))
++    class_expr = get_class_info_from_ss (pre, ss, &eltype);
++
++  /* If the dynamic type is not available, use the declared type.  */
++  if (eltype && GFC_CLASS_TYPE_P (eltype))
++    eltype = gfc_get_element_type (TREE_TYPE (TYPE_FIELDS (eltype)));
++
++  if (class_expr == NULL_TREE)
++    elemsize = fold_convert (gfc_array_index_type,
++			     TYPE_SIZE_UNIT (eltype));
++  else
++    {
++      /* Unlimited polymorphic entities are initialised with NULL vptr. They
++	 can be tested for by checking if the len field is present. If so
++	 test the vptr before using the vtable size.  */
++      tmp = gfc_class_vptr_get (class_expr);
++      tmp = fold_build2_loc (input_location, NE_EXPR,
++			     logical_type_node,
++			     tmp, build_int_cst (TREE_TYPE (tmp), 0));
++      elemsize = fold_build3_loc (input_location, COND_EXPR,
++				  gfc_array_index_type,
++				  tmp,
++				  gfc_class_vtab_size_get (class_expr),
++				  gfc_index_zero_node);
++      elemsize = gfc_evaluate_now (elemsize, pre);
++      elemsize = gfc_resize_class_size_with_len (pre, class_expr, elemsize);
++      /* Casting the data as a character of the dynamic length ensures that
++	 assignment of elements works when needed.  */
++      eltype = gfc_get_character_type_len (1, elemsize);
++    }
++
+   memset (from, 0, sizeof (from));
+   memset (to, 0, sizeof (to));
+ 
+@@ -1408,12 +1557,6 @@ gfc_trans_create_temp_array (stmtblock_t * pre, stmtblock_t * post, gfc_ss * ss,
+ 	}
+     }
+ 
+-  if (class_expr == NULL_TREE)
+-    elemsize = fold_convert (gfc_array_index_type,
+-			     TYPE_SIZE_UNIT (gfc_get_element_type (type)));
+-  else
+-    elemsize = gfc_class_vtab_size_get (class_expr);
+-
+   /* Get the size of the array.  */
+   if (size && !callee_alloc)
+     {
+@@ -2979,13 +3122,16 @@ gfc_conv_ss_descriptor (stmtblock_t * block, gfc_ss * ss, int base)
+ 	}
+       /* Also the data pointer.  */
+       tmp = gfc_conv_array_data (se.expr);
+-      /* If this is a variable or address of a variable we use it directly.
++      /* If this is a variable or address or a class array, use it directly.
+          Otherwise we must evaluate it now to avoid breaking dependency
+ 	 analysis by pulling the expressions for elemental array indices
+ 	 inside the loop.  */
+       if (!(DECL_P (tmp)
+ 	    || (TREE_CODE (tmp) == ADDR_EXPR
+-		&& DECL_P (TREE_OPERAND (tmp, 0)))))
++		&& DECL_P (TREE_OPERAND (tmp, 0)))
++	    || (GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (se.expr))
++		&& TREE_CODE (se.expr) == COMPONENT_REF
++		&& GFC_CLASS_TYPE_P (TREE_TYPE (TREE_OPERAND (se.expr, 0))))))
+ 	tmp = gfc_evaluate_now (tmp, block);
+       info->data = tmp;
+ 
+@@ -3442,18 +3588,10 @@ build_class_array_ref (gfc_se *se, tree base, tree index)
+   size = gfc_class_vtab_size_get (decl);
+ 
+   /* For unlimited polymorphic entities then _len component needs to be
+-     multiplied with the size.  If no _len component is present, then
+-     gfc_class_len_or_zero_get () return a zero_node.  */
+-  tmp = gfc_class_len_or_zero_get (decl);
+-  if (!integer_zerop (tmp))
+-    size = fold_build2 (MULT_EXPR, TREE_TYPE (index),
+-			fold_convert (TREE_TYPE (index), size),
+-			fold_build2 (MAX_EXPR, TREE_TYPE (index),
+-				     fold_convert (TREE_TYPE (index), tmp),
+-				     fold_convert (TREE_TYPE (index),
+-						   integer_one_node)));
+-  else
+-    size = fold_convert (TREE_TYPE (index), size);
++     multiplied with the size.  */
++  size = gfc_resize_class_size_with_len (&se->pre, decl, size);
++
++  size = fold_convert (TREE_TYPE (index), size);
+ 
+   /* Build the address of the element.  */
+   type = TREE_TYPE (TREE_TYPE (base));
+@@ -6945,6 +7083,24 @@ gfc_get_dataptr_offset (stmtblock_t *block, tree parm, tree desc, tree offset,
  	      tmp = gfc_build_array_ref (tmp, index, NULL);
  	      break;
  
@@ -22971,7 +23695,7 @@ new file mode 100755
  	    default:
  	      gcc_unreachable ();
  	      break;
-@@ -6991,7 +7009,12 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
+@@ -6991,7 +7147,12 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
        e = gfc_constructor_first (expr->value.constructor)->expr;
  
        gfc_init_se (&tse, NULL);
@@ -22984,7 +23708,7 @@ new file mode 100755
  	gfc_conv_expr_descriptor (&tse, e);
        else
  	gfc_conv_expr (&tse, e);
-@@ -7009,14 +7032,26 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
+@@ -7009,14 +7170,26 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
        gfc_add_modify (&se->pre, expr->ts.u.cl->backend_decl,
  		      tse.string_length);
  
@@ -23013,6 +23737,378 @@ new file mode 100755
  
        expr->ts.u.cl->backend_decl =
  		gfc_create_var (gfc_charlen_type_node, "sln");
+@@ -9137,21 +9310,9 @@ structure_alloc_comps (gfc_symbol * der_type, tree decl,
+ 		 for the malloc call.  */
+ 	      if (UNLIMITED_POLY (c))
+ 		{
+-		  tree ctmp;
+ 		  gfc_add_modify (&tmpblock, gfc_class_len_get (dcmp),
+ 				  gfc_class_len_get (comp));
+-
+-		  size = gfc_evaluate_now (size, &tmpblock);
+-		  tmp = gfc_class_len_get (comp);
+-		  ctmp = fold_build2_loc (input_location, MULT_EXPR,
+-					  size_type_node, size,
+-					  fold_convert (size_type_node, tmp));
+-		  tmp = fold_build2_loc (input_location, GT_EXPR,
+-					 logical_type_node, tmp,
+-					 build_zero_cst (TREE_TYPE (tmp)));
+-		  size = fold_build3_loc (input_location, COND_EXPR,
+-					  size_type_node, tmp, ctmp, size);
+-		  size = gfc_evaluate_now (size, &tmpblock);
++		  size = gfc_resize_class_size_with_len (&tmpblock, comp, size);
+ 		}
+ 
+ 	      /* Coarray component have to have the same allocation status and
+@@ -9890,6 +10051,8 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+   tree alloc_expr;
+   tree size1;
+   tree size2;
++  tree elemsize1;
++  tree elemsize2;
+   tree array1;
+   tree cond_null;
+   tree cond;
+@@ -9905,6 +10068,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+   tree jump_label2;
+   tree neq_size;
+   tree lbd;
++  tree class_expr2 = NULL_TREE;
+   int n;
+   int dim;
+   gfc_array_spec * as;
+@@ -9969,6 +10133,114 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+   gcc_assert (GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (desc)));
+   array1 = gfc_conv_descriptor_data_get (desc);
+ 
++  if (expr2)
++    desc2 = rss->info->data.array.descriptor;
++  else
++    desc2 = NULL_TREE;
++
++  /* Get the old lhs element size for deferred character and class expr1.  */
++  if (expr1->ts.type == BT_CHARACTER && expr1->ts.deferred)
++    {
++      if (expr1->ts.u.cl->backend_decl
++	  && VAR_P (expr1->ts.u.cl->backend_decl))
++	elemsize1 = expr1->ts.u.cl->backend_decl;
++      else
++	elemsize1 = lss->info->string_length;
++    }
++  else if (expr1->ts.type == BT_CLASS)
++    {
++      tmp = expr1->rank ? gfc_get_class_from_expr (desc) : NULL_TREE;
++      if (tmp == NULL_TREE)
++	tmp = gfc_get_class_from_gfc_expr (expr1);
++
++      if (tmp != NULL_TREE)
++	{
++	  tmp2 = gfc_class_vptr_get (tmp);
++	  cond = fold_build2_loc (input_location, NE_EXPR,
++				  logical_type_node, tmp2,
++				  build_int_cst (TREE_TYPE (tmp2), 0));
++	  elemsize1 = gfc_class_vtab_size_get (tmp);
++	  elemsize1 = fold_build3_loc (input_location, COND_EXPR,
++				      gfc_array_index_type, cond,
++				      elemsize1, gfc_index_zero_node);
++	}
++      else
++	elemsize1 = TYPE_SIZE_UNIT (gfc_typenode_for_spec (&CLASS_DATA (expr1)->ts));
++    }
++  else
++    elemsize1 = NULL_TREE;
++  if (elemsize1 != NULL_TREE)
++    elemsize1 = gfc_evaluate_now (elemsize1, &fblock);
++
++  /* Get the new lhs size in bytes.  */
++  if (expr1->ts.type == BT_CHARACTER && expr1->ts.deferred)
++    {
++      if (expr2->ts.deferred)
++	{
++	  if (expr2->ts.u.cl->backend_decl
++	      && VAR_P (expr2->ts.u.cl->backend_decl))
++	    tmp = expr2->ts.u.cl->backend_decl;
++	  else
++	    tmp = rss->info->string_length;
++	}
++      else
++	{
++	  tmp = expr2->ts.u.cl->backend_decl;
++	  if (!tmp && expr2->expr_type == EXPR_OP
++	      && expr2->value.op.op == INTRINSIC_CONCAT)
++	    {
++	      tmp = concat_str_length (expr2);
++	      expr2->ts.u.cl->backend_decl = gfc_evaluate_now (tmp, &fblock);
++	    }
++	  else if (!tmp && expr2->ts.u.cl->length)
++	    {
++	      gfc_se tmpse;
++	      gfc_init_se (&tmpse, NULL);
++	      gfc_conv_expr_type (&tmpse, expr2->ts.u.cl->length,
++				  gfc_charlen_type_node);
++	      tmp = tmpse.expr;
++	      expr2->ts.u.cl->backend_decl = gfc_evaluate_now (tmp, &fblock);
++	    }
++	  tmp = fold_convert (TREE_TYPE (expr1->ts.u.cl->backend_decl), tmp);
++	}
++
++      if (expr1->ts.u.cl->backend_decl
++	  && VAR_P (expr1->ts.u.cl->backend_decl))
++	gfc_add_modify (&fblock, expr1->ts.u.cl->backend_decl, tmp);
++      else
++	gfc_add_modify (&fblock, lss->info->string_length, tmp);
++
++      if (expr1->ts.kind > 1)
++	tmp = fold_build2_loc (input_location, MULT_EXPR,
++			       TREE_TYPE (tmp),
++			       tmp, build_int_cst (TREE_TYPE (tmp),
++						   expr1->ts.kind));
++    }
++  else if (expr1->ts.type == BT_CHARACTER && expr1->ts.u.cl->backend_decl)
++    {
++      tmp = TYPE_SIZE_UNIT (TREE_TYPE (gfc_typenode_for_spec (&expr1->ts)));
++      tmp = fold_build2_loc (input_location, MULT_EXPR,
++			     gfc_array_index_type, tmp,
++			     expr1->ts.u.cl->backend_decl);
++    }
++  else if (UNLIMITED_POLY (expr1) && expr2->ts.type != BT_CLASS)
++    tmp = TYPE_SIZE_UNIT (gfc_typenode_for_spec (&expr2->ts));
++  else if (expr1->ts.type == BT_CLASS && expr2->ts.type == BT_CLASS)
++    {
++      tmp = expr2->rank ? gfc_get_class_from_expr (desc2) : NULL_TREE;
++      if (tmp == NULL_TREE && expr2->expr_type == EXPR_VARIABLE)
++	tmp = class_expr2 = gfc_get_class_from_gfc_expr (expr2);
++
++      if (tmp != NULL_TREE)
++	tmp = gfc_class_vtab_size_get (tmp);
++      else
++	tmp = TYPE_SIZE_UNIT (gfc_typenode_for_spec (&CLASS_DATA (expr2)->ts));
++    }
++  else
++    tmp = TYPE_SIZE_UNIT (gfc_typenode_for_spec (&expr2->ts));
++  elemsize2 = fold_convert (gfc_array_index_type, tmp);
++  elemsize2 = gfc_evaluate_now (elemsize2, &fblock);
++
+   /* 7.4.1.3 "If variable is an allocated allocatable variable, it is
+      deallocated if expr is an array of different shape or any of the
+      corresponding length type parameter values of variable and expr
+@@ -9988,6 +10260,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+ 			     rss->info->string_length);
+       cond_null = fold_build2_loc (input_location, TRUTH_OR_EXPR,
+ 				   logical_type_node, tmp, cond_null);
++      cond_null= gfc_evaluate_now (cond_null, &fblock);
+     }
+   else
+     cond_null= gfc_evaluate_now (cond_null, &fblock);
+@@ -10036,6 +10309,19 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+       gfc_add_expr_to_block (&fblock, tmp);
+     }
+ 
++  /* ...else if the element lengths are not the same also go to
++     setting the bounds and doing the reallocation.... */
++  if (elemsize1 != NULL_TREE)
++    {
++      cond = fold_build2_loc (input_location, NE_EXPR,
++			      logical_type_node,
++			      elemsize1, elemsize2);
++      tmp = build3_v (COND_EXPR, cond,
++		      build1_v (GOTO_EXPR, jump_label1),
++		      build_empty_stmt (input_location));
++      gfc_add_expr_to_block (&fblock, tmp);
++    }
++
+   /* ....else jump past the (re)alloc code.  */
+   tmp = build1_v (GOTO_EXPR, jump_label2);
+   gfc_add_expr_to_block (&fblock, tmp);
+@@ -10058,11 +10344,6 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+   gfc_add_expr_to_block (&fblock, tmp);
+ 
+   /* Get the rhs size and fix it.  */
+-  if (expr2)
+-    desc2 = rss->info->data.array.descriptor;
+-  else
+-    desc2 = NULL_TREE;
+-
+   size2 = gfc_index_one_node;
+   for (n = 0; n < expr2->rank; n++)
+     {
+@@ -10177,69 +10458,12 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+ 	gfc_add_modify (&fblock, linfo->delta[dim], tmp);
+     }
+ 
+-  /* Get the new lhs size in bytes.  */
+-  if (expr1->ts.type == BT_CHARACTER && expr1->ts.deferred)
+-    {
+-      if (expr2->ts.deferred)
+-	{
+-	  if (expr2->ts.u.cl->backend_decl
+-	      && VAR_P (expr2->ts.u.cl->backend_decl))
+-	    tmp = expr2->ts.u.cl->backend_decl;
+-	  else
+-	    tmp = rss->info->string_length;
+-	}
+-      else
+-	{
+-	  tmp = expr2->ts.u.cl->backend_decl;
+-	  if (!tmp && expr2->expr_type == EXPR_OP
+-	      && expr2->value.op.op == INTRINSIC_CONCAT)
+-	    {
+-	      tmp = concat_str_length (expr2);
+-	      expr2->ts.u.cl->backend_decl = gfc_evaluate_now (tmp, &fblock);
+-	    }
+-	  else if (!tmp && expr2->ts.u.cl->length)
+-	    {
+-	      gfc_se tmpse;
+-	      gfc_init_se (&tmpse, NULL);
+-	      gfc_conv_expr_type (&tmpse, expr2->ts.u.cl->length,
+-				  gfc_charlen_type_node);
+-	      tmp = tmpse.expr;
+-	      expr2->ts.u.cl->backend_decl = gfc_evaluate_now (tmp, &fblock);
+-	    }
+-	  tmp = fold_convert (TREE_TYPE (expr1->ts.u.cl->backend_decl), tmp);
+-	}
+-
+-      if (expr1->ts.u.cl->backend_decl
+-	  && VAR_P (expr1->ts.u.cl->backend_decl))
+-	gfc_add_modify (&fblock, expr1->ts.u.cl->backend_decl, tmp);
+-      else
+-	gfc_add_modify (&fblock, lss->info->string_length, tmp);
+-
+-      if (expr1->ts.kind > 1)
+-	tmp = fold_build2_loc (input_location, MULT_EXPR,
+-			       TREE_TYPE (tmp),
+-			       tmp, build_int_cst (TREE_TYPE (tmp),
+-						   expr1->ts.kind));
+-    }
+-  else if (expr1->ts.type == BT_CHARACTER && expr1->ts.u.cl->backend_decl)
+-    {
+-      tmp = TYPE_SIZE_UNIT (TREE_TYPE (gfc_typenode_for_spec (&expr1->ts)));
+-      tmp = fold_build2_loc (input_location, MULT_EXPR,
+-			     gfc_array_index_type, tmp,
+-			     expr1->ts.u.cl->backend_decl);
+-    }
+-  else if (UNLIMITED_POLY (expr1) && expr2->ts.type != BT_CLASS)
+-    tmp = TYPE_SIZE_UNIT (gfc_typenode_for_spec (&expr2->ts));
+-  else
+-    tmp = TYPE_SIZE_UNIT (gfc_typenode_for_spec (&expr1->ts));
+-  tmp = fold_convert (gfc_array_index_type, tmp);
+-
+   if (GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (desc)))
+-    gfc_conv_descriptor_span_set (&fblock, desc, tmp);
++    gfc_conv_descriptor_span_set (&fblock, desc, elemsize2);
+ 
+   size2 = fold_build2_loc (input_location, MULT_EXPR,
+ 			   gfc_array_index_type,
+-			   tmp, size2);
++			   elemsize2, size2);
+   size2 = fold_convert (size_type_node, size2);
+   size2 = fold_build2_loc (input_location, MAX_EXPR, size_type_node,
+ 			   size2, size_one_node);
+@@ -10260,27 +10484,47 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+       gfc_add_modify (&fblock, tmp,
+ 		      gfc_get_dtype_rank_type (expr1->rank,type));
+     }
+-  else if (UNLIMITED_POLY (expr1) && expr2->ts.type != BT_CLASS)
++  else if (expr1->ts.type == BT_CLASS)
+     {
+       tree type;
+       tmp = gfc_conv_descriptor_dtype (desc);
+-      type = gfc_typenode_for_spec (&expr2->ts);
++
++      if (expr2->ts.type != BT_CLASS)
++	type = gfc_typenode_for_spec (&expr2->ts);
++      else
++	type = gfc_get_character_type_len (1, elemsize2);
++
+       gfc_add_modify (&fblock, tmp,
+ 		      gfc_get_dtype_rank_type (expr2->rank,type));
+       /* Set the _len field as well...  */
+-      tmp = gfc_class_len_get (TREE_OPERAND (desc, 0));
+-      if (expr2->ts.type == BT_CHARACTER)
+-	gfc_add_modify (&fblock, tmp,
+-			fold_convert (TREE_TYPE (tmp),
+-				      TYPE_SIZE_UNIT (type)));
+-      else
+-	gfc_add_modify (&fblock, tmp,
+-			build_int_cst (TREE_TYPE (tmp), 0));
++      if (UNLIMITED_POLY (expr1))
++	{
++	  tmp = gfc_class_len_get (TREE_OPERAND (desc, 0));
++	  if (expr2->ts.type == BT_CHARACTER)
++	    gfc_add_modify (&fblock, tmp,
++			    fold_convert (TREE_TYPE (tmp),
++					  TYPE_SIZE_UNIT (type)));
++	  else
++	    gfc_add_modify (&fblock, tmp,
++			    build_int_cst (TREE_TYPE (tmp), 0));
++	}
+       /* ...and the vptr.  */
+       tmp = gfc_class_vptr_get (TREE_OPERAND (desc, 0));
+-      tmp2 = gfc_get_symbol_decl (gfc_find_vtab (&expr2->ts));
+-      tmp2 = gfc_build_addr_expr (TREE_TYPE (tmp), tmp2);
+-      gfc_add_modify (&fblock, tmp, tmp2);
++      if (expr2->ts.type == BT_CLASS && !VAR_P (desc2)
++	  && TREE_CODE (desc2) == COMPONENT_REF)
++	{
++	  tmp2 = gfc_get_class_from_expr (desc2);
++	  tmp2 = gfc_class_vptr_get (tmp2);
++	}
++      else if (expr2->ts.type == BT_CLASS && class_expr2 != NULL_TREE)
++	tmp2 = gfc_class_vptr_get (class_expr2);
++      else
++	{
++	  tmp2 = gfc_get_symbol_decl (gfc_find_vtab (&expr2->ts));
++	  tmp2 = gfc_build_addr_expr (TREE_TYPE (tmp), tmp2);
++	}
++
++      gfc_add_modify (&fblock, tmp, fold_convert (TREE_TYPE (tmp), tmp2));
+     }
+   else if (coarray && GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (desc)))
+     {
+@@ -10356,11 +10600,19 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+   gfc_add_block_to_block (&realloc_block, &caf_se.post);
+   realloc_expr = gfc_finish_block (&realloc_block);
+ 
+-  /* Only reallocate if sizes are different.  */
++  /* Reallocate if sizes or dynamic types are different.  */
++  if (elemsize1)
++    {
++      tmp = fold_build2_loc (input_location, NE_EXPR, logical_type_node,
++			     elemsize1, elemsize2);
++      tmp = gfc_evaluate_now (tmp, &fblock);
++      neq_size = fold_build2_loc (input_location, TRUTH_OR_EXPR,
++				  logical_type_node, neq_size, tmp);
++    }
+   tmp = build3_v (COND_EXPR, neq_size, realloc_expr,
+ 		  build_empty_stmt (input_location));
+-  realloc_expr = tmp;
+ 
++  realloc_expr = tmp;
+ 
+   /* Malloc expression.  */
+   gfc_init_block (&alloc_block);
+@@ -10407,11 +10659,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+   alloc_expr = gfc_finish_block (&alloc_block);
+ 
+   /* Malloc if not allocated; realloc otherwise.  */
+-  tmp = build_int_cst (TREE_TYPE (array1), 0);
+-  cond = fold_build2_loc (input_location, EQ_EXPR,
+-			  logical_type_node,
+-			  array1, tmp);
+-  tmp = build3_v (COND_EXPR, cond, alloc_expr, realloc_expr);
++  tmp = build3_v (COND_EXPR, cond_null, alloc_expr, realloc_expr);
+   gfc_add_expr_to_block (&fblock, tmp);
+ 
+   /* Make sure that the scalarizer data pointer is updated.  */
+@@ -10421,7 +10669,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+       gfc_add_modify (&fblock, linfo->data, tmp);
+     }
+ 
+-  /* Add the exit label.  */
++  /* Add the label for same shape lhs and rhs.  */
+   tmp = build1_v (LABEL_EXPR, jump_label2);
+   gfc_add_expr_to_block (&fblock, tmp);
+ 
 --- a/gcc/fortran/trans-common.c
 +++ b/gcc/fortran/trans-common.c
 @@ -242,8 +242,9 @@ static tree
@@ -23167,7 +24263,248 @@ new file mode 100755
    dump_function (TDI_original, fndecl);
 --- a/gcc/fortran/trans-expr.c
 +++ b/gcc/fortran/trans-expr.c
-@@ -7462,12 +7462,14 @@ gfc_conv_initializer (gfc_expr * expr, gfc_typespec * ts, tree type,
+@@ -257,6 +257,42 @@ gfc_class_len_or_zero_get (tree decl)
+ }
+ 
+ 
++tree
++gfc_resize_class_size_with_len (stmtblock_t * block, tree class_expr, tree size)
++{
++  tree tmp;
++  tree tmp2;
++  tree type;
++
++  tmp = gfc_class_len_or_zero_get (class_expr);
++
++  /* Include the len value in the element size if present.  */
++  if (!integer_zerop (tmp))
++    {
++      type = TREE_TYPE (size);
++      if (block)
++	{
++	  size = gfc_evaluate_now (size, block);
++	  tmp = gfc_evaluate_now (fold_convert (type , tmp), block);
++	}
++      tmp2 = fold_build2_loc (input_location, MULT_EXPR,
++			      type, size, tmp);
++      tmp = fold_build2_loc (input_location, GT_EXPR,
++			     logical_type_node, tmp,
++			     build_zero_cst (type));
++      size = fold_build3_loc (input_location, COND_EXPR,
++			      type, tmp, tmp2, size);
++    }
++  else
++    return size;
++
++  if (block)
++    size = gfc_evaluate_now (size, block);
++
++  return size;
++}
++
++
+ /* Get the specified FIELD from the VPTR.  */
+ 
+ static tree
+@@ -472,9 +508,63 @@ gfc_reset_len (stmtblock_t *block, gfc_expr *expr)
+ }
+ 
+ 
+-/* Obtain the vptr of the last class reference in an expression.
++/* Obtain the last class reference in a gfc_expr. Return NULL_TREE if no class
++   reference is found. Note that it is up to the caller to avoid using this
++   for expressions other than variables.  */
++
++tree
++gfc_get_class_from_gfc_expr (gfc_expr *e)
++{
++  gfc_expr *class_expr;
++  gfc_se cse;
++  class_expr = gfc_find_and_cut_at_last_class_ref (e);
++  if (class_expr == NULL)
++    return NULL_TREE;
++  gfc_init_se (&cse, NULL);
++  gfc_conv_expr (&cse, class_expr);
++  gfc_free_expr (class_expr);
++  return cse.expr;
++}
++
++
++/* Obtain the last class reference in an expression.
+    Return NULL_TREE if no class reference is found.  */
+ 
++tree
++gfc_get_class_from_expr (tree expr)
++{
++  tree tmp;
++  tree type;
++
++  for (tmp = expr; tmp; tmp = TREE_OPERAND (tmp, 0))
++    {
++      if (CONSTANT_CLASS_P (tmp))
++	return NULL_TREE;
++
++      type = TREE_TYPE (tmp);
++      while (type)
++	{
++	  if (GFC_CLASS_TYPE_P (type))
++	    return tmp;
++	  if (type != TYPE_CANONICAL (type))
++	    type = TYPE_CANONICAL (type);
++	  else
++	    type = NULL_TREE;
++	}
++      if (VAR_P (tmp) || TREE_CODE (tmp) == PARM_DECL)
++	break;
++    }
++
++  if (POINTER_TYPE_P (TREE_TYPE (tmp)))
++    tmp = build_fold_indirect_ref_loc (input_location, tmp);
++
++  if (GFC_CLASS_TYPE_P (TREE_TYPE (tmp)))
++    return tmp;
++
++  return NULL_TREE;
++}
++
++
+ tree
+ gfc_get_vptr_from_expr (tree expr)
+ {
+@@ -483,6 +573,9 @@ gfc_get_vptr_from_expr (tree expr)
+ 
+   for (tmp = expr; tmp; tmp = TREE_OPERAND (tmp, 0))
+     {
++      if (CONSTANT_CLASS_P (tmp))
++	return NULL_TREE;
++
+       type = TREE_TYPE (tmp);
+       while (type)
+ 	{
+@@ -1577,6 +1670,111 @@ gfc_trans_class_init_assign (gfc_code *code)
+ }
+ 
+ 
++/* Class valued elemental function calls or class array elements arriving
++   in gfc_trans_scalar_assign come here.  Wherever possible the vptr copy
++   is used to ensure that the rhs dynamic type is assigned to the lhs.  */
++
++static bool
++trans_scalar_class_assign (stmtblock_t *block, gfc_se *lse, gfc_se *rse)
++{
++  tree fcn;
++  tree rse_expr;
++  tree class_data;
++  tree tmp;
++  tree zero;
++  tree cond;
++  tree final_cond;
++  stmtblock_t inner_block;
++  bool is_descriptor;
++  bool not_call_expr = TREE_CODE (rse->expr) != CALL_EXPR;
++  bool not_lhs_array_type;
++
++  /* Temporaries arising from depencies in assignment get cast as a
++     character type of the dynamic size of the rhs. Use the vptr copy
++     for this case.  */
++  tmp = TREE_TYPE (lse->expr);
++  not_lhs_array_type = !(tmp && TREE_CODE (tmp) == ARRAY_TYPE
++			 && TYPE_MAX_VALUE (TYPE_DOMAIN (tmp)) != NULL_TREE);
++
++  /* Use ordinary assignment if the rhs is not a call expression or
++     the lhs is not a class entity or an array(ie. character) type.  */
++  if ((not_call_expr && gfc_get_class_from_expr (lse->expr) == NULL_TREE)
++      && not_lhs_array_type)
++    return false;
++
++  /* Ordinary assignment can be used if both sides are class expressions
++     since the dynamic type is preserved by copying the vptr.  This
++     should only occur, where temporaries are involved.  */
++  if (GFC_CLASS_TYPE_P (TREE_TYPE (lse->expr))
++      && GFC_CLASS_TYPE_P (TREE_TYPE (rse->expr)))
++    return false;
++
++  /* Fix the class expression and the class data of the rhs.  */
++  if (!GFC_CLASS_TYPE_P (TREE_TYPE (rse->expr))
++      || not_call_expr)
++    {
++      tmp = gfc_get_class_from_expr (rse->expr);
++      if (tmp == NULL_TREE)
++	return false;
++      rse_expr = gfc_evaluate_now (tmp, block);
++    }
++  else
++    rse_expr = gfc_evaluate_now (rse->expr, block);
++
++  class_data = gfc_class_data_get (rse_expr);
++
++  /* Check that the rhs data is not null.  */
++  is_descriptor = GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (class_data));
++  if (is_descriptor)
++    class_data = gfc_conv_descriptor_data_get (class_data);
++  class_data = gfc_evaluate_now (class_data, block);
++
++  zero = build_int_cst (TREE_TYPE (class_data), 0);
++  cond = fold_build2_loc (input_location, NE_EXPR,
++			  logical_type_node,
++			  class_data, zero);
++
++  /* Copy the rhs to the lhs.  */
++  fcn = gfc_vptr_copy_get (gfc_class_vptr_get (rse_expr));
++  fcn = build_fold_indirect_ref_loc (input_location, fcn);
++  tmp = gfc_evaluate_now (gfc_build_addr_expr (NULL, rse->expr), block);
++  tmp = is_descriptor ? tmp : class_data;
++  tmp = build_call_expr_loc (input_location, fcn, 2, tmp,
++			     gfc_build_addr_expr (NULL, lse->expr));
++  gfc_add_expr_to_block (block, tmp);
++
++  /* Only elemental function results need to be finalised and freed.  */
++  if (not_call_expr)
++    return true;
++
++  /* Finalize the class data if needed.  */
++  gfc_init_block (&inner_block);
++  fcn = gfc_vptr_final_get (gfc_class_vptr_get (rse_expr));
++  zero = build_int_cst (TREE_TYPE (fcn), 0);
++  final_cond = fold_build2_loc (input_location, NE_EXPR,
++				logical_type_node, fcn, zero);
++  fcn = build_fold_indirect_ref_loc (input_location, fcn);
++  tmp = build_call_expr_loc (input_location, fcn, 1, class_data);
++  tmp = build3_v (COND_EXPR, final_cond,
++		  tmp, build_empty_stmt (input_location));
++  gfc_add_expr_to_block (&inner_block, tmp);
++
++  /* Free the class data.  */
++  tmp = gfc_call_free (class_data);
++  tmp = build3_v (COND_EXPR, cond, tmp,
++		  build_empty_stmt (input_location));
++  gfc_add_expr_to_block (&inner_block, tmp);
++
++  /* Finish the inner block and subject it to the condition on the
++     class data being non-zero.  */
++  tmp = gfc_finish_block (&inner_block);
++  tmp = build3_v (COND_EXPR, cond, tmp,
++		  build_empty_stmt (input_location));
++  gfc_add_expr_to_block (block, tmp);
++
++  return true;
++}
++
+ /* End of prototype trans-class.c  */
+ 
+ 
+@@ -5372,8 +5570,10 @@ gfc_conv_procedure_call (gfc_se * se, gfc_symbol * sym,
+ 	{
+ 	  /* The intrinsic type needs to be converted to a temporary
+ 	     CLASS object for the unlimited polymorphic formal.  */
++	  gfc_find_vtab (&e->ts);
+ 	  gfc_init_se (&parmse, se);
+ 	  gfc_conv_intrinsic_to_class (&parmse, e, fsym->ts);
++
+ 	}
+       else if (se->ss && se->ss->info->useflags)
+ 	{
+@@ -7462,12 +7662,14 @@ gfc_conv_initializer (gfc_expr * expr, gfc_typespec * ts, tree type,
  	  return se.expr;
  
  	case BT_CHARACTER:
@@ -23187,7 +24524,7 @@ new file mode 100755
  	default:
  	  gfc_init_se (&se, NULL);
  	  gfc_conv_constant (&se, expr);
-@@ -8558,6 +8560,7 @@ gfc_conv_expr_reference (gfc_se * se, gfc_expr * expr, bool add_clobber)
+@@ -8558,6 +8760,7 @@ gfc_conv_expr_reference (gfc_se * se, gfc_expr * expr, bool add_clobber)
  
    if (expr->expr_type == EXPR_FUNCTION
        && ((expr->value.function.esym
@@ -23195,6 +24532,242 @@ new file mode 100755
  	   && expr->value.function.esym->result->attr.pointer
  	   && !expr->value.function.esym->result->attr.dimension)
  	  || (!expr->value.function.esym && !expr->ref
+@@ -8645,14 +8848,32 @@ trans_class_vptr_len_assignment (stmtblock_t *block, gfc_expr * le,
+   tree tmp, to_len = NULL_TREE, from_len = NULL_TREE, lhs_vptr;
+   bool set_vptr = false, temp_rhs = false;
+   stmtblock_t *pre = block;
++  tree class_expr = NULL_TREE;
+ 
+   /* Create a temporary for complicated expressions.  */
+   if (re->expr_type != EXPR_VARIABLE && re->expr_type != EXPR_NULL
+       && rse->expr != NULL_TREE && !DECL_P (rse->expr))
+     {
+-      tmp = gfc_create_var (TREE_TYPE (rse->expr), "rhs");
+-      pre = &rse->pre;
+-      gfc_add_modify (&rse->pre, tmp, rse->expr);
++      if (re->ts.type == BT_CLASS && !GFC_CLASS_TYPE_P (TREE_TYPE (rse->expr)))
++	class_expr = gfc_get_class_from_expr (rse->expr);
++
++      if (rse->loop)
++	pre = &rse->loop->pre;
++      else
++	pre = &rse->pre;
++
++      if (class_expr != NULL_TREE && UNLIMITED_POLY (re))
++	{
++	  tmp = TREE_OPERAND (rse->expr, 0);
++	  tmp = gfc_create_var (TREE_TYPE (tmp), "rhs");
++	  gfc_add_modify (&rse->pre, tmp, TREE_OPERAND (rse->expr, 0));
++	}
++      else
++	{
++	  tmp = gfc_create_var (TREE_TYPE (rse->expr), "rhs");
++	  gfc_add_modify (&rse->pre, tmp, rse->expr);
++	}
++
+       rse->expr = tmp;
+       temp_rhs = true;
+     }
+@@ -8720,9 +8941,17 @@ trans_class_vptr_len_assignment (stmtblock_t *block, gfc_expr * le,
+ 	  else if (temp_rhs && re->ts.type == BT_CLASS)
+ 	    {
+ 	      vptr_expr = NULL;
+-	      se.expr = gfc_class_vptr_get (rse->expr);
++	      if (class_expr)
++		tmp = class_expr;
++	      else if (!GFC_CLASS_TYPE_P (TREE_TYPE (rse->expr)))
++		tmp = gfc_get_class_from_expr (rse->expr);
++	      else
++		tmp = rse->expr;
++
++	      se.expr = gfc_class_vptr_get (tmp);
+ 	      if (UNLIMITED_POLY (re))
+-		from_len = gfc_class_len_get (rse->expr);
++		from_len = gfc_class_len_get (tmp);
++
+ 	    }
+ 	  else if (re->expr_type != EXPR_NULL)
+ 	    /* Only when rhs is non-NULL use its declared type for vptr
+@@ -9461,7 +9690,7 @@ gfc_trans_scalar_assign (gfc_se * lse, gfc_se * rse, gfc_typespec ts,
+ 	  gfc_add_expr_to_block (&block, tmp);
+ 	}
+     }
+-  else if (gfc_bt_struct (ts.type) || ts.type == BT_CLASS)
++  else if (gfc_bt_struct (ts.type))
+     {
+       gfc_add_block_to_block (&block, &lse->pre);
+       gfc_add_block_to_block (&block, &rse->pre);
+@@ -9469,7 +9698,20 @@ gfc_trans_scalar_assign (gfc_se * lse, gfc_se * rse, gfc_typespec ts,
+ 			     TREE_TYPE (lse->expr), rse->expr);
+       gfc_add_modify (&block, lse->expr, tmp);
+     }
+-  else
++  /* If possible use the rhs vptr copy with trans_scalar_class_assign....  */
++  else if (ts.type == BT_CLASS
++	   && !trans_scalar_class_assign (&block, lse, rse))
++    {
++      gfc_add_block_to_block (&block, &lse->pre);
++      gfc_add_block_to_block (&block, &rse->pre);
++      /* ...otherwise assignment suffices. Note the use of VIEW_CONVERT_EXPR
++	 for the lhs which ensures that class data rhs cast as a string assigns
++	 correctly.  */
++      tmp = fold_build1_loc (input_location, VIEW_CONVERT_EXPR,
++			     TREE_TYPE (rse->expr), lse->expr);
++      gfc_add_modify (&block, tmp, rse->expr);
++    }
++  else if (ts.type != BT_CLASS)
+     {
+       gfc_add_block_to_block (&block, &lse->pre);
+       gfc_add_block_to_block (&block, &rse->pre);
+@@ -10366,23 +10608,53 @@ trans_class_assignment (stmtblock_t *block, gfc_expr *lhs, gfc_expr *rhs,
+ 			gfc_se *lse, gfc_se *rse, bool use_vptr_copy,
+ 			bool class_realloc)
+ {
+-  tree tmp, fcn, stdcopy, to_len, from_len, vptr;
++  tree tmp, fcn, stdcopy, to_len, from_len, vptr, old_vptr;
+   vec<tree, va_gc> *args = NULL;
+ 
++  /* Store the old vptr so that dynamic types can be compared for
++     reallocation to occur or not.  */
++  if (class_realloc)
++    {
++      tmp = lse->expr;
++      if (!GFC_CLASS_TYPE_P (TREE_TYPE (tmp)))
++	tmp = gfc_get_class_from_expr (tmp);
++    }
++
+   vptr = trans_class_vptr_len_assignment (block, lhs, rhs, rse, &to_len,
+ 					 &from_len);
+ 
+-  /* Generate allocation of the lhs.  */
++  /* Generate (re)allocation of the lhs.  */
+   if (class_realloc)
+     {
+-      stmtblock_t alloc;
+-      tree class_han;
++      stmtblock_t alloc, re_alloc;
++      tree class_han, re, size;
++
++      if (tmp && GFC_CLASS_TYPE_P (TREE_TYPE (tmp)))
++	old_vptr = gfc_evaluate_now (gfc_class_vptr_get (tmp), block);
++      else
++	old_vptr = build_int_cst (TREE_TYPE (vptr), 0);
+ 
+-      tmp = gfc_vptr_size_get (vptr);
++      size = gfc_vptr_size_get (vptr);
+       class_han = GFC_CLASS_TYPE_P (TREE_TYPE (lse->expr))
+ 	  ? gfc_class_data_get (lse->expr) : lse->expr;
++
++      /* Allocate block.  */
+       gfc_init_block (&alloc);
+-      gfc_allocate_using_malloc (&alloc, class_han, tmp, NULL_TREE);
++      gfc_allocate_using_malloc (&alloc, class_han, size, NULL_TREE);
++
++      /* Reallocate if dynamic types are different. */
++      gfc_init_block (&re_alloc);
++      re = build_call_expr_loc (input_location,
++				builtin_decl_explicit (BUILT_IN_REALLOC), 2,
++				fold_convert (pvoid_type_node, class_han),
++				size);
++      tmp = fold_build2_loc (input_location, NE_EXPR,
++			     logical_type_node, vptr, old_vptr);
++      re = fold_build3_loc (input_location, COND_EXPR, void_type_node,
++			    tmp, re, build_empty_stmt (input_location));
++      gfc_add_expr_to_block (&re_alloc, re);
++
++      /* Allocate if _data is NULL, reallocate otherwise.  */
+       tmp = fold_build2_loc (input_location, EQ_EXPR,
+ 			     logical_type_node, class_han,
+ 			     build_int_cst (prvoid_type_node, 0));
+@@ -10390,7 +10662,7 @@ trans_class_assignment (stmtblock_t *block, gfc_expr *lhs, gfc_expr *rhs,
+ 			     gfc_unlikely (tmp,
+ 					   PRED_FORTRAN_FAIL_ALLOC),
+ 			     gfc_finish_block (&alloc),
+-			     build_empty_stmt (input_location));
++			     gfc_finish_block (&re_alloc));
+       gfc_add_expr_to_block (&lse->pre, tmp);
+     }
+ 
+@@ -10493,6 +10765,7 @@ gfc_trans_assignment_1 (gfc_expr * expr1, gfc_expr * expr2, bool init_flag,
+   bool maybe_workshare = false, lhs_refs_comp = false, rhs_refs_comp = false;
+   symbol_attribute lhs_caf_attr, rhs_caf_attr, lhs_attr;
+   bool is_poly_assign;
++  bool realloc_flag;
+ 
+   /* Assignment of the form lhs = rhs.  */
+   gfc_start_block (&block);
+@@ -10533,6 +10806,10 @@ gfc_trans_assignment_1 (gfc_expr * expr1, gfc_expr * expr2, bool init_flag,
+ 		       || gfc_is_class_array_ref (expr2, NULL)
+ 		       || gfc_is_class_scalar_expr (expr2));
+ 
++  realloc_flag = flag_realloc_lhs
++		 && gfc_is_reallocatable_lhs (expr1)
++		 && expr2->rank
++		 && !is_runtime_conformable (expr1, expr2);
+ 
+   /* Only analyze the expressions for coarray properties, when in coarray-lib
+      mode.  */
+@@ -10776,10 +11053,24 @@ gfc_trans_assignment_1 (gfc_expr * expr1, gfc_expr * expr2, bool init_flag,
+   tmp = NULL_TREE;
+ 
+   if (is_poly_assign)
+-    tmp = trans_class_assignment (&body, expr1, expr2, &lse, &rse,
+-				  use_vptr_copy || (lhs_attr.allocatable
+-						    && !lhs_attr.dimension),
+-				  flag_realloc_lhs && !lhs_attr.pointer);
++    {
++      tmp = trans_class_assignment (&body, expr1, expr2, &lse, &rse,
++				    use_vptr_copy || (lhs_attr.allocatable
++						      && !lhs_attr.dimension),
++				    !realloc_flag && flag_realloc_lhs
++				    && !lhs_attr.pointer);
++      if (expr2->expr_type == EXPR_FUNCTION
++	  && expr2->ts.type == BT_DERIVED
++	  && expr2->ts.u.derived->attr.alloc_comp)
++	{
++	  tree tmp2 = gfc_deallocate_alloc_comp (expr2->ts.u.derived,
++						 rse.expr, expr2->rank);
++	  if (lss == gfc_ss_terminator)
++	    gfc_add_expr_to_block (&rse.post, tmp2);
++	  else
++	    gfc_add_expr_to_block (&loop.post, tmp2);
++	}
++    }
+   else if (flag_coarray == GFC_FCOARRAY_LIB
+ 	   && lhs_caf_attr.codimension && rhs_caf_attr.codimension
+ 	   && ((lhs_caf_attr.allocatable && lhs_refs_comp)
+@@ -10809,7 +11100,8 @@ gfc_trans_assignment_1 (gfc_expr * expr1, gfc_expr * expr2, bool init_flag,
+     {
+       /* This case comes about when the scalarizer provides array element
+ 	 references. Use the vptr copy function, since this does a deep
+-	 copy of allocatable components, without which the finalizer call */
++	 copy of allocatable components, without which the finalizer call
++	 will deallocate the components.  */
+       tmp = gfc_get_vptr_from_expr (rse.expr);
+       if (tmp != NULL_TREE)
+ 	{
+@@ -10884,10 +11176,7 @@ gfc_trans_assignment_1 (gfc_expr * expr1, gfc_expr * expr2, bool init_flag,
+ 	}
+ 
+       /* F2003: Allocate or reallocate lhs of allocatable array.  */
+-      if (flag_realloc_lhs
+-	  && gfc_is_reallocatable_lhs (expr1)
+-	  && expr2->rank
+-	  && !is_runtime_conformable (expr1, expr2))
++      if (realloc_flag)
+ 	{
+ 	  realloc_lhs_warning (expr1->ts.type, true, &expr1->where);
+ 	  ompws_flags &= ~OMPWS_SCALARIZER_WS;
+@@ -10996,8 +11285,7 @@ gfc_trans_assignment (gfc_expr * expr1, gfc_expr * expr2, bool init_flag,
+ 	return tmp;
+     }
+ 
+-  if (UNLIMITED_POLY (expr1) && expr1->rank
+-      && expr2->ts.type != BT_CLASS)
++  if (UNLIMITED_POLY (expr1) && expr1->rank)
+     use_vptr_copy = true;
+ 
+   /* Fallback to the scalarizer to generate explicit loops.  */
 --- a/gcc/fortran/trans-intrinsic.c
 +++ b/gcc/fortran/trans-intrinsic.c
 @@ -4861,6 +4861,24 @@ gfc_conv_intrinsic_dot_product (gfc_se * se, gfc_expr * expr)
@@ -23272,6 +24845,43 @@ new file mode 100755
      return need_temp;
  
    new_symtree = NULL;
+--- a/gcc/fortran/trans.c
++++ b/gcc/fortran/trans.c
+@@ -417,7 +417,14 @@ gfc_build_array_ref (tree base, tree offset, tree decl, tree vptr)
+   /* If decl or vptr are non-null, pointer arithmetic for the array reference
+      is likely. Generate the 'span' for the array reference.  */
+   if (vptr)
+-    span = gfc_vptr_size_get (vptr);
++    {
++      span = gfc_vptr_size_get (vptr);
++
++      /* Check if this is an unlimited polymorphic object carrying a character
++	 payload. In this case, the 'len' field is non-zero.  */
++      if (decl && GFC_CLASS_TYPE_P (TREE_TYPE (decl)))
++	span = gfc_resize_class_size_with_len (NULL, decl, span);
++    }
+   else if (decl)
+     span = get_array_span (type, decl);
+ 
+--- a/gcc/fortran/trans.h
++++ b/gcc/fortran/trans.h
+@@ -415,6 +415,7 @@ tree gfc_class_data_get (tree);
+ tree gfc_class_vptr_get (tree);
+ tree gfc_class_len_get (tree);
+ tree gfc_class_len_or_zero_get (tree);
++tree gfc_resize_class_size_with_len (stmtblock_t *, tree, tree);
+ gfc_expr * gfc_find_and_cut_at_last_class_ref (gfc_expr *, bool is_mold = false);
+ /* Get an accessor to the class' vtab's * field, when a class handle is
+    available.  */
+@@ -434,6 +435,8 @@ tree gfc_vptr_final_get (tree);
+ tree gfc_vptr_deallocate_get (tree);
+ void gfc_reset_vptr (stmtblock_t *, gfc_expr *);
+ void gfc_reset_len (stmtblock_t *, gfc_expr *);
++tree gfc_get_class_from_gfc_expr (gfc_expr *);
++tree gfc_get_class_from_expr (tree);
+ tree gfc_get_vptr_from_expr (tree);
+ tree gfc_get_class_array_ref (tree, tree, tree, bool);
+ tree gfc_copy_class_to_class (tree, tree, tree, bool);
 --- a/gcc/gcov-io.c
 +++ b/gcc/gcov-io.c
 @@ -48,6 +48,7 @@ struct gcov_var
@@ -24175,6 +25785,16 @@ new file mode 100755
      warning (OPT_Wpadded, "padding struct size to alignment boundary");
  
    if (warn_packed && TREE_CODE (rli->t) == RECORD_TYPE
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
 new file mode 100644
 new file mode 100644
 new file mode 100644
@@ -26027,6 +27647,18 @@ new file mode 100644
    unsigned HOST_WIDE_INT fieldsize
      = int_size_in_bytes (TREE_TYPE (local->type));
  
+--- a/gcc/wide-int.h
++++ b/gcc/wide-int.h
+@@ -3032,8 +3032,7 @@ wi::lshift (const T1 &x, const T2 &y)
+       if (STATIC_CONSTANT_P (xi.precision > HOST_BITS_PER_WIDE_INT)
+ 	  ? (STATIC_CONSTANT_P (shift < HOST_BITS_PER_WIDE_INT - 1)
+ 	     && xi.len == 1
+-	     && xi.val[0] <= (HOST_WIDE_INT) ((unsigned HOST_WIDE_INT)
+-					      HOST_WIDE_INT_MAX >> shift))
++	     && IN_RANGE (xi.val[0], 0, HOST_WIDE_INT_MAX >> shift))
+ 	  : precision <= HOST_BITS_PER_WIDE_INT)
+ 	{
+ 	  val[0] = xi.ulow () << shift;
 --- a/include/ChangeLog
 +++ b/include/ChangeLog
 @@ -1,3 +1,13 @@
@@ -26100,7 +27732,17 @@ new file mode 100644
        /* No need for fwait, exception is triggered by emitted fstp.  */
 --- a/libgcc/ChangeLog
 +++ b/libgcc/ChangeLog
-@@ -1,3 +1,146 @@
+@@ -1,3 +1,156 @@
++2021-01-13  Samuel Thibault  <samuel.thibault@gnu.org>
++
++	Backported from master:
++	2021-01-13  Samuel Thibault  <samuel.thibault@gnu.org>
++
++	* config/i386/gnu-unwind.h (x86_gnu_fallback_frame_state): Add the
++	posix siginfo case to struct handler_args. Detect between legacy
++	and siginfo from the second parameter, which is a small sigcode in
++	the legacy case, and a pointer in the siginfo case.
++
 +2020-08-07  Jakub Jelinek  <jakub@redhat.com>
 +
 +	Backported from master:
@@ -26836,7 +28478,7 @@ new file mode 100644
 new file mode 100644
 --- /dev/null
 +++ b/libgcc/config/i386/gnu-unwind.h
-@@ -0,0 +1,107 @@
+@@ -0,0 +1,141 @@
 +/* DWARF2 EH unwinding support for GNU Hurd: x86.
 +   Copyright (C) 2020 Free Software Foundation, Inc.
 +   Contributed by Samuel Thibault <samuel.thibault@gnu.org>
@@ -26877,10 +28519,21 @@ new file mode 100644
 +{
 +  struct handler_args {
 +    int signo;
-+    int sigcode;
-+    struct sigcontext *scp;
++    union
++      {
++	struct
++	  {
++	    long int sigcode;
++	    struct sigcontext *scp;
++	  } legacy;
++	struct
++	  {
++	    siginfo_t *siginfop;
++	    ucontext_t *uctxp;
++	  } posix;
++      };
 +  } *handler_args;
-+  struct sigcontext *scp;
++  long int sigcode;
 +  unsigned long usp;
 +
 +/*
@@ -26914,29 +28567,52 @@ new file mode 100644
 +    return _URC_END_OF_STACK;
 +
 +  handler_args = context->cfa;
-+  scp = handler_args->scp;
-+  usp = scp->sc_uesp;
++  sigcode = handler_args->legacy.sigcode;
++  if (sigcode >= -16 && sigcode < 4096)
++    {
++      /* This cannot be a SIGINFO pointer, assume legacy.  */
++      struct sigcontext *scp = handler_args->legacy.scp;
++      usp = scp->sc_uesp;
++
++      fs->regs.reg[0].loc.offset = (unsigned long)&scp->sc_eax - usp;
++      fs->regs.reg[1].loc.offset = (unsigned long)&scp->sc_ecx - usp;
++      fs->regs.reg[2].loc.offset = (unsigned long)&scp->sc_edx - usp;
++      fs->regs.reg[3].loc.offset = (unsigned long)&scp->sc_ebx - usp;
++      fs->regs.reg[5].loc.offset = (unsigned long)&scp->sc_ebp - usp;
++      fs->regs.reg[6].loc.offset = (unsigned long)&scp->sc_esi - usp;
++      fs->regs.reg[7].loc.offset = (unsigned long)&scp->sc_edi - usp;
++      fs->regs.reg[8].loc.offset = (unsigned long)&scp->sc_eip - usp;
++    }
++  else
++    {
++      /* This is not a valid sigcode, assume SIGINFO.  */
++      ucontext_t *uctxp = handler_args->posix.uctxp;
++      gregset_t *gregset = &uctxp->uc_mcontext.gregs;
++      usp = (*gregset)[REG_UESP];
++
++      fs->regs.reg[0].loc.offset = (unsigned long)&(*gregset)[REG_EAX] - usp;
++      fs->regs.reg[1].loc.offset = (unsigned long)&(*gregset)[REG_ECX] - usp;
++      fs->regs.reg[2].loc.offset = (unsigned long)&(*gregset)[REG_EDX] - usp;
++      fs->regs.reg[3].loc.offset = (unsigned long)&(*gregset)[REG_EBX] - usp;
++      fs->regs.reg[5].loc.offset = (unsigned long)&(*gregset)[REG_EBP] - usp;
++      fs->regs.reg[6].loc.offset = (unsigned long)&(*gregset)[REG_ESI] - usp;
++      fs->regs.reg[7].loc.offset = (unsigned long)&(*gregset)[REG_EDI] - usp;
++      fs->regs.reg[8].loc.offset = (unsigned long)&(*gregset)[REG_EIP] - usp;
++    }
 +
 +  fs->regs.cfa_how = CFA_REG_OFFSET;
 +  fs->regs.cfa_reg = 4;
 +  fs->regs.cfa_offset = usp - (unsigned long) context->cfa;
 +
 +  fs->regs.reg[0].how = REG_SAVED_OFFSET;
-+  fs->regs.reg[0].loc.offset = (unsigned long)&scp->sc_eax - usp;
 +  fs->regs.reg[1].how = REG_SAVED_OFFSET;
-+  fs->regs.reg[1].loc.offset = (unsigned long)&scp->sc_ecx - usp;
 +  fs->regs.reg[2].how = REG_SAVED_OFFSET;
-+  fs->regs.reg[2].loc.offset = (unsigned long)&scp->sc_edx - usp;
 +  fs->regs.reg[3].how = REG_SAVED_OFFSET;
-+  fs->regs.reg[3].loc.offset = (unsigned long)&scp->sc_ebx - usp;
 +  fs->regs.reg[5].how = REG_SAVED_OFFSET;
-+  fs->regs.reg[5].loc.offset = (unsigned long)&scp->sc_ebp - usp;
 +  fs->regs.reg[6].how = REG_SAVED_OFFSET;
-+  fs->regs.reg[6].loc.offset = (unsigned long)&scp->sc_esi - usp;
 +  fs->regs.reg[7].how = REG_SAVED_OFFSET;
-+  fs->regs.reg[7].loc.offset = (unsigned long)&scp->sc_edi - usp;
 +  fs->regs.reg[8].how = REG_SAVED_OFFSET;
-+  fs->regs.reg[8].loc.offset = (unsigned long)&scp->sc_eip - usp;
++
 +  fs->retaddr_column = 8;
 +  fs->signal_frame = 1;
 +
@@ -33710,7 +35386,122 @@ new file mode 100644
    ucontext_t *ucontext = (ucontext_t*)context;
 --- a/libstdc++-v3/ChangeLog
 +++ b/libstdc++-v3/ChangeLog
-@@ -1,3 +1,670 @@
+@@ -1,3 +1,785 @@
++2021-01-13  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2021-01-13  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/98605
++	* include/std/mutex (call_once): Use NOLINT to suppress clang
++	analyzer warnings.
++
++2021-01-11  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-09-24  Jonathan Wakely  <jwakely@redhat.com>
++
++	* doc/xml/manual/configure.xml: Correct name of option.
++	* doc/html/*: Regenerate.
++
++2021-01-11  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-12-02  Jonathan Wakely  <jwakely@redhat.com>
++
++	* python/libstdcxx/v6/printers.py (StdExpPathPrinter): Store the
++	name of the type and pass it to the iterator.
++	(StdPathPrinter): Likewise.
++	* testsuite/libstdc++-prettyprinters/filesystem-ts.cc: New test.
++
++2021-01-11  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-12-16  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/96083
++	* include/ext/throw_allocator.h: Use __has_builtin to check for
++	__builtin_sprintf support, and use std::sprintf if necessary.
++
++2021-01-11  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-12-02  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/65480
++	PR libstdc++/68735
++	* python/libstdcxx/v6/printers.py (function_pointer_to_name):
++	New helper function to get the name of a function from its
++	address.
++	(StdExpAnyPrinter.__init__): Use it.
++
++2021-01-11  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-08-10  Jonathan Wakely  <jwakely@redhat.com>
++
++	* python/libstdcxx/v6/printers.py (UniquePointerPrinter.__init__):
++	Use gdb.Type.strip_typedefs().
++	* testsuite/libstdc++-prettyprinters/compat.cc: Use a typedef in
++	the emulated old type.
++
++2021-01-11  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2019-05-14  Jonathan Wakely  <jwakely@redhat.com>
++
++	* python/libstdcxx/v6/printers.py (UniquePointerPrinter.__init__): Do
++	not assume field called _M_head_impl is the first tuple element.
++	* testsuite/libstdc++-prettyprinters/compat.cc: Make tuple
++	implementation more accurate.
++	* testsuite/libstdc++-prettyprinters/cxx11.cc: Check unique_ptr with
++	empty pointer type and non-empty deleter.
++
++2021-01-11  François Dumont  <fdumont@gcc.gnu.org>
++
++	Backported from master:
++	2019-12-20  François Dumont  <fdumont@gcc.gnu.org>
++
++	* python/libstdcxx/v6/printers.py (lookup_node_type): Remove redundant
++	call to lookup_node_type.
++	* testsuite/libstdc++-prettyprinters/80276.cc: Define
++	_GLIBCXX_USE_CXX11_ABI to 0.
++	* testsuite/libstdc++-prettyprinters/91997.cc: Use regexp-test to check
++	'a' content.
++
++2021-01-11  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2019-11-29  Jonathan Wakely  <jwakely@redhat.com>
++
++	PR libstdc++/91997
++	* python/libstdcxx/v6/printers.py (find_type): Fail more gracefully
++	if we run out of base classes to look at.
++	(llokup_templ_spec, lookup_node_type): New utilities to find node
++	types for node-based containers.
++	(StdListPrinter.children, NodeIteratorPrinter.__init__)
++	(NodeIteratorPrinter.to_string, StdSlistPrinter.children)
++	(StdSlistIteratorPrinter.to_string, StdRbtreeIteratorPrinter.__init__)
++	(StdMapPrinter.children, StdSetPrinter.children)
++	(StdForwardListPrinter.children): Use lookup_node_type instead of
++	find_type.
++	(StdListIteratorPrinter.__init__, StdFwdListIteratorPrinter.__init__):
++	Pass name of node type to NodeIteratorPrinter constructor.
++	(Tr1HashtableIterator.__init__): Rename argument.
++	(StdHashtableIterator.__init__): Likewise. Use lookup_templ_spec
++	instead of find_type.
++	* testsuite/libstdc++-prettyprinters/59161.cc: Remove workaround for
++	_Node typedef not being present in debuginfo.
++	* testsuite/libstdc++-prettyprinters/91997.cc: New test.
++
++2021-01-11  Jonathan Wakely  <jwakely@redhat.com>
++
++	Backported from master:
++	2020-07-31  Jonathan Wakely  <jwakely@redhat.com>
++
++	* testsuite/experimental/filesystem/filesystem_error/cons.cc:
++	Remove -std=gnu++17 option.
++
 +2020-11-26  Jonathan Wakely  <jwakely@redhat.com>
 +
 +	Backported from master:
@@ -37316,6 +39107,18 @@ new file mode 100644
      __GXX_ABI_VERSION. This macro is defined as the version of the
      compiler v3 ABI, with g++ 3.0 being version 100. This macro will
      be automatically defined whenever g++ is used (the curious can
+--- a/libstdc++-v3/doc/html/manual/configure.html
++++ b/libstdc++-v3/doc/html/manual/configure.html
+@@ -110,7 +110,8 @@
+ 	the build directory, will do much the same thing, without the
+ 	configuration difference and without building everything twice:
+ 	<code class="code">make CXXFLAGS='-g3 -O0 -fno-inline' all</code>
+-     </p></dd><dt><span class="term"><code class="code">--enable-libstdcxx-debug-flags=FLAGS</code></span></dt><dd><p>This option is only valid when <code class="code"> --enable-debug </code>
++     </p></dd><dt><span class="term"><code class="code">--enable-libstdcxx-debug-flags=FLAGS</code></span></dt><dd><p>This option is only valid when
++	<code class="code">--enable-libstdcxx-debug</code>
+ 	is also specified, and applies to the debug builds only. With
+ 	this option, you can pass a specific string of flags to the
+ 	compiler to use when building the debug versions of libstdc++.
 --- a/libstdc++-v3/doc/html/manual/status.html
 +++ b/libstdc++-v3/doc/html/manual/status.html
 @@ -5,7 +5,7 @@
@@ -38008,6 +39811,18 @@ new file mode 100644
      </itemizedlist>
      </listitem>
  
+--- a/libstdc++-v3/doc/xml/manual/configure.xml
++++ b/libstdc++-v3/doc/xml/manual/configure.xml
+@@ -198,7 +198,8 @@
+ 
+  <varlistentry><term><code>--enable-libstdcxx-debug-flags=FLAGS</code></term>
+ 
+- <listitem><para>This option is only valid when <code> --enable-debug </code>
++ <listitem><para>This option is only valid when
++	<code>--enable-libstdcxx-debug</code>
+ 	is also specified, and applies to the debug builds only. With
+ 	this option, you can pass a specific string of flags to the
+ 	compiler to use when building the debug versions of libstdc++.
 --- a/libstdc++-v3/doc/xml/manual/status_cxx1998.xml
 +++ b/libstdc++-v3/doc/xml/manual/status_cxx1998.xml
 @@ -18,7 +18,7 @@ This status table is based on the table of contents of ISO/IEC 14882:2003.
@@ -40883,6 +42698,64 @@ new file mode 100644
  
 -#endif 
 +#endif
+--- a/libstdc++-v3/include/ext/throw_allocator.h
++++ b/libstdc++-v3/include/ext/throw_allocator.h
+@@ -63,6 +63,13 @@
+ # include <tr1/random>
+ #endif
+ 
++#ifdef __has_builtin
++# if !__has_builtin(__builtin_sprintf)
++#  include <cstdio>
++#  define _GLIBCXX_NO_BUILTIN_SPRINTF
++# endif
++#endif
++
+ namespace __gnu_cxx _GLIBCXX_VISIBILITY(default)
+ {
+ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+@@ -309,6 +316,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+     static void
+     log_to_string(std::string& s, const_reference ref)
+     {
++#ifdef _GLIBCXX_NO_BUILTIN_SPRINTF
++      __typeof__(&std::sprintf) __builtin_sprintf = &std::sprintf;
++#endif
++
+       char buf[40];
+       const char tab('\t');
+       s += "label: ";
+@@ -331,6 +342,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+     static void
+     log_to_string(std::string& s, const std::pair<const void*, size_t>& ref)
+     {
++#ifdef _GLIBCXX_NO_BUILTIN_SPRINTF
++      auto __builtin_sprintf = &std::sprintf;
++#endif
++
+       char buf[40];
+       const char tab('\t');
+       s += "label: ";
+@@ -565,6 +580,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+       static gen_t generator(engine(), distribution);
+ #endif
+ 
++#ifdef _GLIBCXX_NO_BUILTIN_SPRINTF
++      __typeof__(&std::sprintf) __builtin_sprintf = &std::sprintf;
++#endif
++
+       double random = generator();
+       if (random < distribution.min() || random > distribution.max())
+ 	{
+@@ -945,6 +964,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+ _GLIBCXX_END_NAMESPACE_VERSION
+ } // namespace
+ 
++#undef _GLIBCXX_NO_BUILTIN_SPRINTF
++
+ #if __cplusplus >= 201103L
+ 
+ # include <bits/functional_hash.h>
 --- a/libstdc++-v3/include/std/bit
 +++ b/libstdc++-v3/include/std/bit
 @@ -250,6 +250,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -41054,6 +42927,30 @@ new file mode 100644
    template<typename _Tp = std::byte>
      class polymorphic_allocator;
  #endif
+--- a/libstdc++-v3/include/std/mutex
++++ b/libstdc++-v3/include/std/mutex
+@@ -672,7 +672,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+ 			std::forward<_Args>(__args)...);
+       };
+ #ifdef _GLIBCXX_HAVE_TLS
+-      __once_callable = std::__addressof(__callable);
++      __once_callable = std::__addressof(__callable); // NOLINT: PR 82481
+       __once_call = []{ (*(decltype(__callable)*)__once_callable)(); };
+ #else
+       unique_lock<mutex> __functor_lock(__get_once_mutex());
+@@ -687,12 +687,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+         __set_once_functor_lock_ptr(0);
+ #endif
+ 
+-#ifdef __clang_analyzer__
+-      // PR libstdc++/82481
+-      __once_callable = nullptr;
+-      __once_call = nullptr;
+-#endif
+-
+       if (__e)
+ 	__throw_system_error(__e);
+     }
 --- a/libstdc++-v3/include/std/numeric
 +++ b/libstdc++-v3/include/std/numeric
 @@ -60,6 +60,7 @@
@@ -41681,6 +43578,386 @@ new file mode 100644
  #endif // C++2a
  #endif // C++17
  #endif // C++14
+--- a/libstdc++-v3/python/libstdcxx/v6/printers.py
++++ b/libstdc++-v3/python/libstdcxx/v6/printers.py
+@@ -94,13 +94,77 @@ def find_type(orig, name):
+         # The type was not found, so try the superclass.  We only need
+         # to check the first superclass, so we don't bother with
+         # anything fancier here.
+-        field = typ.fields()[0]
+-        if not field.is_base_class:
++        fields = typ.fields()
++        if len(fields) and fields[0].is_base_class:
++            typ = fields[0].type
++        else:
+             raise ValueError("Cannot find type %s::%s" % (str(orig), name))
+-        typ = field.type
+ 
+ _versioned_namespace = '__8::'
+ 
++def lookup_templ_spec(templ, *args):
++    """
++    Lookup template specialization templ<args...>
++    """
++    t = '{}<{}>'.format(templ, ', '.join([str(a) for a in args]))
++    try:
++        return gdb.lookup_type(t)
++    except gdb.error as e:
++        # Type not found, try again in versioned namespace.
++        global _versioned_namespace
++        if _versioned_namespace and _versioned_namespace not in templ:
++            t = t.replace('::', '::' + _versioned_namespace, 1)
++            try:
++                return gdb.lookup_type(t)
++            except gdb.error:
++                # If that also fails, rethrow the original exception
++                pass
++        raise e
++
++# Use this to find container node types instead of find_type,
++# see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91997 for details.
++def lookup_node_type(nodename, containertype):
++    """
++    Lookup specialization of template NODENAME corresponding to CONTAINERTYPE.
++    e.g. if NODENAME is '_List_node' and CONTAINERTYPE is std::list<int>
++    then return the type std::_List_node<int>.
++    Returns None if not found.
++    """
++    # If nodename is unqualified, assume it's in namespace std.
++    if '::' not in nodename:
++        nodename = 'std::' + nodename
++    try:
++        valtype = find_type(containertype, 'value_type')
++    except:
++        valtype = containertype.template_argument(0)
++    valtype = valtype.strip_typedefs()
++    try:
++        return lookup_templ_spec(nodename, valtype)
++    except gdb.error as e:
++        # For debug mode containers the node is in std::__cxx1998.
++        if is_member_of_namespace(nodename, 'std'):
++            if is_member_of_namespace(containertype, 'std::__cxx1998',
++                                      'std::__debug', '__gnu_debug'):
++                nodename = nodename.replace('::', '::__cxx1998::', 1)
++                try:
++                    return lookup_templ_spec(nodename, valtype)
++                except gdb.error:
++                    pass
++        return None
++
++def is_member_of_namespace(typ, *namespaces):
++    """
++    Test whether a type is a member of one of the specified namespaces.
++    The type can be specified as a string or a gdb.Type object.
++    """
++    if type(typ) is gdb.Type:
++        typ = str(typ)
++    typ = strip_versioned_namespace(typ)
++    for namespace in namespaces:
++        if typ.startswith(namespace + '::'):
++            return True
++    return False
++
+ def is_specialization_of(x, template_name):
+     "Test if a type is a given template instantiation."
+     global _versioned_namespace
+@@ -181,13 +245,22 @@ class UniquePointerPrinter:
+ 
+     def __init__ (self, typename, val):
+         self.val = val
+-        impl_type = val.type.fields()[0].type.tag
++        impl_type = val.type.fields()[0].type.strip_typedefs()
+         if is_specialization_of(impl_type, '__uniq_ptr_impl'): # New implementation
+-            self.pointer = val['_M_t']['_M_t']['_M_head_impl']
++            tuple_member = val['_M_t']['_M_t']
+         elif is_specialization_of(impl_type, 'tuple'):
+-            self.pointer = val['_M_t']['_M_head_impl']
++            tuple_member = val['_M_t']
+         else:
+-            raise ValueError("Unsupported implementation for unique_ptr: %s" % impl_type)
++            raise ValueError("Unsupported implementation for unique_ptr: %s" % str(impl_type))
++        tuple_impl_type = tuple_member.type.fields()[0].type # _Tuple_impl
++        tuple_head_type = tuple_impl_type.fields()[1].type   # _Head_base
++        head_field = tuple_head_type.fields()[0]
++        if head_field.name == '_M_head_impl':
++            self.pointer = tuple_member['_M_head_impl']
++        elif head_field.is_base_class:
++            self.pointer = tuple_member.cast(head_field.type)
++        else:
++            raise ValueError("Unsupported implementation for tuple in unique_ptr: %s" % str(impl_type))
+ 
+     def children (self):
+         return SmartPtrIterator(self.pointer)
+@@ -242,40 +315,40 @@ class StdListPrinter:
+         self.val = val
+ 
+     def children(self):
+-        nodetype = find_type(self.val.type, '_Node')
+-        nodetype = nodetype.strip_typedefs().pointer()
++        nodetype = lookup_node_type('_List_node', self.val.type).pointer()
+         return self._iterator(nodetype, self.val['_M_impl']['_M_node'])
+ 
+     def to_string(self):
+-        if self.val['_M_impl']['_M_node'].address == self.val['_M_impl']['_M_node']['_M_next']:
++        headnode = self.val['_M_impl']['_M_node']
++        if headnode['_M_next'] == headnode.address:
+             return 'empty %s' % (self.typename)
+         return '%s' % (self.typename)
+ 
+ class NodeIteratorPrinter:
+-    def __init__(self, typename, val, contname):
++    def __init__(self, typename, val, contname, nodename):
+         self.val = val
+         self.typename = typename
+         self.contname = contname
++        self.nodetype = lookup_node_type(nodename, val.type)
+ 
+     def to_string(self):
+         if not self.val['_M_node']:
+             return 'non-dereferenceable iterator for std::%s' % (self.contname)
+-        nodetype = find_type(self.val.type, '_Node')
+-        nodetype = nodetype.strip_typedefs().pointer()
+-        node = self.val['_M_node'].cast(nodetype).dereference()
++        node = self.val['_M_node'].cast(self.nodetype.pointer()).dereference()
+         return str(get_value_from_list_node(node))
+ 
+ class StdListIteratorPrinter(NodeIteratorPrinter):
+     "Print std::list::iterator"
+ 
+     def __init__(self, typename, val):
+-        NodeIteratorPrinter.__init__(self, typename, val, 'list')
++        NodeIteratorPrinter.__init__(self, typename, val, 'list', '_List_node')
+ 
+ class StdFwdListIteratorPrinter(NodeIteratorPrinter):
+     "Print std::forward_list::iterator"
+ 
+     def __init__(self, typename, val):
+-        NodeIteratorPrinter.__init__(self, typename, val, 'forward_list')
++        NodeIteratorPrinter.__init__(self, typename, val, 'forward_list',
++                                     '_Fwd_list_node')
+ 
+ class StdSlistPrinter:
+     "Print a __gnu_cxx::slist"
+@@ -302,9 +375,8 @@ class StdSlistPrinter:
+         self.val = val
+ 
+     def children(self):
+-        nodetype = find_type(self.val.type, '_Node')
+-        nodetype = nodetype.strip_typedefs().pointer()
+-        return self._iterator(nodetype, self.val)
++        nodetype = lookup_node_type('__gnu_cxx::_Slist_node', self.val.type)
++        return self._iterator(nodetype.pointer(), self.val)
+ 
+     def to_string(self):
+         if self.val['_M_head']['_M_next'] == 0:
+@@ -320,8 +392,7 @@ class StdSlistIteratorPrinter:
+     def to_string(self):
+         if not self.val['_M_node']:
+             return 'non-dereferenceable iterator for __gnu_cxx::slist'
+-        nodetype = find_type(self.val.type, '_Node')
+-        nodetype = nodetype.strip_typedefs().pointer()
++        nodetype = lookup_node_type('__gnu_cxx::_Slist_node', self.val.type).pointer()
+         return str(self.val['_M_node'].cast(nodetype).dereference()['_M_data'])
+ 
+ class StdVectorPrinter:
+@@ -574,12 +645,8 @@ class StdRbtreeIteratorPrinter:
+ 
+     def __init__ (self, typename, val):
+         self.val = val
+-        valtype = self.val.type.template_argument(0).strip_typedefs()
+-        nodetype = '_Rb_tree_node<' + str(valtype) + '>'
+-        if _versioned_namespace and typename.startswith('std::' + _versioned_namespace):
+-            nodetype = _versioned_namespace + nodetype
+-        nodetype = gdb.lookup_type('std::' + nodetype)
+-        self.link_type = nodetype.strip_typedefs().pointer()
++        nodetype = lookup_node_type('_Rb_tree_node', self.val.type)
++        self.link_type = nodetype.pointer()
+ 
+     def to_string (self):
+         if not self.val['_M_node']:
+@@ -644,9 +711,7 @@ class StdMapPrinter:
+                                num_elements(len(RbtreeIterator (self.val))))
+ 
+     def children (self):
+-        rep_type = find_type(self.val.type, '_Rep_type')
+-        node = find_type(rep_type, '_Link_type')
+-        node = node.strip_typedefs()
++        node = lookup_node_type('_Rb_tree_node', self.val.type).pointer()
+         return self._iter (RbtreeIterator (self.val), node)
+ 
+     def display_hint (self):
+@@ -684,9 +749,7 @@ class StdSetPrinter:
+                                num_elements(len(RbtreeIterator (self.val))))
+ 
+     def children (self):
+-        rep_type = find_type(self.val.type, '_Rep_type')
+-        node = find_type(rep_type, '_Link_type')
+-        node = node.strip_typedefs()
++        node = lookup_node_type('_Rb_tree_node', self.val.type).pointer()
+         return self._iter (RbtreeIterator (self.val), node)
+ 
+ class StdBitsetPrinter:
+@@ -844,11 +907,11 @@ class StdStringPrinter:
+         return 'string'
+ 
+ class Tr1HashtableIterator(Iterator):
+-    def __init__ (self, hash):
+-        self.buckets = hash['_M_buckets']
++    def __init__ (self, hashtable):
++        self.buckets = hashtable['_M_buckets']
+         self.bucket = 0
+-        self.bucket_count = hash['_M_bucket_count']
+-        self.node_type = find_type(hash.type, '_Node').pointer()
++        self.bucket_count = hashtable['_M_bucket_count']
++        self.node_type = find_type(hashtable.type, '_Node').pointer()
+         self.node = 0
+         while self.bucket != self.bucket_count:
+             self.node = self.buckets[self.bucket]
+@@ -875,9 +938,13 @@ class Tr1HashtableIterator(Iterator):
+         return result
+ 
+ class StdHashtableIterator(Iterator):
+-    def __init__(self, hash):
+-        self.node = hash['_M_before_begin']['_M_nxt']
+-        self.node_type = find_type(hash.type, '__node_type').pointer()
++    def __init__(self, hashtable):
++        self.node = hashtable['_M_before_begin']['_M_nxt']
++        valtype = hashtable.type.template_argument(1)
++        cached = hashtable.type.template_argument(9).template_argument(0)
++        node_type = lookup_templ_spec('std::__detail::_Hash_node', str(valtype),
++                                      'true' if cached else 'false')
++        self.node_type = node_type.pointer()
+ 
+     def __iter__(self):
+         return self
+@@ -892,7 +959,7 @@ class StdHashtableIterator(Iterator):
+         return valptr.dereference()
+ 
+ class Tr1UnorderedSetPrinter:
+-    "Print a tr1::unordered_set"
++    "Print a std::unordered_set or tr1::unordered_set"
+ 
+     def __init__ (self, typename, val):
+         self.typename = strip_versioned_namespace(typename)
+@@ -918,7 +985,7 @@ class Tr1UnorderedSetPrinter:
+         return izip (counter, StdHashtableIterator (self.hashtable()))
+ 
+ class Tr1UnorderedMapPrinter:
+-    "Print a tr1::unordered_map"
++    "Print a std::unordered_map or tr1::unordered_map"
+ 
+     def __init__ (self, typename, val):
+         self.typename = strip_versioned_namespace(typename)
+@@ -989,8 +1056,7 @@ class StdForwardListPrinter:
+         self.typename = strip_versioned_namespace(typename)
+ 
+     def children(self):
+-        nodetype = find_type(self.val.type, '_Node')
+-        nodetype = nodetype.strip_typedefs().pointer()
++        nodetype = lookup_node_type('_Fwd_list_node', self.val.type).pointer()
+         return self._iterator(nodetype, self.val['_M_impl']['_M_head'])
+ 
+     def to_string(self):
+@@ -1041,6 +1107,29 @@ class SingleObjContainerPrinter(object):
+             return self.visualizer.display_hint ()
+         return self.hint
+ 
++def function_pointer_to_name(f):
++    "Find the name of the function referred to by the gdb.Value f, "
++    " which should contain a function pointer from the program."
++
++    # Turn the function pointer into an actual address.
++    # This is needed to unpack ppc64 function descriptors.
++    f = f.dereference().address
++
++    if sys.version_info[0] == 2:
++        # Older versions of GDB need to use long for Python 2,
++        # because int(f) on 64-bit big-endian values raises a
++        # gdb.error saying "Cannot convert value to int."
++        f = long(f)
++    else:
++        f = int(f)
++
++    try:
++        # If the function can't be found older versions of GDB raise a
++        # RuntimeError saying "Cannot locate object file for block."
++        return gdb.block_for_pc(f).function.name
++    except:
++        return None
++
+ class StdExpAnyPrinter(SingleObjContainerPrinter):
+     "Print a std::any or std::experimental::any"
+ 
+@@ -1053,11 +1142,11 @@ class StdExpAnyPrinter(SingleObjContainerPrinter):
+         visualizer = None
+         mgr = self.val['_M_manager']
+         if mgr != 0:
+-            func = gdb.block_for_pc(int(mgr.cast(gdb.lookup_type('intptr_t'))))
++            func = function_pointer_to_name(mgr)
+             if not func:
+-                raise ValueError("Invalid function pointer in %s" % self.typename)
++                raise ValueError("Invalid function pointer in %s" % (self.typename))
+             rx = r"""({0}::_Manager_\w+<.*>)::_S_manage\((enum )?{0}::_Op, (const {0}|{0} const) ?\*, (union )?{0}::_Arg ?\*\)""".format(typename)
+-            m = re.match(rx, func.function.name)
++            m = re.match(rx, func)
+             if not m:
+                 raise ValueError("Unknown manager function in %s" % self.typename)
+ 
+@@ -1209,6 +1298,7 @@ class StdExpPathPrinter:
+ 
+     def __init__ (self, typename, val):
+         self.val = val
++        self.typename = typename
+         start = self.val['_M_cmpts']['_M_impl']['_M_start']
+         finish = self.val['_M_cmpts']['_M_impl']['_M_finish']
+         self.num_cmpts = int (finish - start)
+@@ -1227,10 +1317,11 @@ class StdExpPathPrinter:
+             t = self._path_type()
+             if t:
+                 path = '%s [%s]' % (path, t)
+-        return "filesystem::path %s" % path
++        return "experimental::filesystem::path %s" % path
+ 
+     class _iterator(Iterator):
+-        def __init__(self, cmpts):
++        def __init__(self, cmpts, pathtype):
++            self.pathtype = pathtype
+             self.item = cmpts['_M_impl']['_M_start']
+             self.finish = cmpts['_M_impl']['_M_finish']
+             self.count = 0
+@@ -1246,13 +1337,13 @@ class StdExpPathPrinter:
+             self.count = self.count + 1
+             self.item = self.item + 1
+             path = item['_M_pathname']
+-            t = StdExpPathPrinter(item.type.name, item)._path_type()
++            t = StdExpPathPrinter(self.pathtype, item)._path_type()
+             if not t:
+                 t = count
+             return ('[%s]' % t, path)
+ 
+     def children(self):
+-        return self._iterator(self.val['_M_cmpts'])
++        return self._iterator(self.val['_M_cmpts'], self.typename)
+ 
+ class StdPathPrinter:
+     "Print a std::filesystem::path"
+@@ -1285,6 +1376,7 @@ class StdPathPrinter:
+ 
+     class _iterator(Iterator):
+         def __init__(self, impl, pathtype):
++            self.pathtype = pathtype
+             if impl:
+                 # We can't access _Impl::_M_size because _Impl is incomplete
+                 # so cast to int* to access the _M_size member at offset zero,
+@@ -1317,7 +1409,7 @@ class StdPathPrinter:
+             self.count = self.count + 1
+             self.item = self.item + 1
+             path = item['_M_pathname']
+-            t = StdPathPrinter(item.type.name, item)._path_type()
++            t = StdPathPrinter(self.pathtype, item)._path_type()
+             if not t:
+                 t = count
+             return ('[%s]' % t, path)
 --- a/libstdc++-v3/src/c++17/fs_ops.cc
 +++ b/libstdc++-v3/src/c++17/fs_ops.cc
 @@ -1175,11 +1175,17 @@ fs::path fs::read_symlink(const path& p, error_code& ec)
@@ -44319,6 +46596,17 @@ new file mode 100644
 +  }
 +  VERIFY( caught );
 +}
+--- a/libstdc++-v3/testsuite/experimental/filesystem/filesystem_error/cons.cc
++++ b/libstdc++-v3/testsuite/experimental/filesystem/filesystem_error/cons.cc
+@@ -15,7 +15,7 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ 
+-// { dg-options "-std=gnu++17 -lstdc++fs" }
++// { dg-options "-lstdc++fs" }
+ // { dg-do run { target c++11 } }
+ // { dg-require-filesystem-ts "" }
+ 
 new file mode 100644
 --- /dev/null
 +++ b/libstdc++-v3/testsuite/experimental/filesystem/iterators/97731.cc
@@ -45235,6 +47523,212 @@ new file mode 100644
          file delete $src
  
          if [string match "" $lines] {
+--- a/libstdc++-v3/testsuite/libstdc++-prettyprinters/59161.cc
++++ b/libstdc++-v3/testsuite/libstdc++-prettyprinters/59161.cc
+@@ -45,8 +45,6 @@ int main()
+   std::list<C> l;
+   l.push_back(c);
+   std::list<C>::iterator liter = l.begin();
+-  // Need to ensure the list<C>::iterator::_Node typedef is in the debuginfo:
+-  int tmp __attribute__((unused)) = (*liter).ref;
+ // { dg-final { regexp-test liter {ref = @0x.*} } }
+ 
+   __gnu_cxx::slist<C> sl;
+--- a/libstdc++-v3/testsuite/libstdc++-prettyprinters/80276.cc
++++ b/libstdc++-v3/testsuite/libstdc++-prettyprinters/80276.cc
+@@ -19,6 +19,9 @@
+ // with this library; see the file COPYING3.  If not see
+ // <http://www.gnu.org/licenses/>.
+ 
++// Type printers only recognize the old std::string for now.
++#define _GLIBCXX_USE_CXX11_ABI 0
++
+ #include <iostream>
+ #include <list>
+ #include <memory>
+new file mode 100644
+--- /dev/null
++++ b/libstdc++-v3/testsuite/libstdc++-prettyprinters/91997.cc
+@@ -0,0 +1,53 @@
++// { dg-options "-std=gnu++17 -g -O0 -Wno-unused" }
++// { dg-do run { target c++17 } }
++
++// Copyright (C) 2019 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++#include <forward_list>
++#include <list>
++#include <set>
++#include <map>
++#include <string>
++#include <any>
++#include <iostream>
++
++int main()
++{
++  std::list<std::string> list{"a"};
++  std::list<std::string>::iterator lit = list.begin();
++  // { dg-final { note-test lit {"a"} } }
++
++  std::forward_list<std::string> flist{"b"};
++  std::forward_list<std::string>::iterator flit = flist.begin();
++  // { dg-final { note-test flit {"b"} } }
++
++  std::map<int, int> m{ {1, 2} };
++  auto mit = m.begin();
++  // { dg-final { note-test mit {{first = 1, second = 2}} } }
++
++  std::any a = m;
++  // { dg-final { regexp-test a {std::any containing std::(__debug::)?map with 1 element = {\[1\] = 2}} } }
++
++  std::set<int> s{1, 2};
++  auto sit = s.begin();
++  // { dg-final { note-test sit {1} } }
++
++  std::cout << "\n";
++  return 0;			// Mark SPOT
++}
++// { dg-final { gdb-test SPOT } }
+--- a/libstdc++-v3/testsuite/libstdc++-prettyprinters/compat.cc
++++ b/libstdc++-v3/testsuite/libstdc++-prettyprinters/compat.cc
+@@ -23,12 +23,30 @@
+ 
+ namespace std
+ {
+-  template<typename T, typename U>
+-    struct tuple
++  template<typename T>
++    struct _Head_base : T
++    { };
++
++  template<typename T>
++    struct _Head_base<T*>
+     {
+-      T _M_head_impl;
++      T* _M_head_impl;
+     };
+ 
++  template<unsigned long, typename ...> struct _Tuple_impl;
++
++  template<typename T, typename U>
++    struct _Tuple_impl<0, T, U> : _Tuple_impl<1, U>, _Head_base<T>
++    { };
++
++  template<typename U>
++    struct _Tuple_impl<1, U> : _Head_base<U>
++    { };
++
++  template<typename T, typename U>
++    struct tuple : _Tuple_impl<0, T, U>
++    { };
++
+   template<typename T> struct default_delete { };
+ 
+   template<typename T, typename D = default_delete<T>>
+@@ -36,7 +54,9 @@ namespace std
+     {
+       unique_ptr(T* p) { _M_t._M_head_impl = p; }
+ 
+-      tuple<T*, D> _M_t;
++      using __tuple_type = tuple<T*, D>;
++
++      __tuple_type _M_t;
+     };
+ 
+   // Old representation of std::optional, before GCC 9
+--- a/libstdc++-v3/testsuite/libstdc++-prettyprinters/cxx11.cc
++++ b/libstdc++-v3/testsuite/libstdc++-prettyprinters/cxx11.cc
+@@ -60,6 +60,21 @@ struct datum
+ 
+ std::unique_ptr<datum> global;
+ 
++struct Deleter
++{
++  // Deleter is not an empty class:
++  int deleter_member = -1;
++  // But pointer is an empty class:
++  struct pointer
++  {
++    pointer(const void* = nullptr) { }
++    explicit operator bool() const noexcept { return false; }
++    friend bool operator==(pointer, pointer) noexcept { return true; }
++    friend bool operator!=(pointer, pointer) noexcept { return false; }
++  };
++  void operator()(pointer) const noexcept { }
++};
++
+ int
+ main()
+ {
+@@ -137,6 +152,11 @@ main()
+   std::unique_ptr<data>& rarrptr = arrptr;
+ // { dg-final { regexp-test rarrptr {std::unique_ptr.datum \[\]. = {get\(\) = 0x.*}} } }
+ 
++  std::unique_ptr<int, Deleter> empty_ptr;
++// { dg-final { note-test empty_ptr {std::unique_ptr<int> = {get() = {<No data fields>}}} } }
++  std::unique_ptr<int, Deleter>& rempty_ptr = empty_ptr;
++// { dg-final { note-test rempty_ptr {std::unique_ptr<int> = {get() = {<No data fields>}}} } }
++
+   ExTuple tpl(6,7);
+ // { dg-final { note-test tpl {std::tuple containing = {[1] = 6, [2] = 7}} } }
+   ExTuple &rtpl = tpl;
+new file mode 100644
+--- /dev/null
++++ b/libstdc++-v3/testsuite/libstdc++-prettyprinters/filesystem-ts.cc
+@@ -0,0 +1,39 @@
++// { dg-options "-g -O0 -lstdc++fs" }
++// { dg-do run { target c++11 } }
++// { dg-require-filesystem-ts "" }
++
++// Copyright (C) 2020 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++#include <experimental/filesystem>
++#include <iostream>
++
++int
++main()
++{
++  std::experimental::filesystem::path path0;
++// { dg-final { note-test path0 {experimental::filesystem::path ""} } }
++  std::experimental::filesystem::path path1("filename");
++// { dg-final { note-test path1 {experimental::filesystem::path "filename"} } }
++  std::experimental::filesystem::path path2("/dir/.");
++// { dg-final { note-test path2 {experimental::filesystem::path "/dir/." = {[root-directory] = "/", [1] = "dir", [2] = "."}} } }
++
++  std::cout << "\n";
++  return 0;			// Mark SPOT
++}
++
++// { dg-final { gdb-test SPOT } }
 --- a/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc
 +++ b/libstdc++-v3/testsuite/tr1/8_c_compatibility/cstdlib/functions.cc
 @@ -30,7 +30,7 @@ void test01()

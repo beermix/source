@@ -1,0 +1,436 @@
+From patchwork Mon Jan  4 00:28:26 2021
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Rosen Penev <rosenp@gmail.com>
+X-Patchwork-Id: 1421976
+Return-Path: 
+ <openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.openwrt.org
+ (client-ip=2001:8b0:10b:1231::1; helo=merlin.infradead.org;
+ envelope-from=openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org;
+ receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: ozlabs.org;
+	dkim=pass (2048-bit key;
+ secure) header.d=lists.infradead.org header.i=@lists.infradead.org
+ header.a=rsa-sha256 header.s=merlin.20170209 header.b=i/ak3geD;
+	dkim=fail reason="signature verification failed" (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=aBhU4qnZ;
+	dkim-atps=neutral
+Received: from merlin.infradead.org (merlin.infradead.org
+ [IPv6:2001:8b0:10b:1231::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	by ozlabs.org (Postfix) with ESMTPS id 4D8Gjn5Qk8z9sWK
+	for <incoming@patchwork.ozlabs.org>; Mon,  4 Jan 2021 11:30:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe
+	:List-Id:MIME-Version:Message-Id:Date:Subject:To:From:Reply-To:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=IjiQG6FTBITkRMbYHpqGNEmYQeY57Ogg1JX3vxhgp6E=; b=i/ak3geDg5pMki98U1Z95D/cc1
+	nyPwwme2PWpkCgYjIvCInvvg0hBzAezjs++1V7Yqa55UDMAw9iV70IMvRVxTYhtIuL2nnC9LAl6Ya
+	LvOGIgfxFSjFEolDfsAdxkMWHEmArs1+DMzh0L27BrEkLNmk4O8HGO6zDUW5FrRNcTF8tJafkA2Jz
+	m+AbzsgG4RLr3jU9dZKAcSzS+u6qxFtlb639z9wFhfagTWQPbFc4YVJePmTsIwKVmXQ6yvy0aG0uR
+	0b7fPXBvD/rv9zGZhjeklK/WKGfWYYJjgJ4R0opoMf/kX56dTyflfW/g8cYlinJonXtG47EIYsN3h
+	ke9E8Log==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1kwDji-0007TM-FT; Mon, 04 Jan 2021 00:28:38 +0000
+Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kwDja-0007Pl-Hg
+ for openwrt-devel@lists.openwrt.org; Mon, 04 Jan 2021 00:28:32 +0000
+Received: by mail-pl1-x633.google.com with SMTP id b8so13514314plx.0
+ for <openwrt-devel@lists.openwrt.org>; Sun, 03 Jan 2021 16:28:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=OXUHUZwARwWIp0YJseUYhjLSB1m+5hEOXLHoS2HwhGs=;
+ b=aBhU4qnZVIknMoloNkG1wSyQcWTHy79dVCMMdA2FrUuTjg+sbDI0+Qlsxc1aqcB3m4
+ 7nhJ/7P8zCGu3JP+V3rf6DVrEwhZvC0kmAEex0JFGusner6l0Kz7BLoHQ3922U4483Qt
+ iVecuyLSkapfXPaLmP5LFG0aOIIKUXMz0oIh4qhRcjl4Qn747kfjtALqfZK8d4dmYsQc
+ a4DLCh+ERoX0378Kzt5xvzsMbdBtpb4PiZf/whRD0WuorwUnphavslNxJmQUsvBcHFXC
+ uz65R7eN6eCglx/nGjNfTSlZ5J9qZ3S3ymrs/OvC12CEuq2No8HOfLNN6GczM8YCItaY
+ DIQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=OXUHUZwARwWIp0YJseUYhjLSB1m+5hEOXLHoS2HwhGs=;
+ b=C7e+HtHdFoMPJQA1pMq6zFq9TJu+92ibdfQz3/n9YuKfSpIOsZ6xyA1vJY8hM0Qkdy
+ VU+5hMqjK0AxeQjbCEciIQqlcFaLJh3fmpIPmlK2tqrhP0Q+rsh8W3aKMmYr1JfuoCom
+ Th6lVBO5MDYnDC3yNvDVl3bY6p+4eM6WBFQe7yiVfYHjs6VstuOnzFfyMNsl37wEdwud
+ OzDj5CdVk1rFXx/tbMeh50nFC61XUz5Z6pGDO3AaZabsqufFURzC1nLvFSCF0519hQNo
+ UJ5s3aIeGp05W8cRFwzXf3pJpq7CHuECXNM9a4xiDWuVP6FX78TdTz/tFJMv6DOPcyuX
+ KqNw==
+X-Gm-Message-State: AOAM532mcI7E6pjqCAzG6rXlt5lHA/tPzue9yh4620Rl+f5+QPi8Ubbx
+ obHyQ0Y/qW6I21mCUZO6hH6htpBBIl9p2g==
+X-Google-Smtp-Source: 
+ ABdhPJzYaDbB48rYDQO44giYFJ1uN+gbwWMsvRF7nY4SAzjSHsNxo5xf5kBY32OjD4QCKnQHVPhmSw==
+X-Received: by 2002:a17:90a:301:: with SMTP id
+ 1mr27602495pje.195.1609720108081;
+ Sun, 03 Jan 2021 16:28:28 -0800 (PST)
+Received: from mangix-trapnet.lan ([2001:470:1f05:79e::a89])
+ by smtp.gmail.com with ESMTPSA id u3sm20787578pjf.52.2021.01.03.16.28.27
+ for <openwrt-devel@lists.openwrt.org>
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Sun, 03 Jan 2021 16:28:27 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: openwrt-devel@lists.openwrt.org
+Subject: [PATCH] libpcap: update to 1.10.0
+Date: Sun,  3 Jan 2021 16:28:26 -0800
+Message-Id: <20210104002826.762710-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.29.2
+MIME-Version: 1.0
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20210103_192830_657846_50D56F9C 
+X-CRM114-Status: GOOD (  18.12  )
+X-Spam-Score: -0.2 (/)
+X-Spam-Report: SpamAssassin version 3.4.4 on merlin.infradead.org summary:
+ Content analysis details:   (-0.2 points)
+ pts rule name              description
+ ---- ----------------------
+ --------------------------------------------------
+ -0.0 RCVD_IN_DNSWL_NONE     RBL: Sender listed at https://www.dnswl.org/,
+ no trust [2607:f8b0:4864:20:0:0:0:633 listed in]
+ [list.dnswl.org]
+ 0.0 FREEMAIL_FROM          Sender email is commonly abused enduser mail
+ provider [rosenp[at]gmail.com]
+ -0.0 SPF_PASS               SPF: sender matches SPF record
+ 0.0 SPF_HELO_NONE          SPF: HELO does not publish an SPF Record
+ 0.1 DKIM_SIGNED            Message has a DKIM or DK signature,
+ not necessarily
+ valid
+ -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+ -0.1 DKIM_VALID_AU          Message has a valid DKIM or DK signature from
+ author's domain
+ -0.1 DKIM_VALID_EF          Message has a valid DKIM or DK signature from
+ envelope-from domain
+X-BeenThere: openwrt-devel@lists.openwrt.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: OpenWrt Development List <openwrt-devel.lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Errors-To: 
+ openwrt-devel-bounces+incoming=patchwork.ozlabs.org@lists.openwrt.org
+
+Simplify cmake option handling by putting everything in blocks.
+
+Add openssl patch as there's no easy way to disable.
+
+Rebase the skip manpages patch.
+
+Remove the monitor mode patch as it no longer applies.
+
+Remove flex patch as normal Makefile is no longer used.
+
+Remove USB path patch. While it is deprecated, the codepath is never
+taken. /sys/bus/usb/devices is checked before hand. If it exists, the
+function does stuff and returns. Additionally, this path is used
+elsewhere in the code.
+
+Refresh other patches.
+
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ package/libs/libpcap/Makefile                 |  21 ++--
+ .../libs/libpcap/patches/100-no-openssl.patch |  10 ++
+ .../libpcap/patches/102-skip-manpages.patch   | 110 +++++++++---------
+ .../103-makefile_flex_workaround.patch        |  14 ---
+ .../patches/201-space_optimization.patch      |   2 +-
+ .../patches/203-undef_iw_mode_monitor.patch   |  11 --
+ .../libpcap/patches/204-usb-bus-path.patch    |  13 ---
+ 7 files changed, 72 insertions(+), 109 deletions(-)
+ create mode 100644 package/libs/libpcap/patches/100-no-openssl.patch
+ delete mode 100644 package/libs/libpcap/patches/103-makefile_flex_workaround.patch
+ delete mode 100644 package/libs/libpcap/patches/203-undef_iw_mode_monitor.patch
+ delete mode 100644 package/libs/libpcap/patches/204-usb-bus-path.patch
+
+diff --git a/package/libs/libpcap/Makefile b/package/libs/libpcap/Makefile
+index 35ceb18c29..c4668d5d81 100644
+--- a/package/libs/libpcap/Makefile
++++ b/package/libs/libpcap/Makefile
+@@ -8,22 +8,21 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=libpcap
+-PKG_VERSION:=1.9.1
+-PKG_RELEASE:=3
++PKG_VERSION:=1.10.0
++PKG_RELEASE:=1
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+ PKG_SOURCE_URL:=http://www.us.tcpdump.org/release/ \
+         http://www.tcpdump.org/release/
+-PKG_HASH:=635237637c5b619bcceba91900666b64d56ecb7be63f298f601ec786ce087094
++PKG_HASH:=8d12b42623eeefee872f123bd0dc85d535b00df4d42e865f993c40f7bfc92b1e
+ 
+ PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
++PKG_LICENSE:=BSD-3-Clause
++PKG_LICENSE_FILES:=LICENSE
+ 
+ PKG_ASLR_PIE_REGULAR:=1
+ PKG_BUILD_PARALLEL:=1
+ 
+-PKG_LICENSE:=BSD-3-Clause
+-PKG_LICENSE_FILES:=LICENSE
+-
+ include $(INCLUDE_DIR)/package.mk
+ include $(INCLUDE_DIR)/cmake.mk
+ 
+@@ -48,11 +47,15 @@ endef
+ CMAKE_OPTIONS += \
+ 	-DBUILD_SHARED_LIBS=ON \
+ 	-DBUILD_WITH_LIBNL=OFF \
++	-DINET6=O$(if $(CONFIG_IPV6),N,FF)
+ 
+ # grep 'option(DISABLE_' CMakeLists.txt | cut -f2 -d'(' | cut -f1 -d' ' | sort --unique
+ CMAKE_OPTIONS += \
++	-DDISABLE_BLUETOOTH=O$(if $(CONFIG_PCAP_HAS_BT),FF,N) \
+ 	-DDISABLE_DAG=ON \
+ 	-DDISABLE_DBUS=ON \
++	-DDISABLE_DPDK=ON \
++	-DDISABLE_LINUX_USBMON=O$(if $(CONFIG_PCAP_HAS_USB),FF,N) \
+ 	-DDISABLE_NETMAP=ON \
+ 	-DDISABLE_RDMA=ON \
+ 	-DDISABLE_SEPTEL=ON \
+@@ -64,12 +67,6 @@ CMAKE_OPTIONS += \
+ 	-DBDEBUG=OFF \
+ 	-DYYDEBUG=OFF \
+ 
+-CMAKE_OPTIONS += $(if $(CONFIG_PCAP_HAS_USB)       ,,-DDISABLE_USB=ON)
+-CMAKE_OPTIONS += $(if $(CONFIG_PCAP_HAS_BT)        ,,-DDISABLE_BLUETOOTH=ON)
+-CMAKE_OPTIONS += $(if $(CONFIG_PCAP_HAS_NETFILTER) ,,-DPCAP_SUPPORT_NETFILTER=OFF)
+-
+-CMAKE_OPTIONS += $(if $(CONFIG_IPV6),-DINET6=ON,-DINET6=OFF)
+-
+ define Build/InstallDev
+ 	$(call Build/InstallDev/cmake,$(1))
+ 	$(SED) \
+diff --git a/package/libs/libpcap/patches/100-no-openssl.patch b/package/libs/libpcap/patches/100-no-openssl.patch
+new file mode 100644
+index 0000000000..6424cf8c6f
+--- /dev/null
++++ b/package/libs/libpcap/patches/100-no-openssl.patch
+@@ -0,0 +1,10 @@
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -1006,7 +1006,6 @@ endif()
++ #
++ # OpenSSL/libressl.
++ #
++-find_package(OpenSSL)
++ if(OPENSSL_FOUND)
++   #
++   # We have OpenSSL.
+diff --git a/package/libs/libpcap/patches/102-skip-manpages.patch b/package/libs/libpcap/patches/102-skip-manpages.patch
+index 28f572c913..57b780c1fe 100644
+--- a/package/libs/libpcap/patches/102-skip-manpages.patch
++++ b/package/libs/libpcap/patches/102-skip-manpages.patch
+@@ -7,69 +7,63 @@ Subject: [PATCH] skip manpages
+  CMakeLists.txt | 55 --------------------------------------------------
+  1 file changed, 55 deletions(-)
+ 
+-diff --git a/CMakeLists.txt b/CMakeLists.txt
+-index 55b93f14..acf1a904 100644
+ --- a/CMakeLists.txt
+ +++ b/CMakeLists.txt
+-@@ -2397,61 +2397,6 @@ if(NOT MSVC)
+-     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpcap.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc @ONLY)
+-     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/pcap-config DESTINATION bin)
+-     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc DESTINATION lib/pkgconfig)
++@@ -2701,57 +2701,6 @@ if(NOT MSVC)
++     if(MINGW)
++         find_program(LINK_EXECUTABLE ln)
++     endif(MINGW)
++-    if(UNIX OR (MINGW AND LINK_EXECUTABLE))
++-        set(MAN1 "")
++-        foreach(MANPAGE ${MAN1_NOEXPAND})
++-            set(MAN1 ${MAN1} ${CMAKE_CURRENT_SOURCE_DIR}/${MANPAGE})
++-        endforeach(MANPAGE)
++-        install(FILES ${MAN1} DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+ -
+--    #
+--    # Man pages.
+--    #
+--    # For each section of the manual for which we have man pages
+--    # that require macro expansion, do the expansion.
+--    #
+--    set(MAN1 "")
+--    foreach(MANPAGE ${MAN1_NOEXPAND})
+--        set(MAN1 ${MAN1} ${CMAKE_CURRENT_SOURCE_DIR}/${MANPAGE})
+--    endforeach(MANPAGE)
+--    install(FILES ${MAN1} DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
++-        set(MAN3PCAP "")
++-        foreach(MANPAGE ${MAN3PCAP_NOEXPAND})
++-            set(MAN3PCAP ${MAN3PCAP} ${CMAKE_CURRENT_SOURCE_DIR}/${MANPAGE})
++-        endforeach(MANPAGE)
++-        foreach(TEMPLATE_MANPAGE ${MAN3PCAP_EXPAND})
++-            string(REPLACE ".in" "" MANPAGE ${TEMPLATE_MANPAGE})
++-            configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${TEMPLATE_MANPAGE} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE} @ONLY)
++-            set(MAN3PCAP ${MAN3PCAP} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE})
++-        endforeach(TEMPLATE_MANPAGE)
++-        install(FILES ${MAN3PCAP} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_datalink_val_to_name.3pcap pcap_datalink_val_to_description.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_datalink_val_to_name.3pcap pcap_datalink_val_to_description_or_dlt.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_dump_open.3pcap pcap_dump_fopen.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_findalldevs.3pcap pcap_freealldevs.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_geterr.3pcap pcap_perror.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_inject.3pcap pcap_sendpacket.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_list_datalinks.3pcap pcap_free_datalinks.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_list_tstamp_types.3pcap pcap_free_tstamp_types.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_loop.3pcap pcap_dispatch.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_major_version.3pcap pcap_minor_version.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_next_ex.3pcap pcap_next.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_open_dead.3pcap pcap_open_dead_with_tstamp_precision.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_open_offline.3pcap pcap_open_offline_with_tstamp_precision.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_open_offline.3pcap pcap_fopen_offline.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_open_offline.3pcap pcap_fopen_offline_with_tstamp_precision.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_tstamp_type_val_to_name.3pcap pcap_tstamp_type_val_to_description.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        install_manpage_symlink(pcap_setnonblock.3pcap pcap_getnonblock.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+ -
+--    set(MAN3PCAP "")
+--    foreach(MANPAGE ${MAN3PCAP_NOEXPAND})
+--        set(MAN3PCAP ${MAN3PCAP} ${CMAKE_CURRENT_SOURCE_DIR}/${MANPAGE})
+--    endforeach(MANPAGE)
+--    foreach(TEMPLATE_MANPAGE ${MAN3PCAP_EXPAND})
+--        string(REPLACE ".in" "" MANPAGE ${TEMPLATE_MANPAGE})
+--        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${TEMPLATE_MANPAGE} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE} @ONLY)
+--        set(MAN3PCAP ${MAN3PCAP} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE})
+--    endforeach(TEMPLATE_MANPAGE)
+--    install(FILES ${MAN3PCAP} DESTINATION ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_datalink_val_to_name.3pcap pcap_datalink_val_to_description.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_dump_open.3pcap pcap_dump_fopen.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_findalldevs.3pcap pcap_freealldevs.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_geterr.3pcap pcap_perror.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_inject.3pcap pcap_sendpacket.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_list_datalinks.3pcap pcap_free_datalinks.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_list_tstamp_types.3pcap pcap_free_tstamp_types.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_loop.3pcap pcap_dispatch.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_major_version.3pcap pcap_minor_version.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_next_ex.3pcap pcap_next.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_open_dead.3pcap pcap_open_dead_with_tstamp_precision.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_open_offline.3pcap pcap_open_offline_with_tstamp_precision.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_open_offline.3pcap pcap_fopen_offline.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_open_offline.3pcap pcap_fopen_offline_with_tstamp_precision.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_tstamp_type_val_to_name.3pcap pcap_tstamp_type_val_to_description.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
+--    install_manpage_symlink(pcap_setnonblock.3pcap pcap_getnonblock.3pcap ${CMAKE_INSTALL_MANDIR}/man3)
++-        set(MANFILE "")
++-        foreach(TEMPLATE_MANPAGE ${MANFILE_EXPAND})
++-            string(REPLACE ".manfile.in" ".${MAN_FILE_FORMATS}" MANPAGE ${TEMPLATE_MANPAGE})
++-            configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${TEMPLATE_MANPAGE} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE} @ONLY)
++-            set(MANFILE ${MANFILE} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE})
++-        endforeach(TEMPLATE_MANPAGE)
++-        install(FILES ${MANFILE} DESTINATION ${CMAKE_INSTALL_MANDIR}/man${MAN_FILE_FORMATS})
+ -
+--    set(MANFILE "")
+--    foreach(TEMPLATE_MANPAGE ${MANFILE_EXPAND})
+--        string(REPLACE ".manfile.in" ".${MAN_FILE_FORMATS}" MANPAGE ${TEMPLATE_MANPAGE})
+--        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${TEMPLATE_MANPAGE} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE} @ONLY)
+--        set(MANFILE ${MANFILE} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE})
+--    endforeach(TEMPLATE_MANPAGE)
+--    install(FILES ${MANFILE} DESTINATION ${CMAKE_INSTALL_MANDIR}/man${MAN_FILE_FORMATS})
+--
+--    set(MANMISC "")
+--    foreach(TEMPLATE_MANPAGE ${MANMISC_EXPAND})
+--        string(REPLACE ".manmisc.in" ".${MAN_MISC_INFO}" MANPAGE ${TEMPLATE_MANPAGE})
+--        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${TEMPLATE_MANPAGE} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE} @ONLY)
+--        set(MANMISC ${MANMISC} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE})
+--    endforeach(TEMPLATE_MANPAGE)
+--    install(FILES ${MANMISC} DESTINATION ${CMAKE_INSTALL_MANDIR}/man${MAN_MISC_INFO})
++-        set(MANMISC "")
++-        foreach(TEMPLATE_MANPAGE ${MANMISC_EXPAND})
++-            string(REPLACE ".manmisc.in" ".${MAN_MISC_INFO}" MANPAGE ${TEMPLATE_MANPAGE})
++-            configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${TEMPLATE_MANPAGE} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE} @ONLY)
++-            set(MANMISC ${MANMISC} ${CMAKE_CURRENT_BINARY_DIR}/${MANPAGE})
++-        endforeach(TEMPLATE_MANPAGE)
++-        install(FILES ${MANMISC} DESTINATION ${CMAKE_INSTALL_MANDIR}/man${MAN_MISC_INFO})
++-    endif(UNIX OR (MINGW AND LINK_EXECUTABLE))
+  endif(NOT MSVC)
+  
+  # uninstall target
+diff --git a/package/libs/libpcap/patches/103-makefile_flex_workaround.patch b/package/libs/libpcap/patches/103-makefile_flex_workaround.patch
+deleted file mode 100644
+index 93e07c69c2..0000000000
+--- a/package/libs/libpcap/patches/103-makefile_flex_workaround.patch
++++ /dev/null
+@@ -1,14 +0,0 @@
+-
+-	Copyright (C) 2006 Markus Wigge
+-
+---- a/Makefile.in
+-+++ b/Makefile.in
+-@@ -59,7 +59,7 @@ MKDEP = @MKDEP@
+- CCOPT = @V_CCOPT@
+- SHLIB_CCOPT = @V_SHLIB_CCOPT@
+- INCLS = -I. @V_INCLS@
+--DEFS = -DBUILDING_PCAP -Dpcap_EXPORTS @DEFS@ @V_DEFS@
+-+DEFS = -DBUILDING_PCAP -D_BSD_SOURCE -Dpcap_EXPORTS @DEFS@ @V_DEFS@
+- ADDLOBJS = @ADDLOBJS@
+- ADDLARCHIVEOBJS = @ADDLARCHIVEOBJS@
+- LIBS = @LIBS@
+diff --git a/package/libs/libpcap/patches/201-space_optimization.patch b/package/libs/libpcap/patches/201-space_optimization.patch
+index 80e3824d82..bf9374dd54 100644
+--- a/package/libs/libpcap/patches/201-space_optimization.patch
++++ b/package/libs/libpcap/patches/201-space_optimization.patch
+@@ -1,6 +1,6 @@
+ --- a/pcap-common.c
+ +++ b/pcap-common.c
+-@@ -1570,14 +1570,23 @@ swap_pseudo_headers(int linktype, struct
++@@ -1662,14 +1662,23 @@ swap_pseudo_headers(int linktype, struct
+  		break;
+  
+  	case DLT_USB_LINUX:
+diff --git a/package/libs/libpcap/patches/203-undef_iw_mode_monitor.patch b/package/libs/libpcap/patches/203-undef_iw_mode_monitor.patch
+deleted file mode 100644
+index 53dd50137b..0000000000
+--- a/package/libs/libpcap/patches/203-undef_iw_mode_monitor.patch
++++ /dev/null
+@@ -1,11 +0,0 @@
+---- a/pcap-linux.c
+-+++ b/pcap-linux.c
+-@@ -263,6 +263,8 @@
+- typedef int		socklen_t;
+- #endif
+- 
+-+#undef IW_MODE_MONITOR
+-+
+- #ifndef MSG_TRUNC
+- /*
+-  * This is being compiled on a system that lacks MSG_TRUNC; define it
+diff --git a/package/libs/libpcap/patches/204-usb-bus-path.patch b/package/libs/libpcap/patches/204-usb-bus-path.patch
+deleted file mode 100644
+index 0c967a00ba..0000000000
+--- a/package/libs/libpcap/patches/204-usb-bus-path.patch
++++ /dev/null
+@@ -1,13 +0,0 @@
+-Fix USB bus path; /proc/bus/usb is deprecated.
+-
+---- a/pcap-usb-linux.c
+-+++ b/pcap-usb-linux.c
+-@@ -73,7 +73,7 @@
+- #define USB_TEXT_DIR_OLD "/sys/kernel/debug/usbmon"
+- #define USB_TEXT_DIR "/sys/kernel/debug/usb/usbmon"
+- #define SYS_USB_BUS_DIR "/sys/bus/usb/devices"
+--#define PROC_USB_BUS_DIR "/proc/bus/usb"
+-+#define PROC_USB_BUS_DIR "/dev/bus/usb"
+- #define USB_LINE_LEN 4096
+- 
+- #if __BYTE_ORDER == __LITTLE_ENDIAN

@@ -1,14 +1,18 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 50bf1713..88412738 100644
+From f172e36e436d714f4def1439b13efd147a6a8411 Mon Sep 17 00:00:00 2001
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Date: Fri, 18 Oct 2019 12:43:22 +0000
+Subject: [PATCH] skip manpages
+
+---
+ CMakeLists.txt | 55 --------------------------------------------------
+ 1 file changed, 55 deletions(-)
+
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2699,60 +2699,7 @@ if(NOT MSVC)
-     # maybe we don't.  (No, we do *NOT* require MSYS!)  If we don't
-     # have it, don't do the man pages.
-     #
--    if(MINGW)
--        find_program(LINK_EXECUTABLE ln)
--    endif(MINGW)
+@@ -2701,57 +2701,6 @@ if(NOT MSVC)
+     if(MINGW)
+         find_program(LINK_EXECUTABLE ln)
+     endif(MINGW)
 -    if(UNIX OR (MINGW AND LINK_EXECUTABLE))
 -        set(MAN1 "")
 -        foreach(MANPAGE ${MAN1_NOEXPAND})
@@ -60,7 +64,6 @@ index 50bf1713..88412738 100644
 -        endforeach(TEMPLATE_MANPAGE)
 -        install(FILES ${MANMISC} DESTINATION ${CMAKE_INSTALL_MANDIR}/man${MAN_MISC_INFO})
 -    endif(UNIX OR (MINGW AND LINK_EXECUTABLE))
-+
  endif(NOT MSVC)
  
  # uninstall target

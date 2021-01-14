@@ -112,7 +112,7 @@ menu "Compiler Options"
 
 	config RUST_MANAGE_SUBMODULES
 		bool "Let the build manage the git submodules (--enable-manage-submodules)"
-		default n
+		default y
 
 	config RUST_FULL_BOOTSTRAP
 		bool "Full Bootstrap - Build three compilers instead of two (--enable-full-bootstrap)"
