@@ -92,7 +92,7 @@ menu "Compiler Options"
 
 	config RUST_OPTIMIZE
 		bool "Build optimized rust code (--enable-optimize)"
-		default y
+		default n
 
 	config RUST_OPTIMIZE_LLVM
 		bool "Build optimized LLVM (--enable-optimize-llvm)"
