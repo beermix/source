@@ -33400,6 +33400,226 @@ new mode 100755
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+--- a/libgomp/configure
++++ b/libgomp/configure
+@@ -15641,21 +15641,30 @@ if test x"$enable_offload_targets" != x; then
+ 	tgt_plugin=intelmic
+ 	;;
+       nvptx*)
+-	tgt_plugin=nvptx
+-	PLUGIN_NVPTX=$tgt
+-	if test "x$CUDA_DRIVER_LIB" != xno \
+-	   && test "x$CUDA_DRIVER_LIB" != xno; then
+-	  PLUGIN_NVPTX_CPPFLAGS=$CUDA_DRIVER_CPPFLAGS
+-	  PLUGIN_NVPTX_LDFLAGS=$CUDA_DRIVER_LDFLAGS
+-	  PLUGIN_NVPTX_LIBS='-lcuda'
+-
+-	  PLUGIN_NVPTX_save_CPPFLAGS=$CPPFLAGS
+-	  CPPFLAGS="$PLUGIN_NVPTX_CPPFLAGS $CPPFLAGS"
+-	  PLUGIN_NVPTX_save_LDFLAGS=$LDFLAGS
+-	  LDFLAGS="$PLUGIN_NVPTX_LDFLAGS $LDFLAGS"
+-	  PLUGIN_NVPTX_save_LIBS=$LIBS
+-	  LIBS="$PLUGIN_NVPTX_LIBS $LIBS"
+-	  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++	case "${target}" in
++	  aarch64*-*-* | powerpc64le-*-* | x86_64-*-*)
++	    case " ${CC} ${CFLAGS} " in
++	      *" -m32 "* | *" -mx32 "*)
++		# PR libgomp/65099: Currently, we only support offloading in
++		# 64-bit configurations.
++		PLUGIN_NVPTX=0
++		;;
++	      *)
++		tgt_plugin=nvptx
++		PLUGIN_NVPTX=$tgt
++		if test "x$CUDA_DRIVER_LIB" != xno \
++		   && test "x$CUDA_DRIVER_LIB" != xno; then
++		  PLUGIN_NVPTX_CPPFLAGS=$CUDA_DRIVER_CPPFLAGS
++		  PLUGIN_NVPTX_LDFLAGS=$CUDA_DRIVER_LDFLAGS
++		  PLUGIN_NVPTX_LIBS='-lcuda'
++
++		  PLUGIN_NVPTX_save_CPPFLAGS=$CPPFLAGS
++		  CPPFLAGS="$PLUGIN_NVPTX_CPPFLAGS $CPPFLAGS"
++		  PLUGIN_NVPTX_save_LDFLAGS=$LDFLAGS
++		  LDFLAGS="$PLUGIN_NVPTX_LDFLAGS $LDFLAGS"
++		  PLUGIN_NVPTX_save_LIBS=$LIBS
++		  LIBS="$PLUGIN_NVPTX_LIBS $LIBS"
++		  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ #include "cuda.h"
+ int
+@@ -15671,25 +15680,33 @@ if ac_fn_c_try_link "$LINENO"; then :
+ fi
+ rm -f core conftest.err conftest.$ac_objext \
+     conftest$ac_exeext conftest.$ac_ext
+-	  CPPFLAGS=$PLUGIN_NVPTX_save_CPPFLAGS
+-	  LDFLAGS=$PLUGIN_NVPTX_save_LDFLAGS
+-	  LIBS=$PLUGIN_NVPTX_save_LIBS
+-	fi
+-	case $PLUGIN_NVPTX in
+-	  nvptx*)
+-	    if (test "x$CUDA_DRIVER_INCLUDE" = x \
+-		|| test "x$CUDA_DRIVER_INCLUDE" = xno) \
+-	       && (test "x$CUDA_DRIVER_LIB" = x \
+-		   || test "x$CUDA_DRIVER_LIB" = xno); then
+-	      PLUGIN_NVPTX=1
+-	      PLUGIN_NVPTX_CPPFLAGS='-I$(srcdir)/plugin/cuda'
+-	      PLUGIN_NVPTX_LIBS='-ldl'
+-	      PLUGIN_NVPTX_DYNAMIC=1
+-	    else
+-	      PLUGIN_NVPTX=0
+-	      as_fn_error $? "CUDA driver package required for nvptx support" "$LINENO" 5
+-	    fi
+-	  ;;
++		  CPPFLAGS=$PLUGIN_NVPTX_save_CPPFLAGS
++		  LDFLAGS=$PLUGIN_NVPTX_save_LDFLAGS
++		  LIBS=$PLUGIN_NVPTX_save_LIBS
++		fi
++		case $PLUGIN_NVPTX in
++		  nvptx*)
++		    if (test "x$CUDA_DRIVER_INCLUDE" = x \
++			|| test "x$CUDA_DRIVER_INCLUDE" = xno) \
++		       && (test "x$CUDA_DRIVER_LIB" = x \
++			   || test "x$CUDA_DRIVER_LIB" = xno); then
++		      PLUGIN_NVPTX=1
++		      PLUGIN_NVPTX_CPPFLAGS='-I$(srcdir)/plugin/cuda'
++		      PLUGIN_NVPTX_LIBS='-ldl'
++		      PLUGIN_NVPTX_DYNAMIC=1
++		    else
++		      PLUGIN_NVPTX=0
++		      as_fn_error $? "CUDA driver package required for nvptx support" "$LINENO" 5
++		    fi
++		    ;;
++		esac
++		;;
++	    esac
++	    ;;
++	  *-*-*)
++	    # Target architecture not supported.
++	    PLUGIN_NVPTX=0
++	    ;;
+ 	esac
+ 	;;
+       hsa*)
+--- a/libgomp/plugin/configfrag.ac
++++ b/libgomp/plugin/configfrag.ac
+@@ -158,44 +158,61 @@ if test x"$enable_offload_targets" != x; then
+ 	tgt_plugin=intelmic
+ 	;;
+       nvptx*)
+-	tgt_plugin=nvptx
+-	PLUGIN_NVPTX=$tgt
+-	if test "x$CUDA_DRIVER_LIB" != xno \
+-	   && test "x$CUDA_DRIVER_LIB" != xno; then
+-	  PLUGIN_NVPTX_CPPFLAGS=$CUDA_DRIVER_CPPFLAGS
+-	  PLUGIN_NVPTX_LDFLAGS=$CUDA_DRIVER_LDFLAGS
+-	  PLUGIN_NVPTX_LIBS='-lcuda'
++	case "${target}" in
++	  aarch64*-*-* | powerpc64le-*-* | x86_64-*-*)
++	    case " ${CC} ${CFLAGS} " in
++	      *" -m32 "* | *" -mx32 "*)
++		# PR libgomp/65099: Currently, we only support offloading in
++		# 64-bit configurations.
++		PLUGIN_NVPTX=0
++		;;
++	      *)
++		tgt_plugin=nvptx
++		PLUGIN_NVPTX=$tgt
++		if test "x$CUDA_DRIVER_LIB" != xno \
++		   && test "x$CUDA_DRIVER_LIB" != xno; then
++		  PLUGIN_NVPTX_CPPFLAGS=$CUDA_DRIVER_CPPFLAGS
++		  PLUGIN_NVPTX_LDFLAGS=$CUDA_DRIVER_LDFLAGS
++		  PLUGIN_NVPTX_LIBS='-lcuda'
+ 
+-	  PLUGIN_NVPTX_save_CPPFLAGS=$CPPFLAGS
+-	  CPPFLAGS="$PLUGIN_NVPTX_CPPFLAGS $CPPFLAGS"
+-	  PLUGIN_NVPTX_save_LDFLAGS=$LDFLAGS
+-	  LDFLAGS="$PLUGIN_NVPTX_LDFLAGS $LDFLAGS"
+-	  PLUGIN_NVPTX_save_LIBS=$LIBS
+-	  LIBS="$PLUGIN_NVPTX_LIBS $LIBS"
+-	  AC_LINK_IFELSE(
+-	    [AC_LANG_PROGRAM(
+-	      [#include "cuda.h"],
+-		[CUresult r = cuCtxPushCurrent (NULL);])],
+-	    [PLUGIN_NVPTX=1])
+-	  CPPFLAGS=$PLUGIN_NVPTX_save_CPPFLAGS
+-	  LDFLAGS=$PLUGIN_NVPTX_save_LDFLAGS
+-	  LIBS=$PLUGIN_NVPTX_save_LIBS
+-	fi
+-	case $PLUGIN_NVPTX in
+-	  nvptx*)
+-	    if (test "x$CUDA_DRIVER_INCLUDE" = x \
+-		|| test "x$CUDA_DRIVER_INCLUDE" = xno) \
+-	       && (test "x$CUDA_DRIVER_LIB" = x \
+-		   || test "x$CUDA_DRIVER_LIB" = xno); then
+-	      PLUGIN_NVPTX=1
+-	      PLUGIN_NVPTX_CPPFLAGS='-I$(srcdir)/plugin/cuda'
+-	      PLUGIN_NVPTX_LIBS='-ldl'
+-	      PLUGIN_NVPTX_DYNAMIC=1
+-	    else
+-	      PLUGIN_NVPTX=0
+-	      AC_MSG_ERROR([CUDA driver package required for nvptx support])
+-	    fi
+-	  ;;
++		  PLUGIN_NVPTX_save_CPPFLAGS=$CPPFLAGS
++		  CPPFLAGS="$PLUGIN_NVPTX_CPPFLAGS $CPPFLAGS"
++		  PLUGIN_NVPTX_save_LDFLAGS=$LDFLAGS
++		  LDFLAGS="$PLUGIN_NVPTX_LDFLAGS $LDFLAGS"
++		  PLUGIN_NVPTX_save_LIBS=$LIBS
++		  LIBS="$PLUGIN_NVPTX_LIBS $LIBS"
++		  AC_LINK_IFELSE(
++		    [AC_LANG_PROGRAM(
++		      [#include "cuda.h"],
++			[CUresult r = cuCtxPushCurrent (NULL);])],
++		    [PLUGIN_NVPTX=1])
++		  CPPFLAGS=$PLUGIN_NVPTX_save_CPPFLAGS
++		  LDFLAGS=$PLUGIN_NVPTX_save_LDFLAGS
++		  LIBS=$PLUGIN_NVPTX_save_LIBS
++		fi
++		case $PLUGIN_NVPTX in
++		  nvptx*)
++		    if (test "x$CUDA_DRIVER_INCLUDE" = x \
++			|| test "x$CUDA_DRIVER_INCLUDE" = xno) \
++		       && (test "x$CUDA_DRIVER_LIB" = x \
++			   || test "x$CUDA_DRIVER_LIB" = xno); then
++		      PLUGIN_NVPTX=1
++		      PLUGIN_NVPTX_CPPFLAGS='-I$(srcdir)/plugin/cuda'
++		      PLUGIN_NVPTX_LIBS='-ldl'
++		      PLUGIN_NVPTX_DYNAMIC=1
++		    else
++		      PLUGIN_NVPTX=0
++		      AC_MSG_ERROR([CUDA driver package required for nvptx support])
++		    fi
++		    ;;
++		esac
++		;;
++	    esac
++	    ;;
++	  *-*-*)
++	    # Target architecture not supported.
++	    PLUGIN_NVPTX=0
++	    ;;
+ 	esac
+ 	;;
+       hsa*)
+--- a/libgomp/plugin/plugin-nvptx.c
++++ b/libgomp/plugin/plugin-nvptx.c
+@@ -876,15 +876,6 @@ nvptx_get_num_devices (void)
+ {
+   int n;
+ 
+-  /* PR libgomp/65099: Currently, we only support offloading in 64-bit
+-     configurations.  */
+-  if (sizeof (void *) != 8)
+-    {
+-      GOMP_PLUGIN_debug (0, "Disabling nvptx offloading;"
+-			 " only 64-bit configurations are supported\n");
+-      return 0;
+-    }
+-
+   /* This function will be called before the plugin has been initialized in
+      order to enumerate available devices, but CUDA API routines can't be used
+      until cuInit has been called.  Just call it now (but don't yet do any
 --- a/libgomp/testsuite/lib/libgomp.exp
 +++ b/libgomp/testsuite/lib/libgomp.exp
 @@ -229,6 +229,12 @@ proc libgomp_init { args } {
