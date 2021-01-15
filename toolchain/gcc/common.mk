@@ -52,7 +52,7 @@ endif
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 #endif
 
-#ifeq ($(PKG_VERSION),10.2.1)
+ifeq ($(PKG_VERSION),10.2.1)
 #  PKG_REV:=10-20210109
 #  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
 #  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
