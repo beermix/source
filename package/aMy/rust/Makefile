@@ -48,7 +48,6 @@ CONFIGURE_ARGS = \
   --localstatedir=/var \
   --release-channel=nightly \
   --enable-lld \
-  --enable-full-bootstrap \
   --enable-manage-submodules \
   --enable-optimize-llvm \
   --enable-missing-tools \
