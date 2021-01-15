@@ -1,19 +1,19 @@
-From 9e3eab51e518018d9d99b3123598b1e2322a6af3 Mon Sep 17 00:00:00 2001
+From 0d83ea67b2e16658a88068ebce0e25cce22fe75e Mon Sep 17 00:00:00 2001
 From: Szabolcs Nagy <nsz@port70.net>
 Date: Sat, 24 Oct 2015 20:09:53 +0000
-Subject: [PATCH 3/6] libgcc_s
+Subject: [PATCH] libgcc_s
 
 ---
- gcc/config/i386/i386.c       | 4 ++--
- libgcc/config/i386/cpuinfo.c | 6 +++---
- libgcc/config/i386/t-linux   | 2 +-
+ gcc/config/i386/i386-expand.c | 4 ++--
+ libgcc/config/i386/cpuinfo.c  | 6 +++---
+ libgcc/config/i386/t-linux    | 2 +-
  3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/gcc/config/i386/i386.c b/gcc/config/i386/i386.c
-index 3d044e8..82523e1 100644
---- a/gcc/config/i386/i386.c
-+++ b/gcc/config/i386/i386.c
-@@ -40269,10 +40269,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
+diff --git a/gcc/config/i386/i386-expand.c b/gcc/config/i386/i386-expand.c
+index c6033688f51..a60e5162995 100644
+--- a/gcc/config/i386/i386-expand.c
++++ b/gcc/config/i386/i386-expand.c
+@@ -10966,10 +10966,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
      {
      case IX86_BUILTIN_CPU_INIT:
        {
@@ -27,10 +27,10 @@ index 3d044e8..82523e1 100644
  	return expand_expr (call_expr, target, mode, EXPAND_NORMAL);
        }
 diff --git a/libgcc/config/i386/cpuinfo.c b/libgcc/config/i386/cpuinfo.c
-index 8c2248d..6c82f15 100644
+index cf5f0884bb4..ed0381e7744 100644
 --- a/libgcc/config/i386/cpuinfo.c
 +++ b/libgcc/config/i386/cpuinfo.c
-@@ -485,7 +485,7 @@ __cpu_indicator_init (void)
+@@ -510,7 +510,7 @@ __cpu_indicator_init (void)
    return 0;
  }
  
@@ -42,7 +42,7 @@ index 8c2248d..6c82f15 100644
 +  __attribute__ ((weak, alias ("__cpu_indicator_init")));
  #endif
 diff --git a/libgcc/config/i386/t-linux b/libgcc/config/i386/t-linux
-index 11bb46e..4f47f7b 100644
+index 8506a635790..564296f788e 100644
 --- a/libgcc/config/i386/t-linux
 +++ b/libgcc/config/i386/t-linux
 @@ -3,5 +3,5 @@
@@ -53,5 +53,5 @@ index 11bb46e..4f47f7b 100644
 +HOST_LIBGCC2_CFLAGS += -mlong-double-80 $(CET_FLAGS)
  CRTSTUFF_T_CFLAGS += $(CET_FLAGS)
 -- 
-2.8.1
+2.29.2
 

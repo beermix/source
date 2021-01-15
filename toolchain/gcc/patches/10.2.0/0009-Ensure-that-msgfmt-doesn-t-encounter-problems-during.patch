@@ -1,4 +1,8 @@
-Ensure that msgfmt doesn't encounter problems during gcc bootstrapping.
+From 4733bb8115411c50028f7a583783ac10c63e8536 Mon Sep 17 00:00:00 2001
+From: Ariadne Conill <ariadne@dereferenced.org>
+Date: Fri, 21 Aug 2020 06:50:33 +0000
+Subject: [PATCH] Ensure that msgfmt doesn't encounter problems during gcc
+ bootstrapping.
 
 Solves error messages like the following:
 
@@ -16,10 +20,16 @@ library path, will make it work as expected here.
 References:
 https://bugs.gentoo.org/372377
 https://bugs.gentoo.org/295480
+---
+ libstdc++-v3/po/Makefile.am | 1 +
+ libstdc++-v3/po/Makefile.in | 1 +
+ 2 files changed, 2 insertions(+)
 
---- gcc-4.1.2.orig/libstdc++-v3/po/Makefile.am
-+++ gcc-4.1.2/libstdc++-v3/po/Makefile.am
-@@ -39,6 +39,7 @@ MSGFMT = msgfmt
+diff --git a/libstdc++-v3/po/Makefile.am b/libstdc++-v3/po/Makefile.am
+index a9391d8d167..f7eee24dc8c 100644
+--- a/libstdc++-v3/po/Makefile.am
++++ b/libstdc++-v3/po/Makefile.am
+@@ -38,6 +38,7 @@ MSGFMT = msgfmt
  EXTRA_DIST = string_literals.cc POTFILES.in $(PACKAGE).pot $(LOCALE_IN)
  
  .po.mo:
@@ -27,9 +37,11 @@ https://bugs.gentoo.org/295480
  	$(MSGFMT) -o $@ $<
  
  all-local: all-local-$(USE_NLS)
---- gcc-4.1.2.orig/libstdc++-v3/po/Makefile.in
-+++ gcc-4.1.2/libstdc++-v3/po/Makefile.in
-@@ -419,6 +419,7 @@ uninstall-am: uninstall-info-am
+diff --git a/libstdc++-v3/po/Makefile.in b/libstdc++-v3/po/Makefile.in
+index a0f84b0cfa0..ab24a47a2fd 100644
+--- a/libstdc++-v3/po/Makefile.in
++++ b/libstdc++-v3/po/Makefile.in
+@@ -548,6 +548,7 @@ uninstall-am:
  
  
  .po.mo:
@@ -37,3 +49,6 @@ https://bugs.gentoo.org/295480
  	$(MSGFMT) -o $@ $<
  
  all-local: all-local-$(USE_NLS)
+-- 
+2.29.2
+
