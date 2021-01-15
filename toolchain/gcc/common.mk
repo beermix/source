@@ -52,20 +52,22 @@ endif
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 #endif
 
-ifeq ($(PKG_VERSION),10.2.1)
-  PKG_REV:=10-20210109
-  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_REV:=65fcf1c
-#  PKG_SOURCE_PROTO:=git
-#  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
-#  PKG_SOURCE_VERSION:=$(PKG_REV)
-#  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-#  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+#ifeq ($(PKG_VERSION),10.2.1)
+#  PKG_REV:=10-20210109
+#  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
+#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+  PKG_REV:=ed0aa61
+  PKG_SOURCE_PROTO:=git
+  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
+  PKG_SOURCE_VERSION:=$(PKG_REV)
+  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
+
+## https://github.com/gcc-mirror/gcc/tree/releases/gcc-10
 
 ifeq ($(PKG_VERSION),11.0.0)
   PKG_REV:=11-20210110
