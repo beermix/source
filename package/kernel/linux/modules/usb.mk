@@ -70,6 +70,25 @@ endef
 $(eval $(call KernelPackage,usb-phy-nop))
 
 
+define KernelPackage/usb-phy-qcom-dwc3
+  TITLE:=DWC3 USB QCOM PHY driver
+  DEPENDS:=@(TARGET_ipq40xx||TARGET_ipq806x) +kmod-usb-dwc3-of-simple
+  KCONFIG:= CONFIG_PHY_QCOM_DWC3
+  FILES:= \
+    $(LINUX_DIR)/drivers/phy/phy-qcom-dwc3.ko@lt4.13 \
+    $(LINUX_DIR)/drivers/phy/qualcomm/phy-qcom-dwc3.ko@ge4.13
+  AUTOLOAD:=$(call AutoLoad,45,phy-qcom-dwc3,1)
+  $(call AddDepends/usb)
+endef
+
+define KernelPackage/usb-phy-qcom-dwc3/description
+ This driver provides support for the integrated DesignWare
+ USB3 IP Core within the QCOM SoCs.
+endef
+
+$(eval $(call KernelPackage,usb-phy-qcom-dwc3))
+
+
 define KernelPackage/phy-ath79-usb
   TITLE:=Support for ATH79 USB PHY
   KCONFIG:=CONFIG_PHY_AR7100_USB \
@@ -304,7 +323,7 @@ $(eval $(call KernelPackage,usb-ohci-pci))
 
 define KernelPackage/usb-bcma
   TITLE:=Support for BCMA USB controllers
-  DEPENDS:=@USB_SUPPORT @TARGET_bcm47xx||TARGET_bcm53xx
+  DEPENDS:=@USB_SUPPORT @TARGET_brcm47xx||TARGET_bcm53xx
   HIDDEN:=1
   KCONFIG:=CONFIG_USB_HCD_BCMA
   FILES:= \
@@ -327,7 +346,7 @@ $(eval $(call KernelPackage,usb-fotg210))
 
 define KernelPackage/usb-ssb
   TITLE:=Support for SSB USB controllers
-  DEPENDS:=@USB_SUPPORT @TARGET_bcm47xx
+  DEPENDS:=@USB_SUPPORT @TARGET_brcm47xx
   HIDDEN:=1
   KCONFIG:=CONFIG_USB_HCD_SSB
   FILES:= \
@@ -352,8 +371,8 @@ $(eval $(call KernelPackage,usb-ehci))
 define KernelPackage/usb2
   TITLE:=Support for USB2 controllers
   DEPENDS:=\
-	+TARGET_bcm47xx:kmod-usb-bcma \
-	+TARGET_bcm47xx:kmod-usb-ssb \
+	+TARGET_brcm47xx:kmod-usb-bcma \
+	+TARGET_brcm47xx:kmod-usb-ssb \
 	+TARGET_bcm53xx:kmod-usb-bcma \
 	+TARGET_bcm53xx:kmod-phy-bcm-ns-usb2 \
 	+TARGET_ath79:kmod-phy-ath79-usb \
@@ -423,8 +442,9 @@ define KernelPackage/usb-dwc2
 	CONFIG_USB_DWC2_TRACK_MISSED_SOFS=n \
 	CONFIG_USB_DWC2_DEBUG_PERIODIC=n
   FILES:= \
-	$(LINUX_DIR)/drivers/usb/dwc2/dwc2.ko
-  AUTOLOAD:=$(call AutoLoad,54,dwc2,1)
+	$(LINUX_DIR)/drivers/usb/dwc2/dwc2.ko \
+	$(LINUX_DIR)/drivers/usb/dwc2/dwc2_platform.ko@lt4.3
+  AUTOLOAD:=$(call AutoLoad,54,dwc2 dwc2_platform@lt4.3,1)
   $(call AddDepends/usb)
 endef
 
@@ -456,6 +476,24 @@ define KernelPackage/usb-dwc3/description
 endef
 
 $(eval $(call KernelPackage,usb-dwc3))
+
+
+define KernelPackage/usb-dwc3-of-simple
+  TITLE:=DWC3 USB simple OF driver
+  DEPENDS:=@!LINUX_4_19 @(TARGET_ipq40xx||TARGET_ipq806x) +kmod-usb-dwc3
+  KCONFIG:= CONFIG_USB_DWC3_OF_SIMPLE
+  FILES:= $(LINUX_DIR)/drivers/usb/dwc3/dwc3-of-simple.ko
+  AUTOLOAD:=$(call AutoLoad,53,dwc3-of-simple,1)
+  $(call AddDepends/usb)
+endef
+
+define KernelPackage/usb-dwc3-of-simple/description
+ This driver provides generic platform glue for the integrated DesignWare
+ USB3 IP Core.
+endef
+
+
+$(eval $(call KernelPackage,usb-dwc3-of-simple))
 
 
 define KernelPackage/usb-dwc3-qcom
@@ -1376,7 +1414,7 @@ define KernelPackage/usb-net-cdc-mbim
 endef
 
 define KernelPackage/usb-net-cdc-mbim/description
- Kernel module for CDC MBIM (Mobile Broadband Interface Model) devices
+ Kernel module for Option USB High Speed Mobile Devices
 endef
 
 $(eval $(call KernelPackage,usb-net-cdc-mbim))
@@ -1667,6 +1705,7 @@ define KernelPackage/usb3
 	CONFIG_USB_XHCI_HCD \
 	CONFIG_USB_XHCI_PCI \
 	CONFIG_USB_XHCI_PLATFORM \
+	CONFIG_USB_XHCI_MVEBU=y \
 	CONFIG_USB_XHCI_MTK \
 	CONFIG_USB_XHCI_HCD_DEBUGGING=n
   FILES:= \

@@ -38,7 +38,7 @@ $(eval $(call KernelPackage,ata-core))
 
 define AddDepends/ata
   SUBMENU:=$(BLOCK_MENU)
-  DEPENDS+=+kmod-ata-core $(1)
+  DEPENDS+=kmod-ata-core $(1)
 endef
 
 
@@ -65,7 +65,7 @@ define KernelPackage/ata-ahci-platform
     $(LINUX_DIR)/drivers/ata/ahci_platform.ko \
     $(LINUX_DIR)/drivers/ata/libahci_platform.ko
   AUTOLOAD:=$(call AutoLoad,40,libahci libahci_platform ahci_platform,1)
-  $(call AddDepends/ata,@TARGET_ipq806x||TARGET_layerscape||TARGET_sunxi)
+  $(call AddDepends/ata,@TARGET_ipq806x||TARGET_sunxi)
 endef
 
 define KernelPackage/ata-ahci-platform/description
@@ -117,13 +117,14 @@ $(eval $(call KernelPackage,ata-nvidia-sata))
 
 
 define KernelPackage/ata-pdc202xx-old
+  SUBMENU:=$(BLOCK_MENU)
   TITLE:=Older Promise PATA controller support
+  DEPENDS:=kmod-ata-core
   KCONFIG:= \
        CONFIG_ATA_SFF=y \
        CONFIG_PATA_PDC_OLD
   FILES:=$(LINUX_DIR)/drivers/ata/pata_pdc202xx_old.ko
   AUTOLOAD:=$(call AutoLoad,41,pata_pdc202xx_old,1)
-  $(call AddDepends/ata)
 endef
 
 define KernelPackage/ata-pdc202xx-old/description
@@ -237,12 +238,7 @@ define KernelPackage/dm
 	CONFIG_BLK_DEV_DM \
 	CONFIG_DM_CRYPT \
 	CONFIG_DM_MIRROR
-  FILES:= \
-    $(LINUX_DIR)/drivers/md/dm-mod.ko \
-    $(LINUX_DIR)/drivers/md/dm-crypt.ko \
-    $(LINUX_DIR)/drivers/md/dm-log.ko \
-    $(LINUX_DIR)/drivers/md/dm-mirror.ko \
-    $(LINUX_DIR)/drivers/md/dm-region-hash.ko
+  FILES:=$(LINUX_DIR)/drivers/md/dm-*.ko
   AUTOLOAD:=$(call AutoLoad,30,dm-mod dm-log dm-region-hash dm-mirror dm-crypt)
 endef
 

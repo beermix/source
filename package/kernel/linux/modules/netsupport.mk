@@ -60,7 +60,9 @@ $(eval $(call KernelPackage,bonding))
 define KernelPackage/udptunnel4
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=IPv4 UDP tunneling support
-  KCONFIG:=CONFIG_NET_UDP_TUNNEL
+  KCONFIG:= \
+	CONFIG_NET_UDP_TUNNEL \
+	CONFIG_VXLAN=m
   HIDDEN:=1
   FILES:=$(LINUX_DIR)/net/ipv4/udp_tunnel.ko
   AUTOLOAD:=$(call AutoLoad,32,udp_tunnel)
@@ -73,7 +75,9 @@ define KernelPackage/udptunnel6
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=IPv6 UDP tunneling support
   DEPENDS:=@IPV6
-  KCONFIG:=CONFIG_NET_UDP_TUNNEL
+  KCONFIG:= \
+	CONFIG_NET_UDP_TUNNEL \
+	CONFIG_VXLAN=m
   HIDDEN:=1
   FILES:=$(LINUX_DIR)/net/ipv6/ip6_udp_tunnel.ko
   AUTOLOAD:=$(call AutoLoad,32,ip6_udp_tunnel)
@@ -111,7 +115,8 @@ define KernelPackage/geneve
 	+IPV6:kmod-udptunnel6
   KCONFIG:=CONFIG_GENEVE
   FILES:= \
-	$(LINUX_DIR)/drivers/net/geneve.ko
+	$(LINUX_DIR)/net/ipv4/geneve.ko@le4.1 \
+	$(LINUX_DIR)/drivers/net/geneve.ko@ge4.2
   AUTOLOAD:=$(call AutoLoad,13,geneve)
 endef
 
@@ -122,6 +127,26 @@ endef
 
 $(eval $(call KernelPackage,geneve))
 
+
+define KernelPackage/capi
+  SUBMENU:=$(NETWORK_SUPPORT_MENU)
+  TITLE:=CAPI (ISDN) Support
+  KCONFIG:= \
+	CONFIG_ISDN_CAPI \
+	CONFIG_ISDN_CAPI_CAPI20 \
+	CONFIG_ISDN_CAPIFS \
+	CONFIG_ISDN_CAPI_CAPIFS
+  FILES:= \
+	$(LINUX_DIR)/drivers/isdn/capi/kernelcapi.ko \
+	$(LINUX_DIR)/drivers/isdn/capi/capi.ko
+  AUTOLOAD:=$(call AutoLoad,30,kernelcapi capi)
+endef
+
+define KernelPackage/capi/description
+ Kernel module for basic CAPI (ISDN) support
+endef
+
+$(eval $(call KernelPackage,capi))
 
 define KernelPackage/nsh
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
@@ -222,7 +247,7 @@ define KernelPackage/ipsec
   DEPENDS:= \
 	+kmod-crypto-authenc +kmod-crypto-cbc +kmod-crypto-deflate \
 	+kmod-crypto-des +kmod-crypto-echainiv +kmod-crypto-hmac \
-	+kmod-crypto-md5 +kmod-crypto-sha1
+	+kmod-crypto-iv +kmod-crypto-md5 +kmod-crypto-sha1
   KCONFIG:= \
 	CONFIG_NET_KEY \
 	CONFIG_XFRM_USER \
@@ -243,13 +268,15 @@ endef
 
 $(eval $(call KernelPackage,ipsec))
 
-IPSEC4-m = \
+
+IPSEC4-m:= \
 	ipv4/ah4 \
 	ipv4/esp4 \
+	ipv4/xfrm4_mode_beet \
+	ipv4/xfrm4_mode_transport \
+	ipv4/xfrm4_mode_tunnel \
 	ipv4/xfrm4_tunnel \
 	ipv4/ipcomp \
-
-IPSEC4-m += $(ifeq ($$(strip $$(call CompareKernelPatchVer,$$(KERNEL_PATCHVER),le,5.2))),ipv4/xfrm4_mode_beet ipv4/xfrm4_mode_transport ipv4/xfrm4_mode_tunnel)
 
 define KernelPackage/ipsec4
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
@@ -283,18 +310,19 @@ endef
 $(eval $(call KernelPackage,ipsec4))
 
 
-IPSEC6-m = \
+IPSEC6-m:= \
 	ipv6/ah6 \
 	ipv6/esp6 \
+	ipv6/xfrm6_mode_beet \
+	ipv6/xfrm6_mode_transport \
+	ipv6/xfrm6_mode_tunnel \
 	ipv6/xfrm6_tunnel \
 	ipv6/ipcomp6 \
-
-IPSEC6-m += $(ifeq ($$(strip $$(call CompareKernelPatchVer,$$(KERNEL_PATCHVER),le,5.2))),ipv6/xfrm6_mode_beet ipv6/xfrm6_mode_transport ipv6/xfrm6_mode_tunnel)
 
 define KernelPackage/ipsec6
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=IPsec related modules (IPv6)
-  DEPENDS:=@IPV6 kmod-ipsec +kmod-iptunnel6
+  DEPENDS:=kmod-ipsec +kmod-iptunnel6
   KCONFIG:= \
 	CONFIG_INET6_AH \
 	CONFIG_INET6_ESP \
@@ -359,7 +387,7 @@ $(eval $(call KernelPackage,ip-vti))
 define KernelPackage/ip6-vti
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=IPv6 VTI (Virtual Tunnel Interface)
-  DEPENDS:=@IPV6 +kmod-iptunnel +kmod-ip6-tunnel +kmod-ipsec6
+  DEPENDS:=+kmod-iptunnel +kmod-ip6-tunnel +kmod-ipsec6
   KCONFIG:=CONFIG_IPV6_VTI
   FILES:=$(LINUX_DIR)/net/ipv6/ip6_vti.ko
   AUTOLOAD:=$(call AutoLoad,33,ip6_vti)
@@ -375,10 +403,10 @@ $(eval $(call KernelPackage,ip6-vti))
 define KernelPackage/xfrm-interface
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=IPsec XFRM Interface
-  DEPENDS:=+kmod-ipsec4 +IPV6:kmod-ipsec6
+  DEPENDS:=+kmod-ipsec4 +kmod-ipsec6 @!LINUX_4_14
   KCONFIG:=CONFIG_XFRM_INTERFACE
   FILES:=$(LINUX_DIR)/net/xfrm/xfrm_interface.ko
-  AUTOLOAD:=$(call AutoProbe,xfrm_interface)
+  AUTOLOAD:=$(call AutoLoad,33,xfrm_interface)
 endef
 
 define KernelPackage/xfrm-interface/description
@@ -705,7 +733,7 @@ $(eval $(call KernelPackage,ipoa))
 define KernelPackage/mppe
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=Microsoft PPP compression/encryption
-  DEPENDS:=kmod-ppp +kmod-crypto-arc4 +kmod-crypto-sha1 +kmod-crypto-ecb
+  DEPENDS:=kmod-ppp +kmod-crypto-sha1 +kmod-crypto-ecb
   KCONFIG:= \
 	CONFIG_PPP_MPPE_MPPC \
 	CONFIG_PPP_MPPE
@@ -722,7 +750,7 @@ $(eval $(call KernelPackage,mppe))
 
 SCHED_MODULES = $(patsubst $(LINUX_DIR)/net/sched/%.ko,%,$(wildcard $(LINUX_DIR)/net/sched/*.ko))
 SCHED_MODULES_CORE = sch_ingress sch_fq_codel sch_hfsc sch_htb sch_tbf cls_basic cls_fw cls_route cls_flow cls_tcindex cls_u32 em_u32 act_mirred act_skbedit cls_matchall
-SCHED_MODULES_FILTER = $(SCHED_MODULES_CORE) act_connmark act_ctinfo sch_cake sch_netem sch_mqprio em_ipset cls_bpf cls_flower act_bpf act_vlan
+SCHED_MODULES_FILTER = $(SCHED_MODULES_CORE) act_connmark act_ctinfo sch_netem sch_mqprio em_ipset cls_bpf cls_flower act_bpf act_vlan
 SCHED_MODULES_EXTRA = $(filter-out $(SCHED_MODULES_FILTER),$(SCHED_MODULES))
 SCHED_FILES = $(patsubst %,$(LINUX_DIR)/net/sched/%.ko,$(filter $(SCHED_MODULES_CORE),$(SCHED_MODULES)))
 SCHED_FILES_EXTRA = $(patsubst %,$(LINUX_DIR)/net/sched/%.ko,$(SCHED_MODULES_EXTRA))
@@ -764,7 +792,7 @@ $(eval $(call KernelPackage,sched-core))
 define KernelPackage/sched-cake
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=Cake fq_codel/blue derived shaper
-  DEPENDS:=@!LINUX_4_14 +kmod-sched-core
+  DEPENDS:=+kmod-sched-core
   KCONFIG:=CONFIG_NET_SCH_CAKE
   FILES:=$(LINUX_DIR)/net/sched/sch_cake.ko
   AUTOLOAD:=$(call AutoProbe,sch_cake)
@@ -922,9 +950,12 @@ $(eval $(call KernelPackage,sched))
 define KernelPackage/tcp-bbr
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=BBR TCP congestion control
-  KCONFIG:=CONFIG_TCP_CONG_BBR
+  DEPENDS:=+LINUX_4_9:kmod-sched
+  KCONFIG:= \
+	CONFIG_TCP_CONG_ADVANCED=y \
+	CONFIG_TCP_CONG_BBR
   FILES:=$(LINUX_DIR)/net/ipv4/tcp_bbr.ko
-  AUTOLOAD:=$(call AutoProbe,tcp_bbr)
+  AUTOLOAD:=$(call AutoLoad,74,tcp_bbr)
 endef
 
 define KernelPackage/tcp-bbr/description
@@ -933,7 +964,11 @@ define KernelPackage/tcp-bbr/description
  For kernel 4.13+, TCP internal pacing is implemented as fallback.
 endef
 
-TCP_BBR_SYSCTL_CONF:=sysctl-tcp-bbr.conf
+ifdef CONFIG_LINUX_4_9
+  TCP_BBR_SYSCTL_CONF:=sysctl-tcp-bbr-k4_9.conf
+else
+  TCP_BBR_SYSCTL_CONF:=sysctl-tcp-bbr.conf
+endif
 
 define KernelPackage/tcp-bbr/install
 	$(INSTALL_DIR) $(1)/etc/sysctl.d
@@ -1133,8 +1168,10 @@ define KernelPackage/rxrpc
 	CONFIG_RXKAD=m \
 	CONFIG_AF_RXRPC_DEBUG=n
   FILES:= \
-	$(LINUX_DIR)/net/rxrpc/rxrpc.ko
-  AUTOLOAD:=$(call AutoLoad,30,rxrpc.ko)
+	$(LINUX_DIR)/net/rxrpc/af-rxrpc.ko@lt4.11 \
+	$(LINUX_DIR)/net/rxrpc/rxrpc.ko@ge4.11 \
+	$(LINUX_DIR)/net/rxrpc/rxkad.ko@lt4.7
+  AUTOLOAD:=$(call AutoLoad,30,rxkad@lt4.7 af-rxrpc.ko@lt4.11 rxrpc.ko@ge4.11)
   DEPENDS:= +kmod-crypto-manager +kmod-crypto-pcbc +kmod-crypto-fcrypt
 endef
 
@@ -1147,7 +1184,7 @@ $(eval $(call KernelPackage,rxrpc))
 define KernelPackage/mpls
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
   TITLE:=MPLS support
-  DEPENDS:=+kmod-iptunnel
+  DEPENDS:=+LINUX_4_19:kmod-iptunnel
   KCONFIG:= \
 	CONFIG_MPLS=y \
 	CONFIG_LWTUNNEL=y \

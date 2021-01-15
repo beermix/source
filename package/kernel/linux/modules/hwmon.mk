@@ -26,7 +26,7 @@ $(eval $(call KernelPackage,hwmon-core))
 
 define AddDepends/hwmon
   SUBMENU:=$(HWMON_MENU)
-  DEPENDS:=+kmod-hwmon-core $(1)
+  DEPENDS:=kmod-hwmon-core $(1)
 endef
 
 define KernelPackage/hwmon-ad7418
@@ -384,7 +384,7 @@ define KernelPackage/pmbus-zl6100
   $(call AddDepends/hwmon, +kmod-pmbus-core)
 endef
 
-define KernelPackage/pmbus-zl6100/description
+define KernelPackage/hwmon-sht21/description
  Kernel module for Intersil / Zilker Labs ZL6100 and
 compatible digital DC-DC controllers
 endef
@@ -409,9 +409,7 @@ $(eval $(call KernelPackage,hwmon-pwmfan))
 
 define KernelPackage/hwmon-sch5627
   TITLE:=SMSC SCH5627 monitoring support
-  KCONFIG:= \
-	CONFIG_SENSORS_SCH5627 \
-	CONFIG_WATCHDOG_CORE=y
+  KCONFIG:=CONFIG_SENSORS_SCH5627
   FILES:= \
 	$(LINUX_DIR)/drivers/hwmon/sch5627.ko \
 	$(LINUX_DIR)/drivers/hwmon/sch56xx-common.ko

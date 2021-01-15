@@ -53,7 +53,8 @@ define KernelPackage/fs-autofs4
 	CONFIG_AUTOFS4_FS \
 	CONFIG_AUTOFS_FS
   FILES:= \
-	$(LINUX_DIR)/fs/autofs/autofs4.ko
+	$(LINUX_DIR)/fs/autofs4/autofs4.ko@lt4.18 \
+	$(LINUX_DIR)/fs/autofs/autofs4.ko@ge4.18
   AUTOLOAD:=$(call AutoLoad,30,autofs4)
 endef
 
@@ -67,7 +68,7 @@ $(eval $(call KernelPackage,fs-autofs4))
 define KernelPackage/fs-btrfs
   SUBMENU:=$(FS_MENU)
   TITLE:=BTRFS filesystem support
-  DEPENDS:=+kmod-lib-crc32c +kmod-lib-lzo +kmod-lib-zlib-inflate +kmod-lib-zlib-deflate +kmod-lib-raid6 +kmod-lib-xor +kmod-lib-zstd
+  DEPENDS:=+kmod-lib-crc32c +kmod-lib-lzo +kmod-lib-zlib-inflate +kmod-lib-zlib-deflate +kmod-lib-raid6 +kmod-lib-xor +!LINUX_4_9:kmod-lib-zstd
   KCONFIG:=\
 	CONFIG_BTRFS_FS \
 	CONFIG_BTRFS_FS_POSIX_ACL=n \
@@ -89,23 +90,20 @@ define KernelPackage/fs-cifs
   TITLE:=CIFS support
   KCONFIG:= \
 	CONFIG_CIFS \
+	CONFIG_CIFS_XATTR=y \
 	CONFIG_CIFS_DFS_UPCALL=n \
-	CONFIG_CIFS_UPCALL=n
+	CONFIG_CIFS_UPCALL=n \
+	CONFIG_CIFS_SMB311=n
   FILES:=$(LINUX_DIR)/fs/cifs/cifs.ko
   AUTOLOAD:=$(call AutoLoad,30,cifs)
   $(call AddDepends/nls)
   DEPENDS+= \
-    +kmod-crypto-md4 \
-    +kmod-crypto-md5 \
-    +kmod-crypto-sha256 \
-    +kmod-crypto-sha512 \
-    +kmod-crypto-cmac \
     +kmod-crypto-hmac \
-    +kmod-crypto-arc4 \
-    +kmod-crypto-aead \
-    +kmod-crypto-ccm \
+    +kmod-crypto-md5 \
+    +kmod-crypto-md4 \
+    +kmod-crypto-des \
     +kmod-crypto-ecb \
-    +kmod-crypto-des
+    +kmod-crypto-sha256
 endef
 
 define KernelPackage/fs-cifs/description
@@ -207,8 +205,14 @@ $(eval $(call KernelPackage,fs-ext4))
 define KernelPackage/fs-f2fs
   SUBMENU:=$(FS_MENU)
   TITLE:=F2FS filesystem support
-  DEPENDS:= +kmod-crypto-hash +kmod-crypto-crc32 +kmod-nls-base
-  KCONFIG:=CONFIG_F2FS_FS
+  DEPENDS:= +kmod-crypto-hash +kmod-crypto-crc32
+  KCONFIG:= \
+	CONFIG_F2FS_FS \
+	CONFIG_F2FS_STAT_FS=y \
+	CONFIG_F2FS_FS_XATTR=y \
+	CONFIG_F2FS_FS_POSIX_ACL=n \
+	CONFIG_F2FS_FS_SECURITY=n \
+	CONFIG_F2FS_CHECK_FS=n
   FILES:=$(LINUX_DIR)/fs/f2fs/f2fs.ko
   AUTOLOAD:=$(call AutoLoad,30,f2fs,1)
 endef
@@ -384,8 +388,7 @@ define KernelPackage/fs-nfs-common-rpcsec
 	+kmod-crypto-md5 \
 	+kmod-crypto-sha1 \
 	+kmod-crypto-hmac \
-	+kmod-crypto-ecb \
-	+kmod-crypto-arc4
+	+kmod-crypto-ecb
   KCONFIG:= \
 	CONFIG_SUNRPC_GSS \
 	CONFIG_RPCSEC_GSS_KRB5
@@ -431,7 +434,7 @@ define KernelPackage/fs-nfs-v4
 endef
 
 define KernelPackage/fs-nfs-v4/description
- Kernel module for NFS v4 client support
+ Kernel module for NFS v4 support
 endef
 
 $(eval $(call KernelPackage,fs-nfs-v4))
@@ -479,7 +482,8 @@ $(eval $(call KernelPackage,fs-ntfs))
 define KernelPackage/fs-reiserfs
   SUBMENU:=$(FS_MENU)
   TITLE:=ReiserFS filesystem support
-  KCONFIG:=CONFIG_REISERFS_FS
+  KCONFIG:=CONFIG_REISERFS_FS \
+	CONFIG_REISERFS_FS_XATTR=y
   FILES:=$(LINUX_DIR)/fs/reiserfs/reiserfs.ko
   AUTOLOAD:=$(call AutoLoad,30,reiserfs,1)
 endef

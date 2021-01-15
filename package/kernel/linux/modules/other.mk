@@ -30,7 +30,7 @@ $(eval $(call KernelPackage,6lowpan))
 define KernelPackage/bluetooth
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Bluetooth support
-  DEPENDS:=@USB_SUPPORT +kmod-usb-core +kmod-crypto-hash +kmod-crypto-ecb +kmod-lib-crc16 +kmod-hid +kmod-crypto-cmac +kmod-regmap-core +kmod-crypto-ecdh
+  DEPENDS:=@USB_SUPPORT +kmod-usb-core +kmod-crypto-hash +kmod-crypto-ecb +kmod-lib-crc16 +kmod-hid +kmod-crypto-cmac +kmod-regmap-core +!LINUX_4_9:kmod-crypto-ecdh
   KCONFIG:= \
 	CONFIG_BT \
 	CONFIG_BT_BREDR=y \
@@ -53,8 +53,11 @@ define KernelPackage/bluetooth
 	$(LINUX_DIR)/net/bluetooth/bnep/bnep.ko \
 	$(LINUX_DIR)/net/bluetooth/hidp/hidp.ko \
 	$(LINUX_DIR)/drivers/bluetooth/hci_uart.ko \
-	$(LINUX_DIR)/drivers/bluetooth/btusb.ko \
+	$(LINUX_DIR)/drivers/bluetooth/btusb.ko
+ifeq ($(strip $(call CompareKernelPatchVer,$(KERNEL_PATCHVER),ge,4.1.0)),1)
+  FILES+= \
 	$(LINUX_DIR)/drivers/bluetooth/btintel.ko
+endif
   AUTOLOAD:=$(call AutoProbe,bluetooth rfcomm bnep hidp hci_uart btusb)
 endef
 
@@ -84,7 +87,7 @@ endef
 $(eval $(call KernelPackage,ath3k))
 
 
-define KernelPackage/bluetooth-6lowpan
+define KernelPackage/bluetooth_6lowpan
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Bluetooth 6LoWPAN support
   DEPENDS:=+kmod-6lowpan +kmod-bluetooth
@@ -93,11 +96,11 @@ define KernelPackage/bluetooth-6lowpan
   AUTOLOAD:=$(call AutoProbe,bluetooth_6lowpan)
 endef
 
-define KernelPackage/bluetooth-6lowpan/description
+define KernelPackage/bluetooth_6lowpan/description
  Kernel support for 6LoWPAN over Bluetooth Low Energy devices
 endef
 
-$(eval $(call KernelPackage,bluetooth-6lowpan))
+$(eval $(call KernelPackage,bluetooth_6lowpan))
 
 
 define KernelPackage/btmrvl
@@ -136,6 +139,20 @@ endef
 $(eval $(call KernelPackage,dma-buf))
 
 
+define KernelPackage/nvmem
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Non Volatile Memory support
+  KCONFIG:=CONFIG_NVMEM
+  HIDDEN:=1
+  FILES:=$(LINUX_DIR)/drivers/nvmem/nvmem_core.ko@ge4.9
+endef
+
+define KernelPackage/nvmem/description
+  Support for NVMEM(Non Volatile Memory) devices like EEPROM, EFUSES, etc.
+endef
+
+$(eval $(call KernelPackage,nvmem))
+
 define KernelPackage/eeprom-93cx6
   SUBMENU:=$(OTHER_MENU)
   TITLE:=EEPROM 93CX6 support
@@ -155,7 +172,7 @@ define KernelPackage/eeprom-at24
   SUBMENU:=$(OTHER_MENU)
   TITLE:=EEPROM AT24 support
   KCONFIG:=CONFIG_EEPROM_AT24
-  DEPENDS:=+kmod-i2c-core +kmod-regmap-i2c
+  DEPENDS:=+kmod-i2c-core +kmod-nvmem +LINUX_4_19:kmod-regmap-i2c
   FILES:=$(LINUX_DIR)/drivers/misc/eeprom/at24.ko
   AUTOLOAD:=$(call AutoProbe,at24)
 endef
@@ -171,6 +188,7 @@ define KernelPackage/eeprom-at25
   SUBMENU:=$(OTHER_MENU)
   TITLE:=EEPROM AT25 support
   KCONFIG:=CONFIG_EEPROM_AT25
+  DEPENDS:=+kmod-nvmem
   FILES:=$(LINUX_DIR)/drivers/misc/eeprom/at25.ko
   AUTOLOAD:=$(call AutoProbe,at25)
 endef
@@ -198,32 +216,17 @@ endef
 $(eval $(call KernelPackage,gpio-dev))
 
 
-define KernelPackage/gpio-f7188x
-  SUBMENU:=$(OTHER_MENU)
-  TITLE:=Fintek F718xx/F818xx GPIO Support
-  DEPENDS:=@GPIO_SUPPORT @TARGET_x86
-  KCONFIG:=CONFIG_GPIO_F7188X
-  FILES:=$(LINUX_DIR)/drivers/gpio/gpio-f7188x.ko
-  AUTOLOAD:=$(call AutoProbe,gpio-f7188x)
-endef
-
-define KernelPackage/gpio-f7188x/description
-  Kernel module for the GPIOs found on many Fintek Super-IO chips.
-endef
-
-$(eval $(call KernelPackage,gpio-f7188x))
-
-
 define KernelPackage/gpio-mcp23s08
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Microchip MCP23xxx I/O expander
-  DEPENDS:=@GPIO_SUPPORT +kmod-i2c-core +kmod-regmap-i2c
+  DEPENDS:=@GPIO_SUPPORT +kmod-i2c-core +!LINUX_4_9:kmod-regmap-i2c
   KCONFIG:= \
 	CONFIG_GPIO_MCP23S08 \
 	CONFIG_PINCTRL_MCP23S08
   FILES:= \
-	$(LINUX_DIR)/drivers/pinctrl/pinctrl-mcp23s08.ko
-  AUTOLOAD:=$(call AutoLoad,40,pinctrl-mcp23s08)
+	$(LINUX_DIR)/drivers/gpio/gpio-mcp23s08.ko@lt4.13 \
+	$(LINUX_DIR)/drivers/pinctrl/pinctrl-mcp23s08.ko@ge4.13
+  AUTOLOAD:=$(call AutoLoad,40,gpio-mcp23s08@lt4.13 pinctrl-mcp23s08@ge4.13)
 endef
 
 define KernelPackage/gpio-mcp23s08/description
@@ -249,7 +252,7 @@ $(eval $(call KernelPackage,gpio-nxp-74hc164))
 
 define KernelPackage/gpio-pca953x
   SUBMENU:=$(OTHER_MENU)
-  DEPENDS:=@GPIO_SUPPORT +kmod-i2c-core +kmod-regmap-i2c
+  DEPENDS:=@GPIO_SUPPORT +kmod-i2c-core
   TITLE:=PCA95xx, TCA64xx, and MAX7310 I/O ports
   KCONFIG:=CONFIG_GPIO_PCA953X
   FILES:=$(LINUX_DIR)/drivers/gpio/gpio-pca953x.ko
@@ -381,7 +384,8 @@ define KernelPackage/mmc
 	CONFIG_SDIO_UART=n
   FILES:= \
 	$(LINUX_DIR)/drivers/mmc/core/mmc_core.ko \
-	$(LINUX_DIR)/drivers/mmc/core/mmc_block.ko
+	$(LINUX_DIR)/drivers/mmc/card/mmc_block.ko@lt4.10 \
+	$(LINUX_DIR)/drivers/mmc/core/mmc_block.ko@ge4.10
   AUTOLOAD:=$(call AutoProbe,mmc_core mmc_block,1)
 endef
 
@@ -471,7 +475,7 @@ $(eval $(call KernelPackage,softdog))
 define KernelPackage/ssb
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Silicon Sonics Backplane glue code
-  DEPENDS:=@PCI_SUPPORT @!TARGET_bcm47xx @!TARGET_bcm63xx
+  DEPENDS:=@PCI_SUPPORT @!TARGET_brcm47xx @!TARGET_brcm63xx
   KCONFIG:=\
 	CONFIG_SSB \
 	CONFIG_SSB_B43_PCI_BRIDGE=y \
@@ -497,7 +501,7 @@ $(eval $(call KernelPackage,ssb))
 define KernelPackage/bcma
   SUBMENU:=$(OTHER_MENU)
   TITLE:=BCMA support
-  DEPENDS:=@PCI_SUPPORT @!TARGET_bcm47xx @!TARGET_bcm53xx
+  DEPENDS:=@PCI_SUPPORT @!TARGET_brcm47xx @!TARGET_bcm53xx
   KCONFIG:=\
 	CONFIG_BCMA \
 	CONFIG_BCMA_POSSIBLE=y \
@@ -524,7 +528,7 @@ define KernelPackage/rtc-ds1307
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Dallas/Maxim DS1307 (and compatible) RTC support
   DEFAULT:=m if ALL_KMODS && RTC_SUPPORT
-  DEPENDS:=+kmod-i2c-core +kmod-regmap-i2c +kmod-hwmon-core
+  DEPENDS:=+kmod-i2c-core +!LINUX_4_9:kmod-regmap-i2c +!LINUX_4_9:kmod-hwmon-core
   KCONFIG:=CONFIG_RTC_DRV_DS1307 \
 	CONFIG_RTC_CLASS=y
   FILES:=$(LINUX_DIR)/drivers/rtc/rtc-ds1307.ko
@@ -800,9 +804,8 @@ define KernelPackage/serial-8250
 	CONFIG_SERIAL_8250_RSA=n
   FILES:= \
 	$(LINUX_DIR)/drivers/tty/serial/8250/8250.ko \
-	$(LINUX_DIR)/drivers/tty/serial/8250/8250_base.ko \
-	$(if $(CONFIG_PCI),$(LINUX_DIR)/drivers/tty/serial/8250/8250_pci.ko) \
-	$(if $(CONFIG_GPIOLIB),$(LINUX_DIR)/drivers/tty/serial/serial_mctrl_gpio.ko)
+	$(LINUX_DIR)/drivers/tty/serial/8250/8250_base.ko@ge4.4 \
+	$(if $(CONFIG_PCI),$(LINUX_DIR)/drivers/tty/serial/8250/8250_pci.ko@ge4.4)
   AUTOLOAD:=$(call AutoProbe,8250 8250_base 8250_pci)
 endef
 
@@ -914,14 +917,15 @@ $(eval $(call KernelPackage,ikconfig))
 define KernelPackage/zram
   SUBMENU:=$(OTHER_MENU)
   TITLE:=ZRAM
-  DEPENDS:=+kmod-lib-lzo
+  DEPENDS:=+kmod-lib-lzo +kmod-lib-lz4
   KCONFIG:= \
 	CONFIG_ZSMALLOC \
 	CONFIG_ZRAM \
 	CONFIG_ZRAM_DEBUG=n \
 	CONFIG_PGTABLE_MAPPING=n \
 	CONFIG_ZRAM_WRITEBACK=n \
-	CONFIG_ZSMALLOC_STAT=n
+	CONFIG_ZSMALLOC_STAT=n \
+	CONFIG_ZRAM_LZ4_COMPRESS=y
   FILES:= \
 	$(LINUX_DIR)/mm/zsmalloc.ko \
 	$(LINUX_DIR)/drivers/block/zram/zram.ko
@@ -1006,10 +1010,26 @@ endef
 $(eval $(call KernelPackage,ptp))
 
 
+define KernelPackage/ptp-gianfar
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Freescale Gianfar PTP support
+  DEPENDS:=@TARGET_mpc85xx +kmod-ptp @!LINUX_4_19
+  KCONFIG:=CONFIG_PTP_1588_CLOCK_GIANFAR
+  FILES:=$(LINUX_DIR)/drivers/net/ethernet/freescale/gianfar_ptp.ko
+  AUTOLOAD:=$(call AutoProbe,gianfar_ptp)
+endef
+
+define KernelPackage/ptp-gianfar/description
+ Kernel module for IEEE 1588 support for Freescale
+ Gianfar Ethernet drivers
+endef
+
+$(eval $(call KernelPackage,ptp-gianfar))
+
 define KernelPackage/ptp-qoriq
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Freescale QorIQ PTP support
-  DEPENDS:=@TARGET_mpc85xx +kmod-ptp
+  DEPENDS:=@TARGET_mpc85xx +kmod-ptp @LINUX_4_19
   KCONFIG:=CONFIG_PTP_1588_CLOCK_QORIQ
   FILES:=$(LINUX_DIR)/drivers/ptp/ptp-qoriq.ko
   AUTOLOAD:=$(call AutoProbe,ptp-qoriq)
@@ -1036,6 +1056,22 @@ endef
 
 $(eval $(call KernelPackage,random-core))
 
+
+define KernelPackage/random-tpm
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Hardware Random Number Generator TPM support
+  KCONFIG:=CONFIG_HW_RANDOM_TPM
+  FILES:=$(LINUX_DIR)/drivers/char/hw_random/tpm-rng.ko
+  DEPENDS:= +kmod-random-core +kmod-tpm @!LINUX_4_19
+  AUTOLOAD:=$(call AutoProbe,tpm-rng)
+endef
+
+define KernelPackage/random-tpm/description
+ Kernel module for the Random Number Generator
+ in the Trusted Platform Module.
+endef
+
+$(eval $(call KernelPackage,random-tpm))
 
 define KernelPackage/thermal
   SUBMENU:=$(OTHER_MENU)
@@ -1103,51 +1139,56 @@ endef
 $(eval $(call KernelPackage,echo))
 
 
-define KernelPackage/keys-encrypted
+define KernelPackage/bmp085
   SUBMENU:=$(OTHER_MENU)
-  TITLE:=encrypted keys on kernel keyring
-  DEPENDS:=@KERNEL_KEYS +kmod-crypto-cbc +kmod-crypto-hmac +kmod-crypto-rng \
-           +kmod-crypto-sha256 +kmod-keys-trusted
-  KCONFIG:=CONFIG_ENCRYPTED_KEYS
-  FILES:=$(LINUX_DIR)/security/keys/encrypted-keys/encrypted-keys.ko
-  AUTOLOAD:=$(call AutoLoad,01,encrypted-keys,1)
+  TITLE:=BMP085/BMP18x pressure sensor
+  DEPENDS:= +kmod-regmap-core
+  KCONFIG:= CONFIG_BMP085
+  FILES:= $(LINUX_DIR)/drivers/misc/bmp085.ko
 endef
 
-define KernelPackage/keys-encrypted/description
-	This module provides support for create/encrypting/decrypting keys
-	in the kernel.  Encrypted keys are kernel generated random numbers,
-	which are encrypted/decrypted with a 'master' symmetric key. The
-	'master' key can be either a trusted-key or user-key type.
-	Userspace only ever sees/stores encrypted blobs.
+define KernelPackage/bmp085/description
+ This driver adds support for Bosch Sensortec's digital pressure
+ sensors BMP085 and BMP18x.
 endef
 
-$(eval $(call KernelPackage,keys-encrypted))
+$(eval $(call KernelPackage,bmp085))
 
 
-define KernelPackage/keys-trusted
+define KernelPackage/bmp085-i2c
   SUBMENU:=$(OTHER_MENU)
-  TITLE:=TPM trusted keys on kernel keyring
-  DEPENDS:=@KERNEL_KEYS +kmod-crypto-hash +kmod-crypto-hmac +kmod-crypto-sha1 +kmod-tpm
-  KCONFIG:=CONFIG_TRUSTED_KEYS
-  FILES:=$(LINUX_DIR)/security/keys/trusted.ko
-  AUTOLOAD:=$(call AutoLoad,01,trusted-keys,1)
+  TITLE:=BMP085/BMP18x pressure sensor I2C
+  DEPENDS:= +kmod-bmp085
+  KCONFIG:= CONFIG_BMP085_I2C
+  FILES:= $(LINUX_DIR)/drivers/misc/bmp085-i2c.ko
+  AUTOLOAD:=$(call AutoProbe,bmp085-i2c)
+endef
+define KernelPackage/bmp085-i2c/description
+ This driver adds support for Bosch Sensortec's digital pressure
+ sensor connected via I2C.
 endef
 
-define KernelPackage/keys-trusted/description
-	This module provides support for creating, sealing, and unsealing
-	keys in the kernel. Trusted keys are random number symmetric keys,
-	generated and RSA-sealed by the TPM. The TPM only unseals the keys,
-	if the boot PCRs and other criteria match.  Userspace will only ever
-	see encrypted blobs.
+$(eval $(call KernelPackage,bmp085-i2c))
+
+
+define KernelPackage/bmp085-spi
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=BMP085/BMP18x pressure sensor SPI
+  DEPENDS:= +kmod-bmp085
+  KCONFIG:= CONFIG_BMP085_SPI
+  FILES:= $(LINUX_DIR)/drivers/misc/bmp085-spi.ko
+  AUTOLOAD:=$(call AutoProbe,bmp085-spi)
+endef
+define KernelPackage/bmp085-spi/description
+ This driver adds support for Bosch Sensortec's digital pressure
+ sensor connected via SPI.
 endef
 
-$(eval $(call KernelPackage,keys-trusted))
-
+$(eval $(call KernelPackage,bmp085-spi))
 
 define KernelPackage/tpm
   SUBMENU:=$(OTHER_MENU)
   TITLE:=TPM Hardware Support
-  DEPENDS:= +kmod-random-core
   KCONFIG:= CONFIG_TCG_TPM
   FILES:= $(LINUX_DIR)/drivers/char/tpm/tpm.ko
   AUTOLOAD:=$(call AutoLoad,10,tpm,1)
