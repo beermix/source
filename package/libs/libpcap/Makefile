@@ -47,7 +47,8 @@ endef
 CMAKE_OPTIONS += \
 	-DBUILD_SHARED_LIBS=ON \
 	-DBUILD_WITH_LIBNL=OFF \
-	-DINET6=O$(if $(CONFIG_IPV6),N,FF)
+	-DINET6=O$(if $(CONFIG_IPV6),N,FF) \
+	-DPCAP_SUPPORT_NETFILTER=O$(if $(CONFIG_PCAP_HAS_NETFILTER),N,FF)
 
 # grep 'option(DISABLE_' CMakeLists.txt | cut -f2 -d'(' | cut -f1 -d' ' | sort --unique
 CMAKE_OPTIONS += \

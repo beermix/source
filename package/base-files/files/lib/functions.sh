@@ -92,7 +92,7 @@ list() {
 	local len
 
 	config_get len "$CONFIG_SECTION" "${varname}_LENGTH" 0
-	[ $len = 0 ] && append CONFIG_LIST_STATE "${CONFIG_SECTION}_${varname}"
+	[ "$len" = 0 ] && append CONFIG_LIST_STATE "${CONFIG_SECTION}_${varname}"
 	len=$((len + 1))
 	config_set "$CONFIG_SECTION" "${varname}_ITEM$len" "$value"
 	config_set "$CONFIG_SECTION" "${varname}_LENGTH" "$len"
@@ -171,7 +171,7 @@ config_list_foreach() {
 
 	config_get len "${section}" "${option}_LENGTH"
 	[ -z "$len" ] && return 0
-	while [ $c -le "$len" ]; do
+	while [ "$c" -le "$len" ]; do
 		config_get val "${section}" "${option}_ITEM$c"
 		eval "$function \"\$val\" \"\$@\""
 		c="$((c + 1))"
@@ -189,7 +189,8 @@ default_prerm() {
 	fi
 
 	local shell="$(command -v bash)"
-	for i in $(grep -s "^/etc/init.d/" "$root/usr/lib/opkg/info/${pkgname}.list"); do
+	grep -s "^/etc/init.d/" "$root/usr/lib/opkg/info/${pkgname}.list" | while IFS= read -r i
+	do
 		if [ -n "$root" ]; then
 			${shell:-/bin/sh} "$root/etc/rc.common" "$root$i" disable
 		else
@@ -267,7 +268,8 @@ default_postinst() {
 
 		if grep -m1 -q -s "^/etc/uci-defaults/" "$filelist"; then
 			[ -d /tmp/.uci ] || mkdir -p /tmp/.uci
-			for i in $(grep -s "^/etc/uci-defaults/" "$filelist"); do
+			grep -s "^/etc/uci-defaults/" "$filelist" | while IFS= read -r i
+			do
 				( [ -f "$i" ] && cd "$(dirname $i)" && . "$i" ) && rm -f "$i"
 			done
 			uci commit
@@ -277,7 +279,8 @@ default_postinst() {
 	fi
 
 	local shell="$(command -v bash)"
-	for i in $(grep -s "^/etc/init.d/" "$root$filelist"); do
+	grep -s "^/etc/init.d/" "$root$filelist" | while IFS= read -r i
+	do
 		if [ -n "$root" ]; then
 			${shell:-/bin/sh} "$root/etc/rc.common" "$root$i" enable
 		else
@@ -294,8 +297,9 @@ default_postinst() {
 include() {
 	local file
 
-	for file in $(ls $1/*.sh 2>/dev/null); do
-		. $file
+	for file in "$1"/*.sh; do
+		[ -e "$file" ] || break
+		. "$file"
 	done
 }
 
