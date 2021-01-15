@@ -54,7 +54,7 @@ Internal viewer and editor are included as well.
 endef
 
 TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto $(if $(CONFIG_USE_GLIBC),-lpthread)
 
 CONFIGURE_ARGS += \
 	--enable-silent-rules \
