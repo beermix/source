@@ -53,7 +53,7 @@ endif
 #endif
 
 #ifeq ($(PKG_VERSION),10.2.1)
-#  PKG_REV:=10-20201226
+#  PKG_REV:=10-20210109
 #  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
 #  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
 #  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
@@ -140,8 +140,6 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-linker-hash-style=gnu \
-		--disable-libstdcxx-pch \
-		--disable-libstdcxx-debug \
 		--with-diagnostics-color=always \
 		--enable-__cxa_atexit
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
