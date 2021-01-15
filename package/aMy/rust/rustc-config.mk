@@ -125,5 +125,5 @@ endif
 
 ifeq ($(CONFIG_LIBC),"musl")
 CONFIGURE_ARGS += \
-  	 --set=target.$(RUSTC_TARGET_ARCH).musl-root=$(TOOLCHAIN_DIR)
+  	 --set=target.i686-unknown-linux-musl.musl-root=$(TOOLCHAIN_DIR)
 endif

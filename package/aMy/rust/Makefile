@@ -37,7 +37,7 @@ CMAKE_INSTALL:=1
 CONFIGURE_ARGS = \
   --host=$(RUSTC_HOST_ARCH) \
   --build=$(RUSTC_HOST_ARCH) \
-  --target=$(RUSTC_TARGET_ARCH) \
+  --target=i686-unknown-linux-musl \
   --prefix=$(CARGO_HOME) \
   --bindir=$(CARGO_HOME)/bin \
   --libdir=$(CARGO_HOME)/lib \
@@ -48,17 +48,24 @@ CONFIGURE_ARGS = \
   --localstatedir=/var \
   --release-channel=nightly \
   --enable-lld \
-  --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
-  --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
-  --set=target.$(RUSTC_TARGET_ARCH).cxx=$(TARGET_CXX_NOCACHE) \
-  --set=target.$(RUSTC_TARGET_ARCH).ar=$(TARGET_AR) \
-  --set=target.$(RUSTC_TARGET_ARCH).ranlib=$(TARGET_RANLIB)
+  --enable-full-bootstrap \
+  --enable-manage-submodules \
+  --enable-optimize-llvm \
+  --enable-missing-tools \
+  --enable-full-tools \
+  --enable-ninja \
+  --enable-option-checking \
+  --set=target.i686-unknown-linux-musl.linker=$(TARGET_CC_NOCACHE) \
+  --set=target.i686-unknown-linux-musl.cc=$(TARGET_CC_NOCACHE) \
+  --set=target.i686-unknown-linux-musl.cxx=$(TARGET_CXX_NOCACHE) \
+  --set=target.i686-unknown-linux-musl.ar=$(TARGET_AR) \
+  --set=target.i686-unknown-linux-musl.ranlib=$(TARGET_RANLIB)
 
 # Because we override CONFIGURE_ARGS, this needs to go here.
 include ./rustc-config.mk
 
 RUST_TMP_DIR:=$(TMP_DIR)/rust-install
-RUST_INSTALL_FILE_NAME:=$(PKG_NAME)-$(PKG_VERSION)-$(RUSTC_HOST_ARCH)_$(RUSTC_TARGET_ARCH)-install.tar.xz
+RUST_INSTALL_FILE_NAME:=$(PKG_NAME)-$(PKG_VERSION)-$(RUSTC_HOST_ARCH)_i686-unknown-linux-musl-install.tar.xz
 RUST_INSTALL_FILE_VERIFY:=$(call check_hash,$(RUST_INSTALL_FILE_NAME),$(RUST_INSTALL_FILE_HASH),RUST_INSTALL_FILE_HASH)
 RUST_INSTALL_UNINSTALL:=$(CARGO_HOME)/lib/rustlib/uninstall.sh
 RUST_INSTALL_BINARIES:=$(CURDIR)/install_binaries.sh $(RUST_TMP_DIR) $(DL_DIR)/$(RUST_INSTALL_FILE_NAME) $(CARGO_HOME)
