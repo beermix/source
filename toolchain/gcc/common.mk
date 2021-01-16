@@ -53,11 +53,11 @@ ifeq ($(PKG_VERSION),9.3.1)
 endif
 
 ifeq ($(PKG_VERSION),10.2.1)
-  PKG_REV:=10-20210109
-  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
-  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+#  PKG_REV:=10-20210109
+#  PKG_SOURCE_URL:=https://gcc.gnu.org/pub/gcc/snapshots/LATEST-10
+#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 #  PKG_REV:=ed0aa61
 #  PKG_SOURCE_PROTO:=git
 #  PKG_SOURCE_URL:=https://github.com/gcc-mirror/gcc
@@ -65,11 +65,11 @@ ifeq ($(PKG_VERSION),10.2.1)
 #  PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 #  PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.xz
 #  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
-#  PKG_REV:=10.2.1_pre1
-#  PKG_SOURCE_URL:=https://dev.alpinelinux.org/~nenolod
-#  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
-#  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
-#  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
+  PKG_REV:=10.2.1_pre1
+  PKG_SOURCE_URL:=https://dev.alpinelinux.org/~nenolod
+  PKG_SOURCE:=gcc-$(PKG_REV).tar.xz
+  GCC_DIR:=$(PKG_NAME)-$(GCC_VERSION)
+  HOST_BUILD_DIR = $(BUILD_DIR_HOST)/gcc-$(PKG_REV)
 endif
 
 ifeq ($(PKG_VERSION),11.0.0)
