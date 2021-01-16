@@ -152,7 +152,7 @@ define KernelPackage/nf-flow
 	CONFIG_NETFILTER_INGRESS=y \
 	CONFIG_NF_FLOW_TABLE \
 	CONFIG_NF_FLOW_TABLE_HW
-  DEPENDS:=+kmod-nf-conntrack @!LINUX_4_9
+  DEPENDS:=+kmod-nf-conntrack
   FILES:= \
 	$(LINUX_DIR)/net/netfilter/nf_flow_table.ko \
 	$(LINUX_DIR)/net/netfilter/nf_flow_table_hw.ko
@@ -368,7 +368,7 @@ IPVS_MODULES:= \
 define KernelPackage/nf-ipvs
   SUBMENU:=Netfilter Extensions
   TITLE:=IP Virtual Server modules
-  DEPENDS:=@IPV6 +kmod-lib-crc32c +kmod-ipt-conntrack +kmod-nf-conntrack +LINUX_4_14:kmod-nf-conntrack6
+  DEPENDS:=@IPV6 +kmod-lib-crc32c +kmod-ipt-conntrack +kmod-nf-conntrack
   KCONFIG:= \
 	CONFIG_IP_VS \
 	CONFIG_IP_VS_IPV6=y \
@@ -542,7 +542,7 @@ define KernelPackage/nf-nathelper-extra
   KCONFIG:=$(KCONFIG_NF_NATHELPER_EXTRA)
   FILES:=$(foreach mod,$(NF_NATHELPER_EXTRA-m),$(LINUX_DIR)/net/$(mod).ko)
   AUTOLOAD:=$(call AutoProbe,$(notdir $(NF_NATHELPER_EXTRA-m)))
-  DEPENDS:=+kmod-nf-nat +kmod-lib-textsearch +kmod-ipt-raw +LINUX_4_19:kmod-asn1-decoder
+  DEPENDS:=+kmod-nf-nat +kmod-lib-textsearch +kmod-ipt-raw +kmod-asn1-decoder
 endef
 
 define KernelPackage/nf-nathelper-extra/description
