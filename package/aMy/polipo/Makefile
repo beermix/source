@@ -21,7 +21,7 @@ PKG_MIRROR_HASH:=b845d38329e049543e8365aa4a6d525846897184eab5748fbccd045d79919ce
 #PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
-PKG_ASLR_PIE_REGULAR:=0
+PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 
