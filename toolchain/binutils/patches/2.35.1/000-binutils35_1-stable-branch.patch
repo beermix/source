@@ -9658,10 +9658,16 @@ index 1627d7afc6d..8aa83dd62c7 100644
  .*:	(f1 02 f7 6e|6e f7 02 f1) 	xvtlsbb cr2,vs62
  .*:	(f1 82 0f 6c|6c 0f 82 f1) 	xvtlsbb cr3,vs1
 diff --git a/gold/ChangeLog b/gold/ChangeLog
-index 85fefa989f0..ea4927330e2 100644
+index 85fefa989f0..3157932f22a 100644
 --- a/gold/ChangeLog
 +++ b/gold/ChangeLog
-@@ -1,3 +1,106 @@
+@@ -1,3 +1,112 @@
++2021-01-28  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR gold/27246
++	* dwarf_reader.cc (Sized_dwarf_line_info::read_header_prolog):
++	Skip address size and segment selector for DWARF5.
++
 +2021-01-03  Alan Modra  <amodra@gmail.com>
 +
 +	PR 27140
@@ -9768,6 +9774,21 @@ index 85fefa989f0..ea4927330e2 100644
  2020-09-19  Nick Clifton  <nickc@redhat.com>
  
  	This is the 2.35.1 point release.
+diff --git a/gold/dwarf_reader.cc b/gold/dwarf_reader.cc
+index ac9fbad5482..ba60654393c 100644
+--- a/gold/dwarf_reader.cc
++++ b/gold/dwarf_reader.cc
+@@ -1658,6 +1658,10 @@ Sized_dwarf_line_info<size, big_endian>::read_header_prolog(
+   header_.version = elfcpp::Swap_unaligned<16, big_endian>::readval(lineptr);
+   lineptr += 2;
+ 
++  // Skip address size and segment selector for DWARF5.
++  if (header_.version >= 5)
++    lineptr += 2;
++
+   if (header_.offset_size == 4)
+     header_.prologue_length = elfcpp::Swap_unaligned<32, big_endian>::readval(lineptr);
+   else
 diff --git a/gold/options.cc b/gold/options.cc
 index b13ae71ce14..6b194374c8c 100644
 --- a/gold/options.cc
