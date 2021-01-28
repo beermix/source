@@ -28,9 +28,6 @@ HOST_BUILD_DEPENDS:=ninja/host python3/host
 PKG_BUILD_DEPENDS:=rust/host
 CMAKE_INSTALL:=1
 
-#gen_sha256sum=$(shell mkhash sha256 $(DL_DIR)/$(1))
-#fixup_rust_hash=$(shell $(SCRIPT_DIR)/fixup-makefile.pl $(1) fix-hash $(2) $(3))
-
 # Basic Configuration Args that are used across all builds.
 # Other build arguments are found in ./rustc-config.mk
 #
@@ -47,7 +44,7 @@ CONFIGURE_ARGS = \
   --mandir=$(CARGO_HOME)/man \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
-  --release-channel=stable \
+  --release-channel=nightly \
   --enable-lld \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
