@@ -16,7 +16,7 @@ PKG_CPE_ID:=cpe:/a:midnight_commander:midnight_commander
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ftp.midnight-commander.org/
-PKG_HASH:=
+PKG_HASH:=c6deadc50595f2d9a22dc6c299a9f28b393e358346ebf6ca444a8469dc166c27
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf gettext-version
 

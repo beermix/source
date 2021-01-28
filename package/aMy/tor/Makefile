@@ -15,6 +15,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://dist.torproject.org/ \
+PKG_HASH:=3f46187a6d93840a44d26ff905f4b226a81653a94cc3360559eb46d2a555bb49
 	https://archive.torproject.org/tor-package-archive
 #PKG_HASH:=5f154c155803adf5c89e87cab53017b6908c5ebe50c65839e8cf4fbd2abe1fdc
 PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
