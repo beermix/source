@@ -1,8 +1,42 @@
 diff --git a/bfd/ChangeLog b/bfd/ChangeLog
-index 9fac12538a5..4c629d4be63 100644
+index 9fac12538a5..2350c2f20f8 100644
 --- a/bfd/ChangeLog
 +++ b/bfd/ChangeLog
-@@ -1,3 +1,97 @@
+@@ -1,3 +1,131 @@
++2021-01-28  Alan Modra  <amodra@gmail.com>
++
++	Apply from master
++	2020-10-16  Alan Modra  <amodra@gmail.com>
++	* elf64-ppc.c (ppc64_elf_relocate_section): Tighten sanity check
++	on R_PPC64_GOT_LO_DS and R_PPC64_GOT_HA instructions.
++
++	2020-08-25  Alan Modra  <amodra@gmail.com>
++	PR 26489
++	* elf64-ppc.c (ppc64_elf_size_stubs): Test code_sec->has_toc_reloc
++	and code_sec->makes_toc_func_call before sec_info[code_sec->id].
++
++	2020-08-25  Alan Modra  <amodra@gmail.com>
++	PR 26492
++	* elf64-ppc.c (ppc_hash_table): Test is_elf_hash_table before
++	accessing elf_hash_table_id.
++
++	2020-08-25  Alan Modra  <amodra@gmail.com>
++	PR 26483
++	* elf32-ppc.c (ppc_elf_hash_table): Test is_elf_hash_table before
++	accessing elf_hash_table_id.
++
++2021-01-24  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR binutils/27231
++	* dwarf2.c (read_rnglists): Ignore empty range when parsing line
++	number tables.
++
++2021-01-23  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR binutils/27231
++	* dwarf2.c (read_rnglists): Advance rngs_ptr after
++	_bfd_safe_read_leb128 when parsing DW_RLE_offset_pair.
++
 +2021-01-01  Alan Modra  <amodra@gmail.com>
 +
 +	Apply from master
@@ -114,10 +148,32 @@ index 32be4b9460f..6bbed41d6d4 100644
  # Indicate whether this is a release branch.
  experimental=false
 diff --git a/bfd/dwarf2.c b/bfd/dwarf2.c
-index b8f0008a10d..977bf43a6a1 100644
+index b8f0008a10d..767e9731199 100644
 --- a/bfd/dwarf2.c
 +++ b/bfd/dwarf2.c
-@@ -3404,7 +3404,8 @@ scan_unit_for_symbols (struct comp_unit *unit)
+@@ -3252,9 +3252,11 @@ read_rnglists (struct comp_unit *unit, struct arange *arange,
+ 	  low_pc = base_address;
+ 	  low_pc += _bfd_safe_read_leb128 (abfd, rngs_ptr, &bytes_read,
+ 					   FALSE, rngs_end);
++	  rngs_ptr += bytes_read;
+ 	  high_pc = base_address;
+ 	  high_pc += _bfd_safe_read_leb128 (abfd, rngs_ptr, &bytes_read,
+ 					    FALSE, rngs_end);
++	  rngs_ptr += bytes_read;
+ 	  break;
+ 
+ 	case DW_RLE_start_end:
+@@ -3274,9 +3276,6 @@ read_rnglists (struct comp_unit *unit, struct arange *arange,
+ 	  return FALSE;
+ 	}
+ 
+-      if ((low_pc == 0 && high_pc == 0) || low_pc == high_pc)
+-	return FALSE;
+-
+       if (!arange_add (unit, arange, low_pc, high_pc))
+ 	return FALSE;
+     }
+@@ -3404,7 +3403,8 @@ scan_unit_for_symbols (struct comp_unit *unit)
        else
  	{
  	  func = NULL;
@@ -127,7 +183,7 @@ index b8f0008a10d..977bf43a6a1 100644
  	    {
  	      size_t amt = sizeof (struct varinfo);
  	      var = (struct varinfo *) bfd_zalloc (abfd, amt);
-@@ -3516,7 +3517,7 @@ scan_unit_for_symbols (struct comp_unit *unit)
+@@ -3516,7 +3516,7 @@ scan_unit_for_symbols (struct comp_unit *unit)
  		      spec_var = lookup_var_by_offset (attr.u.val,
  						       unit->variable_table);
  		      if (spec_var == NULL)
@@ -136,8 +192,24 @@ index b8f0008a10d..977bf43a6a1 100644
  			  _bfd_error_handler (_("DWARF error: could not find "
  						"variable specification "
  						"at offset %lx"),
+diff --git a/bfd/elf32-ppc.c b/bfd/elf32-ppc.c
+index 24b1485edf6..11ae6e82f4b 100644
+--- a/bfd/elf32-ppc.c
++++ b/bfd/elf32-ppc.c
+@@ -2233,8 +2233,9 @@ struct ppc_elf_link_hash_table
+ /* Get the PPC ELF linker hash table from a link_info structure.  */
+ 
+ #define ppc_elf_hash_table(p) \
+-  (elf_hash_table_id ((struct elf_link_hash_table *) ((p)->hash)) \
+-  == PPC32_ELF_DATA ? ((struct ppc_elf_link_hash_table *) ((p)->hash)) : NULL)
++  ((is_elf_hash_table ((p)->hash)					\
++    && elf_hash_table_id (elf_hash_table (p)) == PPC32_ELF_DATA)	\
++   ? (struct ppc_elf_link_hash_table *) (p)->hash : NULL)
+ 
+ /* Create an entry in a PPC ELF linker hash table.  */
+ 
 diff --git a/bfd/elf64-ppc.c b/bfd/elf64-ppc.c
-index 4bf37e1d981..ec8c85eba59 100644
+index 4bf37e1d981..fe9e54820f1 100644
 --- a/bfd/elf64-ppc.c
 +++ b/bfd/elf64-ppc.c
 @@ -114,7 +114,7 @@ static bfd_vma opd_entry_value
@@ -182,7 +254,19 @@ index 4bf37e1d981..ec8c85eba59 100644
  
  /* Pad with this.  */
  #define NOP		0x60000000
-@@ -6340,13 +6344,13 @@ static const struct sfpr_def_parms save_res_funcs[] =
+@@ -3279,8 +3283,9 @@ struct ppc_link_hash_table
+ /* Get the ppc64 ELF linker hash table from a link_info structure.  */
+ 
+ #define ppc_hash_table(p) \
+-  (elf_hash_table_id ((struct elf_link_hash_table *) ((p)->hash)) \
+-  == PPC64_ELF_DATA ? ((struct ppc_link_hash_table *) ((p)->hash)) : NULL)
++  ((is_elf_hash_table ((p)->hash)					\
++    && elf_hash_table_id (elf_hash_table (p)) == PPC64_ELF_DATA)	\
++   ? (struct ppc_link_hash_table *) (p)->hash : NULL)
+ 
+ #define ppc_stub_hash_lookup(table, string, create, copy) \
+   ((struct ppc_stub_hash_entry *) \
+@@ -6340,13 +6345,13 @@ static const struct sfpr_def_parms save_res_funcs[] =
    };
  
  /* Called near the start of bfd_elf_size_dynamic_sections.  We use
@@ -201,7 +285,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  {
    struct ppc_link_hash_table *htab;
  
-@@ -6354,6 +6358,9 @@ ppc64_elf_func_desc_adjust (bfd *obfd ATTRIBUTE_UNUSED,
+@@ -6354,6 +6359,9 @@ ppc64_elf_func_desc_adjust (bfd *obfd ATTRIBUTE_UNUSED,
    if (htab == NULL)
      return FALSE;
  
@@ -211,7 +295,7 @@ index 4bf37e1d981..ec8c85eba59 100644
    /* Provide any missing _save* and _rest* functions.  */
    if (htab->sfpr != NULL)
      {
-@@ -7694,9 +7701,11 @@ ppc64_elf_inline_plt (struct bfd_link_info *info)
+@@ -7694,9 +7702,11 @@ ppc64_elf_inline_plt (struct bfd_link_info *info)
    return TRUE;
  }
  
@@ -225,7 +309,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  ppc64_elf_tls_setup (struct bfd_link_info *info)
  {
    struct ppc_link_hash_table *htab;
-@@ -7704,7 +7713,7 @@ ppc64_elf_tls_setup (struct bfd_link_info *info)
+@@ -7704,7 +7714,7 @@ ppc64_elf_tls_setup (struct bfd_link_info *info)
  
    htab = ppc_hash_table (info);
    if (htab == NULL)
@@ -234,7 +318,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  
    if (abiversion (info->output_bfd) == 1)
      htab->opd_abi = 1;
-@@ -7730,6 +7739,19 @@ ppc64_elf_tls_setup (struct bfd_link_info *info)
+@@ -7730,6 +7740,19 @@ ppc64_elf_tls_setup (struct bfd_link_info *info)
       --plt-localentry can cause trouble.  */
    if (htab->params->plt_localentry0 < 0)
      htab->params->plt_localentry0 = 0;
@@ -254,7 +338,7 @@ index 4bf37e1d981..ec8c85eba59 100644
    if (htab->params->plt_localentry0
        && elf_link_hash_lookup (&htab->elf, "GLIBC_2.26",
  			       FALSE, FALSE, FALSE) == NULL)
-@@ -7826,7 +7848,7 @@ ppc64_elf_tls_setup (struct bfd_link_info *info)
+@@ -7826,7 +7849,7 @@ ppc64_elf_tls_setup (struct bfd_link_info *info)
  		      _bfd_elf_strtab_delref (elf_hash_table (info)->dynstr,
  					      opt_fd->dynstr_index);
  		      if (!bfd_elf_link_record_dynamic_symbol (info, opt_fd))
@@ -263,7 +347,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  		    }
  		  if (tga_fd != NULL)
  		    {
-@@ -7885,7 +7907,7 @@ ppc64_elf_tls_setup (struct bfd_link_info *info)
+@@ -7885,7 +7908,7 @@ ppc64_elf_tls_setup (struct bfd_link_info *info)
        && htab->params->no_tls_get_addr_regsave == -1)
      htab->params->no_tls_get_addr_regsave = 0;
  
@@ -272,7 +356,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  }
  
  /* Return TRUE iff REL is a branch reloc with a global symbol matching
-@@ -10834,62 +10856,60 @@ eh_advance_size (unsigned int delta)
+@@ -10834,62 +10857,60 @@ eh_advance_size (unsigned int delta)
  static inline unsigned int
  plt_stub_size (struct ppc_link_hash_table *htab,
  	       struct ppc_stub_hash_entry *stub_entry,
@@ -366,7 +450,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	}
      }
    return size;
-@@ -10904,7 +10924,8 @@ plt_stub_size (struct ppc_link_hash_table *htab,
+@@ -10904,7 +10925,8 @@ plt_stub_size (struct ppc_link_hash_table *htab,
  static inline unsigned int
  plt_stub_pad (struct ppc_link_hash_table *htab,
  	      struct ppc_stub_hash_entry *stub_entry,
@@ -376,7 +460,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  {
    int stub_align;
    unsigned stub_size;
-@@ -10919,7 +10940,7 @@ plt_stub_pad (struct ppc_link_hash_table *htab,
+@@ -10919,7 +10941,7 @@ plt_stub_pad (struct ppc_link_hash_table *htab,
      }
  
    stub_align = 1 << -htab->params->plt_stub_align;
@@ -385,7 +469,7 @@ index 4bf37e1d981..ec8c85eba59 100644
    if (((stub_off + stub_size - 1) & -stub_align) - (stub_off & -stub_align)
        > ((stub_size - 1) & -stub_align))
      return stub_align - (stub_off & (stub_align - 1));
-@@ -11114,14 +11135,12 @@ build_plt_stub (struct ppc_link_hash_table *htab,
+@@ -11114,14 +11136,12 @@ build_plt_stub (struct ppc_link_hash_table *htab,
  #define MR_R3_R0	0x7c030378
  #define BCTRL		0x4e800421
  
@@ -403,7 +487,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  
    bfd_put_32 (obfd, LD_R0_0R3 + 0, p),		p += 4;
    bfd_put_32 (obfd, LD_R12_0R3 + 8, p),		p += 4;
-@@ -11130,21 +11149,43 @@ build_tls_get_addr_stub (struct ppc_link_hash_table *htab,
+@@ -11130,21 +11150,43 @@ build_tls_get_addr_stub (struct ppc_link_hash_table *htab,
    bfd_put_32 (obfd, ADD_R3_R12_R13, p),		p += 4;
    bfd_put_32 (obfd, BEQLR, p),			p += 4;
    bfd_put_32 (obfd, MR_R3_R0, p),		p += 4;
@@ -456,7 +540,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        bfd_put_32 (obfd, BCTRL, p - 4);
  
        bfd_put_32 (obfd, LD_R2_0R1 + STK_TOC (htab), p);
-@@ -11156,24 +11197,6 @@ build_tls_get_addr_stub (struct ppc_link_hash_table *htab,
+@@ -11156,24 +11198,6 @@ build_tls_get_addr_stub (struct ppc_link_hash_table *htab,
        bfd_put_32 (obfd, BLR, p);
        p += 4;
      }
@@ -481,7 +565,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  
    if (htab->glink_eh_frame != NULL
        && htab->glink_eh_frame->size != 0)
-@@ -11182,21 +11205,11 @@ build_tls_get_addr_stub (struct ppc_link_hash_table *htab,
+@@ -11182,21 +11206,11 @@ build_tls_get_addr_stub (struct ppc_link_hash_table *htab,
  
        base = htab->glink_eh_frame->contents + stub_entry->group->eh_base + 17;
        eh = base + stub_entry->group->eh_size;
@@ -507,7 +591,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	  /* After the bctrl, lr has been modified so we need to emit
  	     .eh_frame info saying the return address is on the stack.  In
  	     fact we must put the EH info at or before the call rather
-@@ -11235,10 +11248,27 @@ build_tls_get_addr_stub (struct ppc_link_hash_table *htab,
+@@ -11235,10 +11249,27 @@ build_tls_get_addr_stub (struct ppc_link_hash_table *htab,
  	  for (i = 4; i < 12; i++)
  	    *eh++ = DW_CFA_restore + i;
  	  *eh++ = DW_CFA_advance_loc + 2;
@@ -538,7 +622,7 @@ index 4bf37e1d981..ec8c85eba59 100644
      }
    return p;
  }
-@@ -11372,6 +11402,7 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11372,6 +11403,7 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
    struct ppc_branch_hash_entry *br_entry;
    struct bfd_link_info *info;
    struct ppc_link_hash_table *htab;
@@ -546,7 +630,7 @@ index 4bf37e1d981..ec8c85eba59 100644
    bfd_byte *loc;
    bfd_byte *p, *relp;
    bfd_vma targ, off;
-@@ -11379,6 +11410,7 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11379,6 +11411,7 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
    asection *plt;
    int num_rel;
    int odd;
@@ -554,7 +638,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  
    /* Massage our args to the form they really have.  */
    stub_entry = (struct ppc_stub_hash_entry *) gen_entry;
-@@ -11428,6 +11460,7 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11428,6 +11461,7 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
        off = targ - off;
  
        p = loc;
@@ -562,7 +646,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        if (stub_entry->stub_type == ppc_stub_long_branch_r2off)
  	{
  	  bfd_vma r2off = get_r2off (info, stub_entry);
-@@ -11437,23 +11470,21 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11437,23 +11471,21 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	      htab->stub_error = TRUE;
  	      return FALSE;
  	    }
@@ -590,7 +674,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        p += 4;
  
        if (off + (1 << 25) >= (bfd_vma) (1 << 26))
-@@ -11579,19 +11610,17 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11579,19 +11611,17 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	}
  
        p = loc;
@@ -614,7 +698,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	}
        else
  	{
-@@ -11603,36 +11632,32 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11603,36 +11633,32 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	      return FALSE;
  	    }
  
@@ -659,7 +743,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        p += 4;
        break;
  
-@@ -11646,12 +11671,23 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11646,12 +11672,23 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
        off = (stub_entry->stub_offset
  	     + stub_entry->group->stub_sec->output_offset
  	     + stub_entry->group->stub_sec->output_section->vma);
@@ -684,7 +768,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	  p += 4;
  	}
        if (stub_entry->stub_type >= ppc_stub_plt_call_notoc)
-@@ -11684,17 +11720,39 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11684,17 +11721,39 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
        if (htab->params->power10_stubs != 0)
  	{
  	  bfd_boolean load = stub_entry->stub_type >= ppc_stub_plt_call_notoc;
@@ -726,7 +810,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  			    stub_entry->stub_type >= ppc_stub_plt_call_notoc);
  	}
  
-@@ -11706,17 +11764,19 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11706,17 +11765,19 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  		  + stub_entry->group->stub_sec->output_offset
  		  + stub_entry->group->stub_sec->output_section->vma
  		  + (p - loc));
@@ -750,7 +834,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        if (info->emitrelocations)
  	{
  	  bfd_vma roff = relp - stub_entry->group->stub_sec->contents;
-@@ -11747,33 +11807,6 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11747,33 +11808,6 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  		return FALSE;
  	    }
  	}
@@ -784,7 +868,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        break;
  
      case ppc_stub_plt_call:
-@@ -11842,12 +11875,20 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -11842,12 +11876,20 @@ ppc_build_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	    r[0].r_offset += 2;
  	  r[0].r_addend = targ;
  	}
@@ -811,7 +895,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        break;
  
      case ppc_stub_save_res:
-@@ -12143,11 +12184,19 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -12143,11 +12185,19 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  
      case ppc_stub_plt_call_notoc:
      case ppc_stub_plt_call_both:
@@ -835,7 +919,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        targ = stub_entry->plt_ent->plt.offset & ~1;
        if (targ >= (bfd_vma) -2)
  	abort ();
-@@ -12163,16 +12212,21 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -12163,16 +12213,21 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	    plt = htab->pltlocal;
  	}
        targ += plt->output_offset + plt->output_section->vma;
@@ -858,7 +942,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	}
  
        if (info->emitrelocations)
-@@ -12186,15 +12240,13 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -12186,15 +12241,13 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	  stub_entry->group->stub_sec->flags |= SEC_RELOC;
  	}
  
@@ -876,7 +960,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	  /* The eh_frame info will consist of a DW_CFA_advance_loc or
  	     variant, DW_CFA_register, 65, 12, DW_CFA_advance_loc+2,
  	     DW_CFA_restore_extended 65.  */
-@@ -12202,6 +12254,30 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -12202,6 +12255,30 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	  stub_entry->group->eh_size += eh_advance_size (delta) + 6;
  	  stub_entry->group->lr_restore = lr_used + 8;
  	}
@@ -907,7 +991,7 @@ index 4bf37e1d981..ec8c85eba59 100644
        break;
  
      case ppc_stub_plt_call:
-@@ -12227,7 +12303,7 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -12227,7 +12304,7 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  
        if (htab->params->plt_stub_align != 0)
  	{
@@ -916,7 +1000,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  
  	  stub_entry->group->stub_sec->size += pad;
  	  stub_entry->stub_offset = stub_entry->group->stub_sec->size;
-@@ -12244,14 +12320,22 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -12244,14 +12321,22 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	  stub_entry->group->stub_sec->flags |= SEC_RELOC;
  	}
  
@@ -941,7 +1025,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	    {
  	      lr_used = stub_entry->stub_offset + size - 20;
  	      /* The eh_frame info will consist of a DW_CFA_advance_loc
-@@ -12260,15 +12344,7 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
+@@ -12260,15 +12345,7 @@ ppc_size_one_stub (struct bfd_hash_entry *gen_entry, void *in_arg)
  	      delta = lr_used - stub_entry->group->lr_restore;
  	      stub_entry->group->eh_size += eh_advance_size (delta) + 6;
  	    }
@@ -958,7 +1042,21 @@ index 4bf37e1d981..ec8c85eba59 100644
  	}
        break;
  
-@@ -13814,11 +13890,11 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+@@ -13427,10 +13504,10 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
+ 			 fact a call needing a TOC adjustment.  */
+ 		      if ((code_sec != NULL
+ 			   && code_sec->output_section != NULL
+-			   && (htab->sec_info[code_sec->id].toc_off
+-			       != htab->sec_info[section->id].toc_off)
+ 			   && (code_sec->has_toc_reloc
+-			       || code_sec->makes_toc_func_call))
++			       || code_sec->makes_toc_func_call)
++			   && (htab->sec_info[code_sec->id].toc_off
++			       != htab->sec_info[section->id].toc_off))
+ 			  || (((hash ? hash->elf.other : sym->st_other)
+ 			       & STO_PPC64_LOCAL_MASK)
+ 			      == 1 << STO_PPC64_LOCAL_BIT))
+@@ -13814,11 +13891,11 @@ ppc64_elf_size_stubs (struct bfd_link_info *info)
  	  /* Augmentation.  */
  	  p += 1;
  
@@ -972,7 +1070,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	  *p++ = DW_CFA_restore_extended;
  	  *p++ = 65;
  	  p += ((24 + align - 1) & -align) - 24;
-@@ -14179,8 +14255,6 @@ write_plt_relocs_for_local_syms (struct bfd_link_info *info)
+@@ -14179,8 +14256,6 @@ write_plt_relocs_for_local_syms (struct bfd_link_info *info)
  		}
  
  	      val = sym->st_value + ent->addend;
@@ -981,7 +1079,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	      if (sym_sec != NULL && sym_sec->output_section != NULL)
  		val += sym_sec->output_offset + sym_sec->output_section->vma;
  
-@@ -14414,23 +14488,60 @@ ppc64_elf_build_stubs (struct bfd_link_info *info,
+@@ -14414,23 +14489,60 @@ ppc64_elf_build_stubs (struct bfd_link_info *info,
  	}
        else
  	{
@@ -1048,7 +1146,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	  p += 4;
  	  bfd_put_32 (htab->glink->owner, LD_R12_0R11, p);
  	  p += 4;
-@@ -15880,22 +15991,25 @@ ppc64_elf_relocate_section (bfd *output_bfd,
+@@ -15880,22 +15992,25 @@ ppc64_elf_relocate_section (bfd *output_bfd,
  	      addend = 0;
  	      reloc_dest = DEST_STUB;
  
@@ -1090,7 +1188,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  
  	      if (r_type == R_PPC64_REL24_NOTOC
  		  && (stub_entry->stub_type == ppc_stub_plt_call_notoc
-@@ -15944,7 +16058,8 @@ ppc64_elf_relocate_section (bfd *output_bfd,
+@@ -15944,7 +16059,8 @@ ppc64_elf_relocate_section (bfd *output_bfd,
  	  break;
  
  	case R_PPC64_GOT16_DS:
@@ -1100,7 +1198,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	    break;
  	  from = TOCstart + htab->sec_info[input_section->id].toc_off;
  	  if (relocation + addend - from + 0x8000 < 0x10000
-@@ -15963,7 +16078,8 @@ ppc64_elf_relocate_section (bfd *output_bfd,
+@@ -15963,21 +16079,24 @@ ppc64_elf_relocate_section (bfd *output_bfd,
  
  	case R_PPC64_GOT16_LO_DS:
  	case R_PPC64_GOT16_HA:
@@ -1110,7 +1208,25 @@ index 4bf37e1d981..ec8c85eba59 100644
  	    break;
  	  from = TOCstart + htab->sec_info[input_section->id].toc_off;
  	  if (relocation + addend - from + 0x80008000ULL < 0x100000000ULL
-@@ -15986,34 +16102,38 @@ ppc64_elf_relocate_section (bfd *output_bfd,
+ 	      && SYMBOL_REFERENCES_LOCAL (info, &h->elf))
+ 	    {
+ 	      insn = bfd_get_32 (input_bfd, contents + (rel->r_offset & ~3));
+-	      if ((insn & (0x3fu << 26 | 0x3)) == 58u << 26 /* ld */)
++	      if (r_type == R_PPC64_GOT16_LO_DS
++		  && (insn & (0x3fu << 26 | 0x3)) == 58u << 26 /* ld */)
+ 		{
+ 		  insn += (14u << 26) - (58u << 26);
+ 		  bfd_put_32 (input_bfd, insn, contents + (rel->r_offset & ~3));
+ 		  r_type = R_PPC64_TOC16_LO;
+ 		  rel->r_info = ELF64_R_INFO (r_symndx, r_type);
+ 		}
+-	      else if ((insn & (0x3fu << 26)) == 15u << 26 /* addis */)
++	      else if (r_type == R_PPC64_GOT16_HA
++		       && (insn & (0x3fu << 26)) == 15u << 26 /* addis */)
+ 		{
+ 		  r_type = R_PPC64_TOC16_HA;
+ 		  rel->r_info = ELF64_R_INFO (r_symndx, r_type);
+@@ -15986,34 +16105,38 @@ ppc64_elf_relocate_section (bfd *output_bfd,
  	  break;
  
  	case R_PPC64_GOT_PCREL34:
@@ -1171,7 +1287,7 @@ index 4bf37e1d981..ec8c85eba59 100644
  	    {
  	      offset = rel->r_offset;
  	      pinsn = bfd_get_32 (input_bfd, contents + offset);
-@@ -16023,43 +16143,37 @@ ppc64_elf_relocate_section (bfd *output_bfd,
+@@ -16023,43 +16146,37 @@ ppc64_elf_relocate_section (bfd *output_bfd,
  		   == ((1ULL << 58) | (2ULL << 56) | (1ULL << 52)
  		       | (14ULL << 26) /* paddi */))
  		{
@@ -1373,10 +1489,16 @@ index e58ddc19cf6..143aae4b5cc 100644
  	    {
  	      if (aprop != NULL)
 diff --git a/binutils/ChangeLog b/binutils/ChangeLog
-index 76ba6d9840a..4b6cd9f755e 100644
+index 76ba6d9840a..b701b69ecb0 100644
 --- a/binutils/ChangeLog
 +++ b/binutils/ChangeLog
-@@ -1,3 +1,142 @@
+@@ -1,3 +1,148 @@
++2021-01-26  Frederic Cambus  <fred@statdns.com>
++
++	* objcopy.c (copy_main): Fix a double free happening when both
++	--localize-symbols and --globalize-symbols options are invoked
++	together.
++
 +2021-01-01  Alan Modra  <amodra@gmail.com>
 +
 +	Apply from master
@@ -2661,6 +2783,19 @@ index 1b5122d56ab..a5144faba60 100644
  	case 'D':
  	  dynamic = 1;
  	  break;
+diff --git a/binutils/objcopy.c b/binutils/objcopy.c
+index 3866c7f4588..b730b25ff56 100644
+--- a/binutils/objcopy.c
++++ b/binutils/objcopy.c
+@@ -5953,7 +5953,7 @@ copy_main (int argc, char *argv[])
+     free (keep_specific_buffer);
+ 
+   if (localize_specific_buffer)
+-    free (globalize_specific_buffer);
++    free (localize_specific_buffer);
+ 
+   if (globalize_specific_buffer)
+     free (globalize_specific_buffer);
 diff --git a/binutils/readelf.c b/binutils/readelf.c
 index 6057515a89b..41547a2594b 100644
 --- a/binutils/readelf.c
@@ -4233,10 +4368,43 @@ index 1221f37f8a6..d5e06d4d7d3 100644
  
  enum DW_EH_PE
 diff --git a/gas/ChangeLog b/gas/ChangeLog
-index 26c703531d9..3ac2f7b72e2 100644
+index 26c703531d9..7e15c77b337 100644
 --- a/gas/ChangeLog
 +++ b/gas/ChangeLog
-@@ -1,3 +1,171 @@
+@@ -1,3 +1,204 @@
++2021-01-28  Alan Modra  <amodra@gmail.com>
++
++	Apply from master
++	2021-01-08  Peter Bergner  <bergner@linux.ibm.com>
++	* testsuite/gas/ppc/rop-checks.d,
++	* testsuite/gas/ppc/rop-checks.l,
++	* testsuite/gas/ppc/rop-checks.s,
++	* testsuite/gas/ppc/rop.d,
++	* testsuite/gas/ppc/rop.s: New tests.
++	* testsuite/gas/ppc/ppc.exp: Run them.
++
++	2020-09-09  Alan Modra  <amodra@gmail.com>
++	* config/tc-ppc.c (md_assemble): Emit prefix insn by parts when
++	valueT is smaller than 64 bits.
++
++2021-01-25  Alan Modra  <amodra@gmail.com>
++
++	PR 27218
++	* dwarf2dbg.c (dwarf2_gen_line_info): Correct setting of dwarf_level.
++	(dwarf2_directive_filename, dwarf2_directive_loc): Likewise, and
++	error for negative file numbers.
++
++2021-01-25  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR gas/27195
++	* dwarf2dbg.c (dwarf2_gen_line_info): Set dwarf_level to 5 if
++	needed.
++	(dwarf2_directive_filename): Likewise.
++	(dwarf2_directive_loc): Likewise.
++	* testsuite/gas/elf/dwarf-5-file0.d: Pass --gdwarf-3.
++	* testsuite/gas/lns/lns-diag-1.l: Remove the
++	"Error: file number less than one" errors.
++
 +2020-11-15  Mark Wielaard  <mark@klomp.org>
 +
 +	Backport from the mainline:
@@ -4544,7 +4712,7 @@ index 037fe4d18b4..623ac77307e 100644
  	    need = i.prefix[ADDR_PREFIX] ? need_word : need_dword;
  	  else if (i.prefix[ADDR_PREFIX])
 diff --git a/gas/config/tc-ppc.c b/gas/config/tc-ppc.c
-index aa989e7d1c2..9719341c546 100644
+index aa989e7d1c2..9faf80f1629 100644
 --- a/gas/config/tc-ppc.c
 +++ b/gas/config/tc-ppc.c
 @@ -3335,6 +3335,15 @@ md_assemble (char *str)
@@ -4563,6 +4731,16 @@ index aa989e7d1c2..9719341c546 100644
  
    str = s;
    while (ISSPACE (*str))
+@@ -4175,7 +4184,8 @@ md_assemble (char *str)
+ 
+   /* The prefix part of an 8-byte instruction always occupies the lower
+      addressed word in a doubleword, regardless of endianness.  */
+-  if (!target_big_endian && insn_length == 8)
++  if (insn_length == 8
++      && (sizeof (insn) > sizeof (valueT) || !target_big_endian))
+     {
+       md_number_to_chars (f, PPC_GET_PREFIX (insn), 4);
+       md_number_to_chars (f + 4, PPC_GET_SUFFIX (insn), 4);
 diff --git a/gas/doc/c-aarch64.texi b/gas/doc/c-aarch64.texi
 index 86b6efc52bd..f5d26695749 100644
 --- a/gas/doc/c-aarch64.texi
@@ -4590,7 +4768,7 @@ index 91803605775..16c94de675c 100644
  @code{xgene2},
  @code{ep9312} (ARM920 with Cirrus Maverick coprocessor),
 diff --git a/gas/dwarf2dbg.c b/gas/dwarf2dbg.c
-index 6899a840eff..1160cafc13e 100644
+index 6899a840eff..419582f9aa8 100644
 --- a/gas/dwarf2dbg.c
 +++ b/gas/dwarf2dbg.c
 @@ -211,7 +211,6 @@ struct file_entry
@@ -4609,7 +4787,23 @@ index 6899a840eff..1160cafc13e 100644
  
  /* Table of directories used by .debug_line.  */
  static char **       dirs = NULL;
-@@ -633,7 +633,7 @@ get_directory_table_entry (const char *  dirname,
+@@ -536,8 +536,13 @@ dwarf2_gen_line_info (addressT ofs, struct dwarf2_line_info *loc)
+   /* Early out for as-yet incomplete location information.  */
+   if (loc->line == 0)
+     return;
+-  if (loc->filenum == 0 && DWARF2_LINE_VERSION < 5)
+-    return;
++  if (loc->filenum == 0)
++    {
++      if (dwarf_level < 5)
++	dwarf_level = 5;
++      if (DWARF2_LINE_VERSION < 5)
++	return;
++    }
+ 
+   /* Don't emit sequences of line symbols for the same line when the
+      symbols apply to assembler code.  It is necessary to emit
+@@ -633,7 +638,7 @@ get_directory_table_entry (const char *  dirname,
  }
  
  static bfd_boolean
@@ -4618,7 +4812,7 @@ index 6899a840eff..1160cafc13e 100644
  {
    if (i >= files_allocated)
      {
-@@ -653,7 +653,6 @@ assign_file_to_slot (unsigned long i, const char *file, unsigned int dir, bfd_bo
+@@ -653,7 +658,6 @@ assign_file_to_slot (unsigned long i, const char *file, unsigned int dir, bfd_bo
  
    files[i].filename = file;
    files[i].dir = dir;
@@ -4626,7 +4820,7 @@ index 6899a840eff..1160cafc13e 100644
    memset (files[i].md5, 0, NUM_MD5_BYTES);
  
    if (files_in_use < i + 1)
-@@ -717,9 +716,11 @@ allocate_filenum (const char * pathname)
+@@ -717,9 +721,11 @@ allocate_filenum (const char * pathname)
  	return i;
        }
  
@@ -4639,7 +4833,7 @@ index 6899a840eff..1160cafc13e 100644
    last_used = i;
    last_used_dir_len = dir_len;
  
-@@ -792,30 +793,15 @@ allocate_filename_to_slot (const char *  dirname,
+@@ -792,30 +798,15 @@ allocate_filename_to_slot (const char *  dirname,
  	}
  
      fail:
@@ -4679,7 +4873,7 @@ index 6899a840eff..1160cafc13e 100644
      }
  
    if (dirname == NULL)
-@@ -833,7 +819,7 @@ allocate_filename_to_slot (const char *  dirname,
+@@ -833,7 +824,7 @@ allocate_filename_to_slot (const char *  dirname,
    d = get_directory_table_entry (dirname, dirlen, num == 0);
    i = num;
  
@@ -4688,7 +4882,7 @@ index 6899a840eff..1160cafc13e 100644
      return FALSE;
  
    if (with_md5)
-@@ -1030,6 +1016,7 @@ dwarf2_directive_filename (void)
+@@ -1030,6 +1021,7 @@ dwarf2_directive_filename (void)
    char *filename;
    const char * dirname = NULL;
    int filename_len;
@@ -4696,7 +4890,28 @@ index 6899a840eff..1160cafc13e 100644
  
    /* Continue to accept a bare string and pass it off.  */
    SKIP_WHITESPACE ();
-@@ -1096,6 +1083,18 @@ dwarf2_directive_filename (void)
+@@ -1041,11 +1033,16 @@ dwarf2_directive_filename (void)
+ 
+   num = get_absolute_expression ();
+ 
+-  if ((offsetT) num < 1 && DWARF2_LINE_VERSION < 5)
++  if ((offsetT) num < 1)
+     {
+-      as_bad (_("file number less than one"));
+-      ignore_rest_of_line ();
+-      return NULL;
++      if (num == 0 && dwarf_level < 5)
++	dwarf_level = 5;
++      if ((offsetT) num < 0 || DWARF2_LINE_VERSION < 5)
++	{
++	  as_bad (_("file number less than one"));
++	  ignore_rest_of_line ();
++	  return NULL;
++	}
+     }
+ 
+   /* FIXME: Should we allow ".file <N>\n" as an expression meaning
+@@ -1096,6 +1093,18 @@ dwarf2_directive_filename (void)
        return NULL;
      }
  
@@ -4715,6 +4930,25 @@ index 6899a840eff..1160cafc13e 100644
    if (! allocate_filename_to_slot (dirname, filename, (unsigned int) num,
  				   with_md5))
      return NULL;
+@@ -1128,14 +1137,16 @@ dwarf2_directive_loc (int dummy ATTRIBUTE_UNUSED)
+ 
+   if (filenum < 1)
+     {
+-      if (filenum != 0 || DWARF2_LINE_VERSION < 5)
++      if (filenum == 0 && dwarf_level < 5)
++	dwarf_level = 5;
++      if (filenum < 0 || DWARF2_LINE_VERSION < 5)
+ 	{
+ 	  as_bad (_("file number less than one"));
+ 	  return;
+ 	}
+     }
+ 
+-  if (filenum >= (int) files_in_use || files[filenum].filename == NULL)
++  if ((valueT) filenum >= files_in_use || files[filenum].filename == NULL)
+     {
+       as_bad (_("unassigned file number %ld"), (long) filenum);
+       return;
 diff --git a/gas/testsuite/gas/aarch64/system.d b/gas/testsuite/gas/aarch64/system.d
 index 20d5c204094..c973584af59 100644
 --- a/gas/testsuite/gas/aarch64/system.d
@@ -5641,6 +5875,16 @@ index 839b4b7c77b..7db20a330b8 100644
     Abbrev Offset: 0x0
     Pointer Size:  .
  #pass
+diff --git a/gas/testsuite/gas/elf/dwarf-5-file0.d b/gas/testsuite/gas/elf/dwarf-5-file0.d
+index 5d76b7bcd14..6cc96e3284f 100644
+--- a/gas/testsuite/gas/elf/dwarf-5-file0.d
++++ b/gas/testsuite/gas/elf/dwarf-5-file0.d
+@@ -1,4 +1,4 @@
+-#as: --gdwarf-5
++#as: --gdwarf-3
+ #name: DWARF5 .line 0
+ #readelf: -wl
+ 
 diff --git a/gas/testsuite/gas/i386/dwarf4-line-1.d b/gas/testsuite/gas/i386/dwarf4-line-1.d
 new file mode 100644
 index 00000000000..4f8321e9bfd
@@ -6521,6 +6765,24 @@ index 6f9032dc4b3..ad69bb13223 100644
 +	movdir64b ecx,[eip+foo]
 +	movdir64b ecx,ds:foo
 +	movdir64b ecx,ds:0x12345678
+diff --git a/gas/testsuite/gas/lns/lns-diag-1.l b/gas/testsuite/gas/lns/lns-diag-1.l
+index 1256e85cfcb..3d8a52f4d5b 100644
+--- a/gas/testsuite/gas/lns/lns-diag-1.l
++++ b/gas/testsuite/gas/lns/lns-diag-1.l
+@@ -1,5 +1,4 @@
+ .*: Assembler messages:
+-.*:2: Error: file number less than one
+ .*:3: Error: missing string
+ .*:4: Error: file table slot 1 is already occupied.*
+ .*:8: Error: unassigned file number 3
+@@ -9,7 +8,6 @@
+ .*:19: Error: bad or irreducible absolute expression
+ .*:23: Error: isa number less than zero
+ .*:26: Error: bad or irreducible absolute expression
+-.*:26: Error: file number less than one
+ .*:27: Error: bad or irreducible absolute expression
+ .*:28: Error: unknown .loc sub-directive `frobnitz'
+ .*:29: Error: unknown .loc sub-directive `frobnitz'
 diff --git a/gas/testsuite/gas/ppc/476.d b/gas/testsuite/gas/ppc/476.d
 index 7818b86b134..0b75d75ae2d 100644
 --- a/gas/testsuite/gas/ppc/476.d
@@ -9129,7 +9391,7 @@ index 69053819ffe..2d412b9e66a 100644
 +	msgsndu     3
 +	msgclru     27
 diff --git a/gas/testsuite/gas/ppc/ppc.exp b/gas/testsuite/gas/ppc/ppc.exp
-index 48c4ce62f31..f2a7b44cdd3 100644
+index 48c4ce62f31..7e835b4acbd 100644
 --- a/gas/testsuite/gas/ppc/ppc.exp
 +++ b/gas/testsuite/gas/ppc/ppc.exp
 @@ -76,6 +76,8 @@ if { [istarget powerpc64*-*-*] || [istarget *-*-elf64*]} then {
@@ -9141,6 +9403,128 @@ index 48c4ce62f31..f2a7b44cdd3 100644
  run_dump_test "pr21303"
  run_dump_test "vle"
  run_dump_test "vle-reloc"
+@@ -146,3 +148,5 @@ run_dump_test "stringop"
+ run_dump_test "xvtlsbb"
+ run_dump_test "rightmost"
+ run_dump_test "scalarquad"
++run_dump_test "rop"
++run_dump_test "rop-checks"
+diff --git a/gas/testsuite/gas/ppc/rop-checks.d b/gas/testsuite/gas/ppc/rop-checks.d
+new file mode 100644
+index 00000000000..b7ef25eed21
+--- /dev/null
++++ b/gas/testsuite/gas/ppc/rop-checks.d
+@@ -0,0 +1,3 @@
++#as: -mpower10
++#name: Test Return-Oriented Programming checks
++#error_output: rop-checks.l
+diff --git a/gas/testsuite/gas/ppc/rop-checks.l b/gas/testsuite/gas/ppc/rop-checks.l
+new file mode 100644
+index 00000000000..83ffbee8ee8
+--- /dev/null
++++ b/gas/testsuite/gas/ppc/rop-checks.l
+@@ -0,0 +1,17 @@
++[^:]*: Assembler messages:
++[^:]*:3: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:4: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:5: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:6: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:7: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:8: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:9: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:10: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:11: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:12: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:13: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:14: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:15: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:16: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:17: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
++[^:]*:18: Error: invalid offset: must be in the range \[-512, -8\] and be a multiple of 8
+diff --git a/gas/testsuite/gas/ppc/rop-checks.s b/gas/testsuite/gas/ppc/rop-checks.s
+new file mode 100644
+index 00000000000..83ca35a819c
+--- /dev/null
++++ b/gas/testsuite/gas/ppc/rop-checks.s
+@@ -0,0 +1,18 @@
++	.text
++_start:
++	hashst   20,8(1)
++	hashst   21,0(1)
++	hashst   22,-12(1)
++	hashst   23,-520(1)
++	hashchk  20,8(1)
++	hashchk  21,0(1)
++	hashchk  22,-12(1)
++	hashchk  23,-520(1)
++	hashstp  20,8(1)
++	hashstp  21,0(1)
++	hashstp  22,-12(1)
++	hashstp  23,-520(1)
++	hashchkp 20,8(1)
++	hashchkp 21,0(1)
++	hashchkp 22,-12(1)
++	hashchkp 23,-520(1)
+diff --git a/gas/testsuite/gas/ppc/rop.d b/gas/testsuite/gas/ppc/rop.d
+new file mode 100644
+index 00000000000..2671dd6bbd5
+--- /dev/null
++++ b/gas/testsuite/gas/ppc/rop.d
+@@ -0,0 +1,27 @@
++#as: -mpower8
++#objdump: -d -Mpower8
++#name: Return-Oriented Programming tests
++
++.*
++
++
++Disassembly of section \.text:
++
++0+0 <_start>:
++.*:	(7f e1 a5 a5|a5 a5 e1 7f) 	hashst  r20,-8\(r1\)
++.*:	(7f c1 ad a5|a5 ad c1 7f) 	hashst  r21,-16\(r1\)
++.*:	(7c 01 b5 a5|a5 b5 01 7c) 	hashst  r22,-256\(r1\)
++.*:	(7c 01 bd a4|a4 bd 01 7c) 	hashst  r23,-512\(r1\)
++.*:	(7f e1 a5 e5|e5 a5 e1 7f) 	hashchk r20,-8\(r1\)
++.*:	(7f c1 ad e5|e5 ad c1 7f) 	hashchk r21,-16\(r1\)
++.*:	(7c 01 b5 e5|e5 b5 01 7c) 	hashchk r22,-256\(r1\)
++.*:	(7c 01 bd e4|e4 bd 01 7c) 	hashchk r23,-512\(r1\)
++.*:	(7f e1 a5 25|25 a5 e1 7f) 	hashstp r20,-8\(r1\)
++.*:	(7f c1 ad 25|25 ad c1 7f) 	hashstp r21,-16\(r1\)
++.*:	(7c 01 b5 25|25 b5 01 7c) 	hashstp r22,-256\(r1\)
++.*:	(7c 01 bd 24|24 bd 01 7c) 	hashstp r23,-512\(r1\)
++.*:	(7f e1 a5 65|65 a5 e1 7f) 	hashchkp r20,-8\(r1\)
++.*:	(7f c1 ad 65|65 ad c1 7f) 	hashchkp r21,-16\(r1\)
++.*:	(7c 01 b5 65|65 b5 01 7c) 	hashchkp r22,-256\(r1\)
++.*:	(7c 01 bd 64|64 bd 01 7c) 	hashchkp r23,-512\(r1\)
++#pass
+diff --git a/gas/testsuite/gas/ppc/rop.s b/gas/testsuite/gas/ppc/rop.s
+new file mode 100644
+index 00000000000..22e45f49aa9
+--- /dev/null
++++ b/gas/testsuite/gas/ppc/rop.s
+@@ -0,0 +1,21 @@
++# These instructions are new in POWER10, but enabled for POWER8 and
++# later cpus.  On POWER8 and POWER9, these instructions behave as
++# nop's.
++	.text
++_start:
++	hashst   20,-8(1)
++	hashst   21,-16(1)
++	hashst   22,-256(1)
++	hashst   23,-512(1)
++	hashchk  20,-8(1)
++	hashchk  21,-16(1)
++	hashchk  22,-256(1)
++	hashchk  23,-512(1)
++	hashstp  20,-8(1)
++	hashstp  21,-16(1)
++	hashstp  22,-256(1)
++	hashstp  23,-512(1)
++	hashchkp 20,-8(1)
++	hashchkp 21,-16(1)
++	hashchkp 22,-256(1)
++	hashchkp 23,-512(1)
 diff --git a/gas/testsuite/gas/ppc/vsx2.d b/gas/testsuite/gas/ppc/vsx2.d
 index e7ea585262a..4f0b25bd474 100644
 --- a/gas/testsuite/gas/ppc/vsx2.d
@@ -12255,10 +12639,23 @@ index 968d1917532..af11668b431 100644
  #undef DW_TAG
  #undef DW_TAG_DUP
 diff --git a/opcodes/ChangeLog b/opcodes/ChangeLog
-index b53a2bba98d..fada4f8c94b 100644
+index b53a2bba98d..577a7dfea3b 100644
 --- a/opcodes/ChangeLog
 +++ b/opcodes/ChangeLog
-@@ -1,3 +1,31 @@
+@@ -1,3 +1,44 @@
++2021-01-28  Alan Modra  <amodra@gmail.com>
++
++	Apply from master
++	2021-01-08  Peter Bergner  <bergner@linux.ibm.com>
++	* ppc-opc.c (insert_dw, (extract_dw): New functions.
++	(DW, (XRC_MASK): Define.
++	(powerpc_opcodes) <hashchk, hashchkp, hashst, haststp>: New mnemonics.
++
++2021-01-26  Alan Modra  <amodra@gmail.com>
++
++	* i386-gen.c (parse_template): Ensure entire template_instance
++	is initialised.
++
 +2020-10-07  H.J. Lu  <hongjiu.lu@intel.com>
 +
 +	PR gas/26685
@@ -12312,11 +12709,84 @@ index 8e0b4a1c2b1..ea2ca1bb88e 100644
  		}
  	      needaddr32 = 1;
  	    }
+diff --git a/opcodes/i386-gen.c b/opcodes/i386-gen.c
+index 7230f873445..09615f6069c 100644
+--- a/opcodes/i386-gen.c
++++ b/opcodes/i386-gen.c
+@@ -1465,6 +1465,8 @@ parse_template (char *buf, int lineno)
+       *end++ = '\0';
+ 
+       inst = xmalloc (sizeof (*inst));
++      inst->next = NULL;
++      inst->args = NULL;
+ 
+       cur = next_field (buf, ':', &next, end);
+       inst->name = xstrdup (cur);
 diff --git a/opcodes/ppc-opc.c b/opcodes/ppc-opc.c
-index 6932e4e820d..d15bde1326e 100644
+index 6932e4e820d..19163f4adf8 100644
 --- a/opcodes/ppc-opc.c
 +++ b/opcodes/ppc-opc.c
-@@ -4441,7 +4441,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -558,6 +558,34 @@ extract_dcmxs (uint64_t insn,
+   return (insn & 0x40) | ((insn << 3) & 0x20) | ((insn >> 16) & 0x1f);
+ }
+ 
++/* The DW field in a X form instruction when the field is split
++   into separate D and DX fields.  */
++
++static uint64_t
++insert_dw (uint64_t insn,
++	   int64_t value,
++	   ppc_cpu_t dialect ATTRIBUTE_UNUSED,
++	   const char **errmsg ATTRIBUTE_UNUSED)
++{
++  /* DW offsets must be in the range [-512, -8] and be a multiple of 8.  */
++  if (value < -512
++      || value > -8
++      || (value & 0x7) != 0)
++    *errmsg = _("invalid offset: must be in the range [-512, -8] "
++		"and be a multiple of 8");
++
++  return insn | ((value & 0xf8) << 18) | ((value >> 8) & 1);
++}
++
++static int64_t
++extract_dw (uint64_t insn,
++	     ppc_cpu_t dialect ATTRIBUTE_UNUSED,
++	     int *invalid ATTRIBUTE_UNUSED)
++{
++  int64_t dw = ((insn & 1) << 8) | ((insn >> 18) & 0xf8);
++  return dw - 512;
++}
++
+ /* The D field in a DX form instruction when the field is split
+    into separate D0, D1 and D2 fields.  */
+ 
+@@ -2497,8 +2525,13 @@ const struct powerpc_operand powerpc_operands[] =
+ #define BHRBE DUIS
+   { 0x3ff, 11, NULL, NULL, 0 },
+ 
++  /* The split DW field in a X form instruction.  */
++#define DW DUIS + 1
++  { -1, PPC_OPSHIFT_INV, insert_dw, extract_dw,
++    PPC_OPERAND_PARENS | PPC_OPERAND_SIGNED},
++
+   /* The split D field in a DX form instruction.  */
+-#define DXD DUIS + 1
++#define DXD DW + 1
+   { 0xffff, PPC_OPSHIFT_INV, insert_dxd, extract_dxd,
+     PPC_OPERAND_SIGNED | PPC_OPERAND_SIGNOPT},
+ 
+@@ -3750,6 +3783,9 @@ const unsigned int num_powerpc_operands = (sizeof (powerpc_operands)
+ /* The mask for an X form instruction with the BF bits specified.  */
+ #define XBF_MASK (X_MASK | (3 << 21))
+ 
++/* An X form instruction without the RC field specified.  */
++#define XRC_MASK XRC (0x3f, 0x3ff, 0)
++
+ /* An X form wait instruction with everything filled in except the WC
+    field.  */
+ #define XWC_MASK (XRC (0x3f, 0x3ff, 1) | (7 << 23) | RA_MASK | RB_MASK)
+@@ -4441,7 +4477,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"nmachhws",	XO (4, 110,0,0), XO_MASK,    MULHW,	0,		{RT, RA, RB}},
  {"nmachhws.",	XO (4, 110,0,1), XO_MASK,    MULHW,	0,		{RT, RA, RB}},
  {"vadduqm",	VX (4, 256),	VX_MASK,     PPCVEC2,	0,		{VD, VA, VB}},
@@ -12325,7 +12795,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"vmaxsb",	VX (4, 258),	VX_MASK,     PPCVEC,	0,		{VD, VA, VB}},
  {"vslb",	VX (4, 260),	VX_MASK,     PPCVEC,	0,		{VD, VA, VB}},
  {"vslq",	VX (4, 261),	VX_MASK,     POWER10,	0,		{VD, VA, VB}},
-@@ -4459,7 +4459,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -4459,7 +4495,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"macchwu",	XO (4, 140,0,0), XO_MASK,    MULHW,	0,		{RT, RA, RB}},
  {"macchwu.",	XO (4, 140,0,1), XO_MASK,    MULHW,	0,		{RT, RA, RB}},
  {"vaddcuq",	VX (4, 320),	VX_MASK,     PPCVEC2,	0,		{VD, VA, VB}},
@@ -12334,7 +12804,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"vmaxsh",	VX (4, 322),	VX_MASK,     PPCVEC,	0,		{VD, VA, VB}},
  {"vslh",	VX (4, 324),	VX_MASK,     PPCVEC,	0,		{VD, VA, VB}},
  {"vrlqnm",	VX (4, 325),	VX_MASK,     POWER10,	0,		{VD, VA, VB}},
-@@ -6114,6 +6114,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6114,6 +6150,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"rlnm.",	M(23,1),	M_MASK,	     PWRCOM,	PPCVLE,		{RA, RS, RB, MBE, ME}},
  
  {"nop",		OP(24),		0xffffffff,  PPCCOM,	PPCVLE,		{0}},
@@ -12342,7 +12812,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"ori",		OP(24),		OP_MASK,     PPCCOM,	PPCVLE,		{RA, RS, UI}},
  {"oril",	OP(24),		OP_MASK,     PWRCOM,	PPCVLE,		{RA, RS, UI}},
  
-@@ -6236,7 +6237,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6236,7 +6273,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  
  {"ldx",		X(31,21),	X_MASK,	     PPC64,	0,		{RT, RA0, RB}},
  
@@ -12351,7 +12821,7 @@ index 6932e4e820d..d15bde1326e 100644
  
  {"lwzx",	X(31,23),	X_MASK,	     PPCCOM,	0,		{RT, RA0, RB}},
  {"lx",		X(31,23),	X_MASK,	     PWRCOM,	0,		{RT, RA, RB}},
-@@ -6302,9 +6303,9 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6302,9 +6339,9 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"subf.",	XO(31,40,0,1),	XO_MASK,     PPC,	0,		{RT, RA, RB}},
  {"sub.",	XO(31,40,0,1),	XO_MASK,     PPC,	0,		{RT, RB, RA}},
  
@@ -12362,7 +12832,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"eratilx",	X(31,51),	X_MASK,	     PPCA2,	0,		{ERAT_T, RA, RB}},
  
  {"lbarx",	X(31,52),	XEH_MASK, POWER8|E6500, 0,		{RT, RA0, RB, EH}},
-@@ -6354,6 +6355,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6354,6 +6391,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mulhw",	XO(31,75,0,0),	XO_MASK,     PPC,	0,		{RT, RA, RB}},
  {"mulhw.",	XO(31,75,0,1),	XO_MASK,     PPC,	0,		{RT, RA, RB}},
  
@@ -12370,7 +12840,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"dlmzb",	XRC(31,78,0), X_MASK, PPC403|PPC440|PPC476|TITAN, 0,	{RA, RS, RB}},
  {"dlmzb.",	XRC(31,78,1), X_MASK, PPC403|PPC440|PPC476|TITAN, 0,	{RA, RS, RB}},
  
-@@ -6387,6 +6389,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6387,6 +6425,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  
  {"lxvrdx",	X(31,109),	XX1_MASK,    POWER10,	0,		{XT6, RA0, RB}},
  
@@ -12378,7 +12848,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mvidsplt",	X(31,110),	X_MASK,	     E6500,	0,		{VD, RA, RB}},
  
  {"mtsrdin",	X(31,114),	XRA_MASK,    PPC64,	0,		{RS, RB}},
-@@ -6489,9 +6492,9 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6489,9 +6528,9 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  
  {"mtmsrd",	X(31,178),	XRLARB_MASK, PPC64,	0,		{RS, A_L}},
  
@@ -12389,7 +12859,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"eratre",	X(31,179),	X_MASK,	     PPCA2,	0,		{RT, RA, WS}},
  
  {"stdux",	X(31,181),	X_MASK,	     PPC64,	0,		{RS, RAS, RB}},
-@@ -6738,11 +6741,13 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6738,11 +6777,13 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  
  {"mfmq",	XSPR(31,339,  0), XSPR_MASK, M601,	0,		{RT}},
  {"mfxer",	XSPR(31,339,  1), XSPR_MASK, COM,	0,		{RT}},
@@ -12403,7 +12873,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mfdscr",	XSPR(31,339, 17), XSPR_MASK, POWER6,	0,		{RT}},
  {"mftid",	XSPR(31,339, 17), XSPR_MASK, POWER,	0,		{RT}},
  {"mfdsisr",	XSPR(31,339, 18), XSPR_MASK, COM,	TITAN,		{RT}},
-@@ -6753,9 +6758,12 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6753,9 +6794,12 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mfsrr0",	XSPR(31,339, 26), XSPR_MASK, COM,	0,		{RT}},
  {"mfsrr1",	XSPR(31,339, 27), XSPR_MASK, COM,	0,		{RT}},
  {"mfcfar",	XSPR(31,339, 28), XSPR_MASK, POWER6,	0,		{RT}},
@@ -12416,7 +12886,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mfdear",	XSPR(31,339, 61), XSPR_MASK, BOOKE,	0,		{RT}},
  {"mfesr",	XSPR(31,339, 62), XSPR_MASK, BOOKE,	0,		{RT}},
  {"mfivpr",	XSPR(31,339, 63), XSPR_MASK, BOOKE,	0,		{RT}},
-@@ -6769,16 +6777,28 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6769,16 +6813,28 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mfcounta",	XSPR(31,339,150), XSPR_MASK, PPC860,	0,		{RT}},
  {"mfcountb",	XSPR(31,339,151), XSPR_MASK, PPC860,	0,		{RT}},
  {"mfcmpe",	XSPR(31,339,152), XSPR_MASK, PPC860,	0,		{RT}},
@@ -12445,7 +12915,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mfsprg4",	XSPR(31,339,260), XSPR_MASK, PPC405|BOOKE, 0,		{RT}},
  {"mfsprg5",	XSPR(31,339,261), XSPR_MASK, PPC405|BOOKE, 0,		{RT}},
  {"mfsprg6",	XSPR(31,339,262), XSPR_MASK, PPC405|BOOKE, 0,		{RT}},
-@@ -6794,20 +6814,37 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6794,20 +6850,37 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mfear",	XSPR(31,339,282), XSPR_MASK, PPC,	TITAN,		{RT}},
  {"mfpir",	XSPR(31,339,286), XSPR_MASK, BOOKE,	0,		{RT}},
  {"mfpvr",	XSPR(31,339,287), XSPR_MASK, PPC,	0,		{RT}},
@@ -12483,7 +12953,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mfivor0",	XSPR(31,339,400), XSPR_MASK, BOOKE,	0,		{RT}},
  {"mfivor1",	XSPR(31,339,401), XSPR_MASK, BOOKE,	0,		{RT}},
  {"mfivor2",	XSPR(31,339,402), XSPR_MASK, BOOKE,	0,		{RT}},
-@@ -6824,6 +6861,14 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6824,6 +6897,14 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mfivor13",	XSPR(31,339,413), XSPR_MASK, BOOKE,	0,		{RT}},
  {"mfivor14",	XSPR(31,339,414), XSPR_MASK, BOOKE,	0,		{RT}},
  {"mfivor15",	XSPR(31,339,415), XSPR_MASK, BOOKE,	0,		{RT}},
@@ -12498,7 +12968,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mfspefscr",	XSPR(31,339,512), XSPR_MASK, PPCSPE,	0,		{RT}},
  {"mfbbear",	XSPR(31,339,513), XSPR_MASK, PPCBRLK,	0,		{RT}},
  {"mfbbtar",	XSPR(31,339,514), XSPR_MASK, PPCBRLK,	0,		{RT}},
-@@ -6848,18 +6893,36 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6848,18 +6929,36 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mfdpdr",	XSPR(31,339,630), XSPR_MASK, PPC860,	0,		{RT}},
  {"mfdpir",	XSPR(31,339,631), XSPR_MASK, PPC860,	0,		{RT}},
  {"mfimmr",	XSPR(31,339,638), XSPR_MASK, PPC860,	0,		{RT}},
@@ -12541,7 +13011,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mfmi_ctr",	XSPR(31,339,784), XSPR_MASK, PPC860,	0,		{RT}},
  {"mfmi_ap",	XSPR(31,339,786), XSPR_MASK, PPC860,	0,		{RT}},
  {"mfmi_epn",	XSPR(31,339,787), XSPR_MASK, PPC860,	0,		{RT}},
-@@ -6873,12 +6936,25 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -6873,12 +6972,25 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mfmd_twc",	XSPR(31,339,797), XSPR_MASK, PPC860,	0,		{RT}},
  {"mfmd_rpn",	XSPR(31,339,798), XSPR_MASK, PPC860,	0,		{RT}},
  {"mfm_tw",	XSPR(31,339,799), XSPR_MASK, PPC860,	0,		{RT}},
@@ -12567,7 +13037,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mfivndx",	XSPR(31,339,880), XSPR_MASK, TITAN,	0,		{RT}},
  {"mfdvndx",	XSPR(31,339,881), XSPR_MASK, TITAN,	0,		{RT}},
  {"mfivlim",	XSPR(31,339,882), XSPR_MASK, TITAN,	0,		{RT}},
-@@ -7051,14 +7127,15 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -7051,14 +7163,15 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  
  {"sthux",	X(31,439),	X_MASK,	     COM,	0,		{RS, RAS, RB}},
  
@@ -12589,7 +13059,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mdoom",	0x7fdef378,	0xffffffff,  POWER7,	0,		{0}},
  {"mr",		XRC(31,444,0),	X_MASK,	     COM,	0,		{RA, RSB}},
  {"or",		XRC(31,444,0),	X_MASK,	     COM,	0,		{RA, RS, RB}},
-@@ -7124,8 +7201,10 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -7124,8 +7237,10 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  
  {"mtmq",	XSPR(31,467,  0), XSPR_MASK, M601,	0,		{RS}},
  {"mtxer",	XSPR(31,467,  1), XSPR_MASK, COM,	0,		{RS}},
@@ -12600,7 +13070,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mtdscr",	XSPR(31,467, 17), XSPR_MASK, POWER6,	0,		{RS}},
  {"mttid",	XSPR(31,467, 17), XSPR_MASK, POWER,	0,		{RS}},
  {"mtdsisr",	XSPR(31,467, 18), XSPR_MASK, COM,	TITAN,		{RS}},
-@@ -7138,13 +7217,20 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -7138,13 +7253,20 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mtsrr0",	XSPR(31,467, 26), XSPR_MASK, COM,	0,		{RS}},
  {"mtsrr1",	XSPR(31,467, 27), XSPR_MASK, COM,	0,		{RS}},
  {"mtcfar",	XSPR(31,467, 28), XSPR_MASK, POWER6,	0,		{RS}},
@@ -12621,7 +13091,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mtcmpa",	XSPR(31,467,144), XSPR_MASK, PPC860,	0,		{RS}},
  {"mtcmpb",	XSPR(31,467,145), XSPR_MASK, PPC860,	0,		{RS}},
  {"mtcmpc",	XSPR(31,467,146), XSPR_MASK, PPC860,	0,		{RS}},
-@@ -7155,13 +7241,24 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -7155,13 +7277,24 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mtcountb",	XSPR(31,467,151), XSPR_MASK, PPC860,	0,		{RS}},
  {"mtctrl",	XSPR(31,467,152), XSPR_MASK, POWER4,	0,		{RS}},
  {"mtcmpe",	XSPR(31,467,152), XSPR_MASK, PPC860,	0,		{RS}},
@@ -12646,7 +13116,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mtvrsave",	XSPR(31,467,256), XSPR_MASK, PPCVEC,	0,		{RS}},
  {"mtusprg0",	XSPR(31,467,256), XSPR_MASK, BOOKE,	0,		{RS}},
  {"mtsprg",	XSPR(31,467,256), XSPRG_MASK, PPC,	0,		{SPRG, RS}},
-@@ -7177,20 +7274,38 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -7177,20 +7310,38 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mtear",	XSPR(31,467,282), XSPR_MASK, PPC,	TITAN,		{RS}},
  {"mttbl",	XSPR(31,467,284), XSPR_MASK, PPC,	0,		{RS}},
  {"mttbu",	XSPR(31,467,285), XSPR_MASK, PPC,	0,		{RS}},
@@ -12685,7 +13155,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mtivor0",	XSPR(31,467,400), XSPR_MASK, BOOKE,	0,		{RS}},
  {"mtivor1",	XSPR(31,467,401), XSPR_MASK, BOOKE,	0,		{RS}},
  {"mtivor2",	XSPR(31,467,402), XSPR_MASK, BOOKE,	0,		{RS}},
-@@ -7207,6 +7322,13 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -7207,6 +7358,13 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mtivor13",	XSPR(31,467,413), XSPR_MASK, BOOKE,	0,		{RS}},
  {"mtivor14",	XSPR(31,467,414), XSPR_MASK, BOOKE,	0,		{RS}},
  {"mtivor15",	XSPR(31,467,415), XSPR_MASK, BOOKE,	0,		{RS}},
@@ -12699,7 +13169,7 @@ index 6932e4e820d..d15bde1326e 100644
  {"mtspefscr",	XSPR(31,467,512), XSPR_MASK, PPCSPE,	0,		{RS}},
  {"mtbbear",	XSPR(31,467,513), XSPR_MASK, PPCBRLK,	0,		{RS}},
  {"mtbbtar",	XSPR(31,467,514), XSPR_MASK, PPCBRLK,	0,		{RS}},
-@@ -7221,12 +7343,44 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -7221,12 +7379,44 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"mtmcsrr0",	XSPR(31,467,570), XSPR_MASK, PPCRFMCI,	0,		{RS}},
  {"mtmcsrr1",	XSPR(31,467,571), XSPR_MASK, PPCRFMCI,	0,		{RS}},
  {"mtmcsr",	XSPR(31,467,572), XSPR_MASK, PPCRFMCI,	0,		{RS}},
@@ -12744,7 +13214,43 @@ index 6932e4e820d..d15bde1326e 100644
  {"mtivndx",	XSPR(31,467,880), XSPR_MASK, TITAN,	0,		{RS}},
  {"mtdvndx",	XSPR(31,467,881), XSPR_MASK, TITAN,	0,		{RS}},
  {"mtivlim",	XSPR(31,467,882), XSPR_MASK, TITAN,	0,		{RS}},
-@@ -8301,7 +8455,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+@@ -7495,6 +7685,8 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+ {"addeo.",	XO(31,138,1,1),	XO_MASK,     PPCCOM,	0,		{RT, RA, RB}},
+ {"aeo.",	XO(31,138,1,1),	XO_MASK,     PWRCOM,	0,		{RT, RA, RB}},
+ 
++{"hashstp",	X(31,658),	XRC_MASK,    POWER8,	0,		{RB, DW, RA0}},
++
+ {"mfsrin",	X(31,659),	XRA_MASK,    PPC,	NON32,		{RT, RB}},
+ 
+ {"stdbrx",	X(31,660),	X_MASK, CELL|POWER7|PPCA2, 0,		{RS, RA0, RB}},
+@@ -7524,6 +7716,8 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+ {"tendall.",	XRC(31,686,1)|(1<<25), XRTRARB_MASK, PPCHTM, 0,		{0}},
+ {"tend.",	XRC(31,686,1), XRTARARB_MASK, PPCHTM,	0,		{HTM_A}},
+ 
++{"hashchkp",	X(31,690),	XRC_MASK,    POWER8,	0,		{RB, DW, RA0}},
++
+ {"stbcx.",	XRC(31,694,1),	X_MASK,	  POWER8|E6500, 0,		{RS, RA0, RB}},
+ 
+ {"stfsux",	X(31,695),	X_MASK,	     COM,	PPCEFS,		{FRS, RAS, RB}},
+@@ -7554,6 +7748,8 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+ {"addzeo.",	XO(31,202,1,1),	XORB_MASK,   PPCCOM,	0,		{RT, RA}},
+ {"azeo.",	XO(31,202,1,1),	XORB_MASK,   PWRCOM,	0,		{RT, RA}},
+ 
++{"hashst",	X(31,722),	XRC_MASK,    POWER8,	0,		{RB, DW, RA0}},
++
+ {"stswi",	X(31,725),	X_MASK,	     PPCCOM,	E500|E500MC,	{RS, RA0, NB}},
+ {"stsi",	X(31,725),	X_MASK,	     PWRCOM,	0,		{RS, RA0, NB}},
+ 
+@@ -7600,6 +7796,8 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+ {"tresume.",	XRCL(31,750,1,1), XRTRARB_MASK,PPCHTM,	0,		{0}},
+ {"tsr.",	XRC(31,750,1),	  XRTLRARB_MASK,PPCHTM,	0,		{L}},
+ 
++{"hashchk",	X(31,754),	XRC_MASK,    POWER8,	0,		{RB, DW, RA0}},
++
+ {"darn",	X(31,755),	XLRAND_MASK, POWER9,	0,		{RT, LRAND}},
+ 
+ {"dcba",	X(31,758), XRT_MASK, PPC405|PPC7450|BOOKE|PPCA2|PPC476, 0, {RA0, RB}},
+@@ -8301,7 +8499,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
  {"xxgenpcvdm",	X(60,949),	XX1_MASK,    POWER10,	PPCVLE,		{XT6, VB, UIMM}},
  {"xvxexpdp",	XX2VA(60,475,0),XX2_MASK,    PPCVSX3,	PPCVLE,		{XT6, XB6}},
  {"xvxsigdp",	XX2VA(60,475,1),XX2_MASK,    PPCVSX3,	PPCVLE,		{XT6, XB6}},

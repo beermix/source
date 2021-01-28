@@ -126,6 +126,43 @@
  2020-03-12  Release Manager
  
  	* GCC 9.3.0 released.
+--- a/contrib/compare-lto
++++ b/contrib/compare-lto
+@@ -32,7 +32,7 @@ case $1 in
+ esac
+ 
+ if test $# != 2; then
+-  echo 'usage: compare-lto file1.o file2.o' >&2
++  echo 'usage: compare-lto file1 file2' >&2
+   exit 1
+ fi
+ 
+@@ -101,6 +101,25 @@ else
+     else
+       status=1
+     fi
++
++  # PE-COFF executables are timestamped so skip leading bytes for them.
++  else
++    case "$1" in
++      *.exe)
++        if cmp -i 256 "$1" "$2"; then
++          status=0
++        else
++          status=1
++        fi
++        ;;
++      *)
++        if test -f "$1.exe" && cmp -i 256 "$1.exe" "$2.exe"; then
++          status=0
++        else
++          status=1
++        fi
++        ;;
++    esac
+   fi
+ fi
+ 
 new file mode 100755
 --- /dev/null
 +++ b/contrib/gcc-changelog/git_check_commit.py
@@ -5141,7 +5178,16 @@ new file mode 100755
 +            print('Please resolve all remaining file conflicts.')
 --- a/gcc/ChangeLog
 +++ b/gcc/ChangeLog
-@@ -1,3 +1,2480 @@
+@@ -1,3 +1,2489 @@
++2021-01-21  Wilco Dijkstra  <wdijkstr@arm.com>
++
++	Backported from master:
++	2019-10-16  Wilco Dijkstra  <wdijkstr@arm.com>
++
++	PR target/98618
++	* config/aarch64/aarch64.c (aarch64_classify_symbol):
++	Apply reasonable limit to symbol offsets.
++
 +2021-01-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 +
 +	Backported from master:
@@ -7626,7 +7672,7 @@ new file mode 100755
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20210116
++20210128
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -1687,6 +1687,10 @@ $(FULL_DRIVER_NAME): ./xgcc
@@ -7651,7 +7697,27 @@ new file mode 100755
  # Use "s-selftest-FE" to ensure that we only run the selftests if the
 --- a/gcc/ada/ChangeLog
 +++ b/gcc/ada/ChangeLog
-@@ -1,3 +1,49 @@
+@@ -1,3 +1,69 @@
++2021-01-26  Marius Hillenbrand  <mhillen@linux.ibm.com>
++
++	PR ada/98228
++	* gcc-interface/utils.c (maybe_pad_type): Test the size of the new
++	packable type instead of its alignment for addressability's sake.
++
++2021-01-25  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gcc-interface/trans.c (make_covariant_thunk): Set the DECL_CONTEXT
++	of the parameters and do not set TREE_PUBLIC on the thunk.
++	(maybe_make_gnu_thunk): Pass the alias to the covariant thunk.
++	* gcc-interface/utils.c (finish_subprog_decl): Set the DECL_CONTEXT
++	of the parameters here...
++	(begin_subprog_body): ...instead of here.
++
++2021-01-19  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR ada/98740
++	* gcc-interface/trans.c (add_decl_expr): Always mark TYPE_ADA_SIZE.
++
 +2020-12-10  Ed Schonberg  <schonberg@adacore.com>
 +
 +	PR ada/98230
@@ -7863,7 +7929,29 @@ new file mode 100755
  	    gnu_init = maybe_unconstrained_array (gnu_init);
  	    if (Do_Range_Check (Expression (gnat_temp)))
  	      gnu_init
-@@ -9830,6 +9801,11 @@ build_binary_op_trapv (enum tree_code code, tree gnu_type, tree left,
+@@ -8951,15 +8922,16 @@ add_decl_expr (tree gnu_decl, Node_Id gnat_node)
+ 	  MARK_VISITED (DECL_SIZE_UNIT (gnu_decl));
+ 	  MARK_VISITED (DECL_INITIAL (gnu_decl));
+ 	}
+-      /* In any case, we have to deal with our own TYPE_ADA_SIZE field.  */
+-      else if (TREE_CODE (gnu_decl) == TYPE_DECL
+-	       && RECORD_OR_UNION_TYPE_P (type)
+-	       && !TYPE_FAT_POINTER_P (type))
+-	MARK_VISITED (TYPE_ADA_SIZE (type));
+     }
+   else
+     add_stmt_with_node (gnu_stmt, gnat_node);
+ 
++  /* Mark our TYPE_ADA_SIZE field now since it will not be gimplified.  */
++  if (TREE_CODE (gnu_decl) == TYPE_DECL
++      && RECORD_OR_UNION_TYPE_P (type)
++      && !TYPE_FAT_POINTER_P (type))
++    MARK_VISITED (TYPE_ADA_SIZE (type));
++
+   /* If this is a variable and an initializer is attached to it, it must be
+      valid for the context.  Similar to init_const in create_var_decl.  */
+   if (TREE_CODE (gnu_decl) == VAR_DECL
+@@ -9830,6 +9802,11 @@ build_binary_op_trapv (enum tree_code code, tree gnu_type, tree left,
    /* If no operand is a constant, we use the generic implementation.  */
    if (TREE_CODE (lhs) != INTEGER_CST && TREE_CODE (rhs) != INTEGER_CST)
      {
@@ -7875,7 +7963,36 @@ new file mode 100755
        /* Never inline a 64-bit mult for a 32-bit target, it's way too long.  */
        if (code == MULT_EXPR && precision == 64 && BITS_PER_WORD < 64)
  	{
-@@ -11267,8 +11243,11 @@ maybe_make_gnu_thunk (Entity_Id gnat_thunk, tree gnu_thunk)
+@@ -11149,7 +11126,7 @@ make_alias_for_thunk (tree target)
+   return alias;
+ }
+ 
+-/* Create the covariant part of the {GNAT,GNU}_THUNK.  */
++/* Create the local covariant part of {GNAT,GNU}_THUNK.  */
+ 
+ static tree
+ make_covariant_thunk (Entity_Id gnat_thunk, tree gnu_thunk)
+@@ -11160,6 +11137,11 @@ make_covariant_thunk (Entity_Id gnat_thunk, tree gnu_thunk)
+ 		  gnu_name, TREE_TYPE (gnu_thunk));
+ 
+   DECL_ARGUMENTS (gnu_cv_thunk) = copy_list (DECL_ARGUMENTS (gnu_thunk));
++  for (tree param_decl = DECL_ARGUMENTS (gnu_cv_thunk);
++       param_decl;
++       param_decl = DECL_CHAIN (param_decl))
++    DECL_CONTEXT (param_decl) = gnu_cv_thunk;
++
+   DECL_RESULT (gnu_cv_thunk) = copy_node (DECL_RESULT (gnu_thunk));
+   DECL_CONTEXT (DECL_RESULT (gnu_cv_thunk)) = gnu_cv_thunk;
+ 
+@@ -11167,7 +11149,6 @@ make_covariant_thunk (Entity_Id gnat_thunk, tree gnu_thunk)
+   DECL_CONTEXT (gnu_cv_thunk) = DECL_CONTEXT (gnu_thunk);
+   TREE_READONLY (gnu_cv_thunk) = TREE_READONLY (gnu_thunk);
+   TREE_THIS_VOLATILE (gnu_cv_thunk) = TREE_THIS_VOLATILE (gnu_thunk);
+-  TREE_PUBLIC (gnu_cv_thunk) = TREE_PUBLIC (gnu_thunk);
+   DECL_ARTIFICIAL (gnu_cv_thunk) = 1;
+ 
+   return gnu_cv_thunk;
+@@ -11267,8 +11248,11 @@ maybe_make_gnu_thunk (Entity_Id gnat_thunk, tree gnu_thunk)
  
    tree gnu_target = gnat_to_gnu_entity (gnat_target, NULL_TREE, false);
  
@@ -7889,8 +8006,83 @@ new file mode 100755
  
    /* If the target returns by invisible reference and is external, apply the
       same transformation as Subprogram_Body_to_gnu here.  */
+@@ -11293,6 +11277,12 @@ maybe_make_gnu_thunk (Entity_Id gnat_thunk, tree gnu_thunk)
+ 
+   cgraph_node *target_node = cgraph_node::get_create (gnu_target);
+ 
++  /* We may also need to create an alias for the target in order to make
++     the call local, depending on the linkage of the target.  */
++  tree gnu_alias = use_alias_for_thunk_p (gnu_target)
++		  ? make_alias_for_thunk (gnu_target)
++		  : gnu_target;
++
+   /* If the return type of the target is a controlling type, then we need
+      both an usual this thunk and a covariant thunk in this order:
+ 
+@@ -11305,17 +11295,11 @@ maybe_make_gnu_thunk (Entity_Id gnat_thunk, tree gnu_thunk)
+       tree gnu_cv_thunk = make_covariant_thunk (gnat_thunk, gnu_thunk);
+       target_node->create_thunk (gnu_cv_thunk, gnu_target, false,
+ 				 - fixed_offset, 0, 0,
+-				 NULL_TREE, gnu_target);
++				 NULL_TREE, gnu_alias);
+ 
+-      gnu_target = gnu_cv_thunk;
++      gnu_alias = gnu_target = gnu_cv_thunk;
+     }
+ 
+-  /* We may also need to create an alias for the target in order to make
+-     the call local, depending on the linkage of the target.  */
+-  tree gnu_alias = use_alias_for_thunk_p (gnu_target)
+-		  ? make_alias_for_thunk (gnu_target)
+-		  : gnu_target;
+-
+   target_node->create_thunk (gnu_thunk, gnu_target, true,
+ 			     fixed_offset, virtual_value, indirect_offset,
+ 			     virtual_offset, gnu_alias);
 --- a/gcc/ada/gcc-interface/utils.c
 +++ b/gcc/ada/gcc-interface/utils.c
+@@ -1387,7 +1387,7 @@ maybe_pad_type (tree type, tree size, unsigned int align,
+     {
+       tree packable_type = make_packable_type (type, true);
+       if (TYPE_MODE (packable_type) != BLKmode
+-	  && align >= TYPE_ALIGN (packable_type))
++	  && compare_tree_int (TYPE_SIZE (packable_type), align) <= 0)
+         type = packable_type;
+     }
+ 
+@@ -3328,6 +3328,12 @@ create_subprog_decl (tree name, tree asm_name, tree type, tree param_decl_list,
+ void
+ finish_subprog_decl (tree decl, tree asm_name, tree type)
+ {
++  /* DECL_ARGUMENTS is set by the caller, but not its context.  */
++  for (tree param_decl = DECL_ARGUMENTS (decl);
++       param_decl;
++       param_decl = DECL_CHAIN (param_decl))
++    DECL_CONTEXT (param_decl) = decl;
++
+   tree result_decl
+     = build_decl (DECL_SOURCE_LOCATION (decl), RESULT_DECL, NULL_TREE,
+ 		  TREE_TYPE (type));
+@@ -3373,8 +3379,6 @@ finish_subprog_decl (tree decl, tree asm_name, tree type)
+ void
+ begin_subprog_body (tree subprog_decl)
+ {
+-  tree param_decl;
+-
+   announce_function (subprog_decl);
+ 
+   /* This function is being defined.  */
+@@ -3391,10 +3395,6 @@ begin_subprog_body (tree subprog_decl)
+      this function.  */
+   gnat_pushlevel ();
+ 
+-  for (param_decl = DECL_ARGUMENTS (subprog_decl); param_decl;
+-       param_decl = DECL_CHAIN (param_decl))
+-    DECL_CONTEXT (param_decl) = subprog_decl;
+-
+   make_decl_rtl (subprog_decl);
+ }
+ 
 @@ -5624,7 +5624,7 @@ can_materialize_object_renaming_p (Node_Id expr)
      {
        expr = Original_Node (expr);
@@ -9602,15 +9794,15 @@ new file mode 100755
 +  machine_mode cmp_mode = GET_MODE (x);
 +  machine_mode cc_mode;
 +  rtx cc_reg;
-+
+ 
+-  emit_set_insn (cc_reg, gen_rtx_COMPARE (mode, x, y));
 +  if (cmp_mode == TImode)
 +    {
 +      gcc_assert (code == NE);
 +
 +      cc_mode = CCmode;
 +      cc_reg = gen_rtx_REG (cc_mode, CC_REGNUM);
- 
--  emit_set_insn (cc_reg, gen_rtx_COMPARE (mode, x, y));
++
 +      rtx x_lo = operand_subword (x, 0, 0, TImode);
 +      rtx y_lo = operand_subword (y, 0, 0, TImode);
 +      emit_set_insn (cc_reg, gen_rtx_COMPARE (cc_mode, x_lo, y_lo));
@@ -9928,7 +10120,53 @@ new file mode 100755
    { NULL, aarch64_attr_custom, false, NULL, OPT____ }
  };
  
-@@ -14105,7 +14352,12 @@ aarch64_simd_container_mode (scalar_mode mode, poly_int64 width)
+@@ -13050,26 +13297,31 @@ aarch64_classify_symbol (rtx x, HOST_WIDE_INT offset)
+ 	     the offset does not cause overflow of the final address.  But
+ 	     we have no way of knowing the address of symbol at compile time
+ 	     so we can't accurately say if the distance between the PC and
+-	     symbol + offset is outside the addressible range of +/-1M in the
+-	     TINY code model.  So we rely on images not being greater than
+-	     1M and cap the offset at 1M and anything beyond 1M will have to
+-	     be loaded using an alternative mechanism.  Furthermore if the
+-	     symbol is a weak reference to something that isn't known to
+-	     resolve to a symbol in this module, then force to memory.  */
+-	  if ((SYMBOL_REF_WEAK (x)
+-	       && !aarch64_symbol_binds_local_p (x))
+-	      || !IN_RANGE (offset, -1048575, 1048575))
++	     symbol + offset is outside the addressible range of +/-1MB in the
++	     TINY code model.  So we limit the maximum offset to +/-64KB and
++	     assume the offset to the symbol is not larger than +/-(1MB - 64KB).
++	     If offset_within_block_p is true we allow larger offsets.
++	     Furthermore force to memory if the symbol is a weak reference to
++	     something that doesn't resolve to a symbol in this module.  */
++
++	  if (SYMBOL_REF_WEAK (x) && !aarch64_symbol_binds_local_p (x))
+ 	    return SYMBOL_FORCE_TO_MEM;
++	  if (!(IN_RANGE (offset, -0x10000, 0x10000)
++		|| offset_within_block_p (x, offset)))
++	    return SYMBOL_FORCE_TO_MEM;
++
+ 	  return SYMBOL_TINY_ABSOLUTE;
+ 
+ 	case AARCH64_CMODEL_SMALL:
+ 	  /* Same reasoning as the tiny code model, but the offset cap here is
+-	     4G.  */
+-	  if ((SYMBOL_REF_WEAK (x)
+-	       && !aarch64_symbol_binds_local_p (x))
+-	      || !IN_RANGE (offset, HOST_WIDE_INT_C (-4294967263),
+-			    HOST_WIDE_INT_C (4294967264)))
++	     1MB, allowing +/-3.9GB for the offset to the symbol.  */
++
++	  if (SYMBOL_REF_WEAK (x) && !aarch64_symbol_binds_local_p (x))
++	    return SYMBOL_FORCE_TO_MEM;
++	  if (!(IN_RANGE (offset, -0x100000, 0x100000)
++		|| offset_within_block_p (x, offset)))
+ 	    return SYMBOL_FORCE_TO_MEM;
++
+ 	  return SYMBOL_SMALL_ABSOLUTE;
+ 
+ 	case AARCH64_CMODEL_TINY_PIC:
+@@ -14105,7 +14357,12 @@ aarch64_simd_container_mode (scalar_mode mode, poly_int64 width)
  static machine_mode
  aarch64_preferred_simd_mode (scalar_mode mode)
  {
@@ -9942,7 +10180,7 @@ new file mode 100755
    return aarch64_simd_container_mode (mode, bits);
  }
  
-@@ -14114,7 +14366,11 @@ aarch64_preferred_simd_mode (scalar_mode mode)
+@@ -14114,7 +14371,11 @@ aarch64_preferred_simd_mode (scalar_mode mode)
  static void
  aarch64_autovectorize_vector_sizes (vector_sizes *sizes)
  {
@@ -9955,7 +10193,7 @@ new file mode 100755
      sizes->safe_push (BYTES_PER_SVE_VECTOR);
    sizes->safe_push (16);
    sizes->safe_push (8);
-@@ -15426,16 +15682,26 @@ static void
+@@ -15426,16 +15687,26 @@ static void
  aarch64_emit_load_exclusive (machine_mode mode, rtx rval,
  			     rtx mem, rtx model_rtx)
  {
@@ -9985,7 +10223,7 @@ new file mode 100755
  }
  
  /* Mark the previous jump instruction as unlikely.  */
-@@ -15447,6 +15713,82 @@ aarch64_emit_unlikely_jump (rtx insn)
+@@ -15447,6 +15718,82 @@ aarch64_emit_unlikely_jump (rtx insn)
    add_reg_br_prob_note (jump, profile_probability::very_unlikely ());
  }
  
@@ -10068,7 +10306,7 @@ new file mode 100755
  /* Expand a compare and swap pattern.  */
  
  void
-@@ -15493,6 +15835,17 @@ aarch64_expand_compare_and_swap (rtx operands[])
+@@ -15493,6 +15840,17 @@ aarch64_expand_compare_and_swap (rtx operands[])
  						   newval, mod_s));
        cc_reg = aarch64_gen_compare_reg_maybe_ze (NE, rval, oldval, mode);
      }
@@ -10086,7 +10324,7 @@ new file mode 100755
    else
      {
        /* The oldval predicate varies by mode.  Test it and force to reg.  */
-@@ -15538,13 +15891,11 @@ aarch64_split_compare_and_swap (rtx operands[])
+@@ -15538,13 +15896,11 @@ aarch64_split_compare_and_swap (rtx operands[])
    /* Split after prolog/epilog to avoid interactions with shrinkwrapping.  */
    gcc_assert (epilogue_completed);
  
@@ -10101,7 +10339,7 @@ new file mode 100755
  
    rval = operands[0];
    mem = operands[1];
-@@ -15565,7 +15916,8 @@ aarch64_split_compare_and_swap (rtx operands[])
+@@ -15565,7 +15921,8 @@ aarch64_split_compare_and_swap (rtx operands[])
  	CBNZ	scratch, .label1
      .label2:
  	CMP	rval, 0.  */
@@ -10111,7 +10349,7 @@ new file mode 100755
  
    label1 = NULL;
    if (!is_weak)
-@@ -15578,35 +15930,20 @@ aarch64_split_compare_and_swap (rtx operands[])
+@@ -15578,35 +15935,20 @@ aarch64_split_compare_and_swap (rtx operands[])
    /* The initial load can be relaxed for a __sync operation since a final
       barrier will be emitted to stop code hoisting.  */
    if (is_mm_sync (model))
@@ -10154,7 +10392,7 @@ new file mode 100755
  
    aarch64_emit_store_exclusive (mode, scratch, mem, newval, model_rtx);
  
-@@ -15627,22 +15964,16 @@ aarch64_split_compare_and_swap (rtx operands[])
+@@ -15627,22 +15969,16 @@ aarch64_split_compare_and_swap (rtx operands[])
        aarch64_emit_unlikely_jump (gen_rtx_SET (pc_rtx, x));
      }
    else
@@ -10181,7 +10419,7 @@ new file mode 100755
    /* Emit any final barrier needed for a __sync operation.  */
    if (is_mm_sync (model))
      aarch64_emit_post_barrier (model);
-@@ -16415,7 +16746,8 @@ aarch64_evpc_rev_local (struct expand_vec_perm_d *d)
+@@ -16415,7 +16751,8 @@ aarch64_evpc_rev_local (struct expand_vec_perm_d *d)
  
    if (d->vec_flags == VEC_SVE_PRED
        || !d->one_vector_p
@@ -10191,7 +10429,7 @@ new file mode 100755
      return false;
  
    size = (diff + 1) * GET_MODE_UNIT_SIZE (d->vmode);
-@@ -17045,6 +17377,8 @@ aarch64_copy_one_block_and_progress_pointers (rtx *src, rtx *dst,
+@@ -17045,6 +17382,8 @@ aarch64_copy_one_block_and_progress_pointers (rtx *src, rtx *dst,
  bool
  aarch64_expand_movmem (rtx *operands)
  {
@@ -10200,7 +10438,7 @@ new file mode 100755
    int n, mode_bits;
    rtx dst = operands[0];
    rtx src = operands[1];
-@@ -17055,21 +17389,24 @@ aarch64_expand_movmem (rtx *operands)
+@@ -17055,21 +17394,24 @@ aarch64_expand_movmem (rtx *operands)
    /* When optimizing for size, give a better estimate of the length of a
       memcpy call, but use the default otherwise.  Moves larger than 8 bytes
       will always require an even number of instructions to do now.  And each
@@ -10229,7 +10467,7 @@ new file mode 100755
    base = copy_to_mode_reg (Pmode, XEXP (dst, 0));
    dst = adjust_automodify_address (dst, VOIDmode, base, 0);
  
-@@ -18900,6 +19237,231 @@ aarch64_file_end_indicate_exec_stack ()
+@@ -18900,6 +19242,231 @@ aarch64_file_end_indicate_exec_stack ()
  #undef GNU_PROPERTY_AARCH64_FEATURE_1_BTI
  #undef GNU_PROPERTY_AARCH64_FEATURE_1_AND
  
@@ -10461,7 +10699,7 @@ new file mode 100755
  /* Target-specific selftests.  */
  
  #if CHECKING_P
-@@ -19420,6 +19982,12 @@ aarch64_libgcc_floating_mode_supported_p
+@@ -19420,6 +19987,12 @@ aarch64_libgcc_floating_mode_supported_p
  #define TARGET_RUN_TARGET_SELFTESTS selftest::aarch64_run_selftests
  #endif /* #if CHECKING_P */
  
@@ -21527,7 +21765,56 @@ new file mode 100755
  				    "division"),
 --- a/gcc/fortran/ChangeLog
 +++ b/gcc/fortran/ChangeLog
-@@ -1,3 +1,668 @@
+@@ -1,3 +1,717 @@
++2021-01-25  Paul Thomas  <pault@gcc.gnu.org>
++
++	Backported from master:
++	2021-01-25  Steve Kargl  <kargl@gcc.gnu.org>
++
++	PR fortran/98517
++	* resolve.c (resolve_charlen): Check that length expression is
++	present before testing for scalar/integer..
++
++2021-01-25  Paul Thomas  <pault@gcc.gnu.org>
++
++	Backported from master:
++	2020-12-29  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/93833
++	* trans-array.c (get_array_ctor_var_strlen): If the character
++	length backend_decl cannot be found, convert the expression and
++	use the string length. Clear up some minor white space issues
++	in the rest of the file.
++
++2021-01-23  Paul Thomas  <pault@gcc.gnu.org>
++
++	Backported from master:
++	2020-12-26  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/98022
++	* data.c (gfc_assign_data_value): Throw an error for inquiry
++	references. Follow with corrected code that would provide the
++	expected result and provides clean error recovery.
++
++2021-01-23  Paul Thomas  <pault@gcc.gnu.org>
++
++	Backported from master:
++	2020-12-12  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/98022
++	* data.c (gfc_assign_data_value): Handle inquiry references in
++	the data statement object list.
++
++2021-01-19  Tobias Burnus  <tobias@codesourcery.com>
++
++	Backported from master:
++	2020-01-04  Tobias Burnus  <tobias@codesourcery.com>
++
++	PR fortran/91640
++	* trans-expr.c (gfc_conv_procedure_call): Avoid copy-out for nonvariable
++	arguments to contiguous dummy args.  Avoid re-checking whether fsym is
++	NULL.
++
 +2021-01-07  Harald Anlauf  <anlauf@gmx.de>
 +
 +	Backported from master:
@@ -22330,7 +22617,115 @@ new file mode 100755
  	return NULL;
 --- a/gcc/fortran/data.c
 +++ b/gcc/fortran/data.c
-@@ -498,12 +498,11 @@ gfc_assign_data_value (gfc_expr *lvalue, gfc_expr *rvalue, mpz_t index,
+@@ -20,14 +20,14 @@ along with GCC; see the file COPYING3.  If not see
+ 
+ 
+ /* Notes for DATA statement implementation:
+-									       
++
+    We first assign initial value to each symbol by gfc_assign_data_value
+    during resolving DATA statement. Refer to check_data_variable and
+    traverse_data_list in resolve.c.
+-									       
++
+    The complexity exists in the handling of array section, implied do
+    and array of struct appeared in DATA statement.
+-									       
++
+    We call gfc_conv_structure, gfc_con_array_array_initializer,
+    etc., to convert the initial value. Refer to trans-expr.c and
+    trans-array.c.  */
+@@ -221,11 +221,14 @@ gfc_assign_data_value (gfc_expr *lvalue, gfc_expr *rvalue, mpz_t index,
+   gfc_ref *ref;
+   gfc_expr *init;
+   gfc_expr *expr = NULL;
++  gfc_expr *rexpr;
+   gfc_constructor *con;
+   gfc_constructor *last_con;
+   gfc_symbol *symbol;
+   gfc_typespec *last_ts;
+   mpz_t offset;
++  const char *msg = "F18(R841): data-implied-do object at %L is neither an "
++		    "array-element nor a scalar-structure-component";
+ 
+   symbol = lvalue->symtree->n.sym;
+   init = symbol->value;
+@@ -464,6 +467,74 @@ gfc_assign_data_value (gfc_expr *lvalue, gfc_expr *rvalue, mpz_t index,
+ 	    }
+ 	  break;
+ 
++	case REF_INQUIRY:
++
++	  /* After some discussion on clf it was determined that the following
++	     violates F18(R841). If the error is removed, the expected result
++	     is obtained. Leaving the code in place ensures a clean error
++	     recovery.  */
++	  gfc_error (msg, &lvalue->where);
++
++	  /* This breaks with the other reference types in that the output
++	     constructor has to be of type COMPLEX, whereas the lvalue is
++	     of type REAL.  The rvalue is copied to the real or imaginary
++	     part as appropriate.  In addition, for all except scalar
++	     complex variables, a complex expression has to provided, where
++	     the constructor does not have it, and the expression modified
++	     with a new value for the real or imaginary part.  */
++	  gcc_assert (ref->next == NULL && last_ts->type == BT_COMPLEX);
++	  rexpr = gfc_copy_expr (rvalue);
++	  if (!gfc_compare_types (&lvalue->ts, &rexpr->ts))
++	    gfc_convert_type (rexpr, &lvalue->ts, 0);
++
++	  /* This is the scalar, complex case, where an initializer exists.  */
++	  if (init && ref == lvalue->ref)
++	    expr = symbol->value;
++	  /* Then all cases, where a complex expression does not exist.  */
++	  else if (!last_con || !last_con->expr)
++	    {
++	      expr = gfc_get_constant_expr (BT_COMPLEX, lvalue->ts.kind,
++					    &lvalue->where);
++	      if (last_con)
++		last_con->expr = expr;
++	    }
++	  else
++	    /* Finally, and existing constructor expression to be modified.  */
++	    expr = last_con->expr;
++
++	  /* Rejection of LEN and KIND inquiry references is handled
++	     elsewhere. The error here is added as backup. The assertion
++	     of F2008 for RE and IM is also done elsewhere.  */
++	  switch (ref->u.i)
++	    {
++	    case INQUIRY_LEN:
++	    case INQUIRY_KIND:
++	      gfc_error ("LEN or KIND inquiry ref in DATA statement at %L",
++			 &lvalue->where);
++	      goto abort;
++	    case INQUIRY_RE:
++	      mpfr_set (mpc_realref (expr->value.complex),
++			rexpr->value.real,
++			GFC_RND_MODE);
++	      break;
++	    case INQUIRY_IM:
++	      mpfr_set (mpc_imagref (expr->value.complex),
++			rexpr->value.real,
++			GFC_RND_MODE);
++	      break;
++	    }
++
++	  /* Only the scalar, complex expression needs to be saved as the
++	     symbol value since the last constructor expression is already
++	     provided as the initializer in the code after the reference
++	     cases.  */
++	  if (ref == lvalue->ref)
++	    symbol->value = expr;
++
++	  gfc_free_expr (rexpr);
++	  mpz_clear (offset);
++	  return true;
++
+ 	default:
+ 	  gcc_unreachable ();
+ 	}
+@@ -498,12 +569,11 @@ gfc_assign_data_value (gfc_expr *lvalue, gfc_expr *rvalue, mpz_t index,
  	return false;
      }
  
@@ -22346,6 +22741,92 @@ new file mode 100755
  	return false;
        expr = create_character_initializer (init, last_ts, ref, rvalue);
      }
+@@ -513,7 +583,7 @@ gfc_assign_data_value (gfc_expr *lvalue, gfc_expr *rvalue, mpz_t index,
+ 	  && gfc_has_default_initializer (lvalue->ts.u.derived))
+ 	{
+ 	  gfc_error ("Nonpointer object %qs with default initialization "
+-		     "shall not appear in a DATA statement at %L", 
++		     "shall not appear in a DATA statement at %L",
+ 		     symbol->name, &lvalue->where);
+ 	  return false;
+ 	}
+@@ -540,13 +610,13 @@ abort:
+ 
+ /* Modify the index of array section and re-calculate the array offset.  */
+ 
+-void 
++void
+ gfc_advance_section (mpz_t *section_index, gfc_array_ref *ar,
+ 		     mpz_t *offset_ret)
+ {
+   int i;
+   mpz_t delta;
+-  mpz_t tmp; 
++  mpz_t tmp;
+   bool forwards;
+   int cmp;
+   gfc_expr *start, *end, *stride;
+@@ -567,21 +637,21 @@ gfc_advance_section (mpz_t *section_index, gfc_array_ref *ar,
+ 	    forwards = true;
+ 	  else
+ 	    forwards = false;
+-	  gfc_free_expr(stride);	
++	  gfc_free_expr(stride);
+ 	}
+       else
+ 	{
+ 	  mpz_add_ui (section_index[i], section_index[i], 1);
+ 	  forwards = true;
+ 	}
+-      
++
+       if (ar->end[i])
+         {
+ 	  end = gfc_copy_expr(ar->end[i]);
+ 	  if(!gfc_simplify_expr(end, 1))
+ 	    gfc_internal_error("Simplification error");
+ 	  cmp = mpz_cmp (section_index[i], end->value.integer);
+-	  gfc_free_expr(end);	
++	  gfc_free_expr(end);
+ 	}
+       else
+ 	cmp = mpz_cmp (section_index[i], ar->as->upper[i]->value.integer);
+@@ -595,7 +665,7 @@ gfc_advance_section (mpz_t *section_index, gfc_array_ref *ar,
+ 	      if(!gfc_simplify_expr(start, 1))
+ 	        gfc_internal_error("Simplification error");
+ 	      mpz_set (section_index[i], start->value.integer);
+-	      gfc_free_expr(start); 
++	      gfc_free_expr(start);
+ 	    }
+ 	  else
+ 	    mpz_set (section_index[i], ar->as->lower[i]->value.integer);
+@@ -613,7 +683,7 @@ gfc_advance_section (mpz_t *section_index, gfc_array_ref *ar,
+       mpz_mul (tmp, tmp, delta);
+       mpz_add (*offset_ret, tmp, *offset_ret);
+ 
+-      mpz_sub (tmp, ar->as->upper[i]->value.integer, 
++      mpz_sub (tmp, ar->as->upper[i]->value.integer,
+ 	       ar->as->lower[i]->value.integer);
+       mpz_add_ui (tmp, tmp, 1);
+       mpz_mul (delta, tmp, delta);
+@@ -699,7 +769,7 @@ gfc_formalize_init_value (gfc_symbol *sym)
+ 
+ /* Get the integer value into RET_AS and SECTION from AS and AR, and return
+    offset.  */
+- 
++
+ void
+ gfc_get_section_index (gfc_array_ref *ar, mpz_t *section_index, mpz_t *offset)
+ {
+@@ -741,7 +811,7 @@ gfc_get_section_index (gfc_array_ref *ar, mpz_t *section_index, mpz_t *offset)
+ 	  gcc_unreachable ();
+ 	}
+ 
+-      mpz_sub (tmp, ar->as->upper[i]->value.integer, 
++      mpz_sub (tmp, ar->as->upper[i]->value.integer,
+ 	       ar->as->lower[i]->value.integer);
+       mpz_add_ui (tmp, tmp, 1);
+       mpz_mul (delta, tmp, delta);
 --- a/gcc/fortran/decl.c
 +++ b/gcc/fortran/decl.c
 @@ -668,6 +668,10 @@ gfc_match_data (void)
@@ -23273,16 +23754,17 @@ new file mode 100755
  	  /* Remove a GFC_ISYM_CAF_GET inserted for a coindexed variable on
  	     the LHS.  */
  	  if (code->expr1->expr_type == EXPR_FUNCTION
-@@ -12000,7 +12042,7 @@ resolve_charlen (gfc_charlen *cl)
+@@ -12000,7 +12042,8 @@ resolve_charlen (gfc_charlen *cl)
  	}
  
        /* cl->length has been resolved.  It should have an integer type.  */
 -      if (cl->length->ts.type != BT_INTEGER)
-+      if (cl->length->ts.type != BT_INTEGER || cl->length->rank != 0)
++      if (cl->length
++	  && (cl->length->ts.type != BT_INTEGER || cl->length->rank != 0))
  	{
  	  gfc_error ("Scalar INTEGER expression expected at %L",
  		     &cl->length->where);
-@@ -12629,6 +12671,7 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
+@@ -12629,6 +12672,7 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
  	{
  	  if (arg->sym
  	      && arg->sym->ts.type == BT_DERIVED
@@ -23290,7 +23772,7 @@ new file mode 100755
  	      && !arg->sym->ts.u.derived->attr.use_assoc
  	      && !gfc_check_symbol_access (arg->sym->ts.u.derived)
  	      && !gfc_notify_std (GFC_STD_F2003, "%qs is of a PRIVATE type "
-@@ -12755,8 +12798,10 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
+@@ -12755,8 +12799,10 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
      {
        if (sym->attr.proc_pointer)
  	{
@@ -23302,7 +23784,7 @@ new file mode 100755
  	  return false;
  	}
        if (sym->attr.dummy)
-@@ -12843,7 +12888,7 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
+@@ -12843,7 +12889,7 @@ resolve_fl_procedure (gfc_symbol *sym, int mp_flag)
        if (sym->attr.subroutine && sym->attr.result)
  	{
  	  gfc_error ("PROCEDURE attribute conflicts with RESULT attribute "
@@ -23311,7 +23793,7 @@ new file mode 100755
  	  return false;
  	}
        if (sym->attr.external && sym->attr.function && !sym->attr.module_procedure
-@@ -13541,7 +13586,7 @@ resolve_typebound_procedure (gfc_symtree* stree)
+@@ -13541,7 +13587,7 @@ resolve_typebound_procedure (gfc_symtree* stree)
      {
        /* If proc has not been resolved at this point, proc->name may
  	 actually be a USE associated entity. See PR fortran/89647. */
@@ -23320,7 +23802,7 @@ new file mode 100755
  	  && proc->attr.function == 0 && proc->attr.subroutine == 0)
  	{
  	  gfc_symbol *tmp;
-@@ -13929,7 +13974,7 @@ resolve_component (gfc_component *c, gfc_symbol *sym)
+@@ -13929,7 +13975,7 @@ resolve_component (gfc_component *c, gfc_symbol *sym)
    /* F2008, C448.  */
    if (c->ts.type == BT_CLASS)
      {
@@ -23329,7 +23811,7 @@ new file mode 100755
  	{
  	  attr = &(CLASS_DATA (c)->attr);
  
-@@ -14791,9 +14836,9 @@ resolve_symbol (gfc_symbol *sym)
+@@ -14791,9 +14837,9 @@ resolve_symbol (gfc_symbol *sym)
    gfc_array_spec *as;
    bool saved_specification_expr;
  
@@ -23341,7 +23823,7 @@ new file mode 100755
  
    /* No symbol will ever have union type; only components can be unions.
       Union type declaration symbols have type BT_UNKNOWN but flavor FL_UNION
-@@ -14805,6 +14850,7 @@ resolve_symbol (gfc_symbol *sym)
+@@ -14805,6 +14851,7 @@ resolve_symbol (gfc_symbol *sym)
    if (flag_coarray == GFC_FCOARRAY_LIB && sym->ts.type == BT_CLASS
        && sym->ts.u.derived && CLASS_DATA (sym)
        && CLASS_DATA (sym)->attr.codimension
@@ -23349,7 +23831,7 @@ new file mode 100755
        && (CLASS_DATA (sym)->ts.u.derived->attr.alloc_comp
  	  || CLASS_DATA (sym)->ts.u.derived->attr.pointer_comp))
      {
-@@ -15534,7 +15580,7 @@ resolve_symbol (gfc_symbol *sym)
+@@ -15534,7 +15581,7 @@ resolve_symbol (gfc_symbol *sym)
        if (formal)
  	{
  	  sym->formal_ns = formal->sym->ns;
@@ -23358,7 +23840,7 @@ new file mode 100755
  	    sym->formal_ns->refs++;
  	}
      }
-@@ -16510,7 +16556,8 @@ resolve_equivalence (gfc_equiv *eq)
+@@ -16510,7 +16557,8 @@ resolve_equivalence (gfc_equiv *eq)
  	  && !gfc_notify_std (GFC_STD_GNU, msg, sym->name, &e->where))
  		continue;
  
@@ -23368,7 +23850,7 @@ new file mode 100755
        last_ts =&sym->ts;
        last_where = &e->where;
  
-@@ -16518,8 +16565,7 @@ resolve_equivalence (gfc_equiv *eq)
+@@ -16518,8 +16566,7 @@ resolve_equivalence (gfc_equiv *eq)
  	continue;
  
        /* Shall not be an automatic array.  */
@@ -23628,7 +24110,35 @@ new file mode 100755
    /* Get the size of the array.  */
    if (size && !callee_alloc)
      {
-@@ -2979,13 +3122,16 @@ gfc_conv_ss_descriptor (stmtblock_t * block, gfc_ss * ss, int base)
+@@ -2125,6 +2268,7 @@ get_array_ctor_var_strlen (stmtblock_t *block, gfc_expr * expr, tree * len)
+   gfc_ref *ref;
+   gfc_typespec *ts;
+   mpz_t char_len;
++  gfc_se se;
+ 
+   /* Don't bother if we already know the length is a constant.  */
+   if (*len && INTEGER_CST_P (*len))
+@@ -2170,6 +2314,19 @@ get_array_ctor_var_strlen (stmtblock_t *block, gfc_expr * expr, tree * len)
+ 	}
+     }
+ 
++  /* A last ditch attempt that is sometimes needed for deferred characters.  */
++  if (!ts->u.cl->backend_decl)
++    {
++      gfc_init_se (&se, NULL);
++      if (expr->rank)
++	gfc_conv_expr_descriptor (&se, expr);
++      else
++	gfc_conv_expr (&se, expr);
++      gcc_assert (se.string_length != NULL_TREE);
++      gfc_add_block_to_block (block, &se.pre);
++      ts->u.cl->backend_decl = se.string_length;
++    }
++
+   *len = ts->u.cl->backend_decl;
+ }
+ 
+@@ -2979,13 +3136,16 @@ gfc_conv_ss_descriptor (stmtblock_t * block, gfc_ss * ss, int base)
  	}
        /* Also the data pointer.  */
        tmp = gfc_conv_array_data (se.expr);
@@ -23647,7 +24157,7 @@ new file mode 100755
  	tmp = gfc_evaluate_now (tmp, block);
        info->data = tmp;
  
-@@ -3442,18 +3588,10 @@ build_class_array_ref (gfc_se *se, tree base, tree index)
+@@ -3442,18 +3602,10 @@ build_class_array_ref (gfc_se *se, tree base, tree index)
    size = gfc_class_vtab_size_get (decl);
  
    /* For unlimited polymorphic entities then _len component needs to be
@@ -23670,7 +24180,7 @@ new file mode 100755
  
    /* Build the address of the element.  */
    type = TREE_TYPE (TREE_TYPE (base));
-@@ -6945,6 +7083,24 @@ gfc_get_dataptr_offset (stmtblock_t *block, tree parm, tree desc, tree offset,
+@@ -6945,6 +7097,24 @@ gfc_get_dataptr_offset (stmtblock_t *block, tree parm, tree desc, tree offset,
  	      tmp = gfc_build_array_ref (tmp, index, NULL);
  	      break;
  
@@ -23695,7 +24205,7 @@ new file mode 100755
  	    default:
  	      gcc_unreachable ();
  	      break;
-@@ -6991,7 +7147,12 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
+@@ -6991,7 +7161,12 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
        e = gfc_constructor_first (expr->value.constructor)->expr;
  
        gfc_init_se (&tse, NULL);
@@ -23708,7 +24218,7 @@ new file mode 100755
  	gfc_conv_expr_descriptor (&tse, e);
        else
  	gfc_conv_expr (&tse, e);
-@@ -7009,14 +7170,26 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
+@@ -7009,14 +7184,26 @@ get_array_charlen (gfc_expr *expr, gfc_se *se)
        gfc_add_modify (&se->pre, expr->ts.u.cl->backend_decl,
  		      tse.string_length);
  
@@ -23737,7 +24247,7 @@ new file mode 100755
  
        expr->ts.u.cl->backend_decl =
  		gfc_create_var (gfc_charlen_type_node, "sln");
-@@ -9137,21 +9310,9 @@ structure_alloc_comps (gfc_symbol * der_type, tree decl,
+@@ -9137,21 +9324,9 @@ structure_alloc_comps (gfc_symbol * der_type, tree decl,
  		 for the malloc call.  */
  	      if (UNLIMITED_POLY (c))
  		{
@@ -23760,7 +24270,7 @@ new file mode 100755
  		}
  
  	      /* Coarray component have to have the same allocation status and
-@@ -9890,6 +10051,8 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -9890,6 +10065,8 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
    tree alloc_expr;
    tree size1;
    tree size2;
@@ -23769,7 +24279,7 @@ new file mode 100755
    tree array1;
    tree cond_null;
    tree cond;
-@@ -9905,6 +10068,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -9905,6 +10082,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
    tree jump_label2;
    tree neq_size;
    tree lbd;
@@ -23777,7 +24287,7 @@ new file mode 100755
    int n;
    int dim;
    gfc_array_spec * as;
-@@ -9969,6 +10133,114 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -9969,6 +10147,114 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
    gcc_assert (GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (desc)));
    array1 = gfc_conv_descriptor_data_get (desc);
  
@@ -23892,7 +24402,7 @@ new file mode 100755
    /* 7.4.1.3 "If variable is an allocated allocatable variable, it is
       deallocated if expr is an array of different shape or any of the
       corresponding length type parameter values of variable and expr
-@@ -9988,6 +10260,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -9988,6 +10274,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
  			     rss->info->string_length);
        cond_null = fold_build2_loc (input_location, TRUTH_OR_EXPR,
  				   logical_type_node, tmp, cond_null);
@@ -23900,7 +24410,7 @@ new file mode 100755
      }
    else
      cond_null= gfc_evaluate_now (cond_null, &fblock);
-@@ -10036,6 +10309,19 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -10036,6 +10323,19 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
        gfc_add_expr_to_block (&fblock, tmp);
      }
  
@@ -23920,7 +24430,7 @@ new file mode 100755
    /* ....else jump past the (re)alloc code.  */
    tmp = build1_v (GOTO_EXPR, jump_label2);
    gfc_add_expr_to_block (&fblock, tmp);
-@@ -10058,11 +10344,6 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -10058,11 +10358,6 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
    gfc_add_expr_to_block (&fblock, tmp);
  
    /* Get the rhs size and fix it.  */
@@ -23932,7 +24442,7 @@ new file mode 100755
    size2 = gfc_index_one_node;
    for (n = 0; n < expr2->rank; n++)
      {
-@@ -10177,69 +10458,12 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -10177,69 +10472,12 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
  	gfc_add_modify (&fblock, linfo->delta[dim], tmp);
      }
  
@@ -24004,7 +24514,7 @@ new file mode 100755
    size2 = fold_convert (size_type_node, size2);
    size2 = fold_build2_loc (input_location, MAX_EXPR, size_type_node,
  			   size2, size_one_node);
-@@ -10260,27 +10484,47 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -10260,27 +10498,47 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
        gfc_add_modify (&fblock, tmp,
  		      gfc_get_dtype_rank_type (expr1->rank,type));
      }
@@ -24065,7 +24575,7 @@ new file mode 100755
      }
    else if (coarray && GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (desc)))
      {
-@@ -10356,11 +10600,19 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -10356,11 +10614,19 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
    gfc_add_block_to_block (&realloc_block, &caf_se.post);
    realloc_expr = gfc_finish_block (&realloc_block);
  
@@ -24087,7 +24597,7 @@ new file mode 100755
  
    /* Malloc expression.  */
    gfc_init_block (&alloc_block);
-@@ -10407,11 +10659,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -10407,11 +10673,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
    alloc_expr = gfc_finish_block (&alloc_block);
  
    /* Malloc if not allocated; realloc otherwise.  */
@@ -24100,7 +24610,7 @@ new file mode 100755
    gfc_add_expr_to_block (&fblock, tmp);
  
    /* Make sure that the scalarizer data pointer is updated.  */
-@@ -10421,7 +10669,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
+@@ -10421,7 +10683,7 @@ gfc_alloc_allocatable_for_assignment (gfc_loopinfo *loop,
        gfc_add_modify (&fblock, linfo->data, tmp);
      }
  
@@ -24504,6 +25014,50 @@ new file mode 100755
  	}
        else if (se->ss && se->ss->info->useflags)
  	{
+@@ -5958,7 +6158,7 @@ gfc_conv_procedure_call (gfc_se * se, gfc_symbol * sym,
+ 				fsym && fsym->attr.pointer);
+ 
+ 	      else if (gfc_is_class_array_ref (e, NULL)
+-			 && fsym && fsym->ts.type == BT_DERIVED)
++		       && fsym && fsym->ts.type == BT_DERIVED)
+ 		/* The actual argument is a component reference to an
+ 		   array of derived types.  In this case, the argument
+ 		   is converted to a temporary, which is passed and then
+@@ -5967,26 +6167,26 @@ gfc_conv_procedure_call (gfc_se * se, gfc_symbol * sym,
+ 		   the same as the declared type, copy-in/copy-out does
+ 		   not occur.  */
+ 		gfc_conv_subref_array_arg (&parmse, e, nodesc_arg,
+-				fsym ? fsym->attr.intent : INTENT_INOUT,
+-				fsym && fsym->attr.pointer);
++					   fsym->attr.intent,
++					   fsym->attr.pointer);
+ 
+ 	      else if (gfc_is_class_array_function (e)
+-			 && fsym && fsym->ts.type == BT_DERIVED)
++		       && fsym && fsym->ts.type == BT_DERIVED)
+ 		/* See previous comment.  For function actual argument,
+ 		   the write out is not needed so the intent is set as
+ 		   intent in.  */
+ 		{
+ 		  e->must_finalize = 1;
+ 		  gfc_conv_subref_array_arg (&parmse, e, nodesc_arg,
+-					     INTENT_IN,
+-					     fsym && fsym->attr.pointer);
++					     INTENT_IN, fsym->attr.pointer);
+ 		}
+ 	      else if (fsym && fsym->attr.contiguous
+-		       && !gfc_is_simply_contiguous (e, false, true))
++		       && !gfc_is_simply_contiguous (e, false, true)
++		       && gfc_expr_is_variable (e))
+ 		{
+ 		  gfc_conv_subref_array_arg (&parmse, e, nodesc_arg,
+-				fsym ? fsym->attr.intent : INTENT_INOUT,
+-				fsym && fsym->attr.pointer);
++					     fsym->attr.intent,
++					     fsym->attr.pointer);
+ 		}
+ 	      else
+ 		gfc_conv_array_parameter (&parmse, e, nodesc_arg, fsym,
 @@ -7462,12 +7662,14 @@ gfc_conv_initializer (gfc_expr * expr, gfc_typespec * ts, tree type,
  	  return se.expr;
  
@@ -25785,6 +26339,13 @@ new file mode 100755
      warning (OPT_Wpadded, "padding struct size to alignment boundary");
  
    if (warn_packed && TREE_CODE (rli->t) == RECORD_TYPE
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
+new file mode 100644
 new file mode 100644
 new file mode 100644
 new file mode 100644
@@ -35510,7 +36071,17 @@ new file mode 100644
  	return MAX (MAX (comp, spec), 64);
 --- a/libphobos/ChangeLog
 +++ b/libphobos/ChangeLog
-@@ -1,3 +1,30 @@
+@@ -1,3 +1,40 @@
++2021-01-24  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	Backported from master:
++	2021-01-23  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/98806
++	* libdruntime/gcc/sections/elf_shared.d (MIPS_Any): Declare version
++	for MIPS32 and MIPS64.
++	(getDependencies): Adjust dlpi_addr on MIPS_Any.
++
 +2020-10-15  Maciej W. Rozycki  <macro@linux-mips.org>
 +
 +	Backported from master:
@@ -35604,6 +36175,26 @@ new file mode 100644
              union
              {
                  timestruc_t st_atim;
+--- a/libphobos/libdruntime/gcc/sections/elf_shared.d
++++ b/libphobos/libdruntime/gcc/sections/elf_shared.d
+@@ -22,6 +22,8 @@
+ 
+ module gcc.sections.elf_shared;
+ 
++version (MIPS32)  version = MIPS_Any;
++version (MIPS64)  version = MIPS_Any;
+ version (RISCV32) version = RISCV_Any;
+ version (RISCV64) version = RISCV_Any;
+ version (S390)    version = IBMZ_Any;
+@@ -763,6 +765,8 @@ version (Shared)
+                     // in glibc: #define DL_RO_DYN_SECTION 1
+                     version (RISCV_Any)
+                         strtab = cast(const(char)*)(info.dlpi_addr + dyn.d_un.d_ptr); // relocate
++                    else version (MIPS_Any)
++                        strtab = cast(const(char)*)(info.dlpi_addr + dyn.d_un.d_ptr); // relocate
+                     else
+                         strtab = cast(const(char)*)dyn.d_un.d_ptr;
+                 }
 --- a/libsanitizer/ChangeLog
 +++ b/libsanitizer/ChangeLog
 @@ -1,3 +1,8 @@
