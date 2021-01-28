@@ -8,15 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=polipo
-#PKG_SOURCE_VERSION:=4d42ca1
-PKG_SOURCE_VERSION:=f048871
+PKG_SOURCE_VERSION:=4d42ca1
+#PKG_SOURCE_VERSION:=f048871
 #PKG_SOURCE_VERSION:=2aa12cb
 #PKG_SOURCE_VERSION:=771e908
 
 PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/jech/polipo.git
-PKG_SOURCE_URL:=https://github.com/zhangchn/polipo.git
-PKG_MIRROR_HASH:=b845d38329e049543e8365aa4a6d525846897184eab5748fbccd045d79919cec
+PKG_SOURCE_URL:=https://github.com/jech/polipo.git
+#PKG_SOURCE_URL:=https://github.com/zhangchn/polipo.git
 #PKG_SOURCE_URL:=https://github.com/love-ginger/polipo.git
 #PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
 
