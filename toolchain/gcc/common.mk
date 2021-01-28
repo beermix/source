@@ -134,6 +134,7 @@ GCC_CONFIGURE:= \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
+		--enable-gold \
 		--enable-target-optspace \
 		--disable-libgomp \
 		--disable-libmudflap \
@@ -154,7 +155,9 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--with-linker-hash-style=gnu \
 		--with-diagnostics-color=always \
-		--enable-__cxa_atexit
+		--enable-__cxa_atexit \
+		--disable-libstdcxx-dual-abi \
+		--with-default-libstdcxx-abi=new
 ifneq ($(CONFIG_mips)$(CONFIG_mipsel),)
   GCC_CONFIGURE += --with-mips-plt
 endif

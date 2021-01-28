@@ -27,7 +27,6 @@ PKG_CONFIG_DEPENDS:=\
 	CONFIG_PACKAGE_libpcrecpp \
 	CONFIG_PCRE_JIT_ENABLED
 
-include $(INCLUDE_DIR)/uclibc++.mk
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 

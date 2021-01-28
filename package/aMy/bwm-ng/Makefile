@@ -5,11 +5,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bwm-ng
-PKG_SOURCE_VERSION:=e8b0976
+PKG_SOURCE_VERSION:=f337ba7
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/vgropp/bwm-ng
-PKG_MIRROR_HASH:=6bfafccee90ab4bb794fd92060b178d3f74464d17f50d050808648a3f3a21041
+PKG_SOURCE_URL:=https://github.com/vgropp/bwm-ng.git
+PKG_MIRROR_HASH:=
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
