@@ -27,6 +27,10 @@ ifeq ($(PKG_VERSION),2.35.1)
   PKG_HASH:=3ced91db9bf01182b7e420eab68039f2083aed0a214c0424e257eae3ddee8607
 endif
 
+ifeq ($(PKG_VERSION),2.36)
+  PKG_HASH:=
+endif
+
 HOST_BUILD_PARALLEL:=1
 
 PATCH_DIR:=./patches/$(PKG_VERSION)
