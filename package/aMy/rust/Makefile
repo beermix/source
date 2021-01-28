@@ -13,8 +13,9 @@ PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
 PKG_SOURCE_DATE:=2020-11-11
-PKG_SOURCE_VERSION:=e1884a8e3c3e813aada8254edfa120e85bf5ffca
-PKG_HASH:=skip
+PKG_SOURCE_VERSION:=fa55f668e5ea5388ec98b9340969527252239151
+PKG_HASH:=e7c3fefe77ee8c15b49fac4c89c9f7025c57e8f6ff3079d905e51a96bda3042d
+PKG_MIRROR_HASH:=e7c3fefe77ee8c15b49fac4c89c9f7025c57e8f6ff3079d905e51a96bda3042d
 PKG_HOST_ONLY:=1
 
 include $(INCLUDE_DIR)/cmake.mk
@@ -92,29 +93,6 @@ include ./rust_install.mk
 else
 include ./rust_compile.mk
 endif
-
-#define Host/InstallDev
-#	[ $(RUST_BINARY) = true ] && ( sh $(RUST_INSTALL_BINARIES) )
-#endef
-
-define Host/Compile-Bak
-	[ $(RUST_BINARY) = true ] && ( true ) || \
-	  ( cd $(HOST_BUILD_DIR) && \
-	     ( RUST_BACKTRACE=full \
-		$(PYTHON) x.py --config ./config.toml dist cargo extended \
-		   library/std llvm-tools miri rust-dev rustc-dev src \
-		   src/librustc src/lldb_batchmode.py src/tools/build-manifest ))
-endef
-
-define Host/CreateBinaries
-	cd $(HOST_BUILD_DIR)/build/dist && \
-	   $(RM) *.gz && \
-	   $(call dl_tar_pack,$(DL_DIR)/$(RUST_INSTALL_FILE_NAME),.)
-
-	$(eval $(call fixup_rust_hash, $(CURDIR)/Makefile, \
-	   RUST_INSTALL_FILE_HASH, \
-	   $(call gen_sha256sum,$(RUST_INSTALL_FILE_NAME))))
-endef
 
 define Package/rust
   SECTION:=lang
