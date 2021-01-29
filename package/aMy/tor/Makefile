@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.4.5.4-rc
+PKG_VERSION:=0.4.4.6
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -32,7 +32,7 @@ define Package/tor/Default
   CATEGORY:=Network
   URL:=https://www.torproject.org/
   USERID:=tor=52:tor=52
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap #+libzstd
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +zlib +libcap +libzstd
   TITLE:=Tor routing daemon
 endef
 
@@ -131,7 +131,7 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-lzma \
-	--disable-zstd \
+	--enable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
 	--enable-pic
