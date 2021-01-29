@@ -135,10 +135,7 @@ GCC_CONFIGURE:= \
 		--target=$(REAL_GNU_TARGET_NAME) \
 		--with-gnu-ld \
 		--enable-target-optspace \
-		--disable-libgomp \
-		--disable-libmudflap \
 		--disable-multilib \
-		--disable-libmpx \
 		--disable-nls \
 		--disable-libssp \
 		$(GRAPHITE_CONFIGURE) \
