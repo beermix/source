@@ -40,6 +40,11 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
+
+TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
+TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
+TARGETLDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
+
 # remove fortify for building libraries
 #  TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
 #  TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}

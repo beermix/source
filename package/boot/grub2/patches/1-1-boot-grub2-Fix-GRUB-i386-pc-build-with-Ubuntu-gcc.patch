@@ -1,0 +1,175 @@
+From patchwork Mon May 25 18:00:29 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+X-Patchwork-Id: 1297488
+Return-Path: <buildroot-bounces@busybox.net>
+X-Original-To: incoming-buildroot@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming-buildroot@bilbo.ozlabs.org
+Authentication-Results: ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=busybox.net
+ (client-ip=140.211.166.136; helo=silver.osuosl.org;
+ envelope-from=buildroot-bounces@busybox.net; receiver=<UNKNOWN>)
+Authentication-Results: ozlabs.org;
+ dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key;
+ unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256
+ header.s=20161025 header.b=W1t2J+hp;
+	dkim-atps=neutral
+Received: from silver.osuosl.org (smtp3.osuosl.org [140.211.166.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ozlabs.org (Postfix) with ESMTPS id 49W4cR2gpXz9sPK
+	for <incoming-buildroot@patchwork.ozlabs.org>;
+ Tue, 26 May 2020 03:59:51 +1000 (AEST)
+Received: from localhost (localhost [127.0.0.1])
+	by silver.osuosl.org (Postfix) with ESMTP id 8595420133;
+	Mon, 25 May 2020 17:59:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at osuosl.org
+Received: from silver.osuosl.org ([127.0.0.1])
+	by localhost (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id oBgLrMTqXwqH; Mon, 25 May 2020 17:59:46 +0000 (UTC)
+Received: from ash.osuosl.org (ash.osuosl.org [140.211.166.34])
+	by silver.osuosl.org (Postfix) with ESMTP id C7CCF2045B;
+	Mon, 25 May 2020 17:59:45 +0000 (UTC)
+X-Original-To: buildroot@lists.busybox.net
+Delivered-To: buildroot@osuosl.org
+Received: from whitealder.osuosl.org (smtp1.osuosl.org [140.211.166.138])
+ by ash.osuosl.org (Postfix) with ESMTP id A6ACB1BF20D
+ for <buildroot@lists.busybox.net>; Mon, 25 May 2020 17:59:44 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+ by whitealder.osuosl.org (Postfix) with ESMTP id A23ED86072
+ for <buildroot@lists.busybox.net>; Mon, 25 May 2020 17:59:44 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at osuosl.org
+Received: from whitealder.osuosl.org ([127.0.0.1])
+ by localhost (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id ctiZTysKTQT6 for <buildroot@lists.busybox.net>;
+ Mon, 25 May 2020 17:59:44 +0000 (UTC)
+X-Greylist: domain auto-whitelisted by SQLgrey-1.7.6
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com
+ [209.85.128.41])
+ by whitealder.osuosl.org (Postfix) with ESMTPS id A9D66860D6
+ for <buildroot@buildroot.org>; Mon, 25 May 2020 17:59:43 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id j198so3430145wmj.0
+ for <buildroot@buildroot.org>; Mon, 25 May 2020 10:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20161025;
+ h=from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=9usxi0eVZkpVF729ZKQ9mgMRAegUuUCfhA6ftJjf9Nw=;
+ b=W1t2J+hpLL+O/IBDAd6UprMbOLh1AMbh4cfDwjjgY0AcoDzfNJUpRL3qCC5Tt8k5BE
+ 0CZdfLU/D0Fy17eDjqBrvUEF9tgETAgFFdcOerRklpf35mICcIQT9kOHGqYeO9uoN7bE
+ 7VZj0+pmUnjzwVaMU/OAaCZoNEw+UX1f2KEt8xtwFVda9LT0r82r1sO/Wgddbjvrvhrf
+ KaiU+3k9VVGFWMML40KreCO9Hw49LwmJ5I6JTSYde60EGzOD8FOCb02AFzMMnamlSXv0
+ wNEmk9MJtr7gkuwu/CW/COSYK+Ptmc9u0S1ew1KD4uAuAf79q68HGYj+8GOBvt8xQmY2
+ jTgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=1e100.net; s=20161025;
+ h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+ :content-transfer-encoding;
+ bh=9usxi0eVZkpVF729ZKQ9mgMRAegUuUCfhA6ftJjf9Nw=;
+ b=EgNJMcmFoSLr7h0rnzXZYDUKkAPlb831vrcD/t/CW2OUvtSch8ATtMiqjgMrxRiGUS
+ Jz+jEsGVEelIK2XNKS6ay7g3MQPTAZJWstinCLY6Z3jKNu+ctGwEOThZm1JNsNpiyGq7
+ K14gBoiYepyTdeEUxWkwglU8iCfLS3usdUxfg/+MxMS1cNroA7roUblcaQMpYrGwGoAM
+ tgZ0V9AKp9anaMPAcqZSISzxuszB/c2UGVLRf96DL3bNmN5J/i42Hl6sYu27bq9vgy1Q
+ ydgGxN1a/YVd8t9v+EeFJTwgEhSWHbUVj4Guj80u2V/Ea2nH4hJPniKJsSAvbs5GjGwX
+ tnCw==
+X-Gm-Message-State: AOAM532aeHt1Q5yuVECtQSKcBAifm+kVMjC0j+lYWca0p3Sva8rMiCPs
+ 6BUSGSdvSv1igi9/B4eRY2zf856r
+X-Google-Smtp-Source: 
+ ABdhPJyQKqYrj7CL8WrbRJ+bVRC03Kj7rlWAoj+e8SLCtqjdA6XPYoSeJ+ctPLmHyuOsPMdGGpNjeQ==
+X-Received: by 2002:a1c:a906:: with SMTP id s6mr8255583wme.171.1590429581464;
+ Mon, 25 May 2020 10:59:41 -0700 (PDT)
+Received: from kali.home (lfbn-ren-1-2144-158.w92-167.abo.wanadoo.fr.
+ [92.167.223.158])
+ by smtp.gmail.com with ESMTPSA id r5sm14905659wrq.0.2020.05.25.10.59.40
+ (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+ Mon, 25 May 2020 10:59:40 -0700 (PDT)
+From: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+To: buildroot@buildroot.org
+Date: Mon, 25 May 2020 20:00:29 +0200
+Message-Id: <20200525180029.2140650-1-fontaine.fabrice@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Subject: [Buildroot] [PATCH 1/1] boot/grub2: Fix GRUB i386-pc build with
+ Ubuntu gcc
+X-BeenThere: buildroot@busybox.net
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Discussion and development of buildroot <buildroot.busybox.net>
+List-Unsubscribe: <http://lists.busybox.net/mailman/options/buildroot>,
+ <mailto:buildroot-request@busybox.net?subject=unsubscribe>
+List-Archive: <http://lists.busybox.net/pipermail/buildroot/>
+List-Post: <mailto:buildroot@busybox.net>
+List-Help: <mailto:buildroot-request@busybox.net?subject=help>
+List-Subscribe: <http://lists.busybox.net/mailman/listinfo/buildroot>,
+ <mailto:buildroot-request@busybox.net?subject=subscribe>
+Cc: Fabrice Fontaine <fontaine.fabrice@gmail.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Errors-To: buildroot-bounces@busybox.net
+Sender: "buildroot" <buildroot-bounces@busybox.net>
+
+Fixes:
+ - https://bugs.buildroot.org/show_bug.cgi?id=12946
+
+Signed-off-by: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+---
+ ...x-GRUB-i386-pc-build-with-Ubuntu-gcc.patch | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 boot/grub2/0001-build-Fix-GRUB-i386-pc-build-with-Ubuntu-gcc.patch
+
+diff --git a/boot/grub2/0001-build-Fix-GRUB-i386-pc-build-with-Ubuntu-gcc.patch b/boot/grub2/0001-build-Fix-GRUB-i386-pc-build-with-Ubuntu-gcc.patch
+new file mode 100644
+index 0000000000..d8acbc5621
+--- /dev/null
++++ b/boot/grub2/0001-build-Fix-GRUB-i386-pc-build-with-Ubuntu-gcc.patch
+@@ -0,0 +1,48 @@
++From 6643507ce30f775008e093580f0c9499dfb2c485 Mon Sep 17 00:00:00 2001
++From: Simon Hardy <simon.hardy@itdev.co.uk>
++Date: Tue, 24 Mar 2020 13:29:12 +0000
++Subject: build: Fix GRUB i386-pc build with Ubuntu gcc
++
++With recent versions of gcc on Ubuntu a very large lzma_decompress.img file is
++output. (e.g. 134479600 bytes instead of 2864.) This causes grub-mkimage to
++fail with: "error: Decompressor is too big."
++
++This seems to be caused by a section .note.gnu.property that is placed at an
++offset such that objcopy needs to pad the img file with zeros.
++
++This issue is present on:
++Ubuntu 19.10 with gcc (Ubuntu 8.3.0-26ubuntu1~19.10) 8.3.0
++Ubuntu 19.10 with gcc (Ubuntu 9.2.1-9ubuntu2) 9.2.1 20191008
++
++This issue is not present on:
++Ubuntu 19.10 with gcc (Ubuntu 7.5.0-3ubuntu1~19.10) 7.5.0
++RHEL 8.0 with gcc 8.3.1 20190507 (Red Hat 8.3.1-4)
++
++The issue can be fixed by removing the section using objcopy as shown in
++this patch.
++
++Signed-off-by: Simon Hardy <simon.hardy@itdev.co.uk>
++Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
++[Retrieved from:
++http://git.savannah.gnu.org/cgit/grub.git/commit/?id=6643507ce30f775008e093580f0c9499dfb2c485]
++Signed-off-by: Fabrice Fontaine <fontaine.fabrice@gmail.com>
++---
++ gentpl.py | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/gentpl.py b/gentpl.py
++index 387588c05..c86550d4f 100644
++--- a/gentpl.py
+++++ b/gentpl.py
++@@ -766,7 +766,7 @@ def image(defn, platform):
++ if test x$(TARGET_APPLE_LINKER) = x1; then \
++   $(MACHO2IMG) $< $@; \
++ else \
++-  $(TARGET_OBJCOPY) $(""" + cname(defn) + """_OBJCOPYFLAGS) --strip-unneeded -R .note -R .comment -R .note.gnu.build-id -R .MIPS.abiflags -R .reginfo -R .rel.dyn -R .note.gnu.gold-version -R .ARM.exidx $< $@; \
+++  $(TARGET_OBJCOPY) $(""" + cname(defn) + """_OBJCOPYFLAGS) --strip-unneeded -R .note -R .comment -R .note.gnu.build-id -R .MIPS.abiflags -R .reginfo -R .rel.dyn -R .note.gnu.gold-version -R .note.gnu.property -R .ARM.exidx $< $@; \
++ fi
++ """)
++ 
++-- 
++cgit v1.2.1
++
