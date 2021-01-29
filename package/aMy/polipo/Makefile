@@ -41,13 +41,13 @@ define Package/polipo/description
 endef
 
 #TARGET_CFLAGS += -DHAVE_IPv6
-TARGET_CFLAGS += -DNO_IPv6 -DNO_DISK_CACHE -DNO_STANDARD_RESOLVER -DNO_TUNNEL
+TARGET_CFLAGS += -DNO_IPv6
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
-		polipo
+		polipo2
 endef
 
 define Package/polipo/conffiles
@@ -57,7 +57,7 @@ endef
 
 define Package/polipo/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo2 $(1)/usr/sbin/polipo
 	$(INSTALL_DIR) $(1)/etc/polipo
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
 	$(INSTALL_DIR) $(1)/etc/config
