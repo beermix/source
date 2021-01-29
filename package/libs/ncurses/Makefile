@@ -129,6 +129,8 @@ endef
 define Package/terminfo/install
 	echo ""
 ifneq ($(HOST_OS),FreeBSD)
+	$(INSTALL_DIR) $(1)/usr/share/tabset/
+	$(CP) $(PKG_INSTALL_DIR)/usr/share/tabset/* $(1)/usr/share/tabset/
 	$(INSTALL_DIR) $(1)/usr/share/terminfo
 	(cd $(PKG_INSTALL_DIR)/usr/share/terminfo; \
 		for dir in ??; do \
@@ -141,6 +143,7 @@ ifneq ($(HOST_OS),FreeBSD)
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/terminfo/$$$$file \
 			$(1)/usr/share/terminfo/$$$$file; \
 	done
+	
 endif
 endef
 
