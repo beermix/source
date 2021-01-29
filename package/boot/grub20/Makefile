@@ -22,7 +22,7 @@ HOST_BUILD_PARALLEL:=1
 PKG_FLAGS:=nonshared
 
 include $(INCLUDE_DIR)/host-build.mk
-i
+
 HOST_BUILD_PREFIX := $(STAGING_DIR_HOST)
 
 HOST_CONFIGURE_VARS += \
@@ -47,4 +47,3 @@ define Host/Configure
 endef
 
 $(eval $(call HostBuild))
-$(eval $(call BuildPackage,grub20))
