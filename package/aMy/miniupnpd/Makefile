@@ -44,6 +44,8 @@ define Build/Prepare
 	echo "$(VERSION_NUMBER)" | tr '() ' '_' >$(PKG_BUILD_DIR)/os.openwrt
 endef
 
+TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+
 CONFIGURE_ARGS = \
 	$(if $(CONFIG_IPV6),--ipv6) \
 	--igd2 \
