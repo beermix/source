@@ -9,16 +9,16 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=grub
-PKG_SOURCE_VERSION:=635ef55
+PKG_CPE_ID:=cpe:/a:gnu:grub2
+PKG_VERSION:=2.04
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git://git.savannah.gnu.org/grub.git
-
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=@GNU/grub
+PKG_HASH:=e5292496995ad42dabe843a0192cf2a2c502e7ffcc7479398232b10a472df77d
 
 HOST_BUILD_PARALLEL:=1
-#HOST_FIXUP:=autoreconf
 PKG_BUILD_DEPENDS:=grub2/host
-#PKG_FIXUP:=autoreconf
 
 PKG_ASLR_PIE:=0
 PKG_SSP:=0
@@ -86,23 +86,9 @@ HOST_MAKE_FLAGS += \
 
 TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
 
-define Host/Prepare
-$(call Host/Prepare/Default)
-	( cd $(HOST_BUILD_DIR) ; \
-			./bootstrap ; \
-	)
-endef
-
-#define Host/Configure
-#	$(SED) 's,(RANLIB),(TARGET_RANLIB),' $(HOST_BUILD_DIR)/grub-core/Makefile.in
-#	$(Host/Configure/Default)
-#endef
-
-define Build/Prepare
-$(call Build/Prepare/Default)
-	( cd $(PKG_BUILD_DIR) ; \
-			./bootstrap ; \
-	)
+define Host/Configure
+	$(SED) 's,(RANLIB),(TARGET_RANLIB),' $(HOST_BUILD_DIR)/grub-core/Makefile.in
+	$(Host/Configure/Default)
 endef
 
 define Package/grub2/install
