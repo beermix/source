@@ -4,7 +4,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rust
-PKG_VERSION:=1.50.0
+PKG_VERSION:=1.49.0
 PKG_RELEASE:=1
 
 PKG_LICENSE:=Apache-2.0 MIT
@@ -13,7 +13,7 @@ PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/rust-lang/rust.git
 PKG_SOURCE_DATE:=2020-11-11
-PKG_SOURCE_VERSION:=74500b99783d126e330184f0392a78f8b93b73ef
+PKG_SOURCE_VERSION:=e1884a8e3c3e813aada8254edfa120e85bf5ffca
 #PKG_HASH:=e7c3fefe77ee8c15b49fac4c89c9f7025c57e8f6ff3079d905e51a96bda3042d
 #PKG_MIRROR_HASH:=e7c3fefe77ee8c15b49fac4c89c9f7025c57e8f6ff3079d905e51a96bda3042d
 PKG_HOST_ONLY:=1
@@ -44,7 +44,7 @@ CONFIGURE_ARGS = \
   --mandir=$(CARGO_HOME)/man \
   --infodir=$(CARGO_HOME)/info \
   --localstatedir=/var \
-  --release-channel=nightly \
+  --release-channel=stable \
   --enable-lld \
   --set=target.$(RUSTC_TARGET_ARCH).linker=$(TARGET_CC_NOCACHE) \
   --set=target.$(RUSTC_TARGET_ARCH).cc=$(TARGET_CC_NOCACHE) \
