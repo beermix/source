@@ -16,7 +16,7 @@ PKG_SOURCE_URL:=git://git.savannah.gnu.org/grub.git
 
 HOST_BUILD_PARALLEL:=1
 #HOST_FIXUP:=autoreconf
-PKG_BUILD_DEPENDS:=grub2/host
+PKG_BUILD_DEPENDS:=grub20/host
 #PKG_FIXUP:=autoreconf
 
 PKG_ASLR_PIE:=0
@@ -85,11 +85,11 @@ HOST_MAKE_FLAGS += \
 
 TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
 
-define Build/Configure
+define Build/Prepare
 	( cd $(PKG_BUILD_DIR) ; \
-			./bootstrap \
+			./bootstrap \d
 	)
-	$(Build/Configure/Default)
+	$(Build/Prepare/Default)
 endef
 
 define Host/Configure
