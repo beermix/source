@@ -41,16 +41,19 @@ ifeq ($(ARCH),mips64)
 endif
 
 
-TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
-TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
-TARGETLDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
+#TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
+#TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
+#TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
+
+#CFLAGS=${CFLAGS/-fno-plt/}
+TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
+TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
+#TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
+
 
 # remove fortify for building libraries
 #  TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
 #  TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
-
-#  export CC="gcc -m32 -mstackrealign"
-#  export CXX="g++ -m32 -mstackrealign"
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
@@ -59,7 +62,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign -g2  -Wl,-z,max-page-size=0x1000 $(filter-out -Os -O2,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign $(filter-out -fno-plt -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
