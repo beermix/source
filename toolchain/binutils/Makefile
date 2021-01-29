@@ -51,6 +51,7 @@ HOST_CONFIGURE_ARGS = \
 	--disable-sim \
 	--disable-gdb \
 	--without-debuginfod \
+	--enable-default-hash-style=gnu \
 	--enable-relro \
 	--enable-secureplt \
 	--with-system-zlib \
