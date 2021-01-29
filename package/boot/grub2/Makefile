@@ -87,7 +87,7 @@ TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
 
 define Build/Prepare
 	( cd $(PKG_BUILD_DIR) ; \
-			./bootstrap \d
+			./bootstrap \
 	)
 	$(Build/Prepare/Default)
 endef
