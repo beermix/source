@@ -8,10 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zlib
-PKG_SOURCE_VERSION:=7606b9f
+PKG_VERSION:=1.2.11
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zlib-ng/zlib-ng.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=@SF/libpng http://www.zlib.net
+PKG_HASH:=4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066
 
 PKG_LICENSE:=Zlib
 PKG_LICENSE_FILES:=README
@@ -58,17 +60,7 @@ ifeq ($(CONFIG_ZLIB_OPTIMIZE_SPEED),y)
 endif
 
 CMAKE_OPTIONS += \
-	-DCMAKE_VERBOSE_MAKEFILE=ON \
-	-DZLIB_COMPAT=ON \
-	-DWITH_OPTIM=ON \
-	-DWITH_GZFILEOP=ON \
-	-DZLIB_ENABLE_TESTS=OFF \
-	-DWITH_AVX2=OFF \
-	-DWITH_SSE2=ON \
-	-DWITH_SSE4=OFF \
-	-DWITH_SSSE3=ON \
-	-DSSSE3_ADLER32=ON \
-	-DWITH_SANITIZER=ON
+	-DARMv8=$$$$(echo -e '\#ifdef __ARM_NEON__\nON\n\#else\nOFF\n\#endif' | $$(TARGET_CC) $$(TARGET_CFLAGS) -x c -E - | grep -xE 'ON|OFF')
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
@@ -78,7 +70,7 @@ define Build/InstallDev
 	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/libz.{a,so*} \
 		$(1)/usr/lib/
 	mkdir -p $(1)/usr/lib/pkgconfig
-	$(CP)	$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
+	$(CP)	$(PKG_INSTALL_DIR)/usr/share/pkgconfig/zlib.pc \
 		$(1)/usr/lib/pkgconfig/
 endef
 
@@ -98,7 +90,7 @@ define Package/zlib-dev/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libz.a $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/zlib.pc \
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/pkgconfig/zlib.pc \
 	  $(1)/usr/lib/pkgconfig/
 endef
 
