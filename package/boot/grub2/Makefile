@@ -15,9 +15,7 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git://git.savannah.gnu.org/grub.git
 
 HOST_BUILD_PARALLEL:=1
-#HOST_FIXUP:=autoreconf
 PKG_BUILD_DEPENDS:=grub20/host
-#PKG_FIXUP:=autoreconf
 
 PKG_ASLR_PIE:=0
 PKG_SSP:=0
@@ -86,17 +84,13 @@ HOST_MAKE_FLAGS += \
 TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
 
 define Build/Prepare
-	( cd $(PKG_BUILD_DIR) ; \
-			./bootstrap \
-	)
-	$(Build/Prepare/Default)
+	$(call Build/Prepare/Default)
+	(cd $(PKG_BUILD_DIR); ./bootstrap)
 endef
 
-define Host/Configure
-	( cd $(HOST_BUILD_DIR) ; \
-			./bootstrap \
-	)
-	$(Host/Configure/Default)
+define Host/Prepare
+	$(call Host/Prepare/Default)
+	(cd $(HOST_BUILD_DIR); ./bootstrap)
 endef
 
 define Package/grub2/install
