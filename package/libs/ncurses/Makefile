@@ -9,12 +9,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_VERSION:=6.2
-PKG_RELEASE:=1
+PKG_SOURCE_VERSION:=4546e76
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_HASH:=30306e0c76e0f9f1f0de987cf1c82a5c21e1ce6568b9227f7da5b71cbea86c9d
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/mirror/ncurses.git
+PKG_MIRROR_HASH:=9728db0bfa245f3d8b079794388b630d1a2be88c8694eae3a2b21ffea8043785
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
@@ -22,7 +21,7 @@ PKG_LICENSE_FILES:=README
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
-PKG_BUILD_DEPENDS:=ncurses/host
+#PKG_BUILD_DEPENDS:=ncurses/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -72,13 +71,13 @@ CONFIGURE_ARGS += \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
-	--without-profile \
+	--with-profile \
 	--with-progs \
 	--without-tests \
-	--disable-big-core \
-	--disable-home-terminfo \
+	--enable-big-core \
 	--with-normal \
 	--with-shared \
+	--without-cxx-binding \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
