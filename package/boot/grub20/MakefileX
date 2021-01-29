@@ -9,25 +9,27 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=grub
-PKG_SOURCE_VERSION:=635ef55
+PKG_CPE_ID:=cpe:/a:gnu:grub20
+PKG_VERSION:=2.04
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git://git.savannah.gnu.org/grub.git
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=@GNU/grub
+PKG_HASH:=e5292496995ad42dabe843a0192cf2a2c502e7ffcc7479398232b10a472df77d
 
 HOST_BUILD_PARALLEL:=1
-#HOST_FIXUP:=autoreconf
-PKG_BUILD_DEPENDS:=grub2/host
-#PKG_FIXUP:=autoreconf
+PKG_BUILD_DEPENDS:=grub20/host
 
 PKG_ASLR_PIE:=0
 PKG_SSP:=0
 
+PKG_FIXUP:=autoreconf
 PKG_FLAGS:=nonshared
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
-define Package/grub2/Default
+define Package/grub20/Default
   CATEGORY:=Boot Loaders
   SECTION:=boot
   TITLE:=GRand Unified Bootloader ($(1))
@@ -36,21 +38,21 @@ define Package/grub2/Default
   VARIANT:=$(1)
 endef
 
-Package/grub2=$(call Package/grub2/Default,pc)
-Package/grub2-efi=$(call Package/grub2/Default,efi)
+Package/grub20=$(call Package/grub20/Default,pc)
+Package/grub20-efi=$(call Package/grub20/Default,efi)
 
-define Package/grub2-editenv
+define Package/grub20-editenv
   CATEGORY:=Utilities
   SECTION:=utils
   SUBMENU:=Boot Loaders
-  TITLE:=Grub2 Environment editor
+  TITLE:=Grub20 Environment editor
   URL:=http://www.gnu.org/software/grub/
   DEPENDS:=@TARGET_x86
   VARIANT:=pc
 endef
 
-define Package/grub2-editenv/description
-	Edit grub2 environment files.
+define Package/grub20-editenv/description
+	Edit grub20 environment files.
 endef
 
 HOST_BUILD_PREFIX := $(STAGING_DIR_HOST)
@@ -85,21 +87,12 @@ HOST_MAKE_FLAGS += \
 
 TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
 
-define Build/Configure
-	( cd $(PKG_BUILD_DIR) ; \
-			./bootstrap \
-	)
-	$(Build/Configure/Default)
-endef
-
 define Host/Configure
-	( cd $(HOST_BUILD_DIR) ; \
-			./bootstrap \
-	)
+	$(SED) 's,(RANLIB),(TARGET_RANLIB),' $(HOST_BUILD_DIR)/grub-core/Makefile.in
 	$(Host/Configure/Default)
 endef
 
-define Package/grub2/install
+define Package/grub20/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/grub-bios-setup $(1)/usr/sbin/
 	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)/grub2
@@ -136,7 +129,7 @@ define Package/grub2/install
 		biosdisk boot chain configfile ext2 linux ls part_msdos reboot serial vga
 endef
 
-define Package/grub2-efi/install
+define Package/grub20-efi/install
 	sed 's#msdos1#gpt1#g' ./files/grub-early.cfg >$(PKG_BUILD_DIR)/grub-early.cfg
 	$(STAGING_DIR_HOST)/bin/grub-mkimage \
 		-d $(PKG_BUILD_DIR)/grub-core \
@@ -154,12 +147,12 @@ define Package/grub2-efi/install
 		at_keyboard boot chain configfile fat iso9660 linux ls part_msdos part_gpt reboot serial test efi_gop efi_uga
 endef
 
-define Package/grub2-editenv/install
+define Package/grub20-editenv/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/grub-editenv $(1)/usr/sbin/
 endef
 
 $(eval $(call HostBuild))
-$(eval $(call BuildPackage,grub2))
-$(eval $(call BuildPackage,grub2-efi))
-$(eval $(call BuildPackage,grub2-editenv))
+$(eval $(call BuildPackage,grub20))
+$(eval $(call BuildPackage,grub20-efi))
+$(eval $(call BuildPackage,grub20-editenv))
