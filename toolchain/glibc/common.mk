@@ -41,8 +41,8 @@ ifeq ($(ARCH),mips64)
 endif
 
 # remove fortify for building libraries
-  TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
-  TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
+#  TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
+#  TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
 
 #  export CC="gcc -m32 -mstackrealign"
 #  export CXX="g++ -m32 -mstackrealign"
@@ -54,7 +54,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-m32 -mstackrealign -O2 $(filter-out -Os -O2,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O3 -m32 -march=bonnell -mstackrealign -g2  -Wl,-z,max-page-size=0x1000 $(filter-out -Os -O2,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
