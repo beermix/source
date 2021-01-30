@@ -8,17 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bash
-#PKG_VERSION:=5.1
-#PKG_RELEASE:=1
+PKG_VERSION:=5.1
+PKG_RELEASE:=2
 
-#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-#PKG_SOURCE_URL:=@GNU/bash
-#PKG_HASH:=cc012bc860406dcf42f64431bcd3d2fa7560c02915a601aba9cd597a39329baa
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=@GNU/bash
+PKG_HASH:=cc012bc860406dcf42f64431bcd3d2fa7560c02915a601aba9cd597a39329baa
 
-PKG_SOURCE_VERSION:=76404c8
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/bash.git
-PKG_MIRROR_HASH:=297590554f506a11cffbf5a14a10d48badbba10a654bb4eae76f124f5056c6f0
+#PKG_SOURCE_VERSION:=76404c8
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_URL:=https://git.savannah.gnu.org/git/bash.git
+#PKG_MIRROR_HASH:=297590554f506a11cffbf5a14a10d48badbba10a654bb4eae76f124f5056c6f0
 
 PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -37,8 +37,6 @@ define Package/bash
   TITLE:=The GNU Bourne Again SHell
   DEPENDS:=+libncurses +libreadline
   URL:=http://www.gnu.org/software/bash/
-  ALTERNATIVES:=\
-    300:/bin/sh:/bin/bash
 endef
 
 define Package/bash/description
@@ -71,7 +69,7 @@ TARGET_CFLAGS:=-O2 $(filter-out -fno-caller-saves -O%,$(call qstrip,$(TARGET_CFL
 # bash_cv_sys_named_pipes: Required for process substituion
 CONFIGURE_VARS += \
 	ac_cv_rl_prefix="$(STAGING_DIR)/usr" \
-	ac_cv_rl_version="8.1" \
+	ac_cv_rl_version="8.0" \
 	bash_cv_getcwd_malloc=yes \
 	bash_cv_job_control_missing=present \
 	bash_cv_dev_fd=whacky \
