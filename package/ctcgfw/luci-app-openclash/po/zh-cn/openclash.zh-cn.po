@@ -490,6 +490,9 @@ msgstr "微软服务流量"
 msgid "Netflix"
 msgstr "Netflix流量"
 
+msgid "Disney"
+msgstr "Disney流量"
+
 msgid "Spotify"
 msgstr "Spotify流量"
 
@@ -783,7 +786,7 @@ msgstr "检测频率（秒）"
 msgid "Tolerance(ms)"
 msgstr "节点切换容忍值（毫秒）"
 
-msgid "Select"
+msgid "Select　"
 msgstr "Select【手动选择】"
 
 msgid "URL-Test"
@@ -1421,3 +1424,18 @@ msgstr "选择配置文件后请点击以获取对应的策略组"
 
 msgid "Other Rules Name"
 msgstr "第三方规则"
+
+msgid "Note"
+msgstr "备注"
+
+msgid "Auto Restart"
+msgstr "定时重启"
+
+msgid "Auto Restart OpenClash"
+msgstr "定时重启插件"
+
+msgid "Restart Time (Every Week)"
+msgstr "重启时间(每周)"
+
+msgid "Restart time (every day)"
+msgstr "重启时间(每天)"

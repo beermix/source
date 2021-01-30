@@ -36,6 +36,10 @@ s = m:section(NamedSection, sid, "other_rules")
 s.anonymous = true
 s.addremove   = false
 
+o = s:option(Value, "Note", translate("Note"))
+o.default = "default"
+o.rmempty = false
+
 o = s:option(ListValue, "config", translate("Config File"))
 local e,a={}
 local groupnames,filename
@@ -142,6 +146,17 @@ o:value("DIRECT")
 o:value("REJECT")
 
 o = s:option(ListValue, "Netflix", translate("Netflix"))
+o:depends("rule_name", "lhie1")
+o.rmempty = true
+for groupname in string.gmatch(groupnames, "([^'##\n']+)##") do
+  if groupname ~= nil and groupname ~= "" then
+    o:value(groupname)
+  end
+end
+o:value("DIRECT")
+o:value("REJECT")
+
+o = s:option(ListValue, "Disney", translate("Disney"))
 o:depends("rule_name", "lhie1")
 o.rmempty = true
 for groupname in string.gmatch(groupnames, "([^'##\n']+)##") do
