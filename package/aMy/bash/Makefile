@@ -37,6 +37,8 @@ define Package/bash
   TITLE:=The GNU Bourne Again SHell
   DEPENDS:=+libncurses +libreadline
   URL:=http://www.gnu.org/software/bash/
+  ALTERNATIVES:=\
+    300:/bin/sh:/bin/bash
 endef
 
 define Package/bash/description
