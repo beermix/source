@@ -40,19 +40,17 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-# TARGET_CFLAGS := $(filter-out -fno-plt,$(TARGET_CFLAGS))
-# TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
-# TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
+TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
+TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
 
 # CFLAGS=${CFLAGS/-fno-plt/}
 # TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
 # TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
 # TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
-
 # remove fortify for building libraries
-#  TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
-#  TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
+# TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
+# TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
