@@ -58,7 +58,8 @@ endef
 define Package/libpcrecpp
   $(call Package/libpcre/default)
   TITLE:=C++ wrapper for Perl Compatible Regular Expression library
-  DEPENDS:=+libpcre $(CXX_DEPENDS)
+  DEPENDS:=+libpcre +libstdcpp
+  #$(CXX_DEPENDS)
 endef
 
 
