@@ -153,6 +153,7 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-diagnostics-color=always \
+		--enable-default-hash-style=gnu \
 		--enable-__cxa_atexit \
 		--disable-libstdcxx-dual-abi \
 		--with-default-libstdcxx-abi=new
