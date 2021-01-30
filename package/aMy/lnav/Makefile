@@ -25,8 +25,7 @@ TARGET_CXXFLAGS+= -ffunction-sections -fdata-sections -flto
 TARGET_CFLAGS+= -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS+= -Wl,--gc-sections -flto
 
-CONFIGURE_ARGS += --disable-silent-rules --disable-static
-
+CONFIGURE_ARGS += --disable-silent-rules
 
 Package/lnav = $(Package/lnav/Default)
 define Package/lnav/Default
