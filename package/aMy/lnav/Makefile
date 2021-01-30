@@ -21,7 +21,7 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CXXFLAGS+= -ffunction-sections -fdata-sections -flto
+#TARGET_CXXFLAGS+= -ffunction-sections -fdata-sections -flto
 TARGET_CFLAGS+= -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS+= -Wl,--gc-sections -flto
 
