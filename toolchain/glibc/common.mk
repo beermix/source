@@ -46,8 +46,8 @@ endif
 #TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
 
 #CFLAGS=${CFLAGS/-fno-plt/}
-TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
-TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
+#TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
+#TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
 #TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
 
