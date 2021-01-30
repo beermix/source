@@ -94,7 +94,6 @@ grep -q bash "$${IPKG_INSTROOT}/etc/shells" || {
 	echo /bin/bash >> "$${IPKG_INSTROOT}/etc/shells"
 	echo /bin/rbash >> "$${IPKG_INSTROOT}/etc/shells"
 }
-
 endef
 
 define Package/bash/install
