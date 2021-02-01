@@ -14,10 +14,10 @@ update:
 	( \
 		cd ~/binutils-gdb ; \
 		git remote update -p > /dev/null 2>&1 ; \
-		git diff binutils-2_35_1..origin/binutils-2_35-branch | filterdiff --exclude="*/bfd/version.h"; \
+		git diff binutils-2_35_2..origin/binutils-2_35-branch | filterdiff --exclude="*/bfd/version.h"; \
 	) > binutils-stable-branch.patch
 	git diff --exit-code binutils-stable-branch.patch
-	mv -f binutils-stable-branch.patch ./toolchain/binutils/patches/2.35.1/000-binutils35_1-stable-branch.patch
+	mv -f binutils-stable-branch.patch ./toolchain/binutils/patches/2.35.2/000-binutils35_2-stable-branch.patch
 
 	test -d ~/binutils-gdb || git clone http://sourceware.org/git/binutils-gdb.git ~/binutils-gdb
 	( \
