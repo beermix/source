@@ -34,7 +34,7 @@ define Package/lnav/Default
 	TITLE:=lnav
 	URL:=https://github.com/tstack/lnav
 	DEPENDS:=+libpthread +libstdcpp +librt +libncurses +libreadline \
-	+zlib +libpcre +libpcrecpp +libbz2 +libcurl +libopenssl +libsqlite3 +libarchive
+	+zlib +libpcre +libpcrecpp +libbz2 +libcurl +libopenssl +libsqlite3 #+libarchive
 endef
 
 define Package/lnav/install
