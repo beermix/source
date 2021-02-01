@@ -8,19 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=polipo
-#PKG_SOURCE_VERSION:=4d42ca1
-#PKG_SOURCE_VERSION:=f048871
 PKG_SOURCE_VERSION:=2aa12cb
-#PKG_SOURCE_VERSION:=7f4dd40
-
 PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://github.com/jech/polipo.git
-#PKG_SOURCE_URL:=https://github.com/zhangchn/polipo.git
-#PKG_SOURCE_URL:=https://github.com/love-ginger/polipo.git
-#PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
+PKG_SOURCE_URL:=https://github.com/love-ginger/polipo.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
-#PKG_ASLR_PIE_REGULAR:=1
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -41,21 +34,24 @@ define Package/polipo/description
  by a larger group.
 endef
 
-#TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
-#TARGET_CFLAGS += -DHAVE_IPv6
-#TARGET_CFLAGS += -DNO_IPv6
-
-#define Build/Compile
-#	$(MAKE) -C $(PKG_BUILD_DIR) \
-#		CC="$(TARGET_CC)" \
-#		CFLAGS="$(TARGET_CFLAGS)" \
-#		polipo2
-#endef
+CMAKE_OPTIONS += -DCMAKE_VERBOSE_MAKEFILE=1
 
 define Package/polipo/conffiles
 /etc/config/polipo
 /etc/polipo/config
+endef
+
+define Build/Install
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/polipo
+	$(INSTALL_DIR) $(1)/etc/polipo
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DATA) ./files/polipo.config $(1)/etc/config/polipo
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/polipo.init $(1)/etc/init.d/polipo
 endef
 
 define Package/polipo/install
