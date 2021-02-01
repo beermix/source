@@ -7687,7 +7687,7 @@ new file mode 100755
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20210130
++20210201
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -1687,6 +1687,10 @@ $(FULL_DRIVER_NAME): ./xgcc
