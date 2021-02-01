@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glibc
-PKG_VERSION:=2.32
-PKG_RELEASE:=3
+PKG_VERSION:=2.33
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=760e1d287825fa91d4d5a0cc921340c740d803e2
+PKG_SOURCE_VERSION:=9826b03b747b841f5fc6de2054bf1ef3f5c4bdf3
 PKG_MIRROR_HASH:=
 PKG_SOURCE_URL:=https://sourceware.org/git/glibc.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
@@ -49,8 +49,8 @@ TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
 # TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
 # remove fortify for building libraries
-# TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
-# TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
+#TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
+#TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
@@ -59,7 +59,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 -mstackrealign $(filter-out -fno-plt -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -m32 -march=bonnell -mstackrealign $(filter-out -march=bonnell -fno-plt -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
