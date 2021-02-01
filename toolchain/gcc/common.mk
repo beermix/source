@@ -154,6 +154,7 @@ GCC_CONFIGURE:= \
 		--disable-decimal-float \
 		--with-diagnostics-color=always \
 		--enable-default-hash-style=gnu \
+		--with-tune=generic \
 		--enable-__cxa_atexit \
 		--disable-libstdcxx-dual-abi \
 		--with-default-libstdcxx-abi=new
