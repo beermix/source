@@ -9,11 +9,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ncurses
-PKG_SOURCE_VERSION:=4546e76
+PKG_SOURCE_VERSION:=5d5daf5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/mirror/ncurses.git
-PKG_MIRROR_HASH:=9728db0bfa245f3d8b079794388b630d1a2be88c8694eae3a2b21ffea8043785
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=README
@@ -52,6 +51,7 @@ define Package/libncurses-dev
 endef
 
 TARGET_CFLAGS += $(FPIC)
+TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
 define Package/ncurses-bin
   SECTION:=utils

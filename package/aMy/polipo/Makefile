@@ -40,7 +40,7 @@ define Package/polipo/description
  by a larger group.
 endef
 
-TARGET_CFLAGS := $(filter-out -O%,$(TARGET_CFLAGS)) -Os
+TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
 #TARGET_CFLAGS += -DHAVE_IPv6
 TARGET_CFLAGS += -DNO_IPv6

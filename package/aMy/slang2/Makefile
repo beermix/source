@@ -45,6 +45,7 @@ define Package/libslang2/description
 $(call Package/libslang2/Default/description)
 endef
 
+TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 TARGET_CFLAGS+= $(FPIC) -Wno-cast-function-type
 TARGET_CFLAGS+= -ffunction-sections -fdata-sections -flto
 TARGET_LDFLAGS+= -Wl,--gc-sections -flto
