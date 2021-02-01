@@ -8,11 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=htop
-PKG_SOURCE_VERSION:=34da6fd
+PKG_SOURCE_VERSION:=06b5828
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/htop-dev/htop
-PKG_MIRROR_HASH:=
+PKG_SOURCE_URL:=https://github.com/htop-dev/htop.git
 
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=COPYING

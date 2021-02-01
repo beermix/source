@@ -17,8 +17,7 @@ PKG_NAME:=iperf
 
 PKG_SOURCE_VERSION:=d1cfda5
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/esnet/iperf
-PKG_MIRROR_HASH:=
+PKG_SOURCE_URL:=https://github.com/esnet/iperf.git
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
