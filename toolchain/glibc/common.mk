@@ -49,8 +49,8 @@ TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
 # TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
 
 # remove fortify for building libraries
-#TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
-#TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
+# TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
+# TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
 
 # -Os miscompiles w. 2.24 gcc5/gcc6
 # only -O2 tested by upstream changeset
