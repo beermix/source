@@ -9,7 +9,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=i2pd
-PKG_SOURCE_VERSION:=ea19802
+PKG_SOURCE_VERSION:=bfb1380
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/PurpleI2P/i2pd
