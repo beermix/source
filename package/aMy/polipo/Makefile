@@ -13,7 +13,6 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/love-ginger/polipo.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
-PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
