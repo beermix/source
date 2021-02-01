@@ -66,8 +66,7 @@ CMAKE_OPTIONS += \
 	-DWITH_AVX2=OFF \
 	-DWITH_SSE2=ON \
 	-DWITH_SSE4=OFF \
-	-DWITH_SSSE3=ON \
-	-DWITH_SANITIZER=ON
+	-DWITH_SSSE3=ON
 
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
