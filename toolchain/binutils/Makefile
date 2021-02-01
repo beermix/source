@@ -51,9 +51,6 @@ HOST_CONFIGURE_ARGS = \
 	--disable-sim \
 	--disable-gdb \
 	--without-debuginfod \
-	--enable-relro \
-	--enable-secureplt \
-	--with-system-zlib \
 	$(GRAPHITE_CONFIGURE) \
 	$(SOFT_FLOAT_CONFIG_OPTION) \
 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
