@@ -43,14 +43,7 @@ define Package/polipo/conffiles
 endef
 
 define Build/Install
-	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/polipo
-	$(INSTALL_DIR) $(1)/etc/polipo
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
-	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_DATA) ./files/polipo.config $(1)/etc/config/polipo
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/polipo.init $(1)/etc/init.d/polipo
+true
 endef
 
 define Package/polipo/install
