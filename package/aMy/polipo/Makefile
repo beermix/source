@@ -10,19 +10,20 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=polipo
 #PKG_SOURCE_VERSION:=4d42ca1
 #PKG_SOURCE_VERSION:=f048871
-#PKG_SOURCE_VERSION:=2aa12cb
-PKG_SOURCE_VERSION:=7f4dd40
+PKG_SOURCE_VERSION:=2aa12cb
+#PKG_SOURCE_VERSION:=7f4dd40
 
 PKG_SOURCE_PROTO:=git
 #PKG_SOURCE_URL:=https://github.com/jech/polipo.git
 #PKG_SOURCE_URL:=https://github.com/zhangchn/polipo.git
 #PKG_SOURCE_URL:=https://github.com/love-ginger/polipo.git
-PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
+#PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
 #PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/polipo
   SUBMENU:=Web Servers/Proxies
@@ -40,17 +41,17 @@ define Package/polipo/description
  by a larger group.
 endef
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+#TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
 #TARGET_CFLAGS += -DHAVE_IPv6
-TARGET_CFLAGS += -DNO_IPv6
+#TARGET_CFLAGS += -DNO_IPv6
 
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) \
-		CC="$(TARGET_CC)" \
-		CFLAGS="$(TARGET_CFLAGS)" \
-		polipo2
-endef
+#define Build/Compile
+#	$(MAKE) -C $(PKG_BUILD_DIR) \
+#		CC="$(TARGET_CC)" \
+#		CFLAGS="$(TARGET_CFLAGS)" \
+#		polipo2
+#endef
 
 define Package/polipo/conffiles
 /etc/config/polipo
