@@ -62,7 +62,6 @@ define Package/libpcrecpp
   DEPENDS:=+libpcre $(CXX_DEPENDS)
 endef
 
-
 HOST_CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
