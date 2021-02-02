@@ -42,7 +42,7 @@ endif
 
 TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
 TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
-#TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
+TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
 
 # TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
 # TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
@@ -76,8 +76,8 @@ GLIBC_CONFIGURE:= \
 		  $(if $(CONFIG_PKG_CC_STACKPROTECTOR_STRONG),--enable-stack-protector=strong) \
 		--enable-kernel=4.14.0
 
-export libc_cv_ssp=no
-export libc_cv_ssp_strong=no
+# "export libc_cv_ssp=no
+# "export libc_cv_ssp_strong=no
 export ac_cv_header_cpuid_h=yes
 export HOST_CFLAGS := $(HOST_CFLAGS) -idirafter $(CURDIR)/$(PATH_PREFIX)/include
 
