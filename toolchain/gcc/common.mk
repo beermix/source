@@ -154,7 +154,6 @@ GCC_CONFIGURE:= \
 		--with-diagnostics-color=always \
 		--with-tune=generic \
 		--with-arch=bonnell \
-		--enable-default-hash-style=gnu \
 		--enable-__cxa_atexit \
 		--disable-libstdcxx-dual-abi \
 		--with-default-libstdcxx-abi=new
