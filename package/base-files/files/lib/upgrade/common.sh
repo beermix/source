@@ -71,7 +71,6 @@ _vn() {
 
 v() {
 	_v "$(date) upgrade: $@"
-	logger -p info -t sysupgrade "$@"
 }
 
 vn() {
