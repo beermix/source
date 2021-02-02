@@ -6,14 +6,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=smartdns
-PKG_VERSION:=Release33
 
-#PKG_SOURCE_PROTO:=git
-#PKG_SOURCE_URL:=https://www.github.com/pymumu/smartdns.git
+PKG_SOURCE_VERSION=c53a87b
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://www.github.com/pymumu/smartdns.git
 
-PKG_SOURCE:=$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/pymumu/smartdns/archive
-PKG_HASH:=49f8d1c34186bfa1f3d50116b1516d868db741e45ab0540d776c624103789251
+#PKG_VERSION:=Release33
+#PKG_SOURCE:=$(PKG_VERSION).tar.gz
+#PKG_SOURCE_URL:=https://github.com/pymumu/smartdns/archive
+#PKG_HASH:=49f8d1c34186bfa1f3d50116b1516d868db741e45ab0540d776c624103789251
 
 
 PKG_MAINTAINER:=Nick Peng <pymumu@gmail.com>
@@ -21,7 +22,7 @@ PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
 
 PKG_BUILD_PARALLEL:=0
-PKG_ASLR_PIE_REGULAR:=0
+PKG_ASLR_PIE_REGULAR:=1
 
 include $(INCLUDE_DIR)/package.mk
 
