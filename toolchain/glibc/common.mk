@@ -40,9 +40,9 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-#TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
-#TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
-#TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
+TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
+TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
+TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
 
 # TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
 # TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
