@@ -127,6 +127,7 @@ GCC_CONFIGURE:= \
 		CXXFLAGS="-O2 -fbracket-depth=512 -pipe" \
 	) \
 	$(HOST_SOURCE_DIR)/configure \
+		--with-bugurl=$(BUGURL) \
 		--with-pkgversion="$(PKGVERSION)" \
 		--prefix=$(TOOLCHAIN_DIR) \
 		--build=$(GNU_HOST_NAME) \
@@ -152,8 +153,6 @@ GCC_CONFIGURE:= \
 		--with-mpc=$(TOPDIR)/staging_dir/host \
 		--disable-decimal-float \
 		--with-diagnostics-color=always \
-		--with-tune=generic \
-		--with-arch=bonnell \
 		--enable-__cxa_atexit \
 		--disable-libstdcxx-dual-abi \
 		--with-default-libstdcxx-abi=new
@@ -183,9 +182,9 @@ ifdef CONFIG_sparc
 		--with-long-double-128
 endif
 
-#ifneq ($(GCC_ARCH),)
-#  GCC_CONFIGURE+= --with-arch=$(GCC_ARCH)
-#endif
+ifneq ($(GCC_ARCH),)
+  GCC_CONFIGURE+= --with-arch=$(GCC_ARCH)
+endif
 
 ifeq ($(CONFIG_arm),y)
   GCC_CONFIGURE+= \
@@ -206,10 +205,6 @@ endif
 ifeq ($(CONFIG_TARGET_x86)$(CONFIG_USE_GLIBC)$(CONFIG_INSTALL_GCCGO),yyy)
   TARGET_CFLAGS+=-fno-split-stack
 endif
-
-#ifneq ($(GCC_USE_VERSION_10),y)
-#	TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
-#endif
 
 GCC_MAKE:= \
 	export SHELL="$(BASH)"; \
