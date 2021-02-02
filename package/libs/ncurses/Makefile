@@ -51,7 +51,7 @@ define Package/libncurses-dev
 endef
 
 TARGET_CFLAGS += $(FPIC)
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
 define Package/ncurses-bin
   SECTION:=utils
@@ -63,26 +63,21 @@ define Package/ncurses-bin
 endef
 
 CONFIGURE_ARGS += \
-	--enable-echo \
-	--enable-const \
 	--enable-overwrite \
 	--enable-pc-files \
-	--disable-rpath \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
-	--with-profile \
 	--with-progs \
 	--without-tests \
-	--enable-big-core \
 	--with-normal \
 	--with-shared \
-	--without-cxx-binding \
+	--with-cxx-binding \
+	--with-cxx-shared \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
-	--enable-widec \
-	--with-build-cppflags=-D_GNU_SOURCE
+	--enable-widec
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
