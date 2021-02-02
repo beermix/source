@@ -15,7 +15,7 @@ PKG_NAME:=iperf
 #PKG_SOURCE_URL:=https://downloads.es.net/pub/iperf
 #PKG_HASH:=24b63a26382325f759f11d421779a937b63ca1bc17c44587d2fcfedab60ac038
 
-PKG_SOURCE_VERSION:=d1cfda5
+PKG_SOURCE_VERSION:=be66b57
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/esnet/iperf.git
 
