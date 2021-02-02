@@ -33,9 +33,9 @@ define Package/polipo/description
  by a larger group.
 endef
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
-CMAKE_OPTIONS += -DCMAKE_VERBOSE_MAKEFILE=1
+TARGET_CFLAGS += -DHAVE_IPv6
 
 define Package/polipo/conffiles
 /etc/config/polipo
@@ -48,7 +48,7 @@ endef
 
 define Package/polipo/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/polipo
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/polipo
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
 	$(INSTALL_DIR) $(1)/etc/config
