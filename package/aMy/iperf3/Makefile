@@ -49,7 +49,7 @@ $(call Package/iperf3/default)
 endef
 
 TARGET_CFLAGS += -D_GNU_SOURCE
-CONFIGURE_ARGS += --disable-shared
+CONFIGURE_ARGS += --disable-shared --enable-static-bin
 
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS += --with-openssl="$(STAGING_DIR)/usr"
