@@ -33,7 +33,7 @@ define Package/polipo/description
  by a larger group.
 endef
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
 CMAKE_OPTIONS += -DCMAKE_VERBOSE_MAKEFILE=1
 
