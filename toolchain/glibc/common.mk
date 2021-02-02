@@ -43,10 +43,8 @@ endif
 # TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
 # TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
 
-# CFLAGS=${CFLAGS/-fno-plt/}
-# TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
-# TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
-# TARGET_CFLAGS:=-O2 $(filter-out -O%,$(call qstrip,$(TARGET_CFLAGS)))
+TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
+TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
 
 # remove fortify for building libraries
 # TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
