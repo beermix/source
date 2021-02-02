@@ -42,7 +42,6 @@ endif
 
 TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
 TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
-TARGET_CFLAGS=${TARGET_CFLAGS/-fno-plt/}
 TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
 
 # TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
@@ -59,7 +58,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 -march=bonnell -mstackrealign $(filter-out -march=bonnell -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -m32 -march=bonnell -mstackrealign $(filter-out -fno-plt -march=bonnell -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
