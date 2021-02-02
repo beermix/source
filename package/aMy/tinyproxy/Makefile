@@ -8,11 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tinyproxy
-PKG_SOURCE_VERSION:=adad565
+PKG_VERSION:=1.10.0
+PKG_RELEASE:=2
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy.git
-PKG_MIRROR_HASH:=9bbd9d0022f597646cde102a1ceb2cc6131214b5ecf237cc334457b019c7c2d3
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://github.com/tinyproxy/tinyproxy/releases/download/$(PKG_VERSION)
+PKG_HASH:=59be87689c415ba0d9c9bc6babbdd3df3b372d60b21e526b118d722dbc995682
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -20,9 +21,7 @@ PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:banu:tinyproxy
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=0
-PKG_ASLR_PIE_REGULAR:=0
-PKG_FIXUP:=autoreconf
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -39,11 +38,6 @@ define Package/tinyproxy/conffiles
 endef
 
 CONFIGURE_VARS += ac_cv_path_A2X=no
-
-CONFIGURE_ARGS += \
-	--enable-transparent \
-	--disable-manpage_support \
-	--disable-debug 
 
 define Package/tinyproxy/install
 	$(INSTALL_DIR) $(1)/usr/bin
