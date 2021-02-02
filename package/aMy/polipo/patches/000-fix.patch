@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6abeb40..a89fa75 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,7 +5,7 @@ include(CTest)
+ enable_testing()
+ 
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -g -Wall -fno-strict-aliasing")
++set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fno-strict-aliasing")
+ 
+ set(HEADERS
+ atom.h auth.h chunk.h client.h config.h dirent_compat.h diskcache.h
+@@ -24,4 +24,4 @@ add_executable(polipo ${SRCS} ${HEADERS})
+ 
+ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+-include(CPack)
+\ No newline at end of file
++include(CPack)
