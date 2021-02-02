@@ -8,14 +8,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=polipo
-PKG_SOURCE_VERSION:=f048871
-#PKG_SOURCE_VERSION:=2aa12cb
-#PKG_SOURCE_VERSION:=771e908
-
+PKG_SOURCE_VERSION:=2aa12cb
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zhangchn/polipo.git
-#PKG_SOURCE_URL:=https://github.com/love-ginger/polipo.git
-#PKG_SOURCE_URL:=https://github.com/ssb22/polipo2.git
+PKG_SOURCE_URL:=https://github.com/love-ginger/polipo.git
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
 
@@ -28,7 +23,7 @@ define Package/polipo
   CATEGORY:=Network
   TITLE:=A caching web proxy
   URL:=http://www.pps.univ-paris-diderot.fr/~jch/software/polipo/
-  DEPENDS:=+musl-fts
+  MAINTAINER:=Gabriel Kerneis <gabriel@kerneis.info>
 endef
 
 define Package/polipo/description
@@ -38,26 +33,22 @@ define Package/polipo/description
  by a larger group.
 endef
 
+#TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+
+#TARGET_CFLAGS += -DHAVE_IPv6
+
 define Package/polipo/conffiles
 /etc/config/polipo
 /etc/polipo/config
 endef
 
-
-#TARGET_CFLAGS += -DNO_IPv6 -DNO_SYSLOG
-#TARGET_CFLAGS += -DNO_IPv6 -DNO_DISK_CACHE -DNO_STANDARD_RESOLVER -DNO_TUNNEL
-LDLIBS = -lfts
-
-CMAKE_OPTIONS += \
-	-DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_EXE_LINKER_FLAGS=-lfts -DCMAKE_MODULE_LINKER_FLAGS=-lfts
-
-LDLIBS = -lfts
-#TARGET_LDFLAGS += -lfts
-#CMAKE_OPTIONS += -DCMAKE_VERBOSE_MAKEFILE=1 -DBUILD_TESTING=0
+define Build/Install
+true
+endef
 
 define Package/polipo/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/polipo
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/polipo
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
 	$(INSTALL_DIR) $(1)/etc/config
