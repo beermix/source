@@ -1,5 +1,5 @@
 diff --git a/ChangeLog b/ChangeLog
-index 185bde7efbd..8420c77ff49 100644
+index 185bde7efb..8420c77ff4 100644
 --- a/ChangeLog
 +++ b/ChangeLog
 @@ -1,3 +1,8 @@
@@ -12,7 +12,7 @@ index 185bde7efbd..8420c77ff49 100644
  
  	* 2.36 release branch crated.
 diff --git a/Makefile.def b/Makefile.def
-index cc429aa8628..b45e580da5b 100644
+index cc429aa862..b45e580da5 100644
 --- a/Makefile.def
 +++ b/Makefile.def
 @@ -448,6 +448,7 @@ dependencies = { module=all-binutils; on=all-intl; };
@@ -24,7 +24,7 @@ index cc429aa8628..b45e580da5b 100644
  // We put install-opcodes before install-binutils because the installed
  // binutils might be on PATH, and they might need the shared opcodes
 diff --git a/Makefile.in b/Makefile.in
-index 4fe7321786e..c2c852c5660 100644
+index 4fe7321786..c2c852c566 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -52111,6 +52111,7 @@ all-stage3-ld: maybe-all-stage3-libctf
@@ -36,7 +36,7 @@ index 4fe7321786e..c2c852c5660 100644
  install-strip-binutils: maybe-install-strip-opcodes
  install-opcodes: maybe-install-bfd
 diff --git a/bfd/ChangeLog b/bfd/ChangeLog
-index 91a828c550a..08d28999487 100644
+index 91a828c550..08d2899948 100644
 --- a/bfd/ChangeLog
 +++ b/bfd/ChangeLog
 @@ -1,3 +1,32 @@
@@ -73,7 +73,7 @@ index 91a828c550a..08d28999487 100644
  
  	This is the 2.36 release.
 diff --git a/bfd/configure b/bfd/configure
-index 4e44eb05869..b3665c68c13 100755
+index 4e44eb0586..b3665c68c1 100755
 --- a/bfd/configure
 +++ b/bfd/configure
 @@ -1,6 +1,6 @@
@@ -159,7 +159,7 @@ index 4e44eb05869..b3665c68c13 100755
    with options \\"\$ac_cs_config\\"
  
 diff --git a/bfd/development.sh b/bfd/development.sh
-index eb9762e4426..a376b02d869 100644
+index eb9762e442..a376b02d86 100644
 --- a/bfd/development.sh
 +++ b/bfd/development.sh
 @@ -16,7 +16,7 @@
@@ -172,7 +172,7 @@ index eb9762e4426..a376b02d869 100644
  # Indicate whether this is a release branch.
  experimental=false
 diff --git a/bfd/dwarf2.c b/bfd/dwarf2.c
-index 292d60c33d4..240138d5982 100644
+index 292d60c33d..240138d598 100644
 --- a/bfd/dwarf2.c
 +++ b/bfd/dwarf2.c
 @@ -3289,9 +3289,6 @@ read_rnglists (struct comp_unit *unit, struct arange *arange,
@@ -186,7 +186,7 @@ index 292d60c33d4..240138d5982 100644
  	return FALSE;
      }
 diff --git a/bfd/elf32-ft32.c b/bfd/elf32-ft32.c
-index bd0ed3e81d3..5a6ec764804 100644
+index bd0ed3e81d..5a6ec76480 100644
 --- a/bfd/elf32-ft32.c
 +++ b/bfd/elf32-ft32.c
 @@ -267,8 +267,7 @@ ft32_reloc_type_lookup (bfd *abfd ATTRIBUTE_UNUSED,
@@ -200,7 +200,7 @@ index bd0ed3e81d3..5a6ec764804 100644
        return & ft32_elf_howto_table [ft32_reloc_map[i].ft32_reloc_val];
  
 diff --git a/bfd/elflink.c b/bfd/elflink.c
-index 27564adb8c3..e7b96f8ca86 100644
+index 27564adb8c..e7b96f8ca8 100644
 --- a/bfd/elflink.c
 +++ b/bfd/elflink.c
 @@ -537,8 +537,10 @@ bfd_elf_link_record_dynamic_symbol (struct bfd_link_info *info,
@@ -247,7 +247,7 @@ index 27564adb8c3..e7b96f8ca86 100644
  
  	  if (!debug_frag_seen
 diff --git a/bfd/po/bfd.pot b/bfd/po/bfd.pot
-index c00be6459e8..c1b2ed936d2 100644
+index c00be6459e..c1b2ed936d 100644
 --- a/bfd/po/bfd.pot
 +++ b/bfd/po/bfd.pot
 @@ -8,7 +8,7 @@ msgid ""
@@ -260,14 +260,14 @@ index c00be6459e8..c1b2ed936d2 100644
  "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
  "Language-Team: LANGUAGE <LL@li.org>\n"
 diff --git a/bfd/version.m4 b/bfd/version.m4
-index 0e9d81ff8e9..755c0393dcd 100644
+index 0e9d81ff8e..755c0393dc 100644
 --- a/bfd/version.m4
 +++ b/bfd/version.m4
 @@ -1 +1 @@
 -m4_define([BFD_VERSION], [2.36])
 +m4_define([BFD_VERSION], [2.36.0])
 diff --git a/binutils/ChangeLog b/binutils/ChangeLog
-index b81a7d369eb..c7ad3742ccb 100644
+index b81a7d369e..c7ad3742cc 100644
 --- a/binutils/ChangeLog
 +++ b/binutils/ChangeLog
 @@ -1,3 +1,13 @@
@@ -285,7 +285,7 @@ index b81a7d369eb..c7ad3742ccb 100644
  
  	This is the 2.36 release.
 diff --git a/binutils/configure b/binutils/configure
-index 1ea0b624ed3..83b4b0172db 100755
+index 1ea0b624ed..83b4b0172d 100755
 --- a/binutils/configure
 +++ b/binutils/configure
 @@ -1,6 +1,6 @@
@@ -371,7 +371,7 @@ index 1ea0b624ed3..83b4b0172db 100755
    with options \\"\$ac_cs_config\\"
  
 diff --git a/binutils/objcopy.c b/binutils/objcopy.c
-index 62ee22202ff..a5cead1cf8e 100644
+index 62ee22202f..a5cead1cf8 100644
 --- a/binutils/objcopy.c
 +++ b/binutils/objcopy.c
 @@ -6018,7 +6018,7 @@ copy_main (int argc, char *argv[])
@@ -384,7 +384,7 @@ index 62ee22202ff..a5cead1cf8e 100644
    if (globalize_specific_buffer)
      free (globalize_specific_buffer);
 diff --git a/gas/ChangeLog b/gas/ChangeLog
-index fd17b2ba94d..fad1ccdfedf 100644
+index fd17b2ba94..fad1ccdfed 100644
 --- a/gas/ChangeLog
 +++ b/gas/ChangeLog
 @@ -1,3 +1,28 @@
@@ -417,7 +417,7 @@ index fd17b2ba94d..fad1ccdfedf 100644
  
  	This is the 2.36 release.
 diff --git a/gas/config/tc-nios2.c b/gas/config/tc-nios2.c
-index eea6687fcc4..be4536caa8a 100644
+index eea6687fcc..be4536caa8 100644
 --- a/gas/config/tc-nios2.c
 +++ b/gas/config/tc-nios2.c
 @@ -3643,10 +3643,6 @@ md_begin (void)
@@ -432,7 +432,7 @@ index eea6687fcc4..be4536caa8a 100644
    nios2_current_align_seg = now_seg;
    nios2_last_label = NULL;
 diff --git a/gas/configure b/gas/configure
-index adf248c3419..d03432c6dc6 100755
+index adf248c341..d03432c6dc 100755
 --- a/gas/configure
 +++ b/gas/configure
 @@ -1,6 +1,6 @@
@@ -518,7 +518,7 @@ index adf248c3419..d03432c6dc6 100755
    with options \\"\$ac_cs_config\\"
  
 diff --git a/gas/testsuite/gas/all/none.d b/gas/testsuite/gas/all/none.d
-index deebab8b49c..374808a4f59 100644
+index deebab8b49..374808a4f5 100644
 --- a/gas/testsuite/gas/all/none.d
 +++ b/gas/testsuite/gas/all/none.d
 @@ -1,7 +1,7 @@
@@ -531,7 +531,7 @@ index deebab8b49c..374808a4f59 100644
  #...
  0+ .*(NONE|NULL|UNUSED0) +\*ABS\*
 diff --git a/gas/testsuite/gas/elf/elf.exp b/gas/testsuite/gas/elf/elf.exp
-index 4f7ff6a2e01..4a695dfbaed 100644
+index 4f7ff6a2e0..4a695dfbae 100644
 --- a/gas/testsuite/gas/elf/elf.exp
 +++ b/gas/testsuite/gas/elf/elf.exp
 @@ -328,4 +328,5 @@ if { [is_elf_format] } then {
@@ -542,7 +542,7 @@ index 4f7ff6a2e01..4a695dfbaed 100644
  }
 diff --git a/gas/testsuite/gas/elf/pr27228.d b/gas/testsuite/gas/elf/pr27228.d
 new file mode 100644
-index 00000000000..da336ff2191
+index 0000000000..da336ff219
 --- /dev/null
 +++ b/gas/testsuite/gas/elf/pr27228.d
 @@ -0,0 +1,10 @@
@@ -558,7 +558,7 @@ index 00000000000..da336ff2191
 +#pass
 diff --git a/gas/testsuite/gas/elf/pr27228.s b/gas/testsuite/gas/elf/pr27228.s
 new file mode 100644
-index 00000000000..5ed301d5ac7
+index 0000000000..5ed301d5ac
 --- /dev/null
 +++ b/gas/testsuite/gas/elf/pr27228.s
 @@ -0,0 +1,5 @@
@@ -569,7 +569,7 @@ index 00000000000..5ed301d5ac7
 +	.nop
 diff --git a/gas/testsuite/gas/nios2/relax.d b/gas/testsuite/gas/nios2/relax.d
 new file mode 100644
-index 00000000000..ca01a4f926a
+index 0000000000..ca01a4f926
 --- /dev/null
 +++ b/gas/testsuite/gas/nios2/relax.d
 @@ -0,0 +1,25 @@
@@ -600,7 +600,7 @@ index 00000000000..ca01a4f926a
 +0x00010018 f800283a 	ret
 diff --git a/gas/testsuite/gas/nios2/relax.s b/gas/testsuite/gas/nios2/relax.s
 new file mode 100644
-index 00000000000..ef417fdc33b
+index 0000000000..ef417fdc33
 --- /dev/null
 +++ b/gas/testsuite/gas/nios2/relax.s
 @@ -0,0 +1,5 @@
@@ -610,7 +610,7 @@ index 00000000000..ef417fdc33b
 +1:
 +	ret
 diff --git a/gold/ChangeLog b/gold/ChangeLog
-index 94443eeaaa4..8988f198b21 100644
+index 94443eeaaa..8988f198b2 100644
 --- a/gold/ChangeLog
 +++ b/gold/ChangeLog
 @@ -1,3 +1,9 @@
@@ -624,7 +624,7 @@ index 94443eeaaa4..8988f198b21 100644
  
  	This is the 2.36 release.
 diff --git a/gold/dwarf_reader.cc b/gold/dwarf_reader.cc
-index 487376965db..f0e6b89bde2 100644
+index 487376965d..f0e6b89bde 100644
 --- a/gold/dwarf_reader.cc
 +++ b/gold/dwarf_reader.cc
 @@ -1658,6 +1658,10 @@ Sized_dwarf_line_info<size, big_endian>::read_header_prolog(
@@ -639,7 +639,7 @@ index 487376965db..f0e6b89bde2 100644
      header_.prologue_length = elfcpp::Swap_unaligned<32, big_endian>::readval(lineptr);
    else
 diff --git a/gprof/ChangeLog b/gprof/ChangeLog
-index 39c939f2d14..843d784f818 100644
+index 39c939f2d1..843d784f81 100644
 --- a/gprof/ChangeLog
 +++ b/gprof/ChangeLog
 @@ -1,3 +1,7 @@
@@ -651,7 +651,7 @@ index 39c939f2d14..843d784f818 100644
  
  	This is the 2.36 release.
 diff --git a/gprof/configure b/gprof/configure
-index 0089913632d..b12ec2e472f 100755
+index 0089913632..b12ec2e472 100755
 --- a/gprof/configure
 +++ b/gprof/configure
 @@ -1,6 +1,6 @@
@@ -737,7 +737,7 @@ index 0089913632d..b12ec2e472f 100755
    with options \\"\$ac_cs_config\\"
  
 diff --git a/ld/ChangeLog b/ld/ChangeLog
-index 1a2a60e70e7..ff2ee9668ce 100644
+index 1a2a60e70e..ff2ee9668c 100644
 --- a/ld/ChangeLog
 +++ b/ld/ChangeLog
 @@ -1,3 +1,25 @@
@@ -767,7 +767,7 @@ index 1a2a60e70e7..ff2ee9668ce 100644
  
  	This is the 2.36 release.
 diff --git a/ld/configure b/ld/configure
-index a8d248eab58..d399d08d0c4 100755
+index a8d248eab5..d399d08d0c 100755
 --- a/ld/configure
 +++ b/ld/configure
 @@ -1,6 +1,6 @@
@@ -853,7 +853,7 @@ index a8d248eab58..d399d08d0c4 100755
    with options \\"\$ac_cs_config\\"
  
 diff --git a/ld/ldelf.c b/ld/ldelf.c
-index f7407ab55a7..28974968251 100644
+index f7407ab55a..2897496825 100644
 --- a/ld/ldelf.c
 +++ b/ld/ldelf.c
 @@ -2188,14 +2188,21 @@ ldelf_before_place_orphans (void)
@@ -886,7 +886,7 @@ index f7407ab55a7..28974968251 100644
        }
  }
 diff --git a/ld/scripttempl/DWARF.sc b/ld/scripttempl/DWARF.sc
-index 37c14caa36e..dfcdf7aa587 100644
+index 37c14caa36..dfcdf7aa58 100644
 --- a/ld/scripttempl/DWARF.sc
 +++ b/ld/scripttempl/DWARF.sc
 @@ -9,19 +9,19 @@ cat <<EOF
@@ -942,7 +942,7 @@ index 37c14caa36e..dfcdf7aa587 100644
 +  .debug_sup      0 : { *(.debug_sup) }
  EOF
 diff --git a/ld/testsuite/ld-tic6x/tic6x.exp b/ld/testsuite/ld-tic6x/tic6x.exp
-index e11699bed31..0a913da25d9 100644
+index e11699bed3..0a913da25d 100644
 --- a/ld/testsuite/ld-tic6x/tic6x.exp
 +++ b/ld/testsuite/ld-tic6x/tic6x.exp
 @@ -130,6 +130,11 @@ set shlibtests {
@@ -958,7 +958,7 @@ index e11699bed31..0a913da25d9 100644
  
  run_ld_link_tests $shlibtests
 diff --git a/opcodes/ChangeLog b/opcodes/ChangeLog
-index 206957af5e8..4d3d8d7acd4 100644
+index 206957af5e..4d3d8d7acd 100644
 --- a/opcodes/ChangeLog
 +++ b/opcodes/ChangeLog
 @@ -1,3 +1,13 @@
@@ -976,7 +976,7 @@ index 206957af5e8..4d3d8d7acd4 100644
  
  	This is the 2.36 release.
 diff --git a/opcodes/configure b/opcodes/configure
-index b72f679440d..dca94db9c3f 100755
+index b72f679440..dca94db9c3 100755
 --- a/opcodes/configure
 +++ b/opcodes/configure
 @@ -1,6 +1,6 @@
@@ -1062,7 +1062,7 @@ index b72f679440d..dca94db9c3f 100755
    with options \\"\$ac_cs_config\\"
  
 diff --git a/opcodes/i386-gen.c b/opcodes/i386-gen.c
-index b3c87dbbd66..44cdc661985 100644
+index b3c87dbbd6..44cdc66198 100644
 --- a/opcodes/i386-gen.c
 +++ b/opcodes/i386-gen.c
 @@ -1576,6 +1576,8 @@ parse_template (char *buf, int lineno)
@@ -1075,7 +1075,7 @@ index b3c87dbbd66..44cdc661985 100644
        cur = next_field (buf, ':', &next, end);
        inst->name = xstrdup (cur);
 diff --git a/opcodes/po/opcodes.pot b/opcodes/po/opcodes.pot
-index 12e4ddfe091..902d8970953 100644
+index 12e4ddfe09..902d897095 100644
 --- a/opcodes/po/opcodes.pot
 +++ b/opcodes/po/opcodes.pot
 @@ -8,7 +8,7 @@ msgid ""
