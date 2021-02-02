@@ -20,7 +20,7 @@ PKG_LICENSE_FILES:=README
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
-#PKG_BUILD_DEPENDS:=ncurses/host
+PKG_BUILD_DEPENDS:=ncurses/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -51,7 +51,6 @@ define Package/libncurses-dev
 endef
 
 TARGET_CFLAGS += $(FPIC)
-# TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
 define Package/ncurses-bin
   SECTION:=utils
@@ -63,21 +62,28 @@ define Package/ncurses-bin
 endef
 
 CONFIGURE_ARGS += \
+	--enable-echo \
+	--enable-const \
 	--enable-overwrite \
 	--enable-pc-files \
+	--disable-rpath \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
+	--without-profile \
 	--with-progs \
 	--without-tests \
-	--with-normal \
-	--with-shared \
 	--with-cxx-binding \
 	--with-cxx-shared \
+	--disable-big-core \
+	--disable-home-terminfo \
+	--with-normal \
+	--with-shared \
 	--with-terminfo-dirs=/usr/share/terminfo \
 	--with-default-terminfo-dir=/usr/share/terminfo \
 	--with-pkg-config-libdir=/usr/lib/pkgconfig \
-	--enable-widec
+	--enable-widec \
+	--with-build-cppflags=-D_GNU_SOURCE
 
 CONFIGURE_VARS += \
 	cf_try_fPIC=no
@@ -85,8 +91,8 @@ CONFIGURE_VARS += \
 HOST_CFLAGS += $(HOST_FPIC)
 
 HOST_CONFIGURE_ARGS += \
-	--without-cxx \
-	--without-cxx-binding \
+	--with-cxx \
+	--with-cxx-binding \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
@@ -118,14 +124,12 @@ endef
 define Package/ncurses-bin/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	rm $(1)/usr/bin/ncursesw6-config
+	$(RM) $(1)/usr/bin/ncurses6-config
 endef
 
 define Package/terminfo/install
 	echo ""
 ifneq ($(HOST_OS),FreeBSD)
-	$(INSTALL_DIR) $(1)/usr/share/tabset/
-	$(CP) $(PKG_INSTALL_DIR)/usr/share/tabset/* $(1)/usr/share/tabset/
 	$(INSTALL_DIR) $(1)/usr/share/terminfo
 	(cd $(PKG_INSTALL_DIR)/usr/share/terminfo; \
 		for dir in ??; do \
@@ -133,12 +137,11 @@ ifneq ($(HOST_OS),FreeBSD)
 			mv $$$$dir $$$$(echo -ne "\x$$$$dir"); \
 		done \
 	)
-	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color; do \
+	for file in a/ansi d/dumb l/linux r/rxvt r/rxvt-unicode s/screen s/screen-256color v/vt100 v/vt102 x/xterm x/xterm-color x/xterm-256color x/xterm-utf8; do \
 		$(INSTALL_DIR) $(1)/usr/share/terminfo/`dirname $$$$file`; \
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/terminfo/$$$$file \
 			$(1)/usr/share/terminfo/$$$$file; \
 	done
-	
 endif
 endef
 
