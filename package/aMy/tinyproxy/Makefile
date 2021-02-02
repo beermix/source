@@ -31,6 +31,7 @@ define Package/tinyproxy
   CATEGORY:=Network
   TITLE:=Tinyproxy is a lightweight HTTP and HTTPS proxy
   URL:=https://tinyproxy.github.io/
+  USERID:=tinyproxy=77:tinyproxy=77
 endef
 
 define Package/tinyproxy/conffiles
@@ -38,6 +39,8 @@ define Package/tinyproxy/conffiles
 endef
 
 CONFIGURE_VARS += ac_cv_path_A2X=no
+
+CONFIGURE_ARGS += --enable-reverse
 
 define Package/tinyproxy/install
 	$(INSTALL_DIR) $(1)/usr/bin

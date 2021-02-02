@@ -22,13 +22,12 @@ option Port 8888
 # this is commented out, tinyproxy will bind to all interfaces present.
 #
 #option Listen 192.168.0.1
-#option Listen 127.0.0.1
 
 #
 # The Bind directive allows you to bind the outgoing connections to a
 # particular IP address.
 #
-#option Bind 192.168.1.1
+#option Bind 192.168.0.1
 
 #
 # Timeout: The number of seconds of inactivity a connection is allowed to
@@ -129,7 +128,6 @@ option MaxRequestsPerChild 0
 # are tested against the controls based on order.
 #
 list Allow 127.0.0.1
-list Allow 192.168.1.0/24
 #list Allow 192.168.0.0/16
 #list Allow 172.16.0.0/12
 #list Allow 10.0.0.0/8
@@ -142,8 +140,6 @@ list Allow 192.168.1.0/24
 #
 option ViaProxyName "tinyproxy"
 
-option DisableViaHeader 1
-
 #
 # The location of the filter file.
 #
@@ -153,7 +149,6 @@ option DisableViaHeader 1
 # Filter based on URLs rather than domains.
 #
 #option FilterURLs 1
-#option ReverseMagic 0
 
 #
 # Use POSIX Extended regular expressions rather than basic.
@@ -194,7 +189,7 @@ option DisableViaHeader 1
 #
 list ConnectPort 443
 list ConnectPort 563
-# list ConnectPort 80
+
 
 #
 # Turns on upstream proxy support.
@@ -210,31 +205,11 @@ list ConnectPort 563
 #	option via testproxy:8008
 #	option target ".test.domain.invalid"
 #
-config upstream
-	option type proxy
-	option via "http 192.168.1.1:8123"
-	option target ".onion"
-
 #config upstream
 #	option type proxy
-#	option via "http  192.168.1.1:8123"
-#	option target ".vision"
-
-#config upstream
-#	option type proxy
-#	option via "socks5 192.168.1.1:9050"
-#	option target ".onion"
-
-#config upstream
-#         option type proxy
-#         option via "socks5 192.168.1.1:9050"
-#         option target ".net"
-
-#config upstream
-#         option type proxy
-#         option via "socks5 127.0.0.1:9050"
-#         option target ".co"
-
+#	option via testproxy:8008
+#	option target ".our_testbed.example.com"
+#
 #config upstream
 #	option type proxy
 #	option via testproxy:8008
