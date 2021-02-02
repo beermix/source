@@ -1,7 +1,7 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-## https://kernel.ubuntu.com/~cking/tarballs/stress-ng/?C=M;O=D
+#
 
 include $(TOPDIR)/rules.mk
 
@@ -11,6 +11,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://kernel.ubuntu.com/~cking/tarballs/stress-ng
+PKG_HASH:=f847be115f60d3ad7d37c806fd1bfb1412aa3c631fca581d6dc233322f50d6a5
 
 PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 PKG_LICENSE:=GPL-2.0-only
@@ -26,7 +27,7 @@ define Package/stress-ng
   CATEGORY:=Utilities
   TITLE:=stress-ng is a stress test utility
   URL:=https://kernel.ubuntu.com/~cking/stress-ng/
-  DEPENDS:=+libatomic +zlib +libcap
+  DEPENDS:=+zlib +libbsd +libaio +libsctp
 endef
 
 define Package/stress-ng/description
