@@ -16,7 +16,7 @@ PKG_SOURCE_URL:=https://github.com/tstack/lnav/releases/download/v$(PKG_VERSION)
 #PKG_SOURCE_PROTO:=git
 #PKG_SOURCE_URL:=https://github.com/tstack/lnav.git
 
-#PKG_FIXUP:=autoreconf
+PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
