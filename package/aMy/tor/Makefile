@@ -133,6 +133,7 @@ CONFIGURE_ARGS += \
 	--enable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
+	--disable-silent-rules \
 	--enable-pic
 
 ifeq ($(BUILD_VARIANT),basic)
