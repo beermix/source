@@ -1,0 +1,1068 @@
+diff --git a/Makefile b/Makefile
+index cc6112a1b..17f55dce2 100644
+diff --git a/archival/libarchive/data_extract_all.c b/archival/libarchive/data_extract_all.c
+index 3142405a3..049c2c156 100644
+--- a/archival/libarchive/data_extract_all.c
++++ b/archival/libarchive/data_extract_all.c
+@@ -159,6 +159,10 @@ void FAST_FUNC data_extract_all(archive_handle_t *archive_handle)
+ 		break;
+ 	}
+ 	case S_IFDIR:
++//TODO: this causes problems if tarball contains a r-xr-xr-x directory:
++// we create this directory, and then fail to create files inside it
++// (if tar xf isn't run as root).
++// GNU tar works around this by chmod-ing directories *after* all files are extracted.
+ 		res = mkdir(dst_name, file_header->mode);
+ 		if ((res != 0)
+ 		 && (errno != EISDIR) /* btw, Linux doesn't return this */
+diff --git a/include/libbb.h b/include/libbb.h
+index cae54658b..dad6fc687 100644
+--- a/include/libbb.h
++++ b/include/libbb.h
+@@ -657,6 +657,7 @@ void parse_datestr(const char *date_str, struct tm *ptm) FAST_FUNC;
+ time_t validate_tm_time(const char *date_str, struct tm *ptm) FAST_FUNC;
+ char *strftime_HHMMSS(char *buf, unsigned len, time_t *tp) FAST_FUNC;
+ char *strftime_YYYYMMDDHHMMSS(char *buf, unsigned len, time_t *tp) FAST_FUNC;
++void xgettimeofday(struct timeval *tv) FAST_FUNC;
+ void xsettimeofday(const struct timeval *tv) FAST_FUNC;
+ 
+ 
+diff --git a/init/bootchartd.c b/init/bootchartd.c
+index 750f67356..ae1ee9d9a 100644
+--- a/init/bootchartd.c
++++ b/init/bootchartd.c
+@@ -218,10 +218,10 @@ static char *make_tempdir(void)
+ 
+ static void do_logging(unsigned sample_period_us, int process_accounting)
+ {
+-	FILE *proc_stat = xfopen("proc_stat.log", "w");
+-	FILE *proc_diskstats = xfopen("proc_diskstats.log", "w");
+-	//FILE *proc_netdev = xfopen("proc_netdev.log", "w");
+-	FILE *proc_ps = xfopen("proc_ps.log", "w");
++	FILE *proc_stat = xfopen_for_write("proc_stat.log");
++	FILE *proc_diskstats = xfopen_for_write("proc_diskstats.log");
++	//FILE *proc_netdev = xfopen_for_write("proc_netdev.log");
++	FILE *proc_ps = xfopen_for_write("proc_ps.log");
+ 	int look_for_login_process = (getppid() == 1);
+ 	unsigned count = 60*1000*1000 / sample_period_us; /* ~1 minute */
+ 
+@@ -268,7 +268,7 @@ static void finalize(char *tempdir, const char *prog, int process_accounting)
+ 	//local pacct=
+ 	//[ -e kernel_pacct ] && pacct=kernel_pacct
+ 
+-	FILE *header_fp = xfopen("header", "w");
++	FILE *header_fp = xfopen_for_write("header");
+ 
+ 	if (process_accounting)
+ 		acct(NULL);
+diff --git a/libbb/procps.c b/libbb/procps.c
+index 75969947b..f56b71b21 100644
+--- a/libbb/procps.c
++++ b/libbb/procps.c
+@@ -21,40 +21,29 @@ typedef struct cache_t {
+ 	int size;
+ } cache_t;
+ 
+-static cache_t username, groupname;
++static cache_t *cache_user_group;
+ 
+-static void clear_cache(cache_t *cp)
+-{
+-	free(cp->cache);
+-	cp->cache = NULL;
+-	cp->size = 0;
+-}
+ void FAST_FUNC clear_username_cache(void)
+ {
+-	clear_cache(&username);
+-	clear_cache(&groupname);
+-}
+-
+-#if 0 /* more generic, but we don't need that yet */
+-/* Returns -N-1 if not found. */
+-/* cp->cache[N] is allocated and must be filled in this case */
+-static int get_cached(cache_t *cp, uid_t id)
+-{
+-	int i;
+-	for (i = 0; i < cp->size; i++)
+-		if (cp->cache[i].id == id)
+-			return i;
+-	i = cp->size++;
+-	cp->cache = xrealloc_vector(cp->cache, 2, i);
+-	cp->cache[i++].id = id;
+-	return -i;
++	if (cache_user_group) {
++		free(cache_user_group[0].cache);
++		free(cache_user_group[1].cache);
++		free(cache_user_group);
++		cache_user_group = NULL;
++	}
+ }
+-#endif
+ 
+-static char* get_cached(cache_t *cp, uid_t id,
++static char* get_cached(int user_group, uid_t id,
+ 			char* FAST_FUNC x2x_utoa(uid_t id))
+ {
++	cache_t *cp;
+ 	int i;
++
++	if (!cache_user_group)
++		cache_user_group = xzalloc(sizeof(cache_user_group[0]) * 2);
++
++	cp = &cache_user_group[user_group];
++
+ 	for (i = 0; i < cp->size; i++)
+ 		if (cp->cache[i].id == id)
+ 			return cp->cache[i].name;
+@@ -67,11 +56,11 @@ static char* get_cached(cache_t *cp, uid_t id,
+ }
+ const char* FAST_FUNC get_cached_username(uid_t uid)
+ {
+-	return get_cached(&username, uid, uid2uname_utoa);
++	return get_cached(0, uid, uid2uname_utoa);
+ }
+ const char* FAST_FUNC get_cached_groupname(gid_t gid)
+ {
+-	return get_cached(&groupname, gid, gid2group_utoa);
++	return get_cached(1, gid, gid2group_utoa);
+ }
+ 
+ 
+diff --git a/libbb/time.c b/libbb/time.c
+index 74a69eefb..cf5f2e5c8 100644
+--- a/libbb/time.c
++++ b/libbb/time.c
+@@ -291,19 +291,19 @@ unsigned FAST_FUNC monotonic_sec(void)
+ unsigned long long FAST_FUNC monotonic_ns(void)
+ {
+ 	struct timeval tv;
+-	gettimeofday(&tv, NULL);
++	xgettimeofday(&tv);
+ 	return tv.tv_sec * 1000000000ULL + tv.tv_usec * 1000;
+ }
+ unsigned long long FAST_FUNC monotonic_us(void)
+ {
+ 	struct timeval tv;
+-	gettimeofday(&tv, NULL);
++	xgettimeofday(&tv);
+ 	return tv.tv_sec * 1000000ULL + tv.tv_usec;
+ }
+ unsigned long long FAST_FUNC monotonic_ms(void)
+ {
+ 	struct timeval tv;
+-	gettimeofday(&tv, NULL);
++	xgettimeofday(&tv);
+ 	return tv.tv_sec * 1000ULL + tv.tv_usec / 1000;
+ }
+ unsigned FAST_FUNC monotonic_sec(void)
+diff --git a/libbb/xfuncs_printf.c b/libbb/xfuncs_printf.c
+index aea995a5c..99596b9d0 100644
+--- a/libbb/xfuncs_printf.c
++++ b/libbb/xfuncs_printf.c
+@@ -720,3 +720,14 @@ void FAST_FUNC xsettimeofday(const struct timeval *tv)
+ 	if (settimeofday(tv, NULL))
+ 		bb_simple_perror_msg_and_die("settimeofday");
+ }
++
++void FAST_FUNC xgettimeofday(struct timeval *tv)
++{
++#if 0
++	if (gettimeofday(tv, NULL))
++		bb_simple_perror_msg_and_die("gettimeofday");
++#else
++	/* Never fails on Linux */
++	gettimeofday(tv, NULL);
++#endif
++}
+diff --git a/miscutils/bc.c b/miscutils/bc.c
+index 59e18a8c1..6d54f968a 100644
+--- a/miscutils/bc.c
++++ b/miscutils/bc.c
+@@ -231,7 +231,7 @@ typedef struct BcNum {
+ #define BC_NUM_MAX_IBASE        36
+ // larger value might speed up BIGNUM calculations a bit:
+ #define BC_NUM_DEF_SIZE         16
+-#define BC_NUM_PRINT_WIDTH      69
++#define BC_NUM_PRINT_WIDTH      70
+ 
+ #define BC_NUM_KARATSUBA_LEN    32
+ 
+@@ -7372,11 +7372,29 @@ static unsigned xc_vm_envLen(const char *var)
+ 
+ 	lenv = getenv(var);
+ 	len = BC_NUM_PRINT_WIDTH;
+-	if (!lenv) return len;
++	if (lenv) {
++		len = bb_strtou(lenv, NULL, 10);
++		if (len == 0 || len > INT_MAX)
++			len = INT_MAX;
++		if (errno)
++			len = BC_NUM_PRINT_WIDTH;
++	}
+ 
+-	len = bb_strtou(lenv, NULL, 10) - 1;
+-	if (errno || len < 2 || len >= INT_MAX)
+-		len = BC_NUM_PRINT_WIDTH;
++	// dc (GNU bc 1.07.1) 1.4.1 seems to use width
++	// 1 char wider than bc from the same package.
++	// Both default width, and xC_LINE_LENGTH=N are wider:
++	// "DC_LINE_LENGTH=5 dc -e'123456 p'" prints:
++	//	|1234\   |
++	//	|56      |
++	// "echo '123456' | BC_LINE_LENGTH=5 bc" prints:
++	//	|123\    |
++	//	|456     |
++	// Do the same, but it might be a bug in GNU package
++	if (IS_BC)
++		len--;
++
++	if (len < 2)
++		len = IS_BC ? BC_NUM_PRINT_WIDTH - 1 : BC_NUM_PRINT_WIDTH;
+ 
+ 	return len;
+ }
+@@ -7467,16 +7485,6 @@ int dc_main(int argc UNUSED_PARAM, char **argv)
+ 
+ 	INIT_G();
+ 
+-	// TODO: dc (GNU bc 1.07.1) 1.4.1 seems to use width
+-	// 1 char wider than bc from the same package.
+-	// Both default width, and xC_LINE_LENGTH=N are wider:
+-	// "DC_LINE_LENGTH=5 dc -e'123456 p'" prints:
+-	//	|1234\   |
+-	//	|56      |
+-	// "echo '123456' | BC_LINE_LENGTH=5 bc" prints:
+-	//	|123\    |
+-	//	|456     |
+-	// Do the same, or it's a bug?
+ 	xc_vm_init("DC_LINE_LENGTH");
+ 
+ 	// Run -e'SCRIPT' and -fFILE in order of appearance, then handle FILEs
+diff --git a/miscutils/i2c_tools.c b/miscutils/i2c_tools.c
+index cda17ee00..48135921d 100644
+--- a/miscutils/i2c_tools.c
++++ b/miscutils/i2c_tools.c
+@@ -1149,12 +1149,12 @@ static void NORETURN list_i2c_busses_and_exit(void)
+ 		/* Simple version for ISA chips. */
+ 		snprintf(path, NAME_MAX, "%s/%s/name",
+ 			 i2cdev_path, de->d_name);
+-		fp = fopen(path, "r");
++		fp = fopen_for_read(path);
+ 		if (fp == NULL) {
+ 			snprintf(path, NAME_MAX,
+ 				 "%s/%s/device/name",
+ 				 i2cdev_path, de->d_name);
+-			fp = fopen(path, "r");
++			fp = fopen_for_read(path);
+ 		}
+ 
+ 		/* Non-ISA chips require the hard-way. */
+@@ -1175,7 +1175,7 @@ static void NORETURN list_i2c_busses_and_exit(void)
+ 						 "%s/%s/device/%s/name",
+ 						 i2cdev_path, de->d_name,
+ 						 subde->d_name);
+-					fp = fopen(path, "r");
++					fp = fopen_for_read(path);
+ 					break;
+ 				}
+ 			}
+diff --git a/miscutils/ts.c b/miscutils/ts.c
+index f2d367654..6e5d77bda 100644
+--- a/miscutils/ts.c
++++ b/miscutils/ts.c
+@@ -47,13 +47,13 @@ int ts_main(int argc UNUSED_PARAM, char **argv)
+ 
+ #define date_buf bb_common_bufsiz1
+ 	setup_common_bufsiz();
+-	gettimeofday(&base, NULL);
++	xgettimeofday(&base);
+ 
+ 	while ((line = xmalloc_fgets(stdin)) != NULL) {
+ 		struct timeval ts;
+ 		struct tm tm_time;
+ 
+-		gettimeofday(&ts, NULL);
++		xgettimeofday(&ts);
+ 		if (opt) {
+ 			/* -i and/or -s */
+ 			struct timeval ts1 = ts1;
+diff --git a/networking/httpd.c b/networking/httpd.c
+index 4346141ee..4c014bc71 100644
+--- a/networking/httpd.c
++++ b/networking/httpd.c
+@@ -1871,7 +1871,7 @@ static NOINLINE void send_file_and_exit(const char *url, int what)
+ 		send_headers(HTTP_OK);
+ #if ENABLE_FEATURE_USE_SENDFILE
+ 	{
+-		off_t offset = range_start;
++		off_t offset = (range_start < 0) ? 0 : range_start;
+ 		while (1) {
+ 			/* sz is rounded down to 64k */
+ 			ssize_t sz = MAXINT(ssize_t) - 0xffff;
+@@ -2486,8 +2486,8 @@ static void handle_incoming_and_exit(const len_and_sockaddr *fromAddr)
+ 		if (STRNCASECMP(iobuf, "Range:") == 0) {
+ 			/* We know only bytes=NNN-[MMM] */
+ 			char *s = skip_whitespace(iobuf + sizeof("Range:")-1);
+-			if (is_prefixed_with(s, "bytes=")) {
+-				s += sizeof("bytes=")-1;
++			s = is_prefixed_with(s, "bytes=");
++			if (s) {
+ 				range_start = BB_STRTOOFF(s, &s, 10);
+ 				if (s[0] != '-' || range_start < 0) {
+ 					range_start = -1;
+diff --git a/networking/inetd.c b/networking/inetd.c
+index 9f5a436d6..febfb7b73 100644
+--- a/networking/inetd.c
++++ b/networking/inetd.c
+@@ -1701,7 +1701,7 @@ static uint32_t machtime(void)
+ {
+ 	struct timeval tv;
+ 
+-	gettimeofday(&tv, NULL);
++	xgettimeofday(&tv);
+ 	return htonl((uint32_t)(tv.tv_sec + 2208988800U));
+ }
+ /* ARGSUSED */
+diff --git a/networking/nslookup.c b/networking/nslookup.c
+index dda22de0e..c43ad46f3 100644
+--- a/networking/nslookup.c
++++ b/networking/nslookup.c
+@@ -349,6 +349,8 @@ static int parse_reply(const unsigned char *msg, size_t len)
+ 	header = (HEADER *)msg;
+ 	if (!header->aa)
+ 		printf("Non-authoritative answer:\n");
++	else if (option_mask32 & OPT_debug)
++		printf("Non-authoritative answer:\n" + 4);
+ 
+ 	if (ns_initparse(msg, len, &handle) != 0) {
+ 		//printf("Unable to parse reply: %s\n", strerror(errno));
+@@ -381,7 +383,7 @@ static int parse_reply(const unsigned char *msg, size_t len)
+ 				return -1;
+ 			}
+ 			inet_ntop(AF_INET6, ns_rr_rdata(rr), astr, sizeof(astr));
+-			/* bind-utils-9.11.3 uses the same format for A and AAAA answers */
++			/* bind-utils 9.11.3 uses the same format for A and AAAA answers */
+ 			printf("Name:\t%s\nAddress: %s\n", ns_rr_name(rr), astr);
+ 			break;
+ #endif
+@@ -580,7 +582,7 @@ static int send_queries(struct ns *ns)
+ 			printf("Address:\t%s\n\n",
+ 				auto_string(xmalloc_sockaddr2dotted(&ns->lsa->u.sa))
+ 			);
+-			/* In "Address", bind-utils-9.11.3 show port after a hash: "1.2.3.4#53" */
++			/* In "Address", bind-utils 9.11.3 show port after a hash: "1.2.3.4#53" */
+ 			/* Should we do the same? */
+ 		}
+ 
+@@ -640,12 +642,26 @@ static int send_queries(struct ns *ns)
+ 				printf("*** Can't find %s: Parse error\n", G.query[qn].name);
+ 				G.exitcode = EXIT_FAILURE;
+ 				break;
+-
+-			case 0:
+-				printf("*** Can't find %s: No answer\n", G.query[qn].name);
+-				break;
++			/* bind-utils 9.11.25 just says nothing in this case */
++			//case 0:
++			//	break;
+ 			}
+ 		}
++/* NB: in case of authoritative, empty answer (NODATA), IOW: one with
++ * ns_msg_count() == 0, bind-utils 9.11.25 shows no trace of this answer
++ * (unless -debug, where it says:
++ * ------------
++ *     QUESTIONS:
++ *     host.com, type = AAAA, class = IN
++ *     ANSWERS:
++ *     AUTHORITY RECORDS:
++ *     ADDITIONAL RECORDS:
++ * ------------
++ * ). Due to printing of below '\n', we do show an additional empty line.
++ * This is better than not showing any indication of this reply at all,
++ * yet maintains "compatibility". I wonder whether it's better to break compat
++ * and emit something more meaningful, e.g. print "Empty answer (NODATA)"?
++ */
+ 		bb_putchar('\n');
+ 		n_replies++;
+ 		if (n_replies >= G.query_count)
+@@ -697,7 +713,7 @@ static void parse_resolvconf(void)
+ {
+ 	FILE *resolv;
+ 
+-	resolv = fopen("/etc/resolv.conf", "r");
++	resolv = fopen_for_read("/etc/resolv.conf");
+ 	if (resolv) {
+ 		char line[512];	/* "search" is defined to be up to 256 chars */
+ 
+diff --git a/networking/ntpd.c b/networking/ntpd.c
+index 5a540a391..46d8f3495 100644
+--- a/networking/ntpd.c
++++ b/networking/ntpd.c
+@@ -560,7 +560,7 @@ static double
+ gettime1900d(void)
+ {
+ 	struct timeval tv;
+-	gettimeofday(&tv, NULL); /* never fails */
++	xgettimeofday(&tv);
+ 	G.cur_time = tv.tv_sec + (1.0e-6 * tv.tv_usec) + OFFSET_1900_1970;
+ 	return G.cur_time;
+ }
+@@ -1144,7 +1144,7 @@ step_time(double offset)
+ 	char buf[sizeof("yyyy-mm-dd hh:mm:ss") + /*paranoia:*/ 4];
+ 	time_t tval;
+ 
+-	gettimeofday(&tvc, NULL); /* never fails */
++	xgettimeofday(&tvc);
+ 	dtime = tvc.tv_sec + (1.0e-6 * tvc.tv_usec) + offset;
+ 	d_to_tv(dtime, &tvn);
+ 	xsettimeofday(&tvn);
+diff --git a/networking/tls_fe.c b/networking/tls_fe.c
+index 10971bbff..f810e112a 100644
+--- a/networking/tls_fe.c
++++ b/networking/tls_fe.c
+@@ -383,12 +383,10 @@ static void fe_inv__distinct(byte *r, const byte *x)
+ 	 * to avoid copying temporaries.
+ 	 */
+ 
+-	/* 1 1 */
+-	fe_mul__distinct(s, x, x);
+-	fe_mul__distinct(r, s, x);
++	lm_copy(r, x);
+ 
+-	/* 1 x 248 */
+-	for (i = 0; i < 248; i++) {
++	/* 1, 1 x 249 */
++	for (i = 0; i < 249; i++) {
+ 		fe_mul__distinct(s, r, r);
+ 		fe_mul__distinct(r, s, x);
+ 	}
+@@ -403,13 +401,11 @@ static void fe_inv__distinct(byte *r, const byte *x)
+ 	/* 0 */
+ 	fe_mul__distinct(r, s, s);
+ 
+-	/* 1 */
+-	fe_mul__distinct(s, r, r);
+-	fe_mul__distinct(r, s, x);
+-
+-	/* 1 */
+-	fe_mul__distinct(s, r, r);
+-	fe_mul__distinct(r, s, x);
++	/* 1, 1 */
++	for (i = 0; i < 2; i++) {
++		fe_mul__distinct(s, r, r);
++		fe_mul__distinct(r, s, x);
++	}
+ }
+ 
+ #if 0 //UNUSED
+@@ -435,12 +431,10 @@ static void exp2523(byte *r, const byte *x, byte *s)
+ 	 *     111111... 01
+ 	 */
+ 
+-	/* 1 1 */
+-	fe_mul__distinct(r, x, x);
+-	fe_mul__distinct(s, r, x);
++	lm_copy(s, x);
+ 
+-	/* 1 x 248 */
+-	for (i = 0; i < 248; i++) {
++	/* 1, 1 x 249 */
++	for (i = 0; i < 249; i++) {
+ 		fe_mul__distinct(r, s, s);
+ 		fe_mul__distinct(s, r, x);
+ 	}
+diff --git a/networking/traceroute.c b/networking/traceroute.c
+index 3f1a9ab46..bd63e4449 100644
+--- a/networking/traceroute.c
++++ b/networking/traceroute.c
+@@ -505,7 +505,7 @@ send_probe(int seq, int ttl)
+ 		struct outdata6_t *pkt = (void *) outdata;
+ 		pkt->ident6 = ident;
+ 		pkt->seq6   = htonl(seq);
+-		/*gettimeofday(&pkt->tv, &tz);*/
++		/*xgettimeofday(&pkt->tv);*/
+ 		icp = outicmp6;
+ 	} else
+ #endif
+diff --git a/networking/udhcp/Config.src b/networking/udhcp/Config.src
+index 7d04bb246..8c8c11c26 100644
+--- a/networking/udhcp/Config.src
++++ b/networking/udhcp/Config.src
+@@ -104,6 +104,14 @@ INSERT
+ comment "Common options for DHCP applets"
+         depends on UDHCPD || UDHCPC || UDHCPC6 || DHCPRELAY
+ 
++config UDHCPC_DEFAULT_INTERFACE
++	string "Default interface name"
++	default "eth0"
++	depends on UDHCPC || UDHCPC6
++	help
++	The interface that will be used if no other interface is
++	specified on the commandline.
++
+ config FEATURE_UDHCP_PORT
+ 	bool "Enable '-P port' option for udhcpd and udhcpc"
+ 	default n
+diff --git a/networking/udhcp/d6_dhcpc.c b/networking/udhcp/d6_dhcpc.c
+index d4d29dcbb..fbdaa99bd 100644
+--- a/networking/udhcp/d6_dhcpc.c
++++ b/networking/udhcp/d6_dhcpc.c
+@@ -1163,7 +1163,7 @@ static void client_background(void)
+ //usage:       "[-fbnq"IF_UDHCP_VERBOSE("v")"odR] [-i IFACE] [-r IPv6] [-s PROG] [-p PIDFILE]\n"
+ //usage:       "	[-x OPT:VAL]... [-O OPT]..." IF_FEATURE_UDHCP_PORT(" [-P PORT]")
+ //usage:#define udhcpc6_full_usage "\n"
+-//usage:     "\n	-i IFACE	Interface to use (default eth0)"
++//usage:     "\n	-i IFACE	Interface to use (default "CONFIG_UDHCPC_DEFAULT_INTERFACE")"
+ //usage:     "\n	-p FILE		Create pidfile"
+ //usage:     "\n	-s PROG		Run PROG at DHCP events (default "CONFIG_UDHCPC_DEFAULT_SCRIPT")"
+ //usage:     "\n	-B		Request broadcast replies"
+@@ -1231,7 +1231,7 @@ int udhcpc6_main(int argc UNUSED_PARAM, char **argv)
+ 	/* Default options */
+ 	IF_FEATURE_UDHCP_PORT(SERVER_PORT6 = 547;)
+ 	IF_FEATURE_UDHCP_PORT(CLIENT_PORT6 = 546;)
+-	client_data.interface = "eth0";
++	client_data.interface = CONFIG_UDHCPC_DEFAULT_INTERFACE;
+ 	client_data.script = CONFIG_UDHCPC_DEFAULT_SCRIPT;
+ 	client_data.sockfd = -1;
+ 
+diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
+index 98720b45b..922c71ebd 100644
+--- a/networking/udhcp/dhcpc.c
++++ b/networking/udhcp/dhcpc.c
+@@ -1196,7 +1196,7 @@ static void client_background(void)
+ //usage:       "	[-i IFACE]"IF_FEATURE_UDHCP_PORT(" [-P PORT]")" [-s PROG] [-p PIDFILE]\n"
+ //usage:       "	[-oC] [-r IP] [-V VENDOR] [-F NAME] [-x OPT:VAL]... [-O OPT]..."
+ //usage:#define udhcpc_full_usage "\n"
+-//usage:     "\n	-i IFACE	Interface to use (default eth0)"
++//usage:     "\n	-i IFACE	Interface to use (default "CONFIG_UDHCPC_DEFAULT_INTERFACE")"
+ //usage:	IF_FEATURE_UDHCP_PORT(
+ //usage:     "\n	-P PORT		Use PORT (default 68)"
+ //usage:	)
+@@ -1265,7 +1265,7 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+ 	/* Default options */
+ 	IF_FEATURE_UDHCP_PORT(SERVER_PORT = 67;)
+ 	IF_FEATURE_UDHCP_PORT(CLIENT_PORT = 68;)
+-	client_data.interface = "eth0";
++	client_data.interface = CONFIG_UDHCPC_DEFAULT_INTERFACE;
+ 	client_data.script = CONFIG_UDHCPC_DEFAULT_SCRIPT;
+ 	client_data.sockfd = -1;
+ 	str_V = "udhcp "BB_VER;
+diff --git a/procps/nmeter.c b/procps/nmeter.c
+index 07b7abe2f..f08938654 100644
+--- a/procps/nmeter.c
++++ b/procps/nmeter.c
+@@ -952,11 +952,11 @@ int nmeter_main(int argc UNUSED_PARAM, char **argv)
+ 	reset_outbuf();
+ 
+ 	if (G.delta >= 0) {
+-		gettimeofday(&G.tv, NULL);
++		xgettimeofday(&G.tv);
+ 		usleep(G.delta > 1000000 ? 1000000 : G.delta - G.tv.tv_usec % G.deltanz);
+ 	}
+ 
+-	gettimeofday(&G.start, NULL);
++	xgettimeofday(&G.start);
+ 	G.tv = G.start;
+ 	while (1) {
+ 		collect_info(first);
+@@ -971,7 +971,7 @@ int nmeter_main(int argc UNUSED_PARAM, char **argv)
+ 		if (G.delta >= 0) {
+ 			int rem;
+ 			// can be commented out, will sacrifice sleep time precision a bit
+-			gettimeofday(&G.tv, NULL);
++			xgettimeofday(&G.tv);
+ 			if (need_seconds)
+ 				rem = G.delta - ((ullong)G.tv.tv_sec*1000000 + G.tv.tv_usec) % G.deltanz;
+ 			else
+@@ -983,7 +983,7 @@ int nmeter_main(int argc UNUSED_PARAM, char **argv)
+ 			}
+ 			usleep(rem);
+ 		}
+-		gettimeofday(&G.tv, NULL);
++		xgettimeofday(&G.tv);
+ 	}
+ 
+ 	/*return 0;*/
+diff --git a/runit/runsv.c b/runit/runsv.c
+index d395d4528..ecab8cdf5 100644
+--- a/runit/runsv.c
++++ b/runit/runsv.c
+@@ -62,12 +62,12 @@ static void gettimeofday_ns(struct timespec *ts)
+ 	 && sizeof(((struct timeval*)ts)->tv_usec) == sizeof(ts->tv_nsec)
+ 	) {
+ 		/* Cheat */
+-		gettimeofday((void*)ts, NULL);
++		xgettimeofday((void*)ts);
+ 		ts->tv_nsec *= 1000;
+ 	} else {
+ 		/* For example, musl has "incompatible" layouts */
+ 		struct timeval tv;
+-	        gettimeofday(&tv, NULL);
++		xgettimeofday(&tv);
+ 		ts->tv_sec = tv.tv_sec;
+ 		ts->tv_nsec = tv.tv_usec * 1000;
+ 	}
+diff --git a/runit/svlogd.c b/runit/svlogd.c
+index 040e71104..294e31aca 100644
+--- a/runit/svlogd.c
++++ b/runit/svlogd.c
+@@ -351,7 +351,7 @@ static void fmt_time_human_30nul(char *s, char dt_delim)
+ 	struct tm *ptm;
+ 	struct timeval tv;
+ 
+-	gettimeofday(&tv, NULL);
++	xgettimeofday(&tv);
+ 	ptm = gmtime_r(&tv.tv_sec, &tm);
+ 	/* ^^^ using gmtime_r() instead of gmtime() to not use static data */
+ 	sprintf(s, "%04u-%02u-%02u%c%02u:%02u:%02u.%06u000",
+@@ -376,7 +376,7 @@ static void fmt_time_bernstein_25(char *s)
+ 	struct timeval tv;
+ 	unsigned sec_hi;
+ 
+-	gettimeofday(&tv, NULL);
++	xgettimeofday(&tv);
+ 	sec_hi = (0x400000000000000aULL + tv.tv_sec) >> 32;
+ 	tv.tv_sec = (time_t)(0x400000000000000aULL) + tv.tv_sec;
+ 	tv.tv_usec *= 1000;
+diff --git a/scripts/bb_release b/scripts/bb_release
+index 2e146bf84..545440d3a 100755
+--- a/scripts/bb_release
++++ b/scripts/bb_release
+@@ -8,6 +8,7 @@
+ 
+ #svn co svn://busybox.net/trunk/busybox
+ cd busybox || { echo "cd busybox failed"; exit 1; }
++chmod -Rc u+w,a+rX,go-w .
+ make release || { echo "make release failed"; exit 1; }
+ cd ..
+ 
+diff --git a/shell/ash.c b/shell/ash.c
+index f16d7fb6a..54f004375 100644
+--- a/shell/ash.c
++++ b/shell/ash.c
+@@ -11371,10 +11371,10 @@ static void FAST_FUNC
+ change_epoch(struct var *vepoch, const char *fmt)
+ {
+ 	struct timeval tv;
+-	char buffer[sizeof("%lu.nnnnnn") + sizeof(long)*3];
++	char buffer[sizeof("%llu.nnnnnn") + sizeof(long long)*3];
+ 
+-	gettimeofday(&tv, NULL);
+-	sprintf(buffer, fmt, (unsigned long)tv.tv_sec, (unsigned)tv.tv_usec);
++	xgettimeofday(&tv);
++	sprintf(buffer, fmt, (unsigned long long)tv.tv_sec, (unsigned)tv.tv_usec);
+ 	setvar(vepoch->var_text, buffer, VNOFUNC);
+ 	vepoch->flags &= ~VNOFUNC;
+ }
+@@ -11382,13 +11382,13 @@ change_epoch(struct var *vepoch, const char *fmt)
+ static void FAST_FUNC
+ change_seconds(const char *value UNUSED_PARAM)
+ {
+-	change_epoch(&vepochs, "%lu");
++	change_epoch(&vepochs, "%llu");
+ }
+ 
+ static void FAST_FUNC
+ change_realtime(const char *value UNUSED_PARAM)
+ {
+-	change_epoch(&vepochr, "%lu.%06u");
++	change_epoch(&vepochr, "%llu.%06u");
+ }
+ #endif
+ 
+diff --git a/shell/hush.c b/shell/hush.c
+index 9fead37da..65f08659f 100644
+--- a/shell/hush.c
++++ b/shell/hush.c
+@@ -1027,7 +1027,7 @@ struct globals {
+ 	struct sigaction sa;
+ 	char optstring_buf[sizeof("eixcs")];
+ #if BASH_EPOCH_VARS
+-	char epoch_buf[sizeof("%lu.nnnnnn") + sizeof(long)*3];
++	char epoch_buf[sizeof("%llu.nnnnnn") + sizeof(long long)*3];
+ #endif
+ #if ENABLE_FEATURE_EDITING
+ 	char user_input_buf[CONFIG_FEATURE_EDITING_MAX_LEN];
+@@ -2277,13 +2277,13 @@ static const char* FAST_FUNC get_local_var_value(const char *name)
+ 	{
+ 		const char *fmt = NULL;
+ 		if (strcmp(name, "EPOCHSECONDS") == 0)
+-			fmt = "%lu";
++			fmt = "%llu";
+ 		else if (strcmp(name, "EPOCHREALTIME") == 0)
+-			fmt = "%lu.%06u";
++			fmt = "%llu.%06u";
+ 		if (fmt) {
+ 			struct timeval tv;
+-			gettimeofday(&tv, NULL);
+-			sprintf(G.epoch_buf, fmt, (unsigned long)tv.tv_sec,
++			xgettimeofday(&tv);
++			sprintf(G.epoch_buf, fmt, (unsigned long long)tv.tv_sec,
+ 					(unsigned)tv.tv_usec);
+ 			return G.epoch_buf;
+ 		}
+diff --git a/sysklogd/syslogd.c b/sysklogd/syslogd.c
+index 598f28d0c..6ddfd771a 100644
+--- a/sysklogd/syslogd.c
++++ b/sysklogd/syslogd.c
+@@ -842,7 +842,7 @@ static void timestamp_and_log(int pri, char *msg, int len)
+ #if ENABLE_FEATURE_SYSLOGD_PRECISE_TIMESTAMPS
+ 	if (!timestamp) {
+ 		struct timeval tv;
+-		gettimeofday(&tv, NULL);
++		xgettimeofday(&tv);
+ 		now = tv.tv_sec;
+ 		timestamp = ctime(&now) + 4; /* skip day of week */
+ 		/* overwrite year by milliseconds, zero terminate */
+diff --git a/testsuite/dc_add_results.txt b/testsuite/dc_add_results.txt
+index 542a62ea3..2d955935f 100644
+--- a/testsuite/dc_add_results.txt
++++ b/testsuite/dc_add_results.txt
+@@ -9,9 +9,9 @@
+ 1998
+ 324869359109479
+ 2378639108055453348401
+-78562139406792834691802347619083467219846713490861872324967138636055\
+-45508706362018540498696043776980521464405852627147161556994835657433\
+-00967298
++785621394067928346918023476190834672198467134908618723249671386360554\
++550870636201854049869604377698052146440585262714716155699483565743300\
++967298
+ 1.1
+ 1.1
+ 37842935130118.1187478621432354
+@@ -20,21 +20,21 @@
+ -2
+ -19
+ -1287904651762470260258
+-100000000000000000000000000000000000000000000000000000000000.0000000\
+-00000000000000000000000000000000000000000000000000000000000000000000\
+-000000000000000000000000000000000000000000000
+-100000000000000000000000000000000000000000000000000000000000.0000000\
+-00000000000000000000000000000000000000000000000000000000000000000000\
+-000000000000000000000000000000000000000000000
+-100000000000000000000000000000000000000000000000000000000000.0000000\
+-00000000000000000000000000000000000000000000000000000000000000000000\
+-000000000000000000000000000000000000000009999
+-99999999999999999999999999999999999999999999999999999999999.99999999\
+-99999999999999999999999999999999999999999999999999000000000000000000\
+-00000000000000000000000000000000000000009999
+-99999999999999999999999999999999999990000000000000000000000.00000000\
+-00000000000000000000000000000000000000000000000000000000000000000000\
+-00000000000000000000000000000000000000009999
++100000000000000000000000000000000000000000000000000000000000.00000000\
++000000000000000000000000000000000000000000000000000000000000000000000\
++0000000000000000000000000000000000000000000
++100000000000000000000000000000000000000000000000000000000000.00000000\
++000000000000000000000000000000000000000000000000000000000000000000000\
++0000000000000000000000000000000000000000000
++100000000000000000000000000000000000000000000000000000000000.00000000\
++000000000000000000000000000000000000000000000000000000000000000000000\
++0000000000000000000000000000000000000009999
++99999999999999999999999999999999999999999999999999999999999.999999999\
++999999999999999999999999999999999999999999999999900000000000000000000\
++000000000000000000000000000000000000009999
++99999999999999999999999999999999999990000000000000000000000.000000000\
++000000000000000000000000000000000000000000000000000000000000000000000\
++000000000000000000000000000000000000009999
+ 122761518
+ -14338.391079082
+ -2422295.6865057444
+diff --git a/testsuite/dc_decimal_results.txt b/testsuite/dc_decimal_results.txt
+index 275d431c6..66bb91ac3 100644
+--- a/testsuite/dc_decimal_results.txt
++++ b/testsuite/dc_decimal_results.txt
+@@ -9,19 +9,17 @@
+ 123
+ 7505
+ 1023468723275435238491972521917846
+-43434724324317058673920735170382703980273527090273892739207390379379\
+-60379637893607893607893670530278200795207952702873892786172916728961\
+-78390789360741897358785738607967926792673752073092537298378279365279\
+-3
++434347243243170586739207351703827039802735270902738927392073903793796\
++037963789360789360789367053027820079520795270287389278617291672896178\
++3907893607418973587857386079679267926737520730925372983782793652793
+ -1
+ -203
+ -57
+ -18586
+ -31378682943772818461924738352952347258
+--8239456287456735894950672387239865203756982376208346745096273452730\
+-96287563846592384526349872634895763257893467523987578690283762897568\
+-45907234875807107108781350187590812735901871502384171023987230138727\
+-8
++-82394562874567358949506723872398652037569823762083467450962734527309\
++628756384659238452634987263489576325789346752398757869028376289756845\
++9072348758071071087813501875908127359018715023841710239872301387278
+ .123521346523546
+ .1245923756273856
+ -.1024678456387
+@@ -31,21 +29,21 @@
+ 234237468293576.000000000000000000000000000000
+ 23987623568943567.00000000000000000005677834650000000000000
+ 23856934568940675.000000000000000435676782300000000000000456784
+-77567648698496.00000000000000000058767475000000000045856380000000000\
+-0000
+-2348672354968723.237482354600000000000325698739450234689243562387000\
+-0000034578
++77567648698496.000000000000000000587674750000000000458563800000000000\
++000
++2348672354968723.2374823546000000000003256987394502346892435623870000\
++000034578
+ -2354768.000000000000000000000000000000000000
+ -96739874567.000000000347683456
+ -3764568345.000000000004573845000000347683460
+ -356784356.934568495770004586495678300000000
+-74325437345273852773827101738273127312738521733017537073520735207307\
+-570358738257390761276072160719802671980267018728630178.7082681027680\
+-52176021786784127612768127086782782176817317820783071097801773817867\
+-8012767377058785378278207385237085237803278203782037237582795870
+--7567527327852738512737285378527382578372836789657385273852729836783\
+-72867327835672967385278372637862738627836279863782673862783670.71738\
+-17836173871836718637861073861783678160376017836701860376017810773527\
+-8372832783728367826738627836278378260736270367362073867097307925
+-9812734012837410982345719208345712908357412903587192048571920458712.\
+-23957182459817249058172945781
++743254373452738527738271017382731273127385217330175370735207352073075\
++70358738257390761276072160719802671980267018728630178.708268102768052\
++176021786784127612768127086782782176817317820783071097801773817867801\
++2767377058785378278207385237085237803278203782037237582795870
++-75675273278527385127372853785273825783728367896573852738527298367837\
++2867327835672967385278372637862738627836279863782673862783670.7173817\
++836173871836718637861073861783678160376017836701860376017810773527837\
++2832783728367826738627836278378260736270367362073867097307925
++9812734012837410982345719208345712908357412903587192048571920458712.2\
++3957182459817249058172945781
+diff --git a/testsuite/dc_divmod_results.txt b/testsuite/dc_divmod_results.txt
+index c55e9303d..ee91ee88c 100644
+--- a/testsuite/dc_divmod_results.txt
++++ b/testsuite/dc_divmod_results.txt
+@@ -58,8 +58,8 @@
+ 100864416620775.31076855630746548983
+ -53336.193401942302558132911110799109649707477
+ .00000000052530099381
+-.0000000000000000000000000000000000000000000000000000000000000001907\
+-266929376630027064745963897
++.00000000000000000000000000000000000000000000000000000000000000019072\
++66929376630027064745963897
+ 42612515855353136519261264261472677699404182.78776061098893912189
+ 0
+ 0
+@@ -121,6 +121,6 @@
+ 100864416620775
+ -3878923750692883.7238596702834756902
+ 0
+-.0000000000000000000000000000000000000000000184866017689020776005643\
+-3621086
++.00000000000000000000000000000000000000000001848660176890207760056433\
++621086
+ 42612515855353136519261264261472677699404182
+diff --git a/testsuite/dc_multiply_results.txt b/testsuite/dc_multiply_results.txt
+index 9666059a5..aaf3a20fc 100644
+--- a/testsuite/dc_multiply_results.txt
++++ b/testsuite/dc_multiply_results.txt
+@@ -15,8 +15,8 @@
+ 3543531533584430580556128344529291738
+ 568600835566479683035874339053.4411638427543228060
+ 7487566285885.8557453089005171423976251098
+-373846412427291014394738378015501363938345620046.7869650248829232267\
+-2297002026819
++373846412427291014394738378015501363938345620046.78696502488292322672\
++297002026819
+ -1
+ -2
+ -2751507058396910892
+diff --git a/testsuite/dc_power_results.txt b/testsuite/dc_power_results.txt
+index 997f44f59..dc5d56766 100644
+--- a/testsuite/dc_power_results.txt
++++ b/testsuite/dc_power_results.txt
+@@ -10,15 +10,15 @@
+ 18927361346
+ .23523785962738592635777
+ 328956734869213746.89782398457234
+-16473742664221279051571200630760751138799221376964991600670000200609\
+-08006052596520320731708604393844468006290371918262741885989163144389\
+-39367835091560809036359941703341471396407660150658436796925310445979\
+-21333166245765946557344383284626113908419359990042883048537750217279\
+-17481980123593363177308481941550382845381799410533956718500484099889\
+-610805653325917409549921909941664118421333562129
++164737426642212790515712006307607511387992213769649916006700002006090\
++800605259652032073170860439384446800629037191826274188598916314438939\
++367835091560809036359941703341471396407660150658436796925310445979213\
++331662457659465573443832846261139084193599900428830485377502172791748\
++198012359336317730848194155038284538179941053395671850048409988961080\
++5653325917409549921909941664118421333562129
+ 0
+-43287877285033571298394739716218787350087163435619825150259705419.98\
+-016445740928054425
++43287877285033571298394739716218787350087163435619825150259705419.980\
++16445740928054425
+ 1.00000000000000000000
+ .50000000000000000000
+ .10000000000000000000
+@@ -31,27 +31,27 @@
+ 1
+ -2
+ 4
+-14997322375665265051328725757939209353051902095893907150382724666290\
+-49749481660976421019742616298227588464420182758442163654172400528243\
+-00885441207762486233574213374503090372518590691583139696652847404883\
+-08573912261119588874308960204159666762789603037188471170006223907416\
+-60492840269152716750700089148882139254399347568222390231015487895905\
+-73727080561379177721440905866857248917982113340543176658480139248897\
+-54802503253413282808814063861470711399810899724515727713334909764746\
+-27910290211411231279325882505708287941671508154740003122373284699097\
+-78346501539634198926772266511968381368929692275950529960923432771985\
+-12597189390708050983487158873301681237787429436264801751664042999180\
+-3448659818912436089
+-11478830555358864333472551120140548480416206583184496764727387456058\
+-792742209537931243951391229607936
++149973223756652650513287257579392093530519020958939071503827246662904\
++974948166097642101974261629822758846442018275844216365417240052824300\
++885441207762486233574213374503090372518590691583139696652847404883085\
++739122611195888743089602041596667627896030371884711700062239074166049\
++284026915271675070008914888213925439934756822239023101548789590573727\
++080561379177721440905866857248917982113340543176658480139248897548025\
++032534132828088140638614707113998108997245157277133349097647462791029\
++021141123127932588250570828794167150815474000312237328469909778346501\
++539634198926772266511968381368929692275950529960923432771985125971893\
++907080509834871588733016812377874294362648017516640429991803448659818\
++912436089
++114788305553588643334725511201405484804162065831844967647273874560587\
++92742209537931243951391229607936
+ -.00000000000000017759
+--2067373624686414405470850679965010694114490999957199847684803894306\
+-56243666149296582304582679590231948238805965642713928910384741502707\
+-.23224479257866798694
+-11606078892843496082360561256965139908586179418605021706789617179085\
+-85768049299693425729565480314913006780973928345684673490252494674985\
+-0186164225375953066263609289359900615361965737717208159874390.293769\
+-70206344604971
++-20673736246864144054708506799650106941144909999571998476848038943065\
++6243666149296582304582679590231948238805965642713928910384741502707.2\
++3224479257866798694
++116060788928434960823605612569651399085861794186050217067896171790858\
++576804929969342572956548031491300678097392834568467349025249467498501\
++86164225375953066263609289359900615361965737717208159874390.293769702\
++06344604971
+ -1.00000000000000000000
+ 1.00000000000000000000
+ -.50000000000000000000
+@@ -59,14 +59,14 @@
+ 0
+ 0
+ -.00000000000002874159
+--1945134149489344891879057554905782841936258356736314337975569799825\
+-94091939572752348215929683891336730843553721422164737465108229034947\
+-87333189564755763444242676978610321731298729194092653999616928308494\
+-26419468484566422775668903315088810746121307679948574976162519479931\
+-18935243698160094347216562490000767121041786977792546155155934655909\
+-14123833869470494708767968978717730012864171105540029928688274136791\
+-98175053824022144065005509214813689232148489884560100200475909009813\
+-340098100705258138.98542904577525702068
++-19451341494893448918790575549057828419362583567363143379755697998259\
++409193957275234821592968389133673084355372142216473746510822903494787\
++333189564755763444242676978610321731298729194092653999616928308494264\
++194684845664227756689033150888107461213076799485749761625194799311893\
++524369816009434721656249000076712104178697779254615515593465590914123\
++833869470494708767968978717730012864171105540029928688274136791981750\
++538240221440650055092148136892321484898845601002004759090098133400981\
++00705258138.98542904577525702068
+ 0
+ 0
+ 0
+diff --git a/testsuite/dc_subtract_results.txt b/testsuite/dc_subtract_results.txt
+index 9f7726254..0a9762381 100644
+--- a/testsuite/dc_subtract_results.txt
++++ b/testsuite/dc_subtract_results.txt
+@@ -8,15 +8,15 @@
+ 2874519803456326214611
+ 9000000000000000000000000000000000000001
+ 1
+-9000000000000000000000000000000000000000.000000000000000000000000000\
+-00000001
++9000000000000000000000000000000000000000.0000000000000000000000000000\
++0000001
+ .0000000000000000000000000000000001
+-9999999999999999999999999999999999999999.999999999999999999999999999\
++9999999999999999999999999999999999999999.9999999999999999999999999999\
++9999999999999999999999999999999999999999999999999999999999
++10000000000000000000000000000000000000000.999999999999999999999999999\
+ 99999999999999999999999999999999999999999999999999999999999
+-10000000000000000000000000000000000000000.99999999999999999999999999\
+-999999999999999999999999999999999999999999999999999999999999
+-10000000000000000000000000000000000000000.00000000009999999999999999\
+-99999999999999999999999999999999999999999999999999
++10000000000000000000000000000000000000000.000000000099999999999999999\
++9999999999999999999999999999999999999999999999999
+ -8
+ -182934721309467230894628759280719690
+ 1245723576605103923392087218483
+diff --git a/util-linux/hwclock.c b/util-linux/hwclock.c
+index 25db7cdad..723b09589 100644
+--- a/util-linux/hwclock.c
++++ b/util-linux/hwclock.c
+@@ -79,7 +79,7 @@ static time_t read_rtc(const char **pp_rtcname, struct timeval *sys_tv, int utc)
+ 		int before = tm_time.tm_sec;
+ 		while (1) {
+ 			rtc_read_tm(&tm_time, fd);
+-			gettimeofday(sys_tv, NULL);
++			xgettimeofday(sys_tv);
+ 			if (before != (int)tm_time.tm_sec)
+ 				break;
+ 		}
+@@ -205,7 +205,7 @@ static void from_sys_clock(const char **pp_rtcname, int utc)
+ 	int rtc;
+ 
+ 	rtc = rtc_xopen(pp_rtcname, O_WRONLY);
+-	gettimeofday(&tv, NULL);
++	xgettimeofday(&tv);
+ 	/* Prepare tm_time */
+ 	if (sizeof(time_t) == sizeof(tv.tv_sec)) {
+ 		if (utc)
+@@ -253,7 +253,7 @@ static void from_sys_clock(const char **pp_rtcname, int utc)
+ 		unsigned rem_usec;
+ 		time_t t;
+ 
+-		gettimeofday(&tv, NULL);
++		xgettimeofday(&tv);
+ 
+ 		t = tv.tv_sec;
+ 		rem_usec = 1000000 - tv.tv_usec;
+@@ -274,7 +274,7 @@ static void from_sys_clock(const char **pp_rtcname, int utc)
+ 		}
+ 
+ 		/* gmtime/localtime took some time, re-get cur time */
+-		gettimeofday(&tv, NULL);
++		xgettimeofday(&tv);
+ 
+ 		if (tv.tv_sec < t /* we are still in old second */
+ 		 || (tv.tv_sec == t && tv.tv_usec < adj) /* not too far into next second */
+diff --git a/util-linux/mdev.c b/util-linux/mdev.c
+index ebf83d1a3..dbbcbc655 100644
+--- a/util-linux/mdev.c
++++ b/util-linux/mdev.c
+@@ -963,7 +963,7 @@ static void load_firmware(const char *firmware, const char *sysfs_path)
+ static char *curtime(void)
+ {
+ 	struct timeval tv;
+-	gettimeofday(&tv, NULL);
++	xgettimeofday(&tv);
+ 	sprintf(
+ 		strftime_HHMMSS(G.timestr, sizeof(G.timestr), &tv.tv_sec),
+ 		".%06u",
+diff --git a/util-linux/script.c b/util-linux/script.c
+index 4eac5e94f..963435335 100644
+--- a/util-linux/script.c
++++ b/util-linux/script.c
+@@ -172,7 +172,7 @@ int script_main(int argc UNUSED_PARAM, char **argv)
+ 						struct timeval tv;
+ 						double newtime;
+ 
+-						gettimeofday(&tv, NULL);
++						xgettimeofday(&tv);
+ 						newtime = tv.tv_sec + (double) tv.tv_usec / 1000000;
+ 						fprintf(timing_fp, "%f %u\n", newtime - oldtime, count);
+ 						oldtime = newtime;
