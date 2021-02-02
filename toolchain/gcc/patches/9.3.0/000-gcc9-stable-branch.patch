@@ -21206,6 +21206,94 @@ new file mode 100755
      if (aliassym)
      {
          FuncDeclaration *fd = aliassym->isFuncLiteralDeclaration();
+--- a/gcc/d/dmd/dmangle.c
++++ b/gcc/d/dmd/dmangle.c
+@@ -176,7 +176,7 @@ public:
+     {
+         visit((Type *)t);
+         if (t->dim)
+-            buf->printf("%llu", t->dim->toInteger());
++            buf->print(t->dim->toInteger());
+         if (t->next)
+             visitWithMask(t->next, t->mod);
+     }
+@@ -274,7 +274,8 @@ public:
+         visit((Type *)t);
+         const char *name = t->ident->toChars();
+         size_t len = strlen(name);
+-        buf->printf("%u%s", (unsigned)len, name);
++        buf->print(len);
++        buf->writestring(name);
+     }
+ 
+     void visit(TypeEnum *t)
+@@ -396,7 +397,7 @@ public:
+             s->error("excessive length %llu for symbol, possible recursive expansion?", len);
+         else
+         {
+-            buf->printf("%llu", (ulonglong)len);
++            buf->print(len);
+             buf->write(id, len);
+         }
+     }
+@@ -614,9 +615,15 @@ public:
+     void visit(IntegerExp *e)
+     {
+         if ((sinteger_t)e->value < 0)
+-            buf->printf("N%lld", -e->value);
++        {
++            buf->writeByte('N');
++            buf->print(-e->value);
++        }
+         else
+-            buf->printf("i%lld",  e->value);
++        {
++            buf->writeByte('i');
++            buf->print(e->value);
++        }
+     }
+ 
+     void visit(RealExp *e)
+@@ -738,7 +745,8 @@ public:
+         }
+         buf->reserve(1 + 11 + 2 * qlen);
+         buf->writeByte(m);
+-        buf->printf("%d_", (int)qlen); // nbytes <= 11
++        buf->print(qlen);
++        buf->writeByte('_');    // nbytes <= 11
+ 
+         for (utf8_t *p = (utf8_t *)buf->data + buf->offset, *pend = p + 2 * qlen;
+              p < pend; p += 2, ++q)
+@@ -754,7 +762,8 @@ public:
+     void visit(ArrayLiteralExp *e)
+     {
+         size_t dim = e->elements ? e->elements->dim : 0;
+-        buf->printf("A%u", dim);
++        buf->writeByte('A');
++        buf->print(dim);
+         for (size_t i = 0; i < dim; i++)
+         {
+             e->getElement(i)->accept(this);
+@@ -764,7 +773,8 @@ public:
+     void visit(AssocArrayLiteralExp *e)
+     {
+         size_t dim = e->keys->dim;
+-        buf->printf("A%u", dim);
++        buf->writeByte('A');
++        buf->print(dim);
+         for (size_t i = 0; i < dim; i++)
+         {
+             (*e->keys)[i]->accept(this);
+@@ -775,7 +785,8 @@ public:
+     void visit(StructLiteralExp *e)
+     {
+         size_t dim = e->elements ? e->elements->dim : 0;
+-        buf->printf("S%u", dim);
++        buf->writeByte('S');
++        buf->print(dim);
+         for (size_t i = 0; i < dim; i++)
+         {
+             Expression *ex = (*e->elements)[i];
 --- a/gcc/d/dmd/expressionsem.c
 +++ b/gcc/d/dmd/expressionsem.c
 @@ -6837,6 +6837,7 @@ public:
@@ -21216,6 +21304,56 @@ new file mode 100755
          }
          Expression *e = exp->op_overload(sc);
          if (e)
+--- a/gcc/d/dmd/root/outbuffer.c
++++ b/gcc/d/dmd/root/outbuffer.c
+@@ -325,6 +325,37 @@ void OutBuffer::printf(const char *format, ...)
+     va_end(ap);
+ }
+ 
++/**************************************
++ * Convert `u` to a string and append it to the buffer.
++ * Params:
++ *  u = integral value to append
++ */
++void OutBuffer::print(unsigned long long u)
++{
++    unsigned long long value = u;
++    char buf[20];
++    const unsigned radix = 10;
++
++    size_t i = sizeof(buf);
++    do
++    {
++        if (value < radix)
++        {
++            unsigned char x = (unsigned char)value;
++            buf[--i] = (char)(x + '0');
++            break;
++        }
++        else
++        {
++            unsigned char x = (unsigned char)(value % radix);
++            value = value / radix;
++            buf[--i] = (char)(x + '0');
++        }
++    } while (value);
++
++    write(buf + i, sizeof(buf) - i);
++}
++
+ void OutBuffer::bracket(char left, char right)
+ {
+     reserve(2);
+--- a/gcc/d/dmd/root/outbuffer.h
++++ b/gcc/d/dmd/root/outbuffer.h
+@@ -62,6 +62,7 @@ public:
+     void fill0(size_t nbytes);
+     void vprintf(const char *format, va_list args);
+     void printf(const char *format, ...);
++    void print(unsigned long long u);
+     void bracket(char left, char right);
+     size_t bracket(size_t i, const char *left, size_t j, const char *right);
+     void spread(size_t offset, size_t nbytes);
 --- a/gcc/d/expr.cc
 +++ b/gcc/d/expr.cc
 @@ -691,7 +691,6 @@ public:
