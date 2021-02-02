@@ -1,4 +1,4 @@
-cmake_bool = $(patsubst %,-D%:BOOL=$(if $($(1)),ON,OFF),$(2))
+acmake_bool = $(patsubst %,-D%:BOOL=$(if $($(1)),ON,OFF),$(2))
 
 PKG_INSTALL:=1
 
@@ -84,6 +84,7 @@ define Build/Configure/Default
 			-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=TRUE \
 			-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=FALSE \
 			-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=TRUE \
+			-Wno-dev \
 			$(CMAKE_OPTIONS) \
 		$(CMAKE_SOURCE_DIR) \
 	)
@@ -129,6 +130,7 @@ define Host/Configure/Default
 			-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=TRUE \
 			-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=FALSE \
 			-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=TRUE \
+			-Wno-dev \
 			$(CMAKE_HOST_OPTIONS) \
 		$(HOST_CMAKE_SOURCE_DIR) \
 	)
