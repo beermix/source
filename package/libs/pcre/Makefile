@@ -62,10 +62,12 @@ define Package/libpcrecpp
   DEPENDS:=+libpcre $(CXX_DEPENDS)
 endef
 
+
 HOST_CONFIGURE_ARGS += \
 	--enable-utf8 \
 	--enable-unicode-properties \
 	--enable-pcre16 \
+	--with-match-limit-recursion=16000 \
 	--enable-cpp
 
 TARGET_CFLAGS += $(FPIC)
@@ -76,6 +78,7 @@ CONFIGURE_ARGS += \
 	--enable-pcre16 \
 	--enable-pcre32 \
 	$(if $(CONFIG_PCRE_JIT_ENABLED),--enable-jit,--disable-jit) \
+	--with-match-limit-recursion=16000 \
 	$(if $(CONFIG_PACKAGE_libpcrecpp),--enable,--disable)-cpp
 
 MAKE_FLAGS += \
