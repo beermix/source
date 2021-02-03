@@ -7687,7 +7687,7 @@ new file mode 100755
 +++ b/gcc/DATESTAMP
 @@ -1 +1 @@
 -20200312
-+20210201
++20210203
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -1687,6 +1687,10 @@ $(FULL_DRIVER_NAME): ./xgcc
@@ -7784,7 +7784,34 @@ new file mode 100755
  	* GCC 9.3.0 released.
 --- a/gcc/ada/gcc-interface/decl.c
 +++ b/gcc/ada/gcc-interface/decl.c
-@@ -2433,8 +2433,8 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
+@@ -2162,14 +2162,16 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
+ 	  }
+ 	else
+ 	  {
++	    /* We make the fields addressable for the sake of compatibility
++	       with languages for which the regular fields are addressable.  */
+ 	    tem
+ 	      = create_field_decl (get_identifier ("P_ARRAY"),
+ 				   ptr_type_node, gnu_fat_type,
+-				   NULL_TREE, NULL_TREE, 0, 0);
++				   NULL_TREE, NULL_TREE, 0, 1);
+ 	    DECL_CHAIN (tem)
+ 	      = create_field_decl (get_identifier ("P_BOUNDS"),
+ 				   gnu_ptr_template, gnu_fat_type,
+-				   NULL_TREE, NULL_TREE, 0, 0);
++				   NULL_TREE, NULL_TREE, 0, 1);
+ 	    finish_fat_pointer_type (gnu_fat_type, tem);
+ 	    SET_TYPE_UNCONSTRAINED_ARRAY (gnu_fat_type, gnu_type);
+ 	  }
+@@ -2275,7 +2277,6 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
+ 	    = chainon (gnu_template_fields, gnu_temp_fields[index]);
+ 	finish_record_type (gnu_template_type, gnu_template_fields, 0,
+ 			    debug_info_p);
+-	TYPE_READONLY (gnu_template_type) = 1;
+ 
+ 	/* If Component_Size is not already specified, annotate it with the
+ 	   size of the component.  */
+@@ -2433,8 +2434,8 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
  	      tree gnu_base_orig_max = TYPE_MAX_VALUE (gnu_base_index_type);
  	      tree gnu_min, gnu_max, gnu_high;
  
@@ -7795,7 +7822,7 @@ new file mode 100755
  		 bounds of the index type of the base array type.  This will
  		 make it possible to calculate the maximum size of the record
  		 type more conservatively.  This may have already been done by
-@@ -2442,8 +2442,8 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
+@@ -2442,8 +2443,8 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
  		 there will be a conversion that needs to be removed first.  */
  	      if (CONTAINS_PLACEHOLDER_P (gnu_orig_min)
  		  && TYPE_RM_SIZE (gnu_base_index_type)
@@ -7806,7 +7833,7 @@ new file mode 100755
  		{
  		  gnu_orig_min = remove_conversions (gnu_orig_min, false);
  		  TREE_TYPE (gnu_orig_min)
-@@ -2454,8 +2454,8 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
+@@ -2454,8 +2455,8 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
  
  	      if (CONTAINS_PLACEHOLDER_P (gnu_orig_max)
  		  && TYPE_RM_SIZE (gnu_base_index_type)
@@ -7817,7 +7844,155 @@ new file mode 100755
  		{
  		  gnu_orig_max = remove_conversions (gnu_orig_max, false);
  		  TREE_TYPE (gnu_orig_max)
-@@ -8673,11 +8673,15 @@ build_subst_list (Entity_Id gnat_subtype, Entity_Id gnat_type, bool definition)
+@@ -2997,15 +2998,24 @@ gnat_to_gnu_entity (Entity_Id gnat_entity, tree gnu_expr, bool definition)
+ 			|| Present (Parent_Subtype (gnat_entity)));
+ 	  }
+ 
+-	/* Make a node for the record.  If we are not defining the record,
+-	   suppress expanding incomplete types.  */
++	/* Make a node for the record type.  */
+ 	gnu_type = make_node (tree_code_for_record_type (gnat_entity));
+ 	TYPE_NAME (gnu_type) = gnu_entity_name;
+ 	TYPE_PACKED (gnu_type) = (packed != 0) || has_align || has_rep;
+ 	TYPE_REVERSE_STORAGE_ORDER (gnu_type)
+ 	  = Reverse_Storage_Order (gnat_entity);
++
++	/* If the record type has discriminants, pointers to it may also point
++	   to constrained subtypes of it, so mark it as may_alias for LTO.  */
++	if (has_discr)
++	  prepend_one_attribute
++	    (&attr_list, ATTR_MACHINE_ATTRIBUTE,
++	     get_identifier ("may_alias"), NULL_TREE,
++	     gnat_entity);
++
+ 	process_attributes (&gnu_type, &attr_list, true, gnat_entity);
+ 
++	/* If we are not defining it, suppress expanding incomplete types.  */
+ 	if (!definition)
+ 	  {
+ 	    defer_incomplete_level++;
+@@ -8138,12 +8148,12 @@ components_to_record (Node_Id gnat_component_list, Entity_Id gnat_record_type,
+   if (p_gnu_rep_list && gnu_rep_list)
+     *p_gnu_rep_list = chainon (*p_gnu_rep_list, gnu_rep_list);
+ 
+-  /* Deal with the annoying case of an extension of a record with variable size
+-     and partial rep clause, for which the _Parent field is forced at offset 0
+-     and has variable size, which we do not support below.  Note that we cannot
+-     do it if the field has fixed size because we rely on the presence of the
+-     REP part built below to trigger the reordering of the fields in a derived
+-     record type when all the fields have a fixed position.  */
++  /* Deal with the case of an extension of a record type with variable size and
++     partial rep clause, for which the _Parent field is forced at offset 0 and
++     has variable size.  Note that we cannot do it if the field has fixed size
++     because we rely on the presence of the REP part built below to trigger the
++     reordering of the fields in a derived record type when all the fields have
++     a fixed position.  */
+   else if (gnu_rep_list
+ 	   && !DECL_CHAIN (gnu_rep_list)
+ 	   && TREE_CODE (DECL_SIZE (gnu_rep_list)) != INTEGER_CST
+@@ -8161,33 +8171,52 @@ components_to_record (Node_Id gnat_component_list, Entity_Id gnat_record_type,
+      record, before the others, if we also have fields without rep clause.  */
+   else if (gnu_rep_list)
+     {
+-      tree gnu_rep_type, gnu_rep_part;
+-      int i, len = list_length (gnu_rep_list);
+-      tree *gnu_arr = XALLOCAVEC (tree, len);
++      tree gnu_parent, gnu_rep_type;
+ 
+       /* If all the fields have a rep clause, we can do a flat layout.  */
+       layout_with_rep = !gnu_field_list
+ 			&& (!gnu_variant_part || variants_have_rep);
++
++      /* Same as above but the extension itself has a rep clause, in which case
++	 we need to set aside the _Parent field to lay out the REP part.  */
++      if (TREE_CODE (DECL_SIZE (gnu_rep_list)) != INTEGER_CST
++	  && !layout_with_rep
++	  && !variants_have_rep
++	  && first_free_pos
++	  && integer_zerop (first_free_pos)
++	  && integer_zerop (bit_position (gnu_rep_list)))
++	{
++	  gnu_parent = gnu_rep_list;
++	  gnu_rep_list = DECL_CHAIN (gnu_rep_list);
++	}
++      else
++	gnu_parent = NULL_TREE;
++
+       gnu_rep_type
+ 	= layout_with_rep ? gnu_record_type : make_node (RECORD_TYPE);
+ 
+-      for (gnu_field = gnu_rep_list, i = 0;
+-	   gnu_field;
+-	   gnu_field = DECL_CHAIN (gnu_field), i++)
+-	gnu_arr[i] = gnu_field;
++      /* Sort the fields in order of increasing bit position.  */
++      const int len = list_length (gnu_rep_list);
++      tree *gnu_arr = XALLOCAVEC (tree, len);
++
++      gnu_field = gnu_rep_list;
++      for (int i = 0; i < len; i++)
++	{
++	  gnu_arr[i] = gnu_field;
++	  gnu_field = DECL_CHAIN (gnu_field);
++	}
+ 
+       qsort (gnu_arr, len, sizeof (tree), compare_field_bitpos);
+ 
+-      /* Put the fields in the list in order of increasing position, which
+-	 means we start from the end.  */
+       gnu_rep_list = NULL_TREE;
+-      for (i = len - 1; i >= 0; i--)
++      for (int i = len - 1; i >= 0; i--)
+ 	{
+ 	  DECL_CHAIN (gnu_arr[i]) = gnu_rep_list;
+ 	  gnu_rep_list = gnu_arr[i];
+ 	  DECL_CONTEXT (gnu_arr[i]) = gnu_rep_type;
+ 	}
+ 
++      /* Do the layout of the REP part, if any.  */
+       if (layout_with_rep)
+ 	gnu_field_list = gnu_rep_list;
+       else
+@@ -8196,14 +8225,36 @@ components_to_record (Node_Id gnat_component_list, Entity_Id gnat_record_type,
+ 	    = create_concat_name (gnat_record_type, "REP");
+ 	  TYPE_REVERSE_STORAGE_ORDER (gnu_rep_type)
+ 	    = TYPE_REVERSE_STORAGE_ORDER (gnu_record_type);
+-	  finish_record_type (gnu_rep_type, gnu_rep_list, 1, debug_info);
++	  finish_record_type (gnu_rep_type, gnu_rep_list, 1, false);
+ 
+ 	  /* If FIRST_FREE_POS is nonzero, we need to ensure that the fields
+ 	     without rep clause are laid out starting from this position.
+ 	     Therefore, we force it as a minimal size on the REP part.  */
+-	  gnu_rep_part
++	  tree gnu_rep_part
+ 	    = create_rep_part (gnu_rep_type, gnu_record_type, first_free_pos);
+ 
++	  /* If this is an extension, put back the _Parent field as the first
++	     field of the REP part at offset 0 and update its layout.  */
++	  if (gnu_parent)
++	    {
++	      const unsigned int align = DECL_ALIGN (gnu_parent);
++	      DECL_CHAIN (gnu_parent) = TYPE_FIELDS (gnu_rep_type);
++	      TYPE_FIELDS (gnu_rep_type) = gnu_parent;
++	      DECL_CONTEXT (gnu_parent) = gnu_rep_type;
++	      if (align > TYPE_ALIGN (gnu_rep_type))
++		{
++		  SET_TYPE_ALIGN (gnu_rep_type, align);
++		  TYPE_SIZE (gnu_rep_type)
++		    = round_up (TYPE_SIZE (gnu_rep_type), align);
++		  TYPE_SIZE_UNIT (gnu_rep_type)
++		    = round_up (TYPE_SIZE_UNIT (gnu_rep_type), align);
++		  SET_DECL_ALIGN (gnu_rep_part, align);
++		}
++	    }
++
++	  if (debug_info)
++	    rest_of_record_type_compilation (gnu_rep_type);
++
+ 	  /* Chain the REP part at the beginning of the field list.  */
+ 	  DECL_CHAIN (gnu_rep_part) = gnu_field_list;
+ 	  gnu_field_list = gnu_rep_part;
+@@ -8673,11 +8724,15 @@ build_subst_list (Entity_Id gnat_subtype, Entity_Id gnat_type, bool definition)
      if (!Is_Access_Type (Etype (Node (gnat_constr))))
        {
  	tree gnu_field = gnat_to_gnu_field_decl (gnat_discrim);
@@ -8056,7 +8231,32 @@ new file mode 100755
  			     virtual_offset, gnu_alias);
 --- a/gcc/ada/gcc-interface/utils.c
 +++ b/gcc/ada/gcc-interface/utils.c
-@@ -1387,7 +1387,7 @@ maybe_pad_type (tree type, tree size, unsigned int align,
+@@ -388,6 +388,11 @@ make_dummy_type (Entity_Id gnat_type)
+     = create_type_stub_decl (TYPE_NAME (gnu_type), gnu_type);
+   if (Is_By_Reference_Type (gnat_equiv))
+     TYPE_BY_REFERENCE_P (gnu_type) = 1;
++  if (Has_Discriminants (gnat_equiv))
++    decl_attributes (&gnu_type,
++		     tree_cons (get_identifier ("may_alias"), NULL_TREE,
++				NULL_TREE),
++		     ATTR_FLAG_TYPE_IN_PLACE);
+ 
+   SET_DUMMY_NODE (gnat_equiv, gnu_type);
+ 
+@@ -437,10 +442,10 @@ build_dummy_unc_pointer_types (Entity_Id gnat_desig_type, tree gnu_desig_type)
+     = create_type_stub_decl (create_concat_name (gnat_desig_type, "XUP"),
+ 			     gnu_fat_type);
+   fields = create_field_decl (get_identifier ("P_ARRAY"), gnu_ptr_array,
+-			      gnu_fat_type, NULL_TREE, NULL_TREE, 0, 0);
++			      gnu_fat_type, NULL_TREE, NULL_TREE, 0, 1);
+   DECL_CHAIN (fields)
+     = create_field_decl (get_identifier ("P_BOUNDS"), gnu_ptr_template,
+-			 gnu_fat_type, NULL_TREE, NULL_TREE, 0, 0);
++			 gnu_fat_type, NULL_TREE, NULL_TREE, 0, 1);
+   finish_fat_pointer_type (gnu_fat_type, fields);
+   SET_TYPE_UNCONSTRAINED_ARRAY (gnu_fat_type, gnu_desig_type);
+   /* Suppress debug info until after the type is completed.  */
+@@ -1387,7 +1392,7 @@ maybe_pad_type (tree type, tree size, unsigned int align,
      {
        tree packable_type = make_packable_type (type, true);
        if (TYPE_MODE (packable_type) != BLKmode
@@ -8065,7 +8265,89 @@ new file mode 100755
          type = packable_type;
      }
  
-@@ -3328,6 +3328,12 @@ create_subprog_decl (tree name, tree asm_name, tree type, tree param_decl_list,
+@@ -1861,7 +1866,6 @@ finish_record_type (tree record_type, tree field_list, int rep_level,
+ 	this_ada_size = this_size;
+ 
+       const bool variant_part = (TREE_CODE (type) == QUAL_UNION_TYPE);
+-      const bool variant_part_at_zero = variant_part && integer_zerop (pos);
+ 
+       /* Clear DECL_BIT_FIELD for the cases layout_decl does not handle.  */
+       if (DECL_BIT_FIELD (field)
+@@ -1904,7 +1908,7 @@ finish_record_type (tree record_type, tree field_list, int rep_level,
+       /* Clear DECL_BIT_FIELD_TYPE for a variant part at offset 0, it's simply
+ 	 not supported by the DECL_BIT_FIELD_REPRESENTATIVE machinery because
+ 	 the variant part is always the last field in the list.  */
+-      if (variant_part_at_zero)
++      if (variant_part && integer_zerop (pos))
+ 	DECL_BIT_FIELD_TYPE (field) = NULL_TREE;
+ 
+       /* If we still have DECL_BIT_FIELD set at this point, we know that the
+@@ -1939,18 +1943,20 @@ finish_record_type (tree record_type, tree field_list, int rep_level,
+ 	case RECORD_TYPE:
+ 	  /* Since we know here that all fields are sorted in order of
+ 	     increasing bit position, the size of the record is one
+-	     higher than the ending bit of the last field processed,
+-	     unless we have a variant part at offset 0, since in this
+-	     case we might have a field outside the variant part that
+-	     has a higher ending position; so use a MAX in this case.
+-	     Also, if this field is a QUAL_UNION_TYPE, we need to take
+-	     into account the previous size in the case of empty variants.  */
++	     higher than the ending bit of the last field processed
++	     unless we have a rep clause, because we might be processing
++	     the REP part of a record with a variant part for which the
++	     variant part has a rep clause but not the fixed part, in
++	     which case this REP part may contain overlapping fields
++	     and thus needs to be treated like a union tyoe above, so
++	     use a MAX in that case.  Also, if this field is a variant
++	     part, we need to take into account the previous size in
++	     the case of empty variants.  */
+ 	  ada_size
+-	    = merge_sizes (ada_size, pos, this_ada_size, variant_part,
+-			   variant_part_at_zero);
++	    = merge_sizes (ada_size, pos, this_ada_size, rep_level > 0,
++			   variant_part);
+ 	  size
+-	    = merge_sizes (size, pos, this_size, variant_part,
+-			   variant_part_at_zero);
++	    = merge_sizes (size, pos, this_size, rep_level > 0, variant_part);
+ 	  break;
+ 
+ 	default:
+@@ -2229,14 +2235,14 @@ rest_of_record_type_compilation (tree record_type)
+ }
+ 
+ /* Utility function of above to merge LAST_SIZE, the previous size of a record
+-   with FIRST_BIT and SIZE that describe a field.  SPECIAL is true if this
+-   represents a QUAL_UNION_TYPE in which case we must look for COND_EXPRs and
+-   replace a value of zero with the old size.  If MAX is true, we take the
++   with FIRST_BIT and SIZE that describe a field.  If MAX is true, we take the
+    MAX of the end position of this field with LAST_SIZE.  In all other cases,
+-   we use FIRST_BIT plus SIZE.  Return an expression for the size.  */
++   we use FIRST_BIT plus SIZE.  SPECIAL is true if it's for a QUAL_UNION_TYPE,
++   in which case we must look for COND_EXPRs and replace a value of zero with
++   the old size.  Return an expression for the size.  */
+ 
+ static tree
+-merge_sizes (tree last_size, tree first_bit, tree size, bool special, bool max)
++merge_sizes (tree last_size, tree first_bit, tree size, bool max, bool special)
+ {
+   tree type = TREE_TYPE (last_size);
+   tree new_size;
+@@ -2253,11 +2259,11 @@ merge_sizes (tree last_size, tree first_bit, tree size, bool special, bool max)
+ 			    integer_zerop (TREE_OPERAND (size, 1))
+ 			    ? last_size : merge_sizes (last_size, first_bit,
+ 						       TREE_OPERAND (size, 1),
+-						       1, max),
++						       max, special),
+ 			    integer_zerop (TREE_OPERAND (size, 2))
+ 			    ? last_size : merge_sizes (last_size, first_bit,
+ 						       TREE_OPERAND (size, 2),
+-						       1, max));
++						       max, special));
+ 
+   /* We don't need any NON_VALUE_EXPRs and they can confuse us (especially
+      when fed through SUBSTITUTE_IN_EXPR) into thinking that a constant
+@@ -3328,6 +3334,12 @@ create_subprog_decl (tree name, tree asm_name, tree type, tree param_decl_list,
  void
  finish_subprog_decl (tree decl, tree asm_name, tree type)
  {
@@ -8078,7 +8360,7 @@ new file mode 100755
    tree result_decl
      = build_decl (DECL_SOURCE_LOCATION (decl), RESULT_DECL, NULL_TREE,
  		  TREE_TYPE (type));
-@@ -3373,8 +3379,6 @@ finish_subprog_decl (tree decl, tree asm_name, tree type)
+@@ -3373,8 +3385,6 @@ finish_subprog_decl (tree decl, tree asm_name, tree type)
  void
  begin_subprog_body (tree subprog_decl)
  {
@@ -8087,7 +8369,7 @@ new file mode 100755
    announce_function (subprog_decl);
  
    /* This function is being defined.  */
-@@ -3391,10 +3395,6 @@ begin_subprog_body (tree subprog_decl)
+@@ -3391,10 +3401,6 @@ begin_subprog_body (tree subprog_decl)
       this function.  */
    gnat_pushlevel ();
  
@@ -8098,7 +8380,7 @@ new file mode 100755
    make_decl_rtl (subprog_decl);
  }
  
-@@ -5624,7 +5624,7 @@ can_materialize_object_renaming_p (Node_Id expr)
+@@ -5624,7 +5630,7 @@ can_materialize_object_renaming_p (Node_Id expr)
      {
        expr = Original_Node (expr);
  
@@ -13263,7 +13545,18 @@ new file mode 100755
  	(const (symbol_ref "((enum attr_tune) arm_tune)")))
 --- a/gcc/config/arm/arm.c
 +++ b/gcc/config/arm/arm.c
-@@ -18408,6 +18408,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -12730,7 +12730,9 @@ neon_vector_mem_operand (rtx op, int type, bool strict)
+   /* Allow post-increment by register for VLDn */
+   if (type == 2 && GET_CODE (ind) == POST_MODIFY
+       && GET_CODE (XEXP (ind, 1)) == PLUS
+-      && REG_P (XEXP (XEXP (ind, 1), 1)))
++      && REG_P (XEXP (XEXP (ind, 1), 1))
++      && REG_P (XEXP (ind, 0))
++      && rtx_equal_p (XEXP (ind, 0), XEXP (XEXP (ind, 1), 0)))
+      return true;
+ 
+   /* Match:
+@@ -18408,6 +18410,7 @@ output_move_double (rtx *operands, bool emit, int *count)
    if (code0 == REG)
      {
        unsigned int reg0 = REGNO (operands[0]);
@@ -13271,7 +13564,7 @@ new file mode 100755
  
        otherops[0] = gen_rtx_REG (SImode, 1 + reg0);
  
-@@ -18419,7 +18420,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18419,7 +18422,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  
  	  if (emit)
  	    {
@@ -13280,7 +13573,7 @@ new file mode 100755
  		  && !(fix_cm3_ldrd && reg0 == REGNO(XEXP (operands[1], 0))))
  		output_asm_insn ("ldrd%?\t%0, [%m1]", operands);
  	      else
-@@ -18428,7 +18429,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18428,7 +18431,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  	  break;
  
  	case PRE_INC:
@@ -13289,7 +13582,7 @@ new file mode 100755
  	  if (emit)
  	    output_asm_insn ("ldrd%?\t%0, [%m1, #8]!", operands);
  	  break;
-@@ -18436,7 +18437,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18436,7 +18439,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  	case PRE_DEC:
  	  if (emit)
  	    {
@@ -13298,7 +13591,7 @@ new file mode 100755
  		output_asm_insn ("ldrd%?\t%0, [%m1, #-8]!", operands);
  	      else
  		output_asm_insn ("ldmdb%?\t%m1!, %M0", operands);
-@@ -18446,7 +18447,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18446,7 +18449,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  	case POST_INC:
  	  if (emit)
  	    {
@@ -13307,7 +13600,7 @@ new file mode 100755
  		output_asm_insn ("ldrd%?\t%0, [%m1], #8", operands);
  	      else
  		output_asm_insn ("ldmia%?\t%m1!, %M0", operands);
-@@ -18454,7 +18455,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18454,7 +18457,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  	  break;
  
  	case POST_DEC:
@@ -13316,7 +13609,7 @@ new file mode 100755
  	  if (emit)
  	    output_asm_insn ("ldrd%?\t%0, [%m1], #-8", operands);
  	  break;
-@@ -18476,6 +18477,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18476,6 +18479,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  		  /* Registers overlap so split out the increment.  */
  		  if (emit)
  		    {
@@ -13324,7 +13617,7 @@ new file mode 100755
  		      output_asm_insn ("add%?\t%1, %1, %2", otherops);
  		      output_asm_insn ("ldrd%?\t%0, [%1] @split", otherops);
  		    }
-@@ -18487,10 +18489,11 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18487,10 +18491,11 @@ output_move_double (rtx *operands, bool emit, int *count)
  		  /* Use a single insn if we can.
  		     FIXME: IWMMXT allows offsets larger than ldrd can
  		     handle, fix these up with a pair of ldr.  */
@@ -13338,7 +13631,7 @@ new file mode 100755
  		    {
  		      if (emit)
  			output_asm_insn ("ldrd%?\t%0, [%1, %2]!", otherops);
-@@ -18513,10 +18516,11 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18513,10 +18518,11 @@ output_move_double (rtx *operands, bool emit, int *count)
  	      /* Use a single insn if we can.
  		 FIXME: IWMMXT allows offsets larger than ldrd can handle,
  		 fix these up with a pair of ldr.  */
@@ -13352,7 +13645,7 @@ new file mode 100755
  		{
  		  if (emit)
  		    output_asm_insn ("ldrd%?\t%0, [%1], %2", otherops);
-@@ -18547,7 +18551,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18547,7 +18553,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  	  operands[1] = otherops[0];
  	  if (emit)
  	    {
@@ -13361,7 +13654,7 @@ new file mode 100755
  		output_asm_insn ("ldrd%?\t%0, [%1]", operands);
  	      else
  		output_asm_insn ("ldmia%?\t%1, %M0", operands);
-@@ -18592,7 +18596,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18592,7 +18598,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  		    }
  		  otherops[0] = gen_rtx_REG(SImode, REGNO(operands[0]) + 1);
  		  operands[1] = otherops[0];
@@ -13370,7 +13663,7 @@ new file mode 100755
  		      && (REG_P (otherops[2])
  			  || TARGET_THUMB2
  			  || (CONST_INT_P (otherops[2])
-@@ -18653,7 +18657,7 @@ output_move_double (rtx *operands, bool emit, int *count)
+@@ -18653,7 +18659,7 @@ output_move_double (rtx *operands, bool emit, int *count)
  	      if (count)
  		*count = 2;
  
@@ -13379,7 +13672,7 @@ new file mode 100755
  		return "ldrd%?\t%0, [%1]";
  
  	      return "ldmia%?\t%1, %M0";
-@@ -31803,6 +31807,39 @@ arm_emit_speculation_barrier_function ()
+@@ -31803,6 +31809,39 @@ arm_emit_speculation_barrier_function ()
    emit_library_call (speculation_barrier_libfunc, LCT_NORMAL, VOIDmode);
  }
  
@@ -20851,7 +21144,25 @@ new file mode 100755
      }
 --- a/gcc/d/ChangeLog
 +++ b/gcc/d/ChangeLog
-@@ -1,3 +1,97 @@
+@@ -1,3 +1,115 @@
++2021-02-02  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	Backported from master:
++	2021-02-02  Iain Buclaw  <ibuclaw@gdcproject.org>
++
++	PR d/98921
++	* dmd/dmangle.c (Mangler::visit (TypeSArray *)): Use buf->print
++	  to format integer value.
++	(Mangler::visit (TypeIdentifier *)): Likewise.
++	(Mangler::toBuffer): Likewise.
++	(Mangler::visit (IntegerExp *)): Likewise.
++	(Mangler::visit (StringExp *)): Likewise.
++	(Mangler::visit (ArrayLiteralExp *)): Likewise.
++	(Mangler::visit (AssocArrayLiteralExp *)): Likewise.
++	(Mangler::visit (StructLiteralExp *)): Likewise.
++	* dmd/root/outbuffer.c (OutBuffer::print): New function.
++	* dmd/root/outbuffer.h (OutBuffer::print): Declare.
++
 +2020-12-15  Iain Buclaw  <ibuclaw@gdcproject.org>
 +
 +	Backported from master:
@@ -26534,6 +26845,7 @@ new file mode 100755
      warning (OPT_Wpadded, "padding struct size to alignment boundary");
  
    if (warn_packed && TREE_CODE (rli->t) == RECORD_TYPE
+new file mode 100644
 new file mode 100644
 new file mode 100644
 new file mode 100644
