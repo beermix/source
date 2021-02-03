@@ -40,9 +40,9 @@ ifeq ($(ARCH),mips64)
   endif
 endif
 
-#TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
-#TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
-#TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
+# TARGET_LDFLAGS=${TARGET_LDFLAGS/-znow/}
+# TARGET_CFLAGS=${TARGET_CFLAGS/-z,now/}
+# TARGET_CFLAGS=${TARGET_CFLAGS/-D_FORTIFY_SOURCE=1/}
 
 # TARGET_CFLAGS := $(filter-out -Wl,-z,now,$(TARGET_CFLAGS))
 # TARGET_LDFLAGS := $(filter-out -znow,$(TARGET_LDFLAGS))
@@ -58,7 +58,7 @@ GLIBC_CONFIGURE:= \
 	unset LD_LIBRARY_PATH; \
 	BUILD_CC="$(HOSTCC)" \
 	$(TARGET_CONFIGURE_OPTS) \
-	CFLAGS="-O2 -m32 -mstackrealign $(filter-out -D_FORTIFY_SOURCE=1 -fno-plt -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
+	CFLAGS="-O2 -m32 -mstackrealign $(filter-out -O2 -Os,$(call qstrip,$(TARGET_CFLAGS)))" \
 	libc_cv_slibdir="/lib" \
 	use_ldconfig=no \
 	$(HOST_BUILD_DIR)/$(GLIBC_PATH)configure \
