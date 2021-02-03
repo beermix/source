@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=polipo
-PKG_SOURCE_VERSION:=6ff0e2c
+PKG_SOURCE_VERSION:=7f4dd40
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zrampageX/polipo
+PKG_SOURCE_URL:=https://github.com/ssb22/polipo2
 
 PKG_CPE_ID:=cpe:/a:pps.jussieu:polipo
 
@@ -33,15 +33,15 @@ define Package/polipo/description
  by a larger group.
 endef
 
-TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
+# TARGET_CFLAGS := -Os $(filter-out -O%,$(TARGET_CFLAGS))
 
-TARGET_CFLAGS += -DNO_IPv6
+TARGET_CFLAGS += -DHAVE_IPv6
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
-		polipo
+		polipo2
 endef
 
 define Package/polipo/conffiles
@@ -51,7 +51,7 @@ endef
 
 define Package/polipo/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/polipo2 $(1)/usr/sbin/polipo
 	$(INSTALL_DIR) $(1)/etc/polipo
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config.sample $(1)/etc/polipo/config
 	$(INSTALL_DIR) $(1)/etc/config
