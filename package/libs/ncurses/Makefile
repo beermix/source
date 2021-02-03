@@ -73,8 +73,6 @@ CONFIGURE_ARGS += \
 	--without-profile \
 	--with-progs \
 	--without-tests \
-	--with-cxx-binding \
-	--with-cxx-shared \
 	--disable-big-core \
 	--disable-home-terminfo \
 	--with-normal \
@@ -91,8 +89,8 @@ CONFIGURE_VARS += \
 HOST_CFLAGS += $(HOST_FPIC)
 
 HOST_CONFIGURE_ARGS += \
-	--with-cxx \
-	--with-cxx-binding \
+	--without-cxx \
+	--without-cxx-binding \
 	--without-ada \
 	--without-debug \
 	--without-manpages \
