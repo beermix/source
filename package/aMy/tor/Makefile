@@ -13,7 +13,12 @@ PKG_VERSION:=0.4.4.7
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://dist.torproject.org
+PKG_SOURCE_URL:=https://dist.torproject.org/ \
+	https://archive.torproject.org/tor-package-archive
+PKG_HASH:=
+PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
+		Peter Wagner <tripolar@gmx.at>
+PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:torproject:tor
 
 #PKG_SOURCE_VERSION:=b256d83
@@ -23,7 +28,7 @@ PKG_CPE_ID:=cpe:/a:torproject:tor
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
-PKG_ASLR_PIE:=0
+# PKG_ASLR_PIE:=0
 
 include $(INCLUDE_DIR)/package.mk
 
