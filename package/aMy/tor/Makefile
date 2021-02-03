@@ -9,8 +9,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-#PKG_VERSION:=0.4.5.5-rc
-PKG_VERSION:=0.4.4.6
+PKG_VERSION:=0.4.4.7
+PKG_RELEASE:=1
+
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://dist.torproject.org
 PKG_CPE_ID:=cpe:/a:torproject:tor
@@ -133,7 +134,6 @@ CONFIGURE_ARGS += \
 	--enable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor \
-	--disable-silent-rules \
 	--enable-pic
 
 ifeq ($(BUILD_VARIANT),basic)
