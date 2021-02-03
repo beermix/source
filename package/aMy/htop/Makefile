@@ -40,7 +40,7 @@ define Package/htop/description
 endef
 
 CONFIGURE_ARGS += \
-	--disable-unicode \
+	--enable-unicode \
 	--disable-hwloc \
 	--enable-setuid \
 	--enable-taskstats \
