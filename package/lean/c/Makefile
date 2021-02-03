@@ -15,7 +15,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=shortcut-fe
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_CONFIG_DEPENDS := CONFIG_IPV6
 
 include $(INCLUDE_DIR)/package.mk
@@ -72,12 +72,6 @@ define Build/InstallDev
 	$(CP) -rf $(PKG_BUILD_DIR)/sfe.h $(1)/usr/include/shortcut-fe
 endef
 endif
-#define KernelPackage/shortcut-fe/install
-#	$(INSTALL_DIR) $(1)/etc/init.d
-#	$(INSTALL_BIN) ./files/etc/init.d/shortcut-fe $(1)/etc/init.d
-#	$(INSTALL_DIR) $(1)/usr/bin
-#	$(INSTALL_BIN) ./files/usr/bin/sfe_dump $(1)/usr/bin
-
 
 $(eval $(call KernelPackage,shortcut-fe))
 $(eval $(call KernelPackage,shortcut-fe-cm))

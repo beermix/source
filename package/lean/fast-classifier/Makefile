@@ -11,7 +11,7 @@ define KernelPackage/$(PKG_NAME)/Default
   SECTION:=kernel
   CATEGORY:=Kernel modules
   SUBMENU:=Network Support
-  DEPENDS:=+kmod-ipt-conntrack +kmod-shortcut-fe
+  DEPENDS:=+kmod-ipt-conntrack +kmod-shortcut-fe +kmod-nf-conntrack
   TITLE:=Kernel driver for FAST Classifier
   FILES:=$(PKG_BUILD_DIR)/fast-classifier.ko
   KCONFIG:=CONFIG_NF_CONNTRACK_CHAIN_EVENTS=y CONFIG_NF_CONNTRACK_MARK=y

@@ -146,6 +146,10 @@ EOF
 	echo "PDNSD: Start DNS Caching"
 }
 
+start_dnsforwarder() {
+	mkdir -p "/var/run/dnscache"
+	cat > "/var/run/dnscache/dnscache.conf" <<EOF
+LogOn false
 LogFileThresholdLength 102400
 LogFileFolder /var/run/dnscache
 UDPLocal 127.0.0.1:5333
@@ -176,6 +180,35 @@ DisabledList
 DomainStatistic false
 DomainStatisticTempletFile
 StatisticUpdateInterval 29
+EOF
+
+	[ -d "/var/sbin" ] || mkdir -p "/var/sbin" && cp -a "/usr/bin/dnsforwarder" "/var/sbin/dnscache"
+	/var/sbin/dnscache -f "/var/run/dnscache/dnscache.conf" &
+	echo "DnsForwarder: Start DNS Caching"
+
+}
+
+stop_dnscache() {
+	killall -9 "dnscache" 2>"/dev/null"
+	kill -9 $(ps | grep dnscache-while.sh | grep -v "grep" | awk '{print $1}') 2>"/dev/null"
+	rm -rf "/var/dnscache" "/var/run/dnscache"
+	echo "Stop DNS Caching"
+}
+
+change_dns() {
+ 	uci -q delete dhcp.@dnsmasq[0].server
+	uci add_list dhcp.@dnsmasq[0].server="127.0.0.1#5333"
+	uci set dhcp.@dnsmasq[0].noresolv="1"
+	uci commit dhcp
+
+}
+
+revert_dns() {
+	uci -q del_list dhcp.@dnsmasq[0].server="127.0.0.1#5333"
+	uci set dhcp.@dnsmasq[0].resolvfile="/tmp/resolv.conf.d/resolv.conf.auto"
+	uci set dhcp.@dnsmasq[0].noresolv="0"
+	uci commit dhcp
+}
 
 start(){
 	inital_conf
