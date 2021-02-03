@@ -15,7 +15,8 @@ LUCI_TITLE:=LuCI support for Flow Offload / Shortcut-FE
 LUCI_DEPENDS:=+pdnsd-alt \
               +PACKAGE_$(PKG_NAME)_INCLUDE_shortcut-fe:kmod-fast-classifier \
               +PACKAGE_$(PKG_NAME)_INCLUDE_flow-offload:kmod-ipt-offload \
-              +PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca:kmod-tcp-bbr \
+              +PACKAGE_$(PKG_NAME)_INCLUDE_bbr-cca:kmod-tcp-bbr
+
 LUCI_PKGARCH:=all
 
 define Package/$(PKG_NAME)/config
