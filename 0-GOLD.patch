@@ -1,0 +1,25 @@
+diff --git a/rules.mk b/rules.mk
+index b658e93020..1dfb8a812c 100755
+--- a/rules.mk
++++ b/rules.mk
+@@ -307,7 +307,7 @@ endif
+ TARGET_CONFIGURE_OPTS = \
+   AR="$(TARGET_AR)" \
+   AS="$(TARGET_CC) -c $(TARGET_ASFLAGS)" \
+-  LD=$(TARGET_CROSS)ld \
++  LD=$(TARGET_CROSS)ld.gold \
+   NM="$(TARGET_NM)" \
+   CC="$(TARGET_CC)" \
+   GCC="$(TARGET_CC)" \
+diff --git a/toolchain/binutils/Makefile b/toolchain/binutils/Makefile
+index 0bc633e111..f604b83e2d 100755
+--- a/toolchain/binutils/Makefile
++++ b/toolchain/binutils/Makefile
+@@ -50,6 +50,7 @@ HOST_CONFIGURE_ARGS = \
+ 	--disable-nls \
+ 	--disable-sim \
+ 	--disable-gdb \
++	--enable-gold \
+ 	$(GRAPHITE_CONFIGURE) \
+ 	$(SOFT_FLOAT_CONFIG_OPTION) \
+ 	$(call qstrip,$(CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS))
