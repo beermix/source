@@ -41,7 +41,12 @@ endef
 
 CONFIGURE_ARGS += \
 	--disable-unicode \
-	--disable-hwloc
+	--disable-hwloc \
+	--enable-setuid \
+	--enable-taskstats \
+	--enable-linux-affinity \
+	--enable-capabilities \
+	--disable-delayacct
 
 CONFIGURE_VARS += \
 	ac_cv_file__proc_stat=yes \
