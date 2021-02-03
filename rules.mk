@@ -307,7 +307,7 @@ endif
 TARGET_CONFIGURE_OPTS = \
   AR="$(TARGET_AR)" \
   AS="$(TARGET_CC) -c $(TARGET_ASFLAGS)" \
-  LD=$(TARGET_CROSS)ld.gold \
+  LD=$(TARGET_CROSS)ld \
   NM="$(TARGET_NM)" \
   CC="$(TARGET_CC)" \
   GCC="$(TARGET_CC)" \
